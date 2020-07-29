@@ -2149,65 +2149,28 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //获取二维码
     public JSONObject porscheAppShopGrCode() {
         String url = "/porsche/app/shop/qrcode";
         String result = httpPostWithCheckCode(url, "{}", IpPort);
         return JSON.parseObject(result);
     }
 
-    //人员管理-销售顾问列表
-    public JSONObject ManageList(Integer role_id)throws Exception{
-        String url="/porsche/role-staff/manage/list";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
-        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-    //人员管理-销售顾问列表
-    public JSONObject ManageListNoSelect(Integer role_id)throws Exception{
-        String url="/porsche/role-staff/manage/list/no-selected";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
-        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-    //人员管理-销售顾问列表
-    public JSONObject ManageAdd(Integer role_id,String uid)throws Exception{
-        String url="/porsche/role-staff/manage/add";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
-        json1.put("uid",uid);
-        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+    //创建接待
+    public JSONObject createReception() {
+        String url = "/porsche/app/sale-reception/createReception";
+        String result = httpPostWithCheckCode(url, "{}", IpPort);
+        return JSON.parseObject(result);
     }
 
-    //删除销售排版中销售
-    public JSONObject ManageDelete(Integer id)throws Exception{
-        String url="/porsche/role-staff/manage/delete/"+id;
-        String json="{}";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    //销售
-    //预约试驾列表,姓名/联系方式搜索
-    public JSONObject appointmentlist(String search_condition) throws Exception {
-        String url = "/porsche/app/after_sale/appointment_test_driver_list";
-        JSONObject json1=new JSONObject();
-        json1.put("search_condition",search_condition);
-        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    //预约试驾列表,根据时间搜索
-    public JSONObject appointmentlist(String search_date_start,String search_date_end) throws Exception {
-        String url = "/porsche/app/after_sale/appointment_test_driver_list";
-        JSONObject json1=new JSONObject();
-        json1.put("search_date_start",search_date_start);
-        json1.put("search_date_end",search_date_end);
-        String res = httpPost(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res);
+    //分配销售
+    public JSONObject allocationSale(String saleId, Long customerId) {
+        String url = "/porsche/app/sale-reception/allocationSale";
+        JSONObject object = new JSONObject();
+        object.put("sale_id", saleId);
+        object.put("customer_id", customerId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
     }
 
 
