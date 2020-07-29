@@ -177,7 +177,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String caseDesc = "";
         try {
-
             Integer car_type = 1;   //试驾车型
             Object[][] objects = emptyParaCheckList();
             for (int i = 0; i < objects.length; i++) {
@@ -361,10 +360,10 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加车辆，数量+1 & 数据校验
+     * @description :添加车辆，数量+1 & 数据校验  此case第一个运行，为保养维修提供数据
      * @date :2020/7/10 18:03
      **/
-    @Test
+    @Test(priority = 1)
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -397,6 +396,44 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             saveData("添加车辆，applet我的车辆列表加1");
         }
     }
+    /**
+     * @description :删除车辆，列表数量-1  此case最后运行，删除mycarConsistency创建的车辆
+     * @date :2020/7/10 22:37
+     **/
+    @Test(priority = 9)
+    public void deleteMycar() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject carData = crm.myCarList();
+            JSONArray list = carData.getJSONArray("list");
+            int count = 0;
+            if (list == null||list.size()==0) {
+                throw new Exception("暂无车辆可删除");
+            } else {
+                count = list.size();
+            }
+            String my_car_id = list.getJSONObject(0).getString("my_car_id");
+            crm.myCarDelete(my_car_id);
+            JSONArray listB = crm.myCarList().getJSONArray("list");
+            int aftercount = 0;
+            if (listB == null) {
+                aftercount = 0;
+            } else {
+                aftercount = listB.size();
+            }
+            Preconditions.checkArgument((count - aftercount) == 1, "删除车辆，数量没-1");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("删除车辆，列表数量-1");
+        }
+    }
+
+
 
     /**
      * @description :【我的】添加车辆，10辆边界
@@ -479,42 +516,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * @description :删除车辆，列表数量-1
-     * @date :2020/7/10 22:37
-     **/
-    @Test
-    public void deleteMycar() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject carData = crm.myCarList();
-            JSONArray list = carData.getJSONArray("list");
-            int count = 0;
-            if (list == null||list.size()==0) {
-                throw new Exception("暂无车辆可删除");
-            } else {
-                count = list.size();
-            }
-            String my_car_id = list.getJSONObject(0).getString("my_car_id");
-            crm.myCarDelete(my_car_id);
-            JSONArray listB = crm.myCarList().getJSONArray("list");
-            int aftercount = 0;
-            if (listB == null) {
-                aftercount = 0;
-            } else {
-                aftercount = listB.size();
-            }
-            Preconditions.checkArgument((count - aftercount) == 1, "删除车辆，数量没-1");
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("删除车辆，列表数量-1");
-        }
-    }
 
     /**
      * @description :预约保养 小程序页面间数据一致性
@@ -526,7 +527,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            if (list == null) {
+            if (list == null||list.size()==0) {
                 throw new Exception("暂无车辆");
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
@@ -703,7 +704,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            if (list == null) {
+            if (list == null||list.size()==0) {
                 throw new Exception("暂无车辆");
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
@@ -1086,9 +1087,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(a==2,"pc已报名人数错误");
             Preconditions.checkArgument(b==50,"pc总报名人数错误");
 
-//            crm.login(adminname,adminpassword);
-//            crm.articleStatusChange(article_id);
-//            crm.articleDelete(article_id);
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
 
         }catch (AssertionError e){
             appendFailreason(e.toString());
@@ -1138,9 +1139,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((aa - a) == Integer.valueOf(customer_num), "取消预约，已报名人数没减少");
             Preconditions.checkArgument((b - bb) == Integer.valueOf(customer_num), "取消预约，剩余名额没增加");
 
-//            crm.login(adminname,adminpassword);
-//            crm.articleStatusChange(article_id);
-//            crm.articleDelete(article_id);
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1184,7 +1185,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :pc 报名活动审核通过，小程序报名人数++
+     * @description :报名活动，小程序报名人数++
      * @date :2020/7/12 14:16
      **/
     @Test(priority = 2)
@@ -1213,7 +1214,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             // crm.appletlogin(code);
             Integer registered_numA = crm.articleDetial(arcile_id).getInteger("registered_num");  //文章详情
             Preconditions.checkArgument((registered_numA - registered_num) == Integer.valueOf(customer_num), "报名活动人数写2，报名活动页报名人数未加2");
-
             crm.login(adminname, adminpassword);
             crm.articleStatusChange(arcile_id);
             crm.articleDelete(arcile_id);
@@ -1222,7 +1222,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc 报名活动审核通过，小程序报名人数+1");
+            saveData("报名活动，小程序报名人数+1");
         }
     }
 
@@ -1262,8 +1262,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONObject pcdataA = crm.activityList(1, 10, activity_id);
             String totalA = pcdataA.getString("total");
             Preconditions.checkArgument(totalA.equals(totalB), "pc把审核通过的报名活动加入黑名单,报名活动列表总数不变");
-
-            //crm.articleDelete(arcile_id);
+            crm.articleStatusChange(arcile_id);
+            crm.articleDelete(arcile_id);
 
 
         } catch (AssertionError e) {
@@ -1303,12 +1303,12 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :删除历史数据
      * @date :2020/7/19 20:27
      **/
-//    @Test
+    //@Test
     public void deletaDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(adminname, adminpassword);
-            JSONArray list = crm.articlePage(1, 10).getJSONArray("list");
+            JSONArray list = crm.articlePage(2, 10).getJSONArray("list");
             for (int i = 0; i < 10; i++) {
                 Long id = list.getJSONObject(i).getLong("id");
                 crm.articleStatusChange(id);
