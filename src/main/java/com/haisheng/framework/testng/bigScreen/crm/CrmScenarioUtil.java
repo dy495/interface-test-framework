@@ -1531,6 +1531,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //添加车辆
     public Long myCarAddCode(Integer car_type, String plate_number) throws Exception {
         String url = "/WeChat-applet/porsche/my-car/add";
@@ -1541,6 +1542,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getLong("code");
     }
+
     //车辆列表
     public JSONObject myCarList() throws Exception {
         String url = "/WeChat-applet/porsche/my-car/list";
@@ -1864,6 +1866,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //pc 商品管理 添加车辆
     public Long addCarPccode(String car_type_name, double lowest_price, double highest_price, String car_discount, String car_introduce, String car_pic, String big_pic, String interior_pic, String space_pic, String appearance_pic) throws Exception {
         String url = "/porsche/goods-manage/add-car";
@@ -2149,6 +2152,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //获取二维码
     public JSONObject porscheAppShopGrCode() {
         String url = "/porsche/app/shop/qrcode";
         String result = httpPostWithCheckCode(url, "{}", IpPort);
@@ -2156,35 +2160,37 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //人员管理-销售顾问列表
-    public JSONObject ManageList(Integer role_id)throws Exception{
-        String url="/porsche/role-staff/manage/list";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
+    public JSONObject ManageList(Integer role_id) throws Exception {
+        String url = "/porsche/role-staff/manage/list";
+        JSONObject json1 = new JSONObject();
+        json1.put("role_id", role_id);
         String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //人员管理-销售顾问列表
-    public JSONObject ManageListNoSelect(Integer role_id)throws Exception{
-        String url="/porsche/role-staff/manage/list/no-selected";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
+    public JSONObject ManageListNoSelect(Integer role_id) throws Exception {
+        String url = "/porsche/role-staff/manage/list/no-selected";
+        JSONObject json1 = new JSONObject();
+        json1.put("role_id", role_id);
         String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //人员管理-销售顾问列表
-    public JSONObject ManageAdd(Integer role_id,String uid)throws Exception{
-        String url="/porsche/role-staff/manage/add";
-        JSONObject json1=new JSONObject();
-        json1.put("role_id",role_id);
-        json1.put("uid",uid);
+    public JSONObject ManageAdd(Integer role_id, String uid) throws Exception {
+        String url = "/porsche/role-staff/manage/add";
+        JSONObject json1 = new JSONObject();
+        json1.put("role_id", role_id);
+        json1.put("uid", uid);
         String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     //删除销售排版中销售
-    public JSONObject ManageDelete(Integer id)throws Exception{
-        String url="/porsche/role-staff/manage/delete/"+id;
-        String json="{}";
+    public JSONObject ManageDelete(Integer id) throws Exception {
+        String url = "/porsche/role-staff/manage/delete/" + id;
+        String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2194,23 +2200,38 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //预约试驾列表,姓名/联系方式搜索
     public JSONObject appointmentlist(String search_condition) throws Exception {
         String url = "/porsche/app/after_sale/appointment_test_driver_list";
-        JSONObject json1=new JSONObject();
-        json1.put("search_condition",search_condition);
+        JSONObject json1 = new JSONObject();
+        json1.put("search_condition", search_condition);
         String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     //预约试驾列表,根据时间搜索
-    public JSONObject appointmentlist(String search_date_start,String search_date_end) throws Exception {
+    public JSONObject appointmentlist(String search_date_start, String search_date_end) throws Exception {
         String url = "/porsche/app/after_sale/appointment_test_driver_list";
-        JSONObject json1=new JSONObject();
-        json1.put("search_date_start",search_date_start);
-        json1.put("search_date_end",search_date_end);
+        JSONObject json1 = new JSONObject();
+        json1.put("search_date_start", search_date_start);
+        json1.put("search_date_end", search_date_end);
         String res = httpPost(url, json1.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
+    //创建接待
+    public JSONObject createReception() {
+        String url = "/porsche/app/sale-reception/createReception";
+        String result = httpPostWithCheckCode(url, "{}", IpPort);
+        return JSON.parseObject(result);
+    }
 
+    //分配销售
+    public JSONObject allocationSale(String saleId, Long customerId) {
+        String url = "/porsche/app/sale-reception/allocationSale";
+        JSONObject object = new JSONObject();
+        object.put("sale_id", saleId);
+        object.put("customer_id", customerId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
 
 
     @DataProvider(name = "APPOINTMENT_TYPE")
@@ -2290,7 +2311,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
 
-    @DataProvider(name="ROLE_IDS")
+    @DataProvider(name = "ROLE_IDS")
     public static Object[] role_ids() {
         return new Integer[]{
                 13,

@@ -26,13 +26,13 @@ public class ApiChecker implements IChecker {
         responseStructureCheck();
         // 验证字段取值
         if (!responseValueCheck()) {
-            throw new CheckExcept(errorMsg.toString());
+            throw new AssertionError(errorMsg.toString());
         }
     }
 
     public void checkPlus() {
         if (!responseValueCheckPlus()) {
-            throw new CheckExcept(errorMsg.toString());
+            throw new AssertionError(errorMsg.toString());
         }
     }
 
@@ -48,11 +48,6 @@ public class ApiChecker implements IChecker {
 
     @Override
     public String getCaseName() {
-        Throwable e = new Throwable();
-        StackTraceElement[] element = e.getStackTrace();
-        if (element != null) {
-            Arrays.stream(element).forEach(StackTraceElement::getClassName);
-        }
         return null;
     }
 
@@ -207,7 +202,7 @@ public class ApiChecker implements IChecker {
          */
         public final <T> Builder checkPlus(String key1, EnumOperator operator, String key2) {
             if (responseJson.isEmpty() || responseJson1.isEmpty()) {
-                throw new CheckExcept("使用checkPlus需要response&&response1");
+                throw new AssertionError("使用checkPlus需要response&&response1");
             }
             if (!checkMap.containsKey(key1) && !checkMap.containsKey(key2)) {
                 checkMap.put(key1, new HashMap<>(16));
@@ -218,7 +213,7 @@ public class ApiChecker implements IChecker {
 
         public ApiChecker build() {
             if (responseJson.isEmpty()) {
-                throw new CheckExcept("接口响应值为空");
+                throw new AssertionError("接口响应值为空");
             }
             return new ApiChecker(this);
         }
