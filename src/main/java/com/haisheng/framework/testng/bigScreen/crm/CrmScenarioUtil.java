@@ -1883,7 +1883,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("appearance_pic", appearance_pic);
         String json = json1.toJSONString();
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res).getLong("code");
     }
 

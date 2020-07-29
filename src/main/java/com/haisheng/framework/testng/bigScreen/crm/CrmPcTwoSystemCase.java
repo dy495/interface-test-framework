@@ -165,7 +165,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void createCar(String car_type_name) throws Exception{
 
         double lowest_price=88.99;
-        double highest_price=8888.99;
+        double highest_price=888.99;
         String car_discount="跑车多数人知道，少数人了解";
         String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
         String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
@@ -267,7 +267,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(article_id);
             crm.articleDelete(article_id);
 
-            //crm.articleDelete(article_id);
+            crm.articleDelete(article_id);
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){
@@ -328,12 +328,15 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long [] aid=createAArcile_id(valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];
+            if(activity_id==null||id==null){
+                throw new Exception("创建文章获取id失败");
+            }
             String total=crm.articlePage(1,10).getString("total");
             //删除排期活动成功 列表-1
             Long code=crm.articleDelete(id).getLong("code");
             //删除活动列表-1
             String totalA=crm.articlePage(1,10).getString("total");
-            Preconditions.checkArgument(code==1000,"删除排期活动成功");
+            Preconditions.checkArgument(code==1000,"删除排期活动不成功");
             Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
         }catch (AssertionError e){
             appendFailreason(e.toString());
@@ -352,7 +355,6 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void bannerArticleList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.login(adminname,adminpassword);
             JSONArray list=crm.articleShowList().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -438,7 +440,6 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void articleTitleCompare(String positionsA){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-             crm.login(adminname,adminpassword);
              String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
              String article_content = "品牌上新，优惠多多，限时4天,文章内容";
              String article_remarks = "品牌上新，优惠多多，限时4天,备注";
@@ -449,8 +450,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              JSONObject detail=crm.articleDetial(actriclereal_id);
              String article_titlA=detail.getString("article_title");
              String article_contentA=detail.getString("article_content");
-             //String article_remarksA=detail.getString("article_remarks");
-
+             //String article_remarksA=detail.getString("article_remarks");  //需求变更文章，不填写备注
+             crm.login(adminname,adminpassword);
+             crm.articleStatusChange(actriclereal_id);
+             crm.articleDelete(actriclereal_id);
              Preconditions.checkArgument(article_titlA.equals(article_title),"小程序文章标题错误");
              Preconditions.checkArgument(article_contentA.equals(article_content),"小程序文章内容错误");
              //Preconditions.checkArgument(article_remarksA.equals(article_remarks),"小程序文章备注错误");
@@ -474,20 +477,24 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void goodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-             crm.login(adminname,adminpassword);
              JSONArray list=crm.carList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
                  total=0;
              }else{ total=list.size(); }
+             if(total==50){
+                 throw new Exception("商品数量已达上限，无法添加");
+             }
              //pc 新建车辆
              String car_type_name="911-"+dt.getHHmm(0);
              createCar(car_type_name);
              JSONArray listA=crm.carList().getJSONArray("list");
              int totalA=0;
-             if(list==null||list.size()==0){
+             if(listA==null||listA.size()==0){
                  totalA=0;
              }else{ totalA=listA.size(); }
+             String car_id=listA.getJSONObject(listA.size()-1).getString("id");  //新建车型id
+             crm.carDelete(Integer.parseInt(car_id));   //删除车辆
              Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
 
          }catch (AssertionError e){
@@ -498,12 +505,45 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              saveData("pc创建车辆后，pc车辆列表数+1");
          }
      }
+    /**
+     * @description :商品管理。pc删除车型，车辆列表-1 ok
+     * @date :2020/7/15 18:34
+     **/
+    @Test
+    public void CardeleteConsistency(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建车
+            String car_type_name="Macan"+dt.getHHmm(0);
+            createCar(car_type_name);
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=list.size();
+            String car_id=list.getJSONObject(list.size()-1).getString("id");  //新建车型id
+            //删除车辆
+            crm.carDelete(Integer.parseInt(car_id));
+            JSONArray listA=crm.carList().getJSONArray("list");
 
+            int totalA;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{
+                totalA=listA.size();
+            }
+            Preconditions.checkArgument((total-totalA)==1,"pc删除车型，pc车辆列表没-1");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc删除车型，车辆列表-1");
+        }
+    }
      /**
       * @description :删除商品管理车
       * @date :2020/7/21 17:42
       **/
-    //@Test
+//    @Test
      public void deletegoodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -532,7 +572,6 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       public void createGoodsManage(){
           logger.logCaseStart(caseResult.getCaseName());
           try{
-              crm.login(adminname,adminpassword);
               JSONArray list=crm.carList().getJSONArray("list");
               int total=0;
               if(list==null||list.size()==0){
@@ -553,7 +592,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                   return;
               }else {
                   JSONArray listA = crm.carList().getJSONArray("list");
-                  for (int j = 0; j < limit; j++) {
+                  for (int j = 5; j < limit; j++) {
                       String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
                       crm.carDelete(Integer.parseInt(car_id));
                   }
@@ -569,9 +608,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       }
 
 
-
      /**
-      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致） ok TODO:排位出现变化后，信息需要重新比对
+      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致） ok
       * @date :2020/7/14 18:34
       **/
      @Test
@@ -594,17 +632,20 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              crm.appletLogin(code);
              JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
              int totalA=0;
-             if(list==null||list.size()==0){
+             if(listA==null||listA.size()==0){
                  totalA=0;
              }else{
-                 totalA=list.size();
+                 totalA=listA.size();
              }
-             String car_type_nameA=listA.getJSONObject(0).getString("car_type_name");//此处认为新建排在第一位
-             String price=listA.getJSONObject(0).getString("price");//此处认为新建排在第一位
-             Preconditions.checkArgument(totalA==total,"pc新建车型，applet看车页车辆列表没+1");
-             //Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
-             //TODO:价格校验
-//             Preconditions.checkArgument(price.equals(""),"pc新建车辆，applet售价显示异常");
+             JSONObject dataA=listA.getJSONObject(listA.size()-1);  //新建车后排在第一位
+             String car_type_nameA=dataA.getString("car_type_name");
+             String price=dataA.getString("price");
+             String car_id=dataA.getString("id");
+             crm.login(adminname,adminpassword);
+             crm.carDelete(Integer.parseInt(car_id));
+             Preconditions.checkArgument((totalA-total)==1,"pc新建车型，applet看车页车辆列表没+1");
+             Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
+             Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，applet售价显示异常");
 
 
          }catch (AssertionError e){
@@ -617,14 +658,13 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      }
 
     /**
-     * @description :商品管理。pc新建车型，车辆列表+1；删除车辆-1--- TODO：不牌位的情况下，新建总在第一个 ok
+     * @description :商品管理。pc新建车型，车辆列表+1；删除车辆-1,信息校验
      * @date :2020/7/14 18:34
      **/
     @Test
     public void CarlistConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.login(adminname,adminpassword);
             JSONArray list=crm.carList().getJSONArray("list");
             int total=0;
             if(list==null||list.size()==0){
@@ -644,14 +684,13 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }else{
                 totalA=listA.size();
             }
-            String car_type_nameA=listA.getJSONObject(0).getString("car_type_name");
-            String car_id=listA.getJSONObject(0).getString("id");  //新建车型id
-            String price=listA.getJSONObject(0).getString("price");
+            String car_type_nameA=listA.getJSONObject(listA.size()-1).getString("car_type_name");
+            String car_id=listA.getJSONObject(listA.size()-1).getString("id");  //新建车型id
+            String price=listA.getJSONObject(listA.size()-1).getString("price");
 
             Preconditions.checkArgument((totalA-total)==1,"pc新建车型，pc车辆列表没+1");
-           // Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
-            //TODO:价格校验
-            //Preconditions.checkArgument(price.equals(""),"pc新建车辆，applet售价显示异常");
+            Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc列表车型名称显示错误");
+            Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，pc列表售价显示异常");
             //删除车辆
             crm.carDelete(Integer.parseInt(car_id));
             JSONArray listB=crm.carList().getJSONArray("list");
@@ -672,41 +711,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :商品管理。pc删除车型，车辆列表-1 ok
-     * @date :2020/7/15 18:34
-     **/
-    @Test
-    public void CardeleteConsistency(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            //创建车
-            String car_type_name="Macan"+dt.getHHmm(0);
-            createCar(car_type_name);
-            JSONArray list=crm.carList().getJSONArray("list");
-            int total=list.size();
 
-            String car_id=list.getJSONObject(0).getString("id");  //新建车型id
-            //删除车辆
-            crm.carDelete(Integer.parseInt(car_id));
-            JSONArray listA=crm.carList().getJSONArray("list");
-
-            int totalA;
-            if(listA==null||listA.size()==0){
-                totalA=0;
-            }else{
-                totalA=listA.size();
-            }
-            Preconditions.checkArgument((total-totalA)==1,"pc删除车型，pc车辆列表没-1");
-
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("pc删除车型，车辆列表-1");
-        }
-    }
 
     /**
       * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验 ok
