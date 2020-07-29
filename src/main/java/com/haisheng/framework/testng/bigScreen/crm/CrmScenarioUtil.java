@@ -15,6 +15,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
@@ -2131,9 +2132,27 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //获取二维码
     public JSONObject porscheAppShopGrCode() {
         String url = "/porsche/app/shop/qrcode";
         String result = httpPostWithCheckCode(url, "{}", IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //创建接待
+    public JSONObject createReception() {
+        String url = "/porsche/app/sale-reception/createReception";
+        String result = httpPostWithCheckCode(url, "{}", IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //分配销售
+    public JSONObject allocationSale(String saleId, Long customerId) {
+        String url = "/porsche/app/sale-reception/allocationSale";
+        JSONObject object = new JSONObject();
+        object.put("sale_id", saleId);
+        object.put("customer_id", customerId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(result);
     }
 

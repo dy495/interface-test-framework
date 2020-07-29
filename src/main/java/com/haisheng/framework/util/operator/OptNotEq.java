@@ -5,29 +5,26 @@ import org.jooq.Condition;
 import org.jooq.Field;
 
 /**
- * 不为空
- *
  * @author wangmin
- * @date 2020/7/22 11:25
+ * @date 2020/7/25 13:53
  */
 @Slf4j
-public class OptIsNotNull implements IOperator {
-    private final OptIsNull optIsNull = new OptIsNull();
+public class OptNotEq implements IOperator {
 
-    @SafeVarargs
+    private final OptEq optNotEq = new OptEq();
+
     @Override
-    public final <T> Condition operator(Field<T> field, T... values) {
-        return field.isNotNull();
+    public <T> Condition operator(Field<T> field, T... values) {
+        return null;
+    }
+
+    @Override
+    public <T> boolean compare(T actual, T... expect) {
+        return !optNotEq.compare(actual, expect);
     }
 
     private static final int PARAM_COUNT = 1;
 
-    @SafeVarargs
-    @Override
-    public final <T> boolean compare(T actual, T... expect) {
-        return !optIsNull.compare(actual, expect);
-    }
-    
     /**
      * 对预期值判断
      *

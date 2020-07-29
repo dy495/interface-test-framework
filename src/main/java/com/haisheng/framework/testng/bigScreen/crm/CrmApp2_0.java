@@ -1,12 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.util.checker.ApiChecker;
-import com.haisheng.framework.util.operator.EnumOperator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -58,13 +57,108 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "获取门店小程序二维码")
-    public void getShopQrcode() {
+    public void getShopQrCode() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject responseJson = crm.porscheAppShopGrCode();
+            JSONObject response = crm.porscheAppShopGrCode();
+            String url = response.getJSONObject("data").getString("qrcode_url");
+            Preconditions.checkArgument(url != null, "二维码为空");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
+        } finally {
+            saveData("获取门店小程序二维码");
         }
-        saveData("获取门店小程序二维码");
+    }
+
+    @Test(description = "创建接待")
+    public void createReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.createReception();
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("创建接待");
+        }
+    }
+
+    @Test(description = "分配销售")
+    public void allocationSale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.allocationSale("uid_41786c76", 1L);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("分配销售");
+        }
+    }
+
+    @Test(description = "空闲销售列表")
+    public void freeSaleList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String url = "/porsche/app/sale-reception/freeSaleList";
+            String json = "{}";
+            String res = httpPostWithCheckCode(url, json, "http://dev.porsche.dealer-ydauto.winsenseos.cn");
+            String message = JSONObject.parseObject(res).getString("message");
+            Preconditions.checkArgument(message.equals("成功"), "接口返回不成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("空闲销售列表");
+        }
+    }
+
+    @Test(description = "全部预约人数>=今日预约人数")
+    public void appointTotalAndTodayNumber() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //预约试驾
+            JSONObject response = crm.appointmentDriverNum();
+            Integer testDriverTotal = response.getInteger("appointment_total_number");
+            Integer testDriverToday = response.getInteger("appointment_today_number");
+            Preconditions.checkArgument(testDriverToday <= testDriverTotal, "试驾-全部预约人数<今日预约人数");
+            //预约保养
+            JSONObject response1 = crm.mainAppointmentDriverNum();
+            Integer maintainTodayNumber = response1.getInteger("appointment_today_number");
+            Integer maintainTotalNumber = response1.getInteger("appointment_total_number");
+            Preconditions.checkArgument(maintainTodayNumber <= maintainTotalNumber, "保养-全部预约人数<今日预约人数");
+            //预约维修
+            JSONObject response2 = crm.repairAppointmentDriverNum();
+            Integer repairTodayNumber = response2.getInteger("appointment_today_number");
+            Integer repairTotalNumber = response2.getInteger("appointment_total_number");
+            Preconditions.checkArgument(repairTodayNumber <= repairTotalNumber, "维修-全部预约人数<今日预约人数");
+            Preconditions.checkArgument((testDriverToday + maintainTodayNumber + repairTodayNumber) <= (testDriverTotal + maintainTotalNumber + repairTotalNumber), "全部预约人数<今日预约人数");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部预约人数>=今日预约人数");
+        }
+    }
+
+    @Test(description = "全部预约人数<=列表数")
+    public void appointTotalAndListNumber() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //预约试驾
+            Integer testDriverTotalNumber = crm.appointmentDriverNum().getInteger("appointment_total_number");
+            //预约试驾列表
+            Integer testDriveTotal = Integer.parseInt(crm.appointmentlist().getString("total"));
+            //预约保养
+            Integer maintainTotalNumber = crm.mainAppointmentDriverNum().getInteger("appointment_total_number");
+            //预约保养列表
+            Integer maintainTotal = Integer.parseInt(crm.mainAppointmentlist().getString("total"));
+            //预约维修
+            Integer repairTotalNumber = crm.repairAppointmentDriverNum().getInteger("appointment_total_number");
+            //预约维修列表
+            Integer repairTotal = Integer.parseInt(crm.repairAppointmentlist().getString("total"));
+            Preconditions.checkArgument((testDriverTotalNumber + maintainTotalNumber + repairTotalNumber) <=
+                    (testDriveTotal + maintainTotal + repairTotal), "全部预约人数>列表数");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部预约人数<=列表数");
+        }
     }
 }
