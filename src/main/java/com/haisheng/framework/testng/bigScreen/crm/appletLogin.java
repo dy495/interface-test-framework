@@ -89,7 +89,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             String customer_name = "lxq自动化";
             String customer_namea = "@@@";
             String customer_phone_number = "13400000000";
-            String customer_phone_numbera = "15037286013";
+            String customer_phone_numbera = "15037286014";
             String date = dt.getHistoryDate(0);
 
             String appointment_time = "23:00";

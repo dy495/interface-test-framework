@@ -26,7 +26,11 @@ public enum EnumOperator {
     /**
      * 为空
      */
-    IS_NULL(new OptIsNull());
+    IS_NULL(new OptIsNull()),
+    /**
+     * 不相等
+     */
+    NOT_EQ(new OptNotEq());
 
 
     EnumOperator(IOperator operator) {
