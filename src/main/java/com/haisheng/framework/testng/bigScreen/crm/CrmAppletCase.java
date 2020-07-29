@@ -259,7 +259,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约试驾成功，页面间一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test(priority = 1)
+    @Test()
     public void driver_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

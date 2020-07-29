@@ -26,6 +26,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     public String adminname="xx";    //pc登录密码，最好销售总监或总经理权限
     public String adminpassword="e10adc3949ba59abbe56e057f20f883e";
+    public String baoshijie="baoshijie";
     public String code="1234567";
 
     public Integer car_type = 1;
@@ -859,6 +860,45 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       public void deletaGuwen(){
           logger.logCaseStart(caseResult.getCaseName());
           try{
+              //主账号登录
+              crm.login(baoshijie,adminpassword);
+              //创建销售/顾问
+              String userName = ""+ System.currentTimeMillis();
+              int roleId=13; //销售顾问
+              String passwd="123456";
+
+              String phone = "1";
+              for (int i = 0; i < 10;i++){
+                  String a = Integer.toString((int)(Math.random()*10));
+                  phone = phone + a;
+              }
+              crm.addUser(userName,userName,phone,passwd,roleId);
+              JSONObject data=crm.userPage(1,100);
+              int total=data.getInteger("total");
+              JSONArray list=new JSONArray();
+              if(total==200){
+                  logger.info("用户数量已达上限");
+                  return;
+              }
+              else if(total<100){
+                  list = data.getJSONArray("list");
+              }else{
+                  list=crm.userPage(2,100).getJSONArray("list");
+              }
+              String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+              //加人到小池子
+              crm.login(adminname,adminpassword);
+              crm.ManageAdd(roleId,userid);
+              JSONArray listA=crm.ManageList(roleId).getJSONArray("list");
+              int totalA=listA.size();   //删除前小池子数量
+              //删除大池子
+              crm.login(baoshijie,adminpassword);
+              crm.userDel(userid);
+
+              crm.login(adminname,adminpassword);
+              JSONArray listB=crm.ManageList(roleId).getJSONArray("list");
+              int totalB=listB.size();   //删除后小池子数量
+              Preconditions.checkArgument((totalA-totalB)==1,"人员管理，删除大池子销售/维修/保养顾问，小池子没-1");
 
           }catch (AssertionError e){
               appendFailreason(e.toString());
@@ -866,6 +906,25 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               appendFailreason(e.toString());
           }finally {
               saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
+          }
+      }
+
+     // @Test
+      public void deleteuser(){
+          try {
+              crm.login("baoshijie", adminpassword);
+//              for(int j=0;j<1;j++) {
+                  JSONArray list = crm.userPage(6, 10).getJSONArray("list");
+                  for (int i = 0; i < list.size(); i++) {
+                      String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
+                      crm.userDel(userid);
+                  }
+//              }
+
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("清多余用户数据");
           }
       }
 
