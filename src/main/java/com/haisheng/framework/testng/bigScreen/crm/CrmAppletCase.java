@@ -372,7 +372,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
-            if (list == null) {
+            if (list == null||list.size()==0) {
                 count = 0;
             } else {
                 count = list.size();
@@ -387,7 +387,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
             Preconditions.checkArgument(car_type_nameBefore.equals(car_type_name), "增加车辆，我的车辆列表车型显示错误");
             Preconditions.checkArgument(plate_numberBefore.equals(plate_number), "增加车辆，我的车辆列表车牌号显示错误");
-            crm.myCarDelete(Integer.toString(car_idBefore));
+            //crm.myCarDelete(Integer.toString(car_idBefore));
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -490,7 +490,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
-            if (list == null) {
+            if (list == null||list.size()==0) {
                 throw new Exception("暂无车辆可删除");
             } else {
                 count = list.size();

@@ -328,12 +328,15 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long [] aid=createAArcile_id(valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];
+            if(activity_id==null||id==null){
+                throw new Exception("创建文章获取id失败");
+            }
             String total=crm.articlePage(1,10).getString("total");
             //删除排期活动成功 列表-1
             Long code=crm.articleDelete(id).getLong("code");
             //删除活动列表-1
             String totalA=crm.articlePage(1,10).getString("total");
-            Preconditions.checkArgument(code==1000,"删除排期活动成功");
+            Preconditions.checkArgument(code==1000,"删除排期活动不成功");
             Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
         }catch (AssertionError e){
             appendFailreason(e.toString());
@@ -480,12 +483,15 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              if(list==null||list.size()==0){
                  total=0;
              }else{ total=list.size(); }
+             if(total==50){
+                 throw new Exception("商品数量已达上限，无法添加");
+             }
              //pc 新建车辆
              String car_type_name="911-"+dt.getHHmm(0);
              createCar(car_type_name);
              JSONArray listA=crm.carList().getJSONArray("list");
              int totalA=0;
-             if(list==null||list.size()==0){
+             if(listA==null||listA.size()==0){
                  totalA=0;
              }else{ totalA=listA.size(); }
              Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
@@ -503,7 +509,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :删除商品管理车
       * @date :2020/7/21 17:42
       **/
-    //@Test
+//    @Test
      public void deletegoodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
