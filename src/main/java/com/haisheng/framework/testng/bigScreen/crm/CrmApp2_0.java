@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
@@ -129,7 +130,8 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             Integer repairTodayNumber = response2.getInteger("appointment_today_number");
             Integer repairTotalNumber = response2.getInteger("appointment_total_number");
             Preconditions.checkArgument(repairTodayNumber <= repairTotalNumber, "维修-全部预约人数<今日预约人数");
-            Preconditions.checkArgument((testDriverToday + maintainTodayNumber + repairTodayNumber) <= (testDriverTotal + maintainTotalNumber + repairTotalNumber), "全部预约人数<今日预约人数");
+            Preconditions.checkArgument((testDriverToday + maintainTodayNumber + repairTodayNumber) <=
+                    (testDriverTotal + maintainTotalNumber + repairTotalNumber), "全部预约人数<今日预约人数");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -159,6 +161,40 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("全部预约人数<=列表数");
+        }
+    }
+
+    @Test
+    public void registeredCustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        int activityTaskId = 0;
+        try {
+            JSONObject response = crm.activityTaskPage();
+            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            activityTaskId = json.getInteger("activity_task_id");
+            int activityId = json.getInteger("activity_id");
+            JSONObject startResponse = crm.customerTaskPage(10, 1, (long) activityId);
+            int size = startResponse.getJSONObject("data").getJSONArray("list").size();
+            //添加报名信息
+            crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
+            //pc任务客户数量+1
+            JSONObject endResponse = crm.customerTaskPage(10, 1, (long) activityId);
+            int size1 = endResponse.getJSONObject("data").getJSONArray("list").size();
+            Preconditions.checkArgument(size1 == size + 1, "添加报名人信息后，pc端任务活动未+1");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            String customerId = null;
+            JSONObject response2 = crm.activityTaskPage();
+            JSONArray list = response2.getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("customer_list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("customer_phone_number").equals("13454678912")) {
+                    customerId = list.getJSONObject(i).getString("customer_id");
+                }
+            }
+            //删除报名人
+            crm.deleteCustomer(String.valueOf(activityTaskId), customerId);
+            saveData("添加报名人信息");
         }
     }
 }

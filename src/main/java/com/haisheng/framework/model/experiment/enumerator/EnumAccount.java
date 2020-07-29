@@ -10,8 +10,11 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e");
-
+    XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e"),
+    /**
+     * 销售总监
+     */
+    XSZJ("xszj", "e10adc3949ba59abbe56e057f20f883e");
 
     EnumAccount(String username, String password) {
         this.username = username;

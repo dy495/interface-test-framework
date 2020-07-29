@@ -30,7 +30,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      */
     private static volatile CrmScenarioUtil instance = null;
 
-    private CrmScenarioUtil() {
+    public CrmScenarioUtil() {
     }
 
     public static CrmScenarioUtil getInstance() {
@@ -1686,11 +1686,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //活动报名顾客列表
-    public JSONObject activityList(Integer page, Integer szie, Long activity_id) throws Exception {
+    public JSONObject activityList(Integer page, Integer size, Long activity_id) throws Exception {
         String url = "/porsche/activity/customer/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
-        json1.put("size", szie);
+        json1.put("size", size);
         json1.put("activity_id", activity_id);
         String json = json1.toJSONString();
 
@@ -2233,6 +2233,36 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
+    //获取活动列表
+    public JSONObject activityTaskPage() {
+        String url = "/porsche/app/activity-task/page";
+        JSONObject object = new JSONObject();
+        object.put("page", 1);
+        object.put("size", 10);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //删除报名人员
+    public JSONObject deleteCustomer(String activityTaskId, String customerId) {
+        String url = "/porsche/app/activity-task/deleteCustomer";
+        JSONObject object = new JSONObject();
+        object.put("activity_task_id", activityTaskId);
+        object.put("customer_id", customerId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //获取任务客户列表
+    public JSONObject customerTaskPage(int size, int page, Long activityId) {
+        String url = "/porsche/activity/customer/task/page";
+        JSONObject object = new JSONObject();
+        object.put("size", size);
+        object.put("page", page);
+        object.put("activity_id", activityId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
 
     @DataProvider(name = "APPOINTMENT_TYPE")
     public static Object[] appointment_type() {
