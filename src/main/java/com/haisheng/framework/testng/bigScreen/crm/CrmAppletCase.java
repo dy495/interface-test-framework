@@ -172,11 +172,12 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :1.0预约试驾 必填项不填异常验证
      * @date :2020/7/8 18:43
      **/
-    @Test
+    @Test(priority = 1)
     public void test_drive() {
         logger.logCaseStart(caseResult.getCaseName());
         String caseDesc = "";
         try {
+            crm.appletLogin(code);
             Integer car_type = 1;   //试驾车型
             Object[][] objects = emptyParaCheckList();
             for (int i = 0; i < objects.length; i++) {
@@ -197,10 +198,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约试驾成功，页面间一致性验证；预约成功+预约消息
      * @date :2020/7/10 11:10
      **/
-    @Test
+    @Test(priority = 1)
     public void driver_dateConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLogin(code);
             JSONObject data = crm.appointmentDrive(customer_name, customer_phone_number, appointment_date, car_type);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
@@ -259,7 +261,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约试驾成功，页面间一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test()
+    @Test(priority = 1)
     public void driver_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -367,6 +369,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLogin(code);
             String plate_number = "豫GBBA29";
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
@@ -404,6 +407,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void deleteMycar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLogin(code);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
@@ -439,7 +443,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :【我的】添加车辆，10辆边界
      * @date :2020/7/27 19:43
      **/
-    @Test
+    @Test(priority = 2)
     public void myCarTen(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -463,6 +467,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
                 crm.myCarDelete(Integer.toString(car_id));
             }
+            JSONArray listq = crm.myCarList().getJSONArray("list");
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){
@@ -476,7 +481,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :【我的】添加车辆，11辆异常 ok
      * @date :2020/7/27 19:43
      **/
-    @Test
+    @Test(priority = 2)
     public void myCarEven(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -501,10 +506,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             else{
                 //删除新增的车辆
                 JSONArray listB = crm.myCarList().getJSONArray("list");
-                for (int j = 0; j < limit; j++) {
+                for (int j = 0; j <limit; j++) {
                     Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
                     crm.myCarDelete(Integer.toString(car_id));
                 }
+                JSONArray listq = crm.myCarList().getJSONArray("list");
             }
         }catch (AssertionError e){
             appendFailreason(e.toString());
@@ -521,10 +527,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约保养 小程序页面间数据一致性
      * @date :2020/7/10 22:52
      **/
-    @Test
+    @Test(priority = 2)
     public void mainTain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLogin(code);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             if (list == null||list.size()==0) {
@@ -589,7 +596,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约保养成功，页面一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void maintian_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -698,17 +705,18 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约维修，小程序页面间数据一致性
      * @date :2020/7/11 13:48
      **/
-    @Test
+    @Test(priority = 2)
     public void repair() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLogin(code);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             if (list == null||list.size()==0) {
                 throw new Exception("暂无车辆");
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
-            String appointment_time = "09:30";
+            String appointment_time = "10:30";
             String description = "故障说明";
             JSONObject data = crm.appointmentRepair(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, description);
             //预约成功
@@ -772,7 +780,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约维修成功，页面间一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void repair_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -879,7 +887,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约活动，小程序页面间数据一致性
      * @date :2020/7/11 14:10
      **/
-    @Test(priority = 1)
+    @Test(priority = 5)
     public void activity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -986,7 +994,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :活动报名 pc报名客户total+1& 报名管理数据校验  TODO:
      * @date :2020/7/12 11:48
      **/
-    @Test(priority = 1)
+    @Test(priority = 5)
     public void activityConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1050,7 +1058,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++
      * @date :2020/7/21 15:29
      **/
-    @Test
+    @Test(priority = 5)
     public void pcappointmentSum(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1105,7 +1113,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :取消活动报名 报名人数--，剩余人数++
      * @date :2020/7/21 13:13
      **/
-    @Test
+    @Test(priority = 5)
     public void cancleappointmentSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1156,7 +1164,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc新建活动，pc & app活动页数据一致 applet已报名人数=假定基数+报名人数（0：不预约） ok
      * @date :2020/7/13 20:35  换到applet case
      **/
-    @Test(priority = 1)
+    @Test(priority = 5)
     public void appletActivityPage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1188,7 +1196,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :报名活动，小程序报名人数++
      * @date :2020/7/12 14:16
      **/
-    @Test(priority = 2)
+    @Test(priority = 5)
     public void checkActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1230,7 +1238,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc把未审核的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变
      * @date :2020/7/13 20:44
      **/
-    @Test(priority = 3)
+    @Test(priority = 5)
     public void blackAddConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1279,7 +1287,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :applet看车和pc商品管理车辆列表数量一致
      * @date :2020/7/15 20:10
      **/
-    @Test
+    @Test(priority = 5)
     public void kancheAppletPC() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
