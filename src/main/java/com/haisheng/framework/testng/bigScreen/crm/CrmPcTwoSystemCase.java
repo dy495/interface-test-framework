@@ -29,6 +29,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public String baoshijie="baoshijie";
     public String code="1234567";
 
+    public String adminnamexiaoshou = "销售总监";    //pc登录密码，最好销售总监或总经理权限
+    public String adminpasswordxiaoshou = "e10adc3949ba59abbe56e057f20f883e";
+
     public Integer car_type = 1;
     public String car_type_name = "Panamera";
     public Long activity_id =43L;
@@ -593,7 +596,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                   return;
               }else {
                   JSONArray listA = crm.carList().getJSONArray("list");
-                  for (int j = 5; j < limit; j++) {
+                  for (int j = 5; j < limit+5; j++) {
                       String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
                       crm.carDelete(Integer.parseInt(car_id));
                   }
@@ -908,6 +911,51 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
           }
       }
+
+      /**
+       * @description :app活动报名，报名信息上限50
+       * @date :2020/7/30 19:45
+       **/
+      @Test
+      public void appactivity(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              //创建活动，获取活动id
+              Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+              Long activity_id=aid[1];
+              Long id=aid[0];
+              crm.login("lxqgw",adminpassword);
+              JSONObject response = crm.activityTaskPage();
+              JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+              int activityTaskId = json.getInteger("activity_task_id");
+              int before_total=0;
+              String userLoginName = ""+ System.currentTimeMillis();
+
+              while (before_total<50){
+                  String newloginname = userLoginName+before_total;
+                  String phone = "1";
+                  for (int i = 0; i < 10;i++){
+                      String a = Integer.toString((int)(Math.random()*10));
+                      phone = phone + a;
+                  }
+                  crm.registeredCustomer((long) activityTaskId, "夏", phone);
+                  before_total = before_total +1;
+              }
+              //添加第51个
+              Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", "15037286612");
+              Preconditions.checkArgument(code==1001,"app添加报名人信息上限50条");
+              crm.login(adminname,adminpassword);
+              crm.articleStatusChange(id);
+              crm.articleDelete(id);
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("app活动报名，报名信息上限50");
+          }
+      }
+
 
      // @Test
       public void deleteuser(){

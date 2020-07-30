@@ -2152,6 +2152,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //活动：添加报名人信息
+    public Long registeredCustomerCode(Long activity_task_id, String customer_name, String customer_phone_number) throws Exception {
+        String url = "/porsche/app/activity-task/registeredCustomer";
+        JSONObject json1 = new JSONObject();
+        json1.put("activity_task_id", activity_task_id);
+        json1.put("customer_name", customer_name);
+        json1.put("customer_phone_number", customer_phone_number);
+        String json = json1.toJSONString();
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res).getLong("code");
+    }
+
     //获取二维码
     public JSONObject porscheAppShopGrCode() {
         String url = "/porsche/app/shop/qrcode";
