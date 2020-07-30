@@ -162,7 +162,6 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
                 //再次分配
                 crm.saleReceptionCreatReception();
-
             }
         } catch (Exception e) {
             appendFailreason(e.toString());
