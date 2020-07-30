@@ -396,7 +396,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject ShopPageHistoryV3(String district_code,String shop_type,String shop_name,String shop_manager,Integer page,Integer size) throws Exception {
+    public JSONObject shopPageHistoryV3(String district_code,String shop_type,String shop_name,String shop_manager,Integer page,Integer size) throws Exception {
         String url = "/patrol/shop/page/history";
         String json =
                 "{" +
@@ -418,7 +418,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject ShopPageMemberV3(String district_code,String shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order	,Integer page,Integer size) throws Exception {
+    public JSONObject shopPageMemberV3(String district_code,String shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order	,Integer page,Integer size) throws Exception {
         String url = "/patrol/shop/page/member";
         String json =
                 "{" +
@@ -495,8 +495,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/history/shop/trend";
         String json =
                 "{" +
-                        "\"cycle_type\" :" + cycle_type + ",\n" +
-                        "\"month\" :" + month + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\",\n" +
                         "\"shop_id\" :" + shop_id + "\n" +
                         "} ";
 
@@ -532,9 +532,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String json =
                 "{" +
                         "\"activity_description\" :" + activity_description + ",\n" +
-                        "\"activity_type\" :" + activity_type + ",\n" +
-                        "\"start_date\" :" + start_date + ",\n" +
-                        "\"end_date\" :" + end_date + ",\n" +
+                        "\"activity_type\" :\"" + activity_type + "\",\n" +
+                        "\"start_date\" :\"" + start_date + "\",\n" +
+                        "\"end_date\" :\"" + end_date + "\",\n" +
                         "\"shop_id\" :" + shop_id + "\n" +
                         "} ";
 
@@ -656,9 +656,27 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    /**
+     * @description:8.5.5 企业下所有门店会员增长趋势
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopMemberCountV3(long shop_id,String cycle_type,String month) throws Exception {
+        String url = "/patrol/history/shop/member/count";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     /**
-     * @description:8.5.5 会员增长趋势
+     * @description:8.5.6 会员增长趋势
      * @author: qingqing
      * @time:
      */
@@ -764,7 +782,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopAgeV3(long shop_id,String cycle_type,String month) throws Exception {
-        String url = "/patrols/history/shop/age-gender/distribution";
+        String url = "/patrol/history/shop/age-gender/distribution";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
