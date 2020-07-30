@@ -30,7 +30,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      */
     private static volatile CrmScenarioUtil instance = null;
 
-    public CrmScenarioUtil() {
+    private CrmScenarioUtil() {
     }
 
     public static CrmScenarioUtil getInstance() {
