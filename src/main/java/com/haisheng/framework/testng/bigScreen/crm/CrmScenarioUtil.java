@@ -30,7 +30,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      */
     private static volatile CrmScenarioUtil instance = null;
 
-    public CrmScenarioUtil() {
+    private CrmScenarioUtil() {
     }
 
     public static CrmScenarioUtil getInstance() {
@@ -1981,7 +1981,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约维修列表展示
-    public JSONObject repairAppointmentlist() throws Exception {
+    public JSONObject repairAppointmentlist() {
         String url = "/porsche/app/after_sale/appointment_mend_list";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -2216,13 +2216,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    //创建接待
-    public JSONObject createReception() {
-        String url = "/porsche/app/sale-reception/createReception";
-        String result = httpPostWithCheckCode(url, "{}", IpPort);
-        return JSON.parseObject(result);
-    }
-
     //分配销售
     public JSONObject allocationSale(String saleId, Long customerId) {
         String url = "/porsche/app/sale-reception/allocationSale";
@@ -2262,6 +2255,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("activity_id", activityId);
         String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(result);
+    }
+
+    //销售前台分配客户
+    public JSONObject saleReceptionCreatReception() {
+        String url = "/porsche/app/sale-reception/createReception";
+        String json = "{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res);
     }
 
     @DataProvider(name = "APPOINTMENT_TYPE")

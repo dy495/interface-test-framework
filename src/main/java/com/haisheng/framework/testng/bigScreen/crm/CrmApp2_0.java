@@ -57,59 +57,6 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "获取门店小程序二维码")
-    public void getShopQrCode() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.porscheAppShopGrCode();
-            String url = response.getJSONObject("data").getString("qrcode_url");
-            Preconditions.checkArgument(url != null, "二维码为空");
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("获取门店小程序二维码");
-        }
-    }
-
-    @Test(description = "创建接待")
-    public void createReception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            crm.createReception();
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("创建接待");
-        }
-    }
-
-    @Test(description = "分配销售")
-    public void allocationSale() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            crm.allocationSale("uid_41786c76", 1L);
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("分配销售");
-        }
-    }
-
-    @Test(description = "空闲销售列表")
-    public void freeSaleList() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String url = "/porsche/app/sale-reception/freeSaleList";
-            String json = "{}";
-            String res = httpPostWithCheckCode(url, json, "http://dev.porsche.dealer-ydauto.winsenseos.cn");
-            String message = JSONObject.parseObject(res).getString("message");
-            Preconditions.checkArgument(message.equals("成功"), "接口返回不成功");
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("空闲销售列表");
-        }
-    }
 
     @Test(description = "全部预约人数>=今日预约人数")
     public void appointTotalAndTodayNumber() {
@@ -195,6 +142,31 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             //删除报名人
             crm.deleteCustomer(String.valueOf(activityTaskId), customerId);
             saveData("添加报名人信息");
+        }
+    }
+
+    @Test(description = "创建接待")
+    public void createReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        //分配销售
+        try {
+            //登录前台账号
+            crm.login(EnumAccount.QT.getUsername(), EnumAccount.QT.getPassword());
+            //创建接待
+            JSONObject response = crm.saleReceptionCreatReception();
+            if (response.getString("message").equals("当前没有空闲销售~")) {
+                //登录销售账号
+                crm.login(EnumAccount.XSGW.getUsername(), EnumAccount.XSGW.getPassword());
+                long customerId = crm.userInfService().getLong("customer_id");
+                //完成接待
+                crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
+                //再次分配
+                crm.saleReceptionCreatReception();
+            }
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("创建接待");
         }
     }
 }
