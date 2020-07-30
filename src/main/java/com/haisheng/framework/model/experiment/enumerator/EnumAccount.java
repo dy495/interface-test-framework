@@ -14,7 +14,11 @@ public enum EnumAccount {
     /**
      * 销售总监
      */
-    XSZJ("xszj", "e10adc3949ba59abbe56e057f20f883e");
+    XSZJ("xszj", "e10adc3949ba59abbe56e057f20f883e"),
+    /**
+     * 前台
+     */
+    QT("qt", "e10adc3949ba59abbe56e057f20f883e");
 
     EnumAccount(String username, String password) {
         this.username = username;

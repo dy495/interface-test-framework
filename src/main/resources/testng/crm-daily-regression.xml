@@ -14,7 +14,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmAppletCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPcTwoSystemCase"></class>
-
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_0"/>
         </classes>
     </test>
 </suite>
