@@ -2649,7 +2649,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
 
 
-            crm.customerEditPC(customerid,name,phone,2,2,0,time,1,1,0);
+            crm.customerEditPC(customerid,name,phone1,2,2,0,time,1,1,0);
 
             //再次查询
             JSONObject obj = crm.customerListPC("",-1,name,phone1,"","",1,1).getJSONArray("list").getJSONObject(0);
@@ -2972,7 +2972,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd="lvxueqing";
+            String passwd=pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
@@ -3034,7 +3034,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd="lvxueqing";
+            String passwd=pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
