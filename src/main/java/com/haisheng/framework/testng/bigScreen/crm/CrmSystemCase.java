@@ -1927,297 +1927,297 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * */
     //----------------------查询--------------------
 
-    @Test
-    public void driverListSearchAll() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        int driverid = -1;
-        try {
-            long level_id=7L;
-            String phone = "12312341234";
-            String name = dt.getHistoryDate(0);
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建试驾
-            String idCard = "110226198210260078";
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String country = "中国";
-            String city = "图们";
-            String email = dt.getHistoryDate(0)+"@qq.com";
-            String address = "北京市昌平区";
-            String ward_name = "小小";
-            String driverLicensePhoto1Url = picurl;
-            String driverLicensePhoto2Url = picurl;
-            String electronicContractUrl = picurl;
-            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
-
-            //直接点击查询
-            int total = crm.driveList(signTime,"","",1,1).getInteger("total");
-            Preconditions.checkArgument(total>=1,"我的试驾数量期待>=1，实际="+total);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的试驾页面直接点击查询按钮");
-        }
-
-    }
-
-    @Test
-    public void driverListSearchName() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        int driverid = -1;
-        try {
-            long level_id=7L;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            String name = dt.getHistoryDate(0);
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建试驾
-            String idCard = "110226198210260078";
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String country = "中国";
-            String city = "图们";
-            String email = dt.getHistoryDate(0)+"@qq.com";
-            String address = "北京市昌平区";
-            String ward_name = "小小";
-            String driverLicensePhoto1Url = picurl;
-            String driverLicensePhoto2Url = picurl;
-            String electronicContractUrl = picurl;
-            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
-
-            //直接点击查询
-            JSONArray obj = crm.driveList(signTime,name,"",1,20).getJSONArray("list");
-            for (int i = 0; i < obj.size();i++){
-                JSONObject single = obj.getJSONObject(i);
-                String search_name = single.getString("customer_name");
-                Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
-            }
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的试驾页面根据客户姓名搜索");
-        }
-
-    }
-
-    @Test
-    public void driverListSearchPhone() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        int driverid = -1;
-        try {
-            long level_id=7L;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            String name = dt.getHistoryDate(0);
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建试驾
-            String idCard = "110226198210260078";
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String country = "中国";
-            String city = "图们";
-            String email = dt.getHistoryDate(0)+"@qq.com";
-            String address = "北京市昌平区";
-            String ward_name = "小小";
-            String driverLicensePhoto1Url = picurl;
-            String driverLicensePhoto2Url = picurl;
-            String electronicContractUrl = picurl;
-            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
-
-            //直接点击查询
-            JSONArray obj = crm.driveList(signTime,"",phone,1,20).getJSONArray("list");
-            for (int i = 0; i < obj.size();i++){
-                JSONObject single = obj.getJSONObject(i);
-                String search_phone = single.getString("customer_phone_number");
-                Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
-            }
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的试驾页面根据客户手机号搜索");
-        }
-
-    }
-
-    @Test
-    public void driverListSearchNameYPhoneY() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        int driverid = -1;
-        try {
-            long level_id=7L;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            String name = dt.getHistoryDate(0);
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建试驾
-            String idCard = "110226198210260078";
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String country = "中国";
-            String city = "图们";
-            String email = dt.getHistoryDate(0)+"@qq.com";
-            String address = "北京市昌平区";
-            String ward_name = "小小";
-            String driverLicensePhoto1Url = picurl;
-            String driverLicensePhoto2Url = picurl;
-            String electronicContractUrl = picurl;
-            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
-
-            //直接点击查询
-            JSONArray obj = crm.driveList(signTime,name,phone,1,20).getJSONArray("list");
-            for (int i = 0; i < obj.size();i++){
-                JSONObject single = obj.getJSONObject(i);
-                String search_phone = single.getString("customer_phone_number");
-                String search_name = single.getString("customer_name");
-                Preconditions.checkArgument(search_phone.equals(phone)&&search_name.equals(name),"查询结果与查询条件不一致");
-            }
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的试驾页面根据姓名+手机号搜索");
-        }
-
-    }
-
-    @Test
-    public void driverListSearchNameNPhoneY() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        int driverid = -1;
-        try {
-            long level_id=7L;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            String name = dt.getHistoryDate(0);
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建试驾
-            String idCard = "110226198210260078";
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String country = "中国";
-            String city = "图们";
-            String email = dt.getHistoryDate(0)+"@qq.com";
-            String address = "北京市昌平区";
-            String ward_name = "小小";
-            String driverLicensePhoto1Url = picurl;
-            String driverLicensePhoto2Url = picurl;
-            String electronicContractUrl = picurl;
-            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
-
-            //查询
-            int total = crm.driveList(signTime,name+"1",phone,1,20).getInteger("total");
-            Preconditions.checkArgument(total==0,"不应有查询结果");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的试驾页面根据不存在姓名+手机号搜索");
-        }
-
-    }
-
-
-
-    /**
-     *
-     * ====================我的交车======================
-     * */
-    //----------------------查询--------------------
-    @Test
-    public void deliverListSearchAll() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //新建交车
-
-            String name = dt.getHHmm(0);
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String customer_phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                customer_phone = customer_phone + a;
-            }
-            int id = crm.deliverAdd(name, gender, customer_phone, signTime, model, picurl).getInteger("id");
-            int total = crm.deliverList(signTime,1,1,"","").getInteger("total");
-            Preconditions.checkArgument(total>=1,"我的交车数量期待>=1，实际="+total);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的交车页面直接点击查询按钮");
-        }
-
-    }
-
-    @Test
-    public void deliverListSearchName() {
-        logger.logCaseStart(caseResult.getCaseName());
-
-        try {
-            //新建交车
-            String name = dt.getHHmm(0);
-            String gender = "男";
-            String signTime = dt.getHistoryDate(0);
-            String model = "718";
-            String customer_phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                customer_phone = customer_phone + a;
-            }
-            int id = crm.deliverAdd(name, gender, customer_phone, signTime, model, picurl).getInteger("id");
-            JSONArray obj = crm.deliverList(signTime,1,1,name,"").getJSONArray("list");
-            for (int i = 0; i < obj.size();i++){
-                JSONObject single = obj.getJSONObject(i);
-                String search_name = single.getString("customer_name");
-                Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
-            }
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("我的交车页面根据姓名查询");
-        }
-
-    }
+//    @Test
+//    public void driverListSearchAll() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid=-1L;
+//        int driverid = -1;
+//        try {
+//            long level_id=7L;
+//            String phone = "12312341234";
+//            String name = dt.getHistoryDate(0);
+//            String desc = "创建H级客户自动化------------------------------------";
+//            //创建试驾
+//            String idCard = "110226198210260078";
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String country = "中国";
+//            String city = "图们";
+//            String email = dt.getHistoryDate(0)+"@qq.com";
+//            String address = "北京市昌平区";
+//            String ward_name = "小小";
+//            String driverLicensePhoto1Url = picurl;
+//            String driverLicensePhoto2Url = picurl;
+//            String electronicContractUrl = picurl;
+//            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+//
+//            //直接点击查询
+//            int total = crm.driveList(signTime,"","",1,1).getInteger("total");
+//            Preconditions.checkArgument(total>=1,"我的试驾数量期待>=1，实际="+total);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的试驾页面直接点击查询按钮");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void driverListSearchName() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid=-1L;
+//        int driverid = -1;
+//        try {
+//            long level_id=7L;
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = dt.getHistoryDate(0);
+//            String desc = "创建H级客户自动化------------------------------------";
+//            //创建试驾
+//            String idCard = "110226198210260078";
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String country = "中国";
+//            String city = "图们";
+//            String email = dt.getHistoryDate(0)+"@qq.com";
+//            String address = "北京市昌平区";
+//            String ward_name = "小小";
+//            String driverLicensePhoto1Url = picurl;
+//            String driverLicensePhoto2Url = picurl;
+//            String electronicContractUrl = picurl;
+//            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+//
+//            //直接点击查询
+//            JSONArray obj = crm.driveList(signTime,name,"",1,20).getJSONArray("list");
+//            for (int i = 0; i < obj.size();i++){
+//                JSONObject single = obj.getJSONObject(i);
+//                String search_name = single.getString("customer_name");
+//                Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的试驾页面根据客户姓名搜索");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void driverListSearchPhone() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid=-1L;
+//        int driverid = -1;
+//        try {
+//            long level_id=7L;
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = dt.getHistoryDate(0);
+//            String desc = "创建H级客户自动化------------------------------------";
+//            //创建试驾
+//            String idCard = "110226198210260078";
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String country = "中国";
+//            String city = "图们";
+//            String email = dt.getHistoryDate(0)+"@qq.com";
+//            String address = "北京市昌平区";
+//            String ward_name = "小小";
+//            String driverLicensePhoto1Url = picurl;
+//            String driverLicensePhoto2Url = picurl;
+//            String electronicContractUrl = picurl;
+//            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+//
+//            //直接点击查询
+//            JSONArray obj = crm.driveList(signTime,"",phone,1,20).getJSONArray("list");
+//            for (int i = 0; i < obj.size();i++){
+//                JSONObject single = obj.getJSONObject(i);
+//                String search_phone = single.getString("customer_phone_number");
+//                Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的试驾页面根据客户手机号搜索");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void driverListSearchNameYPhoneY() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid=-1L;
+//        int driverid = -1;
+//        try {
+//            long level_id=7L;
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = dt.getHistoryDate(0);
+//            String desc = "创建H级客户自动化------------------------------------";
+//            //创建试驾
+//            String idCard = "110226198210260078";
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String country = "中国";
+//            String city = "图们";
+//            String email = dt.getHistoryDate(0)+"@qq.com";
+//            String address = "北京市昌平区";
+//            String ward_name = "小小";
+//            String driverLicensePhoto1Url = picurl;
+//            String driverLicensePhoto2Url = picurl;
+//            String electronicContractUrl = picurl;
+//            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+//
+//            //直接点击查询
+//            JSONArray obj = crm.driveList(signTime,name,phone,1,20).getJSONArray("list");
+//            for (int i = 0; i < obj.size();i++){
+//                JSONObject single = obj.getJSONObject(i);
+//                String search_phone = single.getString("customer_phone_number");
+//                String search_name = single.getString("customer_name");
+//                Preconditions.checkArgument(search_phone.equals(phone)&&search_name.equals(name),"查询结果与查询条件不一致");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的试驾页面根据姓名+手机号搜索");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void driverListSearchNameNPhoneY() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid=-1L;
+//        int driverid = -1;
+//        try {
+//            long level_id=7L;
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = dt.getHistoryDate(0);
+//            String desc = "创建H级客户自动化------------------------------------";
+//            //创建试驾
+//            String idCard = "110226198210260078";
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String country = "中国";
+//            String city = "图们";
+//            String email = dt.getHistoryDate(0)+"@qq.com";
+//            String address = "北京市昌平区";
+//            String ward_name = "小小";
+//            String driverLicensePhoto1Url = picurl;
+//            String driverLicensePhoto2Url = picurl;
+//            String electronicContractUrl = picurl;
+//            driverid = crm.driveradd(name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+//
+//            //查询
+//            int total = crm.driveList(signTime,name+"1",phone,1,20).getInteger("total");
+//            Preconditions.checkArgument(total==0,"不应有查询结果");
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的试驾页面根据不存在姓名+手机号搜索");
+//        }
+//
+//    }
+//
+//
+//
+//    /**
+//     *
+//     * ====================我的交车======================
+//     * */
+//    //----------------------查询--------------------
+//    @Test
+//    public void deliverListSearchAll() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //新建交车
+//
+//            String name = dt.getHHmm(0);
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String customer_phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                customer_phone = customer_phone + a;
+//            }
+//            int id = crm.deliverAdd(name, gender, customer_phone, signTime, model, picurl).getInteger("id");
+//            int total = crm.deliverList(signTime,1,1,"","").getInteger("total");
+//            Preconditions.checkArgument(total>=1,"我的交车数量期待>=1，实际="+total);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的交车页面直接点击查询按钮");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void deliverListSearchName() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//
+//        try {
+//            //新建交车
+//            String name = dt.getHHmm(0);
+//            String gender = "男";
+//            String signTime = dt.getHistoryDate(0);
+//            String model = "718";
+//            String customer_phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                customer_phone = customer_phone + a;
+//            }
+//            int id = crm.deliverAdd(name, gender, customer_phone, signTime, model, picurl).getInteger("id");
+//            JSONArray obj = crm.deliverList(signTime,1,1,name,"").getJSONArray("list");
+//            for (int i = 0; i < obj.size();i++){
+//                JSONObject single = obj.getJSONObject(i);
+//                String search_name = single.getString("customer_name");
+//                Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+//            }
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("我的交车页面根据姓名查询");
+//        }
+//
+//    }
 
     /**
      *
@@ -3369,7 +3369,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        }
 //    }
 
-    //@Test //服务端没做校验
+    @Test //服务端没做校验
     public void  RecToIn(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3392,6 +3392,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //                    crm.userDel(userid);
 //                }
 //            }
+            Long cid = creatCust("aa","aa"); //898
+
 
 
         } catch (AssertionError e) {
@@ -3438,10 +3440,43 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         crm.login(userLoginName, pwd);
         customerid = crm.userInfService().getLong("customer_id");
         //创建某级客户
-        JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "H级客户-taskListChkNum-修改时间为昨天");
+        JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "自动化---------创建----------H级客户");
 
         return customerid;
+    }
 
+    //新建试驾+审核封装
+    public void creatDriver(Long customer_id,String name,String phone,String sign_date,String sign_time, int audit_status) throws Exception {  //1-通过，2-拒绝
+        String idCard = "110226198210260078";
+        String gender = "男";
+        String signTime = dt.getHistoryDate(0);
+        String model = "911";
+        String country = "中国";
+        String city = "图们";
+        String email = dt.getHistoryDate(0)+"@qq.com";
+        String address = "北京市昌平区";
+        String ward_name = "小小";
+        String driverLicensePhoto1Url = picurl;
+        String driverLicensePhoto2Url = picurl;
+        String electronicContractUrl = picurl;
+
+        String call="先生";
+        int driverid = crm.driveradd(customer_id,name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call).getInteger("id");
+        //销售总监登陆
+        crm.login(zjlname,pwd);
+        crm.driverAudit(driverid,audit_status);
+        //最后销售要再登陆一次
+
+    }
+
+    //订车+交车封装
+    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
+        //订车
+        crm.orderCar(customer_id);
+        //创建交车
+        String model = "911";
+        String path = picurl;
+        crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
     }
 
 
