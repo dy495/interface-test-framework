@@ -2485,7 +2485,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("size", size);
         json.put("page", page);
-        json.put("search_condition", search_condition);
+        json.put("customer_name_phone", search_condition);
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
@@ -2507,7 +2507,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json.put("page", page);
         json.put("start_time", start_time);
         json.put("end_time", end_time);
-        json.put("search_condition", search_condition);
+        json.put("customer_name_phone", search_condition);
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
