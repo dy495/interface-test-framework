@@ -407,6 +407,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -469,6 +470,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -539,6 +541,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -603,6 +607,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -671,6 +677,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -752,6 +760,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -822,6 +832,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -906,6 +918,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -984,6 +997,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1085,6 +1100,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1129,6 +1146,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1217,6 +1236,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1915,6 +1936,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1978,6 +2000,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2036,6 +2059,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2118,6 +2142,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2189,6 +2214,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2265,6 +2291,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2344,6 +2371,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2425,6 +2453,7 @@ public class ManagePlatform {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3016,6 +3045,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3078,6 +3109,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3148,6 +3181,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3213,6 +3248,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3283,6 +3320,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3342,6 +3381,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3416,6 +3457,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3775,6 +3818,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3835,6 +3880,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3900,6 +3947,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3967,6 +4016,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4059,6 +4110,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4105,6 +4158,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4151,6 +4206,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4718,6 +4775,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4778,6 +4837,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4854,6 +4915,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4989,6 +5052,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5379,6 +5444,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5436,6 +5503,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5499,6 +5568,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5557,6 +5628,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5766,6 +5839,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5825,6 +5900,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5896,6 +5973,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5960,6 +6039,8 @@ public class ManagePlatform {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
