@@ -15,6 +15,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @description :crm2.0 pc case--xia
  * @date :2020/7/15 20:22
@@ -28,6 +33,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public String adminpassword="e10adc3949ba59abbe56e057f20f883e";
     public String baoshijie="baoshijie";
     public String code="1234567";
+    public String lxqgw="lxqgw";
+    public String adminnamexiaoshou = "销售总监";    //pc登录密码，最好销售总监或总经理权限
+    public String adminpasswordxiaoshou = "e10adc3949ba59abbe56e057f20f883e";
 
     public Integer car_type = 1;
     public String car_type_name = "Panamera";
@@ -279,6 +287,88 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :pc新建活动，报名客户和任务客户活动列表+1,删除活动-1  TODO:
+     * @date :2020/8/2 13:08
+     **/
+     @Test
+     public void appointTaskList(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             JSONArray list=crm.activityShowList().getJSONArray("list");
+             int total;
+             if(list==null||list.size()==0){
+                 total=0;
+             }else{
+                 total=list.size();
+             }
+             //创建活动
+             Long [] aid=createAArcile_id(dt.getHistoryDate(0),"10");
+             Long activity_id=aid[1];
+             Long id=aid[0];
+             if(activity_id==null){
+                 throw new Exception("创建活动失败");
+             }
+
+             JSONArray listA=crm.activityShowList().getJSONArray("list");
+             int totalA=listA.size();
+
+             //删除活动
+             crm.articleStatusChange(id);
+             crm.articleDelete(id);
+             JSONArray listB=crm.activityShowList().getJSONArray("list");
+             int totalB=listB.size();
+             Preconditions.checkArgument(totalA-total==1,"创建活动，报名管理-活动列表没+1");
+             Preconditions.checkArgument(totalB==total,"删除活动，报名管理-活动列表没-1");
+
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("pc新建活动，报名客户和任务客户活动列表+1，删除-1");
+         }
+     }
+
+     /**
+      * @description :活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）
+      * @date :2020/8/2 13:31
+      **/
+     @Test
+     public void activityDetailAndList(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             JSONArray list=crm.activityShowList().getJSONArray("list");
+             if(list==null||list.size()==0){
+                 return;
+             }
+             for(int i=0;i<list.size();i++){
+                 Long avtivity_id=list.getJSONObject(i).getLong("id");
+                 String avtivity_name=list.getJSONObject(i).getString("name");
+                 //活动详情，已报名人数  TODO:无法由活动id获取文章id,故无法获取pc文章详情中已报名人数
+
+                 JSONObject dataActivity=crm.activityList(1,10,avtivity_id);
+                 long listActivityTotal=dataActivity.getLong("total");
+                 JSONArray listActivity=dataActivity.getJSONArray("list");
+                 for(int j=0;j<listActivity.size();j++){
+                     String service_status=listActivity.getJSONObject(j).getString("service_status"); //客户状态，已取消、报名成功/失败
+                     String audit_status=listActivity.getJSONObject(j).getString("audit_status");  //审核状态，2拒绝
+                     if(service_status.equals("已取消")||(service_status.equals("报名失败")&&audit_status.equals("2")))
+                         listActivityTotal=listActivityTotal-1;
+                 }
+                 logger.info("[{}]报名客户列表中，已报名客户数量：{}",avtivity_name,listActivityTotal);
+
+             }
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）");
+         }
+     }
+
+
+    /**
      * @description :pc内容运营，状态，删除文章；展示中的活动不应该能被删除，下架的活动能被删除且活动列表-1    新建了活动 ok
      * @date :2020/7/15 16:18
      **/
@@ -381,6 +471,40 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("banner 新建文章，管理文章列表+1,删除文章，列表-1");
         }
     }
+
+    /**
+     * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期） TODO:
+     * @date :2020/8/2 15:49
+     **/
+    @Test
+    public void bannerAndArticle(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.articlePage(1,100).getJSONArray("list");
+            if(list==null||list.size()==0){
+                return;
+            }
+            int total=list.size();
+
+            for(int i=0;i<list.size();i++){
+                String status_name=list.getJSONObject(i).getString("status_name");
+                if((status_name.equals("已下架"))||(status_name.equals("已过期"))){
+                    total = total - 1;
+                }
+            }
+            //banner 下拉列表数
+            int totalB=crm.articleShowList().getJSONArray("list").size();
+            Preconditions.checkArgument(totalB==total,"下拉菜单中数!=内容运营文章数（除已下架、已过期）");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("下拉菜单中数==内容运营文章数（除已下架、已过期）");
+        }
+    }
+
 
 
 
@@ -593,7 +717,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                   return;
               }else {
                   JSONArray listA = crm.carList().getJSONArray("list");
-                  for (int j = 5; j < limit; j++) {
+                  for (int j = total; j < limit+total; j++) {
                       String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
                       crm.carDelete(Integer.parseInt(car_id));
                   }
@@ -787,8 +911,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //             Preconditions.checkArgument(customer_name1.equals(customer_nameA),"黑名单中，顾客姓名错误");
              Preconditions.checkArgument(customer_phone_number1.equals(customer_phone_numberA),"黑名单中，客户电话错误");
 //             Preconditions.checkArgument(customer_type.equals(customer_typeA),"黑名单中，客户类型错误");
-//             Preconditions.checkArgument(appointment_activity_total.equals(order_number),"黑名单中，报名次数错误");
-//             Preconditions.checkArgument(time.equals(timeA),"黑名单中，划入时间错误");
+             Preconditions.checkArgument(appointment_activity_total.equals(order_number),"黑名单中，报名次数错误");
+             Preconditions.checkArgument(time.equals(timeA),"黑名单中，划入时间错误");
              crm.articleStatusChange(id);
              crm.articleDelete(id);
 
@@ -848,7 +972,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
           }catch (Exception e){
               appendFailreason(e.toString());
           }finally {
-              saveData("人员管理增删销售排班，列表+-1");
+              saveData("【人员管理】增删销售排班，列表+-1");
           }
       }
 
@@ -909,6 +1033,162 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
           }
       }
 
+      /**
+       * @description :【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}
+       * @date :2020/7/31 16:41
+       **/
+      @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+      public void roleListCrm(Integer role_ids){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+              int total;
+              if(list==null||list.size()==0){
+                  total=0;
+              }else {total=list.size();}
+              JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+              int totalNoSelect;
+              if(listN==null){
+                  totalNoSelect=0;
+              }else{
+                  totalNoSelect=listN.size();
+              }
+              //crm中校色数统计
+              int crmRoleTotal=0;
+              //100以内
+              crm.login("baoshijie",adminpassword);
+              JSONObject data=crm.userPage(1,100);
+              int crmTotal=data.getInteger("total");
+              JSONArray listC=data.getJSONArray("list");
+              for(int i=0;i<listC.size();i++){
+                  int role_idC=listC.getJSONObject(i).getInteger("role_id");
+                  String user_id=listC.getJSONObject(i).getString("user_id");
+                  logger.info("------user_id:{}------",user_id);
+                  if(role_idC==role_ids){
+                      crmRoleTotal=crmRoleTotal+1;
+                  }
+              }
+              //若超过100
+              if(crmTotal>100){
+                  JSONObject data2=crm.userPage(2,100);
+                  JSONArray listC2=data2.getJSONArray("list");
+                  for(int i=0;i<listC2.size();i++){
+                      int role_idC2=listC2.getJSONObject(i).getInteger("role_id");
+                      if(role_idC2==role_ids){
+                          crmRoleTotal=crmRoleTotal+1;
+                      }
+                  }
+              }
+              crm.login(adminname,adminpassword);
+              logger.info("crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
+              Preconditions.checkArgument(crmRoleTotal==total+totalNoSelect,"crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
+
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}");
+          }
+      }
+
+
+      /**
+       * @description :app活动报名，报名信息上限50
+       * @date :2020/7/30 19:45
+       **/
+      @Test
+      public void appactivity(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              //创建活动，获取活动id
+              Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+              Long activity_id=aid[1];
+              Long id=aid[0];
+              crm.login("lxqgw",adminpassword);
+              JSONObject response = crm.activityTaskPage();
+              JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+              int activityTaskId = json.getInteger("activity_task_id");
+              int before_total=0;
+              String userLoginName = ""+ System.currentTimeMillis();
+
+              while (before_total<50){
+                  String newloginname = userLoginName+before_total;
+                  String phone = "1";
+                  for (int i = 0; i < 10;i++){
+                      String a = Integer.toString((int)(Math.random()*10));
+                      phone = phone + a;
+                  }
+                  crm.registeredCustomer((long) activityTaskId, "夏", phone);
+                  before_total = before_total +1;
+              }
+              //添加第51个
+              Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", "15037286612");
+              Preconditions.checkArgument(code==1001,"app添加报名人信息上限50条");
+              crm.login(adminname,adminpassword);
+              crm.articleStatusChange(id);
+              crm.articleDelete(id);
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("app活动报名，报名信息上限50");
+          }
+      }
+
+    /**
+     * @description :app活动报名，pc任务客户+1&信息校验
+     * @date :2020/7/30 19:45
+     **/
+    @Test
+    public void taskactivity(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动，获取活动id
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            JSONObject data=crm.customerTaskPage(1,10,activity_id);
+            int total=data.getInteger("total");
+            crm.login(lxqgw,adminpassword);
+            JSONObject response = crm.activityTaskPage();
+            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            int activityTaskId = json.getInteger("activity_task_id");
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            crm.registeredCustomer((long) activityTaskId, "夏", phone);
+            crm.login(adminname,adminpassword);
+            JSONObject dataA=crm.customerTaskPage(1,10,activity_id);
+            int totalA=dataA.getInteger("total");
+            JSONObject list=dataA.getJSONArray("list").getJSONObject(0);
+            String customer_type=list.getString("customer_type");
+            String customer_name=list.getString("customer_name");
+            String customer_phone_number=list.getString("customer_phone_number");
+            String sale_name=list.getString("sale_name");
+            //获取报名字段，校验
+            Preconditions.checkArgument(totalA-total==1,"app报名活动，该任务任务客户+1");
+            Preconditions.checkArgument(customer_name.equals("夏"),"任务客户报名人名错误");
+            Preconditions.checkArgument(customer_type.equals("售前/售后"),"活动类型错误错误");
+            Preconditions.checkArgument(customer_phone_number.equals(phone),"任务客户报名人电话错误");
+            Preconditions.checkArgument(sale_name.equals(lxqgw),"任务客户报名销售名错误");
+
+
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("app活动报名，pc任务客户+1&信息校验");
+        }
+    }
+
      // @Test
       public void deleteuser(){
           try {
@@ -927,6 +1207,223 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               saveData("清多余用户数据");
           }
       }
+
+      /**
+       * @description :预约记录查询验证预约记录查询验证，今日数=列表去重数,数字统计按创建日期，页面无创建日期，故此case不通 TODO:可用于app试驾、交车
+       * @date :2020/7/31 13:55
+       **/
+      //@Test
+      public void appointmentRecoed(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              JSONObject data=crm.appointmentpage(dt.getHistoryDate(0),dt.getHistoryDate(0),1,100);
+              int today_number=data.getInteger("today_number");
+              JSONArray list=data.getJSONArray("list");
+              List<String> numList = new ArrayList<String>();
+              if(list==null||list.size()==0){
+                  logger.info("今日无预约记录");
+                  return;
+              }
+              for(int i=0;i<list.size();i++){
+                   String phone=list.getJSONObject(i).getString("customer_phone_number");
+                   String service_status_name=list.getJSONObject(i).getString("service_status_name");
+                   if(!service_status_name.equals("已取消")){
+                       numList.add(phone);
+                   }
+              }
+              Set<String> numSet = new HashSet<String>();
+              numSet.addAll(numList);
+              int similar=numSet.size();
+              Preconditions.checkArgument(similar==today_number,"今日预约数！=今日列表电话号码去重数");
+
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("预约记录查询验证预约记录查询验证，今日数=列表去重数");
+          }
+      }
+
+      /**
+       * @description :预约试驾记录查询，按日期查询及结果验证
+       * @date :2020/7/31 14:37
+       **/
+      @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+      public void driverRecoedSelect(String select_date){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              JSONObject data=crm.appointmentpage(select_date,select_date,1,50);
+              JSONArray list=data.getJSONArray("list");
+              if(list==null||list.size()==0){
+                  logger.info("当日无预约记录");
+              }
+              for(int i=0;i<list.size();i++){
+                  String order_date=list.getJSONObject(i).getString("order_date");
+                  Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
+              }
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("预约试驾记录查询");
+          }
+      }
+
+    /**
+     * @description :预约保养记录查询，按日期查询及结果验证
+     * @date :2020/7/31 14:37
+     **/
+    @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+    public void maintainRecoedSelect(String select_date){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.mainAppointmentpage(select_date,select_date,1,50);
+            JSONArray list=data.getJSONArray("list");
+            if(list==null||list.size()==0){
+                logger.info("当日无预约记录");
+            }
+            for(int i=0;i<list.size();i++){
+                String order_date=list.getJSONObject(i).getString("order_date");
+                Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约保养记录查询");
+        }
+    }
+
+    /**
+     * @description :预约维修记录查询，按日期查询及结果验证
+     * @date :2020/7/31 14:37
+     **/
+    @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+    public void repairRecoedSelect(String select_date){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.repairAppointmentpage(select_date,select_date,1,50);
+            JSONArray list=data.getJSONArray("list");
+            if(list==null||list.size()==0){
+                logger.info("当日无预约记录");
+            }
+            for(int i=0;i<list.size();i++){
+                String order_date=list.getJSONObject(i).getString("order_date");
+                Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约维修记录查询");
+        }
+    }
+
+    /**
+     * @description :黑名单记录查询，按日期查询及结果验证   ok
+     * @date :2020/7/31 14:37
+     **/
+    @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+    public void blackList(String select_date){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.blacklist(select_date,select_date,1,50);
+            JSONArray list=data.getJSONArray("list");
+            if(list==null||list.size()==0){
+                logger.info("当日无拉黑名单");
+            }
+            for(int i=0;i<list.size();i++){
+                String order_date=list.getJSONObject(i).getString("order_date");
+                Preconditions.checkArgument(order_date.equals(select_date),"黑名单按日期查询，查询到记录日期{}",order_date);
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("黑名单记录查询");
+        }
+    }
+
+    /**
+     * @description :今日试驾共计<本月共计
+     * @date :2020/7/31 16:02
+     **/
+     @Test
+     public void todayLower(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             JSONObject data=crm.appointmentpage(1,100);
+             int total_number=data.getInteger("total_number");
+             int month_number=data.getInteger("month_number");
+             int today_number=data.getInteger("today_number");
+             int total=data.getInteger("total");
+             Preconditions.checkArgument(today_number<=month_number,"今日试驾总数>本月共计");
+             Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
+             Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("今日试驾共计<本月共计<累计<列表总数");
+         }
+     }
+    /**
+     * @description :今日保养共计<本月共计
+     * @date :2020/7/31 16:02
+     **/
+    @Test
+    public void repairtodayLower(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.mainAppointmentpage(1,100);
+            int total_number=data.getInteger("total_number");
+            int month_number=data.getInteger("month_number");
+            int today_number=data.getInteger("today_number");
+            int total=data.getInteger("total");
+            Preconditions.checkArgument(today_number<=month_number,"今日保养总数>本月共计");
+            Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
+            Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("今日保养共计<本月共计<累计<列表总数");
+        }
+    }
+
+    /**
+     * @description :今日维修共计<本月共计
+     * @date :2020/7/31 16:02
+     **/
+    @Test
+    public void mainTaintodayLower(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.repairAppointmentpage(1,100);
+            int total_number=data.getInteger("total_number");
+            int month_number=data.getInteger("month_number");
+            int today_number=data.getInteger("today_number");
+            int total=data.getInteger("total");
+            Preconditions.checkArgument(today_number<=month_number,"今日维修总数>本月共计");
+            Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
+            Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("今日维修共计<本月共计<累计<列表总数");
+        }
+    }
+
+
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

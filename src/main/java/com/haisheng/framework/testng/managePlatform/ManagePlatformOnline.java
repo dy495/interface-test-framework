@@ -378,6 +378,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -440,6 +441,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -510,6 +512,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -574,6 +578,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -642,6 +648,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -721,6 +729,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -792,6 +802,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -876,6 +888,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -954,6 +967,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1051,6 +1066,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1694,6 +1711,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1757,6 +1775,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1815,6 +1834,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1897,6 +1917,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -1968,6 +1989,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2044,6 +2066,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2123,6 +2146,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2204,6 +2228,7 @@ public class ManagePlatformOnline {
                 .getEnclosingMethod()
                 .getName();
 
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2777,6 +2802,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2837,6 +2864,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2899,6 +2928,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -2969,6 +3000,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3034,6 +3067,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3104,6 +3139,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3163,6 +3200,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3237,6 +3276,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3586,6 +3627,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3646,6 +3689,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3711,6 +3756,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3778,6 +3825,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3860,6 +3909,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3906,6 +3957,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -3952,6 +4005,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4500,6 +4555,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4560,6 +4617,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4636,6 +4695,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4700,6 +4761,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -4771,6 +4834,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5161,6 +5226,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5218,6 +5285,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5281,6 +5350,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5339,6 +5410,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5547,6 +5620,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5606,6 +5681,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5677,6 +5754,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;
@@ -5741,6 +5820,8 @@ public class ManagePlatformOnline {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
         failReason = "";
         Case aCase = new Case();
         int step = 0;

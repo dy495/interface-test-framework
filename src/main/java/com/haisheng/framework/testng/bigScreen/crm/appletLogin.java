@@ -85,7 +85,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
     public void applet4hour() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLogin("qa_need_dont delete");
+            crm.appletLogin("qa_need_not_delete");
             String customer_name = "lxq自动化";
             String customer_namea = "@@@";
             String customer_phone_number = "13400000000";

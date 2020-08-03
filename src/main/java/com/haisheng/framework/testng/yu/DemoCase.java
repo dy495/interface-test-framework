@@ -93,7 +93,7 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void test2() {
+    public void test23() {
 
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -107,7 +107,11 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
             saveData("demo测试2");
         }
 
+    }
 
+    @Test
+    public void testConflict() {
+        logger.info("dummy case");
     }
 
 
