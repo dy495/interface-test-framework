@@ -53,6 +53,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public Long activity_id = 34L;
     //活动报名客户id 记录 for blackAddConsistency
     public String customer_idF = "";
+    public String filePath="src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
 
 
     //读取文件内容
@@ -93,7 +94,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {car_type};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-            String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_bg_pic = texFile(filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
 
@@ -139,7 +140,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-            String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_bg_pic = texFile(filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
 
@@ -1366,7 +1367,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :人员管理，app完成接待接待次数+1  TODO:
      * @date :2020/8/2 10:43
      **/
-     @Test
+//     @Test
      public void finnalRecept(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -1440,35 +1441,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             saveData("小程序取消预约，pc预约记录，接待状态预约中变更已取消");
         }
     }
-
-    /**
-     * @description :小程序车主风采<pc今日交车数 TODO:
-     * @date :2020/8/2 15:41
-     **/
-    @Test
-    public void carOwer(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            crm.appletLogin(code);
-            JSONArray list=crm.carOwner().getJSONArray("list");
-            int total;
-            if(list==null||list.size()==0){
-                total=0;
-            }else{
-                total=list.size();
-            }
-            //pc今日交车数  TODO:
-
-
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("小程序车主风采<pc今日交车数 ");
-        }
-    }
-
 
 
 

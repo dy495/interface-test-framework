@@ -33,13 +33,14 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public String adminpassword="e10adc3949ba59abbe56e057f20f883e";
     public String baoshijie="baoshijie";
     public String code="1234567";
-    public String lxqgw="lxqgw";
+    public String lxqgw="lxqgw";     //销售顾问
     public String adminnamexiaoshou = "销售总监";    //pc登录密码，最好销售总监或总经理权限
     public String adminpasswordxiaoshou = "e10adc3949ba59abbe56e057f20f883e";
 
     public Integer car_type = 1;
     public String car_type_name = "Panamera";
     public Long activity_id =43L;
+    public String filePath="src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
 
     //读取文件内容
     public String texFile(String fileName) throws IOException {
@@ -76,7 +77,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {car_type};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-            String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_bg_pic = texFile(filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
 
@@ -120,7 +121,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {car_type};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-            String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_bg_pic = texFile(filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
 
@@ -162,7 +163,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         String valid_end = dt.getHistoryDate(4);
         int[] car_types = {};
         //String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-        String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String article_bg_pic = texFile(filePath);  //base 64
         String article_content = "品牌上新，优惠多多，限时4天,文章内容";
         String article_remarks = "品牌上新，优惠多多，限时4天,备注";
         //新建文章，获取id
@@ -177,11 +178,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         double highest_price=888.99;
         String car_discount="跑车多数人知道，少数人了解";
         String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
-        String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String big_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String interior_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String space_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String appearance_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String car_pic=texFile(filePath);  //base 64
+        String big_pic=texFile(filePath);  //base 64
+        String interior_pic=texFile(filePath);  //base 64
+        String space_pic=texFile(filePath);  //base 64
+        String appearance_pic=texFile(filePath);  //base 64
         crm.addCarPc(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
     }
 
@@ -192,11 +193,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         double highest_price=8888.99;
         String car_discount="跑车多数人知道，少数人了解";
         String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
-        String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String big_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String interior_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String space_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-        String appearance_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String car_pic=texFile(filePath);  //base 64
+        String big_pic=texFile(filePath);  //base 64
+        String interior_pic=texFile(filePath);  //base 64
+        String space_pic=texFile(filePath);  //base 64
+        String appearance_pic=texFile(filePath);  //base 64
         Long code=crm.addCarPccode(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
         return code;
     }
@@ -219,7 +220,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String valid_end=dt.getHistoryDate(4);
             int []car_types={car_type};
             String article_title="购买指南，品牌上新，优惠多多，限时4天---"+dt.getHistoryDate(0);
-            String article_bg_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_bg_pic=texFile(filePath);  //base 64
             String article_content="购买指南，品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks="购买指南，品牌上新，优惠多多，限时4天,备注";
 
@@ -1105,7 +1106,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
               Long activity_id=aid[1];
               Long id=aid[0];
-              crm.login("lxqgw",adminpassword);
+              crm.login(lxqgw,adminpassword);
               JSONObject response = crm.activityTaskPage();
               JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
               int activityTaskId = json.getInteger("activity_task_id");
@@ -1136,9 +1137,47 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               saveData("app活动报名，报名信息上限50");
           }
       }
+      /**
+       * @description :app活动报名，添加报过名的电话，失败 TODO:
+       * @date :2020/8/3 16:21
+       **/
+      @Test
+      public void appactivitySamePhone(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              //创建活动，获取活动id
+              Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+              Long activity_id=aid[1];
+              Long id=aid[0];
+              crm.login(lxqgw,adminpassword);
+              JSONObject response = crm.activityTaskPage();
+              JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+              int activityTaskId = json.getInteger("activity_task_id");
+              String phone = "1";
+              for (int i = 0; i < 10;i++){
+                  String a = Integer.toString((int)(Math.random()*10));
+                  phone = phone + a;
+              }
+              crm.registeredCustomer((long) activityTaskId, "夏", phone);
+              //添加第51个
+              Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", phone);
+              Preconditions.checkArgument(code==1001,"app添加报过名的电话，应该失败");
+              crm.login(adminname,adminpassword);
+              crm.articleStatusChange(id);
+              crm.articleDelete(id);
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("活动报名，添加报过名的电话，失败");
+          }
+      }
+
+
 
     /**
-     * @description :app活动报名，pc任务客户+1&信息校验
+     * @description :app活动报名，pc任务客户+1&信息校验 TODO:
      * @date :2020/7/30 19:45
      **/
     @Test
@@ -1188,6 +1227,85 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("app活动报名，pc任务客户+1&信息校验");
         }
     }
+
+    /**
+     * @description :app活动报名，删除报名客户，pc任务客户-1 TODO:
+     * @date :2020/8/3 18:38
+     **/
+    @Test
+    public void taskactivityDelet(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动，获取活动id
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            crm.login(lxqgw,adminpassword);
+            JSONObject response = crm.activityTaskPage();
+            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            int activityTaskId = json.getInteger("activity_task_id");
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            crm.registeredCustomer((long) activityTaskId, "夏", phone);
+            //报名后，任务人数
+            crm.login(adminname,adminpassword);
+            JSONObject data=crm.customerTaskPage(1,10,activity_id);
+            int total=data.getInteger("total");
+            Long customer_id= data.getJSONArray("list").getJSONObject(0).getLong("id");
+            //删除报名客户
+            crm.login(adminname,adminpassword);
+            crm.deleteCustomer(Integer.toString(activityTaskId),Long.toString(customer_id) );
+            //删除后，任务人数
+            crm.login(adminname,adminpassword);
+            JSONObject dataA=crm.customerTaskPage(1,10,activity_id);
+            int totalA=dataA.getInteger("total");
+
+            Preconditions.checkArgument(total-totalA==1,"app报名活动，删除报名客户，pc任务客户没-1");
+
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("app活动报名，删除报名客户，pc任务客户-1");
+        }
+    }
+
+    /**
+     * @description :小程序车主风采<=pc今日交车数 TODO:
+     * @date :2020/8/2 15:41
+     **/
+    @Test
+    public void carOwer(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.appletLogin("123456");
+            JSONArray list=crm.carOwner().getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            //pc今日交车数
+            crm.login(adminname,adminpassword);
+            long totalDeliverCar=crm.deliverCarList(1,10).getLong("total");
+            Preconditions.checkArgument(total<=totalDeliverCar,"小程序车主风采>pc今日交车数");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("小程序车主风采<=pc今日交车数 ");
+        }
+    }
+
 
      // @Test
       public void deleteuser(){

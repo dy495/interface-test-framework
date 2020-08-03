@@ -2496,6 +2496,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    public JSONObject deliverTotal() {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        String json="{}";
+
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject driverTotal() {
+        String url = "/porsche/daily-work/test-drive/app/test-driver-total";
+        String json="{}";
+
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
     public JSONObject driverSelect(int size, int page) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
@@ -2575,6 +2590,27 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    public JSONObject createLine(String customer_name, int like_car, String customer_phone,Integer customer_level) throws Exception {
+        String url = "/porsche/app/customer/create";
+        JSONObject json = new JSONObject();
+        json.put("customer_name", customer_name);
+        json.put("like_car", like_car);
+        json.put("customer_phone", customer_phone);
+        json.put("customer_level", customer_level);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    public JSONObject deliverCarList( int page,int size) throws Exception {
+        String url = "/porsche/daily-work/deliver-car/list";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
 
 
     @DataProvider(name = "APPOINTMENT_TYPE")
