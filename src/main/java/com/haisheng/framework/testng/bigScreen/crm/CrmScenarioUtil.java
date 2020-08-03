@@ -1075,15 +1075,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //--------------------APP----------------
 
-    //新建试驾
-    public JSONObject driveradd(String customerName, String idCard, String gender, String phone,
+    //新建试驾 2.1修改
+    public JSONObject driveradd(Long customer_id, String customerName, String idCard, String gender, String phone,
                                 String signTime, String activity, String model, String country,
                                 String city, String email, String address, String ward_name, String driverLicensePhoto1Url,
-                                String driverLicensePhoto2Url, String electronicContractUrl) throws Exception {
+                                String driverLicensePhoto2Url, String electronicContractUrl,String sign_date,String sign_time,String call){
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         String json =
                 "{\n" +
+                        "    \"customer_id\":" + customer_id + ",\n" +
                         "    \"customer_name\":\"" + customerName + "\",\n" +
                         "    \"customer_id_number\":\"" + idCard + "\",\n" +
                         "    \"customer_gender\":\"" + gender + "\",\n" +
@@ -1098,7 +1099,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "    \"ward_name\":\"" + ward_name + "\",\n" +
                         "    \"driver_license_photo_1_url\":\"" + driverLicensePhoto1Url + "\",\n" +
                         "    \"driver_license_photo_2_url\":\"" + driverLicensePhoto2Url + "\",\n" +
-                        "    \"electronic_contract_url\":\"" + electronicContractUrl + "\"" +
+                        "    \"electronic_contract_url\":\"" + electronicContractUrl + "\",\n" +
+                        "    \"sign_date\":\"" + sign_date + "\",\n" +
+                        "    \"sign_time\":\"" + sign_time + "\",\n" +
+                        "    \"call\":\"" + call + "\"" +
                         "}";
 
 
@@ -1112,6 +1116,22 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/daily-work/test-drive/delete";
 
         String json = "{\"id\": " + id + "}";
+
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //试驾审核
+    public JSONObject driverAudit(long id,int audit_status) throws Exception { //1-通过，2-拒绝
+        String url = "/porsche/daily-work/test-drive/delete";
+
+        String json =
+                "{\n" +
+                        "  \"id\":\"" + id + "\",\n" +
+                        "  \"audit_status\":" + audit_status +
+                        "}";
 
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1199,16 +1219,40 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    //新建交车
-    public JSONObject deliverAdd(String customer_name, String customer_gender, String customer_phone_number, String deliver_car_time, String model, String path) throws Exception {
-        String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
+    //2.1新增 订车
+    public JSONObject orderCar(Long customer_id) throws Exception {
+        String url = "/porsche/daily-work/order-car/app/order-car";
 
         String json =
                 "{" +
-                        "    \"customer_name\":\"" + customer_name + "\",\n" +
-                        "    \"customer_gender\":\"" + customer_gender + "\",\n" +
-                        "    \"img_file\":\"" + path + "\",\n" +
-                        "    \"model\":\"" + model + "\"\n}";
+                        "    \"customer_id\":\"" + customer_id + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //新建交车 2.1修改
+    public JSONObject deliverAdd(Long customer_id, String customer_name,String deliver_car_time, String model, String img_file,
+                                 Boolean accept_show,String sign_name_url){
+        String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
+        JSONObject json1 = new JSONObject();
+        json1.put("customer_id", customer_id);
+        json1.put("customer_name", customer_name);
+        json1.put("customer_gender", "女");
+        json1.put("deliver_car_time", deliver_car_time);
+        json1.put("model", model);
+        json1.put("img_file", img_file);
+        json1.put("accept_show", accept_show);
+        json1.put("works", "[\"自由\"，\"金融\"]");
+        json1.put("likes", "[\"摄影\"，\"宠物\"]");
+        json1.put("greeting", "自动化-恭喜QA同学喜提车车一辆");
+        json1.put("call", "自动化");
+        json1.put("id_card", "222402199708150628");
+        json1.put("sign_name_url", sign_name_url);
+
+        String json = json1.toJSONString();
 
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
