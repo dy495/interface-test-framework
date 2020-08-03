@@ -418,7 +418,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopPageMemberV3(String district_code,String shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order	,Integer page,Integer size) throws Exception {
+    public JSONObject shopPageMemberV3(String district_code,String shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order,Integer page,Integer size) throws Exception {
         String url = "/patrol/shop/page/member";
         String json =
                 "{" +

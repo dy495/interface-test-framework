@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
-    String cycle_type = "RECENT_SEVEN";
+    String cycle_type = "RECENT_THIRTY";
     String month = "";
     long shop_id = 4116;
     String district_code = "110105";
@@ -676,6 +676,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int c_count = 0;
             int o_count = 0;
             int p_count = 0;
+
+            int cust_uv = 0;
+            int channel_uv = 0;
+            int pay_uv = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
            JSONArray trend_list = Md.historyShopMemberCountV3(shop_id,cycle_type,month).getJSONArray("trend_list");
            for(int i=0;i<trend_list.size();i++){
                Integer customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv");
@@ -688,13 +693,32 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                }
                String shop_name="";
                String shop_manager="";
-               String member_type="";
+               String member_type="OMNI_CHANNEL";
                Integer member_type_order=0;
-               Md.shopPageMemberV3(district_code,district_code,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("trend_list");
+               JSONArray member_list = Md.shopPageMemberV3(district_code,district_code,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
+
+               for(int j=0;i<member_list.size();j++){
+                   JSONArray memb_info = member_list.getJSONObject(i).getJSONArray("member_info");
+                   for(int k=0;k<memb_info.size();k++){
+                       String type = memb_info.getJSONObject(k).getString("type");
+                       int uv = memb_info.getJSONObject(k).getInteger("uv");
+                       if(type =="顾客"){
+                           cust_uv += uv;
+                       }
+                       if(type =="全渠道会员"){
+                           channel_uv += uv;
+                       }
+                       if(type =="付费会员"){
+                           pay_uv += uv;
+                       }
+                   }
+
+               }
 
            }
-
-//            Preconditions.checkArgument((check = true),"门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）不等于实时客流中的门店基本信息");
+            Preconditions.checkArgument((c_count <= cust_uv),"所选周期30天的顾客总人数" + c_count + ">所有门店30天顾客之和=" + cust_uv);
+            Preconditions.checkArgument((o_count <= channel_uv),"所选周期30天的全渠道会员总人数" + o_count + ">所有门店30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((p_count <= pay_uv),"所选周期30天的付费总人数" + p_count + ">所有门店30天付费会员之和=" + pay_uv);
 
 
         } catch (AssertionError e) {
@@ -703,7 +727,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("日均客流==所选时间段内的日均客流pv");
+            saveData("所选周期30天的顾客总人数<=所有门店30天顾客之和|所选周期30天的全渠道会员总人数<=所有门店30天全渠道会员之和|所选周期30天的付费会员总人数<=所有门店30天付费会员之和");
         }
 
     }
