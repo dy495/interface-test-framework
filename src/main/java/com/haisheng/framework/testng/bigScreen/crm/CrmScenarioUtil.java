@@ -1491,6 +1491,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //评价
+    public JSONObject appointmentEvaluate(Long appointment_id, String star_rating, String service_description) throws Exception {
+        String url = "/WeChat-applet/porsche/appointment/evaluate";
+        JSONObject json = new JSONObject();
+        json.put("appointment_id", appointment_id);
+        json.put("star_rating", star_rating);
+        json.put("service_description", service_description);
+
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
 
     //预约详情
@@ -1605,6 +1617,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //看车详情
+    public JSONObject carOwnernew() throws Exception {
+        String url = "/WeChat-applet/porsche/car-owner-splendour/newest";
+        String json ="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //看车详情
+    public JSONObject carOwner() throws Exception {
+        String url = "/WeChat-applet/porsche/car-owner-splendour/today-list";
+        String json ="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     public JSONObject addCheckListEmpty(String customer_name, String customer_phone, String appointment_date, Integer car_type, String emptyPara, String message) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/test-drive";
@@ -1973,7 +1999,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //pc文章列表-for banner
     public JSONObject articleShowList() throws Exception {
         String url = "/porsche/article/show-list";
-        JSONObject json1 = new JSONObject();
+        String json = "{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc活动列表
+    public JSONObject activityShowList() throws Exception {
+        String url = "/porsche/activity/list";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
