@@ -2349,6 +2349,125 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res);
     }
+    //--------------------------app2.1------------------------
+    public JSONObject deliverSelect(int size, int page) {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject deliverSelect(int size, int page, String search_condition) {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject deliverSelect(int size, int page, String start_date,String end_date) {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject deliverSelect(int size, int page, String search_condition,String start_date,String end_date) {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject driverSelect(int size, int page) {
+        String url = "/porsche/daily-work/deliver-car/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject driverSelect(int size, int page, String search_condition) {
+        String url = "/porsche/daily-work/test-drive/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject driverSelect(int size, int page, String start_date,String end_date) {
+        String url = "/porsche/daily-work/test-drive/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject driverSelect(int size, int page, String search_condition,String start_date,String end_date) {
+        String url = "/porsche/daily-work/test-drive/app/list";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //我的客户
+    public JSONObject customerSelect(int size, int page) {
+        String url = "/porsche/app/customer/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject customerSelect(int size, int page, String search_condition) {
+        String url = "/porsche/app/customer/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject customerSelect(int size, int page, String start_time,String end_time) {
+        String url = "/porsche/app/customer/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_time", start_time);
+        json.put("end_time", end_time);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject customerSelect(int size, int page, String search_condition,String start_time,String end_time) {
+        String url = "/porsche/app/customer/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        json.put("start_time", start_time);
+        json.put("end_time", end_time);
+        json.put("search_condition", search_condition);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
 
     @DataProvider(name = "APPOINTMENT_TYPE")
     public static Object[] appointment_type() {
