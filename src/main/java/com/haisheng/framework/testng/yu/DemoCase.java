@@ -110,6 +110,10 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test
+    public void testConflict() {
+        logger.info("dummy case");
+    }
 
 
 }
