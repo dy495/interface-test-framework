@@ -32,8 +32,7 @@ public enum EnumChecklistAppId {
      */
     DB_APP_ID_SHELF_SERVICE(6);
 
-    EnumChecklistAppId(
-            int id) {
+    EnumChecklistAppId(int id) {
         this.id = id;
     }
 

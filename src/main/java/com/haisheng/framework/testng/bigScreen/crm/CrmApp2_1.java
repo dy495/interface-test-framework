@@ -1,9 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -37,7 +39,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        crm.login(EnumAccount.XSGW.getUsername(), EnumAccount.XSGW.getPassword());
+        crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
     }
 
     @AfterClass
@@ -54,10 +56,64 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test
-    public void test() {
-
-
+    @Test(description = "销售排班")
+    public void saleOrder() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取销售排班
+            JSONObject response = crm.saleOrderList();
+            String saleId = CommonUtil.getStrFieldByData(response, 0, "sale_id");
+            //销售排班
+            crm.saleOrder(saleId, 2);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售排班");
+        }
     }
 
+    @Test(description = "回访详情", enabled = false)
+    public void returnVisitTaskInfo() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取回访列表
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntFieldByData(response, 0, "task_id");
+            //获取回访详情
+            crm.returnVisitTaskInfo(taskId);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("获取回访详情");
+        }
+    }
+
+    @Test(description = "回访操作", enabled = false)
+    public void returnVisitTaskExecute() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取回访列表
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntFieldByData(response, 1, "task_id");
+            //回访
+            crm.returnVisitTaskExecute(taskId);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        }
+    }
+
+    @Test(enabled = false)
+    public void afterSaleCustomer() {
+        logger.info(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.publicFaceList();
+            String analysisCustomerId = CommonUtil.getStrFieldByData(response, 0, "analysis_customer_id");
+            System.err.println(analysisCustomerId);
+            crm.afterSalelCustomer(analysisCustomerId);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后客户标记");
+        }
+    }
 }

@@ -11,8 +11,15 @@ public class CommonUtil {
         return response.getJSONObject("data").getString(field);
     }
 
+    public static String getStrFieldByData(JSONObject response, int index, String field) {
+        return response.getJSONObject("data").getJSONArray("list").getJSONObject(index).getString(field);
+    }
+
     public static Integer getIntFieldByData(JSONObject response, String field) {
         return response.getJSONObject("data").getInteger(field);
     }
 
+    public static Integer getIntFieldByData(JSONObject response, int index, String field) {
+        return response.getJSONObject("data").getJSONArray("list").getJSONObject(index).getInteger(field);
+    }
 }

@@ -145,7 +145,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "创建接待")
+    @Test(description = "创建接待",enabled = false)
     public void createReception() {
         logger.logCaseStart(caseResult.getCaseName());
         //分配销售
