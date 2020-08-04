@@ -503,8 +503,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value3 = enter.get("pv1");//进店客群PV
             DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
-            String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
+            String rate ="";
+
+            if(value2/value1 == 1){
+                 rate = "100%";
+            }else {
+                 rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+            }
+            String rate1 ="";
+            if(value3/value2 == 1){
+                rate1 = "100%";
+            }else {
+                rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
+            }
             boolean reslut=false;
             if(value1 >= value2 && value2>= value3){
                 reslut = true;
