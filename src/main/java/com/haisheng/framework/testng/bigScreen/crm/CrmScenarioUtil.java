@@ -1535,6 +1535,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //评价
     public JSONObject appointmentEvaluate(Long appointment_id, String star_rating, String service_description) throws Exception {
         String url = "/WeChat-applet/porsche/appointment/evaluate";
@@ -1546,7 +1547,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     //预约详情
@@ -2497,19 +2497,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     public JSONObject deliverTotal() {
         String url = "/porsche/daily-work/deliver-car/app/list";
-        String json="{}";
-
+        String json = "{}";
         String result = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     public JSONObject driverTotal() {
         String url = "/porsche/daily-work/test-drive/app/test-driver-total";
-        String json="{}";
-
+        String json = "{}";
         String result = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     public JSONObject driverSelect(int size, int page) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
@@ -2594,7 +2593,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-    public JSONObject createLine(String customer_name, int like_car, String customer_phone,Integer customer_level) throws Exception {
+
+    public JSONObject createLine(String customer_name, int like_car, String customer_phone, Integer customer_level) throws Exception {
         String url = "/porsche/app/customer/create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
@@ -2605,7 +2605,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
-    public JSONObject deliverCarList( int page,int size) throws Exception {
+    public JSONObject deliverCarList(int page, int size) throws Exception {
         String url = "/porsche/daily-work/deliver-car/list";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -2613,8 +2613,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
-
 
     public JSONObject myReceptionList(String searchCondition, String searchDateStart, String searchDateEnd, Integer size, Integer page) {
         String url = "/porsche/app/customer/my-reception-list";
