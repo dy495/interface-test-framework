@@ -329,7 +329,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int idNum=0;
             double link_re2=0;
 //            double link_re_uv2=0;
-            JSONArray sameList = Md.realTimeTotal(shop_id).getJSONArray("list");
+            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
             for(int j=0;j<sameList.size();j++){
                String type = sameList.getJSONObject(j).getString("type");
                //获取pv的高于多少的值
@@ -384,7 +384,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             int value1 = 0;
-            JSONArray sameList = Md.realTimeTotal(shop_id).getJSONArray("list");
+            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
 
             for(int i=0;i<sameList.size();i++){
                 JSONObject jsonObject=sameList.getJSONObject(i);
@@ -395,6 +395,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             int count=0;
+            String district_code = "";
             Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量(需要对城市进行不传和传一个城市的id)
             JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
             for(int j=0;j<storeList.size();j++){
@@ -533,8 +534,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
             int values = 0;
             int values1= 0;//值不为Null的个数，求平均值时用
-            int averageFlow = Md.StoreHistoryTrend(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
-            JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int averageFlow = Md.historyShopTrendsV3(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
+            JSONArray  trendList =  Md.historyShopTrendsV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             for(int i=0;i<trendList.size();i++){
                 Integer value = trendList.getJSONObject(i).getInteger("value");
                 if(value != null && value != 0){
@@ -572,13 +573,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
              //过店客群的各个年龄段的男性比例累计和
             double count=0;
             double count1=0;
-            JSONObject deal = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject("deal");
-            JSONArray ageList = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject("deal").getJSONArray("list");
+            JSONObject enter = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject("enter");
+            JSONArray ageList = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject("enter").getJSONArray("list");
 
-            String male_ratio_str = deal.getString("male_ratio_str");
+            String male_ratio_str = enter.getString("male_ratio_str");
             Double result1 = Double.valueOf(male_ratio_str.replace("%", ""));
 
-            String female_ratio_str = deal.getString("female_ratio_str");
+            String female_ratio_str = enter.getString("female_ratio_str");
             Double result2 = Double.valueOf(female_ratio_str.replace("%", ""));
 
             for(int i=0;i<ageList.size();i++){
@@ -638,9 +639,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer size = 50;
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
-            JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
+            JSONArray storeList = Md.patrolShopPageV3(district_code,page,size).getJSONArray("list");
             long shop_id = 4116;
-            JSONObject res = Md.StoreShopDetail(shop_id);
+            JSONObject res = Md.shopDetailV3(shop_id);
 
             if( storeList.contains(res)){
                 check = true;
@@ -681,41 +682,50 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int channel_uv = 0;
             int pay_uv = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-           JSONArray trend_list = Md.historyShopMemberCountV3(shop_id,cycle_type,month).getJSONArray("trend_list");
-           for(int i=0;i<trend_list.size();i++){
+           JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type,month).getJSONArray("trend_list");
+           for(int i=0;i<trend_list.size();i++) {
                Integer customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv");
                Integer omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv");
                Integer paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv");
-               if(customer_uv !=null && omni_uv!=null && paid_uv !=null){
-                   c_count+=customer_uv;
-                   o_count+=omni_uv;
-                   p_count+=paid_uv;
+               if(customer_uv == null||omni_uv ==null ||paid_uv ==null){
+                   customer_uv = 0;
                }
-               String shop_name="";
-               String shop_manager="";
-               String member_type="OMNI_CHANNEL";
-               Integer member_type_order=0;
-               JSONArray member_list = Md.shopPageMemberV3(district_code,district_code,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
-
-               for(int j=0;i<member_list.size();j++){
-                   JSONArray memb_info = member_list.getJSONObject(i).getJSONArray("member_info");
-                   for(int k=0;k<memb_info.size();k++){
-                       String type = memb_info.getJSONObject(k).getString("type");
-                       int uv = memb_info.getJSONObject(k).getInteger("uv");
-                       if(type =="顾客"){
-                           cust_uv += uv;
-                       }
-                       if(type =="全渠道会员"){
-                           channel_uv += uv;
-                       }
-                       if(type =="付费会员"){
-                           pay_uv += uv;
-                       }
-                   }
-
+               else {
+                   c_count += customer_uv;
+                   o_count += omni_uv;
+                   p_count += paid_uv;
                }
+            }
 
-           }
+
+            String shop_type = "";
+            String shop_name="";
+            String shop_manager="";
+            String member_type="";
+            Integer member_type_order=null;
+            JSONArray member_list = Md.shopPageMemberV3(district_code,shop_type,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
+
+            for(int j=0;j<member_list.size();j++){
+                JSONArray memb_info = member_list.getJSONObject(j).getJSONArray("member_info");
+                for(int k=0;k<memb_info.size();k++){
+                    String type = memb_info.getJSONObject(k).getString("type");
+                    Integer uv = memb_info.getJSONObject(k).getInteger("uv");
+                    if(uv == null){
+                        uv = 0;
+                    }
+                    if(type =="顾客"){
+                        cust_uv += uv;
+                    }
+                    if(type =="全渠道会员"){
+                        channel_uv += uv;
+                    }
+                    if(type =="付费会员"  ){
+                        pay_uv += uv;
+                    }
+                }
+
+            }
+
             Preconditions.checkArgument((c_count <= cust_uv),"所选周期30天的顾客总人数" + c_count + ">所有门店30天顾客之和=" + cust_uv);
             Preconditions.checkArgument((o_count <= channel_uv),"所选周期30天的全渠道会员总人数" + o_count + ">所有门店30天全渠道会员之和=" + channel_uv);
             Preconditions.checkArgument((p_count <= pay_uv),"所选周期30天的付费总人数" + p_count + ">所有门店30天付费会员之和=" + pay_uv);
@@ -731,4 +741,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+
+
 }
