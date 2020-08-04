@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.abs;
+
 
 /**
  * @author : qingqing
@@ -608,8 +610,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             double theResult = maleResult + femaleResult;
 
             double resultAll = count + count1;
-            Preconditions.checkArgument(result1== count,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
-            Preconditions.checkArgument(result2== count1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
+
+            double theError1 = Math.abs(result1-count);
+            double theError2 = Math.abs(result2-count1);
+            Preconditions.checkArgument(theError1 <1,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
+            Preconditions.checkArgument(theError2 <1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
             Preconditions.checkArgument(resultAll==100||resultAll==0.0,"男性比例+女性比例" + resultAll + "!=100" );
             Preconditions.checkArgument(resultOther==theResult,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
 

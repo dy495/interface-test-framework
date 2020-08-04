@@ -89,9 +89,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================添加事件(结束时间为开始时间&结束时间大于开始时间)======================
+     * ====================添加事件======================
      * */
-    @Test(dataProvider = "END_TIME_TYPE", dataProviderClass = StoreScenarioUtil.class)
+    @Test()
     public void thingAddT1(String endTimeType) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
