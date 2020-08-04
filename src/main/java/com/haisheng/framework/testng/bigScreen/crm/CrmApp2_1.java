@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -39,7 +41,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
+        crm.login(EnumAccount.XSGW.getUsername(), EnumAccount.XSGW.getPassword());
     }
 
     @AfterClass
@@ -115,5 +117,32 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("售后客户标记");
         }
+    }
+
+    @Test(description = "接待状态为接待中数量<=1")
+    public void myReceptionList() {
+        logger.info(caseResult.getCaseName());
+        try {
+            //获取我的接待数量
+            JSONObject response = crm.myReceptionList("", "", "", 10, 1);
+            JSONArray list = response.getJSONObject("data").getJSONArray("list");
+            int a = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("service_status_name").equals("接待中")) {
+                    a++;
+                }
+            }
+            Preconditions.checkArgument(a <= 1, "接待状态为接待中数量>1");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("接待状态为接待中数量>1");
+        }
+    }
+
+
+    @Test
+    public void test() {
+
     }
 }
