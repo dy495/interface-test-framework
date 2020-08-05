@@ -2630,12 +2630,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param url         url
      * @param requestBody 请求体
-     * @return JSONObject
+     * @return JSONObject response.data
      */
     private JSONObject invokeApi(String url, JSONObject requestBody) {
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);
-        return JSON.parseObject(result);
+        return JSON.parseObject(result).getJSONObject("data");
     }
 
 

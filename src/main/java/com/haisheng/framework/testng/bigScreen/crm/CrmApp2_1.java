@@ -106,11 +106,10 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
 
     @Test(enabled = false)
     public void afterSaleCustomer() {
-        logger.info(caseResult.getCaseName());
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = crm.publicFaceList();
             String analysisCustomerId = CommonUtil.getStrFieldByData(response, 0, "analysis_customer_id");
-            System.err.println(analysisCustomerId);
             crm.afterSalelCustomer(analysisCustomerId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -121,7 +120,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "接待状态为接待中数量<=1")
     public void myReceptionList() {
-        logger.info(caseResult.getCaseName());
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取我的接待数量
             JSONObject response = crm.myReceptionList("", "", "", 10, 1);
@@ -140,9 +139,8 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    @Test
-    public void test() {
+    @Test(description = "今日新客接待", enabled = false)
+    public void newCustomerReception() {
 
     }
 }
