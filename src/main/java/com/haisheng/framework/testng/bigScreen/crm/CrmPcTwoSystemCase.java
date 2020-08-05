@@ -288,7 +288,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :pc新建活动，报名客户和任务客户活动列表+1,删除活动-1  TODO:
+     * @description :pc新建活动，报名客户和任务客户活动列表+1,删除活动-1
      * @date :2020/8/2 13:08
      **/
      @Test
@@ -351,9 +351,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                  long listActivityTotal=dataActivity.getLong("total");
                  JSONArray listActivity=dataActivity.getJSONArray("list");
                  for(int j=0;j<listActivity.size();j++){
-                     String service_status=listActivity.getJSONObject(j).getString("service_status"); //客户状态，已取消、报名成功/失败
-                     String audit_status=listActivity.getJSONObject(j).getString("audit_status");  //审核状态，2拒绝
-                     if(service_status.equals("已取消")||(service_status.equals("报名失败")&&audit_status.equals("2")))
+                     String service_status=listActivity.getJSONObject(j).getString("service_status_name"); //客户状态，已取消、报名成功/失败
+                     int audit_status=listActivity.getJSONObject(j).getInteger("audit_status");  //审核状态，2拒绝
+                     if(service_status.equals("已取消")||(service_status.equals("报名失败")&&audit_status==2))
                          listActivityTotal=listActivityTotal-1;
                  }
                  logger.info("[{}]报名客户列表中，已报名客户数量：{}",avtivity_name,listActivityTotal);
@@ -474,7 +474,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期） TODO:
+     * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期）
      * @date :2020/8/2 15:49
      **/
     @Test
@@ -563,14 +563,14 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @date :2020/7/14 20:16
       **/
      @Test(dataProvider = "POSITIONS",dataProviderClass = CrmScenarioUtil.class)
-     public void articleTitleCompare(String positionsA){
+     public void articleTitleCompare(String positions){
          logger.logCaseStart(caseResult.getCaseName());
          try{
              String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
              String article_content = "品牌上新，优惠多多，限时4天,文章内容";
              String article_remarks = "品牌上新，优惠多多，限时4天,备注";
              //新建文章，获取id
-             Long actriclereal_id=createArcile(positionsA,article_title);
+             Long actriclereal_id=createArcile(positions,article_title);
             //小程序查看文章内容
              crm.appletLogin(code);
              JSONObject detail=crm.articleDetial(actriclereal_id);
@@ -1107,7 +1107,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Long activity_id=aid[1];
               Long id=aid[0];
               crm.login(lxqgw,adminpassword);
-              JSONObject response = crm.activityTaskPage();
+              JSONObject response = crm.activityTaskPageX();
               JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
               int activityTaskId = json.getInteger("activity_task_id");
               int before_total=0;
@@ -1150,7 +1150,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Long activity_id=aid[1];
               Long id=aid[0];
               crm.login(lxqgw,adminpassword);
-              JSONObject response = crm.activityTaskPage();
+              JSONObject response = crm.activityTaskPageX();
               JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
               int activityTaskId = json.getInteger("activity_task_id");
               String phone = "1";
@@ -1177,7 +1177,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :app活动报名，pc任务客户+1&信息校验 TODO:
+     * @description :app活动报名，pc任务客户+1&信息校验
      * @date :2020/7/30 19:45
      **/
     @Test
@@ -1188,10 +1188,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
-            JSONObject data=crm.customerTaskPage(1,10,activity_id);
+            JSONObject data=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int total=data.getInteger("total");
             crm.login(lxqgw,adminpassword);
-            JSONObject response = crm.activityTaskPage();
+            JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
             String phone = "1";
@@ -1201,9 +1201,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }
             crm.registeredCustomer((long) activityTaskId, "夏", phone);
             crm.login(adminname,adminpassword);
-            JSONObject dataA=crm.customerTaskPage(1,10,activity_id);
+            JSONObject dataA=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int totalA=dataA.getInteger("total");
-            JSONObject list=dataA.getJSONArray("list").getJSONObject(0);
+            JSONArray list1=dataA.getJSONArray("list");
+
+            JSONObject list=list1.getJSONObject(0);
             String customer_type=list.getString("customer_type");
             String customer_name=list.getString("customer_name");
             String customer_phone_number=list.getString("customer_phone_number");
@@ -1229,7 +1231,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :app活动报名，删除报名客户，pc任务客户-1 TODO:
+     * @description :app活动报名，删除报名客户，pc任务客户-1
      * @date :2020/8/3 18:38
      **/
     @Test
@@ -1241,7 +1243,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long activity_id=aid[1];
             Long id=aid[0];
             crm.login(lxqgw,adminpassword);
-            JSONObject response = crm.activityTaskPage();
+            JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
             String phone = "1";
@@ -1250,17 +1252,20 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
             crm.registeredCustomer((long) activityTaskId, "夏", phone);
+            JSONObject responseapp = crm.activityTaskPageX();
+            JSONObject jsonapp = responseapp.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            Long customer_id = jsonapp.getJSONArray("customer_list").getJSONObject(0).getLong("customer_id");
             //报名后，任务人数
             crm.login(adminname,adminpassword);
-            JSONObject data=crm.customerTaskPage(1,10,activity_id);
+            JSONObject data=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int total=data.getInteger("total");
-            Long customer_id= data.getJSONArray("list").getJSONObject(0).getLong("id");
+
             //删除报名客户
-            crm.login(adminname,adminpassword);
-            crm.deleteCustomer(Integer.toString(activityTaskId),Long.toString(customer_id) );
+            crm.login(lxqgw,adminpassword);
+            crm.deleteCustomerX(Integer.toString(activityTaskId),Long.toString(customer_id) );
             //删除后，任务人数
             crm.login(adminname,adminpassword);
-            JSONObject dataA=crm.customerTaskPage(1,10,activity_id);
+            JSONObject dataA=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int totalA=dataA.getInteger("total");
 
             Preconditions.checkArgument(total-totalA==1,"app报名活动，删除报名客户，pc任务客户没-1");

@@ -35,7 +35,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public String adminname="xx";    //服务总监账号
     public String adminpassword="e10adc3949ba59abbe56e057f20f883e";
 
-    public String adminnameapp="lxqgw";      //销售账号
+    public String adminnameapp="销售顾问xia";      //销售账号
     public String filePath="src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -506,7 +506,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
            Long id=aid[0];
            //app销售登录报名
            crm.login(adminnameapp,adminpassword);
-           JSONObject response = crm.activityTaskPage();
+           JSONObject response = crm.activityTaskPageX();
            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
            int activityTaskId = json.getInteger("activity_task_id");
            int task_customer_num = json.getInteger("task_customer_num");
@@ -524,7 +524,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             }
             crm.registeredCustomer((long) activityTaskId, "夏", phone);
 
-            JSONObject responseA = crm.activityTaskPage();
+            JSONObject responseA = crm.activityTaskPageX();
             JSONObject jsonA = responseA.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
            int totalA = jsonA.getJSONArray("customer_list").size();
            //获取报名字段，校验
