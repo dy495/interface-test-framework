@@ -57,7 +57,6 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
     @Test(description = "全部预约人数>=今日预约人数")
     public void appointTotalAndTodayNumber() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -145,7 +144,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "创建接待",enabled = false)
+    @Test(description = "创建接待", enabled = false)
     public void createReception() {
         logger.logCaseStart(caseResult.getCaseName());
         //分配销售

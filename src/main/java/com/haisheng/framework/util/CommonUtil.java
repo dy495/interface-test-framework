@@ -8,18 +8,18 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class CommonUtil {
     public static String getStrFieldByData(JSONObject response, String field) {
-        return response.getJSONObject("data").getString(field);
+        return response.getString(field);
     }
 
     public static String getStrFieldByData(JSONObject response, int index, String field) {
-        return response.getJSONObject("data").getJSONArray("list").getJSONObject(index).getString(field);
+        return response.getJSONArray("list").getJSONObject(index).getString(field);
     }
 
     public static Integer getIntFieldByData(JSONObject response, String field) {
-        return response.getJSONObject("data").getInteger(field);
+        return response.getInteger(field);
     }
 
     public static Integer getIntFieldByData(JSONObject response, int index, String field) {
-        return response.getJSONObject("data").getJSONArray("list").getJSONObject(index).getInteger(field);
+        return response.getJSONArray("list").getJSONObject(index).getInteger(field);
     }
 }

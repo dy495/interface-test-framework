@@ -2158,7 +2158,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public static Object[] positions() {
 
         return new String[]{
-                "MODEL_RECOMMENDATION",
+                //"MODEL_RECOMMENDATION",
                 "PURCHASE_GUIDE",
                 "BRAND_CULTURE",
                 "CAR_ACTIVITY"
@@ -2344,6 +2344,36 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //获取活动列表
+    public JSONObject activityTaskPageX() {
+        String url = "/porsche/app/activity-task/page";
+        JSONObject object = new JSONObject();
+        object.put("page", 1);
+        object.put("size", 10);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //删除报名人员
+    public JSONObject deleteCustomerX(String activityTaskId, String customerId) {
+        String url = "/porsche/app/activity-task/deleteCustomer";
+        JSONObject object = new JSONObject();
+        object.put("activity_task_id", activityTaskId);
+        object.put("customer_id", customerId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //获取任务客户列表
+    public JSONObject customerTaskPageX(int size, int page, Long activityId) {
+        String url = "/porsche/activity/customer/task/page";
+        JSONObject object = new JSONObject();
+        object.put("size", size);
+        object.put("page", page);
+        object.put("activity_id", activityId);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(result);
+    }
 
     //销售
     //预约试驾列表,姓名/联系方式搜索
@@ -2362,7 +2392,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("search_date_start", search_date_start);
         json1.put("search_date_end", search_date_end);
         String res = httpPost(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     //分配销售
@@ -2630,12 +2660,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param url         url
      * @param requestBody 请求体
-     * @return JSONObject
+     * @return JSONObject response.data
      */
     private JSONObject invokeApi(String url, JSONObject requestBody) {
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);
-        return JSON.parseObject(result);
+        return JSON.parseObject(result).getJSONObject("data");
     }
 
 
