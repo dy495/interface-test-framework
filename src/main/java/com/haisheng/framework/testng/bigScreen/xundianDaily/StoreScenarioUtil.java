@@ -64,210 +64,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     }
 
-
-
-/**---------------------------------------------------门店相关V2.0-----------------------------------------------------**/
-
-    /**
-     * @description:8.1.1 门店列表(获取主账号下所有门店)
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreShopPage(String district_code,Integer page,Integer size) throws Exception {
-        String url = "/patrol/shop/page";
-        String json =
-                "{" +
-                        "\"district_code\" :\"" + district_code + "\",\n" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.1.2 门店详情
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreShopDetail(Long shop_id) throws Exception {
-        String url = "/patrol/shop/detail";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * @description:8.2.1 查询周期列表
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreQueryClycleList() throws Exception {
-        String url = "/patrol/query-cycle/list";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.1 客群漏斗
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreHistoryConversion(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/conversion";
-        String json =
-                "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.2.1 获取天气类型列表
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreWeatherList(Long shop_id) throws Exception {
-        String url = "/patrol/weather/type/list";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * @description:8.3.2.1 获取到店趋势数据
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreHistoryTrend(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/trend";
-        String json =
-                "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.3 到店时段分布
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreHistoryHourdata(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/hour-data";
-        String json =
-                "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.4.1 获得店铺支持的活动事件类型列表
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreActivityList(Long shop_id) throws Exception {
-        String url = "/patrol/activity/type/list";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.5.2 添加活动事件
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreActivityAdd(String activity_description,String activity_type,String start_date,String end_date,Long shop_id) throws Exception {
-        String url = "/patrol/activity/add";
-        String json =
-                "{" +
-                        "\"activity_description\" :\"" + activity_description + "\",\n" +
-                        "\"activity_type\" :\"" + activity_type + "\",\n" +
-                        "\"start_date\" :\"" + start_date + "\",\n" +
-                        "\"end_date\" :\"" + end_date + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
-    }
-
-    /**
-     * @description:8.4.1 门店实时pv和uv
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject realTimeTotal(Long shop_id) throws Exception {
-        String url = "/patrol/real-time/shop/total";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.4.2 门店小时级别的pv
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreRealTimePv(Long shop_id) throws Exception {
-        String url = "/patrol/real-time/shop/pv";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
     @DataProvider(name = "CYCLE_TYPE")
     public static Object[] cycle_type() {
 
@@ -506,6 +302,25 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description: 8.3.1.3获取到店趋势数据pv & uv (8.3.1.2升级版)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopTrendsV3(String cycle_type,String month,long shop_id) throws Exception {
+        String url = "/patrol/history/shop/trend-pv-uv";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\",\n" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
      * @description:8.3.2 活动事件相关V3.0---8.3.2.1 获得店铺支持的活动事件类型列表
      * @author: qingqing
      * @time:
@@ -661,11 +476,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject historyShopMemberCountV3(long shop_id,String cycle_type,String month) throws Exception {
+    public JSONObject historyShopMemberCountV3(String cycle_type,String month) throws Exception {
         String url = "/patrol/history/shop/member/count";
         String json =
                 "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
                         "\"month\" :\"" + month + "\"\n" +
                         "} ";
