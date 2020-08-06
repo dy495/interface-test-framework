@@ -169,6 +169,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    /**
+     * @description:8.1.3 实时客流门店列表V3.0
+     * @author: guoliya
+     * @time:
+     */
 
     public JSONObject patrolShopRealV3A(String district_code, String[] shop_type,String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/real-time";
