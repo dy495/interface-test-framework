@@ -247,90 +247,90 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
-    /**
-     *
-     * ====================巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数======================
-     * */
-    @Test
-    public void unqualifiedItemsComparison() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //获取shop_id
-            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
-            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
-            int shop_id = check_list.getJSONObject(0).getInteger("id");
-            //获取巡店记录id
-            JSONArray detailList=xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
-            int id = detailList.getJSONObject(0).getInteger("id");
+//    /**
+//     *
+//     * ====================巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数======================
+//     * */
+//    @Test
+//    public void unqualifiedItemsComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //获取shop_id
+//            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
+//            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
+//            int shop_id = check_list.getJSONObject(0).getInteger("id");
+//            //获取巡店记录id
+//            JSONArray detailList=xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+//            int id = detailList.getJSONObject(0).getInteger("id");
+//
+//           //获取不合格项的结果
+//            int unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
+//
+//            //获取执行清单中的不合格项数
+//            JSONArray checklists = xd.shopChecksDetail(id,shop_id).getJSONArray("check_lists");
+//            int size = checklists.size();
+//            int count= 0;
+//            for (int i = 0;i < size; i++){
+//                JSONObject jsonObject = checklists.getJSONObject(i);
+//                if (jsonObject !=null){
+//                    Integer check_result = jsonObject.getInteger("check_result");
+//                    if (check_result != null && check_result == 2){
+//                        count ++;
+//                    }
+//                }
+//            }
+//            Preconditions.checkArgument(unqualified_num == count,"巡店记录的巡店详情中的巡店结果中的不合格项数" + unqualified_num + "执行清单中的不合格项数=" + count);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数");
+//        }
+//    }
 
-           //获取不合格项的结果
-            int unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
-
-            //获取执行清单中的不合格项数
-            JSONArray checklists = xd.shopChecksDetail(id,shop_id).getJSONArray("check_lists");
-            int size = checklists.size();
-            int count= 0;
-            for (int i = 0;i < size; i++){
-                JSONObject jsonObject = checklists.getJSONObject(i);
-                if (jsonObject !=null){
-                    Integer check_result = jsonObject.getInteger("check_result");
-                    if (check_result != null && check_result == 2){
-                        count ++;
-                    }
-                }
-            }
-            Preconditions.checkArgument(unqualified_num == count,"巡店记录的巡店详情中的巡店结果中的不合格项数" + unqualified_num + "执行清单中的不合格项数=" + count);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数");
-        }
-    }
-
-    /**
-     *
-     * ====================每个店铺的巡店次数=各个巡店员巡检该店铺的总数======================
-     * */
-    @Test
-    public void  StoreCheckNoComparison() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-
-            //获取每个店铺的巡店次数
-            //获取shop_id
-            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
-            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
-            int shop_id = check_list.getJSONObject(0).getInteger("id");
-
-            //获取各个巡店员检查该店铺的总数
-
-            JSONArray list= xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
-            int size = list.size();
-            int count= 0;
-            for (int i = 0;i < size; i++){
-                JSONObject jsonObject = list.getJSONObject(i);
-                if (jsonObject !=null){
-                    String inspector_name = jsonObject.getString("inspector_name");
-                    if (inspector_name != null ){
-                        count ++;
-                    }
-                }
-            }
-            Preconditions.checkArgument(patrol_num == count,"每个店铺的巡店次数=" + patrol_num + "各个巡店员巡检该店铺的总数=" + count);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("每个店铺的巡店次数=各个巡店员巡检该店铺的总数");
-        }
-    }
+//    /**
+//     *
+//     * ====================每个店铺的巡店次数=各个巡店员巡检该店铺的总数======================
+//     * */
+//    @Test
+//    public void  StoreCheckNoComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//
+//            //获取每个店铺的巡店次数
+//            //获取shop_id
+//            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
+//            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
+//            int shop_id = check_list.getJSONObject(0).getInteger("id");
+//
+//            //获取各个巡店员检查该店铺的总数
+//
+//            JSONArray list= xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+//            int size = list.size();
+//            int count= 0;
+//            for (int i = 0;i < size; i++){
+//                JSONObject jsonObject = list.getJSONObject(i);
+//                if (jsonObject !=null){
+//                    String inspector_name = jsonObject.getString("inspector_name");
+//                    if (inspector_name != null ){
+//                        count ++;
+//                    }
+//                }
+//            }
+//            Preconditions.checkArgument(patrol_num == count,"每个店铺的巡店次数=" + patrol_num + "各个巡店员巡检该店铺的总数=" + count);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("每个店铺的巡店次数=各个巡店员巡检该店铺的总数");
+//        }
+//    }
 
     /**
      *
@@ -496,90 +496,91 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     }
 
 
-    /**
-     *
-     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
-     * */
-    @Test
-    public void  ReCheckNoDataComparison() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-           //获取待办事项列表得不合格事项
-            Integer type = 0;
-            Long last_id = null;
-            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
-            int theSize1 = thingsList.size();
-            int count = 0;
-            for(int i = 0;i < theSize1;i++) {
-                JSONObject jsonObject = thingsList.getJSONObject(i);
-                String task_type = jsonObject.getString("task_type");
-                //这里是计算REMOTE_UNQUALIFIED 出现的次数
-                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
-                    count ++;
-                }
-            }
-
-            //提交不合格的巡店记录
-//            long shop_id = this.getShopId(page, size);//获取shop_id
-            long shop_id = 28760;
-            String check_type = "REMOTE";
-            Integer reset = 1;
-            Long task_id = null;
-            String pic_data1 = this.texFile(filepath);
-            String audit_comment = "自动化测试专用审核意见哈哈哈哈";
-            Integer check_result = 2;
-            long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
-            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
-            long list_id = 0;
-            long item_id = 0;
-            int checkSize= 0;
-            for(int i = 0;i<checklists.size();i++){
-                list_id = checklists.getJSONObject(i).getInteger("id");
-                JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
-                if (check_items == null){
-                    continue;
-                }
-                //第二个循环遍历获取item_id
-                for (int j = 0;j<check_items.size();j++){
-                    JSONArray  pic_list=new JSONArray();
-                    item_id= check_items.getJSONObject(j).getInteger("id");
-                    JSONObject pic =xd.picUpload(1,pic_data1);
-                    pic_list.add(pic.getString("pic_path"));
-                    if(item_id !=0){
-                        checkSize ++;
-                    }
-                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);//提交执行项的结果
-                }
-            }
-
-            String comment = "审核不通过来一波啊哈哈哈";
-            xd.shopChecksSubmit(shop_id,patrol_id,comment);
-
-            //新建一个不合格的巡店记录以后，再次去获取待办事项列表
-            JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
-            int theSize = thingsLists.size();
-            int count2 = 0;
-            for(int i = 0;i < theSize;i++) {
-                JSONObject jsonObject = thingsLists.getJSONObject(i);
-                String task_type = jsonObject.getString("task_type");
-                //这里是计算REMOTE_UNQUALIFIED 出现的次数
-                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
-                    count2 ++;
-                }
-            }
-            int counts=count2 -checkSize;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
-
-            Preconditions.checkArgument(count == counts,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
-        }
-    }
+//    /**
+//     *
+//     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
+//     * */
+//    @Test
+//    public void  ReCheckNoDataComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//           //获取待办事项列表得不合格事项
+//            Integer type = 0;
+//            Long last_id = null;
+//            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
+//            int theSize1 = thingsList.size();
+//            int count = 0;
+//            for(int i = 0;i < theSize1;i++) {
+//                JSONObject jsonObject = thingsList.getJSONObject(i);
+//                String task_type = jsonObject.getString("task_type");
+//                //这里是计算REMOTE_UNQUALIFIED 出现的次数
+//                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
+//                    count ++;
+//                }
+//            }
+//
+//            //提交不合格的巡店记录
+////            long shop_id = this.getShopId(page, size);//获取shop_id
+//            long shop_id = 28760;
+//            String check_type = "REMOTE";
+//            Integer reset = 1;
+//            Long task_id = null;
+//            String pic_data1 = this.texFile(filepath);
+//            String audit_comment = "自动化测试专用审核意见哈哈哈哈";
+//            Integer check_result = 2;
+//            long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
+//            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
+//            long list_id = 0;
+//            long item_id = 0;
+//            int checkSize= 0;
+//            for(int i = 0;i<checklists.size();i++){
+//                list_id = checklists.getJSONObject(i).getInteger("id");
+//                JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
+//                if (check_items == null){
+//                    continue;
+//                }
+//                //第二个循环遍历获取item_id
+//                for (int j = 0;j<check_items.size();j++){
+//                    JSONArray  pic_list=new JSONArray();
+//                    item_id= check_items.getJSONObject(j).getInteger("id");
+//                    JSONObject pic =xd.picUpload(1,pic_data1);
+//                    pic_list.add(pic.getString("pic_path"));
+//                    if(item_id !=0){
+//                        checkSize ++;
+//                    }
+//                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);//提交执行项的结果
+//                }
+//            }
+//
+//            String comment = "审核不通过来一波啊哈哈哈";
+//            xd.shopChecksSubmit(shop_id,patrol_id,comment);
+//
+//            //新建一个不合格的巡店记录以后，再次去获取待办事项列表
+//            JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
+//            int theSize = thingsLists.size();
+//            int count2 = 0;
+//            for(int i = 0;i < theSize;i++) {
+//                JSONObject jsonObject = thingsLists.getJSONObject(i);
+//                String task_type = jsonObject.getString("task_type");
+//                //这里是计算REMOTE_UNQUALIFIED 出现的次数
+//                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
+//                    count2 ++;
+//                }
+//            }
+//            int counts=count2 -checkSize;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
+//            int result = counts-count;
+//
+//            Preconditions.checkArgument(result==0,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
+//        }
+//    }
     //获取shop_id
     public long getShopId (int page, int size) throws Exception {
         JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
