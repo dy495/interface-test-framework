@@ -5,6 +5,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -53,9 +54,17 @@ public class StoreCaseV2 extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
 
         //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
+        //13436941018 吕雪晴
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        commonConfig.pushRd = new String[]{"13581630214"};
 
         //set shop id
         commonConfig.shopId = getXundianShop(); //要改！！！

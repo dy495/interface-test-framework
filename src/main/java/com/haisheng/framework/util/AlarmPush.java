@@ -375,20 +375,20 @@ public class AlarmPush {
         msg += "\n\n#### " + today + " 记录信息\n";
         msg +=  "\n\n>##### **模块：越秀售楼处，RD：谢志东**"
                 + "\n>##### 【线上】通过率：" + yuexiuOnlinePassRate[0] + "，FAIL：" + yuexiuOnlinePassRate[1] + "，TOTAL：" + yuexiuOnlinePassRate[2]
-                + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
+//                + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
 
-                +"\n\n>##### **模块：魔镜，RD：谢志东**"
-                + "\n>##### 【日常】通过率：" + magicMirrorDailyPassRate[0] + "，FAIL：" + magicMirrorDailyPassRate[1] + "，TOTAL：" + magicMirrorDailyPassRate[2]
+//                +"\n\n>##### **模块：魔镜，RD：谢志东**"
+//                + "\n>##### 【日常】通过率：" + magicMirrorDailyPassRate[0] + "，FAIL：" + magicMirrorDailyPassRate[1] + "，TOTAL：" + magicMirrorDailyPassRate[2]
 
                 + "\n\n>##### **模块：飞单，RD：谢志东、杨航**"
                 + "\n>##### 【线上】通过率：" + feidanOnlinePassRate[0] + "，FAIL：" + feidanOnlinePassRate[1] + "，TOTAL：" + feidanOnlinePassRate[2]
                 + "\n>##### 【日常】通过率：" + feidanDailyPassRate[0] + "，FAIL：" + feidanDailyPassRate[1] + "，TOTAL：" + feidanDailyPassRate[2]
 
-                + "\n\n>##### **模块：门禁，RD：华成裕、杨航**"
-                + "\n>##### 【日常】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
+//                + "\n\n>##### **模块：门禁，RD：华成裕、杨航**"
+//                + "\n>##### 【日常】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
 
                 + "\n\n>##### **模块：立体安防，RD：华成裕、杨航、谢志东**"
-                + "\n>##### 【日常】通过率：" + aiDefenceDailyPassRate[0] + "，FAIL：" + aiDefenceDailyPassRate[1] + "，TOTAL：" + aiDefenceDailyPassRate[2]
+//                + "\n>##### 【日常】通过率：" + aiDefenceDailyPassRate[0] + "，FAIL：" + aiDefenceDailyPassRate[1] + "，TOTAL：" + aiDefenceDailyPassRate[2]
                 + "\n>##### 【线上】通过率：" + aiDefenceOnlinePassRate[0] + "，FAIL：" + aiDefenceOnlinePassRate[1] + "，TOTAL：" + aiDefenceOnlinePassRate[2]
 
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]

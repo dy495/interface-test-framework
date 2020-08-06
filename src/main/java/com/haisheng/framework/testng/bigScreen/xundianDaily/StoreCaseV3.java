@@ -134,11 +134,11 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             String districtCode = "";
             String[] shopType = {};
-            String shopName="";
-            String shopManager="";
+            String shopName = "";
+            String shopManager = "";
             int page = 1;
             int size = 10;
-            JSONObject response = Md.patrolShopRealV3A(districtCode, shopType, shopName,shopManager,page, size);
+            JSONObject response = Md.patrolShopRealV3A(districtCode, shopType, shopName, shopManager, page, size);
             JSONArray storeList = response.getJSONArray("list");
             for (int i = 0; i < storeList.size() - 1; i++) {
                 System.out.println(i);
@@ -163,51 +163,42 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             //多选
             String district_code = "";
             String[] shopType = new String[]{"NORMAL", "COMMUNITY"};
-            String shopName="";
-            String shopManager="";
+            String shopName = "";
+            String shopManager = "";
             int page = 1;
             int size = 10;
             int num = 0;
             int num1 = 0;
-            JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType,shopName, shopManager,page, size).getJSONArray("list");
+            JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
-
-                    Preconditions.checkArgument(!storeList.getJSONObject(i).getString("type").equals("NORMAL") || !storeList.getJSONObject(i).getString("type").equals("COMMUNITY"), "筛选栏多选数据准确");
-
+                Preconditions.checkArgument(storeList.getJSONObject(i).getString("type").equals("NORMAL") || storeList.getJSONObject(i).getString("type").equals("COMMUNITY"), "筛选栏多选数据有问题");
             }
 
             //单选
             String[] shopType1 = new String[]{"NORMAL"};
-            JSONArray storeList1 = Md.patrolShopRealV3A(district_code, shopType1,shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList1 = Md.patrolShopRealV3A(district_code, shopType1, shopName, shopManager, page, size).getJSONArray("list");
             for (int j = 0; j < storeList1.size(); j++) {
-
-                    Preconditions.checkArgument(!storeList1.getJSONObject(j).getString("type").equals("NORMAL"), "筛选栏单选数据准确");
-
+                Preconditions.checkArgument(storeList1.getJSONObject(j).getString("type").equals("NORMAL"), "筛选栏单选数据有问题");
             }
+
             //全选
             String[] shopType2 = new String[]{"NORMAL", "COMMUNITY", "PLAZA", "FLAGSHIP"};
-            int page1=2;
-            JSONArray storeList2 = Md.patrolShopRealV3A(district_code, shopType2,shopName, shopManager, page1, size).getJSONArray("list");
+            JSONArray storeList2 = Md.patrolShopRealV3A(district_code, shopType2, shopName, shopManager, page, size).getJSONArray("list");
             for (int m = 0; m < storeList2.size(); m++) {
                 num++;
-                System.out.println("num为  "+num);
-
-                    Preconditions.checkArgument(!storeList2.getJSONObject(m).getString("type").equals("PLAZA") || !storeList2.getJSONObject(m).getString("type").equals("FLAGSHIP") || !storeList2.getJSONObject(m).getString("type").equals("COMMUNITY") || !storeList2.getJSONObject(m).getString("type").equals("NORMAL"), "筛选栏全选数据准确");
-
+                System.out.println("num为  " + num);
+                Preconditions.checkArgument(storeList2.getJSONObject(m).getString("type").equals("PLAZA") || storeList2.getJSONObject(m).getString("type").equals("FLAGSHIP") || storeList2.getJSONObject(m).getString("type").equals("COMMUNITY") || storeList2.getJSONObject(m).getString("type").equals("NORMAL"), "筛选栏全选数据有问题");
             }
 
             //不选
             String[] shopType3 = new String[]{};
-
-            JSONArray storeList3 = Md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager,page1, size).getJSONArray("list");
+            JSONArray storeList3 = Md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager, page, size).getJSONArray("list");
             for (int n = 0; n < storeList3.size(); n++) {
                 num1++;
                 //System.out.println("num1为  "+num1);
-                Preconditions.checkArgument(!storeList2.getJSONObject(n).getString("type").equals("PLAZA") || !storeList2.getJSONObject(n).getString("type").equals("FLAGSHIP") || !storeList2.getJSONObject(n).getString("type").equals("COMMUNITY") || !storeList2.getJSONObject(n).getString("type").equals("NORMAL"), "筛选栏不选数据准确");
+                Preconditions.checkArgument(storeList2.getJSONObject(n).getString("type").equals("PLAZA") || storeList2.getJSONObject(n).getString("type").equals("FLAGSHIP") || storeList2.getJSONObject(n).getString("type").equals("COMMUNITY") || storeList2.getJSONObject(n).getString("type").equals("NORMAL"), "筛选栏不选数据有问题");
             }
-
-           Preconditions.checkArgument(num == num1, "全选：" + num + "不选：" + num1);
-
+            Preconditions.checkArgument(num == num1, "全选：" + num + "不选：" + num1);
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -228,22 +219,35 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         int size = 10;
         try {
             JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
-
             for (int i = 0; i < storeList.size(); i++) {
                 String string = storeList.getJSONObject(i).getString("name");
-                System.out.println(string);
                 if(string != null&&string.contains(shopName)) {
                     Preconditions.checkArgument(true, "\"t\"的模糊搜索的结果为：" + string);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
     }
-
-
-
+//    private void shopTypeMd(String[] type,String name){
+//        String district_code = "";
+//        String[] shopType = type;
+//        String shopName = name;
+//        String shopManager = "";
+//        int page = 1;
+//        int size = 10;
+//        try {
+//            JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
+//            for(int i = 0; i < storeList.size(); i++){
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 }
