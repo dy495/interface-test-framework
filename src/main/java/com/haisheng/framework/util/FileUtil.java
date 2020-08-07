@@ -180,7 +180,7 @@ public class FileUtil {
         return true;
     }
 
-    public static void downloadImageMana(String picA,String terminalPath) {
+    public void downloadImageMana(String picA,String terminalPath) {
 
         URL url = null;
 

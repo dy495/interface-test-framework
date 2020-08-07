@@ -13,7 +13,9 @@ import java.util.HashMap;
 
 public class OnlineTestInDaily {
 
+    //日常环境【接口测试】专用应用
     private String APP_ID = "0d28ec728799";
+    //日常环境【接口测试】专用品牌
     private String BRAND_ID = "638";
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
