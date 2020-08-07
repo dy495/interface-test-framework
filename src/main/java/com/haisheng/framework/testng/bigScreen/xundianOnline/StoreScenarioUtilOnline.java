@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.testng.annotations.DataProvider;
 
@@ -12,12 +13,14 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
-     *
-     * */
+     */
 
     private static volatile StoreScenarioUtilOnline instance = null;
+    public JSONArray patrolShopRealV3;
 
-    private StoreScenarioUtilOnline() {}
+    private StoreScenarioUtilOnline() {
+    }
+
     public static StoreScenarioUtilOnline getInstance() {
 
         if (null == instance) {
@@ -36,7 +39,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = "http://inspect.store.winsenseos.com/";
+    public String IpPort = "http://inspect.store.winsenseos.com";
+
     /**
      * @description:登录
      * @author: qingqing
@@ -63,329 +67,161 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
     }
 
+    @DataProvider(name = "CYCLE_TYPE")
+    public static Object[] cycle_type() {
 
-    /*
-    3.3新建定检任务
-   */
-    public JSONObject scheduleCheckAdd(String name,String cycle,JSONArray dates,String send_time,String valid_start,String valid_end,String inspector_id,JSONArray shop_list) throws Exception {
-        String url = "/patrol/schedule-check/add";
-        String json =
-                "{" +
-                        "\"name\" :\"" + name + "\",\n" +
-                        "\"cycle\" :\"" + cycle + "\",\n" +
-                        "\"dates\" :" + dates + ",\n" +
-                        "\"send_time\" :\"" + send_time + "\",\n" +
-                        "\"valid_start\" :\"" + valid_start + "\",\n" +
-                        "\"valid_end\" :\"" + valid_end + "\",\n" +
-                        "\"inspector_id\" :\"" + inspector_id + "\",\n" +
-                        "\"shop_list\" :" + shop_list + "\n"
-                        + "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res);
-    }
-    /*
-    3.4 定检任务列表
-    */
-    public JSONObject scheduleCheckPage(int page,int size) throws Exception {
-        String url = "/patrol/schedule-check/page";
-        String json =
-                "{" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n"
-                        + "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "RECENT_SEVEN",
+                "RECENT_THIRTY",
+                "RECENT_THIRTY",
+                "RECENT_SIXTY"
+        };
     }
 
-    /*
-   3.5 删除定检任务
-   */
-    public JSONObject scheduleCheckDelete(long id) throws Exception {
-        String url = "/patrol/schedule-check/delete";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n"
-                        + "} ";
+    @DataProvider(name = "END_TIME_TYPE")
+    public static Object[] endTimeType() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "2020-07-14",
+                "2020-07-18"
+
+        };
     }
 
-    /*
-    4.1 获取门店列表
-    */
-    public JSONObject ShopPage(int page,int size) throws Exception {
-        String url = "/patrol/shop/page";
-        String json =
-                "{" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n"
-                        + "} ";
+    @DataProvider(name = "DESCRIPTION")
+    public static Object[] description() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "店庆店庆店庆店庆店庆",
+                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆"
+        };
     }
 
+    @DataProvider(name = "DESCRIPTION_FALSE")
+    public static Object[] description_false() {
 
-    /*
-     4.2 获取门店详情
-   */
-    public JSONObject shopDetail(Long id) throws Exception {
-        String url = "/patrol/shop/detail";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆",
+                ""
+        };
     }
 
-    /*
-    4.3 获取门店巡店记录列表
-   */
-    public JSONObject shopChecksPage(int page,int size,long shop_id) throws Exception {
-        String url = "/patrol/shop/checks/page";
-        String json =
-                "{" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + ",\n"+
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
+    @DataProvider(name = "THING_TYPE")
+    public static Object[] thing_type() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "NEW_COMMODITY",
+                "CHANGE_COMMODITY",
+                "PROMOTIONS"
+        };
     }
 
-    /*
-   4.4 获取门店巡店记录详情
-  */
-    public JSONObject shopChecksDetail(Integer id,long shop_id) throws Exception {
-        String url = "/patrol/shop/checks/detail";
-        String json =
-                "{" +
-                        "\"id\" :" + id + ",\n"+
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
+    @DataProvider(name = "THING_TYPE_FALSE")
+    public static Object[] thing_type_false() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                ""
+        };
     }
 
-    /*
-     4.8 开始或继续巡店
-   */
-    public JSONObject shopChecksStart(Long shop_id,String check_type,Integer reset,Long task_id) throws Exception {
-        String url = "/patrol/shop/checks/start";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"check_type\" :\"" + check_type + "\",\n" +
-                        "\"reset\" :" + reset + ",\n" +
-                        "\"task_id\" :" + task_id + "\n" +
-                        "} ";
+    @DataProvider(name = "TIME_TYPE_FALSE")
+    public static Object[] time_type_false() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        return new String[]{
+                "2019-08-08",
+                "2020-07-09",
+                ""
+        };
+    }
+    @DataProvider(name = "AREA_CODE")
+    public static Object[] area_code() {
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "110000"
+        };
     }
 
-    /*
-    4.9 提交巡检项目结果
-   */
-    public JSONObject shopChecksItemSubmit(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
-        String url = "/patrol/shop/checks/item/submit";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"patrol_id\" :" + patrol_id + ",\n" +
-                        "\"list_id\" :" + list_id + ",\n" +
-                        "\"item_id\" :" + item_id + ",\n" +
-                        "\"check_result\" :" + check_result + ",\n" +
-                        "\"audit_comment\" :\"" + audit_comment + "\",\n" +
-                        "\"pic_list\" :" + pic_list + "\n" +
-                        "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
+    @DataProvider(name = "AREA_TYPE")
+    public static Object[] area_type() {
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return new String[]{
+                "[\"FLAGSHIP\"]"
+        };
     }
 
-    /*
-   4.10 提交巡检结果
-  */
-    public JSONObject shopChecksSubmit(Long shop_id,Long id,String comment) throws Exception {
-        String url = "/patrol/shop/checks/submit";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"id\" :" + id + ",\n" +
-                        "\"comment\" :\"" + comment + "\"\n" +
-                        "} ";
+    @DataProvider(name = "CUSTMER_TYPE")
+    public static Object[] custmer_type() {
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
+        return new String[]{
+                "PASS_BY",
+                "INTEREST",
+                "ENTER",
+                "DEAL"
+        };
     }
-    /*
-   5.1 获取工作成果
-    */
-    public JSONObject taskDetail() throws Exception {
-        String url = "/patrol/m/task/detail";
+//    String district_code = "110105";
+/**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
+
+    /**
+     * @description:8.1.1 门店类型列表V3.0
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject shopTypeList() throws Exception {
+        String url = "/patrol/shop/type/list";
         String json =
                 "{} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
+
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
 
     /**
-     * @description :不合格留痕截屏
-     * @date :2020/6/21 10:58
-     **/
-    public JSONObject picUpload(int type,String pic_data)throws Exception{
-        String url="/patrol/pic/base64/upload";
-        JSONObject json=new JSONObject();
-        json.put("shop_id",getXunDianShop());
-        json.put("type",type);
-        json.put("pic_data",pic_data);
-        String res = httpPostWithCheckCode(url, json.toJSONString(),IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-
-
-    }
-
-    /*
-      5.3 待办/已办列表
-  */
-    public JSONObject MTaskList(Integer type,Integer size,Long last_id) throws Exception {
-        String url = "/patrol/m/task/list";
-        String json =
-                "{" +
-                        "\"type\" :" + type + ",\n" +
-                        "\"size\" :" + size + ",\n" +
-                        "\"last_id\" :" + last_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /*
-   5.5 复检、不合格处理步骤提交
-   */
-    public JSONObject MstepSumit(Long shop_id,Long id,String comment,JSONArray pic_list,Integer recheck_result) throws Exception {
-        String url = "/patrol/m/task/step/submit";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"id\" :" + id + ",\n" +
-                        "\"comment\" :\"" + comment + "\",\n" +
-                        "\"pic_list\" :" + pic_list + ",\n" +
-                        "\"recheck_result\" :" + recheck_result + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res);
-    }
-    /*
-   6.2 新建执行清单
-   */
-    public JSONObject checkListAdd(String name,String desc,JSONArray items,JSONArray shop_list) throws Exception {
-        String url = "/patrol/check-list/add";
-        String json =
-                "{" +
-                        "\"name\" :\"" + name + "\",\n" +
-                        "\"desc\" :\"" + desc + "\",\n" +
-                        "\"items\" :" + items + ",\n" +
-                        "\"shop_list\" :" + shop_list + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
-    }
-    /*
-   6.3 执行清单列表
-    */
-    public JSONObject checklistPage(int page,int size) throws Exception {
-        String url = "/patrol/check-list/page";
-        String json =
-                "{" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n"
-                        +"} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /*
-   6.4 删除执行清单任务
-  */
-    public JSONObject checkListDelete(long id) throws Exception {
-        String url = "/patrol/check-list/delete";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
-    }
-    /*
-   6.5 执行清单详情
-  */
-    public JSONObject checkListDetail(long id) throws Exception {
-        String url = "/patrol/check-list/detail";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /*
-   6.6 编辑执行清单
-   */
-    public JSONObject checkListEdit(Long id,String name,String desc,JSONArray items,JSONArray shop_list) throws Exception {
-        String url = "/patrol/check-list/edit";
-        String json =
-                "{" +
-                        "\"id\" :" + id + ",\n" +
-                        "\"name\" :\"" + name + "\",\n" +
-                        "\"desc\" :\"" + desc + "\",\n" +
-                        "\"items\" :" + items + ",\n" +
-                        "\"shop_list\" :" + shop_list + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
-    }
-
-
-/**---------------------------------------------------门店相关-----------------------------------------------------**/
-    /**
-     * @description:8.1.1 门店列表(获取主账号下所有门店)
+     * @description:8.1.3 实时客流门店列表V3.0
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreShopPage(String district_code,Integer page,Integer size) throws Exception {
+    public JSONObject patrolShopRealV3(String district_code, String shop_type, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/real-time";
+
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :" + shop_type + ",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:8.1.3 实时客流门店列表V3.0
+     * @author: guoliya
+     * @time:
+     */
+
+    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type,String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/real-time";
+        JSONObject object = new JSONObject();
+        object.put("district_code", district_code);
+        object.put("shop_type", shop_type);
+        object.put("shop_name",shop_name);
+        object.put("shop_manager",shop_manager);
+        object.put("page", page);
+        object.put("size", size);
+        String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.1.2 门店列表(获取主账号下所有门店)V3.0
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopPageV3(String district_code, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page";
         String json =
                 "{" +
@@ -400,11 +236,57 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.1.2 门店详情
+     * @description:8.1.4 历史客流门店列表V3.0
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreShopDetail(Long shop_id) throws Exception {
+    public JSONObject shopPageHistoryV3(String district_code, String shop_type, String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/history";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.1.5 会员门店列表V3.0
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject shopPageMemberV3(String district_code, String shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/member";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
+                        "\"member_type\" :\"" + member_type + "\",\n" +
+                        "\"member_type_order\" :" + member_type_order + ",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.1.6 门店详情V3.0
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject shopDetailV3(long shop_id) throws Exception {
         String url = "/patrol/shop/detail";
         String json =
                 "{" +
@@ -415,15 +297,32 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
+    /**---------------------------------8.2 日期相关-------------------------**/
     /**
-     * @description:8.2.1 查询周期列表
+     * @description:8.2.1 查询周期列表V3.0
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreQueryClycleList() throws Exception {
+    public JSONObject queryCycleListV3(long shop_id) throws Exception {
         String url = "/patrol/query-cycle/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**---------------------------------8.3 历史客流-------------------------**/
+    /**
+     * @description:8.3.1 到店趋势V3.0---8.3.1.1 获取天气类型列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject weatherTypeListV3() throws Exception {
+        String url = "/patrol/weather/type/list";
         String json =
                 "{} ";
 
@@ -433,12 +332,12 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.3.1 客群漏斗
+     * @description:8.3.1 到店趋势V3.0---8.3.1.2 获取到店趋势数据（20200716增加同类和同市店铺数据）
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreHistoryConversion(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/conversion";
+    public JSONObject historyShopTrendV3(String cycle_type, String month, long shop_id) throws Exception {
+        String url = "/patrol/history/shop/trend-pv-uv";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
@@ -452,30 +351,12 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.3.2.1 获取天气类型列表
+     * @description: 8.3.1.3获取到店趋势数据pv & uv (8.3.1.2升级版)
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreWeatherList(Long shop_id) throws Exception {
-        String url = "/patrol/weather/type/list";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * @description:8.3.2.1 获取到店趋势数据
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreHistoryTrend(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/trend";
+    public JSONObject historyShopTrendsV3(String cycle_type, String month, long shop_id) throws Exception {
+        String url = "/patrol/history/shop/trend-pv-uv";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
@@ -489,30 +370,11 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.3.3 到店时段分布
+     * @description:8.3.2 活动事件相关V3.0---8.3.2.1 获得店铺支持的活动事件类型列表
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreHistoryHourdata(String cycle_type,String month,Long shop_id) throws Exception {
-        String url = "/patrol/history/shop/hour-data";
-        String json =
-                "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * @description:8.3.4.1 获得店铺支持的活动事件类型列表
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject StoreActivityList(Long shop_id) throws Exception {
+    public JSONObject activityTypeListV3(long shop_id) throws Exception {
         String url = "/patrol/activity/type/list";
         String json =
                 "{" +
@@ -525,15 +387,15 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.3.5.2 添加活动事件
+     * @description:8.3.2 活动事件相关V3.0---8.3.2.2 添加活动事件
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreActivityAdd(String activity_description,String activity_type,String start_date,String end_date,Long shop_id) throws Exception {
+    public JSONObject activityAddV3(String activity_description, String activity_type, String start_date, String end_date, long shop_id) throws Exception {
         String url = "/patrol/activity/add";
         String json =
                 "{" +
-                        "\"activity_description\" :\"" + activity_description + "\",\n" +
+                        "\"activity_description\" :" + activity_description + ",\n" +
                         "\"activity_type\" :\"" + activity_type + "\",\n" +
                         "\"start_date\" :\"" + start_date + "\",\n" +
                         "\"end_date\" :\"" + end_date + "\",\n" +
@@ -542,15 +404,17 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**---------------------------------8.4 实时客流-------------------------**/
+
     /**
-     * @description:8.4.1 门店实时pv和uv
+     * @description:8.4.1 门店实时数据总览（20200716添加了同类和同城门店平均客流）
      * @author: qingqing
      * @time:
      */
-    public JSONObject realTimeTotal(Long shop_id) throws Exception {
+    public JSONObject realTimeShopTotalV3(long shop_id) throws Exception {
         String url = "/patrol/real-time/shop/total";
         String json =
                 "{" +
@@ -563,11 +427,11 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
-     * @description:8.4.2 门店小时级别的pv
+     * @description:8.4.2 门店小时级别实时客流（20200716添加了活动支持）
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreRealTimePv(Long shop_id) throws Exception {
+    public JSONObject realTimeShopPvV3(long shop_id) throws Exception {
         String url = "/patrol/real-time/shop/pv";
         String json =
                 "{" +
@@ -579,72 +443,246 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**-------------------------------------------------------------8.5 会员相关---------------------------------------------**/
 
-    @DataProvider(name = "CYCLE_TYPE")
-    public static Object[] cycle_type() {
+    /**
+     * @description:8.5.1 会员类型列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberTypeListV3(long shop_id) throws Exception {
+        String url = "/patrol/member/type/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
 
-        return new String[] {
-                "RECENT_SEVEN",
-                "RECENT_THIRTY",
-                "RECENT_THIRTY",
-                "RECENT_SIXTY"
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "END_TIME_TYPE")
-    public static Object[] endTimeType() {
 
-        return new String[] {
-                "2020-07-14",
-                "2020-07-18"
+    /**
+     * @description:8.5.2 会员人脸注册类型列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberFaceTypeListV3(long shop_id) throws Exception {
+        String url = "/patrol/member/face-register-type/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
 
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "DESCRIPTION")
-    public static Object[] description() {
+    /**
+     * @description:8.5.3 来访抓拍列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberVisitListV3(long shop_id, String member_type, Integer face_register, Integer gender, String member_id, Integer page, Integer size) throws Exception {
+        String url = "/patrol/member/visit/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"member_type\" :\"" + member_type + "\",\n" +
+                        "\"face_register\" :" + face_register + ",\n" +
+                        "\"gender\" :" + gender + ",\n" +
+                        "\"member_id\" :\"" + member_id + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + ",\n" +
+                        "} ";
 
-        return new String[] {
-                "店庆店庆店庆店庆店庆",
-                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆"
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "DESCRIPTION_FALSE")
-    public static Object[] description_false() {
+    /**
+     * @description:8.5.4 通过隐私提醒，获得头像数据
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberPrivacyAgreeV3(long shop_id, String member_id) throws Exception {
+        String url = "/patrol/member/privacy/agree";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"member_id\" :\"" + member_id + "\"\n" +
+                        "} ";
 
-        return new String[] {
-                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆",
-                ""
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "THING_TYPE")
-    public static Object[] thing_type() {
+    /**
+     * @description:8.5.5 企业下所有门店会员增长趋势
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopMemberCountV3(String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/member/count";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
 
-        return new String[] {
-                "NEW_COMMODITY",
-                "CHANGE_COMMODITY",
-                "PROMOTIONS"
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "THING_TYPE_FALSE")
-    public static Object[] thing_type_false() {
+    /**
+     * @description:8.5.6 会员增长趋势
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopMemberV3(long shop_id, String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/member";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
 
-        return new String[] {
-                ""
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    @DataProvider(name = "TIME_TYPE_FALSE")
-    public static Object[] time_type_false() {
+    /**
+     * @description:8.5.6 会员性别默认图片列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberImaListV3(long shop_id) throws Exception {
+        String url = "/patrol/member/gender-default-img/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
 
-        return new String[] {
-                "2019-08-08",
-                "2020-07-09",
-                ""
-        };
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+    /**--------------------------------------------------------8.6 客群漏斗------------------------------------------------------------**/
+    /**
+     * @description:8.6.1 客群漏斗列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject shopPageConversionV3(String district_code, String shop_type, String shop_name, String shop_manager, String percentage_type, Integer percentage_type_order, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/conversion";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+                        "\"percentage_type\" :\"" + percentage_type + "\",\n" +
+                        "\"percentage_type_order\" :\"" + percentage_type_order + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + ",\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.6.2 客群漏斗想详情(20200716升级为pv和uv共存版本)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopConversionV3(long shop_id, String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/conversion";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.6.3 到店时段分布（20200716增加多客群）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopHourV3(long shop_id, String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/hour-data";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.6.4 年龄性别分布
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject historyShopAgeV3(long shop_id, String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/age-gender/distribution";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    /**--------------------------------------------------------9.App端接口------------------------------------------------------------**/
+//    /**
+//     * @description:8.6.1 客群漏斗列表
+//     * @author: qingqing
+//     * @time:
+//     */
+//    public JSONObject shopPageConversionV3(String district_code,String shop_type,String shop_name,String shop_manager,String percentage_type,Integer percentage_type_order,Integer page,Integer size) throws Exception {
+//        String url = "/patrol/shop/page/conversion";
+//        String json =
+//                "{" +
+//                        "\"district_code\" :\"" + district_code + "\",\n" +
+//                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+//                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+//                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
+//                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+//                        "\"percentage_type\" :\"" + percentage_type + "\",\n" +
+//                        "\"percentage_type_order\" :\"" + percentage_type_order + "\",\n" +
+//                        "\"page\" :" + page + ",\n" +
+//                        "\"size\" :" + size + ",\n" +
+//                        "} ";
+//
+//        String res = httpPostWithCheckCode(url, json, IpPort);
+//
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
 }
