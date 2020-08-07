@@ -132,9 +132,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String reception_phone = "15037286013"; //接待人员电话
             String customer_max = "50";                    //人数上限
 
-            String activity_start = dt.getHistoryDate(0);
+            String activity_start = dt.getHistoryDate(1);
             String activity_end = dt.getHistoryDate(4);
-            Integer role_id = 13;
+            Integer role_id = 16;
             Boolean is_create_poster = true;//是否生成海报
             Integer task_customer_numa = crm.groupTotal(customer_types, car_types, customer_level, customer_property).getInteger("total");
             Integer task_customer_num=5;
@@ -1106,7 +1106,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
               Long activity_id=aid[1];
               Long id=aid[0];
-              crm.login(lxqgw,adminpassword);
+              crm.login("baoyangr",adminpassword);
               JSONObject response = crm.activityTaskPageX();
               JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
               int activityTaskId = json.getInteger("activity_task_id");
@@ -1127,8 +1127,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", "15037286612");
               Preconditions.checkArgument(code==1001,"app添加报名人信息上限50条");
               crm.login(adminname,adminpassword);
-              crm.articleStatusChange(id);
-              crm.articleDelete(id);
+              //crm.articleStatusChange(id);
+             // crm.articleDelete(id);
           }catch (AssertionError e){
               appendFailreason(e.toString());
           }catch (Exception e){
@@ -1138,7 +1138,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
           }
       }
       /**
-       * @description :app活动报名，添加报过名的电话，失败 TODO:
+       * @description :app活动报名，添加报过名的电话，失败
        * @date :2020/8/3 16:21
        **/
       @Test
@@ -1282,13 +1282,19 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :小程序车主风采<=pc今日交车数 TODO:
+     * @description :小程序车主风采<=pc今日交车数 TODO:  车主风采中需要是今日才成立，若今日无交车，则此case 不成立
      * @date :2020/8/2 15:41
      **/
     @Test
     public void carOwer(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //pc今日交车数
+            crm.login(adminname,adminpassword);
+            long totalDeliverCar=crm.deliverCarList(1,10).getLong("total");
+            if(totalDeliverCar==0){
+                return;
+            }
             crm.appletLogin("123456");
             JSONArray list=crm.carOwner().getJSONArray("list");
             int total;
@@ -1297,9 +1303,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }else{
                 total=list.size();
             }
-            //pc今日交车数
             crm.login(adminname,adminpassword);
-            long totalDeliverCar=crm.deliverCarList(1,10).getLong("total");
             Preconditions.checkArgument(total<=totalDeliverCar,"小程序车主风采>pc今日交车数");
 
         }catch (AssertionError e){

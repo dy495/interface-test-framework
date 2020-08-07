@@ -2344,7 +2344,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-    //获取活动列表
+    //获取活动列表 --勿删除
     public JSONObject activityTaskPageX() {
         String url = "/porsche/app/activity-task/page";
         JSONObject object = new JSONObject();
@@ -2354,7 +2354,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
-    //删除报名人员
+    //删除报名人员--勿删除
     public JSONObject deleteCustomerX(String activityTaskId, String customerId) {
         String url = "/porsche/app/activity-task/deleteCustomer";
         JSONObject object = new JSONObject();
@@ -2364,7 +2364,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
-    //获取任务客户列表
+    //获取任务客户列表--勿删除
     public JSONObject customerTaskPageX(int size, int page, Long activityId) {
         String url = "/porsche/activity/customer/task/page";
         JSONObject object = new JSONObject();
