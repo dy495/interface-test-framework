@@ -97,6 +97,77 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    //读取文件内容
+    public String texFile(String fileName) throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        String str = in.readLine();
+        return str;
+    }
+
+    //前台点击创建接待按钮创建顾客
+    public Long creatCust(String name, String phone) throws Exception {
+        //前台登陆
+        crm.login("qt", adminpassword);
+        Long customerid = -1L;
+        //获取当前空闲第一位销售id
+
+        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        //创建接待
+        crm.creatReception("FIRST_VISIT");
+        //销售登陆，获取当前接待id
+        crm.login(userLoginName, adminpassword);
+        customerid = crm.userInfService().getLong("customer_id");
+        //创建某级客户
+//        JSONObject customer = crm.finishReception(customerid, 7, name, phone, "自动化---------创建----------H级客户");
+        JSONObject customer = crm.customerEdit_onlyNec(customerid, 7, name, phone, "自动化---------创建----------H级客户");
+
+        return customerid;
+    }
+
+    //新建试驾+审核封装
+    public void creatDriver(Long customer_id,String name,String phone,String sign_date,String sign_time, int audit_status) throws Exception {  //1-通过，2-拒绝
+        String idCard = "110226198210260078";
+        String gender = "男";
+        String signTime = dt.getHistoryDate(0);
+        String model = "911";
+        String country = "中国";
+        String city = "图们";
+        String email = dt.getHistoryDate(0)+"@qq.com";
+        String address = "北京市昌平区";
+        String ward_name = "小小";
+        String driverLicensePhoto1Url = texFile(filePath);
+        String driverLicensePhoto2Url = texFile(filePath);
+        String electronicContractUrl = texFile(filePath);
+
+        String call="MEN";
+        int driverid = crm.driveradd(customer_id,name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call).getInteger("id");
+        //销售总监登陆
+        crm.login("xszj",adminpassword);
+        crm.driverAudit(driverid,audit_status);
+        //最后销售要再登陆一次
+
+    }
+
+    //订车+交车封装 TODO: copy lxq ok
+    public void creatDeliver(Long customer_id,String customer_name,String deliver_car_time, Boolean accept_show) throws Exception {
+        //订车
+        crm.orderCar(customer_id);
+        //创建交车
+        String model = "911";
+        String path = texFile(filePath);
+        crm.deliverAdd(customer_id,customer_name,deliver_car_time,model,path,accept_show,path);
+    }
+
+
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num){
         Long article_id=0L;
@@ -143,7 +214,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         return aid;
     }
     /**
-     * @description :交车按名字/电话查询，结果校验
+     * @description :交车按名字/电话查询，结果校验  ok
      * @date :2020/8/3 12:48
      **/
     @Test
@@ -160,7 +231,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             }
             JSONArray listPhone=crm.deliverSelect(1,10,customer_phone_number).getJSONArray("list");
             for(int i=0;i<listPhone.size();i++){
-                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_name");
+                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_phone_number");
                 Preconditions.checkArgument(PhoneSelect.equals(customer_phone_number),"交车按客户电话查询，结果错误");
             }
 
@@ -174,14 +245,14 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :交车查询
+     * @description :交车按时间查询 ok
      * @date :2020/8/3 12:48
      **/
     @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
     public void jiaocheSelectTime(String select_date){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray list=crm.deliverSelect(1,10,select_date,select_date).getJSONArray("list");
+            JSONArray list=crm.deliverSelect(10,1,select_date,select_date).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String timeSelect=list.getJSONObject(i).getString("deliver_car_time");
                 Preconditions.checkArgument(timeSelect.equals(select_date),"交车按交车时间{}查询，结果{}错误",select_date,timeSelect);
@@ -238,7 +309,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             }
             JSONArray listPhone=crm.driverSelect(1,10,customer_phone_number).getJSONArray("list");
             for(int i=0;i<listPhone.size();i++){
-                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_name");
+                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_phone_number");
                 Preconditions.checkArgument(PhoneSelect.equals(customer_phone_number),"交车按客户电话查询，结果错误");
             }
 
@@ -252,7 +323,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :试驾查询
+     * @description :试驾查询 ok
      * @date :2020/8/3 12:48
      **/
     @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
@@ -273,7 +344,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :试驾查询
+     * @description :试驾查询 ok
      * @date :2020/8/3 12:48
      **/
     @Test()
@@ -299,24 +370,24 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :客户按名字/电话查询，结果校验
+     * @description :客户按名字/电话查询，结果校验 ok
      * @date :2020/8/3 12:48
      **/
     @Test
     public void customerSelect(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject data=crm.driverSelect(1,10);
+            JSONObject data=crm.customerSelect(1,10);
             String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
             String customer_phone=data.getJSONArray("list").getJSONObject(0).getString("customer_phone");
-            JSONArray list=crm.driverSelect(1,10,customer_name).getJSONArray("list");
+            JSONArray list=crm.customerSelect(1,10,customer_name).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument(nameSelect.equals(customer_name),"客户按客户名称查询，结果错误");
             }
-            JSONArray listPhone=crm.driverSelect(1,10,customer_phone).getJSONArray("list");
+            JSONArray listPhone=crm.customerSelect(1,10,customer_phone).getJSONArray("list");
             for(int i=0;i<listPhone.size();i++){
-                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_name");
+                String PhoneSelect=listPhone.getJSONObject(i).getString("customer_phone");
                 Preconditions.checkArgument(PhoneSelect.equals(customer_phone),"客户按客户电话查询，结果错误");
             }
 
@@ -377,18 +448,24 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :创建线索
+     * @description :创建线索 ok
      * @date :2020/8/3 14:58
      **/
     @Test
     public void createLine(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String customer_phone="15037286012";
-            Long code=crm.createLine("诸葛",1,customer_phone,1).getLong("code");
+//            String customer_phone="15037286012";
+            String customer_phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                customer_phone = customer_phone + a;
+            }
+            String remark="自动化创建线索自动化创建线索自动化创建线索";
+            Long code=crm.createLine("诸葛自动",1,customer_phone,1,remark).getLong("code");
             Preconditions.checkArgument(code==1000,"使用不存在的手机号创建线索应该成功");
 
-            Long code2=crm.createLine("诸葛",1,customer_phone,1).getLong("code");
+            Long code2=crm.createLine("诸葛自动",1,customer_phone,1,remark).getLong("code");
             Preconditions.checkArgument(code2==1001,"使用存在的手机号创建线索不应该成功");
 
         }catch (AssertionError e){
@@ -398,23 +475,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }finally {
             saveData("创建线索");
         }
-    }
-
-    //读取文件内容
-    public String texFile(String fileName) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String str = in.readLine();
-        return str;
-    }
-
-    //订车+交车封装 TODO: copy lxq 待调试
-    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
-        //订车
-        crm.orderCar(customer_id);
-        //创建交车
-        String model = "911";
-        String path = texFile(filePath);
-        crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
     }
 
 
@@ -427,8 +487,18 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //app 销售登录，交车授权信息
-            Long customer_id=911L;  //TODO:
-            creatDeliver(customer_id,dt.getHistoryDate(0),true);
+            Long customer_id=13979L;  //TODO:
+            String customer_name="auto";
+//            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//            Long customer_id=creatCust(customer_name,phone);
+
+            creatDeliver(customer_id,customer_name,dt.getHistoryDate(0),true);
+            //完成接待
+//            crm.finishReception(customer_id, 7, customer_name, phone, "自动化---------创建----------H级客户");
             //小程序登录，查看最新交车
             crm.appletLogin("123456");
             JSONObject data=crm.carOwnernew();
@@ -438,9 +508,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String hobby=data.getString("hobby");
             crm.login(adminnameapp,adminpassword);
             Preconditions.checkArgument(car_model.equals("911"),"最新交车信息校验失败");
-            Preconditions.checkArgument(work.equals("[\"自由\"，\"金融\"]"),"最新交车信息校验失败");
-            Preconditions.checkArgument(hobby.equals("[\"摄影\"，\"宠物\"]"),"最新交车信息校验失败");
-            Preconditions.checkArgument(car_model.equals("[\"摄影\"，\"宠物\"]"),"最新交车信息校验失败");
+            Preconditions.checkArgument(work.equals("金融 "),"最新交车信息校验失败");
+            Preconditions.checkArgument(hobby.equals("宠物 "),"最新交车信息校验失败");
 
 
         }catch (AssertionError e){
@@ -469,9 +538,16 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 total=list.size();
             }
             //app 销售登录，交车授权信息
-            crm.login(adminnameapp,adminpassword);
-            Long customer_id=911L;            //TODO:
-            creatDeliver(customer_id,dt.getHistoryDate(0),true);
+//            crm.login(adminnameapp,adminpassword);
+//            Long customer_id=13979L;            //TODO:
+            String customer_name="autolist";
+            String phone = "1";
+            for (int i = 0; i < 10; i++) {
+                String a = Integer.toString((int) (Math.random() * 10));
+                phone = phone + a;
+            }
+            Long customer_id=creatCust(customer_name,phone);
+            creatDeliver(customer_id,customer_name,dt.getHistoryDate(0),true);
             //小程序登录，查看交车
             crm.appletLogin("123456");
             JSONArray listA=crm.carOwner().getJSONArray("list");
@@ -493,7 +569,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
    /**
-    * @description :app活动报名,任务人数于创建时相同，增加报名，任务人数+1，  删除报名-1
+    * @description :app活动报名,任务人数于创建时相同，增加报名，任务人数+1，  删除报名-1 0k
     * @date :2020/8/3 19:13
     **/
    @Test
@@ -545,18 +621,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
    }
 
 
-
-
-
-
-
-
-
-
-
-
     /**
-     * @description :交车 今日数=列表电话去重数   TODO
+     * @description :交车 今日数=列表电话去重数   ok
      * @date :2020/7/31 13:55
      **/
     @Test
@@ -564,7 +630,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject data=crm.deliverSelect(1,100,dt.getHistoryDate(0),dt.getHistoryDate(0));
-            JSONObject dataTotal=crm.deliverTotal();
+            JSONObject dataTotal=crm.jiaocheTotal();
             int today_number=dataTotal.getInteger("today_deliver_car_total");
             JSONArray list=data.getJSONArray("list");
             List<String> numList = new ArrayList<String>();
@@ -628,6 +694,36 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             saveData("试驾 今日数=列表电话去重数");
         }
     }
+
+      /**
+       * @description :试驾
+       * @date :2020/8/10 16:45
+       **/
+      @Test
+    public void testderver(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              Long customer_id=13979L;  //TODO:
+              String customer_name="auto";
+            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//            Long customer_id=creatCust(customer_name,phone);
+              String time=dt.getHHmm(0);
+              creatDriver(customer_id,customer_name,phone,dt.getHistoryDate(0),dt.getHHmm(0),1);
+
+
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+             appendFailreason(e.toString());
+          }finally {
+              saveData("创建试驾");
+          }
+      }
+
 
 
 
