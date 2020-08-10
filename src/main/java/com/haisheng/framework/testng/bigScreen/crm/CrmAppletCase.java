@@ -1350,7 +1350,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 //            }
 //        }
 //        a[0] = userLoginName;
-        //维修顾问登陆，点击接待按钮
+        //保养顾问登陆，点击接待按钮
         crm.login(baoyangr, adminpassword);
         if (ifreception.equals("yes")) {
             Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
@@ -1384,16 +1384,43 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
          }
      }
     /**
-     * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次
+     * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1
      * @date :2020/8/2 10:29
      **/
     @Test(priority = 12)
     public void appointEvaluate(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //接待前baoyangr，接待次数
+            crm.login(adminname,adminpassword);
+            JSONArray list= crm.ManageList(16).getJSONArray("list");
+            if(list==null||list.size()==0){
+                return;
+            }
+            int  num=0;
+            for(int i=0;i<list.size();i++){
+                String name=list.getJSONObject(i).getString("name");
+                if(name.equals("baoyangr")){
+                    num=list.getJSONObject(i).getInteger("num");
+                }else{
+                    continue;
+                }
+            }
             String [] aa= maintainP(dt.getHistoryDate(0),mycarID,"yes");
             String appoint_id=aa[1];
-            //评价
+
+             int num2=0;
+            JSONArray list2= crm.ManageList(16).getJSONArray("list");
+            for(int j=0;j<list2.size();j++){
+                String name2=list2.getJSONObject(j).getString("name");
+                if(name2.equals("baoyangr")){
+                    num2=list2.getJSONObject(j).getInteger("num");
+                }else{
+                    continue;
+                }
+            }
+            Preconditions.checkArgument((num2-num)==1,"接待完成，接待次数没+1");
+            crm.appletLogin("123456");   //评价
             crm.appointmentEvaluate(Long.parseLong(appoint_id),"4","保养满意");
         }catch (AssertionError e){
             appendFailreason(e.toString());
