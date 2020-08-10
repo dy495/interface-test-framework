@@ -132,6 +132,33 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 ""
         };
     }
+    @DataProvider(name = "AREA_CODE")
+    public static Object[] area_code() {
+
+        return new String[]{
+                "110000"
+        };
+    }
+
+    @DataProvider(name = "AREA_TYPE")
+    public static Object[] area_type() {
+
+        return new String[]{
+                "[\"NORMAL\"]"
+        };
+    }
+
+    @DataProvider(name = "CUSTMER_TYPE")
+    public static Object[] custmer_type() {
+
+        return new String[]{
+                "PASS_BY",
+                "INTEREST",
+                "ENTER",
+                "DEAL"
+        };
+    }
+//    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
 
     /**
@@ -169,6 +196,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    /**
+     * @description:8.1.3 实时客流门店列表V3.0
+     * @author: guoliya
+     * @time:
+     */
 
     public JSONObject patrolShopRealV3A(String district_code, String[] shop_type,String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/real-time";
@@ -304,7 +336,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopTrendV3(String cycle_type, String month, long shop_id) throws Exception {
-        String url = "/patrol/history/shop/trend";
+        String url = "/patrol/history/shop/trend-pv-uv";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +

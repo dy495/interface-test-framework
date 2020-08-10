@@ -31,4 +31,6 @@ public class DingWebhook {
 
     //日常回归-管理后台
     public static String DAILY_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=5fe27703e52c3ee3e8a97bf9f6a13c6e23b63ef2abff5f5c4d91f5e915f64c10";
+    //线上巡检-管理后台&门店中心
+    public static String ONLINE_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=4beef5484b39755950f469c5c0b09f9cf262c9e7988627da07909862fce54c42";
 }

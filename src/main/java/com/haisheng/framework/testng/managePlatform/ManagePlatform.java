@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.managePlatform;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.CheckUtil;
@@ -10,6 +11,8 @@ import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import okhttp3.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -36,8 +39,8 @@ public class ManagePlatform {
     private String SHOP_Id = "640";
     private String CLUSTER_NODE_Id = "463";
     private String ALIAS = "测试专用机";
-    private static String BATCH_START_DEVICE_ID_1 = "6857175479387136";//batchStartDeviceCheck,listDeviceDiffConditionCheck
-    private static String BATCH_START_DEVICE_ID_2 = "6857180815393792";//batchStartDeviceCheck,listDeviceDiffConditionCheck
+    private static String BATCH_START_DEVICE_ID_1 = "7696038596150272";//batchStartDeviceCheck,listDeviceDiffConditionCheck
+    private static String BATCH_START_DEVICE_ID_2 = "7695750673630208";//batchStartDeviceCheck,listDeviceDiffConditionCheck
     private static String DEVICE_ID_MAPPING = "6869660253094912";//layoutMapping
 
     private static String REGION_DEVICE_1 = "6869668371661824";//已经添加到REGION_ID=3674上
@@ -1521,7 +1524,7 @@ public class ManagePlatform {
         return deviceId;
     }
 
-    private void checkisExistByListDevice(String response, String deivceId, boolean isExist) {
+    private void checkisExistByListDevice(String response, String deviceId, boolean isExist) {
         boolean isExistRes = false;
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
@@ -1530,7 +1533,8 @@ public class ManagePlatform {
         for (int i = 0; i < list.size(); i++) {
             JSONObject singleDevice = list.getJSONObject(i);
             String deviceIdRes = singleDevice.getString("device_id");
-            if (deviceIdRes.equals(deivceId)) {
+            Preconditions.checkArgument(deviceIdRes != null, "device_id is null");
+            if (deviceIdRes.trim().equals(deviceId.trim())) {
                 isExistRes = true;
             }
         }
@@ -6247,6 +6251,8 @@ public class ManagePlatform {
         }
     }
 
+    @NotNull
+    @Contract(value = " -> new", pure = true)
     @DataProvider(name = "CONDITION")
     private static Object[][] condition() {
         return new Object[][]{
@@ -6258,10 +6264,10 @@ public class ManagePlatform {
                 },
                 new Object[]{
                         "name", "\"name\":\"" + DEVICE_NAME_1 + "\""
-                },
-                new Object[]{
-                        "sceneType", "\"scene_type\":\"" + "COMMON" + "\""
                 }
+//                new Object[]{
+//                        "sceneType", "\"scene_type\":\"" + "COMMON" + "\""
+//                }
         };
     }
 

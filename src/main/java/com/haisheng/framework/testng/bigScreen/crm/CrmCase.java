@@ -2128,7 +2128,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
         }
         //创建接待
-        crm.creatReception();
+        crm.creatReception("FIRST_VISIT");
         //销售登陆，获取当前接待id
         crm.login(userLoginName, pwd);
         customerid = crm.userInfService().getLong("customer_id");

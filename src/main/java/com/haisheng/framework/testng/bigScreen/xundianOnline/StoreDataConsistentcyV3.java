@@ -1,28 +1,25 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.*;
-;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -31,15 +28,16 @@ import java.util.*;
  */
 
 public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
-    long shop_id = 4116;
+    long shop_id = 13260;
     String district_code = "";
     //    String shop_type = "[\"NORMAL\"]";
     String shop_type = "[]";
     Integer page = 1;
     Integer size = 50;
+
 
 
 
@@ -57,7 +55,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
 //
@@ -65,23 +63,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
-        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
-        //13436941018 吕雪晴
-        //17610248107 廖祥茹
-        //15084928847 黄青青
-        //13581630214 马琨
-        //18513118484 杨航
-        //13259979249 黄鑫
-        //18672733045 高凯
-        //15898182672 华成裕
-        //18810332354 刘峤
-
+        commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214"};
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
@@ -93,7 +81,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
         logger.debug("store " + Md);
 
-        Md.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        Md.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
 
 
     }
@@ -115,7 +103,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
     /**
      *
      * ====================今日到访人数<=今天各个时间段内到访人数的累计======================
@@ -126,11 +113,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 4116l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 13260l).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long)4116l).getJSONArray("list");
+            JSONArray eTlist = Md.realTimeShopPvV3((long)13260l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todayUv = eTlist.getJSONObject(i).getInteger("today");
@@ -154,7 +141,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     /**
      *
-     * ====================过店客群总人次==各个门的过店人次之和======================
+     * ====================过店客群总人次==各个门的过店人次之和+兴趣客群======================
      * */
     @Test
     public void passByTotal() {
@@ -168,8 +155,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int pv2 = pass_by.get("pv2");
             int uv1 = pass_by.get("uv1");
             int uv2 = pass_by.get("uv2");
-            Preconditions.checkArgument(pv1== pv2,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
-            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+            int pvIn1 = interest.get("pv1");
+            int uvIn1 = interest.get("uv1");
+
+            int passPv = pv2 +  pvIn1;
+            int passUv = uv2 + uvIn1;
+            Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
+            Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"兴趣客群总人次"+uvIn1);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -177,7 +170,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("过店客群总人次==各个门的过店人次之和|过店客群总人数==各个门的过店人次之数");
+            saveData("过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
         }
 
     }
@@ -248,7 +241,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     /**
      *
-     * ====================兴趣客群总人次==各个门的进店人次之和======================
+     * ====================兴趣客群总人次==各个门的进店人次之和 + 进店的客群======================
      * */
     @Test
     public void interestTotal() {
@@ -261,8 +254,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int pv2 = interest.get("pv2");
             int uv1 = interest.get("uv1");
             int uv2 = interest.get("uv2");
-            Preconditions.checkArgument(pv1== pv2,"兴趣客群总人次=" + pv1 + "各个门的兴趣人次之和=" + pv2);
-            Preconditions.checkArgument(uv1== uv2,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2);
+            Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
+            int pvEn1 = enter.get("pv1");
+            int uvEn1 = enter.get("uv1");
+
+            int intPv = pv2 +  pvEn1;
+            int intUv = uv2 + uvEn1;
+            Preconditions.checkArgument(pv1== intPv,"兴趣客群总人次=" + pv1 + "各个门的兴趣人次之和=" + pv2 + "+ 进店客群的总人次" + pvEn1);
+            Preconditions.checkArgument(uv1== intUv,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2 + "+ 进店客群的总人数"+ uvEn1);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -270,7 +269,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("兴趣客群总人次==各个门的进店人次之和");
+            saveData("兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
         }
 
     }
@@ -341,7 +340,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================高于同城门店的比例(pv)==同城总门店数量-该门店的排行/同城总门店数量======================
      * */
-    @Test(dataProvider = "AREA_CODE", dataProviderClass = StoreScenarioUtil.class)
+    @Test(dataProvider = "AREA_CODE", dataProviderClass = StoreScenarioUtilOnline.class)
     public void highAveragePv(String area_code ) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -371,7 +370,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONArray list = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一城市的门店列表
             for(int i=0;i<list.size();i++){
                 Integer shop_id= list.getJSONObject(i).getInteger("id");
-                if(shop_id == 4116){
+                if(shop_id == 13260){
                     idNum=i+1;
                 }
             }
@@ -396,8 +395,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================高于同类型门店的比例(pv)==同类型总门店数量-该门店的排行/同类型总门店数量======================
      * */
-    @Test(dataProvider = "AREA_TYPE", dataProviderClass = StoreScenarioUtil.class)
-    public void highAveragePvs(String area_type ) {
+    @Test(dataProvider = "AREA_TYPE", dataProviderClass = StoreScenarioUtilOnline.class)
+    public void highAveragePvs(String area_type) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         int value1 = 0;
@@ -426,7 +425,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONArray list = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一类型的门店列表
             for(int i=0;i<list.size();i++){
                 Integer shop_id= list.getJSONObject(i).getInteger("id");
-                if(shop_id == 4116){
+                if(shop_id == 13260){
                     idNum=i+1;
                 }
             }
@@ -435,7 +434,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
 
 
-            Preconditions.checkArgument(highScale.equals(link_re),"高于同城门店的比例(pv)=" + link_re + "同城总门店数量-该门店的排行/同城总门店数量=" + highScale);
+            Preconditions.checkArgument(highScale.equals(link_re),"高于同类门店的比例(pv)=" + link_re + "同类总门店数量-该门店的排行/同类总门店数量=" + highScale);
 //            Preconditions.checkArgument(link_re_uv2== highScale,"高于同类门店的比例=" + link_re_uv2 + "同类型总门店数量-该门店的排行/同类型总门店数量=" + highScale);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -443,7 +442,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("高于同城门店的比例(pv)==同城总门店数量-该门店的排行/同城总门店数量");
+            saveData("高于同类门店的比例(pv)==同类总门店数量-该门店的排行/同类总门店数量");
         }
 
     }
@@ -470,7 +469,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             int count=0;
-            String shop_type = "[\"NORMAL\"]";
+            String shop_type = "[\"FLAGSHIP\"]";
             Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一类型的门店数量
             JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
             for(int j=0;j<storeList.size();j++){
@@ -668,9 +667,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int result3 = Math.abs(value3-times3);
             int result4 = Math.abs(value4-times4);
             Preconditions.checkArgument(result1<=720,"交易客群总人次=" + value1 + "时段分布中各个时段交易pv累计=" + times1);
-            Preconditions.checkArgument(result2<=720,"进店客群总人次=" + value1 + "时段分布中各个时段进店pv累计=" + times2);
-            Preconditions.checkArgument(result3<=720,"兴趣客群总人次=" + value1 + "时段分布中各个时段兴趣pv累计=" + times3);
-            Preconditions.checkArgument(result4<=720,"过店客群总人次=" + value1 + "时段分布中各个时段过店pv累计=" + times4);
+            Preconditions.checkArgument(result2<=720,"进店客群总人次=" + value2 + "时段分布中各个时段进店pv累计=" + times2);
+            Preconditions.checkArgument(result3<=720,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
+            Preconditions.checkArgument(result4<=720,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
 
 
 
@@ -682,7 +681,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("到店客群总人次==到店时段分布中各个时段pv累计");
+            saveData("各个客群总人次==到店时段分布中各个客群各个时段pv累计");
 
         }
 
@@ -768,7 +767,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
             int values2 = values/values1;
             int result = Math.abs(averageFlow-values2);
-            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values2);
+            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流uv=" + values2);
 
 
         } catch (AssertionError e) {
@@ -835,7 +834,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             double theError3 = Math.abs(resultOther-theResult);
             Preconditions.checkArgument(theError1 <1,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
             Preconditions.checkArgument(theError2 <1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
-            Preconditions.checkArgument(resultAll<=101||resultAll>=99,"男性比例+女性比例" + resultAll + "不在99-100的范围间" );
+            Preconditions.checkArgument(resultAll<=101 && resultAll>=99,"男性比例+女性比例" + resultAll + "不在99-101的范围间" );
             Preconditions.checkArgument(theError3 <1,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
 
 
@@ -865,7 +864,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
             JSONArray storeList = Md.patrolShopPageV3(district_code,page,size).getJSONArray("list");
-            long shop_id = 4116;
+            long shop_id = 13260;
             JSONObject res = Md.shopDetailV3(shop_id);
 
             if( storeList.contains(res)){
@@ -966,6 +965,4 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-
-
 }
