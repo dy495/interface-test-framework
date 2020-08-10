@@ -8,14 +8,20 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
+ * crmApp2.1自动化用例
+ *
  * @author wangmin
  * @date 2020/7/30 18:52
  */
@@ -123,11 +129,11 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取我的接待数量
-            JSONObject response = crm.myReceptionList("", "", "", 10, 1);
-            JSONArray list = response.getJSONObject("data").getJSONArray("list");
+            JSONObject response = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONArray list = response.getJSONArray("list");
             int a = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("service_status_name").equals("接待中")) {
+                if (list.getJSONObject(i).getString("user_status_name").equals("接待中")) {
                     a++;
                 }
             }
@@ -135,12 +141,172 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("接待状态为接待中数量>1");
+            saveData("接待状态为接待中数量<=1");
         }
     }
 
-    @Test(description = "今日新客接待", enabled = false)
-    public void newCustomerReception() {
+    @Test(description = "共计接待=列表总数-等待中数量-去重手机号数量")
+    public void totalReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            int totalReception = CommonUtil.getIntFieldByData(response, "total_reception");
+            //列表总数
+            JSONObject response1 = crm.myReceptionList("", "", "", totalReception + 1000, 1);
+            JSONArray list = response1.getJSONArray("list");
+            int listTotal = list.size();
+            int waitTotal = 0;
+            //等待中数量
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("user_status_name").equals("等待中")) {
+                    waitTotal++;
+                }
+            }
+            int s = CommonUtil.phoneDuplicates(response1);
+            Preconditions.checkArgument(totalReception == listTotal - waitTotal - s, "共计接待!=列表总数-等待中数量-去重手机号数量");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("共计接待==列表总数-等待中数量-去重手机号数量");
+        }
+    }
 
+    @Test(description = "今日新客接待=接待日期为今天 客户类型为新客的手机号去重数量")
+    public void todayNewCustomer() {
+        logger.info(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            //今日新客接待
+            int todayNewCustomer = CommonUtil.getIntFieldByData(response, "today_new_customer");
+            JSONObject response1 = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONArray list = response1.getJSONArray("list");
+            Set<String> set = new HashSet<>();
+            int ss = 0;
+            for (int i = 0; i < list.size(); i++) {
+                String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+                if (list.getJSONObject(i).getString("day_date").equals(today)
+                        && list.getJSONObject(i).getString("customer_type_name").equals("新客")
+                        && !list.getJSONObject(i).getString("user_status_name").equals("等待中")) {
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    set.add(customerPhone);
+                    ss++;
+                }
+            }
+            int s = ss - set.size();
+            Preconditions.checkArgument(todayNewCustomer == ss - s, "今日新客接待!=接待日期为今天 客户类型为新客的手机号去重数量");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
+        }
+    }
+
+    @Test(description = "今日老客接待=接待日期为今天 客户类型为老客的手机号去重数量")
+    public void totalOldCustomer() {
+        logger.info(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            //今日老客接待
+            int todayOldCustomer = CommonUtil.getIntFieldByData(response, "total_old_customer");
+            JSONObject response1 = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONArray list = response1.getJSONArray("list");
+            Set<String> set = new HashSet<>();
+            int ss = 0;
+            for (int i = 0; i < list.size(); i++) {
+                String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+                if (list.getJSONObject(i).getString("day_date").equals(today)
+                        && list.getJSONObject(i).getString("customer_type_name").equals("老客")
+                        && !list.getJSONObject(i).getString("user_status_name").equals("等待中")) {
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    set.add(customerPhone);
+                    ss++;
+                }
+            }
+            int s = ss - set.size();
+            Preconditions.checkArgument(todayOldCustomer == ss - s, "今日老客接待!=接待日期为今天 客户类型为老客的手机号去重数量");
+        } catch (AssertionError | Exception e) {
+            System.err.println("xxx");
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
+        }
+    }
+
+    @Test(description = "今日订单数<=今日新客接待+今日老客接待")
+    public void todayOrder() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            int todayOrder = CommonUtil.getIntFieldByData(response, "today_order");
+            int todayNewCustomer = CommonUtil.getIntFieldByData(response, "today_new_customer");
+            int totalOldCustomer = CommonUtil.getIntFieldByData(response, "total_old_customer");
+            Preconditions.checkArgument(todayOrder <= todayNewCustomer + totalOldCustomer, "今日订单数>今日新客接待+今日老客接待");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日订单数<=今日新客接待+今日老客接待");
+        }
+    }
+
+
+    @Test(description = "【我的接待】共计接待 >= 【我的客户】全部客户")
+    public void saleReceptionReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            int totalReception = CommonUtil.getIntFieldByData(response, "total_reception");
+            JSONObject response1 = crm.customerPage(10, 1);
+            int total = CommonUtil.getIntFieldByData(response1, "total");
+            Preconditions.checkArgument(totalReception >= total, "【我的接待】共计接待 < 【我的客户】全部客户");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("【我的接待】共计接待 >= 【我的客户】全部客户");
+        }
+    }
+
+    @Test(description = "今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数")
+    public void todayReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            int todayOldCustomer = CommonUtil.getIntFieldByData(response, "total_old_customer");
+            int todayNewCustomer = CommonUtil.getIntFieldByData(response, "today_new_customer");
+            int todayCustomerNum = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("sale_name").equals("销售顾问temp")) {
+                    todayCustomerNum = list.getJSONObject(i).getInteger("today_customer_num");
+                }
+            }
+            Preconditions.checkArgument(todayCustomerNum == todayNewCustomer + todayOldCustomer, "今日新客接待+今日老客接待!=【PC端销售排班】该销售今日接待次数");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数");
+        }
+    }
+
+    @Test(description = "今日新客接待+今日老客接待=【PC端展厅接待】分配销售为该销售条数")
+    public void todayReception1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerReceptionTotalInfo();
+            int todayOldCustomer = CommonUtil.getIntFieldByData(response, "total_old_customer");
+            int todayNewCustomer = CommonUtil.getIntFieldByData(response, "today_new_customer");
+            int customerTodayList = 0;
+            JSONArray list = crm.customerTodayList().getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("sale_name") != null && list.getJSONObject(i).getString("sale_name").equals("销售顾问temp")) {
+                    customerTodayList++;
+                }
+            }
+            CommonUtil.valueView(todayNewCustomer, todayOldCustomer, customerTodayList);
+            Preconditions.checkArgument(customerTodayList == (todayNewCustomer + todayOldCustomer), "今日新客接待+今日老客接待!=【PC端展厅接待】分配销售为该销售条数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日新客接待+今日老客接待=【PC端展厅接待】分配销售为该销售条数");
+        }
     }
 }
