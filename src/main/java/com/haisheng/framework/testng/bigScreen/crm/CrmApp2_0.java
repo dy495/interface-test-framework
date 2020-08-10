@@ -7,14 +7,19 @@ import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
+ * crmApp2.0自动化用例
+ *
  * @author wangmin
  * @date 2020/7/23 16:45
  */
@@ -166,6 +171,37 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("创建接待");
+        }
+    }
+
+    @Test(description = "同一客户，一天内小程序预约试驾2次", enabled = false)
+    public void appointmentTestDrive() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //登录小程序
+            JSONObject response = crm.appointmentDriverNum();
+            JSONObject testDriverList = crm.appointmentTestDriverList(1, 2 << 10);
+            int listSize = testDriverList.getJSONArray("list").size();
+            int appointmentTotalNumber = CommonUtil.getIntFieldByData(response, "appointment_total_number");
+            int appointmentTodayNumber = CommonUtil.getIntFieldByData(response, "appointment_today_number");
+            crm.appletLogin(EnumAppletCode.CODE.getCode());
+            String data = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
+            for (int i = 0; i < 2; i++) {
+                crm.appointmentDrive("【自动化】王先生", "15321527989", data, 718);
+            }
+            JSONObject response1 = crm.appointmentDriverNum();
+            JSONObject testDriverList1 = crm.appointmentTestDriverList(1, 2 << 10);
+            int listSize1 = testDriverList1.getJSONArray("list").size();
+            int appointmentTotalNumber1 = CommonUtil.getIntFieldByData(response1, "appointment_total_number");
+            int appointmentTodayNumber1 = CommonUtil.getIntFieldByData(response1, "appointment_today_number");
+            Preconditions.checkArgument(listSize1 == listSize + 2, "列表条数未+2");
+            Preconditions.checkArgument(appointmentTotalNumber == appointmentTotalNumber1 + 1, "全部预约未+1");
+            Preconditions.checkArgument(appointmentTodayNumber1 == appointmentTodayNumber + 1, "今日预约未+1");
+        } catch (Exception | AssertionError e) {
+            System.err.println("sss");
+            appendFailreason(e.toString());
+        } finally {
+            saveData("同一客户，一天内小程序预约试驾2次");
         }
     }
 }
