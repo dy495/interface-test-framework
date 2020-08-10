@@ -10,11 +10,12 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.JsonpathUtil;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -1029,7 +1030,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
             customerid = creatCust(name,phone);
-             //完成接待
+            //完成接待
 
             Thread.sleep(1000);
 

@@ -894,7 +894,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 //            //TODO:试驾车型；今日总计，本月总计，当天去重，隔天不去重；故一天只能运行一次，且首次运行 app
 //            Preconditions.checkArgument((Long.parseLong(appointment_today_numberB)-Long.parseLong(appointment_today_numberA))==1,"预约试驾成功后，app预约试驾今日总计没有+1");
 //            Preconditions.checkArgument((Long.parseLong(appointment_total_numberB)-Long.parseLong(appointment_total_numberA))==1,"预约试驾成功后，app预约试驾全部累计没+1");
-              crm.myCarDelete(my_car_id);
+            crm.myCarDelete(my_car_id);
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -1368,21 +1368,21 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/2 10:43
      **/
 //     @Test
-     public void finnalRecept(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             //完成接待前，接待次数
-             //预约接待
-             //完成接待后，接待次数
+    public void finnalRecept(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //完成接待前，接待次数
+            //预约接待
+            //完成接待后，接待次数
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("完成接待，pc预约记录接待次数+1");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("完成接待，pc预约记录接待次数+1");
+        }
+    }
     /**
      * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1
      * @date :2020/8/2 10:29
@@ -1409,7 +1409,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String [] aa= maintainP(dt.getHistoryDate(0),mycarID,"yes");
             String appoint_id=aa[1];
 
-             int num2=0;
+            int num2=0;
             JSONArray list2= crm.ManageList(16).getJSONArray("list");
             for(int j=0;j<list2.size();j++){
                 String name2=list2.getJSONObject(j).getString("name");
