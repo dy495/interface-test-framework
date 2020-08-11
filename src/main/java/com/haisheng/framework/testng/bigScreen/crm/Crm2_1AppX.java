@@ -568,32 +568,32 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :app活动报名,任务人数于创建时相同，增加报名，任务人数+1，  删除报名-1 0k
-     * @date :2020/8/3 19:13
-     **/
-    @Test
-    public void taskactivity(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            //创建活动，获取活动id
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
-            Long activity_id=aid[1];
-            Long id=aid[0];
-            //app销售登录报名
-            crm.login(adminnameapp,adminpassword);
-            JSONObject response = crm.activityTaskPageX();
-            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
-            int activityTaskId = json.getInteger("activity_task_id");
-            int task_customer_num = json.getInteger("task_customer_num");
-            JSONArray list=json.getJSONArray("customer_list");
-            int total;
-            if(list==null||list.size()==0){
-                total=0;
-            }else {
-                total = list.size();
-            }
-            String phone = "1";
+   /**
+    * @description :app活动报名,任务人数于创建时相同，增加报名，任务人数+1，  删除报名-1 0k
+    * @date :2020/8/3 19:13
+    **/
+   @Test
+   public void taskactivity(){
+       logger.logCaseStart(caseResult.getCaseName());
+       try{
+           //创建活动，获取活动id
+           Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+           Long activity_id=aid[1];
+           Long id=aid[0];
+           //app销售登录报名
+           crm.login(adminnameapp,adminpassword);
+           JSONObject response = crm.activityTaskPageX();
+           JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
+           int activityTaskId = json.getInteger("activity_task_id");
+           int task_customer_num = json.getInteger("task_customer_num");
+           JSONArray list=json.getJSONArray("customer_list");
+           int total;
+           if(list==null||list.size()==0){
+               total=0;
+               }else {
+               total = list.size();
+               }
+           String phone = "1";
             for (int i = 0; i < 10; i++) {
                 String a = Integer.toString((int) (Math.random() * 10));
                 phone = phone + a;
@@ -602,23 +602,23 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
             JSONObject responseA = crm.activityTaskPageX();
             JSONObject jsonA = responseA.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
-            int totalA = jsonA.getJSONArray("customer_list").size();
-            //获取报名字段，校验
-            Preconditions.checkArgument(task_customer_num == 5, "app报名活动，任务人数与活动创建时不一致");
-            Preconditions.checkArgument(totalA-total == 1, "app报名活动，报名列表+1");
+           int totalA = jsonA.getJSONArray("customer_list").size();
+           //获取报名字段，校验
+           Preconditions.checkArgument(task_customer_num == 5, "app报名活动，任务人数与活动创建时不一致");
+           Preconditions.checkArgument(totalA-total == 1, "app报名活动，报名列表+1");
 
-            crm.articleStatusChange(id);
-            crm.articleDelete(id);
-            crm.login(adminnameapp, adminpassword);
+           crm.articleStatusChange(id);
+           crm.articleDelete(id);
+           crm.login(adminnameapp, adminpassword);
 
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("app活动报名,任务人数于创建时相同，增加报名，任务人数+1");
-        }
-    }
+       }catch (AssertionError e){
+           appendFailreason(e.toString());
+       }catch (Exception e){
+           appendFailreason(e.toString());
+       }finally {
+           saveData("app活动报名,任务人数于创建时相同，增加报名，任务人数+1");
+       }
+   }
 
 
     /**
@@ -695,34 +695,34 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :试驾
-     * @date :2020/8/10 16:45
-     **/
-    @Test
+      /**
+       * @description :试驾
+       * @date :2020/8/10 16:45
+       **/
+      @Test
     public void testderver(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            Long customer_id=13979L;  //TODO:
-            String customer_name="auto";
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              Long customer_id=13979L;  //TODO:
+              String customer_name="auto";
             String phone = "1";
 //            for (int i = 0; i < 10; i++) {
 //                String a = Integer.toString((int) (Math.random() * 10));
 //                phone = phone + a;
 //            }
 //            Long customer_id=creatCust(customer_name,phone);
-            String time=dt.getHHmm(0);
-            creatDriver(customer_id,customer_name,phone,dt.getHistoryDate(0),dt.getHHmm(0),1);
+              String time=dt.getHHmm(0);
+              creatDriver(customer_id,customer_name,phone,dt.getHistoryDate(0),dt.getHHmm(0),1);
 
 
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("创建试驾");
-        }
-    }
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+             appendFailreason(e.toString());
+          }finally {
+              saveData("创建试驾");
+          }
+      }
 
 
 
