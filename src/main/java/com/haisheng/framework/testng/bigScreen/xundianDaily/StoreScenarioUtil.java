@@ -431,7 +431,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject realTimeShopPvV3(long shop_id) throws Exception {
-        String url = "/patrol/real-time/shop/pv";
+        String url = "/patrol/real-time/shop/pv-uv";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +

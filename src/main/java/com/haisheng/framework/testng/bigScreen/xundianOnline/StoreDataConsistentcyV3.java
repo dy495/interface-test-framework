@@ -120,7 +120,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONArray eTlist = Md.realTimeShopPvV3((long)13260l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
-                Integer todayUv = eTlist.getJSONObject(i).getInteger("today");
+                Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
                 todayUv = todayUv  != null ?  todayUv : 0;
                 count += todayUv;
 
@@ -965,4 +965,47 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+    /**
+     *
+     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
+     * */
+    @Test
+    public void yesterdayTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+
+
+            //获取昨天日各个时间段内到访得人次且相加
+            JSONArray eTlist = Md.realTimeShopPvV3((long)13260l).getJSONArray("list");
+            int count = 0;
+            for(int i=0;i<eTlist.size();i++){
+                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
+                yesterdayPv = yesterdayPv  != null ?  yesterdayPv : 0;
+                count += yesterdayPv;
+
+            }
+
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int pv = 0;
+            int count1= trend_list.size();
+            for(int i=0;i<count1;i++){
+                if(i == count1 - 1){
+                    pv = trend_list.getJSONObject(i).getInteger("pv");
+                }
+            }
+            Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+        }
+
+    }
+
 }
