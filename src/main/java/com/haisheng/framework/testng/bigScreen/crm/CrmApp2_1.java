@@ -332,4 +332,142 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             saveData("今日交车数=今日交车列表手机号去重后列数和");
         }
     }
+
+    @Test(description = "实际交车>=今日交车")
+    public void deliverCarTotal() {
+        logger.info(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.deliverCarTotal();
+            int deliverCarTotal = CommonUtil.getIntFieldByData(response, "deliver_car_total");
+            int todayDeliverCarTotal = CommonUtil.getIntFieldByData(response, "today_deliver_car_total");
+            CommonUtil.valueView(deliverCarTotal, todayDeliverCarTotal);
+            Preconditions.checkArgument(deliverCarTotal >= todayDeliverCarTotal, "实际交车<今日交车");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("实际交车>=今日交车");
+        }
+    }
+
+    @Test(description = "全部交车>=实际交车")
+    public void totalOrder() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.deliverCarTotal();
+            int totalOrder = CommonUtil.getIntFieldByData(response, "total_order");
+            int deliverCarTotal = CommonUtil.getIntFieldByData(response, "deliver_car_total");
+            Preconditions.checkArgument(totalOrder >= deliverCarTotal, "全部交车<实际交车");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部交车>=实际交车");
+        }
+    }
+
+    @Test(description = "全部客户=列表数")
+    public void totalCustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            int total = CommonUtil.getIntFieldByData(response, "total");
+            JSONArray list = response.getJSONArray("list");
+            CommonUtil.valueView(total, list.size());
+            Preconditions.checkArgument(total == list.size(), "全部客户!=列表数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部客户=列表数");
+        }
+    }
+
+    @Test(description = "创建线索,全部客户+1")
+    public void customerCreate() {
+        String phone = "13333333333";
+        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
+        int total;
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
+            total = CommonUtil.getIntFieldByData(crm.customerPage(1, 10, "", "", ""), "total");
+            //创建线索
+            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 2, remark);
+            if (response.getString("message").equals("联系方式系统中已存在~")) {
+                //删除客户
+                JSONObject response1 = crm.customerList("", phone, "", "", "", 1, 10);
+                int customerId = CommonUtil.getIntFieldByData(response1, 0, "customer_id");
+                crm.customerDelete(customerId);
+                total = CommonUtil.getIntFieldByData(crm.customerPage(1, 10, "", "", ""), "total");
+                crm.createLine("【自动化】王先生", 6, phone, 2, remark);
+            }
+            int total1 = CommonUtil.getIntFieldByData(crm.customerPage(1, 10, "", "", ""), "total");
+            CommonUtil.valueView(total, total1);
+            Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("创建线索,全部客户+1");
+        }
+    }
+
+    @Test(description = "已订车=列表中是否订车为是的数量")
+    public void buyCarNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            int buyCarNum = CommonUtil.getIntFieldByData(response, "buy_car_num");
+            int s = 0;
+            JSONArray list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("if_buy_car_name").equals("是")) {
+                    s++;
+                }
+            }
+            CommonUtil.valueView(buyCarNum, s);
+            Preconditions.checkArgument(buyCarNum == s, "已订车!=列表中是否订车为是的数量");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("已订车=列表中是否订车为是的数量");
+        }
+    }
+
+    @Test(description = "全部客户>=已订车>=已交车")
+    public void customerTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            int total = CommonUtil.getIntFieldByData(response, "total");
+            int buyCarNum = CommonUtil.getIntFieldByData(response, "buy_car_num");
+            int deliverCarNum = CommonUtil.getIntFieldByData(response, "deliver_car_num");
+            CommonUtil.valueView(total, buyCarNum, deliverCarNum);
+            Preconditions.checkArgument(total >= buyCarNum, "全部客户<已定车数");
+            Preconditions.checkArgument(buyCarNum >= deliverCarNum, "已定车数<已交车数");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部客户>=已订车>=已交车");
+        }
+    }
+
+    @Test(description = "非订单客户1=<剩余天数<90")
+    public void remainDays() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            JSONArray list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("customer_level_name") == null
+                        || !list.getJSONObject(i).getString("customer_level_name").equals("D级")) {
+                    int remainDays = list.getJSONObject(i).getInteger("remain_days");
+                    CommonUtil.valueView(remainDays);
+                    Preconditions.checkArgument(remainDays < 90, "我的客户-剩余天数>90");
+                    Preconditions.checkArgument(remainDays >= 1, "我的客户-剩余天数<1");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("非订单客户1=<剩余天数<90");
+        }
+    }
 }
