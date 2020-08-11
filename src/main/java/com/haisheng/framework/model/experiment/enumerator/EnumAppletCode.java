@@ -8,12 +8,15 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    CODE("dZBhO0nkeaeCRUza2qlH+A==");
+    WM("w", "dZBhO0nkeaeCRUza2qlH+A==");
 
-    EnumAppletCode(String code) {
+    EnumAppletCode(String weChatName, String code) {
         this.code = code;
+        this.weChatName = weChatName;
     }
 
     @Getter
     private final String code;
+    @Getter
+    private final String weChatName;
 }

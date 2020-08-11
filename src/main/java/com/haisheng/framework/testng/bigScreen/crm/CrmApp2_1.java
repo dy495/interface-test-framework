@@ -88,7 +88,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntFieldByData(response, 0, "task_id");
             //获取回访详情
-            crm.returnVisitTaskInfo(taskId);
+            CommonUtil.valueView(crm.returnVisitTaskInfo(taskId));
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -104,7 +104,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntFieldByData(response, 1, "task_id");
             //回访
-            crm.returnVisitTaskExecute(taskId);
+            CommonUtil.valueView(crm.returnVisitTaskExecute(taskId));
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         }
@@ -129,7 +129,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取我的接待数量
-            JSONObject response = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONObject response = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
             JSONArray list = response.getJSONArray("list");
             int a = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -152,7 +152,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerReceptionTotalInfo();
             int totalReception = CommonUtil.getIntFieldByData(response, "total_reception");
             //列表总数
-            JSONObject response1 = crm.myReceptionList("", "", "", totalReception + 1000, 1);
+            JSONObject response1 = crm.customerMyReceptionList("", "", "", totalReception + 1000, 1);
             JSONArray list = response1.getJSONArray("list");
             int listTotal = list.size();
             int waitTotal = 0;
@@ -178,7 +178,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerReceptionTotalInfo();
             //今日新客接待
             int todayNewCustomer = CommonUtil.getIntFieldByData(response, "today_new_customer");
-            JSONObject response1 = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONObject response1 = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
             JSONArray list = response1.getJSONArray("list");
             Set<String> set = new HashSet<>();
             int ss = 0;
@@ -208,7 +208,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerReceptionTotalInfo();
             //今日老客接待
             int todayOldCustomer = CommonUtil.getIntFieldByData(response, "total_old_customer");
-            JSONObject response1 = crm.myReceptionList("", "", "", 2 << 10, 1);
+            JSONObject response1 = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
             JSONArray list = response1.getJSONArray("list");
             Set<String> set = new HashSet<>();
             int ss = 0;
@@ -248,14 +248,13 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @Test(description = "【我的接待】共计接待 >= 【我的客户】全部客户")
     public void saleReceptionReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = crm.customerReceptionTotalInfo();
             int totalReception = CommonUtil.getIntFieldByData(response, "total_reception");
-            JSONObject response1 = crm.customerPage(10, 1);
+            JSONObject response1 = crm.customerPage(10, 1, "", "", "");
             int total = CommonUtil.getIntFieldByData(response1, "total");
             Preconditions.checkArgument(totalReception >= total, "【我的接待】共计接待 < 【我的客户】全部客户");
         } catch (Exception | AssertionError e) {
@@ -307,6 +306,30 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("今日新客接待+今日老客接待=【PC端展厅接待】分配销售为该销售条数");
+        }
+    }
+
+    @Test(description = "今日交车数=今日交车列表手机号去重后列数和")
+    public void todayDeliverCar() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //今日交车数
+            JSONObject response = crm.deliverCarTotal();
+            int todayDeliverCarTotal = CommonUtil.getIntFieldByData(response, "today_deliver_car_total");
+            String startDay = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+            JSONArray array = crm.deliverCarAppList("", 1, 2 << 10, startDay, startDay).getJSONArray("list");
+            //电话号去重
+            Set<String> set = new HashSet<>();
+            for (int i = 0; i < array.size(); i++) {
+                String customerPhoneNumber = array.getJSONObject(i).getString("customer_phone_number");
+                set.add(customerPhoneNumber);
+            }
+            CommonUtil.valueView(todayDeliverCarTotal, array.size(), set.size());
+            Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数!=今日交车列表手机号去重后列数和");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日交车数=今日交车列表手机号去重后列数和");
         }
     }
 }
