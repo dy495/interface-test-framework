@@ -1029,7 +1029,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
             customerid = creatCust(name,phone);
-             //完成接待
+            //完成接待
 
             Thread.sleep(1000);
 

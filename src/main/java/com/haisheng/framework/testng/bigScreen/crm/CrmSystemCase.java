@@ -2435,7 +2435,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-   //@Test
+    //@Test
     public void customerListDelInService() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;

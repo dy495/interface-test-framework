@@ -2,17 +2,11 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -186,7 +180,7 @@ public class CrmStatistics {
         }
     }
 
-//    @Test
+    //    @Test
     public void test() throws Exception {
         String[] models = {"Panamera", "718", "911", "Macan", "Taycan", "Cayenne"};
 

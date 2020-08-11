@@ -831,16 +831,16 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
 
-        //预约保养
-        public String[] maintain(String date, Long carid, String ifreception) throws Exception {
-            String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
-            //小程序登陆
-            crm.appletLoginLxq("");
+    //预约保养
+    public String[] maintain(String date, Long carid, String ifreception) throws Exception {
+        String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
+        //小程序登陆
+        crm.appletLoginLxq("");
 
-            String appointment_time = "09:00";
-            JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time);
-            Long maintain_id = obj.getLong("appointment_id");
-            a[1] = Long.toString(maintain_id);
+        String appointment_time = "09:00";
+        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time);
+        Long maintain_id = obj.getLong("appointment_id");
+        a[1] = Long.toString(maintain_id);
 
 //        String salephone = obj.getString("sale_phone");
 //        //前台登陆
@@ -854,38 +854,38 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //            }
 //        }
 //        a[0] = userLoginName;
-            //维修顾问登陆，点击接待按钮
-            crm.login(by_name, pwd);
-            if (ifreception.equals("yes")) {
-                Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
-                a[2] = Long.toString(after_record_id);
-            } else {
-                a[2] = "未点击接待按钮";
-            }
-            return a;
-
+        //维修顾问登陆，点击接待按钮
+        crm.login(by_name, pwd);
+        if (ifreception.equals("yes")) {
+            Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
+            a[2] = Long.toString(after_record_id);
+        } else {
+            a[2] = "未点击接待按钮";
         }
-
-
-        //获取图片base64
-        public static String getImgStr(String imgFile){ //图片转base64
-            // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
-
-            InputStream in = null;
-            byte[] data = null;
-            // 读取图片字节数组
-            try {
-                in = new FileInputStream(imgFile);
-                data = new byte[in.available()];
-                in.read(data);
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return new String(Base64.encodeBase64(data));
-        }
-
-
+        return a;
 
     }
+
+
+    //获取图片base64
+    public static String getImgStr(String imgFile){ //图片转base64
+        // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+
+        InputStream in = null;
+        byte[] data = null;
+        // 读取图片字节数组
+        try {
+            in = new FileInputStream(imgFile);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String(Base64.encodeBase64(data));
+    }
+
+
+
+}
 

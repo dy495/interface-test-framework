@@ -11,6 +11,11 @@ public enum EnumAccount {
      * 销售顾问
      */
     XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e"),
+
+    /**
+     * 销售顾问
+     */
+    ZDH("zdh", "e10adc3949ba59abbe56e057f20f883e"),
     /**
      * 销售总监
      */
@@ -21,8 +26,8 @@ public enum EnumAccount {
     QT("qt", "e10adc3949ba59abbe56e057f20f883e");
 
     EnumAccount(String username, String password) {
-        this.username =username;
-        this.password =password;
+        this.username = username;
+        this.password = password;
     }
 
     @Getter
@@ -31,4 +36,4 @@ public enum EnumAccount {
     @Getter
     private final String password;
 
-    }
+}

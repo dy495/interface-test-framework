@@ -3,24 +3,26 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+;
 
 
 /**
@@ -69,9 +71,17 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
 
         commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214"};
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
+        //13436941018 吕雪晴
+        //17610248107 廖祥茹
+        //15084928847 黄青青
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
 
-        //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -122,7 +132,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONArray eTlist = Md.realTimeShopPvV3((long)4116l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
-                Integer todayUv = eTlist.getJSONObject(i).getInteger("today");
+                Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
                 todayUv = todayUv  != null ?  todayUv : 0;
                 count += todayUv;
 
@@ -952,6 +962,54 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         } finally {
 
             saveData("所选周期30天的顾客总人数<=所有门店30天顾客之和|所选周期30天的全渠道会员总人数<=所有门店30天全渠道会员之和|所选周期30天的付费会员总人数<=所有门店30天付费会员之和");
+        }
+
+    }
+
+    /**
+     *
+     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
+     * */
+    @Test
+    public void yesterdayTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+
+//            //获取今日实时得到访人次pv
+//            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 4116l).getJSONArray("list");
+//            Integer pv = iPvlist.getJSONObject(0).getInteger("value");
+
+            //获取昨天日各个时间段内到访得人次且相加
+            JSONArray eTlist = Md.realTimeShopPvV3((long)4116l).getJSONArray("list");
+            int count = 0;
+            for(int i=0;i<eTlist.size();i++){
+                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
+                yesterdayPv = yesterdayPv  != null ?  yesterdayPv : 0;
+                count += yesterdayPv;
+
+            }
+
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int pv = 0;
+            int count1= trend_list.size();
+            for(int i=0;i<count1;i++){
+                if(i == count1 - 1){
+                     pv = trend_list.getJSONObject(i).getInteger("pv");
+                }
+            }
+              Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv);
+//            Preconditions.checkArgument((o_count <= channel_uv),"所选周期30天的全渠道会员总人数" + o_count + ">所有门店30天全渠道会员之和=" + channel_uv);
+//            Preconditions.checkArgument((p_count <= pay_uv),"所选周期30天的付费总人数" + p_count + ">所有门店30天付费会员之和=" + pay_uv);
+//
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
         }
 
     }
