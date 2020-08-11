@@ -441,7 +441,7 @@ public class DateTimeUtil {
 
     }
 
-    public String getBeginDayOfMonth(Date date,String pattern) {
+    public String getBeginDayOfMonth(Date date, String pattern) {
 
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         Calendar cal = Calendar.getInstance();
@@ -451,7 +451,7 @@ public class DateTimeUtil {
         return sdf.format(cal.getTime());
     }
 
-    public String getEndDayOfMonth(Date date,String pattern) {
+    public String getEndDayOfMonth(Date date, String pattern) {
 
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         Calendar cal = Calendar.getInstance();
@@ -459,7 +459,7 @@ public class DateTimeUtil {
         cal.set(getNowYear(date), getNowMonth(date) - 1, 1);
 
         int day = cal.getActualMaximum(5);
-        cal.set(getNowYear(date),getNowMonth(date)-1,day);
+        cal.set(getNowYear(date), getNowMonth(date) - 1, day);
         return sdf.format(cal.getTime());
     }
 
@@ -479,7 +479,7 @@ public class DateTimeUtil {
         return gc.get(2) + 1;
     }
 
-    public  String getHHmm(int n) throws ParseException {
+    public String getHHmm(int n) throws ParseException {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
@@ -487,7 +487,7 @@ public class DateTimeUtil {
         return before;
     }
 
-    public   long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
+    public long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DATE, n);
@@ -504,10 +504,10 @@ public class DateTimeUtil {
      * @author: liao
      * @time:
      */
-    public int daysOfMonth(int year,int month) {
+    public int daysOfMonth(int year, int month) {
         Calendar c = Calendar.getInstance();
 
-        c.set(year,month,0);
+        c.set(year, month, 0);
 
         int days = c.get(Calendar.DAY_OF_MONTH);
 
@@ -563,27 +563,63 @@ public class DateTimeUtil {
 
         String day = "";
 
-        if (n>0){
+        if (n > 0) {
             day = LocalDate.now().plusDays(n).toString();
-        }else {
+        } else {
 
             day = LocalDate.now().minusDays(Math.abs(n)).toString();
         }
 
-        return  Integer.valueOf(day.substring(day.length()-2));
+        return Integer.valueOf(day.substring(day.length() - 2));
     }
 
     public String getDaysMinusPlusStr(int n) {
 
         String day = "";
 
-        if (n>0){
+        if (n > 0) {
             day = LocalDate.now().plusDays(n).toString();
-        }else {
+        } else {
 
             day = LocalDate.now().minusDays(Math.abs(n)).toString();
         }
 
-        return  day;
+        return day;
+    }
+
+    /**
+     * 将一个时间日期格式化为指定格式
+     *
+     * @param date      时间
+     * @param formatStr 格式字符串
+     * @return String
+     */
+    public static String getFormat(Date date, String formatStr) {
+        SimpleDateFormat sf = new SimpleDateFormat(formatStr);
+        return sf.format(date);
+    }
+
+    /**
+     * 生成格式化时间，默认使用模板：yyyy-MM-dd
+     *
+     * @param date 日期时间对象
+     * @return String 格式化后的时间信息
+     */
+    public static String getFormat(Date date) {
+        String formatStr = "yyyy-MM-dd";
+        return getFormat(date, formatStr);
+    }
+
+    /**
+     * 给指定日期增加若干天
+     *
+     * @param date 日期
+     * @param i    天数
+     * @return 最后的日期
+     */
+    public static Date addDay(Date date, int i) {
+        long curr = date.getTime();
+        curr += (long) i * 24 * 60 * 60000;
+        return new Date(curr);
     }
 }

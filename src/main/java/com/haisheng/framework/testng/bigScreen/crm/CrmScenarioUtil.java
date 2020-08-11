@@ -2113,8 +2113,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //---------------------app前台-----------------
     public JSONObject creatReception(String FIRST_VISIT) throws Exception {
         String url = "/porsche/app/sale-reception/reception";
-        JSONObject json=new JSONObject();
-        json.put("reception_type",FIRST_VISIT);
+        JSONObject json = new JSONObject();
+        json.put("reception_type", FIRST_VISIT);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2345,6 +2345,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //获取活动列表 --勿删除
     public JSONObject activityTaskPageX() {
         String url = "/porsche/app/activity-task/page";
@@ -2484,7 +2485,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //--------------------------app2.1------------------------
-    public JSONObject deliverSelect( int page,int size) {
+    public JSONObject deliverSelect(int page, int size) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2493,7 +2494,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject deliverSelect(int page,int size, String search_condition) {
+    public JSONObject deliverSelect(int page, int size, String search_condition) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2503,7 +2504,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject deliverSelect(int page,int size, String start_date, String end_date) {
+    public JSONObject deliverSelect(int page, int size, String start_date, String end_date) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2514,7 +2515,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject deliverSelect(int page,int size, String search_condition, String start_date, String end_date) {
+    public JSONObject deliverSelect(int page, int size, String search_condition, String start_date, String end_date) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2540,7 +2541,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject driverSelect(int page,int size) {
+    public JSONObject driverSelect(int page, int size) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2549,7 +2550,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject driverSelect(int page,int size, String search_condition) {
+    public JSONObject driverSelect(int page, int size, String search_condition) {
         String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2559,7 +2560,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject driverSelect(int page,int size, String start_date, String end_date) {
+    public JSONObject driverSelect(int page, int size, String start_date, String end_date) {
         String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2570,7 +2571,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject driverSelect(int page,int size, String search_condition, String start_date, String end_date) {
+    public JSONObject driverSelect(int page, int size, String search_condition, String start_date, String end_date) {
         String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2583,7 +2584,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //我的客户
-    public JSONObject customerSelect(int page,int size) {
+    public JSONObject customerSelect(int page, int size) {
         String url = "/porsche/app/customer/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2592,7 +2593,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject customerSelect(int page,int size, String search_condition) {
+    public JSONObject customerSelect(int page, int size, String search_condition) {
         String url = "/porsche/app/customer/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2602,7 +2603,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject customerSelect(int page,int size, String start_time, String end_time) {
+    public JSONObject customerSelect(int page, int size, String start_time, String end_time) {
         String url = "/porsche/app/customer/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2613,7 +2614,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject customerSelect(int page,int size, String search_condition, String start_time, String end_time) {
+    public JSONObject customerSelect(int page, int size, String search_condition, String start_time, String end_time) {
         String url = "/porsche/app/customer/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -2625,7 +2626,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject createLine(String customer_name, int like_car, String customer_phone, Integer customer_level,String remark) throws Exception {
+    public JSONObject createLine(String customer_name, int like_car, String customer_phone, Integer customer_level, String remark) throws Exception {
         String url = "/porsche/app/customer/create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
@@ -2654,6 +2655,64 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("search_date_end", searchDateEnd);
         object.put("size", size);
         object.put("page", page);
+        return invokeApi(url, object);
+    }
+
+    //我的客户列表
+    public JSONObject customerList(String customerName, String customerPhone, String customerLevel, String startTime, String endTime, int page, int size) {
+        String url = "/porsche/customer/list";
+        JSONObject object = new JSONObject();
+        if (!customerName.equals("")) {
+            object.put("customer_name", customerName);
+        }
+        if (!customerPhone.equals("")) {
+            object.put("customer_phone", customerPhone);
+        }
+        if (!customerLevel.equals("")) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!startTime.equals("")) {
+            object.put("start_time", startTime);
+        }
+        if (!endTime.equals("")) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //删除顾客
+    public JSONObject customerDelete(int customerId) {
+        String url = "/porsche/customer/delete";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        return invokeApi(url, object);
+    }
+
+    //共计接待接口
+    public JSONObject customerReceptionTotalInfo() {
+        String url = "/porsche/app/customer/reception-total-info";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    //我的客户
+    public JSONObject customerPage(int size, int page) {
+        String url = "/porsche/app/customer/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("page", page);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //我的预约列表
+    public JSONObject appointmentTestDriverList(int page, int size) {
+        String url = "/porsche/app/after_sale/appointment_test_driver_list";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 
