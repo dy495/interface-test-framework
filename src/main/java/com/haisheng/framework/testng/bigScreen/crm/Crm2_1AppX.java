@@ -133,12 +133,12 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         return customerid;
     }
 
-    //新建试驾+审核封装
+    //新建试驾+审核封装 TODO：
     public void creatDriver(Long customer_id,String name,String phone,String sign_date,String sign_time, int audit_status) throws Exception {  //1-通过，2-拒绝
         String idCard = "110226198210260078";
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
-        String model = "911";
+        Long model = 1L;
         String country = "中国";
         String city = "图们";
         String email = dt.getHistoryDate(0)+"@qq.com";
@@ -157,7 +157,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //订车+交车封装 TODO: copy lxq ok
+    //订车+交车封装  copy lxq debug ok
     public void creatDeliver(Long customer_id,String customer_name,String deliver_car_time, Boolean accept_show) throws Exception {
         //订车
         crm.orderCar(customer_id);
@@ -479,7 +479,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :新建交车授权，是小程序最新车主风采 TODO:
+     * @description :新建交车授权，是小程序最新车主风采 ok
      * @date :2020/8/3 16:46
      **/
     @Test
@@ -521,7 +521,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :新建交车授权，applet车主风采列表+1 TODO:
+     * @description :新建交车授权，applet车主风采列表+1 ok
      * @date :2020/8/3 18:25
      **/
     @Test
@@ -666,7 +666,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject data=crm.driverSelect(1,100,dt.getHistoryDate(0),dt.getHistoryDate(0));
             JSONObject dataTotal=crm.driverTotal();
-            int today_number=dataTotal.getInteger("today_deliver_car_total");
+            int today_number=dataTotal.getInteger("today_test_drive_total");
             JSONArray list=data.getJSONArray("list");
             List<String> numList = new ArrayList<String>();
             if(list==null||list.size()==0){

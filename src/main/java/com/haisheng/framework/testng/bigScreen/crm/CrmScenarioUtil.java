@@ -1077,7 +1077,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //新建试驾 2.1修改
     public JSONObject driveradd(Long customer_id, String customerName, String idCard, String gender, String phone,
-                                String signTime, String activity, String model, String country,
+                                String signTime, String activity, Long model, String country,
                                 String city, String email, String address, String ward_name, String driverLicensePhoto1Url,
                                 String driverLicensePhoto2Url, String electronicContractUrl, String sign_date, String sign_time, String call) {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
@@ -1547,6 +1547,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
 
 
     //预约详情

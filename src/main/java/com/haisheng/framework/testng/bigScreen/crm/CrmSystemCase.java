@@ -3450,7 +3450,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         String idCard = "110226198210260078";
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
-        String model = "911";
+        Long model = 1L;
         String country = "中国";
         String city = "图们";
         String email = dt.getHistoryDate(0)+"@qq.com";
