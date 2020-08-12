@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.http.HttpEntity;
@@ -29,6 +31,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 此部分不变，后面的方法自行更改
      */
     private static volatile CrmScenarioUtil instance = null;
+    CustomerInfo cstm = new CustomerInfo();
 
     private CrmScenarioUtil() {
     }
@@ -3025,4 +3028,78 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 dt.getHistoryDate(-2)
         };
     }
+
+
+
+
+
+    //方法封装
+    //前台点击创建接待按钮创建顾客
+    public String[] creatCust() throws Exception {
+        String a[] = new String[4];
+        //前台登陆
+        login(cstm.qt, cstm.pwd);
+        Long customerid = -1L;
+        //获取当前空闲第一位销售id
+
+        String sale_id = freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        //
+        String userLoginName = "";
+        JSONArray userlist = userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        a[0] = userLoginName;
+        //创建接待
+        creatReception("FIRST_VISIT");
+        //销售登陆，获取当前接待id
+        login(userLoginName, cstm.pwd);
+        customerid = userInfService().getLong("customer_id");
+        a[1] = Long.toString(customerid);
+        //创建某级客户
+        String name = "zdh";
+        String phone = "zdh"+(int)((Math.random()*9+1)*100000);
+        a[2] = name;
+        a[3] = phone;
+        JSONObject customer = finishReception(customerid, 7, name, phone, "自动化---------创建----------H级客户");
+        return a;
+    }
+
+    //新建试驾+审核封装
+    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
+        String idCard = "110226198210260078";
+        String gender = "男";
+        String signTime = dt.getHistoryDate(0);
+        Long model = 1L;
+        String country = "中国";
+        String city = "图们";
+        String email = dt.getHistoryDate(0)+"@qq.com";
+        String address = "北京市昌平区";
+        String ward_name = "小小";
+        String driverLicensePhoto1Url = cstm.picurl;
+        String driverLicensePhoto2Url = cstm.picurl;
+        String electronicContractUrl = cstm.picurl;
+
+        String call="先生";
+        int driverid = driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
+        //销售总监登陆
+        login(cstm.xszj,cstm.pwd);
+        driverAudit(driverid,driver.auditStatus);
+        //最后销售要再登陆一次
+
+    }
+
+    //订车+交车封装
+    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
+        //订车
+        orderCar(customer_id);
+        //创建交车
+        String model = "911";
+        String path = cstm.picurl;
+        deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
+    }
+
 }

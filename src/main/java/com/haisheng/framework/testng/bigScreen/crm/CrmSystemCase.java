@@ -3,66 +3,28 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.FileUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
+import org.testng.annotations.*;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import java.lang.reflect.Method;
 
 
 /**
- * @author : yu
+ * @author : lxq
  * @date :  2020/05/30
  */
 
 public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
-    //销售顾问
-    String saleShowName = "销售顾问-自动化";
-    String salename1 = "lxqgw";
-    String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
-    String by_name = "lxqby";//保养顾问姓名
-    String wx_name = "lxqwx";//维修顾问姓名
-    String pwd = "e10adc3949ba59abbe56e057f20f883e";//123456
-
-    //销售总监
-    String zjlname = "xszj";
-    String zjlpwd = "e10adc3949ba59abbe56e057f20f883e";
-    //根账号
-    String baoshijie = "baoshijie";
-    String bpwd = "e10adc3949ba59abbe56e057f20f883e";
+    CustomerInfo cstm = new CustomerInfo();
 
 
-    FileUtil fileUtil = new FileUtil();
-    String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg";
-    String picurl = fileUtil.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg");
-
-    String phone = "一个假的手机号"+dt.getHistoryDate(0);
-
-
-//    public void clearCustomer(long customerid)  throws Exception{
-//        if( customerid!=-1L){
-//            try {
-//
-//                //总经理登陆删除客户
-//                crm.login(zjlname,zjlpwd);
-//                //删除顾客
-//                crm.customerDeletePC(customerid);
-//            } catch (Exception e) {
-//                throw e;
-//            } finally {
-//                crm.login(salename1,salepwd1);
-//            }
-//        }
-//    }
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -101,7 +63,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(salename1, salepwd1);
+       crm.login(cstm.lxqgw,cstm.pwd);
 
     }
 
@@ -125,9 +87,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================工作安排======================
+     * ====================PC工作安排  V3.0取消页面======================
      * */
 
+    @Ignore
     @Test
     public void addScheduledesc10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -160,6 +123,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduledesc200() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -193,6 +157,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduledesc9() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -260,6 +225,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addSchedule_startGTend() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -293,6 +259,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduleRetime() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -332,6 +299,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduleEndLTNow() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -364,6 +332,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addSchedulePeriodTL10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -396,6 +365,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduleEndLTStartLTNow() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -428,6 +398,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addScheduleEndEQStart() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -460,6 +431,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test(dataProvider = "ERR_FORMAT",dataProviderClass = CrmScenarioUtil.class)
     public void addScheduleFormatErr1(String errformat) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -496,11 +468,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================我的回访====================== 修改数据库
+     * ====================PC我的回访 V3。0取消页面====================== 修改数据库
      * */
 
     //--------------------------查询--------------------
 
+    @Ignore
     @Test
     public void taskListSearchAll() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -508,8 +481,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
+            String name = ""+System.currentTimeMillis();
+            String phone = "zdh"+(int)((Math.random()*9+1)*100000);
             String desc = "创建H级客户自动化------------------------------------";
 
             customerid = creatCust(name,phone);
@@ -532,6 +505,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchName() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -566,6 +540,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -597,6 +572,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchLevel() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -629,6 +605,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameYPhoneY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -664,6 +641,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -697,6 +675,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -730,6 +709,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameYPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -764,6 +744,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameYPhoneN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -795,6 +776,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -824,6 +806,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchPhoneYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -853,6 +836,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void taskListSearchNameNPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -884,6 +868,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     //----------------------添加回访--------------------
 
+    @Ignore
     @Test
     public void addVisitComment10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -893,7 +878,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
-            String name = phone;
+            String name =""+System.currentTimeMillis();
             String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
 
@@ -925,6 +910,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitComment200() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -967,6 +953,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitnum50() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1052,6 +1039,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitComment9() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1091,6 +1079,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitComment201() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1129,6 +1118,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitComment0() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1204,6 +1194,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitButtonToContactED() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1248,6 +1239,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitDetialNotToContactED() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1542,6 +1534,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * ====================今日来访======================
      * */
     //----------------------查询--------------------
+    @Ignore
     @Test
     public void todayListSearchAll() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1570,6 +1563,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchName() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1604,6 +1598,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1635,6 +1630,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchLevel() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1668,6 +1664,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameYPhoneY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1701,6 +1698,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1732,6 +1730,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1765,6 +1764,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameYPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1798,6 +1798,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameYPhoneN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1828,6 +1829,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1859,6 +1861,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchPhoneYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1889,6 +1892,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void todayListSearchNameNPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1923,7 +1927,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================我的试驾======================
+     * ====================我的试驾 V3。0 取消页面======================
      * */
     //----------------------查询--------------------
 
@@ -2377,7 +2381,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             //查询
             JSONArray list = crm.customerListPC("",-1,"","","","",1,50).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
@@ -2414,12 +2418,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total==1,"删除前查询，期待有一条记录，实际"+total);
 
             //总经理登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             //删除顾客
             crm.customerDeletePC(customerid);
 
             //销售顾问登陆
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             //再次查询应无结果
             int total2 = crm.customerListPC("",-1,name,phone1,0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
@@ -2429,7 +2433,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("我的客户页面删除后再查询");
         }
 
@@ -2446,18 +2450,18 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String name = phone;
             customerid = creatCust(name,phone);
             //总经理登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             //删除顾客
             int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除接待中客户");
         }
 
@@ -2475,7 +2479,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             customerid = creatCust(name,phone);
 
             //总经理登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             //删除顾客
             int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
             Preconditions.checkArgument(code==1000,"删除失败");
@@ -2486,7 +2490,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除已完成接待客户");
         }
 
@@ -2546,11 +2550,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //总经理登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             crm.customerEditPC(customerid,name,phone.substring(4),2);
 
             //
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             //再次查询，手机号应改变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
             Preconditions.checkArgument(obj.getString("customer_phone").equals(phone.substring(4)),"手机号未改变");
@@ -2579,7 +2583,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             customerid = creatCust(name,phone);
 
             //销售总监登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             crm.customerEditsale(customerid,name,phone.substring(3),"uid_9c2b914d");
 
             //再次查询，手机号应不变
@@ -2613,12 +2617,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //总经理登陆
-            crm.login(zjlname,zjlpwd);
+            crm.login(cstm.xszj,cstm.pwd);
             crm.customerEditsale(customerid,name,phone.substring(3),"uid_8861b7fd");
 
             //再次查询，手机号应不变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             Preconditions.checkArgument(obj.getString("belongs_sale_id").equals("uid_8861b7fd"),"所属顾问未改变");
 
 
@@ -2716,7 +2720,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addUserREname(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -2771,7 +2775,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("创建已存在账号");
         }
     }
@@ -2780,7 +2784,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addUserREphone(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -2836,7 +2840,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("使用已存在手机号创建账号");
         }
     }
@@ -2846,7 +2850,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addUserPhoneErr1(String errphone){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = errphone;
@@ -2862,7 +2866,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("创建账号时手机号格式不正确");
         }
     }
@@ -2871,11 +2875,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addUse200(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
 
-            String passwd=pwd;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             int before_total = crm.userPage(1,1).getInteger("total");
             while (before_total<200){
@@ -2907,7 +2911,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("创建200个账号");
         }
     }
@@ -2916,11 +2920,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addUse201(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
 
-            String passwd=pwd;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             int before_total = crm.userPage(1,1).getInteger("total");
             while (before_total<200){
@@ -2954,7 +2958,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("创建201个账号");
         }
     }
@@ -2963,7 +2967,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  delUserDiffRole(String role){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -2972,7 +2976,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd=pwd;
+            String passwd=cstm.pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
@@ -3008,7 +3012,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int code = crm.userDelNotChk(userid).getInteger("code");
             Preconditions.checkArgument(code==1000,"删除失败，状态码"+code);
             //总经理登陆
-            String message = crm.tryLogin(userLoginName,salepwd1).getString("message");
+            String message = crm.tryLogin(userLoginName,cstm.pwd).getString("message");
             Preconditions.checkArgument(message.equals("用户名或密码错误"),"提示语为："+message);
 
         } catch (AssertionError e) {
@@ -3016,7 +3020,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除不同身份账号");
         }
     }
@@ -3025,7 +3029,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  delUserDiffRoleANDlogin(String role){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -3034,7 +3038,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd=pwd;
+            String passwd=cstm.pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
@@ -3070,7 +3074,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.userDel(userid);
 
             //登陆
-            String message = crm.tryLogin(userLoginName,salepwd1).getString("message");
+            String message = crm.tryLogin(userLoginName,cstm.pwd).getString("message");
             Preconditions.checkArgument(message.equals("用户名或密码错误"),"提示语为："+message);
 
         } catch (AssertionError e) {
@@ -3078,7 +3082,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除不同身份账号后，再次登陆");
         }
     }
@@ -3092,7 +3096,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  loginExist(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -3101,7 +3105,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd=salepwd1;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
@@ -3144,7 +3148,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("使用存在的销售账号登陆");
         }
     }
@@ -3153,7 +3157,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  loginExistWrongPwd(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(baoshijie,bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
             String phone = "1";
@@ -3162,7 +3166,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
-            String passwd=salepwd1;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId);
@@ -3205,7 +3209,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("使用存在的销售账号，错误的密码登陆");
         }
     }
@@ -3223,7 +3227,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             saveData("使用不存在的销售账号登陆");
         }
     }
@@ -3240,7 +3244,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            crm.login(baoshijie, bpwd);
+            crm.login(cstm.baoshijie,cstm.pwd);
             //上传图片
             int code = crm.faceOutUpload(path).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
@@ -3249,7 +3253,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1, salepwd1);
+           crm.login(cstm.lxqgw,cstm.pwd);
             saveData("人脸排除上传识别不出人脸的图片");
         }
     }
@@ -3279,7 +3283,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //            //创建某级客户
 //            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
 //            //完成接待之前为接待中,总经理登陆 接待中转等待
-//            crm.login(zjlname,zjlpwd);
+//            crm.login(cstm.xszj,cstm.pwd);
 //            //展厅接待列表获取该记录id
 //            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
 //            //修改客户状态 0:接待中, 1:离店, 2:等待中
@@ -3295,7 +3299,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        } catch (Exception e) {
 //            appendFailreason(e.toString());
 //        } finally {
-//            crm.login(salename1, salepwd1);
+//           crm.login(cstm.lxqgw,cstm.pwd);
 //            saveData("展厅接待接待中客户转等待");
 //        }
 //    }
@@ -3320,7 +3324,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //            //创建某级客户
 //            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
 //            //完成接待之前为接待中,总经理登陆 接待中转等待
-//            crm.login(zjlname,zjlpwd);
+//            crm.login(cstm.xszj,cstm.pwd);
 //            //展厅接待列表获取该记录id
 //            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
 //            //修改客户状态 0:接待中, 1:离店, 2:等待中
@@ -3337,7 +3341,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        } catch (Exception e) {
 //            appendFailreason(e.toString());
 //        } finally {
-//            crm.login(salename1, salepwd1);
+//           crm.login(cstm.lxqgw,cstm.pwd);
 //            saveData("展厅接待接待中客户转离店");
 //        }
 //    }
@@ -3420,7 +3424,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     //前台点击创建接待按钮创建顾客
     public Long creatCust(String name, String phone) throws Exception {
         //前台登陆
-        crm.login("qt", pwd);
+        crm.login(cstm.qt,cstm.pwd);
         Long customerid = -1L;
         //获取当前空闲第一位销售id
 
@@ -3437,16 +3441,25 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         //创建接待
         crm.creatReception("FIRST_VISIT");
         //销售登陆，获取当前接待id
-        crm.login(userLoginName, pwd);
+        crm.login(userLoginName, cstm.pwd);
         customerid = crm.userInfService().getLong("customer_id");
         //创建某级客户
-        JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "自动化---------创建----------H级客户");
+        if (name.equals("")){
+            String name1 = "zdh";
+            String phone1 = "zdh"+(int)((Math.random()*9+1)*100000);
+            JSONObject customer = crm.finishReception(customerid, 7, name1, phone1, "自动化---------创建----------H级客户");
+
+        }
+        else {
+            JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "自动化---------创建----------H级客户");
+
+        }
 
         return customerid;
     }
 
     //新建试驾+审核封装
-    public void creatDriver(Long customer_id,String name,String phone,String sign_date,String sign_time, int audit_status) throws Exception {  //1-通过，2-拒绝
+    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
         String idCard = "110226198210260078";
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
@@ -3456,15 +3469,15 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         String email = dt.getHistoryDate(0)+"@qq.com";
         String address = "北京市昌平区";
         String ward_name = "小小";
-        String driverLicensePhoto1Url = picurl;
-        String driverLicensePhoto2Url = picurl;
-        String electronicContractUrl = picurl;
+        String driverLicensePhoto1Url = cstm.picurl;
+        String driverLicensePhoto2Url =  cstm.picurl;
+        String electronicContractUrl =  cstm.picurl;
 
         String call="先生";
-        int driverid = crm.driveradd(customer_id,name,idCard,gender,phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call).getInteger("id");
+        int driverid = crm.driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
         //销售总监登陆
-        crm.login(zjlname,pwd);
-        crm.driverAudit(driverid,audit_status);
+        crm.login(cstm.xszj,cstm.pwd);
+        crm.driverAudit(driverid,driver.auditStatus);
         //最后销售要再登陆一次
 
     }
@@ -3475,7 +3488,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         crm.orderCar(customer_id);
         //创建交车
         String model = "911";
-        String path = picurl;
+        String path =  cstm.picurl;
         crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
     }
 
@@ -3491,7 +3504,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  Search_testDriver_name(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             JSONArray list = crm.appointmentlist().getJSONArray("list");
 
             if (list.size()>0){
@@ -3515,7 +3528,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  Search_testDriver_time(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(salename1,salepwd1);
+            crm.login(cstm.lxqgw,cstm.pwd);
             String yesterday = dt.getHistoryDate(-1);
             String tomorrow = dt.getHistoryDate(1);
             String dayaftertom = dt.getHistoryDate(2);
