@@ -202,10 +202,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         return code;
     }
 
-   /**
-    * @description :pc新建活动，数据一致，pc活动列表+1，列表信息校验，新建活动时投放人数等于该活动发送短信页总人数；查看文章详情信息校验
-    * @date :2020/7/14 10:23
-    **/
+    /**
+     * @description :pc新建活动，数据一致，pc活动列表+1，列表信息校验，新建活动时投放人数等于该活动发送短信页总人数；查看文章详情信息校验
+     * @date :2020/7/14 10:23
+     **/
     @Test(priority = 1)
     public void articleManage(){
         logger.logCaseStart(caseResult.getCaseName());
@@ -291,82 +291,82 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc新建活动，报名客户和任务客户活动列表+1,删除活动-1
      * @date :2020/8/2 13:08
      **/
-     @Test
-     public void appointTaskList(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONArray list=crm.activityShowList().getJSONArray("list");
-             int total;
-             if(list==null||list.size()==0){
-                 total=0;
-             }else{
-                 total=list.size();
-             }
-             //创建活动
-             Long [] aid=createAArcile_id(dt.getHistoryDate(0),"10");
-             Long activity_id=aid[1];
-             Long id=aid[0];
-             if(activity_id==null){
-                 throw new Exception("创建活动失败");
-             }
+    @Test
+    public void appointTaskList(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.activityShowList().getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            //创建活动
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"10");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            if(activity_id==null){
+                throw new Exception("创建活动失败");
+            }
 
-             JSONArray listA=crm.activityShowList().getJSONArray("list");
-             int totalA=listA.size();
+            JSONArray listA=crm.activityShowList().getJSONArray("list");
+            int totalA=listA.size();
 
-             //删除活动
-             crm.articleStatusChange(id);
-             crm.articleDelete(id);
-             JSONArray listB=crm.activityShowList().getJSONArray("list");
-             int totalB=listB.size();
-             Preconditions.checkArgument(totalA-total==1,"创建活动，报名管理-活动列表没+1");
-             Preconditions.checkArgument(totalB==total,"删除活动，报名管理-活动列表没-1");
+            //删除活动
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
+            JSONArray listB=crm.activityShowList().getJSONArray("list");
+            int totalB=listB.size();
+            Preconditions.checkArgument(totalA-total==1,"创建活动，报名管理-活动列表没+1");
+            Preconditions.checkArgument(totalB==total,"删除活动，报名管理-活动列表没-1");
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("pc新建活动，报名客户和任务客户活动列表+1，删除-1");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc新建活动，报名客户和任务客户活动列表+1，删除-1");
+        }
+    }
 
-     /**
-      * @description :活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）
-      * @date :2020/8/2 13:31
-      **/
-     @Test
-     public void activityDetailAndList(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONArray list=crm.activityShowList().getJSONArray("list");
-             if(list==null||list.size()==0){
-                 return;
-             }
-             for(int i=0;i<list.size();i++){
-                 Long avtivity_id=list.getJSONObject(i).getLong("id");
-                 String avtivity_name=list.getJSONObject(i).getString("name");
-                 //活动详情，已报名人数  TODO:无法由活动id获取文章id,故无法获取pc文章详情中已报名人数
+    /**
+     * @description :活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）
+     * @date :2020/8/2 13:31
+     **/
+    @Test
+    public void activityDetailAndList(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.activityShowList().getJSONArray("list");
+            if(list==null||list.size()==0){
+                return;
+            }
+            for(int i=0;i<list.size();i++){
+                Long avtivity_id=list.getJSONObject(i).getLong("id");
+                String avtivity_name=list.getJSONObject(i).getString("name");
+                //活动详情，已报名人数  TODO:无法由活动id获取文章id,故无法获取pc文章详情中已报名人数
 
-                 JSONObject dataActivity=crm.activityList(1,10,avtivity_id);
-                 long listActivityTotal=dataActivity.getLong("total");
-                 JSONArray listActivity=dataActivity.getJSONArray("list");
-                 for(int j=0;j<listActivity.size();j++){
-                     String service_status=listActivity.getJSONObject(j).getString("service_status_name"); //客户状态，已取消、报名成功/失败
-                     int audit_status=listActivity.getJSONObject(j).getInteger("audit_status");  //审核状态，2拒绝
-                     if(service_status.equals("已取消")||(service_status.equals("报名失败")&&audit_status==2))
-                         listActivityTotal=listActivityTotal-1;
-                 }
-                 logger.info("[{}]报名客户列表中，已报名客户数量：{}",avtivity_name,listActivityTotal);
+                JSONObject dataActivity=crm.activityList(1,10,avtivity_id);
+                long listActivityTotal=dataActivity.getLong("total");
+                JSONArray listActivity=dataActivity.getJSONArray("list");
+                for(int j=0;j<listActivity.size();j++){
+                    String service_status=listActivity.getJSONObject(j).getString("service_status_name"); //客户状态，已取消、报名成功/失败
+                    int audit_status=listActivity.getJSONObject(j).getInteger("audit_status");  //审核状态，2拒绝
+                    if(service_status.equals("已取消")||(service_status.equals("报名失败")&&audit_status==2))
+                        listActivityTotal=listActivityTotal-1;
+                }
+                logger.info("[{}]报名客户列表中，已报名客户数量：{}",avtivity_name,listActivityTotal);
 
-             }
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）");
-         }
-     }
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）");
+        }
+    }
 
 
     /**
@@ -509,128 +509,128 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-     /**
-      * @description :pc新建文章，applet文章列表+1 //本期首页坑位只展示当前最新文章，不展示历史文章列表；下期可能会改动
-      * @date :2020/7/14 11:46
-      **/
+    /**
+     * @description :pc新建文章，applet文章列表+1 //本期首页坑位只展示当前最新文章，不展示历史文章列表；下期可能会改动
+     * @date :2020/7/14 11:46
+     **/
 //     @Test
-     public void createArctile(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             //小程序登录 记录小程序首页文章列表中总数
-             crm.appletLogin(code);
-             JSONArray list=crm.articleList().getJSONArray("list");
-             int total=0;
-             if(list==null||list.size()==0){
-                 total=0;
-             }else {
-                 total=list.size();
-             }
-             crm.login(adminname,adminpassword);
-             //创建文章
+    public void createArctile(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //小程序登录 记录小程序首页文章列表中总数
+            crm.appletLogin(code);
+            JSONArray list=crm.articleList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else {
+                total=list.size();
+            }
+            crm.login(adminname,adminpassword);
+            //创建文章
 
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("pc新建文章，applet文章列表+1");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc新建文章，applet文章列表+1");
+        }
+    }
 
     /**
      * @description :发送推广短信
      * @date :2020/7/13 19:37
      **/
 //     @Test
-     public void sendMessage(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
+    public void sendMessage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
 
 
-         }catch(AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("发送推广短信");
-         }
-     }
+        }catch(AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("发送推广短信");
+        }
+    }
 
-     /**
-      * @description :新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)
-      * @date :2020/7/14 20:16
-      **/
-     @Test(dataProvider = "POSITIONS",dataProviderClass = CrmScenarioUtil.class)
-     public void articleTitleCompare(String positions){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-             String article_content = "品牌上新，优惠多多，限时4天,文章内容";
-             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
-             //新建文章，获取id
-             Long actriclereal_id=createArcile(positions,article_title);
+    /**
+     * @description :新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)
+     * @date :2020/7/14 20:16
+     **/
+    @Test(dataProvider = "POSITIONS",dataProviderClass = CrmScenarioUtil.class)
+    public void articleTitleCompare(String positions){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
+            String article_content = "品牌上新，优惠多多，限时4天,文章内容";
+            String article_remarks = "品牌上新，优惠多多，限时4天,备注";
+            //新建文章，获取id
+            Long actriclereal_id=createArcile(positions,article_title);
             //小程序查看文章内容
-             crm.appletLogin(code);
-             JSONObject detail=crm.articleDetial(actriclereal_id);
-             String article_titlA=detail.getString("article_title");
-             String article_contentA=detail.getString("article_content");
-             //String article_remarksA=detail.getString("article_remarks");  //需求变更文章，不填写备注
-             crm.login(adminname,adminpassword);
-             crm.articleStatusChange(actriclereal_id);
-             crm.articleDelete(actriclereal_id);
-             Preconditions.checkArgument(article_titlA.equals(article_title),"小程序文章标题错误");
-             Preconditions.checkArgument(article_contentA.equals(article_content),"小程序文章内容错误");
-             //Preconditions.checkArgument(article_remarksA.equals(article_remarks),"小程序文章备注错误");
+            crm.appletLogin(code);
+            JSONObject detail=crm.articleDetial(actriclereal_id);
+            String article_titlA=detail.getString("article_title");
+            String article_contentA=detail.getString("article_content");
+            //String article_remarksA=detail.getString("article_remarks");  //需求变更文章，不填写备注
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(actriclereal_id);
+            crm.articleDelete(actriclereal_id);
+            Preconditions.checkArgument(article_titlA.equals(article_title),"小程序文章标题错误");
+            Preconditions.checkArgument(article_contentA.equals(article_content),"小程序文章内容错误");
+            //Preconditions.checkArgument(article_remarksA.equals(article_remarks),"小程序文章备注错误");
 
 
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)");
+        }
+    }
 
-     /**
-      * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数+1 ok
-      * @date :2020/7/14 11:35
-      **/
-     @Test
-     public void goodsManage(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONArray list=crm.carList().getJSONArray("list");
-             int total=0;
-             if(list==null||list.size()==0){
-                 total=0;
-             }else{ total=list.size(); }
-             if(total==50){
-                 throw new Exception("商品数量已达上限，无法添加");
-             }
-             //pc 新建车辆
-             String car_type_name="911-"+dt.getHHmm(0);
-             createCar(car_type_name);
-             JSONArray listA=crm.carList().getJSONArray("list");
-             int totalA=0;
-             if(listA==null||listA.size()==0){
-                 totalA=0;
-             }else{ totalA=listA.size(); }
-             String car_id=listA.getJSONObject(listA.size()-1).getString("id");  //新建车型id
-             crm.carDelete(Integer.parseInt(car_id));   //删除车辆
-             Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
+    /**
+     * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数+1 ok
+     * @date :2020/7/14 11:35
+     **/
+    @Test
+    public void goodsManage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{ total=list.size(); }
+            if(total==50){
+                throw new Exception("商品数量已达上限，无法添加");
+            }
+            //pc 新建车辆
+            String car_type_name="911-"+dt.getHHmm(0);
+            createCar(car_type_name);
+            JSONArray listA=crm.carList().getJSONArray("list");
+            int totalA=0;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{ totalA=listA.size(); }
+            String car_id=listA.getJSONObject(listA.size()-1).getString("id");  //新建车型id
+            crm.carDelete(Integer.parseInt(car_id));   //删除车辆
+            Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("pc创建车辆后，pc车辆列表数+1");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc创建车辆后，pc车辆列表数+1");
+        }
+    }
     /**
      * @description :商品管理。pc删除车型，车辆列表-1 ok
      * @date :2020/7/15 18:34
@@ -665,123 +665,123 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("pc删除车型，车辆列表-1");
         }
     }
-     /**
-      * @description :删除商品管理车
-      * @date :2020/7/21 17:42
-      **/
+    /**
+     * @description :删除商品管理车
+     * @date :2020/7/21 17:42
+     **/
 //    @Test
-     public void deletegoodsManage(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONArray list=crm.carList().getJSONArray("list");
-             int total=0;
-             if(list==null||list.size()==0){
-                 total=0;
-             }else{ total=list.size(); }
-             for(int i=0;i<45;i++){
-                 Integer id=list.getJSONObject(i).getInteger("id");
-                 crm.carDelete(id);
-             }
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("pc批量删除车辆");
-         }
-     }
-     /**
-      * @description :创建商品车辆 50辆边界
-      * @date :2020/7/21 17:43
-      **/
-      @Test
-      public void createGoodsManage(){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              JSONArray list=crm.carList().getJSONArray("list");
-              int total=0;
-              if(list==null||list.size()==0){
-                  total=0;
-              }else{ total=list.size(); }
-              //pc 新建车辆
-              int limit=50-total;
-              for(int i=0;i<limit;i++){
-              String car_type_name="Cayman2"+Integer.toString(i);
-              createCar(car_type_name);
-              }
-              //创建第51辆车
-              String car_type_name="Cayman51";
-              Long code=createCarcode(car_type_name);
-              Preconditions.checkArgument(code==1001,"商品车辆边界50，添加51辆应该失败");
-             //删除创建的商品车辆
-              if(limit==0){
-                  return;
-              }else {
-                  JSONArray listA = crm.carList().getJSONArray("list");
-                  for (int j = total; j < limit+total; j++) {
-                      String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
-                      crm.carDelete(Integer.parseInt(car_id));
-                  }
-              }
+    public void deletegoodsManage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{ total=list.size(); }
+            for(int i=0;i<45;i++){
+                Integer id=list.getJSONObject(i).getInteger("id");
+                crm.carDelete(id);
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc批量删除车辆");
+        }
+    }
+    /**
+     * @description :创建商品车辆 50辆边界
+     * @date :2020/7/21 17:43
+     **/
+    @Test
+    public void createGoodsManage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{ total=list.size(); }
+            //pc 新建车辆
+            int limit=50-total;
+            for(int i=0;i<limit;i++){
+                String car_type_name="Cayman2"+Integer.toString(i);
+                createCar(car_type_name);
+            }
+            //创建第51辆车
+            String car_type_name="Cayman51";
+            Long code=createCarcode(car_type_name);
+            Preconditions.checkArgument(code==1001,"商品车辆边界50，添加51辆应该失败");
+            //删除创建的商品车辆
+            if(limit==0){
+                return;
+            }else {
+                JSONArray listA = crm.carList().getJSONArray("list");
+                for (int j = total; j < limit+total; j++) {
+                    String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
+                    crm.carDelete(Integer.parseInt(car_id));
+                }
+            }
 
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("pc创建商品车辆 50辆边界");
-          }
-      }
-
-
-     /**
-      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致） ok
-      * @date :2020/7/14 18:34
-      **/
-     @Test
-     public void watchCarConsistency(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             crm.appletLogin(code);
-             JSONArray list=crm.appletwatchCarList().getJSONArray("list");
-             int total=0;
-             if(list==null||list.size()==0){
-                 total=0;
-             }else{
-                 total=list.size();
-             }
-             //pc创建车辆
-             crm.login(adminname,adminpassword);
-             String car_type_name="Cayman"+dt.getHHmm(0);
-             createCar(car_type_name);
-             //applet 看车列&详情
-             crm.appletLogin(code);
-             JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
-             int totalA=0;
-             if(listA==null||listA.size()==0){
-                 totalA=0;
-             }else{
-                 totalA=listA.size();
-             }
-             JSONObject dataA=listA.getJSONObject(listA.size()-1);  //新建车后排在第一位
-             String car_type_nameA=dataA.getString("car_type_name");
-             String price=dataA.getString("price");
-             String car_id=dataA.getString("id");
-             crm.login(adminname,adminpassword);
-             crm.carDelete(Integer.parseInt(car_id));
-             Preconditions.checkArgument((totalA-total)==1,"pc新建车型，applet看车页车辆列表没+1");
-             Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
-             Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，applet售价显示异常");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc创建商品车辆 50辆边界");
+        }
+    }
 
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
-         }
-     }
+    /**
+     * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致） ok
+     * @date :2020/7/14 18:34
+     **/
+    @Test
+    public void watchCarConsistency(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.appletLogin(code);
+            JSONArray list=crm.appletwatchCarList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            //pc创建车辆
+            crm.login(adminname,adminpassword);
+            String car_type_name="Cayman"+dt.getHHmm(0);
+            createCar(car_type_name);
+            //applet 看车列&详情
+            crm.appletLogin(code);
+            JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
+            int totalA=0;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{
+                totalA=listA.size();
+            }
+            JSONObject dataA=listA.getJSONObject(listA.size()-1);  //新建车后排在第一位
+            String car_type_nameA=dataA.getString("car_type_name");
+            String price=dataA.getString("price");
+            String car_id=dataA.getString("id");
+            crm.login(adminname,adminpassword);
+            crm.carDelete(Integer.parseInt(car_id));
+            Preconditions.checkArgument((totalA-total)==1,"pc新建车型，applet看车页车辆列表没+1");
+//             Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
+//             Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，applet售价显示异常");
+
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
+        }
+    }
 
     /**
      * @description :商品管理。pc新建车型，车辆列表+1；删除车辆-1,信息校验
@@ -815,8 +815,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String price=listA.getJSONObject(listA.size()-1).getString("price");
 
             Preconditions.checkArgument((totalA-total)==1,"pc新建车型，pc车辆列表没+1");
-            Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc列表车型名称显示错误");
-            Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，pc列表售价显示异常");
+//            Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc列表车型名称显示错误");
+//            Preconditions.checkArgument(price.equals("88.99-888.99万"),"pc新建车辆，pc列表售价显示异常");
             //删除车辆
             crm.carDelete(Integer.parseInt(car_id));
             JSONArray listB=crm.carList().getJSONArray("list");
@@ -840,38 +840,38 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-      * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验 ok
-      * @date :2020/7/15 11:13
-      **/
-     @Test(priority = 2)   //TODO:
-     public void pcblackList(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
-             Long activity_id=aid[1];
-             Long id=aid[0];
-             //活动报名
-             crm.appletLogin(code);
-             String other_brand="奥迪pc-黑名单报名";
-             String customer_num="2";
-             //预约使用参数
-             String customer_name = "@@@2";
-             String customer_phone_number = "15037286013";
-             String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
-             Integer car_type = 1;
-             String car_type_name = "";
-             JSONObject data1=crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
-             String appointment_id=data1.getString("appointment_id");
-             //crm.cancle(Long.parseLong(appointment_id));  //取消活动报名
-             crm.login(adminname,adminpassword);
-             //报名客户 页获取客户id
-             JSONArray list=crm.activityList(1,10,activity_id).getJSONArray("list");
-             String customer_type=list.getJSONObject(0).getString("customer_type");
-             String customer_id=list.getJSONObject(0).getString("customer_id");
-             String customer_name1=list.getJSONObject(0).getString("customer_name");
-             String customer_phone_number1=list.getJSONObject(0).getString("customer_phone_number");
-             String appointment_activity_total=list.getJSONObject(0).getString("appointment_activity_total"); //报名次数，TODO:首次报名，报名次数=1
-             //pc黑名单客户列表total
+     * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验 ok
+     * @date :2020/7/15 11:13
+     **/
+    @Test(priority = 2)   //TODO:
+    public void pcblackList(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            //活动报名
+            crm.appletLogin(code);
+            String other_brand="奥迪pc-黑名单报名";
+            String customer_num="2";
+            //预约使用参数
+            String customer_name = "@@@2";
+            String customer_phone_number = "15037286013";
+            String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
+            Integer car_type = 1;
+            String car_type_name = "";
+            JSONObject data1=crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+            String appointment_id=data1.getString("appointment_id");
+            //crm.cancle(Long.parseLong(appointment_id));  //取消活动报名
+            crm.login(adminname,adminpassword);
+            //报名客户 页获取客户id
+            JSONArray list=crm.activityList(1,10,activity_id).getJSONArray("list");
+            String customer_type=list.getJSONObject(0).getString("customer_type");
+            String customer_id=list.getJSONObject(0).getString("customer_id");
+            String customer_name1=list.getJSONObject(0).getString("customer_name");
+            String customer_phone_number1=list.getJSONObject(0).getString("customer_phone_number");
+            String appointment_activity_total=list.getJSONObject(0).getString("appointment_activity_total"); //报名次数，TODO:首次报名，报名次数=1
+            //pc黑名单客户列表total
             String blackTotal=crm.blacklist(1,10).getString("total");
             Integer total;
             if(blackTotal==null){
@@ -879,300 +879,300 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }else{
                 total=Integer.parseInt(blackTotal);
             }
-             //加入黑名单
+            //加入黑名单
             crm.blackadd(customer_id);
             String time=dt.getHistoryDate(0);
             JSONObject data=crm.blacklist(1,10);
-             String blackTotalA=data.getString("total");
-             JSONArray listA=data.getJSONArray("list");
-             String customer_typeA=listA.getJSONObject(0).getString("customer_type");
-             String customer_nameA=listA.getJSONObject(0).getString("customer_name");
-             String customer_phone_numberA=listA.getJSONObject(0).getString("customer_phone_number");
-             String timeA=listA.getJSONObject(0).getString("time");         //划入时间
-             String order_number=listA.getJSONObject(0).getString("order_number"); //报名次数
+            String blackTotalA=data.getString("total");
+            JSONArray listA=data.getJSONArray("list");
+            String customer_typeA=listA.getJSONObject(0).getString("customer_type");
+            String customer_nameA=listA.getJSONObject(0).getString("customer_name");
+            String customer_phone_numberA=listA.getJSONObject(0).getString("customer_phone_number");
+            String timeA=listA.getJSONObject(0).getString("time");         //划入时间
+            String order_number=listA.getJSONObject(0).getString("order_number"); //报名次数
 
-             Integer totalA;
-             if(blackTotal==null){
-                 throw new Exception("报名客户加入黑名单，黑名单列表仍是空");
-             }else{
-                 totalA=Integer.parseInt(blackTotalA);
-             }
-             //释放 黑名单
-             crm.blackRemove(customer_id);
-             String blackTotalB=crm.blacklist(1,10).getString("total");
-             Integer totalB=0;
-             if(blackTotalB==null){
-                 totalB=0;
-             }else{
-                 totalB=Integer.parseInt(blackTotalB);
-             }
+            Integer totalA;
+            if(blackTotal==null){
+                throw new Exception("报名客户加入黑名单，黑名单列表仍是空");
+            }else{
+                totalA=Integer.parseInt(blackTotalA);
+            }
+            //释放 黑名单
+            crm.blackRemove(customer_id);
+            String blackTotalB=crm.blacklist(1,10).getString("total");
+            Integer totalB=0;
+            if(blackTotalB==null){
+                totalB=0;
+            }else{
+                totalB=Integer.parseInt(blackTotalB);
+            }
 
-             Preconditions.checkArgument((totalA-total)==1,"报名客户加入黑名单，黑名单列表没+1");
-             Preconditions.checkArgument((totalA-totalB)==1,"释放黑名单，黑名单列表没-1");
+            Preconditions.checkArgument((totalA-total)==1,"报名客户加入黑名单，黑名单列表没+1");
+            Preconditions.checkArgument((totalA-totalB)==1,"释放黑名单，黑名单列表没-1");
 //             Preconditions.checkArgument(customer_name1.equals(customer_nameA),"黑名单中，顾客姓名错误");
-             Preconditions.checkArgument(customer_phone_number1.equals(customer_phone_numberA),"黑名单中，客户电话错误");
+            Preconditions.checkArgument(customer_phone_number1.equals(customer_phone_numberA),"黑名单中，客户电话错误");
 //             Preconditions.checkArgument(customer_type.equals(customer_typeA),"黑名单中，客户类型错误");
-             Preconditions.checkArgument(appointment_activity_total.equals(order_number),"黑名单中，报名次数错误");
-             Preconditions.checkArgument(time.equals(timeA),"黑名单中，划入时间错误");
-             crm.articleStatusChange(id);
-             crm.articleDelete(id);
+            Preconditions.checkArgument(appointment_activity_total.equals(order_number),"黑名单中，报名次数错误");
+            Preconditions.checkArgument(time.equals(timeA),"黑名单中，划入时间错误");
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
 
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("报名列表加入黑名单，黑名单增+1；释放-1,&黑名单信息校验");
-         }
-     }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("报名列表加入黑名单，黑名单增+1；释放-1,&黑名单信息校验");
+        }
+    }
 
-     /**
-      * @description :人员管理
-      * @date :2020/7/19 19:06
-      **/
-      @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
-      public void peopelmange(Integer role_ids){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              //删除排版销售前，排班人数
-              JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
-              int total;
-              if(list==null||list.size()==0){
-                  total=0;
-              }else {total=list.size();}
-              JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
-              if(listN==null||listN.size()==0){
-                  throw new Exception("未创建销售顾问，无法排班");
-              }
-              //增加排班
-              String uid=listN.getJSONObject(0).getString("uid");
-              crm.ManageAdd(role_ids,uid);
-              //增加排班人数后，人数
-              JSONArray listA=crm.ManageList(role_ids).getJSONArray("list");
-              int totalA;
-              if(list==null||listA.size()==0){
-                  totalA=0;
-              }else {totalA=listA.size();}
-              Preconditions.checkArgument((totalA-total)==1,"增加销售排版");
-              //删除增加的排班
-              JSONArray listB=crm.ManageList(role_ids).getJSONArray("list");
-              int index=listB.size()-1;
-              Integer id=crm.ManageList(role_ids).getJSONArray("list").getJSONObject(index).getInteger("id");
-              crm.ManageDelete(id);
+    /**
+     * @description :人员管理
+     * @date :2020/7/19 19:06
+     **/
+    @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+    public void peopelmange(Integer role_ids){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //删除排版销售前，排班人数
+            JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else {total=list.size();}
+            JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            if(listN==null||listN.size()==0){
+                throw new Exception("未创建销售顾问，无法排班");
+            }
+            //增加排班
+            String uid=listN.getJSONObject(0).getString("uid");
+            crm.ManageAdd(role_ids,uid);
+            //增加排班人数后，人数
+            JSONArray listA=crm.ManageList(role_ids).getJSONArray("list");
+            int totalA;
+            if(list==null||listA.size()==0){
+                totalA=0;
+            }else {totalA=listA.size();}
+            Preconditions.checkArgument((totalA-total)==1,"增加销售排版");
+            //删除增加的排班
+            JSONArray listB=crm.ManageList(role_ids).getJSONArray("list");
+            int index=listB.size()-1;
+            Integer id=crm.ManageList(role_ids).getJSONArray("list").getJSONObject(index).getInteger("id");
+            crm.ManageDelete(id);
 
-              JSONArray listD=crm.ManageList(role_ids).getJSONArray("list");
-              int totalD;
-              if(listD==null||listD.size()==0){
-                  totalD=0;
-              }else {totalD=listD.size();}
-              Preconditions.checkArgument(totalD==total,"删除排班销售，排版数-1");
+            JSONArray listD=crm.ManageList(role_ids).getJSONArray("list");
+            int totalD;
+            if(listD==null||listD.size()==0){
+                totalD=0;
+            }else {totalD=listD.size();}
+            Preconditions.checkArgument(totalD==total,"删除排班销售，排版数-1");
 
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("【人员管理】增删销售排班，列表+-1");
-          }
-      }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("【人员管理】增删销售排班，列表+-1");
+        }
+    }
 
-      /**
-       * @description :人员管理，删除大池子销售/维修/保养顾问，小池子-1
-       * @date :2020/7/28 19:44
-       **/
-      @Test
-      public void deletaGuwen(){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              //主账号登录
-              crm.login(baoshijie,adminpassword);
-              //创建销售/顾问
-              String userName = ""+ System.currentTimeMillis();
-              int roleId=13; //销售顾问
-              String passwd="123456";
+    /**
+     * @description :人员管理，删除大池子销售/维修/保养顾问，小池子-1
+     * @date :2020/7/28 19:44
+     **/
+    @Test
+    public void deletaGuwen(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //主账号登录
+            crm.login(baoshijie,adminpassword);
+            //创建销售/顾问
+            String userName = ""+ System.currentTimeMillis();
+            int roleId=13; //销售顾问
+            String passwd="123456";
 
-              String phone = "1";
-              for (int i = 0; i < 10;i++){
-                  String a = Integer.toString((int)(Math.random()*10));
-                  phone = phone + a;
-              }
-              crm.addUser(userName,userName,phone,passwd,roleId);
-              JSONObject data=crm.userPage(1,100);
-              int total=data.getInteger("total");
-              JSONArray list=new JSONArray();
-              if(total==200){
-                  logger.info("用户数量已达上限");
-                  return;
-              }
-              else if(total<100){
-                  list = data.getJSONArray("list");
-              }else{
-                  list=crm.userPage(2,100).getJSONArray("list");
-              }
-              String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
-              //加人到小池子
-              crm.login(adminname,adminpassword);
-              crm.ManageAdd(roleId,userid);
-              JSONArray listA=crm.ManageList(roleId).getJSONArray("list");
-              int totalA=listA.size();   //删除前小池子数量
-              //删除大池子
-              crm.login(baoshijie,adminpassword);
-              crm.userDel(userid);
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            crm.addUser(userName,userName,phone,passwd,roleId);
+            JSONObject data=crm.userPage(1,100);
+            int total=data.getInteger("total");
+            JSONArray list=new JSONArray();
+            if(total==200){
+                logger.info("用户数量已达上限");
+                return;
+            }
+            else if(total<100){
+                list = data.getJSONArray("list");
+            }else{
+                list=crm.userPage(2,100).getJSONArray("list");
+            }
+            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            //加人到小池子
+            crm.login(adminname,adminpassword);
+            crm.ManageAdd(roleId,userid);
+            JSONArray listA=crm.ManageList(roleId).getJSONArray("list");
+            int totalA=listA.size();   //删除前小池子数量
+            //删除大池子
+            crm.login(baoshijie,adminpassword);
+            crm.userDel(userid);
 
-              crm.login(adminname,adminpassword);
-              JSONArray listB=crm.ManageList(roleId).getJSONArray("list");
-              int totalB=listB.size();   //删除后小池子数量
-              Preconditions.checkArgument((totalA-totalB)==1,"人员管理，删除大池子销售/维修/保养顾问，小池子没-1");
+            crm.login(adminname,adminpassword);
+            JSONArray listB=crm.ManageList(roleId).getJSONArray("list");
+            int totalB=listB.size();   //删除后小池子数量
+            Preconditions.checkArgument((totalA-totalB)==1,"人员管理，删除大池子销售/维修/保养顾问，小池子没-1");
 
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
-          }
-      }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
+        }
+    }
 
-      /**
-       * @description :【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}
-       * @date :2020/7/31 16:41
-       **/
-      @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
-      public void roleListCrm(Integer role_ids){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
-              int total;
-              if(list==null||list.size()==0){
-                  total=0;
-              }else {total=list.size();}
-              JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
-              int totalNoSelect;
-              if(listN==null){
-                  totalNoSelect=0;
-              }else{
-                  totalNoSelect=listN.size();
-              }
-              //crm中校色数统计
-              int crmRoleTotal=0;
-              //100以内
-              crm.login("baoshijie",adminpassword);
-              JSONObject data=crm.userPage(1,100);
-              int crmTotal=data.getInteger("total");
-              JSONArray listC=data.getJSONArray("list");
-              for(int i=0;i<listC.size();i++){
-                  int role_idC=listC.getJSONObject(i).getInteger("role_id");
-                  String user_id=listC.getJSONObject(i).getString("user_id");
-                  logger.info("------user_id:{}------",user_id);
-                  if(role_idC==role_ids){
-                      crmRoleTotal=crmRoleTotal+1;
-                  }
-              }
-              //若超过100
-              if(crmTotal>100){
-                  JSONObject data2=crm.userPage(2,100);
-                  JSONArray listC2=data2.getJSONArray("list");
-                  for(int i=0;i<listC2.size();i++){
-                      int role_idC2=listC2.getJSONObject(i).getInteger("role_id");
-                      if(role_idC2==role_ids){
-                          crmRoleTotal=crmRoleTotal+1;
-                      }
-                  }
-              }
-              crm.login(adminname,adminpassword);
-              logger.info("crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
-              Preconditions.checkArgument(crmRoleTotal==total+totalNoSelect,"crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
+    /**
+     * @description :【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}
+     * @date :2020/7/31 16:41
+     **/
+    @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+    public void roleListCrm(Integer role_ids){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else {total=list.size();}
+            JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            int totalNoSelect;
+            if(listN==null){
+                totalNoSelect=0;
+            }else{
+                totalNoSelect=listN.size();
+            }
+            //crm中校色数统计
+            int crmRoleTotal=0;
+            //100以内
+            crm.login("baoshijie",adminpassword);
+            JSONObject data=crm.userPage(1,100);
+            int crmTotal=data.getInteger("total");
+            JSONArray listC=data.getJSONArray("list");
+            for(int i=0;i<listC.size();i++){
+                int role_idC=listC.getJSONObject(i).getInteger("role_id");
+                String user_id=listC.getJSONObject(i).getString("user_id");
+                logger.info("------user_id:{}------",user_id);
+                if(role_idC==role_ids){
+                    crmRoleTotal=crmRoleTotal+1;
+                }
+            }
+            //若超过100
+            if(crmTotal>100){
+                JSONObject data2=crm.userPage(2,100);
+                JSONArray listC2=data2.getJSONArray("list");
+                for(int i=0;i<listC2.size();i++){
+                    int role_idC2=listC2.getJSONObject(i).getInteger("role_id");
+                    if(role_idC2==role_ids){
+                        crmRoleTotal=crmRoleTotal+1;
+                    }
+                }
+            }
+            crm.login(adminname,adminpassword);
+            logger.info("crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
+            Preconditions.checkArgument(crmRoleTotal==total+totalNoSelect,"crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
 
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}");
-          }
-      }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}");
+        }
+    }
 
 
-      /**
-       * @description :app活动报名，报名信息上限50
-       * @date :2020/7/30 19:45
-       **/
-      @Test
-      public void appactivity(){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              //创建活动，获取活动id
-              Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
-              Long activity_id=aid[1];
-              Long id=aid[0];
-              crm.login("baoyangr",adminpassword);
-              JSONObject response = crm.activityTaskPageX();
-              JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
-              int activityTaskId = json.getInteger("activity_task_id");
-              int before_total=0;
-              String userLoginName = ""+ System.currentTimeMillis();
+    /**
+     * @description :app活动报名，报名信息上限50
+     * @date :2020/7/30 19:45
+     **/
+    @Test
+    public void appactivity(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动，获取活动id
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            crm.login("baoyangr",adminpassword);
+            JSONObject response = crm.activityTaskPageX();
+            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            int activityTaskId = json.getInteger("activity_task_id");
+            int before_total=0;
+            String userLoginName = ""+ System.currentTimeMillis();
 
-              while (before_total<50){
-                  String newloginname = userLoginName+before_total;
-                  String phone = "1";
-                  for (int i = 0; i < 10;i++){
-                      String a = Integer.toString((int)(Math.random()*10));
-                      phone = phone + a;
-                  }
-                  crm.registeredCustomer((long) activityTaskId, "夏", phone);
-                  before_total = before_total +1;
-              }
-              //添加第51个
-              Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", "15037286612");
-              Preconditions.checkArgument(code==1001,"app添加报名人信息上限50条");
-              crm.login(adminname,adminpassword);
-              //crm.articleStatusChange(id);
-             // crm.articleDelete(id);
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("app活动报名，报名信息上限50");
-          }
-      }
-      /**
-       * @description :app活动报名，添加报过名的电话，失败
-       * @date :2020/8/3 16:21
-       **/
-      @Test
-      public void appactivitySamePhone(){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              //创建活动，获取活动id
-              Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
-              Long activity_id=aid[1];
-              Long id=aid[0];
-              crm.login(lxqgw,adminpassword);
-              JSONObject response = crm.activityTaskPageX();
-              JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
-              int activityTaskId = json.getInteger("activity_task_id");
-              String phone = "1";
-              for (int i = 0; i < 10;i++){
-                  String a = Integer.toString((int)(Math.random()*10));
-                  phone = phone + a;
-              }
-              crm.registeredCustomer((long) activityTaskId, "夏", phone);
-              //添加第51个
-              Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", phone);
-              Preconditions.checkArgument(code==1001,"app添加报过名的电话，应该失败");
-              crm.login(adminname,adminpassword);
-              crm.articleStatusChange(id);
-              crm.articleDelete(id);
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("活动报名，添加报过名的电话，失败");
-          }
-      }
+            while (before_total<50){
+                String newloginname = userLoginName+before_total;
+                String phone = "1";
+                for (int i = 0; i < 10;i++){
+                    String a = Integer.toString((int)(Math.random()*10));
+                    phone = phone + a;
+                }
+                crm.registeredCustomer((long) activityTaskId, "夏", phone);
+                before_total = before_total +1;
+            }
+            //添加第51个
+            Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", "15037286612");
+            Preconditions.checkArgument(code==1001,"app添加报名人信息上限50条");
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("app活动报名，报名信息上限50");
+        }
+    }
+    /**
+     * @description :app活动报名，添加报过名的电话，失败
+     * @date :2020/8/3 16:21
+     **/
+    @Test
+    public void appactivitySamePhone(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动，获取活动id
+            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            crm.login(lxqgw,adminpassword);
+            JSONObject response = crm.activityTaskPageX();
+            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            int activityTaskId = json.getInteger("activity_task_id");
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            crm.registeredCustomer((long) activityTaskId, "夏", phone);
+            //添加第51个
+            Long code=crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", phone);
+            Preconditions.checkArgument(code==1001,"app添加报过名的电话，应该失败");
+            crm.login(adminname,adminpassword);
+            crm.articleStatusChange(id);
+            crm.articleDelete(id);
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("活动报名，添加报过名的电话，失败");
+        }
+    }
 
 
 
@@ -1316,87 +1316,87 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-     // @Test
-      public void deleteuser(){
-          try {
-              crm.login("baoshijie", adminpassword);
+    // @Test
+    public void deleteuser(){
+        try {
+            crm.login("baoshijie", adminpassword);
 //              for(int j=0;j<1;j++) {
-                  JSONArray list = crm.userPage(6, 10).getJSONArray("list");
-                  for (int i = 0; i < list.size(); i++) {
-                      String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
-                      crm.userDel(userid);
-                  }
+            JSONArray list = crm.userPage(6, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
+                crm.userDel(userid);
+            }
 //              }
 
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("清多余用户数据");
-          }
-      }
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("清多余用户数据");
+        }
+    }
 
-      /**
-       * @description :预约记录查询验证预约记录查询验证，今日数=列表去重数,数字统计按创建日期，页面无创建日期，故此case不通 TODO:可用于app试驾、交车
-       * @date :2020/7/31 13:55
-       **/
-      //@Test
-      public void appointmentRecoed(){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              JSONObject data=crm.appointmentpage(dt.getHistoryDate(0),dt.getHistoryDate(0),1,100);
-              int today_number=data.getInteger("today_number");
-              JSONArray list=data.getJSONArray("list");
-              List<String> numList = new ArrayList<String>();
-              if(list==null||list.size()==0){
-                  logger.info("今日无预约记录");
-                  return;
-              }
-              for(int i=0;i<list.size();i++){
-                   String phone=list.getJSONObject(i).getString("customer_phone_number");
-                   String service_status_name=list.getJSONObject(i).getString("service_status_name");
-                   if(!service_status_name.equals("已取消")){
-                       numList.add(phone);
-                   }
-              }
-              Set<String> numSet = new HashSet<String>();
-              numSet.addAll(numList);
-              int similar=numSet.size();
-              Preconditions.checkArgument(similar==today_number,"今日预约数！=今日列表电话号码去重数");
+    /**
+     * @description :预约记录查询验证预约记录查询验证，今日数=列表去重数,数字统计按创建日期，页面无创建日期，故此case不通 TODO:可用于app试驾、交车
+     * @date :2020/7/31 13:55
+     **/
+    //@Test
+    public void appointmentRecoed(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.appointmentpage(dt.getHistoryDate(0),dt.getHistoryDate(0),1,100);
+            int today_number=data.getInteger("today_number");
+            JSONArray list=data.getJSONArray("list");
+            List<String> numList = new ArrayList<String>();
+            if(list==null||list.size()==0){
+                logger.info("今日无预约记录");
+                return;
+            }
+            for(int i=0;i<list.size();i++){
+                String phone=list.getJSONObject(i).getString("customer_phone_number");
+                String service_status_name=list.getJSONObject(i).getString("service_status_name");
+                if(!service_status_name.equals("已取消")){
+                    numList.add(phone);
+                }
+            }
+            Set<String> numSet = new HashSet<String>();
+            numSet.addAll(numList);
+            int similar=numSet.size();
+            Preconditions.checkArgument(similar==today_number,"今日预约数！=今日列表电话号码去重数");
 
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("预约记录查询验证预约记录查询验证，今日数=列表去重数");
-          }
-      }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约记录查询验证预约记录查询验证，今日数=列表去重数");
+        }
+    }
 
-      /**
-       * @description :预约试驾记录查询，按日期查询及结果验证
-       * @date :2020/7/31 14:37
-       **/
-      @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
-      public void driverRecoedSelect(String select_date){
-          logger.logCaseStart(caseResult.getCaseName());
-          try{
-              JSONObject data=crm.appointmentpage(select_date,select_date,1,50);
-              JSONArray list=data.getJSONArray("list");
-              if(list==null||list.size()==0){
-                  logger.info("当日无预约记录");
-              }
-              for(int i=0;i<list.size();i++){
-                  String order_date=list.getJSONObject(i).getString("order_date");
-                  Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
-              }
-          }catch (AssertionError e){
-              appendFailreason(e.toString());
-          }catch (Exception e){
-              appendFailreason(e.toString());
-          }finally {
-              saveData("预约试驾记录查询");
-          }
-      }
+    /**
+     * @description :预约试驾记录查询，按日期查询及结果验证
+     * @date :2020/7/31 14:37
+     **/
+    @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+    public void driverRecoedSelect(String select_date){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.appointmentpage(select_date,select_date,1,50);
+            JSONArray list=data.getJSONArray("list");
+            if(list==null||list.size()==0){
+                logger.info("当日无预约记录");
+            }
+            for(int i=0;i<list.size();i++){
+                String order_date=list.getJSONObject(i).getString("order_date");
+                Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约试驾记录查询");
+        }
+    }
 
     /**
      * @description :预约保养记录查询，按日期查询及结果验证
@@ -1480,26 +1480,26 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :今日试驾共计<本月共计
      * @date :2020/7/31 16:02
      **/
-     @Test
-     public void todayLower(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONObject data=crm.appointmentpage(1,100);
-             int total_number=data.getInteger("total_number");
-             int month_number=data.getInteger("month_number");
-             int today_number=data.getInteger("today_number");
-             int total=data.getInteger("total");
-             Preconditions.checkArgument(today_number<=month_number,"今日试驾总数>本月共计");
-             Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
-             Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("今日试驾共计<本月共计<累计<列表总数");
-         }
-     }
+    @Test
+    public void todayLower(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.appointmentpage(1,100);
+            int total_number=data.getInteger("total_number");
+            int month_number=data.getInteger("month_number");
+            int today_number=data.getInteger("today_number");
+            int total=data.getInteger("total");
+            Preconditions.checkArgument(today_number<=month_number,"今日试驾总数>本月共计");
+            Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
+            Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("今日试驾共计<本月共计<累计<列表总数");
+        }
+    }
     /**
      * @description :今日保养共计<本月共计
      * @date :2020/7/31 16:02

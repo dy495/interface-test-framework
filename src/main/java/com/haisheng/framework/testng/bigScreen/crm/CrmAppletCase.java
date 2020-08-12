@@ -1364,7 +1364,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :人员管理，app完成接待接待次数+1  TODO:
+     * @description :人员管理，app完成接待接待次数+1 见保养评价ok
      * @date :2020/8/2 10:43
      **/
 //     @Test
@@ -1384,7 +1384,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
          }
      }
     /**
-     * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1
+     * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1 ok
      * @date :2020/8/2 10:29
      **/
     @Test(priority = 12)

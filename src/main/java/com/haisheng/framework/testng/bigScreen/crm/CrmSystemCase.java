@@ -2435,7 +2435,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-   //@Test
+    //@Test
     public void customerListDelInService() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -3435,7 +3435,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             }
         }
         //创建接待
-        crm.creatReception();
+        crm.creatReception("FIRST_VISIT");
         //销售登陆，获取当前接待id
         crm.login(userLoginName, pwd);
         customerid = crm.userInfService().getLong("customer_id");
@@ -3450,7 +3450,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         String idCard = "110226198210260078";
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
-        String model = "911";
+        Long model = 1L;
         String country = "中国";
         String city = "图们";
         String email = dt.getHistoryDate(0)+"@qq.com";

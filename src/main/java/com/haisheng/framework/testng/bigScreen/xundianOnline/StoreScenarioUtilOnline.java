@@ -66,6 +66,15 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         //saveData("登陆");
 
     }
+    @DataProvider(name = "LOGINFO")
+    public static Object[][] loginInfo() {
+
+        return new String[][]{
+                { "zhoudafu@winsense.ai","d5f396edf97676490dd9e58a7cc60d51"},
+                { "baiguoyuan@winsense.ai","fb95eb1a95a5f061ae1b9d275bd36e02"},
+                { "salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8"}
+        };
+    }
 
     @DataProvider(name = "CYCLE_TYPE")
     public static Object[] cycle_type() {
@@ -137,7 +146,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     public static Object[] area_code() {
 
         return new String[]{
-                "110000"
+                "440305"
         };
     }
 
@@ -145,7 +154,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     public static Object[] area_type() {
 
         return new String[]{
-                "[\"FLAGSHIP\"]"
+                "[\"NORMAL\"]"
         };
     }
 
@@ -432,7 +441,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @time:
      */
     public JSONObject realTimeShopPvV3(long shop_id) throws Exception {
-        String url = "/patrol/real-time/shop/pv";
+        String url = "/patrol/real-time/shop/pv-uv";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
