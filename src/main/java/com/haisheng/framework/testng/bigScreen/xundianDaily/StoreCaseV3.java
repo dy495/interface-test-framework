@@ -119,11 +119,15 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             String shopName = "";
             JSONObject response = Md.patrolShopRealV3A(districtCode, shopType, shopName, shopManager, page, size);
             JSONArray storeList = response.getJSONArray("list");
-            for (int i = 0; i < storeList.size() - 1; i++) {
-                System.out.println(i);
-                int realtimePv = storeList.getJSONObject(i).getInteger("realtime_pv");
-                int realtimePv1 = storeList.getJSONObject(i + 1).getInteger("realtime_pv");
-                Preconditions.checkArgument(realtimePv >= realtimePv1, "人次多的数据为" + realtimePv + "人次少的数据为" + realtimePv1);
+            if (storeList.size()>1) {
+                for (int i = 0; i < storeList.size() - 1; i++) {
+                    Integer realtimePv = storeList.getJSONObject(i).getInteger("realtime_pv");
+                    Integer realtimePv1 = storeList.getJSONObject(i + 1).getInteger("realtime_pv");
+                    if(realtimePv!=null&&realtimePv1!=null){
+                        //System.out.println("i=="+i+"   "+realtimePv+"    "+realtimePv1);
+                        Preconditions.checkArgument(realtimePv >= realtimePv1, "人次多的数据为" + realtimePv + "人次少的数据为" + realtimePv1);
+                    }
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -197,8 +201,5 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
 }
