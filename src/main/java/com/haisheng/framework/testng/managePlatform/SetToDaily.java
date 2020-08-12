@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.managePlatform;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -33,6 +34,49 @@ public class SetToDaily {
     public org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private int pageSize = 10000;
+
+
+    public String listNodes(String nodeId) throws Exception {
+        String url = URL_prefix + "/admin/cluster/bind/list";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\"," +
+                        "    \"page\":\"1\"," +
+                        "    \"size\":\"10\"" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    public String bindNode(String nodeId, String clusterNodeId, String alias) throws Exception {
+        String url = URL_prefix + "/admin/cluster/node/bind";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"cluster_node_id\":" + clusterNodeId + ",\n" +
+                        "    \"alias\":\"" + alias + "\"\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    业务节点解除关联机器，即解绑定机器
+    public String removeNode(String nodeId, String clusterNodeId) throws Exception {
+        String url = URL_prefix + "/admin/cluster/node/remove";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"cluster_node_id\":\"" + clusterNodeId + "\"" +
+                        "}";
+
+        String response = deleteRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
 
     public String uploadLayoutPic(String picA) throws Exception {
 
@@ -637,7 +681,7 @@ public class SetToDaily {
                         "        \"district\":\"海淀区\"\n" +
                         "    },\n" +
                         "    \"local\":\"中关村soho\",\n" +
-                        "    \"manager\":\"娜乌西卡\",\n" +
+                        "    \"manager\":\"算法测评\",\n" +
                         "    \"telephone\":\"17666666666\"\n" +
                         "}";
 
