@@ -1549,7 +1549,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
 
-
     //预约详情
     public JSONObject appointmentInfo(Long appointment_id) throws Exception {
         String url = "/WeChat-applet/porsche/appointment/info";
@@ -2431,6 +2430,43 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * 获得我的回访任务列表接口
+     *
+     * @param data                ”yyyy-mm-dd”形式的日期,可以用来过滤要查看的范围
+     * @param status              0：未执行； 1：已执行
+     * @param page                页码
+     * @param size                页大小
+     * @param customerName        客户姓名（过滤选项）
+     * @param customerPhoneNumber 客户手机号码（过滤选项）
+     * @param customerLevel       客户级别（过滤选项）
+     * @return response
+     */
+    public JSONObject withFilterAndCustomerDetail(String data, Integer status, Integer page, Integer size, String customerName, String customerPhoneNumber, String customerLevel) {
+        String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
+        JSONObject object = new JSONObject();
+        if (!data.equals("")) {
+            object.put("data", data);
+        }
+        if (!customerName.equals("")) {
+            object.put("customer_name", customerName);
+        }
+        if (!customerPhoneNumber.equals("")) {
+            object.put("customer_phone_number", customerPhoneNumber);
+        }
+        if (!customerLevel.equals("")) {
+            object.put("customer_level", customerLevel);
+        }
+        object.put("status", status);
+        if (!(page <= 0)) {
+            object.put("page", page);
+        }
+        if (!(size <= 0)) {
+            object.put("size", size);
+        }
+        return invokeApi(url, object);
+    }
+
     //--------------------------web2.0------------------------
 
     /**
@@ -2470,6 +2506,33 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         object.put("page", page);
         object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 公海列表接口
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param size      页码
+     * @param page      页大小
+     * @return response
+     */
+    public JSONObject publicCustomerList(String startTime, String endTime, Integer size, Integer page) {
+        String url = "/porsche/customer/public_customer_list";
+        JSONObject object = new JSONObject();
+        if (!startTime.equals("")) {
+            object.put("start_time", startTime);
+        }
+        if (!endTime.equals("")) {
+            object.put("end_time", endTime);
+        }
+        if (!(page <= 0)) {
+            object.put("page", page);
+        }
+        if (!(size <= 0)) {
+            object.put("size", size);
+        }
         return invokeApi(url, object);
     }
 
@@ -2914,6 +2977,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!endDate.equals("")) {
             object.put("end_date", endDate);
         }
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 销售前台客户分配接口
+     *
+     * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
+     * @return response
+     */
+    public JSONObject saleReception(String receptionType) {
+        String url = "/porsche/app/sale-reception/reception";
+        JSONObject object = new JSONObject();
+        object.put("reception_type", receptionType);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 我的试驾列表接口
+     *
+     * @param searchCondition 搜索条件，客户姓名
+     * @param startDate       开始时间
+     * @param endDate         结束时间
+     * @param size            页码
+     * @param page            页大小
+     * @return response
+     */
+    public JSONObject testDriverAppList(String searchCondition, String startDate, String endDate, Integer size, Integer page) {
+        String url = "/porsche/daily-work/test-drive/app/list";
+        JSONObject object = new JSONObject();
+        if (!searchCondition.equals("")) {
+            object.put("search_condition", searchCondition);
+        }
+        if (!startDate.equals("")) {
+            object.put("start_date", startDate);
+        }
+        if (!endDate.equals("")) {
+            object.put("end_date", endDate);
+        }
+        object.put("size", size);
+        object.put("page", page);
         return invokeApi(url, object);
     }
 

@@ -21,11 +21,13 @@ public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
     public static String getStrFieldByData(JSONObject response, String field) {
-        return response.getString(field);
+        String value = response.getString(field);
+        return value == null ? "" : value;
     }
 
     public static String getStrFieldByData(JSONObject response, int index, String field) {
-        return response.getJSONArray("list").getJSONObject(index).getString(field);
+        String value = response.getJSONArray("list").getJSONObject(index).getString(field);
+        return value == null ? "" : value;
     }
 
     public static Integer getIntFieldByData(JSONObject response, String field) {
@@ -71,8 +73,8 @@ public class CommonUtil {
                 a++;
             }
         }
-        logger.info("接待的总数量：{}", a);
         int i = removeDuplicates(arr).size();
+        logger.info("接待的总数量：{}", a);
         logger.info("电话号去重后接待数量：{}", i);
         logger.info("电话号重复的数量：{}", a - i);
         return a - i;
