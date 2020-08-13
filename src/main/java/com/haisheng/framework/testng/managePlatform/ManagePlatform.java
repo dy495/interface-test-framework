@@ -4485,7 +4485,7 @@ public class ManagePlatform {
                         "        \"district\":\"海淀区\"\n" +
                         "    },\n" +
                         "    \"local\":\"中关村soho\",\n" +
-                        "    \"manager\":\"娜乌西卡\",\n" +
+                        "    \"manager\":\"QA-RGN\",\n" +
                         "    \"telephone\":\"17666666666\"\n" +
                         "}";
 
