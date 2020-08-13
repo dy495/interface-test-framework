@@ -3035,8 +3035,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //方法封装
     //前台点击创建接待按钮创建顾客
-    public String[] creatCust() throws Exception {
-        String a[] = new String[4];
+    public JSONObject creatCust() throws Exception {
+        JSONObject object = new JSONObject();
         //前台登陆
         login(cstm.qt, cstm.pwd);
         Long customerid = -1L;
@@ -3052,20 +3052,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 userLoginName = obj.getString("user_login_name");
             }
         }
-        a[0] = userLoginName;
+        object.put("loginname",userLoginName);
         //创建接待
         creatReception("FIRST_VISIT");
         //销售登陆，获取当前接待id
         login(userLoginName, cstm.pwd);
         customerid = userInfService().getLong("customer_id");
-        a[1] = Long.toString(customerid);
+        object.put("customerid",customerid);
         //创建某级客户
         String name = "zdh";
         String phone = "zdh"+(int)((Math.random()*9+1)*100000);
-        a[2] = name;
-        a[3] = phone;
+        object.put("name",name);
+        object.put("phone",phone);
+
         JSONObject customer = finishReception(customerid, 7, name, phone, "自动化---------创建----------H级客户");
-        return a;
+        return object;
     }
 
     //新建试驾+审核封装
