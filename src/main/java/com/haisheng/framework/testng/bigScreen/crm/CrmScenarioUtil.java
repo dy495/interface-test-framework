@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.http.HttpEntity;
@@ -29,6 +31,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 此部分不变，后面的方法自行更改
      */
     private static volatile CrmScenarioUtil instance = null;
+    CustomerInfo cstm = new CustomerInfo();
 
     private CrmScenarioUtil() {
     }
@@ -1577,7 +1580,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
 
-
     //预约详情
     public JSONObject appointmentInfo(Long appointment_id) throws Exception {
         String url = "/WeChat-applet/porsche/appointment/info";
@@ -2531,6 +2533,43 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * 获得我的回访任务列表接口
+     *
+     * @param data                ”yyyy-mm-dd”形式的日期,可以用来过滤要查看的范围
+     * @param status              0：未执行； 1：已执行
+     * @param page                页码
+     * @param size                页大小
+     * @param customerName        客户姓名（过滤选项）
+     * @param customerPhoneNumber 客户手机号码（过滤选项）
+     * @param customerLevel       客户级别（过滤选项）
+     * @return response
+     */
+    public JSONObject withFilterAndCustomerDetail(String data, Integer status, Integer page, Integer size, String customerName, String customerPhoneNumber, String customerLevel) {
+        String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
+        JSONObject object = new JSONObject();
+        if (!data.equals("")) {
+            object.put("data", data);
+        }
+        if (!customerName.equals("")) {
+            object.put("customer_name", customerName);
+        }
+        if (!customerPhoneNumber.equals("")) {
+            object.put("customer_phone_number", customerPhoneNumber);
+        }
+        if (!customerLevel.equals("")) {
+            object.put("customer_level", customerLevel);
+        }
+        object.put("status", status);
+        if (!(page <= 0)) {
+            object.put("page", page);
+        }
+        if (!(size <= 0)) {
+            object.put("size", size);
+        }
+        return invokeApi(url, object);
+    }
+
     //--------------------------web2.0------------------------
 
     /**
@@ -2570,6 +2609,33 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         object.put("page", page);
         object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 公海列表接口
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param size      页码
+     * @param page      页大小
+     * @return response
+     */
+    public JSONObject publicCustomerList(String startTime, String endTime, Integer size, Integer page) {
+        String url = "/porsche/customer/public_customer_list";
+        JSONObject object = new JSONObject();
+        if (!startTime.equals("")) {
+            object.put("start_time", startTime);
+        }
+        if (!endTime.equals("")) {
+            object.put("end_time", endTime);
+        }
+        if (!(page <= 0)) {
+            object.put("page", page);
+        }
+        if (!(size <= 0)) {
+            object.put("size", size);
+        }
         return invokeApi(url, object);
     }
 
@@ -3042,6 +3108,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * 销售前台客户分配接口
+     *
+     * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
+     * @return response
+     */
+    public JSONObject saleReception(String receptionType) {
+        String url = "/porsche/app/sale-reception/reception";
+        JSONObject object = new JSONObject();
+        object.put("reception_type", receptionType);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 我的试驾列表接口
+     *
+     * @param searchCondition 搜索条件，客户姓名
+     * @param startDate       开始时间
+     * @param endDate         结束时间
+     * @param size            页码
+     * @param page            页大小
+     * @return response
+     */
+    public JSONObject testDriverAppList(String searchCondition, String startDate, String endDate, Integer size, Integer page) {
+        String url = "/porsche/daily-work/test-drive/app/list";
+        JSONObject object = new JSONObject();
+        if (!searchCondition.equals("")) {
+            object.put("search_condition", searchCondition);
+        }
+        if (!startDate.equals("")) {
+            object.put("start_date", startDate);
+        }
+        if (!endDate.equals("")) {
+            object.put("end_date", endDate);
+        }
+        object.put("size", size);
+        object.put("page", page);
+        return invokeApi(url, object);
+    }
+
+    /**
      * http请求方法调用
      *
      * @param url         url
@@ -3149,4 +3255,79 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 dt.getHistoryDate(-2)
         };
     }
+
+
+
+
+
+    //方法封装
+    //前台点击创建接待按钮创建顾客
+    public JSONObject creatCust() throws Exception {
+        JSONObject object = new JSONObject();
+        //前台登陆
+        login(cstm.qt, cstm.pwd);
+        Long customerid = -1L;
+        //获取当前空闲第一位销售id
+
+        String sale_id = freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        //
+        String userLoginName = "";
+        JSONArray userlist = userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        object.put("loginname",userLoginName);
+        //创建接待
+        creatReception("FIRST_VISIT");
+        //销售登陆，获取当前接待id
+        login(userLoginName, cstm.pwd);
+        customerid = userInfService().getLong("customer_id");
+        object.put("customerid",customerid);
+        //创建某级客户
+        String name = "zdh";
+        String phone = "zdh"+(int)((Math.random()*9+1)*100000);
+        object.put("name",name);
+        object.put("phone",phone);
+
+        JSONObject customer = finishReception(customerid, 7, name, phone, "自动化---------创建----------H级客户");
+        return object;
+    }
+
+    //新建试驾+审核封装
+    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
+        String idCard = "110226198210260078";
+        String gender = "男";
+        String signTime = dt.getHistoryDate(0);
+        Long model = 1L;
+        String country = "中国";
+        String city = "图们";
+        String email = dt.getHistoryDate(0)+"@qq.com";
+        String address = "北京市昌平区";
+        String ward_name = "小小";
+        String driverLicensePhoto1Url = cstm.picurl;
+        String driverLicensePhoto2Url = cstm.picurl;
+        String electronicContractUrl = cstm.picurl;
+
+        String call="先生";
+        int driverid = driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
+        //销售总监登陆
+        login(cstm.xszj,cstm.pwd);
+        driverAudit(driverid,driver.auditStatus);
+        //最后销售要再登陆一次
+
+    }
+
+    //订车+交车封装
+    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
+        //订车
+        orderCar(customer_id);
+        //创建交车
+        String model = "911";
+        String path = cstm.picurl;
+        deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
+    }
+
 }

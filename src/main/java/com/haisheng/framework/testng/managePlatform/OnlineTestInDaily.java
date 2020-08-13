@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
@@ -13,11 +15,7 @@ import java.util.HashMap;
 
 public class OnlineTestInDaily {
 
-    //日常环境【接口测试】专用应用
-    private String APP_ID = "0d28ec728799";
-    //日常环境【接口测试】专用品牌
-    private String BRAND_ID = "638";
-
+    private DailyManagePlatformUnit dailyManagePlatformUnit = new DailyManagePlatformUnit();
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String genAuthURLDaily = "http://39.106.253.190/administrator/login";
@@ -31,12 +29,26 @@ public class OnlineTestInDaily {
 
     private String genAuthURLOnline = "http://39.106.253.135/administrator/login";
 
-    private String appIdOnline = "";
-    private String subjectIdOnline = "97";
-    private String layoutIdOnline = "98";
-    private String regionIdOnline = "651";
-    private String entranceIdOnline = "652";
-    private String deviceIdOnline = "6368037709677568";
+//    private String appIdOnline = "111112a388c2";
+//    //主体id
+//    private String subjectIdOnline = "97";
+//    //平面id
+//    private String layoutIdOnline = "98";
+//    //区域id
+//    private String regionIdOnline = "99";
+//    //进出口id
+//    private String entranceIdOnline = "2894";
+//    //设备id
+//    private String deviceIdOnline = "6368036841161728";
+
+    private String appIdOnline = "2cf019f4c443";
+    private String subjectIdOnline = "246";
+    private String layoutIdOnline = "247";
+    private String regionIdOnline = "248";
+    private String entranceIdOnline = "249";
+    private String deviceIdOnline = "6588528881599488";
+
+    private String REMOVE_NODE = System.getProperty("REMOVE_NODE", "true").trim();
 
     @Test
     public void onlineTestInDaily() throws Exception {
@@ -57,15 +69,17 @@ public class OnlineTestInDaily {
             int typeId = single.getInteger("type_id");
             String subjectName = single.getString("subject_name");
 
-//            1、新建shop
-            String s4 = setToDaily.listSubject(APP_ID, BRAND_ID);
+//            1、新建shop，查看shop是否已存在，不存则新建
+            String s4 = setToDaily.listSubject(dailyManagePlatformUnit.appId, dailyManagePlatformUnit.brandId);
             String subjectIdNew = "";
             subjectIdNew = getSubjectIdByName(s4, subjectName);
             if ("".equals(subjectIdNew)) {
-                setToDaily.addSubject(BRAND_ID, subjectName, typeId);
-                String listSubject = setToDaily.listSubject(APP_ID, BRAND_ID);
+                setToDaily.addSubject(dailyManagePlatformUnit.brandId, subjectName, typeId);
+                String listSubject = setToDaily.listSubject(dailyManagePlatformUnit.appId, dailyManagePlatformUnit.brandId);
 
                 subjectIdNew = getSubjectIdByName(listSubject, subjectName);
+                //更新shop id
+                dailyManagePlatformUnit.nodeId = subjectIdNew;
             }
 
 //            配置服务
@@ -91,24 +105,33 @@ public class OnlineTestInDaily {
 
 //            确定唯一device
             String listDevice = getFromOnline.listDevice(deviceIdOnline);
-
             JSONArray devices = JSON.parseObject(listDevice).getJSONObject("data").getJSONArray("list");
 
             for (int j = 0; j < devices.size(); j++) {
                 JSONObject singleDevice = devices.getJSONObject(j);
 
-                String url = "rtsp://admin:winsense2018@192.168.50.153";
+                String url = "rtsp://admin:winsense2018@192.168.50.152";
                 String name = singleDevice.getString("name");
                 String deviceType = singleDevice.getString("device_type");
                 String cloudSceneType = singleDevice.getString("cloud_scene_type");
 
-//                2、新建设备
+//                2、新建设备，已有同名设备则不新建
                 String s = setToDaily.listDeviceBySubjectId(subjectIdNew);
                 String deviceIdByName = getDeviceIdByName(s, name);
                 if ("".equals(deviceIdByName)) {
                     setToDaily.addDevice(name, deviceType, "COMMON", cloudSceneType, url, subjectIdNew);
                 }
             }
+
+//            添加边缘服务器，无边缘服务器则添加
+            String nodeList = setToDaily.listNodes(dailyManagePlatformUnit.nodeId);
+            JSONArray clusterList = JSON.parseObject(nodeList).getJSONObject("data").getJSONObject("cluster_node_list").getJSONArray("list");
+            if (null == clusterList || clusterList.size() == 0) {
+                setToDaily.bindNode(dailyManagePlatformUnit.nodeId,
+                        dailyManagePlatformUnit.clusterNodeId,
+                        dailyManagePlatformUnit.clusterAlias);
+            }
+
 
 //            获取平面信息
             String listLayout = getFromOnline.listLayout(subjectIdOld);
@@ -162,7 +185,8 @@ public class OnlineTestInDaily {
                     if ("".equals(getDeviceIdByName(s2, layoutDeviceName))) {
                         setToDaily.startDevice(deviceId);
 
-                        Thread.sleep(60000);
+                        logger.info("sleep 5m, starting device......");
+                        Thread.sleep(5*60*1000);
 
                         setToDaily.stopDevice(deviceId);
 
@@ -206,17 +230,18 @@ public class OnlineTestInDaily {
 
                 String layoutIdOld = singleRegion.getString("layout_id");
                 String layoutIdNew = "";
+                String dailyRegionName = "";
                 boolean isLayoutRegion = true;
                 if (layoutIdOld == null || "".equals(layoutIdOld)) {
                     layoutIdNew = "";
                     isLayoutRegion = false;
                 } else {
                     JSONObject layoutInfo = singleRegion.getJSONObject("layout_info");
-                    String name = layoutInfo.getString("name");
+                    dailyRegionName = layoutInfo.getString("name");
 
                     String listLayout1 = setToDaily.listLayout(subjectIdNew);
 
-                    layoutIdNew = getLayoutIdByName(listLayout1, name);
+                    layoutIdNew = getLayoutIdByName(listLayout1, dailyRegionName);
                 }
 
 //                4.1 新建区域
@@ -226,7 +251,7 @@ public class OnlineTestInDaily {
                     regionIdNew = getRegionIdNyName(listRegion1, "全店区域" + ":" + subjectName);
                 } else if ("DEFAULT".equals(regionType)) {
                     String listRegion1 = setToDaily.listRegion(subjectIdNew);
-                    regionIdNew = getRegionIdNyName(listRegion1, "楼层区域" + ":" + subjectName);
+                    regionIdNew = getRegionIdNyName(listRegion1, "楼层区域" + ":" + dailyRegionName);
                 } else {
                     String listRegion1 = setToDaily.listRegion(subjectIdNew);
                     regionIdNew = getRegionIdNyName(listRegion1, regionName);
@@ -461,8 +486,8 @@ public class OnlineTestInDaily {
     public String genAuthJson() {
         String json =
                 "{\n" +
-                        "  \"email\": \"liaoxiangru@winsense.ai\"," +
-                        "  \"password\": \"e586aee0d9d9fdb16b9982adb74aeb60\"" +
+                        "  \"email\": \"yuhaisheng@winsense.ai\"," +
+                        "  \"password\": \"efe03eff1233eea2d1316db23ded613d\"" +
                         "}";
 
         return json;
@@ -508,7 +533,7 @@ public class OnlineTestInDaily {
         return executor.getResponse();
     }
 
-    @BeforeSuite
+    @BeforeClass
     public void initial() {
         genAuthDaily();
         genAuthOnline();
@@ -518,5 +543,14 @@ public class OnlineTestInDaily {
 
         getFromOnline.header = headerOnline;
         setToDaily.header = headerDaily;
+    }
+
+    @AfterClass
+    public void clean() throws Exception{
+        // 释放原有边缘服务器
+        if (REMOVE_NODE.toLowerCase().equals("true")) {
+            setToDaily.removeNode(dailyManagePlatformUnit.nodeId,
+                    dailyManagePlatformUnit.clusterNodeId);
+        }
     }
 }

@@ -996,14 +996,14 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String deviceType = getOneDeviceType();
-            String deviceName_1 = ciCaseName + "-1";
+            String deviceName_1 = ciCaseName + "-3";
             String response = addDevice(deviceName_1, deviceType, SHOP_Id, aCase, step);
             deviceId_1 = getDeviceId(response);
 
 //            2、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            String deviceName_2 = ciCaseName + "-2";
+            String deviceName_2 = ciCaseName + "-4";
             response = addDevice(deviceName_2, deviceType, SHOP_Id, aCase, step);
             deviceId_2 = getDeviceId(response);
 
@@ -1729,7 +1729,7 @@ public class ManagePlatformOnline {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -1793,7 +1793,7 @@ public class ManagePlatformOnline {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -1852,7 +1852,7 @@ public class ManagePlatformOnline {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -1935,7 +1935,7 @@ public class ManagePlatformOnline {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -2007,7 +2007,7 @@ public class ManagePlatformOnline {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -4261,7 +4261,7 @@ public class ManagePlatformOnline {
                         "        \"district\":\"海淀区\"\n" +
                         "    },\n" +
                         "    \"local\":\"中关村soho\",\n" +
-                        "    \"manager\":\"娜乌西卡\",\n" +
+                        "    \"manager\":\"QA-RGN\",\n" +
                         "    \"telephone\":\"17666666666\"\n" +
                         "}";
 

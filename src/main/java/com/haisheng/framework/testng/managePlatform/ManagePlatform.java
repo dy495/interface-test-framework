@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
@@ -4485,7 +4487,7 @@ public class ManagePlatform {
                         "        \"district\":\"海淀区\"\n" +
                         "    },\n" +
                         "    \"local\":\"中关村soho\",\n" +
-                        "    \"manager\":\"娜乌西卡\",\n" +
+                        "    \"manager\":\"QA-RGN\",\n" +
                         "    \"telephone\":\"17666666666\"\n" +
                         "}";
 
@@ -6332,6 +6334,11 @@ public class ManagePlatform {
     public void initial() throws Exception {
         genAuth();
         qaDbUtil.openConnection();
+
+        CommonConfig commonConfig = new CommonConfig();
+
+        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
     }
 
     @AfterSuite

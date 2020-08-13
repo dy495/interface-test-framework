@@ -374,8 +374,16 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     idNum=i+1;
                 }
             }
-            DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),4,BigDecimal.ROUND_HALF_UP));
+            String highScale = "";
+            int sales=total-idNum;
+            if(sales*100%total== 0 ){
+                DecimalFormat decimalFormat = new DecimalFormat("0%");
+                 highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP));
+            }else {
+                DecimalFormat decimalFormat = new DecimalFormat("0.00%");
+                 highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),4,BigDecimal.ROUND_HALF_UP));
+            }
+
 
 
 
@@ -429,8 +437,15 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     idNum=i+1;
                 }
             }
-            DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),4,BigDecimal.ROUND_HALF_UP));
+            String highScale = "";
+            int sales=total-idNum;
+            if(sales*100%total== 0 ){
+                DecimalFormat decimalFormat = new DecimalFormat("0%");
+                highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP));
+            }else {
+                DecimalFormat decimalFormat = new DecimalFormat("0.00%");
+                highScale = decimalFormat.format(new BigDecimal(total-idNum).divide(new BigDecimal(total),4,BigDecimal.ROUND_HALF_UP));
+            }
 
 
 
@@ -1013,6 +1028,4 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-
-
 }

@@ -45,7 +45,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        crm.login(EnumAccount.XSGW.getUsername(), EnumAccount.XSGW.getPassword());
+        crm.login(EnumAccount.XSGWTEMP.getUsername(), EnumAccount.XSGWTEMP.getPassword());
     }
 
     @AfterClass
@@ -160,7 +160,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
                 //登录销售账号
-                crm.login(EnumAccount.XSGW.getUsername(), EnumAccount.XSGW.getPassword());
+                crm.login(EnumAccount.XSGWTEMP.getUsername(), EnumAccount.XSGWTEMP.getPassword());
                 long customerId = crm.userInfService().getLong("customer_id");
                 //完成接待
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
