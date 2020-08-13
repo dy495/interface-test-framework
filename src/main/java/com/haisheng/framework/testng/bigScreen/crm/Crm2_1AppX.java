@@ -177,7 +177,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
             int[] customer_level = {};           //TODO:客户等级
             String[] customer_property = {};
-            String[] positions = {"CAR_ACTIVITY"}; //投放位置车型推荐 单选
+            String positions = "CAR_ACTIVITY"; //投放位置车型推荐 单选
             // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
 //            String valid_start = dt.getHistoryDate(0);
             String valid_end = dt.getHistoryDate(4);
@@ -200,8 +200,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Boolean is_create_poster = true;//是否生成海报
             Integer task_customer_num=5;
             //新建文章并返回文章/活动id
-            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
-            Long activity_id=crm.appartilceDetail(article_id).getLong("activity_id");
+            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title,false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
+            Long activity_id=crm.appartilceDetail(article_id,positions).getLong("activity_id");
             aid[0]=article_id;  //文章id
             aid[1]=activity_id;  //活动id
         }catch (AssertionError e){
