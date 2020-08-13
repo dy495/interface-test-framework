@@ -1060,8 +1060,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONArray iPvlist = Md.realTimeShopTotalV3((long) 1928l).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
-            int scrole =pv/uv ;
-
+            int scrole = 0;
+            if(pv !=0 && uv!=0){
+                 scrole =pv/uv ;
+            }else{
+                uv = uv+1;
+                pv = pv+1;
+                scrole= pv/uv;
+            }
             Preconditions.checkArgument(( scrole <= 4),"uv" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv);
 
 
