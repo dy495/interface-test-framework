@@ -622,4 +622,22 @@ public class DateTimeUtil {
         curr += (long) i * 24 * 60 * 60000;
         return new Date(curr);
     }
+
+   /**当前时间的前后多少秒
+    * @description :
+    * @date :2020/8/14 16:43
+    **/
+    public String currentTimeB(String pattern,int time) throws Exception {
+
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar c = Calendar.getInstance();
+
+        Date today = new Date();
+        c.setTime(today);
+        c.add(Calendar.SECOND,time);
+        Date m = c.getTime();
+
+        return format.format(m);
+    }
+
 }
