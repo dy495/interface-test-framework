@@ -200,7 +200,6 @@ public class TestCaseCommon {
         }
     }
 
-
     public ApiResponse sendRequest(String router, String[] resource, String json) {
         ApiResponse apiResponse = null;
         try {

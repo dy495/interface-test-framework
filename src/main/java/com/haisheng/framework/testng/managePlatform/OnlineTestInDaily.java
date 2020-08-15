@@ -8,7 +8,6 @@ import com.haisheng.framework.util.StatusCode;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -29,26 +28,56 @@ public class OnlineTestInDaily {
 
     private String genAuthURLOnline = "http://39.106.253.135/administrator/login";
 
-//    private String appIdOnline = "111112a388c2";
-//    //主体id
-//    private String subjectIdOnline = "97";
+//    private String appIdOnline = System.getProperty("APP_ID", "2cf019f4c443");
+//    //主体、shop、scope id
+//    private String subjectIdOnline = "246";
 //    //平面id
-//    private String layoutIdOnline = "98";
+//    private String layoutIdOnline = "247";
 //    //区域id
-//    private String regionIdOnline = "99";
+//    private String regionIdOnline = "248";
 //    //进出口id
-//    private String entranceIdOnline = "2894";
+//    private String entranceIdOnline = "249";
 //    //设备id
-//    private String deviceIdOnline = "6368036841161728";
+//    private String deviceIdOnline = "6588528881599488";
 
-    private String appIdOnline = "2cf019f4c443";
-    private String subjectIdOnline = "246";
-    private String layoutIdOnline = "247";
-    private String regionIdOnline = "248";
-    private String entranceIdOnline = "249";
-    private String deviceIdOnline = "6588528881599488";
+    private String appIdOnline = System.getProperty("APP_ID");
+    //主体、shop、scope id
+    private String subjectIdOnline = System.getProperty("SHOP_ID");
+    //平面id
+    private String layoutIdOnline = System.getProperty("LAYOUT_ID");
+    //区域id
+    private String regionIdOnline = System.getProperty("REGION_ID");
+    //进出口id
+    private String entranceIdOnline = System.getProperty("ENTRANCE_ID");
+    //设备id
+    private String deviceIdOnline = System.getProperty("DEVICE_ID");
 
     private String REMOVE_NODE = System.getProperty("REMOVE_NODE", "true").trim();
+
+
+
+
+    @BeforeClass
+    public void initial() {
+        genAuthDaily();
+        genAuthOnline();
+
+        getFromOnline.authorization = authOnline;
+        setToDaily.authorization = authDaily;
+
+        getFromOnline.header = headerOnline;
+        setToDaily.header = headerDaily;
+    }
+
+    @AfterClass
+    public void clean() throws Exception{
+        // 释放原有边缘服务器
+        if (REMOVE_NODE.toLowerCase().equals("true")) {
+            setToDaily.removeNode(dailyManagePlatformUnit.nodeId,
+                    dailyManagePlatformUnit.clusterNodeId);
+        }
+    }
+
 
     @Test
     public void onlineTestInDaily() throws Exception {
@@ -533,24 +562,4 @@ public class OnlineTestInDaily {
         return executor.getResponse();
     }
 
-    @BeforeClass
-    public void initial() {
-        genAuthDaily();
-        genAuthOnline();
-
-        getFromOnline.authorization = authOnline;
-        setToDaily.authorization = authDaily;
-
-        getFromOnline.header = headerOnline;
-        setToDaily.header = headerDaily;
-    }
-
-    @AfterClass
-    public void clean() throws Exception{
-        // 释放原有边缘服务器
-        if (REMOVE_NODE.toLowerCase().equals("true")) {
-            setToDaily.removeNode(dailyManagePlatformUnit.nodeId,
-                    dailyManagePlatformUnit.clusterNodeId);
-        }
-    }
 }

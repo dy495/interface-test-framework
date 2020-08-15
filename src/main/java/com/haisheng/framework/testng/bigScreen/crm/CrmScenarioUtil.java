@@ -1,5 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import ai.winsense.ApiClient;
+import ai.winsense.common.Credential;
+import ai.winsense.constant.SdkConstant;
+import ai.winsense.model.ApiRequest;
+import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,6 +13,7 @@ import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,6 +29,7 @@ import org.testng.annotations.DataProvider;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class CrmScenarioUtil extends TestCaseCommon {
 
@@ -3328,6 +3335,42 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String model = "911";
         String path = cstm.picurl;
         deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
+    }
+
+
+    /**
+     * 保时捷日常环境专用
+     * 上传车牌号
+     * */
+    public JSONObject carUploadToDaily(String router, String deviceId, String[] resource, String json) throws Exception {
+        ApiResponse apiResponse = null;
+        CommonConfig commonConfig = new CommonConfig();
+        try {
+            Credential credential = new Credential("1562385b98617267", "eff2e0ab091f2989cbe91608f39c4b9a");
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid("uid_827f10a3")
+                    .appId("88590052b177")
+                    .dataDeviceId(deviceId)
+                    .requestId(requestId)
+                    .version(SdkConstant.API_VERSION)
+                    .router(router)
+                    .dataResource(resource)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            ApiClient apiClient = new ApiClient(commonConfig.gateway, credential);
+            apiResponse = apiClient.doRequest(apiRequest);
+            caseResult.setResponse(JSON.toJSONString(apiResponse));
+
+            logger.printImportant(JSON.toJSONString(apiRequest));
+            logger.printImportant(JSON.toJSONString(apiResponse));
+
+            checkCode(apiResponse, router, StatusCode.SUCCESS);
+        } catch (Exception e) {
+            throw e;
+        }
+        return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
 }

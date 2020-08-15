@@ -14,9 +14,9 @@ public class DailyManagePlatformUnit {
     //日常环境【接口测试】专用品牌
     public String brandId = "638";
 
-    //QA专用算法测评边缘服务器
-    public String nodeId = "13384";
-    //边缘服务器集群ID
+    //QA管理后台日常回归测试scope，case无发获得新建的scopeid时默认绑定的scope
+    public String nodeId = "41280";
+    //边缘服务器集群ID,固定
     public String clusterNodeId = "538";
     public String clusterAlias = "QA-算法测评专用";
 }
