@@ -757,26 +757,21 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 String taskTime= list.getJSONObject(i).getString("return_visit_date");
                 String today_time = dt.getHistoryDate(0);
                 String yester_time = dt.getHistoryDate(-1);
-
+                String error= "";
                 if(taskTime.equals(today_time)){
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF1 = true;
-                        break;
+
                     }
-                }else {
-                    isTrueOrF1 = false;
                 }
                 if(taskTime.equals(yester_time)){
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF2 = true;
-                        break;
-                    }
-                }else {
-                    isTrueOrF2 = false;
-                }
 
+                    }
+                }
             }
 
 
@@ -847,7 +842,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF1 = true;
-                        break;
+
                     }
                 }else {
                     isTrueOrF1 = false;
@@ -856,7 +851,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF2 = true;
-                        break;
+
                     }
                 }else {
                     isTrueOrF2 = false;
@@ -932,7 +927,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF1 = true;
-                        break;
+
                     }
                 }else {
                     isTrueOrF1 = false;
@@ -941,7 +936,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
                     if(isTrue.equals("已完成")){
                         isTrueOrF2 = true;
-                        break;
+
                     }
                 }else {
                     isTrueOrF2 = false;
