@@ -723,7 +723,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj = crm.afterSale_VisitRecordList(1,50,"","","");
             Integer total = obj.getInteger("total");//全部回访条数
             JSONArray list = obj.getJSONArray("list");
-            Integer listTotal = 0;//列表的条数
+            int listTotal = 0;//列表的条数
             for(int j=0;j<list.size();j++){
                 Integer id = list.getJSONObject(j).getInteger("id");
                 if(id != null ){
@@ -779,11 +779,12 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
             }
 
-            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-售后回访中的全部回访" + total == "后工作管理中我的回访-售后回访中的列表条数"+listTotal);
-            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum == "后工作管理中我的回访-售后回访中任务日期为今天的条数"+todayListTotal);
-            Preconditions.checkArgument(flag = true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 = true , "回访任务日期为今天的回访任务是否完成=未完成" );
-            Preconditions.checkArgument(isTrueOrF2 = true , "回访任务日期为昨天的回访任务是否完成=未完成" );
+
+            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于工作管理中我的回访-售后回访中任务日期为今天的条数"+todayListTotal);
+            Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
+            Preconditions.checkArgument(isTrueOrF1 == true , "回访任务日期为今天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(isTrueOrF2 == true , "回访任务日期为昨天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-售后回访中的全部回访" + total + "不等于后工作管理中我的回访-售后回访中的列表条数"+listTotal);
 
 
         } catch (AssertionError e) {
@@ -864,11 +865,11 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             }
 
 
-            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-首保提醒中的全部回访" + total == "后工作管理中我的回访-首保提醒中的列表条数"+listTotal);
-            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum == "后工作管理中我的回访-售后回访中任务日期为今天的条数"+todayListTotal);
-            Preconditions.checkArgument(flag = true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 = true , "回访任务日期为今天的回访任务是否完成=未完成" );
-            Preconditions.checkArgument(isTrueOrF2 = true , "回访任务日期为昨天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-首保提醒中的全部回访" + total + "不等于售后后工作管理中我的回访-首保提醒中的列表条数"+listTotal);
+            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于后工作管理中我的回访-售后回访中任务日期为今天的条数"+todayListTotal);
+            Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
+            Preconditions.checkArgument(isTrueOrF1 == true , "回访任务日期为今天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(isTrueOrF2 == true , "回访任务日期为昨天的回访任务是否完成=未完成" );
 
 
         } catch (AssertionError e) {
@@ -949,11 +950,11 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             }
 
 
-            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-流失预警中的全部回访" + total == "后工作管理中我的回访-流失预警中的列表条数"+listTotal);
-            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-流失预警中的今日回访" + todayViNum == "后工作管理中我的回访-流失预警中任务日期为今天的条数"+todayListTotal);
-            Preconditions.checkArgument(flag = true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 = true , "回访任务日期为今天的回访任务是否完成=未完成" );
-            Preconditions.checkArgument(isTrueOrF2 = true , "回访任务日期为昨天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-流失预警中的全部回访" + total + "不等于售后工作管理中我的回访-流失预警中的列表条数"+listTotal);
+            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-流失预警中的今日回访" + todayViNum  +"不等于售后工作管理中我的回访-流失预警中任务日期为今天的条数"+todayListTotal);
+            Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
+            Preconditions.checkArgument(isTrueOrF1 == true , "回访任务日期为今天的回访任务是否完成=未完成" );
+            Preconditions.checkArgument(isTrueOrF2 == true , "回访任务日期为昨天的回访任务是否完成=未完成" );
 
 
         } catch (AssertionError e) {
