@@ -19,4 +19,7 @@ public class DailyManagePlatformUnit {
     //边缘服务器集群ID,固定
     public String clusterNodeId = "538";
     public String clusterAlias = "QA-算法测评专用";
+
+    //线下设备id，用于信息打印
+    public String dailyDeviceId = "default";
 }

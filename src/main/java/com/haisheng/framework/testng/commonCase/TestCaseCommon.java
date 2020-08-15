@@ -237,6 +237,22 @@ public class TestCaseCommon {
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
+    public void checkCode(String gateway, ApiResponse apiResponse, String router, int expectCode) throws Exception {
+        try {
+            if (null == apiResponse) {
+                throw new Exception("api");
+            }
+            int codeRes = apiResponse.getCode();
+            if (codeRes != expectCode) {
+                String msg = "gateway: " + gateway + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+                        "actual code: " + codeRes + " expect code: " + expectCode + ".";
+                throw new Exception(msg);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public void checkCode(ApiResponse apiResponse, String router, int expectCode) throws Exception {
         try {
             if (null == apiResponse) {

@@ -3339,34 +3339,35 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * 保时捷日常环境专用
+     * 保时捷日常环境专用，与保时捷测试日常环境配置一致
      * 上传车牌号
      * */
     public JSONObject carUploadToDaily(String router, String deviceId, String[] resource, String json) throws Exception {
         ApiResponse apiResponse = null;
         CommonConfig commonConfig = new CommonConfig();
         try {
-            Credential credential = new Credential("1562385b98617267", "eff2e0ab091f2989cbe91608f39c4b9a");
+            Credential credential = new Credential("77327ffc83b27f6d", "7624d1e6e190fbc381d0e9e18f03ab81");
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid("uid_827f10a3")
-                    .appId("88590052b177")
+                    .uid("uid_7fc78d24")
+                    .appId("097332a388c2")
                     .dataDeviceId(deviceId)
                     .requestId(requestId)
-                    .version(SdkConstant.API_VERSION)
+                    .version("1.0")
+                    .dataResourceUnencryptedIdx(new Integer[]{0})
                     .router(router)
                     .dataResource(resource)
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            ApiClient apiClient = new ApiClient(commonConfig.gateway, credential);
+            ApiClient apiClient = new ApiClient(commonConfig.gatewayDevice, credential);
             apiResponse = apiClient.doRequest(apiRequest);
             caseResult.setResponse(JSON.toJSONString(apiResponse));
 
             logger.printImportant(JSON.toJSONString(apiRequest));
             logger.printImportant(JSON.toJSONString(apiResponse));
 
-            checkCode(apiResponse, router, StatusCode.SUCCESS);
+            checkCode(commonConfig.gatewayDevice, apiResponse, router, StatusCode.SUCCESS);
         } catch (Exception e) {
             throw e;
         }

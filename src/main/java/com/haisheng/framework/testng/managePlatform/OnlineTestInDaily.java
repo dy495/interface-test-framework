@@ -76,6 +76,10 @@ public class OnlineTestInDaily {
             setToDaily.removeNode(dailyManagePlatformUnit.nodeId,
                     dailyManagePlatformUnit.clusterNodeId);
         }
+        logger.info("============================");
+        logger.info("线下新建shop id: " + dailyManagePlatformUnit.nodeId);
+        logger.info("线下新建device id: " + dailyManagePlatformUnit.dailyDeviceId);
+        logger.info("============================");
     }
 
 
@@ -209,6 +213,7 @@ public class OnlineTestInDaily {
                     String subjectDevices = setToDaily.listDeviceBySubjectId(subjectIdNew);
 
                     String deviceId = getDeviceIdByName(subjectDevices, layoutDeviceName);
+                    dailyManagePlatformUnit.dailyDeviceId = deviceId;
 
                     String s2 = setToDaily.listLayoutDevice(layoutIdNew);
                     if ("".equals(getDeviceIdByName(s2, layoutDeviceName))) {

@@ -95,11 +95,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      *
      */
     @Test
-    public void uploadCarPlate() {
-        String carNum = "京KD1916";
+    public void uploadEnterShopCarPlate() {
+        String carNum = "京KD1000";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与日常环境的设置一致，不要修改
         String deviceId = "7709867521115136";
-        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.png";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         ImageUtil imageUtil = new ImageUtil();
         String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{\"plate_num\":\"" + carNum +"\"," +
@@ -113,7 +114,37 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("车牌号上传");
+            saveData("入场车牌号上传");
+        }
+    }
+
+    /**
+     *
+     * 上传车牌
+     * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
+     *
+     */
+    @Test
+    public void uploadLeaveShopCarPlate() {
+        String carNum = "京KD1000";
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与日常环境的设置一致，不要修改
+        String deviceId = "7724082825888768";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{\"plate_num\":\"" + carNum +"\"," +
+                "\"plate_pic\":\"@0\"," +
+                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "}";
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, json);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("离场车牌号上传");
         }
     }
 
