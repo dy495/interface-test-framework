@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.service.ApiRequest;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
@@ -15,10 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @description :crm2.0 pc case--xia
@@ -326,7 +324,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Integer activityTotal=crm.activityPeople(article_id).getInteger("total");
             Preconditions.checkArgument(activityTotal==task_customer_numa,"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
-            Preconditions.checkArgument(customer_typesA.equals("售前、售后"),"新建活动列表信息，投放人群展示错误");
+            Preconditions.checkArgument(customer_typesA.equals("销售、售后"),"新建活动列表信息，投放人群展示错误");
             Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
@@ -1614,7 +1612,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车型推荐车数量==商品管理数量  TODO:
+     * @description :车型推荐车数量==商品管理数量
      * @date :2020/8/12 17:22
      **/
      @Test
@@ -1653,7 +1651,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
              int[] customer_level = {};           //TODO:客户等级
              String[] customer_property = {};
-             String sendTime = dt.getHistoryDate(4);
+             long time=60*1000;
+
+//             String sendTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",60);
+
              int[] car_types = {};
              String messageTitile = "暑期特惠" + dt.getHistoryDate(0);
              String messageContent = "站内自动消息内容";
@@ -1662,9 +1664,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list= crm.activityVaild().getJSONArray("list");
             if(list==null||list.size()==0){
                 crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent);
-            }else{
+            }else if(appointment_type.equals("ACTIVITY")){
                 Long activityId=list.getJSONObject(0).getLong("id");
                 crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent,appointment_type,activityId);
+
+            }else{
+                crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent,appointment_type,null);
 
             }
             //我的消息页
@@ -1681,15 +1686,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(contentM.equals(messageContent),"站内消息内容显示错误");
 
 
-
-
-
          }catch (AssertionError e){
              appendFailreason(e.toString());
          }catch (Exception e){
              appendFailreason(e.toString());
          }finally {
-             saveData("车型推荐车数量==商品管理数量");
+             saveData("站内消息与小程序收到的消息一致性校验");
          }
      }
 
