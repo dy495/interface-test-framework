@@ -1634,7 +1634,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //取消预约
     public JSONObject cancle(Long appointment_id) throws Exception {
-        String url = "/WeChat-applet/porsche/appointment/cancel";
+        String url = "/WeChat-applet/porsche/a/appointment/cancel";
         JSONObject json = new JSONObject();
         json.put("appointment_id", appointment_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
@@ -2299,7 +2299,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return new String[]{
                 //"MODEL_RECOMMENDATION",
-//                "PURCHASE_GUIDE",
+                "PURCHASE_GUIDE",
                 "BRAND_CULTURE",
                 "CAR_ACTIVITY"
         };
@@ -2401,6 +2401,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //售后：查看回访列表
     public JSONObject afterSale_VisitRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
         String url = "/porsche/app/return-visit-record/after-sale/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        if (!search_name_phone.equals("")) {
+            json1.put("search_name_phone", search_name_phone);
+        }
+        if (!search_start_day.equals("")) {
+            json1.put("search_start_day", search_start_day);
+        }
+        if (!search_end_day.equals("")) {
+            json1.put("search_end_day", search_end_day);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //售后：首保提醒列表
+    public JSONObject afterSale_firstmMintainRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+        String url = "/porsche/app/return-visit-record/first-maintain-record/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        if (!search_name_phone.equals("")) {
+            json1.put("search_name_phone", search_name_phone);
+        }
+        if (!search_start_day.equals("")) {
+            json1.put("search_start_day", search_start_day);
+        }
+        if (!search_end_day.equals("")) {
+            json1.put("search_end_day", search_end_day);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //售后：流失预警列表
+    public JSONObject afterSale_customerChurnWarningList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+        String url = "/porsche/app/return-visit-record/customer-churn-warning/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);
