@@ -94,7 +94,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    @Test
+    //@Test
     public void uploadEnterShopCarPlate() {
         String carNum = "京KD1000";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
@@ -124,7 +124,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    @Test
+    //@Test
     public void uploadLeaveShopCarPlate() {
         String carNum = "京KD1000";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
