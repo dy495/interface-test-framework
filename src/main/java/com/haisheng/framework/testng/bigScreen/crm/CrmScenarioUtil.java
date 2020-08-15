@@ -2388,6 +2388,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //售后：首保提醒列表
+    public JSONObject afterSale_firstmMintainRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+        String url = "/porsche/app/return-visit-record/first-maintain-record/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        if (!search_name_phone.equals("")) {
+            json1.put("search_name_phone", search_name_phone);
+        }
+        if (!search_start_day.equals("")) {
+            json1.put("search_start_day", search_start_day);
+        }
+        if (!search_end_day.equals("")) {
+            json1.put("search_end_day", search_end_day);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //售后：流失预警列表
+    public JSONObject afterSale_customerChurnWarningList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+        String url = "/porsche/app/return-visit-record/customer-churn-warning/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        if (!search_name_phone.equals("")) {
+            json1.put("search_name_phone", search_name_phone);
+        }
+        if (!search_start_day.equals("")) {
+            json1.put("search_start_day", search_start_day);
+        }
+        if (!search_end_day.equals("")) {
+            json1.put("search_end_day", search_end_day);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //活动：添加报名人信息
     public JSONObject registeredCustomer(Long activity_task_id, String customer_name, String customer_phone_number) {
         String url = "/porsche/app/activity-task/registeredCustomer";
