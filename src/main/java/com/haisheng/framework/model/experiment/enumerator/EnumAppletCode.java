@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "dZBhO0nkeaeCRUza2qlH+A==");
+    WM("w", "qa_need_not_delete2");
 
     EnumAppletCode(String weChatName, String code) {
         this.code = code;
