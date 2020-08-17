@@ -790,7 +790,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约维修，小程序页面间数据一致性
      * @date :2020/7/11 13:48
      **/
-    @Test(priority = 2)
+//    @Test(priority = 2)
     public void repair() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -868,7 +868,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约维修成功，页面间一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test(priority = 2)
+//    @Test(priority = 2)
     public void repair_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1545,10 +1545,10 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :小程序取消预约，pc预约记录，接待状态预约中变更已取消 ok
+     * @description :小程序取消预约，pc预约记录，接待状态预约中变更已取消 ok，受预约保养维修次数限制，此case 改为预约试驾
      * @date :2020/7/30 12:41
      **/
-    @Test
+    //@Test
     public void appointmentStstus(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1617,10 +1617,10 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :预约同一天其他时段失败  TODO：待调试
+     * @description :预约同一天其他时段失败  TODO：待调试  1次
      * @date :2020/8/12 12:57
      **/
-    @Test
+//    @Test
     public void timeListFail(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

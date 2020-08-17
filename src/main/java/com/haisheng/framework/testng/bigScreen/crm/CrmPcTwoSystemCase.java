@@ -682,7 +682,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 totalA=0;
             }else{ totalA=listA.size(); }
             String car_id=listA.getJSONObject(listA.size()-1).getString("id");  //新建车型id
-            crm.carDelete(Integer.parseInt(car_id));   //删除车辆
+//            crm.carDelete(Integer.parseInt(car_id));   //删除车辆
             Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
 
         }catch (AssertionError e){

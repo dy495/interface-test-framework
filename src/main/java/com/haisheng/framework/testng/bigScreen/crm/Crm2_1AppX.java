@@ -703,14 +703,14 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void testderver(){
           logger.logCaseStart(caseResult.getCaseName());
           try{
-              Long customer_id=13979L;  //TODO:
+//              Long customer_id=13979L;  //TODO:
               String customer_name="auto";
             String phone = "1";
-//            for (int i = 0; i < 10; i++) {
-//                String a = Integer.toString((int) (Math.random() * 10));
-//                phone = phone + a;
-//            }
-//            Long customer_id=creatCust(customer_name,phone);
+            for (int i = 0; i < 10; i++) {
+                String a = Integer.toString((int) (Math.random() * 10));
+                phone = phone + a;
+            }
+            Long customer_id=creatCust(customer_name,phone);
               String time=dt.getHHmm(0);
               creatDriver(customer_id,customer_name,phone,dt.getHistoryDate(0),dt.getHHmm(0),1);
 
