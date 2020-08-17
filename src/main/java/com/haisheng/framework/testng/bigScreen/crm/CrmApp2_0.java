@@ -243,9 +243,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             int appointmentId = response.getInteger("appointment_id");
             //登录销售总监账号
             crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
-//            crm.appointmentTestDriverList("", "", "", 1, );
-
-
+            crm.appointmentTestDriverList("", "", "", 1, 100);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         }
@@ -268,6 +266,5 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
 //        } catch (Exception | AssertionError e) {
 //            appendFailreason(e.toString());
 //        }
-
     }
 }

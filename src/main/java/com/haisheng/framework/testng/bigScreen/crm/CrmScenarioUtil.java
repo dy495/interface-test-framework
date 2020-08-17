@@ -131,7 +131,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * 小程序通用登录
+     * 小程序通用登录-w
      *
      * @param token 自己的token
      */
