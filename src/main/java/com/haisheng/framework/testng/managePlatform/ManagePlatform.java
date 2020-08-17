@@ -1035,14 +1035,14 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String deviceType = getOneDeviceType();
-            String deviceName_1 = ciCaseName + "-1";
+            String deviceName_1 = ciCaseName + "—11";
             String response = addDevice(deviceName_1, deviceType, SHOP_Id, aCase, step);
             deviceId_1 = getDeviceId(response);
 
 //            2、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            String deviceName_2 = ciCaseName + "-2";
+            String deviceName_2 = ciCaseName + "-33";
             response = addDevice(deviceName_2, deviceType, SHOP_Id, aCase, step);
             deviceId_2 = getDeviceId(response);
 
@@ -6259,7 +6259,7 @@ public class ManagePlatform {
     private static Object[][] condition() {
         return new Object[][]{
                 new Object[]{
-                        "deviceType", "\"device_type\":\"AI_CAMERA\" "
+                        "deviceType", "\"device_type\":\"WEB_CAMERA\" "
                 },
                 new Object[]{
                         "deviceId", "\"device_id\":\"" + BATCH_START_DEVICE_ID_1 + "\""
