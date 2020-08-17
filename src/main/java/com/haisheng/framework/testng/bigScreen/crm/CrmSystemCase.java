@@ -4,16 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.ImageUtil;
-import com.haisheng.framework.util.StatusCode;
 import org.testng.annotations.*;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
+
 import java.lang.reflect.Method;
 
 
@@ -94,9 +93,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    //@Test
+    @Test
     public void uploadEnterShopCarPlate() {
-        String carNum = "京KD1000";
+        String carNum = "鲁A081711";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7709867521115136";
@@ -124,9 +123,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    //@Test
+    @Test
     public void uploadLeaveShopCarPlate() {
-        String carNum = "京KD1000";
+        String carNum = "京KD1001";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7724082825888768";
