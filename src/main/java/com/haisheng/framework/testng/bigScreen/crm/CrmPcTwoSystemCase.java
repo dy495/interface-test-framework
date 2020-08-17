@@ -31,7 +31,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public String adminpassword="e10adc3949ba59abbe56e057f20f883e";
     public String baoshijie="baoshijie";
     public String code="1234567";
-    public String lxqgw="lxqgw";     //销售顾问
+    public String xiaoshou="销售顾问xia";     //销售顾问
     public String adminnamexiaoshou = "销售总监";    //pc登录密码，最好销售总监或总经理权限
     public String adminpasswordxiaoshou = "e10adc3949ba59abbe56e057f20f883e";
 
@@ -109,7 +109,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         return activity_id;
     }
     //pc新建活动方法，返回文章id和文章id
-    public Long[] createAArcile_id(String valid_start, String simulation_num){
+    public Long[] createAArcile_id(String positions,String valid_start, String simulation_num){
         Long article_id=0L;
         Long [] aid=new Long[2];
         try {
@@ -117,7 +117,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
             int[] customer_level = {};           //TODO:客户等级
             String[] customer_property = {};
-            String positions = "CAR_ACTIVITY"; //投放位置看车推荐 单选
+//            String positions = "CAR_ACTIVITY"; //投放位置看车推荐 单选
             // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
 //            String valid_start = dt.getHistoryDate(0);
             String valid_end = dt.getHistoryDate(4);
@@ -229,8 +229,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
 
         //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+//        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -314,7 +314,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long totalA=data.getLong("total");
             JSONArray list=data.getJSONArray("list");
             String customer_typesA=list.getJSONObject(0).getString("customer_types");
-            String positionsA=list.getJSONObject(0).getString("positions");
+            String positionsA=list.getJSONObject(0).getString("position");
             String valid_startA=list.getJSONObject(0).getString("valid_start");
             String valid_endA=list.getJSONObject(0).getString("valid_end");
             String statusA=list.getJSONObject(0).getString("status");
@@ -364,7 +364,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 total=list.size();
             }
             //创建活动
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"10");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"10");
             Long activity_id=aid[1];
             Long id=aid[0];
             if(activity_id==null){
@@ -441,7 +441,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             String num="6"; //假定基数
             String valid_start = dt.getHistoryDate(0);
-            Long [] aid=createAArcile_id(valid_start,num);
+            Long [] aid=createAArcile_id(positionList1,valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];   //文章id
             String total=crm.articlePage(1,10,positionList1).getString("total");
@@ -478,7 +478,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             String num="6"; //假定基数
             String valid_start = dt.getHistoryDate(1);
-            Long [] aid=createAArcile_id(valid_start,num);
+            Long [] aid=createAArcile_id(positionList1,valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];
             if(activity_id==null||id==null){
@@ -674,6 +674,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }
             //pc 新建车辆
             String car_type_name="911-"+dt.getHHmm(0);
+//            String car_type_name="911";
             createCar(car_type_name);
             JSONArray listA=crm.carList().getJSONArray("list");
             int totalA=0;
@@ -755,7 +756,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :创建商品车辆 50辆边界
      * @date :2020/7/21 17:43
      **/
-    @Test
+//    @Test
     public void createGoodsManage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -908,7 +909,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void pcblackList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
             //活动报名
@@ -1164,7 +1165,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建活动，获取活动id
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
             crm.login("baoyangr",adminpassword);
@@ -1207,10 +1208,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建活动，获取活动id
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
-            crm.login(lxqgw,adminpassword);
+            crm.login(xiaoshou,adminpassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1246,12 +1247,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建活动，获取活动id
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
             JSONObject data=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int total=data.getInteger("total");
-            crm.login(lxqgw,adminpassword);
+            crm.login(xiaoshou,adminpassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1276,7 +1277,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customer_name.equals("夏"),"任务客户报名人名错误");
             Preconditions.checkArgument(customer_type.equals("售前/售后"),"活动类型错误错误");
             Preconditions.checkArgument(customer_phone_number.equals(phone),"任务客户报名人电话错误");
-            Preconditions.checkArgument(sale_name.equals(lxqgw),"任务客户报名销售名错误");
+            Preconditions.checkArgument(sale_name.equals(xiaoshou),"任务客户报名销售名错误");
 
 
             crm.login(adminname,adminpassword);
@@ -1300,10 +1301,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建活动，获取活动id
-            Long [] aid=createAArcile_id(dt.getHistoryDate(0),"8");
+            Long [] aid=createAArcile_id(positionList1,dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
-            crm.login(lxqgw,adminpassword);
+            crm.login(xiaoshou,adminpassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1322,7 +1323,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int total=data.getInteger("total");
 
             //删除报名客户
-            crm.login(lxqgw,adminpassword);
+            crm.login(xiaoshou,adminpassword);
             crm.deleteCustomerX(Integer.toString(activityTaskId),Long.toString(customer_id) );
             //删除后，任务人数
             crm.login(adminname,adminpassword);
@@ -1612,7 +1613,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车型推荐车数量==商品管理数量
+     * @description :车型推荐车数量==商品管理数量 ok
      * @date :2020/8/12 17:22
      **/
      @Test
@@ -1639,7 +1640,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      }
 
      /**
-      * @description :站内消息与小程序收到的消息一致性校验 TODO；
+      * @description :站内消息与小程序收到的消息一致性校验 ok
       * @date :2020/8/12 17:51
       **/
      @Test(dataProvider = "APPOINTMENT_TYPE",dataProviderClass = CrmScenarioUtil.class)
@@ -1648,6 +1649,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          try{
 //             String appointment_type = "TEST_DRIVER";
              //pc创建站内消息
+             crm.login(adminname,adminpassword);
              String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
              int[] customer_level = {};           //TODO:客户等级
              String[] customer_property = {};
@@ -1672,6 +1674,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent,appointment_type,null);
 
             }
+            Thread.sleep(1000*60); //60秒后，查看小程序是否收到消息
+            crm.appletLogin(code);
             //我的消息页
              JSONArray messagePage=crm.messageList(10).getJSONArray("list");
             Long id=messagePage.getJSONObject(0).getLong("id");
@@ -1694,6 +1698,156 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              saveData("站内消息与小程序收到的消息一致性校验");
          }
      }
+
+     /**
+      * @description :发送自定义消息，不选择预约按钮，为小程序界面测试提供数据
+      * @date :2020/8/16 15:32
+      **/
+     @Test()
+     public void messageInterFormanul(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             //pc创建站内消息
+             crm.login(adminname,adminpassword);
+             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
+             int[] customer_level = {};           //TODO:客户等级
+             String[] customer_property = {};
+             long time=60*1000;
+
+//             String sendTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",60);
+
+             int[] car_types = {};
+             String messageTitile = "暑期特惠" + dt.getHistoryDate(0);
+             String messageContent = "站内自动消息内容";
+
+             //站内消息列表
+             int total=crm.messagePage(1,10).getInteger("total");
+
+             //有效活动列表
+             JSONArray list= crm.activityVaild().getJSONArray("list");
+             crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent);
+             int totalA=crm.messagePage(1,10).getInteger("total");
+             Preconditions.checkArgument((totalA-total)==1,"站内消息列表没+1");
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("发送站内消息，站内消息列表+1");
+         }
+     }
+
+     /**
+      * @description : ok
+      * @date :2020/8/16 15:46
+      **/
+     @Test(dataProvider = "APOSITIONS",dataProviderClass = CrmScenarioUtil.class)
+     public void createActivityForManual(String apositions){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             //坑位列表
+             JSONArray positionList=crm.positionList().getJSONArray("list");
+             Long totalB=crm.articlePage(1,10,apositions).getLong("total");
+             String []customer_types={"PRE_SALES","AFTER_SALES"};
+             int []customer_level={};                          //客户等级
+             String []customer_property={};
+             String valid_start=dt.getHistoryDate(0);
+             String valid_end=dt.getHistoryDate(4);
+             int []car_types={car_type};
+             String article_title="车主活动，保时捷邀您乘风破浪"+dt.getHistoryDate(0);
+             String article_bg_pic=texFile(filePath);  //base 64
+             String article_content="车主活动,活动内容，跑车性能采用后置设计、动力强劲的 双涡轮增压水平对置 6 缸发动机高精度 Porsche Doppelkupplung (PDK) 保时捷双离合器变速箱可提升驾驶动态性能的诸多系统舒适性动力强劲。设计标杆。日常座驾。";
+             String article_remarks="车主活动,备注";
+
+             boolean is_online_activity=true;  //是否线上报名活动
+//            String reception_name=manage(13)[0];  //接待人员名
+//            String reception_phone=manage(13)[1]; //接待人员电话
+             String reception_name="xia1";  //接待人员名
+             String reception_phone="15037286013"; //接待人员电话
+             String customer_max="20";                    //人数上限
+             String simulation_num="10";                   //假定基数
+             String activity_start=dt.getHistoryDate(0);
+             String activity_end=dt.getHistoryDate(4);
+             Integer role_id=15;
+             Boolean is_create_poster=true;//是否生成海报
+             Integer task_customer_num=5;
+             //新建文章并返回文章id
+             Long article_id=crm.createArticle(apositions,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,false,article_bg_pic,article_content,article_remarks,is_online_activity,reception_name,reception_phone,customer_max,simulation_num,activity_start,activity_end,role_id,Integer.toString(task_customer_num),is_create_poster).getLong("id");
+             //activity_id = article_id;
+
+             JSONObject pcarctile=crm.artilceDetailpc(article_id);  //pc活动详情
+             String detail_customer_max=pcarctile.getString("customer_max");
+             String detail_registered_num=pcarctile.getString("registered_num");  //已经报名人数
+             String detail_article_title=pcarctile.getString("article_title");
+             String detail_article_content=pcarctile.getString("article_content");
+
+
+             //新增活动，活动列表+1
+             JSONObject data=crm.articlePage(1,10,apositions);
+             Long totalA=data.getLong("total");
+             JSONArray list=data.getJSONArray("list");
+             String customer_typesA=list.getJSONObject(0).getString("customer_types");
+             String positionsA=list.getJSONObject(0).getString("position");
+             String valid_startA=list.getJSONObject(0).getString("valid_start");
+             String valid_endA=list.getJSONObject(0).getString("valid_end");
+             String statusA=list.getJSONObject(0).getString("status");
+
+
+             Preconditions.checkArgument((totalA-totalB)==1,"新建活动，活动详情列表总数没+1");
+             Integer activityTotal=crm.activityPeople(article_id).getInteger("total");
+             //活动列表信息校验
+             Preconditions.checkArgument(customer_typesA.equals("销售、售后"),"新建活动列表信息，投放人群展示错误");
+             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
+             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
+             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
+
+             //查看详情信息校验
+             Preconditions.checkArgument(detail_customer_max.equals(customer_max),"查看文章详情，报名总额错误");
+             Preconditions.checkArgument(detail_article_title.equals(article_title),"查看文章详情，文章内容错误");
+             Preconditions.checkArgument(detail_article_content.equals(article_content),"查看文章详情，文章标题错误");
+
+             crm.articleStatusChange(article_id);
+             crm.articleDelete(article_id);
+
+//             crm.articleDelete(article_id);
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("pc新建车主活动，数据一致，活动列表+1,文章列表数据校验，查看文章详情数据校验");
+         }
+     }
+
+     /**
+      * @description :评价查询
+      * @date :2020/8/16 18:07
+      **/
+     @Test()
+     public void elvaueSelectTime(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             JSONArray evaluateList=crm.evaluateList(1,10,"","","").getJSONArray("list");
+             if(evaluateList==null||evaluateList.size()==0){
+                 return;
+             }
+             String name=evaluateList.getJSONObject(0).getString("reception_sale_name");
+             JSONArray list=crm.evaluateList(1,10,"","",name).getJSONArray("list");
+             for(int i=0;i<list.size();i++){
+                 String nameSlect=list.getJSONObject(i).getString("reception_sale_name");
+                 Preconditions.checkArgument(nameSlect.equals(name),"pc评价页按接待人员名查询错误");
+             }
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("pc评价页按接待人员名查询");
+         }
+     }
+
+
 
 
 

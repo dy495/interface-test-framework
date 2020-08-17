@@ -64,8 +64,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
 
         //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+//        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -252,7 +252,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void jiaocheSelectTime(String select_date){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray list=crm.deliverSelect(10,1,select_date,select_date).getJSONArray("list");
+            JSONArray list=crm.deliverSelect(1,10,select_date,select_date).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String timeSelect=list.getJSONObject(i).getString("deliver_car_time");
                 Preconditions.checkArgument(timeSelect.equals(select_date),"交车按交车时间{}查询，结果{}错误",select_date,timeSelect);
@@ -657,10 +657,10 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :试驾 今日数=列表电话去重数  TODO
+     * @description :试驾 今日数=列表电话去重数  TODO：
      * @date :2020/7/31 13:55
      **/
-    @Test
+//    @Test
     public void shijiaRecodeApp(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -696,10 +696,10 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
       /**
-       * @description :试驾
+       * @description :试驾   TODO：
        * @date :2020/8/10 16:45
        **/
-      @Test
+//      @Test
     public void testderver(){
           logger.logCaseStart(caseResult.getCaseName());
           try{

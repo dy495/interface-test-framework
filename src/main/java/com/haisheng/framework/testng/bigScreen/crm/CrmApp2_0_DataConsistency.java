@@ -1048,7 +1048,9 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
         String appointment_time = "09:30";
         String description = "自动化故障说明" + System.currentTimeMillis();
-        JSONObject obj = crm.appointmentRepair(carid, customer_name, customer_phone_number, date, appointment_time, description);
+        long timelist=crm.timeList("REPAIR",date).getJSONArray("list").getJSONObject(0).getLong("id");
+
+        JSONObject obj = crm.appointmentRepair(carid, customer_name, customer_phone_number, date, appointment_time, description,timelist);
         Long repair_id = obj.getLong("appointment_id");
         a[1] = Long.toString(repair_id);
 
@@ -1088,7 +1090,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         crm.appletLoginLxq("");
 
         String appointment_time = "09:00";
-        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time);
+        long timelist=crm.timeList("REPAIR",date).getJSONArray("list").getJSONObject(0).getLong("id");
+        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time,timelist);
         Long maintain_id = obj.getLong("appointment_id");
         a[1] = Long.toString(maintain_id);
 
