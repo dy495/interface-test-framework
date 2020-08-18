@@ -12,8 +12,6 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCaseX"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianAppCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreCaseV2"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataConsistentcyV2"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreCaseV3"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataConsistentcyV3"></class>
         </classes>

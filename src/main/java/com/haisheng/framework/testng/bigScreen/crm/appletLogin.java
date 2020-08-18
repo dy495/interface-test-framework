@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-
 /**
  * @author : yu
  * @date :  2020/05/30
@@ -22,7 +21,6 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -31,7 +29,6 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -80,40 +77,24 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
-    @Test
-    public void applet4hour() {
+    @Test(dataProvider = "APPLET_TOKENS", dataProviderClass = CrmScenarioUtil.class)
+    public void applet4hour(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLogin("qa_need_not_delete");
+            crm.appletLoginToken(token);
             String customer_name = "lxq自动化";
             String customer_namea = "@@@";
             String customer_phone_number = "13400000000";
             String customer_phone_numbera = "15037286014";
             String date = dt.getHistoryDate(0);
-
             String appointment_time = "23:00";
-            Long appoint_id=crm.appointmentDrive(customer_namea, customer_phone_numbera, "2022-01-01", 1).getLong("appointment_id");
+            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1).getLong("appointment_id");
             // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             crm.cancle(appoint_id);
-            Thread.sleep(100);
-
-            crm.appletLoginLxq("");
-            //crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
-            Long appoint_idL=crm.appointmentDrive(customer_name, customer_phone_number, "2022-01-01", 1).getLong("appointment_id");
-            crm.cancle(appoint_idL);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("小程序每4小时登陆一次，防止失效");
-
         }
-
-
     }
-
-
 }

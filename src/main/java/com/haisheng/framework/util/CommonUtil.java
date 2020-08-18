@@ -2,10 +2,15 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import org.jooq.util.derby.sys.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +24,7 @@ import java.util.List;
 public class CommonUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+    private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     public static String getStrFieldByData(JSONObject response, String field) {
         String value = response.getString(field);
@@ -36,6 +42,61 @@ public class CommonUtil {
 
     public static Integer getIntFieldByData(JSONObject response, int index, String field) {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
+    }
+
+    /**
+     * 结果展示
+     *
+     * @param value value
+     * @param <T>   T
+     */
+    @SafeVarargs
+    public static <T> void valueView(T... value) {
+        Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+    /**
+     * 页面跳转
+     * 当接口每页只能传入pageSize时，获取接口的访问次数来得到list.size()
+     *
+     * @param listSize list的尺寸
+     * @param pageSize 接口要求的size
+     * @return a
+     */
+    public static int pageTurning(double listSize, double pageSize) {
+        double a = 0;
+        if (listSize > pageSize) {
+            if (listSize % pageSize == 0) {
+                a = listSize / pageSize;
+            } else {
+                a = Math.floor(listSize / pageSize) + 1;
+            }
+        }
+        return (int) a;
+    }
+
+    /**
+     * 登录账号
+     *
+     * @param enumAccount 人员
+     */
+    public static void login(EnumAccount enumAccount) {
+        if (enumAccount == null) {
+            throw new DataExcept("enumAccount is null");
+        }
+        crm.login(enumAccount.getUsername(), enumAccount.getPassword());
+    }
+
+    /**
+     * 更新小程序
+     *
+     * @param appletCode 自己的token
+     */
+    public static void loginApplet(EnumAppletCode appletCode) {
+        if (appletCode == null) {
+            throw new DataExcept("appletCode is null");
+        }
+        crm.appletLoginToken(appletCode.getCode());
     }
 
     /**
@@ -100,14 +161,50 @@ public class CommonUtil {
         return list;
     }
 
+
     /**
-     * 结果展示
+     * 车辆进店车牌号上传
      *
-     * @param value value
-     * @param <T>   T
+     * @param carNum 车牌号
+     * @param status 车辆进店状态 0入店/1出店
      */
-    @SafeVarargs
-    public static <T> void valueView(T... value) {
-        Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    public static void uploadShopCarPlate(String carNum, Integer status) {
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String deviceId = null;
+        if (status == 0) {
+            deviceId = "7709867521115136";
+        } else if (status == 1) {
+            deviceId = "7724082825888768";
+        } else {
+            try {
+                throw new InterruptedException("状态值只能为0或1");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        upload(picPath, carNum, router, deviceId);
+    }
+
+    /**
+     * 上传
+     *
+     * @param picPath  图片地址
+     * @param carNum   车牌号
+     * @param router   地址
+     * @param deviceId deviceId
+     */
+    private static void upload(String picPath, String carNum, String router, String deviceId) {
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        JSONObject object = new JSONObject();
+        object.put("plate_num", carNum);
+        object.put("plate_pic", "@0");
+        object.put("time", System.currentTimeMillis());
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
