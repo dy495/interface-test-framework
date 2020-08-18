@@ -13,6 +13,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.misc.Request;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -187,7 +188,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             crm.appletLogin("qa_need_not_delete");
             String data = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
             for (int i = 0; i < 2; i++) {
-                crm.appointmentDrive("【自动化】王先生", "15321527989", data, 718);
+                crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
             }
             JSONObject response1 = crm.appointmentDriverNum();
             JSONObject testDriverList1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
@@ -232,14 +233,15 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-//    @Test
+    //    @Test
     public void returnVisitRecordExecute() {
         logger.logCaseStart(caseResult.getCaseName());
         //更新小程序token
         crm.appletLoginToken(EnumAppletCode.WM.getCode());
         try {
+            String data = DateTimeUtil.getFormat(new Date());
             //预约试驾
-            JSONObject response = crm.appointmentDrive("王", "15321527989", DateTimeUtil.getFormat(new Date()), 1);
+            JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
             int appointmentId = response.getInteger("appointment_id");
             //登录销售总监账号
             crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());

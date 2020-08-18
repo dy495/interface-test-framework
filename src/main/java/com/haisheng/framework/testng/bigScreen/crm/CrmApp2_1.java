@@ -641,8 +641,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在，全部客户未+1");
         } catch (Exception e) {
-            System.err.println("sss");
-            e.printStackTrace();
+            appendFailreason(e.toString());
         } finally {
             //删除客户
             deleteCustomer(phone);
@@ -662,7 +661,6 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         }
     }
-
 
     /**
      * 获取顾客id

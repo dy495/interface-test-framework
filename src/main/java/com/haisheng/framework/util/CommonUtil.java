@@ -2,10 +2,24 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.common.HttpMethods;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
+import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +33,8 @@ import java.util.List;
 public class CommonUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+    private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    private static final String IpPort = EnumAddress.PORSCHE.getAddress();
 
     public static String getStrFieldByData(JSONObject response, String field) {
         String value = response.getString(field);
@@ -109,5 +125,51 @@ public class CommonUtil {
     @SafeVarargs
     public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+    /**
+     * 车辆进店车牌号上传
+     *
+     * @param carNum 车牌号
+     * @param status 车辆进店状态 0入店/1出店
+     */
+    public static void uploadShopCarPlate(String carNum, Integer status) {
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String deviceId = null;
+        if (status == 0) {
+            deviceId = "7709867521115136";
+        } else if (status == 1) {
+            deviceId = "7724082825888768";
+        } else {
+            try {
+                throw new InterruptedException("状态值只能为0或1");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        upload(picPath, carNum, router, deviceId);
+    }
+
+    /**
+     * 上传
+     *
+     * @param picPath  图片地址
+     * @param carNum   车牌号
+     * @param router   地址
+     * @param deviceId deviceId
+     */
+    private static void upload(String picPath, String carNum, String router, String deviceId) {
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        JSONObject object = new JSONObject();
+        object.put("plate_num", carNum);
+        object.put("plate_pic", "@0");
+        object.put("time", System.currentTimeMillis());
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

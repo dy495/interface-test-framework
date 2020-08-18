@@ -45,7 +45,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public String baoyangr = "baoyangr"; //保养顾问
     public String weixiu = "weixiu";     //维修顾问
 
-    public Long mycarID=357L; //TODO:车id待定
+    public Long mycarID = 357L; //TODO:车id待定
 
     //销售总监  预约试驾 售前
     public String adminnamexiaoshou = "销售总监";    //pc登录密码，最好销售总监或总经理权限
@@ -59,13 +59,13 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public Long activity_id = 34L;
     //活动报名客户id 记录 for blackAddConsistency
     public String customer_idF = "";
-    public String filePath="src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
 
     public String positions = "CAR_ACTIVITY";
 
     //预约剩余时段查询
-    public Long timeList(String type)throws Exception{
-        long timelist=crm.timeList("MAINTAIN",appointment_date).getJSONArray("list").getJSONObject(0).getLong("id");
+    public Long timeList(String type) throws Exception {
+        long timelist = crm.timeList("MAINTAIN", appointment_date).getJSONArray("list").getJSONObject(0).getLong("id");
         return timelist;
     }
 
@@ -126,8 +126,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Integer task_customer_numa = crm.groupTotal(customer_types, car_types, customer_level, customer_property).getInteger("total");
             Integer task_customer_num = 5;
             //新建文章并返回文章/活动id
-            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, false,article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
-            activity_id = crm.appartilceDetail(article_id,positions).getLong("activity_id");
+            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
+            activity_id = crm.appartilceDetail(article_id, positions).getLong("activity_id");
             //activity_id = article_id;
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -172,8 +172,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Integer task_customer_numa = crm.groupTotal(customer_types, car_types, customer_level, customer_property).getInteger("total");
             Integer task_customer_num = 5;
             //新建文章并返回文章/活动id
-            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title,false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
-            activity_id = crm.appartilceDetail(article_id,positions).getLong("activity_id");
+            article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
+            activity_id = crm.appartilceDetail(article_id, positions).getLong("activity_id");
             long activity_id1 = article_id;
             aid[0] = article_id;  //文章id
             aid[1] = activity_id;  //活动id
@@ -245,6 +245,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     /**
      * @description :1.0预约试驾 必填项不填异常验证
      * @date :2020/7/8 18:43
@@ -278,7 +279,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void driver_dateConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = crm.appointmentDrive(customer_name, customer_phone_number, appointment_date, car_type);
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
             String appointment_statusA = data.getString("appointment_status");
@@ -360,8 +361,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //2.预约试驾
             crm.appletLogin(code);
-            JSONObject data = crm.appointmentDrive(customer_name, customer_phone_number, appointment_date, car_type);
-            Long appoint_id=data.getLong("appointment_id");
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            Long appoint_id = data.getLong("appointment_id");
 
             //预约试驾后：  pc销售总监权限登录
             crm.login(adminname, adminpassword);
@@ -448,7 +449,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
-            if (list == null||list.size()==0) {
+            if (list == null || list.size() == 0) {
                 count = 0;
             } else {
                 count = list.size();
@@ -473,6 +474,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             saveData("添加车辆，applet我的车辆列表加1");
         }
     }
+
     /**
      * @description :删除车辆，列表数量-1  此case最后运行，删除mycarConsistency创建的车辆
      * @date :2020/7/10 22:37
@@ -486,7 +488,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
-            if (list == null||list.size()==0) {
+            if (list == null || list.size() == 0) {
                 throw new Exception("暂无车辆可删除");
             } else {
                 count = list.size();
@@ -513,15 +515,14 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
     /**
      * @description :【我的】添加车辆，10辆边界
      * @date :2020/7/27 19:43
      **/
     @Test(priority = 3)
-    public void myCarTen(){
+    public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -530,23 +531,23 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 count = list.size();
             }
-            int limit=10-count;
-            for(int i=0;i<limit;i++){
-                String plate_number = "豫GBBA3"+Integer.toString(i);
+            int limit = 10 - count;
+            for (int i = 0; i < limit; i++) {
+                String plate_number = "豫GBBA3" + Integer.toString(i);
                 crm.myCarAdd(car_type, plate_number);
             }
             //删除新增的车辆
             JSONArray listB = crm.myCarList().getJSONArray("list");
-            for(int j=0;j<limit;j++){
+            for (int j = 0; j < limit; j++) {
                 Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
                 crm.myCarDelete(Integer.toString(car_id));
             }
             JSONArray listq = crm.myCarList().getJSONArray("list");
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("小程序我的车辆，增加十辆");
         }
     }
@@ -556,9 +557,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/7/27 19:43
      **/
     @Test(priority = 3)
-    public void myCarEven(){
+    public void myCarEven() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -567,33 +568,33 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 count = list.size();
             }
-            int limit=10-count;
-            for(int i=0;i<limit;i++){
-                String plate_number = "豫GBBA3"+Integer.toString(i);
+            int limit = 10 - count;
+            for (int i = 0; i < limit; i++) {
+                String plate_number = "豫GBBA3" + Integer.toString(i);
                 crm.myCarAddCode(car_type, plate_number);
             }
             String plate_number = "豫GBBA11";
-            Long code=crm.myCarAddCode(car_type, plate_number);
-            Preconditions.checkArgument(code==1001,"我的车辆上限10辆车");
-            if(limit==0) {return;}
-            else{
+            Long code = crm.myCarAddCode(car_type, plate_number);
+            Preconditions.checkArgument(code == 1001, "我的车辆上限10辆车");
+            if (limit == 0) {
+                return;
+            } else {
                 //删除新增的车辆
                 JSONArray listB = crm.myCarList().getJSONArray("list");
-                for (int j = 0; j <limit; j++) {
+                for (int j = 0; j < limit; j++) {
                     Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
                     crm.myCarDelete(Integer.toString(car_id));
                 }
                 JSONArray listq = crm.myCarList().getJSONArray("list");
             }
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("小程序我的车辆，增加十一辆异常验证");
         }
     }
-
 
 
     /**
@@ -608,14 +609,14 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.myCarAdd(car_type, plate_number);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            if (list == null||list.size()==0) {
+            if (list == null || list.size() == 0) {
                 throw new Exception("暂无车辆");
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "09:00";
-            long timelist=timeList("REAPIR");
+            long timelist = timeList("REAPIR");
 
-            JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time,timelist);
+            JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
             //预约成功
             Long appointment_idM = data.getLong("appointment_id");
             String appointment_statusM = data.getString("appointment_status");
@@ -704,9 +705,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "09:00";
-            long timelist=timeList("MAINTAIN");
+            long timelist = timeList("MAINTAIN");
 
-            JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time,timelist);
+            JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
 
             //预约试驾后：  pc销售总监总经理权限登录
             crm.login(adminname, adminpassword);
@@ -746,7 +747,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_phone_numberapp = appdataList.getString("customer_phone_number");
             String phone_appointmentapp = appdataList.getString("phone_appointment");
 
-            Long appoint_id=data.getLong("appointment_id");
+            Long appoint_id = data.getLong("appointment_id");
             crm.appletLogin(code);
             crm.cancle(appoint_id);
             crm.myCarDelete(my_car_id);
@@ -799,14 +800,14 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.myCarAdd(car_type, plate_number);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            if (list == null||list.size()==0) {
+            if (list == null || list.size() == 0) {
                 throw new Exception("暂无车辆");
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "10:30";
             String description = "故障说明";
-            long timelist=timeList("REAPIR");
-            JSONObject data = crm.appointmentRepair(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, description,timelist);
+            long timelist = timeList("REAPIR");
+            JSONObject data = crm.appointmentRepair(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, description, timelist);
             //预约成功
             Long appointment_idM = data.getLong("appointment_id");
             String appointment_statusM = data.getString("appointment_status");
@@ -899,8 +900,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "10:00";
             String description = "故障说明";
-            long timelist=timeList("REAPIR");
-            JSONObject data = crm.appointmentRepair(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, description,timelist);
+            long timelist = timeList("REAPIR");
+            JSONObject data = crm.appointmentRepair(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, description, timelist);
             //预约试驾后：  pc销售总监权限登录
 //            TODO:
             crm.login(adminname, adminpassword);
@@ -1156,49 +1157,49 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/7/21 15:29
      **/
     @Test(priority = 5)
-    public void pcappointmentSum(){
+    public void pcappointmentSum() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //创建活动
-            String simulation_num="8";
-            String vailtime=dt.getHistoryDate(0);
-            Long [] aid=createAArcile_id(vailtime,simulation_num);
-            Long activity_id=aid[1];
-            Long article_id=aid[0];
+            String simulation_num = "8";
+            String vailtime = dt.getHistoryDate(0);
+            Long[] aid = createAArcile_id(vailtime, simulation_num);
+            Long activity_id = aid[1];
+            Long article_id = aid[0];
             //pc文章详情
 
             //参加活动，报名人数统计
-            String other_brand="奥迪";
-            String customer_num="2";
+            String other_brand = "奥迪";
+            String customer_num = "2";
             crm.appletLogin(code);
-            JSONObject data1=crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
 
-            JSONObject data=crm.appartilceDetail(article_id,positions);
-            Integer registered_num=data.getInteger("registered_num");  //文章详情
-            Integer customer_max=data.getInteger("customer_max");  //剩余人数
-            int aa=registered_num.intValue();  //已报名人数
-            int bb=customer_max.intValue();
-            Preconditions.checkArgument(aa==10,"applet已报名人数=假定基数+报名人数");
-            Preconditions.checkArgument(bb==48,"applet剩余名额=总人数-报名人数");
-            crm.login(adminname,adminpassword);
-            JSONObject dataA=crm.artilceDetailpc(article_id);
-            Integer registered_numA=dataA.getInteger("registered_num");  //已报名人数
-            Integer customer_maxA=dataA.getInteger("customer_max");  //总数
-            int a=registered_numA.intValue();
-            int b=customer_maxA.intValue();
+            JSONObject data = crm.appartilceDetail(article_id, positions);
+            Integer registered_num = data.getInteger("registered_num");  //文章详情
+            Integer customer_max = data.getInteger("customer_max");  //剩余人数
+            int aa = registered_num.intValue();  //已报名人数
+            int bb = customer_max.intValue();
+            Preconditions.checkArgument(aa == 10, "applet已报名人数=假定基数+报名人数");
+            Preconditions.checkArgument(bb == 48, "applet剩余名额=总人数-报名人数");
+            crm.login(adminname, adminpassword);
+            JSONObject dataA = crm.artilceDetailpc(article_id);
+            Integer registered_numA = dataA.getInteger("registered_num");  //已报名人数
+            Integer customer_maxA = dataA.getInteger("customer_max");  //总数
+            int a = registered_numA.intValue();
+            int b = customer_maxA.intValue();
 
-            Preconditions.checkArgument(a==2,"pc已报名人数错误");
-            Preconditions.checkArgument(b==50,"pc总报名人数错误");
+            Preconditions.checkArgument(a == 2, "pc已报名人数错误");
+            Preconditions.checkArgument(b == 50, "pc总报名人数错误");
 
-            crm.login(adminname,adminpassword);
+            crm.login(adminname, adminpassword);
             crm.articleStatusChange(article_id);
             crm.articleDelete(article_id);
 
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             crm.appletLogin(code);
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
         }
@@ -1225,14 +1226,14 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_num = "2";
             JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
             String appointment_id = data1.getString("appointment_id");
-            JSONObject data = crm.appartilceDetail(article_id,positions);
+            JSONObject data = crm.appartilceDetail(article_id, positions);
             Integer registered_num = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数
             int aa = registered_num.intValue();  //已报名人数
             int bb = customer_max.intValue();
 
             crm.cancle(Long.parseLong(appointment_id));  //取消预约
-            JSONObject dataA = crm.appartilceDetail(article_id,positions);
+            JSONObject dataA = crm.appartilceDetail(article_id, positions);
             Integer registered_numA = dataA.getInteger("registered_num");  //文章详情
             Integer customer_maxA = dataA.getInteger("customer_max");  //剩余人数
             int a = registered_numA.intValue();
@@ -1241,7 +1242,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((aa - a) == Integer.valueOf(customer_num), "取消预约，已报名人数没减少");
             Preconditions.checkArgument((b - bb) == Integer.valueOf(customer_num), "取消预约，剩余名额没增加");
 
-            crm.login(adminname,adminpassword);
+            crm.login(adminname, adminpassword);
             crm.articleStatusChange(article_id);
             crm.articleDelete(article_id);
 
@@ -1269,7 +1270,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Long[] aid = createAArcile_id(valid_start, simulation_num);  //创建活动方法
             Long article_id = aid[0];
             crm.appletLogin(code);
-            JSONObject data = crm.appartilceDetail(article_id,positions);
+            JSONObject data = crm.appartilceDetail(article_id, positions);
             Integer registered_numA = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数
             //pc 创建活动 不预约，创建活动假定基数==applet报名人数
@@ -1304,7 +1305,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
             Long arcile_id = aid[0];
             crm.appletLogin(code);
-            Integer registered_num = crm.appartilceDetail(arcile_id,positions).getInteger("registered_num");
+            Integer registered_num = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");
             String other_brand = "奥迪";
             String customer_num = "2";
             JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
@@ -1318,7 +1319,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             //customer_idF=customer_id;
             //crm.chackActivity(1,appointment_id);  //pc 审核通过
             // crm.appletlogin(code);
-            Integer registered_numA = crm.appartilceDetail(arcile_id,positions).getInteger("registered_num");  //文章详情
+            Integer registered_numA = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");  //文章详情
             Preconditions.checkArgument((registered_numA - registered_num) == Integer.valueOf(customer_num), "报名活动人数写2，报名活动页报名人数未加2");
             crm.login(adminname, adminpassword);
             crm.articleStatusChange(arcile_id);
@@ -1352,7 +1353,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
             String appointment_id = data.getString("appointment_id");
-            Integer registered_num = crm.appartilceDetail(arcile_id,positions).getInteger("registered_num");  //小程序活动报名人数
+            Integer registered_num = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");  //小程序活动报名人数
 
             crm.login(adminname, adminpassword);
             JSONObject pcdata = crm.activityList(1, 10, activity_id);
@@ -1364,7 +1365,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.blackadd(customer_id);                //加入黑名单
             //移除黑名单
             crm.blackRemove(customer_id);
-            Integer registered_numA = crm.appartilceDetail(arcile_id,positions).getInteger("registered_num");
+            Integer registered_numA = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");
             Preconditions.checkArgument((registered_num - registered_numA) == 2, "pc把审核通过的报名活动加入黑名单，小程序总报名人数没--");
 
             JSONObject pcdataA = crm.activityList(1, 10, activity_id);
@@ -1417,8 +1418,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         crm.appletLogin(code);
 
         String appointment_time = "09:00";
-        long timelist=timeList("MAINTAIN");
-        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time,timelist);
+        long timelist = timeList("MAINTAIN");
+        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time, timelist);
         Long maintain_id = obj.getLong("appointment_id");
         a[1] = Long.toString(maintain_id);
 
@@ -1452,95 +1453,96 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/2 10:43
      **/
 //     @Test
-     public void finnalRecept(){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             //完成接待前，接待次数
-             //预约接待
-             //完成接待后，接待次数
+    public void finnalRecept() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待前，接待次数
+            //预约接待
+            //完成接待后，接待次数
 
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("完成接待，pc预约记录接待次数+1");
-         }
-     }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("完成接待，pc预约记录接待次数+1");
+        }
+    }
+
     /**
      * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1 ok  TODO:
      * @date :2020/8/2 10:29
      **/
     //@Test(priority = 12)
-    public void appointEvaluate(){
+    public void appointEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //接待前baoyangr，接待次数
-            crm.login(adminname,adminpassword);
-            JSONArray list= crm.ManageList(16).getJSONArray("list");
-            if(list==null||list.size()==0){
+            crm.login(adminname, adminpassword);
+            JSONArray list = crm.ManageList(16).getJSONArray("list");
+            if (list == null || list.size() == 0) {
                 return;
             }
-            int  num=0;
-            for(int i=0;i<list.size();i++){
-                String name=list.getJSONObject(i).getString("name");
-                if(name.equals("baoyangr")){
-                    num=list.getJSONObject(i).getInteger("num");
-                }else{
+            int num = 0;
+            for (int i = 0; i < list.size(); i++) {
+                String name = list.getJSONObject(i).getString("name");
+                if (name.equals("baoyangr")) {
+                    num = list.getJSONObject(i).getInteger("num");
+                } else {
                     continue;
                 }
             }
             //pc评价页总数
-            JSONArray evaluateList=crm.evaluateList(1,10,"","","").getJSONArray("list");
-            int total=evaluateList.size();
+            JSONArray evaluateList = crm.evaluateList(1, 10, "", "", "").getJSONArray("list");
+            int total = evaluateList.size();
             //预约接待完成
-            String [] aa= maintainP(dt.getHistoryDate(0),mycarID,"yes");
-            String appoint_id=aa[1];
+            String[] aa = maintainP(dt.getHistoryDate(0), mycarID, "yes");
+            String appoint_id = aa[1];
 
-             int num2=0;
-            JSONArray list2= crm.ManageList(16).getJSONArray("list");
-            for(int j=0;j<list2.size();j++){
-                String name2=list2.getJSONObject(j).getString("name");
-                if(name2.equals("baoyangr")){
-                    num2=list2.getJSONObject(j).getInteger("num");
-                }else{
+            int num2 = 0;
+            JSONArray list2 = crm.ManageList(16).getJSONArray("list");
+            for (int j = 0; j < list2.size(); j++) {
+                String name2 = list2.getJSONObject(j).getString("name");
+                if (name2.equals("baoyangr")) {
+                    num2 = list2.getJSONObject(j).getInteger("num");
+                } else {
                     continue;
                 }
             }
-            Preconditions.checkArgument((num2-num)==1,"接待完成，接待次数没+1");
+            Preconditions.checkArgument((num2 - num) == 1, "接待完成，接待次数没+1");
             crm.appletLogin("123456");
 //            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
-            int score=4;
-            JSONObject ll=new JSONObject();
+            int score = 4;
+            JSONObject ll = new JSONObject();
             ll.put("score", score);
             ll.put("type_comment", "顾问接待服务质量");
             ll.put("type", "SERVICE_QUALITY");
 
-            JSONObject ll2=new JSONObject();
+            JSONObject ll2 = new JSONObject();
             ll2.put("score", score);
             ll2.put("type_comment", "保养待服务流程");
             ll2.put("type", "PROCESS");
 
-            JSONObject ll3=new JSONObject();
+            JSONObject ll3 = new JSONObject();
             ll3.put("score", score);
             ll3.put("type_comment", "保养车辆质量评价");
             ll3.put("type", "PROFESSIONAL");
 
-            JSONArray array1=new JSONArray();
-            array1.add(0,ll);
-            array1.add(1,ll2);
-            array1.add(2,ll3);
+            JSONArray array1 = new JSONArray();
+            array1.add(0, ll);
+            array1.add(1, ll2);
+            array1.add(2, ll3);
 
-            crm.appointmentEvaluate(Long.parseLong(appoint_id),"保养满意",array1);  //评价
+            crm.appointmentEvaluate(Long.parseLong(appoint_id), "保养满意", array1);  //评价
 
-            JSONArray evaluateListB=crm.evaluateList(1,10,"","","").getJSONArray("list");
-            int totalB=evaluateList.size();
-            Preconditions.checkArgument((totalB-total)==1,"评价后，pc评价列表没+1");
-        }catch (AssertionError e){
+            JSONArray evaluateListB = crm.evaluateList(1, 10, "", "", "").getJSONArray("list");
+            int totalB = evaluateList.size();
+            Preconditions.checkArgument((totalB - total) == 1, "评价后，pc评价列表没+1");
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("保养评价");
         }
     }
@@ -1550,9 +1552,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/7/30 12:41
      **/
     //@Test
-    public void appointmentStstus(){
+    public void appointmentStstus() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
 //            String plate_number = "蒙GBBA10";
 //            crm.myCarAdd(car_type, plate_number);
 //            JSONArray list = crm.myCarList().getJSONArray("list");
@@ -1561,58 +1563,59 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 //            }
 //            String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "10:00";
-            long timelist=timeList("MAINTAIN");
-            JSONObject data = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time,timelist);
-            Long appoint_id=data.getLong("appointment_id");
+            long timelist = timeList("MAINTAIN");
+            JSONObject data = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            Long appoint_id = data.getLong("appointment_id");
             //预约试驾后：  pc销售总监总经理权限登录
             crm.login(adminname, adminpassword);
             //预约记录，接待状态
-            String service_status_name=crm.mainAppointmentpage(1,10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
+            String service_status_name = crm.mainAppointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
             //取消预约
             crm.appletLogin(code);
             crm.cancle(appoint_id);
-            String service_status_nameD=crm.mainAppointmentpage(1,10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
-            Preconditions.checkArgument(service_status_name.equals("预约中"),"预约记录接待状态错误");
+            String service_status_nameD = crm.mainAppointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
+            Preconditions.checkArgument(service_status_name.equals("预约中"), "预约记录接待状态错误");
 
-            Preconditions.checkArgument(service_status_nameD.equals("已取消"),"预约记录接待状态错误");
-        }catch (AssertionError e){
+            Preconditions.checkArgument(service_status_nameD.equals("已取消"), "预约记录接待状态错误");
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("小程序取消预约，pc预约记录，接待状态预约中变更已取消");
         }
     }
+
     /**
      * @description : 预约该时段剩余-1，取消+1  TODO:待调试
      * @date :2020/8/12 12:06
      **/
     @Test
-    public void timeListR(){
+    public void timeListR() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             crm.appletLogin("code");
-            String type="REPAIR";
+            String type = "REPAIR";
             String appointment_time = "11:00";
-            JSONArray list=crm.timeList(type,appointment_date).getJSONArray("list");
-            Integer leftNum=list.getJSONObject(3).getInteger("left_num");
+            JSONArray list = crm.timeList(type, appointment_date).getJSONArray("list");
+            Integer leftNum = list.getJSONObject(3).getInteger("left_num");
             //预约
-            long timelist=timeList(type);
-            JSONObject data = crm.appointmentMaintain(mycarID, customer_name, customer_phone_number, appointment_date, appointment_time,timelist);
-            Long appoint_id=data.getLong("appointment_id");
-            JSONArray list2=crm.timeList(type,appointment_date).getJSONArray("list");
-            Integer leftNum2=list2.getJSONObject(3).getInteger("left_num");
+            long timelist = timeList(type);
+            JSONObject data = crm.appointmentMaintain(mycarID, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            Long appoint_id = data.getLong("appointment_id");
+            JSONArray list2 = crm.timeList(type, appointment_date).getJSONArray("list");
+            Integer leftNum2 = list2.getJSONObject(3).getInteger("left_num");
             crm.cancle(appoint_id);    //取消预约
-            JSONArray list3=crm.timeList(type,appointment_date).getJSONArray("list");
-            Integer leftNum3=list3.getJSONObject(3).getInteger("left_num");
-            Preconditions.checkArgument((leftNum-leftNum2)==1,"预约后时段剩余名额没有-1");
-            Preconditions.checkArgument((leftNum3-leftNum2)==1,"预约后时段剩余名额没有+1");
+            JSONArray list3 = crm.timeList(type, appointment_date).getJSONArray("list");
+            Integer leftNum3 = list3.getJSONObject(3).getInteger("left_num");
+            Preconditions.checkArgument((leftNum - leftNum2) == 1, "预约后时段剩余名额没有-1");
+            Preconditions.checkArgument((leftNum3 - leftNum2) == 1, "预约后时段剩余名额没有+1");
 
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("预约该时段剩余-1，取消+1");
         }
     }
@@ -1622,32 +1625,32 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/12 12:57
      **/
 //    @Test
-    public void timeListFail(){
+    public void timeListFail() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            String type="REPAIR";
+        try {
+            String type = "REPAIR";
             String appointment_time = "11:00";
-            JSONArray list=crm.timeList(type,appointment_date).getJSONArray("list");
-            Integer leftNum=list.getJSONObject(3).getInteger("left_num");
+            JSONArray list = crm.timeList(type, appointment_date).getJSONArray("list");
+            Integer leftNum = list.getJSONObject(3).getInteger("left_num");
             //预约
-            long timelist=timeList("MAINTAIN");
-            JSONObject data = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time,timelist);
-            Long appoint_id=data.getLong("appointment_id");
+            long timelist = timeList("MAINTAIN");
+            JSONObject data = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            Long appoint_id = data.getLong("appointment_id");
 
-            long timelist2=crm.timeList("REPAIR",appointment_date).getJSONArray("list").getJSONObject(1).getLong("id");
-            JSONObject res = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time,timelist2);
-            Long appoint_id2=res.getJSONObject("data").getLong("appointment_id");
-            Long code=res.getLong("code");
-            Preconditions.checkArgument(code==1001,"预约同一天其他时段应该失败");
+            long timelist2 = crm.timeList("REPAIR", appointment_date).getJSONArray("list").getJSONObject(1).getLong("id");
+            JSONObject res = crm.appointmentMaintain((mycarID), customer_name, customer_phone_number, appointment_date, appointment_time, timelist2);
+            Long appoint_id2 = res.getJSONObject("data").getLong("appointment_id");
+            Long code = res.getLong("code");
+            Preconditions.checkArgument(code == 1001, "预约同一天其他时段应该失败");
 
             crm.cancle(appoint_id);    //取消预约
 //            crm.cancle(appoint_id2);    //取消预约
 
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("预约该时段剩余-1，取消+1");
         }
     }
@@ -1670,15 +1673,15 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.appletLogin(code);
             String other_brand = "奥迪";
             String customer_num = "2";
-            for(int i=0;i<3;i++){
+            for (int i = 0; i < 3; i++) {
                 JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
                 String appointment_id = data1.getString("appointment_id");
                 crm.cancle(Long.parseLong(appointment_id));  //取消预约
             }
             Long code1 = crm.joinActivityCode(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num).getLong("code");
-            Preconditions.checkArgument(code1==1001,"报名取消三次后再报名应该失败");
+            Preconditions.checkArgument(code1 == 1001, "报名取消三次后再报名应该失败");
 
-            crm.login(adminname,adminpassword);
+            crm.login(adminname, adminpassword);
             crm.articleStatusChange(article_id);
             crm.articleDelete(article_id);
 
@@ -1694,11 +1697,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
-
-
     /**
      * @description :删除历史数据
      * @date :2020/7/19 20:27
@@ -1708,7 +1706,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(adminname, adminpassword);
-            JSONArray list = crm.articlePage(2, 10,"CAR_ACTIVITY").getJSONArray("list");
+            JSONArray list = crm.articlePage(2, 10, "CAR_ACTIVITY").getJSONArray("list");
             for (int i = 0; i < 10; i++) {
                 Long id = list.getJSONObject(i).getLong("id");
                 crm.articleStatusChange(id);
@@ -1808,8 +1806,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
-
-
 
 
 }
