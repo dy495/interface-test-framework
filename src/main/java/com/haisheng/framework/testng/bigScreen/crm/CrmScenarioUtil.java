@@ -77,7 +77,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
             appendFailreason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        //saveData("登陆");
     }
 
     public JSONObject tryLogin(String userName, String passwd) throws Exception {
@@ -132,12 +131,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * 小程序通用登录-w
+     * 小程序通用登录
      *
      * @param token 自己的token
      */
     public void appletLoginToken(String token) {
         authorization = token;
+        logger.info("applet authorization is:{}", authorization);
     }
 
 
@@ -1519,6 +1519,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * 取消预约
+     *
+     * @param appointmentId 预约id
+     */
+    public JSONObject appointmentCancel(Integer appointmentId) {
+        String url = "/WeChat-applet/porsche/a/appointment/cancel/" + appointmentId;
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
     //预约保养
     public JSONObject appointmentMaintain(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
@@ -2201,7 +2212,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //*************************app relate*************************
     //app 预约试驾全部预约及今日预约人数
-    public JSONObject appointmentDriverNum() throws Exception {
+    public JSONObject appointmentDriverNum() {
         String url = "/porsche/app/appointment/appointment_test_driver_number";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -2579,9 +2590,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param customerLevel 客户等级
      * @param startTime     开始时间
      * @param endTime       结束时间
-     * @param page          页数
-     * @param size          页大小
-     * @return response
      */
     public JSONObject customerList(String customerName, String customerPhone, String customerLevel, String startTime, String endTime, Integer page, Integer size) {
         String url = "/porsche/customer/list";
@@ -2615,12 +2623,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param data                ”yyyy-mm-dd”形式的日期,可以用来过滤要查看的范围
      * @param status              0：未执行； 1：已执行
-     * @param page                页码
-     * @param size                页大小
      * @param customerName        客户姓名（过滤选项）
      * @param customerPhoneNumber 客户手机号码（过滤选项）
      * @param customerLevel       客户级别（过滤选项）
-     * @return response
      */
     public JSONObject withFilterAndCustomerDetail(String data, Integer status, Integer page, Integer size, String customerName, String customerPhoneNumber, String customerLevel) {
         String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
@@ -2644,6 +2649,27 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!(size <= 0)) {
             object.put("size", size);
         }
+        return invokeApi(url, object);
+    }
+
+    //--------------------------applet3.0------------------------
+
+    /**
+     * 小程序我的试驾列表
+     *
+     * @param lastValue 传<0的值表示此字段为空
+     */
+    public JSONObject appointmentList(Long lastValue, String type, Integer size) {
+        String url = "/WeChat-applet/porsche/a/appointment/list";
+        JSONObject object = new JSONObject();
+        if (lastValue <= 0) {
+            object.put("last_value", "");
+        }
+        if (lastValue > 0) {
+            object.put("last_value", lastValue);
+        }
+        object.put("type", type);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 
@@ -2671,9 +2697,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param startDay 开始日期 YYYY-MM-dd
      * @param endDay   结束日期 YYYY-MM-dd
-     * @param page     页码
-     * @param size     页大小
-     * @return response
      */
     public JSONObject testDriverPage(String startDay, String endDay, Integer page, Integer size) {
         String url = "/porsche/order-manage/order/test-drive/page";
@@ -2694,9 +2717,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @param size      页码
-     * @param page      页大小
-     * @return response
      */
     public JSONObject publicCustomerList(String startTime, String endTime, Integer size, Integer page) {
         String url = "/porsche/customer/public_customer_list";
@@ -2720,8 +2740,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 销售前台分配销售接口
-     *
-     * @return response
      */
     public JSONObject saleReceptionCreatReception() {
         String url = "/porsche/app/sale-reception/createReception";
@@ -2734,7 +2752,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param activityTaskId 活动任务Id
      * @param customerId     顾客id
-     * @return response
      */
     public JSONObject deleteCustomer(String activityTaskId, String customerId) {
         String url = "/porsche/app/activity-task/deleteCustomer";
@@ -2749,7 +2766,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param saleId     销售id
      * @param customerId 客户id
-     * @return response
      */
     public JSONObject allocationSale(String saleId, Long customerId) {
         String url = "/porsche/app/sale-reception/allocationSale";
@@ -2761,8 +2777,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 获取二维码接口
-     *
-     * @return response
      */
     public JSONObject porscheAppShopGrCode() {
         String url = "/porsche/app/shop/qrcode";
@@ -2774,8 +2788,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 销售排班列表接口
-     *
-     * @return response
      */
     public JSONObject saleOrderList() {
         String url = "/porsche/app/sale-reception/sale-order-list";
@@ -2788,7 +2800,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param saleId 销售Id
      * @param order  顺序
-     * @return response
      */
     public JSONObject saleOrder(String saleId, Integer order) {
         String url = "/porsche/app/sale-reception/sale-order";
@@ -2800,10 +2811,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 活动任务列表接口
-     *
-     * @param page 页码
-     * @param size 页大小
-     * @return response
      */
     public JSONObject activityTaskPage(Integer page, Integer size) {
         String url = "/porsche/app/activity-task/page";
@@ -2818,7 +2825,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param startTime 起始时间
      * @param endTime   结束时间
-     * @return response
      */
     public JSONObject returnVisitTaskPage(int page, int size, String startTime, String endTime) {
         String url = "/porsche/app/return-visit-task/page";
@@ -2838,7 +2844,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 回访详情接口
      *
      * @param taskId 回访任务Id
-     * @return response
      */
     public JSONObject returnVisitTaskInfo(final int taskId) {
         String url = "/porsche/app/return-visit-task/info";
@@ -2851,7 +2856,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 回访执行接口
      *
      * @param taskId 回访任务Id
-     * @return response
      */
     public JSONObject returnVisitTaskExecute(final int taskId) {
         String url = "/porsche/app/return-visit-task/execute";
@@ -3086,7 +3090,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param searchCondition 查询条件，姓名or联系方式
      * @param searchDateStart 日期起始时间
      * @param searchDateEnd   日期结束时间
-     * @return response
      */
     public JSONObject customerMyReceptionList(String searchCondition, String searchDateStart, String searchDateEnd, Integer size, Integer page) {
         String url = "/porsche/app/customer/my-reception-list";
@@ -3113,7 +3116,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 删除客户接口
      *
      * @param customerId 客户id
-     * @return response
      */
     public JSONObject customerDelete(int customerId) {
         String url = "/porsche/customer/delete";
@@ -3124,8 +3126,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 我的接待接口
-     *
-     * @return response
      */
     public JSONObject customerReceptionTotalInfo() {
         String url = "/porsche/app/customer/reception-total-info";
@@ -3135,8 +3135,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 我的客户列表接口
-     *
-     * @return response
      */
     public JSONObject customerPage(Integer size, Integer page, String customerNamePhone, String startTime, String endTime) {
         String url = "/porsche/app/customer/page";
@@ -3161,7 +3159,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param searchCondition 按照客户名称或者联系方式搜索
      * @param searchDateStart 按照预约日期搜索(yyyy-MM-dd)
      * @param searchDateEnd   按照预约日期搜索(yyyy-MM-dd)
-     * @return response
      */
     public JSONObject appointmentTestDriverList(String searchCondition, String searchDateStart, String searchDateEnd, int page, int size) {
         String url = "/porsche/app/after_sale/appointment_test_driver_list";
@@ -3182,8 +3179,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     /**
      * 我的交车列表
-     *
-     * @return response
      */
     public JSONObject deliverCarTotal() {
         String url = "/porsche/daily-work/deliver-car/app/deliver-car-total";
@@ -3199,7 +3194,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param size            页大小，若想接口无此参数传入0
      * @param startDate       开始时间
      * @param endDate         结束时间
-     * @return response
      */
     public JSONObject deliverCarAppList(String searchCondition, Integer page, Integer size, String startDate, String endDate) {
         String url = "/porsche/daily-work/deliver-car/app/list";
@@ -3226,7 +3220,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * 销售前台客户分配接口
      *
      * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
-     * @return response
      */
     public JSONObject saleReception(String receptionType) {
         String url = "/porsche/app/sale-reception/reception";
@@ -3241,9 +3234,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param searchCondition 搜索条件，客户姓名
      * @param startDate       开始时间
      * @param endDate         结束时间
-     * @param size            页码
-     * @param page            页大小
-     * @return response
      */
     public JSONObject testDriverAppList(String searchCondition, String startDate, String endDate, Integer size, Integer page) {
         String url = "/porsche/daily-work/test-drive/app/list";
@@ -3385,11 +3375,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //小程序token
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
-
         return new String[]{
                 EnumAppletCode.WM.getCode(),
                 EnumAppletCode.XMF.getCode(),
-                EnumAppletCode.LXQ.getCode()
+//                EnumAppletCode.LXQ.getCode()
         };
     }
 
