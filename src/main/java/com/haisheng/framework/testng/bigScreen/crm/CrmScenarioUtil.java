@@ -2805,7 +2805,28 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * 活动任务列表接口
+     * 销售排班接口
+     *
+     * @param page 页码
+     * @param size 页大小
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return response
+     */
+    public JSONObject receptionPage(Integer page, Integer size,String startTime, String endTime){
+        String url = "/porsche/app/sale-reception/reception-page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        object.put("startTime", startTime);
+        object.put("endTime", endTime);
+        return invokeApi(url, object);
+
+    }
+
+
+    /**
+     * 接待列表
      *
      * @param page 页码
      * @param size 页大小
