@@ -5,6 +5,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.service.CsvDataProvider;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -81,11 +82,11 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
-    public void applet4hour() {
+    @Test(dataProvider = "APPLET_TOKENS", dataProviderClass = CrmScenarioUtil.class)
+    public void applet4hour(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLogin("qa_need_not_delete");
+            crm.appletLoginToken(token);
             String customer_name = "lxq自动化";
             String customer_namea = "@@@";
             String customer_phone_number = "13400000000";
@@ -96,12 +97,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             Long appoint_id=crm.appointmentDrive(customer_namea, customer_phone_numbera, "2022-01-01", 1).getLong("appointment_id");
             // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             crm.cancle(appoint_id);
-            Thread.sleep(100);
 
-            crm.appletLoginLxq("");
-            //crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
-            Long appoint_idL=crm.appointmentDrive(customer_name, customer_phone_number, "2022-01-01", 1).getLong("appointment_id");
-            crm.cancle(appoint_idL);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

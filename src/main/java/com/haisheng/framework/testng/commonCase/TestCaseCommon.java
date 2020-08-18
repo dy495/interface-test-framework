@@ -356,11 +356,22 @@ public class TestCaseCommon {
             return;
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
-        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", commonConfig.shopId)
-                .userAgent(userAgent)
-                .authorization(authorization)
-                .build();
+        Header[] headers = null;
+
+        if (authorization.contains("qa_need")) {
+            headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                    .other("shop_id", commonConfig.shopId)
+                    .userAgent(userAgent)
+                    .referer("https://servicewechat.com/wx0cf070e8eed63e90/")
+                    .authorization(authorization)
+                    .build();
+        } else {
+            headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                    .other("shop_id", commonConfig.shopId)
+                    .userAgent(userAgent)
+                    .authorization(authorization)
+                    .build();
+        }
         config = HttpConfig.custom()
                 .headers(headers)
                 .client(client);

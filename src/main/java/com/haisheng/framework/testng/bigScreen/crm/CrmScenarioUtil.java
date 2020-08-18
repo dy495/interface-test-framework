@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -135,23 +136,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param token 自己的token
      */
-    public void appletLoginCommon(String token) {
-        initHttpConfig();
-        String path = "/WeChat-applet-login";
-        String loginUrl = IpPort + path;
-        JSONObject object = new JSONObject();
-        object.put("code", token);
-        config.url(loginUrl).json(JSONObject.toJSONString(object));
-        logger.info("{} json param: {}", path, JSONObject.toJSONString(object));
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            authorization = token;
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+    public void appletLoginToken(String token) {
+        authorization = token;
     }
 
 
@@ -3386,6 +3372,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
+    //小程序token
+    @DataProvider(name = "APPLET_TOKENS")
+    public static Object[] appletTokens() {
+
+        return new String[]{
+                EnumAppletCode.WM.getCode(),
+                EnumAppletCode.XMF.getCode(),
+                EnumAppletCode.LXQ.getCode()
+        };
+    }
 
     //方法封装
     //前台点击创建接待按钮创建顾客

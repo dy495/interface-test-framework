@@ -232,11 +232,11 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(enabled = false)
+//    @Test
     public void returnVisitRecordExecute() {
         logger.logCaseStart(caseResult.getCaseName());
-        //登录小程序
-        crm.appletLoginCommon(EnumAppletCode.WM.getCode());
+        //更新小程序token
+        crm.appletLoginToken(EnumAppletCode.WM.getCode());
         try {
             //预约试驾
             JSONObject response = crm.appointmentDrive("王", "15321527989", DateTimeUtil.getFormat(new Date()), 1);
