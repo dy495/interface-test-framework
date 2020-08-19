@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.rmi.AccessException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1145,129 +1146,140 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
 
-    //销售接待--今日接待=列表总数手机号去重
-
-    @Test
-    public void TodayReception(){
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name,pwd);
-        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
-        System.out.println("response   "+response);
-        int todayReptionNum=response.getInteger("today_reception_num");
-        System.out.println("todayReptionNum   "+todayReptionNum);
-
-    }
-
-    //销售接待--接待率=今日接待/今日线索*100
-
-    @Test
-    public void receptionRatio(){
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name,pwd);
-        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
-        //今日接待数量
-        double todayReptionNum=response.getInteger("today_reception_num");
-        //今日线索数量
-        double allCustomerNum=response.getInteger("all_customer_num");
-        //接待率
-        String todayReceptionRatio=response.getString("today_reception_ratio");
-        String result=null;
-        if(allCustomerNum==0&&todayReptionNum!=0){
-            result="100";
-        }else {
-            result = new DecimalFormat("#").format(Math.round(todayReptionNum / allCustomerNum * 100));
-        }
-        Preconditions.checkArgument(todayReceptionRatio.equals(result + "%"),"接待率："+todayReceptionRatio+"  "+"今日接待/今日线索*100："+result);
-    }
-
-    //销售接待--试驾率=试驾/接待*100
-
-    @Test
-    public void driveatio(){
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name,pwd);
-        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
-        //今日接待数量
-        double todayReptionNum=response.getInteger("today_reception_num");
-        //今日试驾数量R
-        double todayestDriveNum=response.getInteger("today_test_drive_num");
-        //试驾率
-        String todayRestDriveatio=response.getString("today_test_drive_ratio");
-        String result=null;
-        if(todayReptionNum==0&&todayestDriveNum!=0){
-            result="100";
-        }else {
-            result = new DecimalFormat("#").format(Math.round(todayestDriveNum / todayReptionNum * 100));
-        }
-        Preconditions.checkArgument(todayRestDriveatio.equals(result + "%"),"试驾率："+todayRestDriveatio+"  "+"试驾/接待*100："+result);
-    }
-
-    //销售接待--订单率=订单/试驾*100
-    @Test
-    public void buyCaratio(){
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name,pwd);
-        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
-        //今日订车数量
-        double todayBuyCarNum=response.getInteger("today_buy_car_num");
-        //今日试驾数量
-        double todayestDriveNum=response.getInteger("today_test_drive_num");
-        //订车率
-        String todayBuyCaratio=response.getString("today_buy_car_ratio");
-        String result=null;
-        if(todayestDriveNum==0&&todayBuyCarNum!=0){
-            result="100";
-        }else {
-            result = new DecimalFormat("#").format(Math.round(todayBuyCarNum / todayestDriveNum * 100));
-        }
-        Preconditions.checkArgument(todayBuyCaratio.equals(result + "%"),"订单率："+todayBuyCaratio+"  "+"订单/试驾*1000："+result);
-
-        if(todayBuyCaratio.equals(result+"%")){
-            System.out.println("结果一致："+"订单率=订单/试驾*100="+todayBuyCaratio);
-        }
-    }
-
-    //销售接待--交车率=交车/订单*100
-    @Test
-    public void deliverCarRatio() {
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name, pwd);
-        JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        //今日订车数量
-        double todayBuyCarNum = response.getInteger("today_buy_car_num");
-        //今日交车数量
-        double todayeliverCarNum = response.getInteger("today_deliver_car_num");
-        //交车率
-        String todayDeliverCarRatio = response.getString("today_deliver_car_ratio");
-        String result = null;
-        if (todayBuyCarNum == 0 && todayeliverCarNum != 0) {
-            result = "100";
-        } else {
-            result = new DecimalFormat("#").format(Math.round(todayeliverCarNum / todayBuyCarNum * 100));
-        }
-        Preconditions.checkArgument(todayDeliverCarRatio.equals(result + "%"),"交车率："+todayDeliverCarRatio+"  "+"交车/订单*100："+result);
-    }
-
-    //销售接待--今天销售创建线索->今日线索+1
-    @Test
-    public void xsCreateLine() throws Exception {
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name, pwd);
-        JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        int allCustomerNum=response.getInteger("all_customer_num");
-        System.out.println("没有创建之前，今日线索;"+allCustomerNum);
-        crm.login(xh_name, pwd);
-        JSONObject responseXs=crm.createLine("Max(自动化2)",2,"13373008999",1,"啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦");
-        String massage=responseXs.getString("message");
-        System.out.println(massage);
-        JSONObject response1 = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        int allCustomerNum1=response1.getInteger("all_customer_num");
-        if(massage.equals("成功")){
-            Preconditions.checkArgument(allCustomerNum1==allCustomerNum+1,"没有创建线索之前数据为："+allCustomerNum+"  创建线索之后数据为："+allCustomerNum);
-            System.out.println("销售创建线索->今日线索+1，今日线索;"+allCustomerNum1);
-        }
-
-    }
+//    //销售接待--今日接待=列表总数手机号去重
+//
+//    @Test
+//    public void TodayReception(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        crm.login(qt_name,pwd);
+//        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
+//        System.out.println("response   "+response);
+//        int todayReptionNum=response.getInteger("today_reception_num");
+//        System.out.println("todayReptionNum   "+todayReptionNum);
+//
+//    }
+//
+//    //销售接待--接待率=今日接待/今日线索*100
+//
+//    @Test
+//    public void receptionRatio(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        crm.login(qt_name,pwd);
+//        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
+//        //今日接待数量
+//        double todayReptionNum=response.getInteger("today_reception_num");
+//        //今日线索数量
+//        double allCustomerNum=response.getInteger("all_customer_num");
+//        //接待率
+//        String todayReceptionRatio=response.getString("today_reception_ratio");
+//        String result=null;
+//        if(allCustomerNum==0&&todayReptionNum!=0){
+//            result="100";
+//        }else {
+//            result = new DecimalFormat("#").format(Math.round(todayReptionNum / allCustomerNum * 100));
+//        }
+//        Preconditions.checkArgument(todayReceptionRatio.equals(result + "%"),"接待率："+todayReceptionRatio+"  "+"今日接待/今日线索*100："+result);
+//    }
+//
+//    //销售接待--试驾率=试驾/接待*100
+//
+//    @Test
+//    public void driveatio(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        crm.login(qt_name,pwd);
+//        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
+//        //今日接待数量
+//        double todayReptionNum=response.getInteger("today_reception_num");
+//        //今日试驾数量R
+//        double todayestDriveNum=response.getInteger("today_test_drive_num");
+//        //试驾率
+//        String todayRestDriveatio=response.getString("today_test_drive_ratio");
+//        String result=null;
+//        if(todayReptionNum==0&&todayestDriveNum!=0){
+//            result="100";
+//        }else {
+//            result = new DecimalFormat("#").format(Math.round(todayestDriveNum / todayReptionNum * 100));
+//        }
+//        Preconditions.checkArgument(todayRestDriveatio.equals(result + "%"),"试驾率："+todayRestDriveatio+"  "+"试驾/接待*100："+result);
+//    }
+//
+//    //销售接待--订单率=订单/试驾*100
+//    @Test
+//    public void buyCaratio(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        crm.login(qt_name,pwd);
+//        JSONObject response=crm.receptionPage(1,2, DateTimeUtil.getFormat(new Date()),DateTimeUtil.getFormat(new Date()));
+//        //今日订车数量
+//        double todayBuyCarNum=response.getInteger("today_buy_car_num");
+//        //今日试驾数量
+//        double todayestDriveNum=response.getInteger("today_test_drive_num");
+//        //订车率
+//        String todayBuyCaratio=response.getString("today_buy_car_ratio");
+//        String result=null;
+//        if(todayestDriveNum==0&&todayBuyCarNum!=0){
+//            result="100";
+//        }else {
+//            result = new DecimalFormat("#").format(Math.round(todayBuyCarNum / todayestDriveNum * 100));
+//        }
+//        Preconditions.checkArgument(todayBuyCaratio.equals(result + "%"),"订单率："+todayBuyCaratio+"  "+"订单/试驾*1000："+result);
+//
+//        if(todayBuyCaratio.equals(result+"%")){
+//            System.out.println("结果一致："+"订单率=订单/试驾*100="+todayBuyCaratio);
+//        }
+//    }
+//
+//    //销售接待--交车率=交车/订单*100
+//    @Test
+//    public void deliverCarRatio() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            crm.login(qt_name, pwd);
+//            JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+//            //今日订车数量
+//            double todayBuyCarNum = response.getInteger("today_buy_car_num");
+//            //今日交车数量
+//            double todayeliverCarNum = response.getInteger("today_deliver_car_num");
+//            //交车率
+//            String todayDeliverCarRatio = response.getString("today_deliver_car_ratio");
+//            String result = null;
+//            if (todayBuyCarNum == 0 && todayeliverCarNum != 0) {
+//                result = "100";
+//                Preconditions.checkArgument(todayDeliverCarRatio.equals(result ),"交车率："+todayDeliverCarRatio+"  "+"交车/订单*100："+result);
+//
+//            } else {
+//                result = new DecimalFormat("#").format(Math.round(todayeliverCarNum / todayBuyCarNum * 100));
+//                Preconditions.checkArgument(todayDeliverCarRatio.equals(result + "%"),"交车率："+todayDeliverCarRatio+"  "+"交车/订单*100："+result);
+//            }
+//        }catch (Exception |AssertionError e) {
+//            appendFailreason(e.toString());
+//            e.printStackTrace();
+//        }finally{
+//            //saveData("交车率=交车/订单*100");
+//        }
+//    }
+//
+//    //销售接待--今天销售创建线索->今日线索+1
+//    @Test
+//    public void xsCreateLine(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            crm.login(qt_name, pwd);
+//            JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+//            int allCustomerNum=response.getInteger("all_customer_num");
+//            crm.login(xh_name, pwd);
+//            JSONObject responseXs= null;
+//            responseXs = crm.createLine("Max(自动化2)",2,"13891108999",1,"啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦");
+//            String massage=responseXs.getString("message");
+//            JSONObject response1 = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+//            int allCustomerNum1=response1.getInteger("all_customer_num");
+//            Preconditions.checkArgument(allCustomerNum1==allCustomerNum+1,"没有创建线索之前数据为："+allCustomerNum+"  创建线索之后数据为："+allCustomerNum);
+//        } catch (AssertionError|Exception e) {
+//            appendFailreason(e.toString());
+//        }finally {
+//            saveData("今天销售创建线索->今日线索+1");
+//        }
+//
+//    }
 
 //    //销售接待--今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和
 //    @Test(enabled=false)
