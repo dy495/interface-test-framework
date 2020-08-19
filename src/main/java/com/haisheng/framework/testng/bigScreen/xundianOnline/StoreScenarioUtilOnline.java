@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.testng.annotations.DataProvider;
 
@@ -84,6 +83,15 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 "RECENT_THIRTY",
                 "RECENT_THIRTY",
                 "RECENT_SIXTY"
+        };
+    }
+    @DataProvider(name = "SHOP_ID")
+    public static Object[] shop_id() {
+
+        return new Long[]{
+                246l,
+                1928l
+
         };
     }
 
