@@ -70,6 +70,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
         commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214"};
+
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
@@ -130,17 +131,17 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================今日到访人数<=今天各个时间段内到访人数的累计======================
      * */
-    @Test
-    public void realTimeTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void realTimeTotal( long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 1928l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long)1928l).getJSONArray("list");
+            JSONArray eTlist = Md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
@@ -166,8 +167,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================过店客群总人次==各个门的过店人次之和+兴趣客群======================
      * */
-    @Test
-    public void passByTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void passByTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -239,8 +240,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================进店客群总人次==各个门的进店人次之和======================
      * */
-    @Test
-    public void enterTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void enterTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -268,8 +269,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================兴趣客群总人次==各个门的进店人次之和 + 进店的客群======================
      * */
-    @Test
-    public void interestTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void interestTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -304,8 +305,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================交易客群总人次==会员+非会员的交易pv之和======================
      * */
-    @Test
-    public void dealTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dealTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -333,8 +334,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================过店客群pv>=兴趣客群pv>=进店客群pv======================
      * */
-    @Test
-    public void enterInterPass() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void enterInterPass(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -492,8 +493,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================同类门店平均到访人次==同一类型的门店当日累计的Pv/同一类型门店的数量======================
      * */
-    @Test
-    public void sameAveragePv() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void sameAveragePv(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -541,8 +542,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================同市门店平均到访人次==同一类型城市当日累积的pv/同一类型门店的数量======================
      * */
-    @Test
-    public void sameAveragePvs() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void sameAveragePvs(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -589,8 +590,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================消费者到店趋势中各天pv累计==到店客群总人次======================
      * */
-    @Test()
-    public void mpvTotals() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void mpvTotals(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -634,8 +635,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
-    @Test()
-    public void mpvTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void mpvTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -731,8 +732,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================吸引率==兴趣客群pv/过店客群pv|进店率==进店客群pv/兴趣客群pv======================
      * */
-    @Test
-    public void attractRate() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void attractRate(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -786,8 +787,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================日均客流==所选时间段内的日均客流uv======================
      * */
-    @Test
-    public void averageFlowTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void averageFlowTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -825,8 +826,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================各个年龄段的男性比例累计和==男性总比例======================
      * */
-    @Test
-    public void manSexScale() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void manSexScale(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -933,8 +934,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================所选周期的顾客总人数<=所有门店各天顾客之和======================
      * */
-    @Test
-    public void memberAllTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void memberAllTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -1009,15 +1010,15 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      * */
-    @Test
-    public void yesterdayTotal() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void yesterdayTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
 
 
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long)1928l).getJSONArray("list");
+            JSONArray eTlist = Md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
@@ -1051,13 +1052,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================uv与pv之间的比例要保持在1：4的范围间========================
      * */
-    @Test
-    public void uvWithPvScrole() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void uvWithPvScrole(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 1928l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
             int scrole = 0;
@@ -1068,7 +1069,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 pv = pv+1;
                 scrole= pv/uv;
             }
-            Preconditions.checkArgument(( scrole <= 4),"uv" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv);
+            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv);
 
 
         } catch (AssertionError e) {
