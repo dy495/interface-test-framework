@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -181,8 +182,8 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.appointmentDriverNum();
             JSONObject testDriverList = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
             int listSize = testDriverList.getJSONArray("list").size();
-            int appointmentTotalNumber = CommonUtil.getIntFieldByData(response, "appointment_total_number");
-            int appointmentTodayNumber = CommonUtil.getIntFieldByData(response, "appointment_today_number");
+            int appointmentTotalNumber = CommonUtil.getIntField(response, "appointment_total_number");
+            int appointmentTodayNumber = CommonUtil.getIntField(response, "appointment_today_number");
             //登录小程序
             crm.appletLogin("qa_need_not_delete");
             String data = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
@@ -192,8 +193,8 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             JSONObject response1 = crm.appointmentDriverNum();
             JSONObject testDriverList1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
             int listSize1 = testDriverList1.getJSONArray("list").size();
-            int appointmentTotalNumber1 = CommonUtil.getIntFieldByData(response1, "appointment_total_number");
-            int appointmentTodayNumber1 = CommonUtil.getIntFieldByData(response1, "appointment_today_number");
+            int appointmentTotalNumber1 = CommonUtil.getIntField(response1, "appointment_total_number");
+            int appointmentTodayNumber1 = CommonUtil.getIntField(response1, "appointment_today_number");
             Preconditions.checkArgument(listSize1 == listSize + 2, "列表条数未+2");
             Preconditions.checkArgument(appointmentTotalNumber == appointmentTotalNumber1 + 1, "全部预约未+1");
             Preconditions.checkArgument(appointmentTodayNumber1 == appointmentTodayNumber + 1, "今日预约未+1");
@@ -221,7 +222,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             }
             //app端预约数量
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-            int appTotal = CommonUtil.getIntFieldByData(response1, "total");
+            int appTotal = CommonUtil.getIntField(response1, "total");
             Preconditions.checkArgument(pcTotal == appTotal, "PC预约试驾，与当前登陆app接待销售不一致");
             Preconditions.checkArgument(pcTotal == response1.getJSONArray("list").size(), "PC预约试驾与app预约列表数不一致");
         } catch (Exception | AssertionError e) {
@@ -241,7 +242,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             //预约试驾
             JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
-            int appointmentId = CommonUtil.getIntFieldByData(response, "appointment_id");
+            int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //已取消数量
             int cancelNum1 = getCancelNum("已取消");
             //取消试驾
@@ -267,18 +268,18 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         String data = DateTimeUtil.getFormat(new Date());
         try {
             JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
-            int appointmentId = CommonUtil.getIntFieldByData(response, "appointment_id");
+            int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //获取列表总数
             CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-            Integer total = CommonUtil.getIntFieldByData(response1, "total");
+            Integer total = CommonUtil.getIntField(response1, "total");
             //取消试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             crm.appointmentCancel(appointmentId);
             //获取列表总数
             CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response2 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-            Integer total1 = CommonUtil.getIntFieldByData(response2, "total");
+            Integer total1 = CommonUtil.getIntField(response2, "total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total.equals(total1), "小程序取消预约试驾后，app我的预约列表数量变化了，应该不变");
         } catch (Exception | AssertionError e) {
@@ -297,13 +298,13 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             //列表条数
             CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-            Integer total1 = CommonUtil.getIntFieldByData(response, "total");
+            Integer total1 = CommonUtil.getIntField(response, "total");
             //预约中数量
             int appointmentNum = getCancelNum("预约中");
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONObject result = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
-            int appointmentId = CommonUtil.getIntFieldByData(result, "appointment_id");
+            int appointmentId = CommonUtil.getIntField(result, "appointment_id");
             //列表条数
             CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response2 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
@@ -322,7 +323,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             }
             assert appointmentDate != null;
             int appointmentNum1 = getCancelNum("预约中");
-            Integer total2 = CommonUtil.getIntFieldByData(response2, "total");
+            Integer total2 = CommonUtil.getIntField(response2, "total");
             CommonUtil.valueView(total1, total2, appointmentNum, appointmentNum1, appointmentDate, carType, customerName, customerPhoneNumber);
             Preconditions.checkArgument(appointmentDate.equals(data), "app我的预约记录中预约日期与小程序不一致");
             Preconditions.checkArgument(customerName.equals("【自动化】王"), "app我的预约记录中客户名称与小程序不一致");
@@ -333,7 +334,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("看如上报错");
+            saveData("预约试驾后，验证小程序和app数据一致性");
         }
     }
 
@@ -343,8 +344,8 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONObject response = crm.appointmentList(0L, "TEST_DRIVE", 100);
-            int total = CommonUtil.getIntFieldByData(response, "total");
-            CommonUtil.login(EnumAccount.XSZJ);
+            int total = CommonUtil.getIntField(response, "total");
+            CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 20);
             JSONArray list = response1.getJSONArray("list");
             int num = 0;
@@ -362,30 +363,27 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "小程序预约成功，app的列表数+1")
     public void appointmentTestDriver2() {
         logger.logCaseStart(caseResult.getCaseName());
         String data = DateTimeUtil.getFormat(new Date());
-        String data1 = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
         int appointmentId = 0;
         try {
             //获取列表数
             CommonUtil.login(EnumAccount.XSZJ);
             JSONObject response = crm.appointmentTestDriverList("", "", "", 1, 10);
-            int total = CommonUtil.getIntFieldByData(response, "total");
+            int total = CommonUtil.getIntField(response, "total");
             JSONObject response1 = crm.appointmentDriverNum();
             int appointmentTodayNumber = response1.getInteger("appointment_today_number");
             int appointmentTotalNumber = response1.getInteger("appointment_total_number");
             //两个人预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONObject result = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
-            appointmentId = CommonUtil.getIntFieldByData(result, "appointment_id");
-//            CommonUtil.loginApplet(EnumAppletCode.XMF);
-//            crm.appointmentTestDrive("MALE", "【自动化】郭", "13373166806", data1, 1);
+            appointmentId = CommonUtil.getIntField(result, "appointment_id");
             CommonUtil.login(EnumAccount.XSZJ);
             crm.appointmentTestDriverList("", "", "", 1, 100);
             JSONObject response2 = crm.appointmentTestDriverList("", "", "", 1, 10);
-            int total1 = CommonUtil.getIntFieldByData(response2, "total");
+            int total1 = CommonUtil.getIntField(response2, "total");
             JSONObject response3 = crm.appointmentDriverNum();
             int appointmentTodayNumber1 = response3.getInteger("appointment_today_number");
             int appointmentTotalNumber1 = response3.getInteger("appointment_total_number");
@@ -397,6 +395,62 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             CommonUtil.loginApplet(EnumAppletCode.WM);
             crm.appointmentCancel(appointmentId);
             saveData("小程序预约成功，app的列表数+1");
+        }
+    }
+
+    @Test(description = "销售回访任务", enabled = false)
+    public void appointmentTestDriver3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String data = DateTimeUtil.getFormat(new Date());
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        try {
+            //登录小程序
+            CommonUtil.loginApplet(EnumAppletCode.WM);
+            //预约试驾
+            CommonUtil.loginApplet(EnumAppletCode.WM);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            //电话预约已完成数量
+            int phoneAppointmentNum = 0;
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            JSONArray list = crm.appointmentTestDriverList("", "", "", 1, 100).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.getJSONObject(i).getBoolean("phone_appointment")) {
+                    phoneAppointmentNum++;
+                }
+            }
+            //获取taskId
+            int taskId = 0;
+            JSONArray list1 = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
+            for (int i = 0; i < list1.size(); i++) {
+                if (list1.getJSONObject(i).getString("customer_name").equals("【自动化】王")
+                        && list1.getJSONObject(i).getString("customer_phone").equals("15321527989")
+                        && list1.getJSONObject(i).getString("task_status_name").equals("未完成")) {
+                    taskId = list1.getJSONObject(i).getInteger("task_id");
+                    break;
+                }
+            }
+            //回访
+            String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+            String picture = new ImageUtil().getImageBinary(picPath);
+            JSONArray array = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("return_visit_pic", picture);
+            array.add(object);
+            crm.returnVisitTaskExecute(taskId, common, data, "ANSWER", array, false);
+            //获取
+            int x = 0;
+            JSONArray s = crm.appointmentTestDriverList("", "", "", 1, 100).getJSONArray("list");
+            for (int i = 0; i < s.size(); i++) {
+                if (!s.getJSONObject(i).getBoolean("phone_appointment")) {
+                    x++;
+                }
+            }
+            CommonUtil.valueView(phoneAppointmentNum, x);
+            Preconditions.checkArgument(x == phoneAppointmentNum + 1, "完成回访任务，我的预约列表电话预约没有变为已完成，还是未完成状态");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("完成回访任务，我的预约列表电话预约变为已完成");
         }
     }
 

@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.StatusCode;
+import jdk.nashorn.internal.objects.annotations.Setter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -2857,10 +2858,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param taskId 回访任务Id
      */
-    public JSONObject returnVisitTaskExecute(final int taskId) {
+    public JSONObject returnVisitTaskExecute(int taskId, String common, String nextReturnVisitDate, String returnVisitResult, JSONArray returnVisitPicList, Boolean ifSystemRecommend) {
         String url = "/porsche/app/return-visit-task/execute";
         JSONObject object = new JSONObject();
         object.put("task_id", taskId);
+        object.put("comment", common);
+        object.put("if_system_recommend", ifSystemRecommend);
+        object.put("next_return_visit_date", nextReturnVisitDate);
+        object.put("return_visit_pic_list", returnVisitPicList);
+        object.put("return_visit_result", returnVisitResult);
         return invokeApi(url, object);
     }
 
