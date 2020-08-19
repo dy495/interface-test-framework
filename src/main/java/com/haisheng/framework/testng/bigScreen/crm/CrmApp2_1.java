@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -594,34 +595,29 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
     @Test(description = "页面内容与pc我的回访一致")
     public void returnVisit() {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //app端内容
-            String time = DateTimeUtil.getFormat(new Date());
-            JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
-            String customerPhone = CommonUtil.getStrField(response, 0, "customer_phone");
-            String belongsSaleName = CommonUtil.getStrField(response, 0, "belongs_sale_name");
-            String customerLevelName = CommonUtil.getStrField(response, 0, "customer_level_name");
-            String customerName = CommonUtil.getStrField(response, 0, "customer_name");
-            String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
-            //pc端内容
-            CommonUtil.login(EnumAccount.XSZJ);
-            JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
-            String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
-            String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
-            String pcCustomerName = CommonUtil.getStrField(response1, 0, "customer_name");
-            String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
-            String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
-            Preconditions.checkArgument(belongsSaleName.equals(saleName), "app与pc回访所属销售不同");
-            Preconditions.checkArgument(customerLevelName.equals(customerLevel + "级"), "app与pc客户等级不同");
-            Preconditions.checkArgument(customerName.equals(pcCustomerName), "app与pc客户名称不同");
-            Preconditions.checkArgument(likeCarName.equals(interestedCarModel), "app与pc客户意向车型不同");
-            Preconditions.checkArgument(customerPhone.equals(customerPhoneNumber), "app与pc客户电话不同");
-            CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("页面内容与pc我的回访一致");
-        }
+        //app端内容
+        String time = DateTimeUtil.getFormat(new Date());
+        JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
+        String customerPhone = CommonUtil.getStrField(response, 0, "customer_phone");
+        String belongsSaleName = CommonUtil.getStrField(response, 0, "belongs_sale_name");
+        String customerLevelName = CommonUtil.getStrField(response, 0, "customer_level_name");
+        String customerName = CommonUtil.getStrField(response, 0, "customer_name");
+        String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
+        //pc端内容
+        CommonUtil.login(EnumAccount.XSZJ);
+        JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
+        String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
+        String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
+        String pcCustomerName = CommonUtil.getStrField(response1, 0, "customer_name");
+        String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
+        String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
+        CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
+        new ApiChecker.Builder().scenario("页面内容与pc我的回访一致")
+                .check(belongsSaleName.equals(saleName), "app与pc回访所属销售不同")
+                .check(customerLevelName.equals(customerLevel + "级"), "app与pc客户等级不同")
+                .check(customerName.equals(pcCustomerName), "app与pc客户名称不同")
+                .check(likeCarName.equals(interestedCarModel), "app与pc客户意向车型不同")
+                .check(customerPhone.equals(customerPhoneNumber), "app与pc客户电话不同").build().check();
     }
 
     @Test(description = "【pc我的回访】条数=回访任务")

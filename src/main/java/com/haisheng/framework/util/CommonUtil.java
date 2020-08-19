@@ -7,10 +7,8 @@ import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import org.jooq.util.derby.sys.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +20,6 @@ import java.util.List;
  * @date 2020/7/27 14:17
  */
 public class CommonUtil {
-
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
