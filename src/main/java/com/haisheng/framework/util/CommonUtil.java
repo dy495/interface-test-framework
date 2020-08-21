@@ -41,6 +41,22 @@ public class CommonUtil {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
     }
 
+    @SafeVarargs
+    public static <T> List<String> getMoreParam(JSONObject object, T... param) {
+        List<String> list = new ArrayList<>();
+        Arrays.stream(param).forEach(e -> {
+            if (!(e instanceof String)) {
+                throw new DataExcept("param类型应为String类型");
+            } else {
+                if (!object.containsKey(e)) {
+                    throw new DataExcept("object中不包含此key");
+                }
+                list.add(object.getString((String) e));
+            }
+        });
+        return list;
+    }
+
     /**
      * 结果展示
      *
@@ -48,7 +64,7 @@ public class CommonUtil {
      * @param <T>   T
      */
     @SafeVarargs
-    public static <T> void valueView(T... value) {
+    public static <T> void resultLog(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
     }
 

@@ -22,11 +22,11 @@ public class ApiChecker implements IChecker {
 
     @Override
     public void check() {
-        if (!StringUtils.isEmpty(errorMsg)) {
+        if (!StringUtils.isBlank(errorMsg)) {
             try {
-                throw new AssertionError(errorMsg);
-            } catch (AssertionError e) {
-                testCaseCommon.appendFailreason(errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            } catch (Exception e) {
+                testCaseCommon.appendFailreason(e.toString());
             } finally {
                 testCaseCommon.saveData(scenarios);
             }
@@ -67,9 +67,23 @@ public class ApiChecker implements IChecker {
             return this;
         }
 
+        /**
+         * 校验内容
+         *
+         * @param expression 表达式
+         * @return Builder
+         */
+        public Builder check(boolean expression) {
+            String str = "请看验证内容，验证结果不正确";
+            if (!expression) {
+                this.errorMessage = str;
+            }
+            return this;
+        }
+
         public ApiChecker build() {
             if (StringUtils.isBlank(scenarios)) {
-                throw new DataExcept("必须输入验证场景");
+                throw new DataExcept("必须输入验证场景参数scenario");
             }
             return new ApiChecker(this);
         }
