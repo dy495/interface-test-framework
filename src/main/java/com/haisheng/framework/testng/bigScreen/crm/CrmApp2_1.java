@@ -37,14 +37,13 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.gateway = EnumChecklistGateway.GATEWAY.getGateway();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
@@ -90,7 +89,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //获取回访详情
-            CommonUtil.valueView(crm.returnVisitTaskInfo(taskId));
+            CommonUtil.resultLog(crm.returnVisitTaskInfo(taskId));
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -115,7 +114,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             object.put("return_visit_pic", picture);
             array.add(object);
             JSONObject result = crm.returnVisitTaskExecute(taskId, common, data, "ANSWER", array, false);
-            CommonUtil.valueView(JSONObject.toJSONString(result));
+            CommonUtil.resultLog(JSONObject.toJSONString(result));
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         }
@@ -138,22 +137,17 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
     @Test(description = "接待状态为接待中数量<=1")
     public void myReceptionList() {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取我的接待数量
-            JSONObject response = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
-            JSONArray list = response.getJSONArray("list");
-            int a = 0;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("user_status_name").equals("接待中")) {
-                    a++;
-                }
+        //获取我的接待数量
+        JSONObject response = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
+        JSONArray list = response.getJSONArray("list");
+        int a = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("user_status_name").equals("接待中")) {
+                a++;
             }
-            Preconditions.checkArgument(a <= 1, "接待状态为接待中数量>1");
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("接待状态为接待中数量<=1");
         }
+        CommonUtil.resultLog(a);
+        new ApiChecker.Builder().scenario("接待状态为接待中数量<=1").check(a <= 1, "接待状态为接待中数量>1").build().check();
     }
 
     @Test(description = "共计接待=列表总数-等待中数量-去重手机号数量", enabled = false)
@@ -187,7 +181,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             }
             System.err.println(arr);
             int s = listTotal - arr.size();
-            CommonUtil.valueView(totalReception, listTotal, waitTotal, arr.size(), s);
+            CommonUtil.resultLog(totalReception, listTotal, waitTotal, arr.size(), s);
             Preconditions.checkArgument(totalReception == listTotal - waitTotal - s, "共计接待!=列表总数-等待中数量-去重手机号数量");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -324,7 +318,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                     customerTodayList++;
                 }
             }
-            CommonUtil.valueView(todayNewCustomer, todayOldCustomer, customerTodayList);
+            CommonUtil.resultLog(todayNewCustomer, todayOldCustomer, customerTodayList);
             Preconditions.checkArgument(customerTodayList == (todayNewCustomer + todayOldCustomer), "今日新客接待+今日老客接待!=【PC端展厅接待】分配销售为该销售条数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -348,7 +342,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                 String customerPhoneNumber = array.getJSONObject(i).getString("customer_phone_number");
                 set.add(customerPhoneNumber);
             }
-            CommonUtil.valueView(todayDeliverCarTotal, array.size(), set.size());
+            CommonUtil.resultLog(todayDeliverCarTotal, array.size(), set.size());
             Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数!=今日交车列表手机号去重后列数和");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -364,7 +358,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.deliverCarTotal();
             int deliverCarTotal = CommonUtil.getIntField(response, "deliver_car_total");
             int todayDeliverCarTotal = CommonUtil.getIntField(response, "today_deliver_car_total");
-            CommonUtil.valueView(deliverCarTotal, todayDeliverCarTotal);
+            CommonUtil.resultLog(deliverCarTotal, todayDeliverCarTotal);
             Preconditions.checkArgument(deliverCarTotal >= todayDeliverCarTotal, "实际交车<今日交车");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -395,7 +389,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerPage(100, 1, "", "", "");
             int total = CommonUtil.getIntField(response, "total");
             JSONArray list = response.getJSONArray("list");
-            CommonUtil.valueView(total, list.size());
+            CommonUtil.resultLog(total, list.size());
             Preconditions.checkArgument(total == list.size(), "全部客户!=列表数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -422,7 +416,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                 crm.createLine("【自动化】王先生", 6, phone, 2, remark);
             }
             int total1 = CommonUtil.getIntField(crm.customerPage(1, 10, "", "", ""), "total");
-            CommonUtil.valueView(total, total1);
+            CommonUtil.resultLog(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -444,7 +438,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                     s++;
                 }
             }
-            CommonUtil.valueView(buyCarNum, s);
+            CommonUtil.resultLog(buyCarNum, s);
             Preconditions.checkArgument(buyCarNum == s, "已订车!=列表中是否订车为是的数量");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -461,7 +455,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             int total = CommonUtil.getIntField(response, "total");
             int buyCarNum = CommonUtil.getIntField(response, "buy_car_num");
             int deliverCarNum = CommonUtil.getIntField(response, "deliver_car_num");
-            CommonUtil.valueView(total, buyCarNum, deliverCarNum);
+            CommonUtil.resultLog(total, buyCarNum, deliverCarNum);
             Preconditions.checkArgument(total >= buyCarNum, "全部客户<已定车数");
             Preconditions.checkArgument(buyCarNum >= deliverCarNum, "已定车数<已交车数");
         } catch (AssertionError | Exception e) {
@@ -471,7 +465,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "非订单客户1=<剩余天数<90")
+    @Test(description = "非订单客户,1=<剩余天数<90")
     public void remainDays() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -481,54 +475,46 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                 if (list.getJSONObject(i).getString("customer_level_name") == null
                         || !list.getJSONObject(i).getString("customer_level_name").equals("D级")) {
                     int remainDays = list.getJSONObject(i).getInteger("remain_days");
-                    CommonUtil.valueView(remainDays);
-                    Preconditions.checkArgument(remainDays < 90, "我的客户-剩余天数>90");
-                    Preconditions.checkArgument(remainDays >= 1, "我的客户-剩余天数<1");
+                    CommonUtil.resultLog(remainDays);
+                    Preconditions.checkArgument(remainDays < 90, "app，我的客户列表中存在剩余天数>90的记录");
+                    Preconditions.checkArgument(remainDays >= 1, "app，我的客户列表中存在剩余天数<1的记录");
                 }
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("非订单客户1=<剩余天数<90");
+            saveData("非订单客户,1=<剩余天数<90");
         }
     }
 
     @Test(description = "app我的客户页列表数=PC我的客户页列表数")
     public void myCustomerTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.customerPage(100, 1, "", "", "");
-            int total = CommonUtil.getIntField(response, "total");
-            JSONObject response1 = crm.customerList("", "", "", "", "", 1, 2 << 20);
-            JSONArray list = response1.getJSONArray("list");
-            CommonUtil.valueView(total, list.size());
-            Preconditions.checkArgument(total == list.size(), "app我的客户页列表数!=PC我的客户页列表数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("app我的客户页列表数=PC我的客户页列表数");
-        }
+        JSONObject response = crm.customerPage(100, 1, "", "", "");
+        int total = CommonUtil.getIntField(response, "total");
+        JSONObject response1 = crm.customerList("", "", "", "", "", 1, 2 << 20);
+        JSONArray list = response1.getJSONArray("list");
+        CommonUtil.resultLog(total, list.size());
+        new ApiChecker.Builder().scenario("app我的客户页列表数=PC我的客户页列表数")
+                .check(total == list.size(), "app我的客户页列表数!=PC我的客户页列表数")
+                .build().check();
     }
 
     @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
     public void testDrive() {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.driverTotal();
-            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
-            JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
-            Set<String> set = new HashSet<>();
-            for (int i = 0; i < list.size(); i++) {
-                String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
-                set.add(phoneNumber);
-            }
-            CommonUtil.valueView(todayTestDriveTotal, set.size());
-            Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("今日试驾数=今日试驾列表手机号去重后列表数和");
+        JSONObject response = crm.driverTotal();
+        int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
+        JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < list.size(); i++) {
+            String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
+            set.add(phoneNumber);
         }
+        CommonUtil.resultLog(todayTestDriveTotal, set.size());
+        new ApiChecker.Builder().scenario("今日试驾数=今日试驾列表手机号去重后列表数和")
+                .check(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和")
+                .build().check();
     }
 
     @Test(description = "全部试驾>=今日试驾")
@@ -538,7 +524,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.driverTotal();
             int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
             int testDriveTotal = CommonUtil.getIntField(response, "test_drive_total");
-            CommonUtil.valueView(testDriveTotal, testDriveTotal);
+            CommonUtil.resultLog(testDriveTotal, testDriveTotal);
             Preconditions.checkArgument(todayTestDriveTotal == testDriveTotal, "全部试驾<今日试驾");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -583,7 +569,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             //公海数量+1
             CommonUtil.login(EnumAccount.XSZJ);
             int total1 = CommonUtil.getIntField(crm.publicCustomerList("", "", 2 << 10, 1), "total");
-            CommonUtil.valueView(total, total1);
+            CommonUtil.resultLog(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "删除所属销售，公海数量未增加");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -611,7 +597,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
         String pcCustomerName = CommonUtil.getStrField(response1, 0, "customer_name");
         String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
         String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
-        CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
+        CommonUtil.resultLog(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
         new ApiChecker.Builder().scenario("页面内容与pc我的回访一致")
                 .check(belongsSaleName.equals(saleName), "app与pc回访所属销售不同")
                 .check(customerLevelName.equals(customerLevel + "级"), "app与pc客户等级不同")
@@ -636,7 +622,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
                     pcReturnVisitNum++;
                 }
             }
-            CommonUtil.valueView(appReturnVisitNum, pcReturnVisitNum);
+            CommonUtil.resultLog(appReturnVisitNum, pcReturnVisitNum);
             Preconditions.checkArgument(appReturnVisitNum == pcReturnVisitNum, "app端我的回访!=pc端我的回访数量");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -658,7 +644,7 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
             crm.finishReception(customerId, 7, "【自动化】王敏先生", phone, remark);
             //获取客户列表
             int total1 = CommonUtil.getIntField(getCustomerList(10), "total");
-            CommonUtil.valueView(total, total1);
+            CommonUtil.resultLog(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在，全部客户未+1");
         } catch (Exception e) {
             appendFailreason(e.toString());

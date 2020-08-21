@@ -2595,19 +2595,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject customerList(String customerName, String customerPhone, String customerLevel, String startTime, String endTime, Integer page, Integer size) {
         String url = "/porsche/customer/list";
         JSONObject object = new JSONObject();
-        if (!customerName.equals("")) {
+        if (!StringUtils.isEmpty(customerName)) {
             object.put("customer_name", customerName);
         }
-        if (!customerPhone.equals("")) {
+        if (!StringUtils.isEmpty(customerPhone)) {
             object.put("customer_phone", customerPhone);
         }
-        if (!customerLevel.equals("")) {
+        if (!StringUtils.isEmpty(customerLevel)) {
             object.put("customer_level", customerLevel);
         }
-        if (!startTime.equals("")) {
+        if (!StringUtils.isEmpty(startTime)) {
             object.put("start_time", startTime);
         }
-        if (!endTime.equals("")) {
+        if (!StringUtils.isEmpty(endTime)) {
             object.put("end_time", endTime);
         }
         if (!(page <= 0)) {
@@ -2824,13 +2824,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 销售排班接口
      *
-     * @param page 页码
-     * @param size 页大小
+     * @param page      页码
+     * @param size      页大小
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return response
      */
-    public JSONObject receptionPage(Integer page, Integer size,String startTime, String endTime){
+    public JSONObject receptionPage(Integer page, Integer size, String startTime, String endTime) {
         String url = "/porsche/app/sale-reception/reception-page";
         JSONObject object = new JSONObject();
         object.put("page", page);

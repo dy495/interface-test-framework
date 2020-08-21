@@ -28,6 +28,11 @@ public enum EnumAccount {
     XSZJ("xszj", "e10adc3949ba59abbe56e057f20f883e"),
 
     /**
+     * 总经理
+     */
+    ZJL("zjl", "e10adc3949ba59abbe56e057f20f883e"),
+
+    /**
      * 前台
      */
     QT("qt", "e10adc3949ba59abbe56e057f20f883e"),
