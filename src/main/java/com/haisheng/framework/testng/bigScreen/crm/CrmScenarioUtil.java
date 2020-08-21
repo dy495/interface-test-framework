@@ -634,7 +634,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     //删除顾客
-    public JSONObject customerDeletePC(long id) throws Exception {
+    public JSONObject customerDeletePC(long id) {
         String url = "/porsche/customer/delete";
 
         String json =
@@ -908,7 +908,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    //客户列表
+    //客户列表*
     public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
                                      long startTime, long endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/list";
@@ -948,6 +948,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    public JSONObject customerListPC(String customerPhone,int page, int size){
+        String url = "/porsche/customer/list";
+
+        String json ="{\n" +"  " + " \"page\":" + page + ",\n" +
+                               "   \"size\":" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
                                      String startTime, String endTime, int page, int size) throws Exception {
