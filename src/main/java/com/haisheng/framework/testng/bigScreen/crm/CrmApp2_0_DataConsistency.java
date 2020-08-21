@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -1319,10 +1320,10 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
 //    //销售接待--今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void TodayDriveSum() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
+//        try {
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 10, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayTestDrive = response.getInteger("today_test_drive_num");
@@ -1349,23 +1350,26 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     }
                 }
             }
-            Preconditions.checkArgument(true, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
-        }catch(Exception|AssertionError e){
-            appendFailreason(e.toString());
-
-        }finally{
-          //  saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
-        }
+            new ApiChecker.Builder().scenario("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和")
+                    .check(todayTestDrive>max,"今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max)
+                    .build().check();
+//            Preconditions.checkArgument(true, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
+//        }catch(Exception|AssertionError e){
+//            appendFailreason(e.toString());
+//
+//        }finally{
+//          //  saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
+//        }
 
     }
 
 
 //    //销售接待--今日订车=所有销售【客户管理-我的接待】今日订单之和
 
-    @Test(enabled = false)
-    public void TodayDuySum(){
+    @Test(enabled = true)
+    public void TodayDuySum() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
+//        try {
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayBuyCarNum = response.getInteger("today_buy_car_num");
@@ -1388,12 +1392,15 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
           // CommonUtil.valueView("max:"+max,"todayBuyCarNum:"+todayBuyCarNum,"page:"+pages);
-            Preconditions.checkArgument(max == todayBuyCarNum, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max);
-        }catch(AssertionError|Exception e){
-            appendFailreason(e.toString());
-        }finally{
-            saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
-        }
+            new ApiChecker.Builder().scenario("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和")
+                    .check(max== todayBuyCarNum, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max)
+                    .build().check();
+//            Preconditions.checkArgument(max == todayBuyCarNum, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max);
+//        }catch(AssertionError|Exception e){
+//            appendFailreason(e.toString());
+//        }finally{
+//            saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
+//        }
         }
 
 //    //销售接待--今日交车=所有销售【客户管理-我的交车】今日交车 之和
