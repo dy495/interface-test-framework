@@ -64,7 +64,7 @@ public class CommonUtil {
      * @param <T>   T
      */
     @SafeVarargs
-    public static <T> void resultLog(T... value) {
+    public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
     }
 

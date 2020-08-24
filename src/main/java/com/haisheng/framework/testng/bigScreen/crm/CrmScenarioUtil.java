@@ -11,6 +11,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
+import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,6 +31,7 @@ import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -508,7 +511,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //修改所属顾问
-    public JSONObject customerEditsale(Long customer_id, String name, String phone, String belongs_sale_id) throws Exception {
+    public JSONObject customerEditsale(Long customer_id, String name, String phone, String belongs_sale_id) {
         String url = "/porsche/customer/edit";
 
         String json =
@@ -1627,7 +1630,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     //预约详情
-    public JSONObject appointmentInfo(Long appointment_id) throws Exception {
+    public JSONObject appointmentInfo(Long appointment_id) {
         String url = "/WeChat-applet/porsche/a/appointment/detail/" + appointment_id;
         String json = "{}";
 
@@ -1795,6 +1798,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     //******************2.0 pc relate**************************
+
     //预约试驾列表 查询
     public JSONObject appointmentpage(String start_day, String end_day, Integer page, Integer size) throws Exception {
         String url = "/porsche/order-manage/order/test-drive/page";
@@ -2584,6 +2588,47 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //--------------------------web1.0------------------------
 
     /**
+     * 修改客户信息
+     *
+     * @param customerId    客户id
+     * @param customerName  客户姓名
+     * @param customerPhone 客户电话
+     * @param customerLevel 客户等级
+     * @param belongsSaleId 所属销售id
+     */
+    public JSONObject customerEdit(Long customerId, String customerName, String customerPhone, int customerLevel, String belongsSaleId) {
+        String url = "/porsche/customer/edit";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        object.put("shop_id", EnumShopId.PORSCHE_SHOP.getShopId());
+        object.put("customer_name", customerName);
+        object.put("customer_phone", customerPhone);
+        object.put("customer_level", customerLevel);
+        object.put("belongs_sale_id", belongsSaleId);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 战败客户列表
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     */
+    public JSONObject failureCustomerList(String startTime, String endTime, Integer page, Integer size) {
+        String url = "/porsche/customer/failure_customer_list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
      * 查看客户信息列表接口
      *
      * @param customerName  客户名称
@@ -2650,6 +2695,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!(size <= 0)) {
             object.put("size", size);
         }
+        return invokeApi(url, object);
+    }
+
+    //--------------------------web2.0------------------------
+
+    /**
+     * 战败转公海接口
+     *
+     * @param customerId 客户id
+     */
+    public JSONObject failureCustomerToPublic(long... customerId) {
+        String url = "/porsche/customer/failure_customer_to_public";
+        JSONObject object = new JSONObject();
+        JSONArray array = new JSONArray();
+        Arrays.stream(customerId).forEach(e -> {
+            JSONObject obj = new JSONObject();
+            obj.put("customer_id", e);
+            array.add(obj);
+        });
+        object.put("customer_list", array);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 小程序列表
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     */
+    public JSONObject wechatCustomerList(String startTime, String endTime, Integer page, Integer size) {
+        String url = "/porsche/customer/wechat_customer_list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 
@@ -3167,15 +3252,36 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);
-        if (!customerNamePhone.equals("")) {
+        if (!StringUtils.isEmpty(customerNamePhone)) {
             object.put("customer_name_phone", customerNamePhone);
         }
-        if (!startTime.equals("")) {
+        if (!StringUtils.isEmpty(startTime)) {
             object.put("start_time", startTime);
         }
-        if (!endTime.equals("")) {
+        if (!StringUtils.isEmpty(endTime)) {
             object.put("end_time", endTime);
         }
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 公海客户分配销售接口
+     *
+     * @param saleId     分配销售的id
+     * @param customerId 公海客户id，可输入多个
+     *                   eg：1，2，3，4
+     */
+    public JSONObject customerAllot(String saleId, long... customerId) {
+        String url = "/porsche/customer/customer_allot";
+        JSONObject object = new JSONObject();
+        JSONArray array = new JSONArray();
+        Arrays.stream(customerId).forEach(e -> {
+            JSONObject obj = new JSONObject();
+            obj.put("customer_id", e);
+            array.add(obj);
+        });
+        object.put("customer_list", array);
+        object.put("sale_id", saleId);
         return invokeApi(url, object);
     }
 
@@ -3189,13 +3295,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject appointmentTestDriverList(String searchCondition, String searchDateStart, String searchDateEnd, int page, int size) {
         String url = "/porsche/app/after_sale/appointment_test_driver_list";
         JSONObject object = new JSONObject();
-        if (!searchCondition.equals("")) {
+        if (!StringUtils.isEmpty(searchCondition)) {
             object.put("search_condition", searchCondition);
         }
-        if (!searchDateStart.equals("")) {
+        if (!StringUtils.isEmpty(searchDateStart)) {
             object.put("search_date_start", searchDateStart);
         }
-        if (!searchDateEnd.equals("")) {
+        if (!StringUtils.isEmpty(searchDateEnd)) {
             object.put("search_date_end", searchDateEnd);
         }
         object.put("page", page);
@@ -3224,7 +3330,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject deliverCarAppList(String searchCondition, Integer page, Integer size, String startDate, String endDate) {
         String url = "/porsche/daily-work/deliver-car/app/list";
         JSONObject object = new JSONObject();
-        if (!searchCondition.equals("")) {
+        if (!StringUtils.isEmpty(searchCondition)) {
             object.put("search_condition", searchCondition);
         }
         if (!(page <= 0)) {
@@ -3233,10 +3339,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!(size <= 0)) {
             object.put("size", size);
         }
-        if (!startDate.equals("")) {
+        if (!StringUtils.isEmpty(startDate)) {
             object.put("start_date", startDate);
         }
-        if (!endDate.equals("")) {
+        if (!StringUtils.isEmpty(endDate)) {
             object.put("end_date", endDate);
         }
         return invokeApi(url, object);
@@ -3264,13 +3370,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject testDriverAppList(String searchCondition, String startDate, String endDate, Integer size, Integer page) {
         String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject object = new JSONObject();
-        if (!searchCondition.equals("")) {
+        if (!StringUtils.isEmpty(searchCondition)) {
             object.put("search_condition", searchCondition);
         }
-        if (!startDate.equals("")) {
+        if (!StringUtils.isEmpty(startDate)) {
             object.put("start_date", startDate);
         }
-        if (!endDate.equals("")) {
+        if (!StringUtils.isEmpty(endDate)) {
             object.put("end_date", endDate);
         }
         object.put("size", size);
@@ -3286,6 +3392,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @return JSONObject response.data
      */
     private JSONObject invokeApi(String url, JSONObject requestBody) {
+        if (StringUtils.isEmpty(url)) {
+            throw new DataExcept("url不可为空");
+        }
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
