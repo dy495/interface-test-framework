@@ -130,6 +130,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         //公海人数总量
         CommonUtil.login(EnumAccount.ZJL);
         JSONObject publicCustomerList = crm.publicCustomerList("", "", 10, 1);
+        String phone = CommonUtil.getStrField(publicCustomerList, 0, "customer_phone");
         int customerId = CommonUtil.getIntField(publicCustomerList, 0, "customer_id");
         int publicTotal = publicCustomerList.getInteger("total");
         //把公海分配销售
@@ -137,13 +138,17 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         //分配之后公海总数
         JSONObject publicCustomerList1 = crm.publicCustomerList("", "", 10, 1);
         int publicTotal1 = publicCustomerList1.getInteger("total");
+        //等级变为c
+        JSONObject result = crm.customerList("", phone, "", "", "", 1, 10);
+        String customerLevelName = CommonUtil.getStrField(result, 0, "customer_level_name");
         //分配之后后销售名下客户数量
         CommonUtil.login(EnumAccount.XSGWTEMP);
         int customerTotal1 = crm.customerPage(100, 1, "", "", "").getInteger("total");
         CommonUtil.valueView(customerTotal, customerTotal1, publicTotal, publicTotal1);
-        new ApiChecker.Builder().scenario("pc端勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-2")
-                .check(customerTotal == customerTotal1 + 1, "公海客户分配给xsgwtemp后，该销售名下客户数量未+1")
-                .check(publicTotal == publicTotal1 - 1, "公海客户分配给xsgwtemp后，公海客户数量未-1")
+        new ApiChecker.Builder().scenario("pc端勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1")
+                .check(customerTotal1 == customerTotal + 1, "公海客户分配给xsgwtemp后，该销售名下客户数量未+1")
+                .check(publicTotal1 == publicTotal - 1, "公海客户分配给xsgwtemp后，公海客户数量未-1")
+                .check(customerLevelName.equals("C"), "客户从公海分配销售后，等级未变为C")
                 .build().check();
     }
 
@@ -303,5 +308,27 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
                 .check(repairTotal == appointmentMend, "pc端预约维修次数为：" + repairTotal + "小程序我的维修预约总数：" + appointmentMend)
                 .check(phone.equals(appointment), "最新预约手机号与pc端小程序预约电话不一致")
                 .build().check();
+    }
+
+    @Test
+    public void salesCustomerManagement_15() {
+        logger.logCaseStart(caseResult.getCaseName());
+        //获取一名客户信息
+        JSONObject customerList = crm.customerList("", "", "", "", "", 1, 10);
+        int customerId = 0;
+        String customerName = null;
+        String customerPhone = null;
+        JSONArray list = customerList.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            if (!list.getJSONObject(i).getString("customer_level_name").equals("G")
+                    && !list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGWTEMP.getUid())) {
+                customerId = list.getJSONObject(i).getInteger("customer_id");
+                customerName = list.getJSONObject(i).getString("customer_name");
+                customerPhone = list.getJSONObject(i).getString("customer_phone");
+            }
+        }
+        //变换所属销售
+        crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getCustomerLevel(), EnumAccount.XSGWTEMP.getUid());
+
     }
 }
