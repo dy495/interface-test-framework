@@ -1,18 +1,19 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 
@@ -21,9 +22,10 @@ import java.lang.reflect.Method;
  * @date :  2020/05/30
  */
 
-public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
+public class GetData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
+    FileUtil fileUtil = new FileUtil();
 
 
 
@@ -87,84 +89,34 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * 店面数据分析页 页面内一致性
-     */
+
     @Test
-    public void serviceETdriver() {
+    public void savedata() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             JSONObject obj = crm.shopPannel("DAY","","");
             int service = obj.getInteger("service");
             int test_drive = obj.getInteger("test_drive");
-            Preconditions.checkArgument(service>=test_drive,"累计接待" + service +" < " + "累计试驾" + test_drive);
+            String data = "data" + dt.getHistoryDate(0) +".txt";
+
+
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
+            filePath = filePath.replace("/",File.separator);
+
+
+            //存
+            fileUtil.appendContentToFile(filePath,"service/"+service);
+
+            //取
+            System.out.println(fileUtil.findLineByKey(filePath,"service"));
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：累计接待>=累计试驾");
-        }
-    }
-
-    @Test
-    public void serviceETdeal() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONObject obj = crm.shopPannel("DAY","","");
-            int service = obj.getInteger("service");
-            int deal = obj.getInteger("deal");
-            Preconditions.checkArgument(service>=deal,"累计接待" + service +" < " + "累计成交" + deal);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析：累计接待>=累计成交");
-        }
-    }
-
-    @Test
-    public void serviceETdelivery() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONObject obj = crm.shopPannel("DAY","","");
-            int service = obj.getInteger("service");
-            int delivery = obj.getInteger("delivery");
-            Preconditions.checkArgument(service>=delivery,"累计接待" + service +" < " + "累计交车" + delivery);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析：累计接待>=累计交车");
-        }
-    }
-
-    @Test
-    public void businessClue() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONObject obj = crm.saleFunnel("DAY","","").getJSONObject("business").getJSONArray("list").getJSONObject(0);
-            int clue = obj.getInteger("value");
-            int creat = obj.getJSONArray("detail").getJSONObject(0).getInteger("value"); //创建线索
-            int recp = obj.getJSONArray("detail").getJSONObject(1).getInteger("value"); //接待线索
-            int all = creat + recp;
-            Preconditions.checkArgument(clue==all ,"线索" + clue +" != " + "创建线索" + creat +" + 接待线索" + recp);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析-业务漏斗：线索=创建线索+接待线索");
+            saveData("存数据");
         }
     }
 
