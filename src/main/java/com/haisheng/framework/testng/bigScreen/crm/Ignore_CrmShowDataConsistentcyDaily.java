@@ -8,12 +8,15 @@ import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
-public class CrmShowDataConsistentcyDaily {
+
+/**
+ * V 3.0页面取消 case作废
+ *
+ *
+ */
+public class Ignore_CrmShowDataConsistentcyDaily {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";
@@ -39,6 +42,7 @@ public class CrmShowDataConsistentcyDaily {
     String dimensionChannel = "CHANNEL";
     String dimensionVisitTimes = "VISIT_TIMES";
 
+    @Ignore
     @Test
     public void uvLTTrendUvLTPv() {
         String ciCaseName = new Object() {
@@ -127,6 +131,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void trend4Equals() {
         String ciCaseName = new Object() {
@@ -151,6 +156,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void trend3Equals() {
         String ciCaseName = new Object() {
@@ -175,6 +181,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void visitDataShopChk() {
         String ciCaseName = new Object() {
@@ -212,6 +219,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void hourDataUvLTPv() {
         String ciCaseName = new Object() {
@@ -250,6 +258,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void hourDataUvMTTrendUv() {
         String ciCaseName = new Object() {
@@ -289,6 +298,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void accompanyPercent100() {
         String ciCaseName = new Object() {
@@ -327,6 +337,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void ageGenderPercent100() {
         String ciCaseName = new Object() {
@@ -357,6 +368,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void visitDataRegionUnique() {
         String ciCaseName = new Object() {
@@ -389,6 +401,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void interestDriveDealNum() {
         String ciCaseName = new Object() {
@@ -419,6 +432,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
+    @Ignore
     @Test
     public void visitDataAndSkuRank() {
         String ciCaseName = new Object() {
