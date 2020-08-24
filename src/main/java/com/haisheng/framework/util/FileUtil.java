@@ -180,6 +180,24 @@ public class FileUtil {
         return true;
     }
 
+    public boolean appendContentToFile(String filePath, String content) { //向文件追加内容
+
+        try {
+            FileWriter fileWriter =new FileWriter(filePath, true);
+            fileWriter.write(content + "\n");
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            logger.error(e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
+
+
     public void downloadImageMana(String picA,String terminalPath) {
 
         URL url = null;
