@@ -95,7 +95,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test
     public void uploadEnterShopCarPlate() {
-        String carNum = "鲁A081711";
+//        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
+//        String carNum = "鲁ABB1711";    //全新
+//        String carNum = "浙ABC1711";    //售前老客，售后新客
+        String carNum = "京ASD1235";    //售前老客，售后新客
+//        String carNum = "京A081800";    //售前新客，售后新客
+
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7709867521115136";
@@ -1625,6 +1630,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     //新建试驾+审核封装
     public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
         String idCard = "110226198210260078";
+        Long receptionId=1L;    //接待记录id
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
         Long model = 1L;
@@ -1638,7 +1644,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         String electronicContractUrl =  cstm.picurl;
 
         String call="先生";
-        int driverid = crm.driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
+        int driverid = crm.driveradd(receptionId,driver.customerId,driver.name,idCard,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
         //销售总监登陆
         crm.login(cstm.xszj,cstm.pwd);
         crm.driverAudit(driverid,driver.auditStatus);

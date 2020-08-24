@@ -2486,30 +2486,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         return customerid;
     }
 
-    //新建试驾+审核封装
-    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
-        String idCard = "110226198210260078";
-        String gender = "男";
-        String signTime = dt.getHistoryDate(0);
-        Long model = 1L;
-        String country = "中国";
-        String city = "图们";
-        String email = dt.getHistoryDate(0)+"@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
-        String driverLicensePhoto1Url = cstm.picurl;
-        String driverLicensePhoto2Url =  cstm.picurl;
-        String electronicContractUrl =  cstm.picurl;
-
-        String call="先生";
-        int driverid = crm.driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
-        //销售总监登陆
-        crm.login(cstm.xszj,cstm.pwd);
-        crm.driverAudit(driverid,driver.auditStatus);
-        //最后销售要再登陆一次
-
-    }
-
     //订车+交车封装
     public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
         //订车

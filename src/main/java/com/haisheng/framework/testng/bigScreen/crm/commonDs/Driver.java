@@ -7,6 +7,7 @@ import lombok.Builder;
 public class Driver {
 
     public Long customerId;
+    public Long receiptId;
     public String name;
     public String phone;
     public String signDate;

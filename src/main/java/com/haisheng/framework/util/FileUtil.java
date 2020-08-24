@@ -306,5 +306,15 @@ public class FileUtil {
         }
         return new String(Base64.encodeBase64(data));
     }
+    public String texFile(String fileName) {
+        String str="";
+        try{
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        str = in.readLine();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 
 }
