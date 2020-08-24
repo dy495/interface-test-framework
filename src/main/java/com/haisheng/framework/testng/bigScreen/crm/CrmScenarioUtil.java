@@ -1111,21 +1111,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //--------------------APP----------------
 
     //新建试驾 2.1修改
-    public JSONObject driveradd(Long customer_id, String customerName, String idCard, String gender, String phone,
-                                String signTime, String activity, Long model, String country,
+    public JSONObject driveradd(Long receptionId,Long customer_id, String customerName, String idCard, String gender, String phone,
+                                 String activity, Long model, String country,
                                 String city, String email, String address, String ward_name, String driverLicensePhoto1Url,
                                 String driverLicensePhoto2Url, String electronicContractUrl, String sign_date, String sign_time, String call) {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         String json =
                 "{\n" +
+                        "    \"reception_id\":" + receptionId + ",\n" +
                         "    \"customer_id\":" + customer_id + ",\n" +
                         "    \"customer_name\":\"" + customerName + "\",\n" +
                         "    \"customer_id_number\":\"" + idCard + "\",\n" +
                         "    \"customer_gender\":\"" + gender + "\",\n" +
                         "    \"customer_phone_number\":\"" + phone + "\",\n" +
-                        "    \"sign_time\":\"" + signTime + "\",\n" +
-                        "    \"model\":\"" + model + "\",\n" +
+                        "    \"carModel\":\"" + model + "\",\n" +
                         "    \"country\":\"" + country + "\",\n" +
                         "    \"city\":\"" + city + "\",\n" +
                         "    \"email\":\"" + email + "\",\n" +
@@ -1146,6 +1146,38 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //新建试驾 3.0,增删部分无用参数
+    public JSONObject driveradd3(Long receptionId,Long customer_id, String customerName, String phone,
+                                Long activity, Long model, String country, String city, String email, String address, String ward_name, String driverLicensePhoto1Url,
+                                String driverLicensePhoto2Url, String electronicContractUrl, String sign_date, String sign_time, String call) {
+        String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
+
+        String json =
+                "{\n" +
+                        "    \"reception_id\":" + receptionId + ",\n" +
+                        "    \"customer_id\":" + customer_id + ",\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"customer_phone_number\":\"" + phone + "\",\n" +
+                        "    \"carModel\":\"" + model + "\",\n" +
+                        "    \"country\":\"" + country + "\",\n" +
+                        "    \"city\":\"" + city + "\",\n" +
+                        "    \"email\":\"" + email + "\",\n" +
+                        "    \"address\":\"" + address + "\",\n" +
+                        "    \"activity\":\"" + activity + "\",\n" +
+                        "    \"ward_name\":\"" + ward_name + "\",\n" +
+                        "    \"driver_license_photo_1_url\":\"" + driverLicensePhoto1Url + "\",\n" +
+                        "    \"driver_license_photo_2_url\":\"" + driverLicensePhoto2Url + "\",\n" +
+                        "    \"electronic_contract_url\":\"" + electronicContractUrl + "\",\n" +
+                        "    \"sign_date\":\"" + sign_date + "\",\n" +
+                        "    \"sign_time\":\"" + sign_time + "\",\n" +
+                        "    \"call\":\"" + call + "\"" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
     //删除试驾
     public JSONObject driverDel(long id) throws Exception {
         String url = "/porsche/daily-work/test-drive/delete";
@@ -1160,7 +1192,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //试驾审核
     public JSONObject driverAudit(long id, int audit_status) throws Exception { //1-通过，2-拒绝
-        String url = "/porsche/daily-work/test-drive/delete";
+        String url = "/porsche/daily-work/test-drive/app/test-driver-audit";
 
         String json =
                 "{\n" +
@@ -1928,8 +1960,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject blacklist(String start_day, String end_day, Integer page, Integer size) throws Exception {
         String url = "/porsche/activity/customer/black/page";
         JSONObject json1 = new JSONObject();
-        json1.put("start_day", start_day);
-        json1.put("end_day", end_day);
+        json1.put("start_date", start_day);
+        json1.put("end_date", end_day);
         json1.put("page", page);
         json1.put("size", size);
         String json = json1.toJSONString();
@@ -2270,6 +2302,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //预约维修列表展示
     public JSONObject repairAppointmentlist() {
         String url = "/porsche/app/after_sale/appointment_mend_list";
+        String json = "{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //预约维修列表展示
+    public JSONObject provinceList() {
+        String url = "/WeChat-applet/porsche/car/plate-number-province-list";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -3160,10 +3200,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //applet 我的消息分页
-    public JSONObject messageList(int size) throws Exception {
+    public JSONObject messageList(int size,String type) throws Exception {
         String url = "/WeChat-applet/porsche/a/message/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
+        json.put("type", type);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
@@ -3205,6 +3246,23 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    public JSONObject phoneCheck(String customer_phone) throws Exception {
+        String url = "/porsche/app/sale-reception/phoneCheck";
+        JSONObject json = new JSONObject();
+        json.put("customer_phone", customer_phone);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject receptionOld(Long phone_check_customer_id,String reception_type) throws Exception {
+        String url = "/porsche/app/sale-reception/reception";
+        JSONObject json = new JSONObject();
+        json.put("phone_check_customer_id", phone_check_customer_id);
+        json.put("reception_type", reception_type);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
 
     /**
      * 我的接待查询接口
@@ -3796,6 +3854,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //新建试驾+审核封装
     public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
+        Long receptionId=1L;    //接待记录id
         String idCard = "110226198210260078";
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
@@ -3810,7 +3869,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String electronicContractUrl = cstm.picurl;
 
         String call = "先生";
-        int driverid = driveradd(driver.customerId, driver.name, idCard, gender, driver.phone, signTime, "试乘试驾", model, country, city, email, address, ward_name, driverLicensePhoto1Url, driverLicensePhoto2Url, electronicContractUrl, driver.signDate, driver.signTime, call).getInteger("id");
+        int driverid = driveradd(receptionId,driver.customerId, driver.name, idCard, gender, driver.phone, "试乘试驾", model, country, city, email, address, ward_name, driverLicensePhoto1Url, driverLicensePhoto2Url, electronicContractUrl, driver.signDate, driver.signTime, call).getInteger("id");
         //销售总监登陆
         login(cstm.xszj, cstm.pwd);
         driverAudit(driverid, driver.auditStatus);
@@ -3864,8 +3923,5 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
-
-
-
 
 }
