@@ -114,6 +114,7 @@ public class PackFunction {
         Long customerId=dataC.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         jsonCO.put("id",id);
         jsonCO.put("customerId",customerId);
+        jsonCO.put("userLoginName",userLoginName);
         return jsonCO;
     }
 
@@ -160,9 +161,10 @@ public class PackFunction {
         JSONObject json=creatCustOld(pp.customer_phone_number);
         Long id=json.getLong("id");
         Long customerId=json.getLong("customerId");
+        String userLoginName=json.getString("userLoginName");
         //新建试驾,审核通过
         creatDriver(id,customerId,pp.customer_name,pp.customer_phone_number,1);
-        crm.login(pp.xiaoshouGuwen,pp.adminpassword);            //销售登录完成接待
+        crm.login(userLoginName,pp.adminpassword);            //销售登录完成接待
         crm.finishReception(customerId,7,pp.customer_name,pp.customer_phone_number,pp.remark);
         return appointment_id;
     }

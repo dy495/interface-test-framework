@@ -435,7 +435,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "豫GBBA26";
+            String plate_number = "辽GBBA26";
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count = 0;
@@ -486,7 +486,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("添加车辆，applet我的车辆列表加1");
+            saveData("添加重复车牌验证");
         }
     }
 
@@ -1240,7 +1240,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String sale_nameA = data.getString("sale_name");
             String sale_phoneA = data.getString("sale_phone");
 
-            Preconditions.checkArgument(customer_nameA.equals(customer_name), "报名成功页信息 客户姓名错误");
+//            Preconditions.checkArgument(customer_nameA.equals(customer_name), "报名成功页信息 客户姓名错误");
             Preconditions.checkArgument(customer_phone_numberA.equals(customer_phone_number), "报名成功页信息 客户姓名错误");
             Preconditions.checkArgument(car_type_nameA.equals(car_type_name), "报名成功页信息 客户姓名错误");
             Preconditions.checkArgument(car_type_nameA.equals(car_type_name), "报名成功页信息 客户姓名错误");
@@ -1260,7 +1260,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String service_descriptionB = dataB.getString("service_description");
             String is_need_evaluateB = dataB.getString("is_need_evaluate");
             //预约消息&填写报名信息页
-            Preconditions.checkArgument(customer_nameB.equals(customer_name), "预约消息客户名显示错误");
+//            Preconditions.checkArgument(customer_nameB.equals(customer_name), "预约消息客户名显示错误");
             Preconditions.checkArgument(customer_phone_numberB.equals(customer_phone_number), "预约消息客户手机号显示错误");
             Preconditions.checkArgument(appointment_dateB.equals(yuyueriqi), "预约消息预约日期显示错误");
 
@@ -1734,13 +1734,15 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Long total2=crm.appointmentList(0L,type,20).getLong("total");
 //            crm.cancle(appointment_id);
             Preconditions.checkArgument((total2-total)==1,"预约试驾，试驾消息没+1");
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+
 
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("预约试驾，我的试驾消息+1");
+            saveData("预约活动，我的活动消息+1");
         }
     }
 
@@ -1920,20 +1922,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
-//    @Test
-    public void tt(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            JSONObject d=crm.appointmentMaintainRes(18L,"Max","13373166806","2020-08-29","",185L);
-           Long ID=d.getLong("appointment_id");
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("test");
-        }
-    }
+
 
 
 }

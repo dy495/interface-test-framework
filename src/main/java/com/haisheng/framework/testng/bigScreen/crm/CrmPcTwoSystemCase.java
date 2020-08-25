@@ -324,7 +324,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(activityTotal==task_customer_numa,"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
             Preconditions.checkArgument(customer_typesA.equals("销售、售后"),"新建活动列表信息，投放人群展示错误");
-            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
+//            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
@@ -1717,7 +1717,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              int[] customer_level = {};
              String[] customer_property = {};
 
-             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",60);
+             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",70);
 
              int[] car_types = {};
              String messageTitile = "暑期特惠" + dt.getHistoryDate(0);
@@ -1735,7 +1735,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent,appointment_type,null);
 
             }
-            Thread.sleep(1000*60); //60秒后，查看小程序是否收到消息
+            Thread.sleep(1000*70); //60秒后，查看小程序是否收到消息
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             //我的消息页
              JSONObject data=crm.messageList(10,"MSG");
@@ -1807,7 +1807,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description : ok
       * @date :2020/8/16 15:46
       **/
-     @Test(dataProvider = "APOSITIONS",dataProviderClass = CrmScenarioUtil.class)
+//     @Test(dataProvider = "APOSITIONS",dataProviderClass = CrmScenarioUtil.class)
      public void createActivityForManual(String apositions){
          logger.logCaseStart(caseResult.getCaseName());
          try{
