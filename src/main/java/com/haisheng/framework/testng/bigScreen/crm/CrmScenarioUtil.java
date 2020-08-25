@@ -2633,7 +2633,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("search_date_start", search_date_start);
         json1.put("search_date_end", search_date_end);
         String res = httpPost(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //--------------------------web1.0------------------------
@@ -3782,7 +3782,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return new Integer[]{
                 13,
                 15,
-                16
+                16,
+                23,
+
         };
     }
 
