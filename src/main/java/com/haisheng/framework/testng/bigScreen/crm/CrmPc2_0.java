@@ -57,7 +57,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         CommonUtil.login(EnumAccount.ZJL);
     }
 
-    @Test(description = "共计人数=列表总条数")
+    @Test(description = "pc端我的客户总数=列表的总数")
     public void salesCustomerManagement_1() {
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
@@ -73,7 +73,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         new ApiChecker.Builder().scenario("pc端我的客户总数=列表的总数").check(listSizeTotal == total, "pc端我的客户总数!=列表的总数").build().check();
     }
 
-    @Test
+    @Test(description = "今日人数=按今日搜索展示列表条数")
     public void salesCustomerManagement_2() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
@@ -89,7 +89,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         new ApiChecker.Builder().scenario("今日人数=按今日搜索展示列表条数").check(listSizeTotal == total, "pc端今日客戶人数!=按今日搜索展示列表条数").build().check();
     }
 
-    @Test(enabled = false)
+    @Test(description = "", enabled = false)
     public void salesCustomerManagement_3() {
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject response = crm.customerList("", "", "", "", "", 1, 10);
@@ -100,7 +100,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test()
+    @Test(description = "pc销售客户管理公海共计人数=列表总条数")
     public void salesCustomerManagement_4() {
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
@@ -313,22 +313,16 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void salesCustomerManagement_15() {
         logger.logCaseStart(caseResult.getCaseName());
-        //获取一名客户信息
-        JSONObject customerList = crm.customerList("", "", "", "", "", 1, 10);
-        int customerId = 0;
-        String customerName = null;
-        String customerPhone = null;
-        JSONArray list = customerList.getJSONArray("list");
-        for (int i = 0; i < list.size(); i++) {
-            if (!list.getJSONObject(i).getString("customer_level_name").equals("G")
-                    && !list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGWTEMP.getUid())) {
-                customerId = list.getJSONObject(i).getInteger("customer_id");
-                customerName = list.getJSONObject(i).getString("customer_name");
-                customerPhone = list.getJSONObject(i).getString("customer_phone");
-            }
-        }
-        //变换所属销售
-        crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getCustomerLevel(), EnumAccount.XSGWTEMP.getUid());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
+        crm.publicCustomerList(date, date1, 1, 10);
+    }
 
+    @Test(enabled = false)
+    public void test() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        CommonUtil.loginApplet(EnumAppletCode.WM);
+        crm.appointmentMaintainRes(18L, "Max", "13373166806", "2020-08-29", "", 185L);
+        new ApiChecker.Builder().scenario("测试").build().check();
     }
 }

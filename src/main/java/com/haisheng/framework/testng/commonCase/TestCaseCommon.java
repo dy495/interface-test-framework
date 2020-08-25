@@ -321,7 +321,7 @@ public class TestCaseCommon {
         try {
             checkCode(response, StatusCode.SUCCESS, path);
         } catch (Exception e) {
-            e.printStackTrace();
+            appendFailreason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         caseResult.setResponse(response);
