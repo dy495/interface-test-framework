@@ -1655,15 +1655,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //订车+交车封装
-    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
-        //订车
-        crm.orderCar(customer_id);
-        //创建交车
-        String model = "911";
-        String path =  cstm.picurl;
-        crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
-    }
 
 
 

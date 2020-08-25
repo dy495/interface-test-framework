@@ -1301,23 +1301,26 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //新建交车 2.1修改
-    public JSONObject deliverAdd(Long customer_id, String customer_name, String deliver_car_time, String model, String img_file,
+    public JSONObject deliverAdd(Long reception_id,Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
                                  Boolean accept_show, String sign_name_url) {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", customer_id);
+        json1.put("reception_id", reception_id);
         json1.put("customer_name", customer_name);
         json1.put("customer_gender", "女");
         json1.put("deliver_car_time", deliver_car_time);
-        json1.put("model", model);
+        json1.put("CarModel", 3);
         json1.put("img_file", img_file);
         json1.put("accept_show", accept_show);
         json1.put("works", "金融");
         json1.put("likes", "宠物");
         json1.put("greeting", "自动化-恭喜QA同学喜提车车一辆");
-        json1.put("call", "自动化");
+        json1.put("call", "先生");
         json1.put("id_card", "222402199708150628");
         json1.put("sign_name_url", sign_name_url);
+
+
 
         String json = json1.toJSONString();
 
@@ -3263,6 +3266,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject importCustom(String type,File file) throws Exception {
+        String url = "/porsche/import/customer";
+        JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("file", file);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result);
+    }
 
     /**
      * 我的接待查询接口
@@ -3878,17 +3889,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         //最后销售要再登陆一次
 
     }
-
-    //订车+交车封装
-    public void creatDeliver(Long customer_id, String deliver_car_time, Boolean accept_show) throws Exception {
-        //订车
-        orderCar(customer_id);
-        //创建交车
-        String model = "911";
-        String path = cstm.picurl;
-        deliverAdd(customer_id, "name", deliver_car_time, model, path, accept_show, path);
-    }
-
 
     /**
      * 保时捷日常环境专用，与保时捷测试日常环境配置一致

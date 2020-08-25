@@ -1677,6 +1677,74 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :预约试驾，我的试驾消息+1
+     * @date :2020/8/25 10:38
+     **/
+    @Test
+    public void driverMessage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String type="TEST_DRIVE";    //ACTIVITY
+            //消息数量
+            Long total=crm.appointmentList(0L,type,20).getLong("total");
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            //预约试驾成功后，页面显示数据
+            Long appointment_id = data.getLong("appointment_id");
+            Long total2=crm.appointmentList(0L,type,20).getLong("total");
+            crm.cancle(appointment_id);
+            Preconditions.checkArgument((total2-total)==1,"预约试驾，试驾消息没+1");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约试驾，我的试驾消息+1");
+        }
+    }
+    /**
+     * @description :预约活动，我的活动消息+1
+     * @date :2020/8/25 10:38
+     **/
+    @Test
+    public void activityMessage(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String type="ACTIVITY";    //ACTIVITY
+            //消息数量
+            Long total=crm.appointmentList(0L,type,20).getLong("total");
+           //创建活动
+            String simulation_num = "8";
+            String vailtime = dt.getHistoryDate(0);
+            Long[] aid = createAArcile_id(vailtime, simulation_num);
+            Long activity_id = aid[1];
+            Long article_id = aid[0];
+            //pc文章详情
+
+            //参加活动，报名人数统计
+            String other_brand = "奥迪";
+            String customer_num = "2";
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+
+            crm.login(adminname, adminpassword);
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
+
+            Long total2=crm.appointmentList(0L,type,20).getLong("total");
+//            crm.cancle(appointment_id);
+            Preconditions.checkArgument((total2-total)==1,"预约试驾，试驾消息没+1");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("预约试驾，我的试驾消息+1");
+        }
+    }
+
+    /**
      * @description :车牌号数量
      * @date :2020/8/24 19:54
      **/
@@ -1850,6 +1918,20 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         String messageRes = JSON.parseObject(response).getString("message");
         if (!message.equals(messageRes)) {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
+        }
+    }
+//    @Test
+    public void tt(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject d=crm.appointmentMaintainRes(18L,"Max","13373166806","2020-08-29","",185L);
+           Long ID=d.getLong("appointment_id");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("test");
         }
     }
 
