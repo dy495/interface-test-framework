@@ -15,6 +15,24 @@
         <result property="openTotalNum" column="open_total_num" />
         <result property="openCriticalNum" column="open_critical_num" />
         <result property="openBlockerNum" column="open_blocker_num" />
+        <result property="onlineOpenTotalNum" column="online_open_total_num" />
+        <result property="onlineOpenCriticalNum" column="online_open_critical_num" />
+        <result property="onlineOpenBlockerNum" column="online_open_blocker_num" />
+        <result property="typePdBug" column="type_pd_bug" />
+        <result property="typePdSug" column="type_pd_sug" />
+        <result property="typeUiBug" column="type_ui_bug" />
+        <result property="typeUiSug" column="type_ui_sug" />
+        <result property="typeUxBug" column="type_ux_bug" />
+        <result property="typeUxSug" column="type_ux_sug" />
+        <result property="typeAppBug" column="type_app_bug" />
+        <result property="typePcBug" column="type_pc_bug" />
+        <result property="typeAppletBug" column="type_applet_bug" />
+        <result property="typeBeBug" column="type_be_bug" />
+        <result property="typeEdgeBug" column="type_edge_bug" />
+        <result property="typeDcBug" column="type_dc_bug" />
+        <result property="typeAlgorithmBug" column="type_algorithm_bug" />
+        <result property="typeAlgorithmPerf" column="type_algorithm_perf" />
+        <result property="typeBePerf" column="type_be_perf" />
         <result property="appId" column="app_id" />
         <result property="day" column="day" />
         <result property="week" column="week" />
@@ -29,6 +47,11 @@
         all_test_total_num,all_test_critical_num,all_test_blocker_num,
         all_online_total_num,all_online_critical_num,all_online_blocker_num,
         open_total_num,open_critical_num,open_blocker_num,
+        online_open_total_num,online_open_critical_num,online_open_blocker_num,
+        type_pd_bug,type_pd_sug,type_ui_bug,type_ui_sug,
+        type_ux_bug,type_ux_sug,type_app_bug,type_pc_bug,
+        type_applet_bug,type_be_bug,type_edge_bug,type_dc_bug,
+        type_algorithm_bug,type_algorithm_perf,type_be_perf,
         app_id,`day`,`week`,`month`,`year`
     </sql>
 
@@ -52,6 +75,24 @@
                 open_total_num,
                 open_critical_num,
                 open_blocker_num,
+                online_open_total_num,
+                online_open_critical_num,
+                online_open_blocker_num,
+                type_pd_bug,
+                type_pd_sug,
+                type_ui_bug,
+                type_ui_sug,
+                type_ux_bug,
+                type_ux_sug,
+                type_app_bug,
+                type_pc_bug,
+                type_applet_bug,
+                type_be_bug,
+                type_edge_bug,
+                type_dc_bug,
+                type_algorithm_bug,
+                type_algorithm_perf,
+                type_be_perf,
                 app_id,
                 `day`,
                 `week`,
@@ -70,6 +111,24 @@
                 #{openTotalNum},
                 #{openCriticalNum},
                 #{openBlockerNum},
+                #{onlineOpenTotalNum},
+                #{onlineOpenCriticalNum},
+                #{onlineOpenBlockerNum},
+                #{typePdBug},
+                #{typePdSug},
+                #{typeUiBug},
+                #{typeUiSug},
+                #{typeUxBug},
+                #{typeUxSug},
+                #{typeAppBug},
+                #{typePcBug},
+                #{typeAppletBug},
+                #{typeBeBug},
+                #{typeEdgeBug},
+                #{typeDcBug},
+                #{typeAlgorithmBug},
+                #{typeAlgorithmPerf},
+                #{typeBePerf},
                 #{appId},
                 #{day},
                 #{week},
