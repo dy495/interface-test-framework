@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface IZentaoBugDao {
 
-    List<ZentaoBug> getAllBugs();
+    List<ZentaoBug> getAllBugs(String startDate);
 }

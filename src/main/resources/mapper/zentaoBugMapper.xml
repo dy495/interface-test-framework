@@ -3,21 +3,25 @@
 <mapper namespace="com.haisheng.framework.dao.IZentaoBugDao">
     <resultMap id="ZentaoBugMap" type="com.haisheng.framework.model.bean.ZentaoBug">
         <result property="product" column="product" />
-        <result property="status" column="status" />
         <result property="severity" column="severity" />
-        <result property="openedBuild" column="openedBuild" />
+        <result property="module" column="module" />
+        <result property="status" column="status" />
+        <result property="openedDate" column="openedDate" />
+        <result property="openedBy" column="openedBy" />
+        <result property="title" column="title" />
+        <result property="type" column="type" />
+        <result property="resolvedBy" column="resolvedBy" />
+        <result property="resolution" column="resolution" />
     </resultMap>
 
-
-    <!-- select -->
+    <!-- select 1-not delete, 2-deleted-->
     <select id="getAllBugs"
             resultMap="ZentaoBugMap">
         select
-        product,status,severity,openedBuild
+        product,status,severity,`module`,openedBy,title,`type`,resolvedBy,resolution
         from
         zt_bug
-        where deleted=1
---         1-not delete, 2-deleted
+        where deleted='0' and openedDate > #{startDate}
     </select>
 
 
