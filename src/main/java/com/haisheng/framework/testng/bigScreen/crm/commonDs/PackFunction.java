@@ -81,8 +81,9 @@ public class PackFunction {
         crm.customerEdit_onlyNec(customerID, 7, name, phone, "自动化---------创建----------H级客户");
         jsonP.put("name",name);
         jsonP.put("phone",phone);
-        jsonP.put("recriptId",receiptId);
-        jsonP.put("customerID",customerID);
+        jsonP.put("reception_id",receiptId);
+        jsonP.put("customerId",customerID);
+        jsonP.put("userLoginName",userLoginName);
         return jsonP;
     }
 
@@ -113,6 +114,7 @@ public class PackFunction {
         Long customerId=dataC.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         jsonCO.put("id",id);
         jsonCO.put("customerId",customerId);
+        jsonCO.put("userLoginName",userLoginName);
         return jsonCO;
     }
 
@@ -141,13 +143,13 @@ public class PackFunction {
     }
 
     //订车+交车封装  copy lxq debug ok
-    public void creatDeliver(Long customer_id,String customer_name,String deliver_car_time, Boolean accept_show) throws Exception {
+    public void creatDeliver(Long reception_id,Long customer_id,String customer_name,String deliver_car_time, Boolean accept_show) throws Exception {
         //订车
         crm.orderCar(customer_id);
         //创建交车
-        String model = "911";
+        Long model = 3L;
         String path = file.texFile(pp.filePath);
-        crm.deliverAdd(customer_id,customer_name,deliver_car_time,model,path,accept_show,path);
+        crm.deliverAdd(reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path);
     }
     //老客试驾完成接待---for评价
     public Long driverEva()throws Exception{
@@ -159,23 +161,24 @@ public class PackFunction {
         JSONObject json=creatCustOld(pp.customer_phone_number);
         Long id=json.getLong("id");
         Long customerId=json.getLong("customerId");
+        String userLoginName=json.getString("userLoginName");
         //新建试驾,审核通过
         creatDriver(id,customerId,pp.customer_name,pp.customer_phone_number,1);
-        crm.login(pp.xiaoshouGuwen,pp.adminpassword);            //销售登录完成接待
+        crm.login(userLoginName,pp.adminpassword);            //销售登录完成接待
         crm.finishReception(customerId,7,pp.customer_name,pp.customer_phone_number,pp.remark);
         return appointment_id;
     }
     //获取(销售)顾问接待次数
-    public Integer jiedaiTimes()throws Exception{
+    public Integer jiedaiTimes(int roleId,String guwen)throws Exception{
         crm.login(pp.zongjingli, pp.adminpassword);
-        JSONArray list = crm.ManageList(16).getJSONArray("list");
+        JSONArray list = crm.ManageList(roleId).getJSONArray("list");
         if (list == null || list.size() == 0) {
             return 0;
         }
         int num = 0;
         for (int i = 0; i < list.size(); i++) {
             String name = list.getJSONObject(i).getString("name");
-            if (name.equals(pp.xiaoshouGuwen)) {
+            if (name.equals(guwen)) {
                 num = list.getJSONObject(i).getInteger("num");
             } else {
                 continue;

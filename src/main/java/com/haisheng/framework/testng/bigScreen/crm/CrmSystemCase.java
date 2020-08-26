@@ -162,6 +162,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
             String name = phone;
             customerid = creatCust(name,phone);
             //完成接待
@@ -176,7 +177,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < 20 ; i++){
                 comment = comment + "备";
             }
-            crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+            crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
 
             //查看顾客详情，备注条数
             int list = crm.customerDetailPC(customerid).getJSONArray("remark").size();
@@ -357,6 +358,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
             customerid = creatCust(name,phone);
@@ -373,10 +375,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 comment = comment + "备";
             }
             for (int i = 0; i < 49;i++){
-                crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+                crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
             }
 
-            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid,name,phone,level_id,comment);
+            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid,name,phone1,level_id,comment);
             int code = obj.getInteger("code");
             String message = obj.getString("messge");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code + "，提示语：" + message);
@@ -472,7 +474,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //查询
             JSONObject obj = crm.customerListPC("",-1,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -555,7 +557,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.customerListPC("",-1,"","","","",1,50).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("belongs_sale_name").equals("lxqgw"),"展示信息不正确");
+                Preconditions.checkArgument(single.getString("belongs_sale_name").equals(cstm.lxqgw),"展示信息不正确");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -712,6 +714,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(4);
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
             customerid = creatCust(name,phone);
@@ -720,13 +723,13 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //总经理登陆
             crm.login(cstm.xszj,cstm.pwd);
-            crm.customerEditPC(customerid,name,phone.substring(4),2);
+            crm.customerEditPC(customerid,name,phone1,2);
 
             //
             crm.login(cstm.lxqgw,cstm.pwd);
             //再次查询，手机号应改变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
-            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone.substring(4)),"手机号未改变");
+            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone1),"手机号未改变");
 
 
         } catch (AssertionError e) {
@@ -1063,11 +1066,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 before_total = before_total +1;
             }
             String userid = "";
-            for (int i = 0 ; i < 3;i++){
+            for (int i = 0 ; i < 7;i++){
                 JSONArray list = crm.userPage(1,100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_name").equals(userName)){
+                    if (single.getString("user_name").contains("159")){
                         userid = single.getString("user_id"); //获取用户id
                         //删除账号
                         crm.userDel(userid);
@@ -1159,7 +1162,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                     a = (int) Math.ceil(total / 50) + 1;
                 }
                 for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    JSONArray list = crm.userPage(i,50).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
                         if (single.getString("user_login_name").equals(userLoginName)){
@@ -1221,7 +1224,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                     a = (int) Math.ceil(total / 50) + 1;
                 }
                 for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    JSONArray list = crm.userPage(i,50).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
                         if (single.getString("user_login_name").equals(userLoginName)){
@@ -1251,7 +1254,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(cstm.lxqgw,cstm.pwd);
+
             saveData("删除不同身份账号后，再次登陆");
         }
     }
@@ -1542,7 +1545,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        }
 //    }
 
-    @Test //服务端没做校验
+    //@Test //服务端没做校验
     public void  RecToIn(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1652,15 +1655,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //订车+交车封装
-    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
-        //订车
-        crm.orderCar(customer_id);
-        //创建交车
-        String model = "911";
-        String path =  cstm.picurl;
-        crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
-    }
 
 
 
@@ -1725,6 +1719,26 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * */
 
 
+    @Test
+    public void  del(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.baoshijie,cstm.pwd);
+            JSONArray array = crm.userPage(1,100).getJSONArray("list");
+            for (int i = 0 ; i< array.size();i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getString("user_name").contains("159")){
+                    crm.userDel(obj.getString("user_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("删除账号");
+        }
+    }
 
 
 }

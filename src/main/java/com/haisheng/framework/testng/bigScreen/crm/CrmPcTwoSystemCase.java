@@ -16,6 +16,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -323,7 +324,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(activityTotal==task_customer_numa,"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
             Preconditions.checkArgument(customer_typesA.equals("销售、售后"),"新建活动列表信息，投放人群展示错误");
-            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
+//            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
@@ -1708,16 +1709,15 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void messageInter(String appointment_type){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-//             String appointment_type = "TEST_DRIVER";
+             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+             Long total1=crm.messageList(10,"MSG").getLong("total");
              //pc创建站内消息
              crm.login(adminname,adminpassword);
              String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
              int[] customer_level = {};
              String[] customer_property = {};
-             long time=60*1000;
 
-//             String sendTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",60);
+             String sendTime=dt.currentTimeB("yyyy-MM-dd HH:mm",70);
 
              int[] car_types = {};
              String messageTitile = "暑期特惠" + dt.getHistoryDate(0);
@@ -1735,10 +1735,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 crm.createMessage(customer_types,car_types,customer_level,customer_property,sendTime,messageTitile,messageContent,appointment_type,null);
 
             }
-            Thread.sleep(1000*60); //60秒后，查看小程序是否收到消息
+            Thread.sleep(1000*70); //60秒后，查看小程序是否收到消息
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             //我的消息页
-             JSONArray messagePage=crm.messageList(10,"MSG").getJSONArray("list");
+             JSONObject data=crm.messageList(10,"MSG");
+             Long total2=data.getLong("total");
+             JSONArray messagePage=data.getJSONArray("list");
             Long id=messagePage.getJSONObject(0).getLong("id");
             JSONObject dataM=crm.messageDetail(id);
 
@@ -1749,6 +1751,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(titleM.equals(messageTitile),"站内消息标题显示错误");
             Preconditions.checkArgument(contentM.equals(messageContent),"站内消息内容显示错误");
+            Preconditions.checkArgument(total2-total1==1,"小程序我的消息数量没+1");
 
 
          }catch (AssertionError e){
@@ -1756,6 +1759,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          }catch (Exception e){
              appendFailreason(e.toString());
          }finally {
+             crm.login(pp.zongjingli,pp.adminpassword);
              saveData("站内消息与小程序收到的消息一致性校验");
          }
      }
@@ -1803,7 +1807,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description : ok
       * @date :2020/8/16 15:46
       **/
-     @Test(dataProvider = "APOSITIONS",dataProviderClass = CrmScenarioUtil.class)
+//     @Test(dataProvider = "APOSITIONS",dataProviderClass = CrmScenarioUtil.class)
      public void createActivityForManual(String apositions){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -1917,6 +1921,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          logger.logCaseStart(caseResult.getCaseName());
          try{
              //导入
+             File file=new File("E:\\excel\\PMP线索表 .xlsx");
+             long code=crm.importCustom("DCC",file).getLong("code");
+             logger.info("返回值：{}",code);
+
          }catch (AssertionError e){
              appendFailreason(e.toString());
          }catch (Exception e){
