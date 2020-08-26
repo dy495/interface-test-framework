@@ -623,18 +623,32 @@ public class DateTimeUtil {
         return new Date(curr);
     }
 
-   /**当前时间的前后多少秒
-    * @description :
-    * @date :2020/8/14 16:43
-    **/
-    public String currentTimeB(String pattern,int time) throws Exception {
+    /**
+     * 给指定日期增加若干天并装换格式
+     *
+     * @param date 日期
+     * @param i    天数
+     * @return 最后的日期
+     */
+    public static String addDayFormat(Date date, int i) {
+        Date newDate = addDay(date, i);
+        return getFormat(newDate);
+    }
+
+    /**
+     * 当前时间的前后多少秒
+     *
+     * @description :
+     * @date :2020/8/14 16:43
+     **/
+    public String currentTimeB(String pattern, int time) throws Exception {
 
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Calendar c = Calendar.getInstance();
 
         Date today = new Date();
         c.setTime(today);
-        c.add(Calendar.SECOND,time);
+        c.add(Calendar.SECOND, time);
         Date m = c.getTime();
 
         return format.format(m);

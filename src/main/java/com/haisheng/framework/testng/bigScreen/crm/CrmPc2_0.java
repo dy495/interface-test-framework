@@ -65,7 +65,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         int total = CommonUtil.getIntField(object, "total");
         int pageSize = CommonUtil.pageTurning(total, 100);
         int listSizeTotal = 0;
-        for (int i = 1; i <= pageSize; i++) {
+        for (int i = 1; i < pageSize; i++) {
             int listSize = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list").size();
             listSizeTotal += listSize;
         }
@@ -81,7 +81,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         int total = CommonUtil.getIntField(object, "total");
         int pageSize = CommonUtil.pageTurning(total, 100);
         int listSizeTotal = 0;
-        for (int i = 1; i <= pageSize; i++) {
+        for (int i = 1; i < pageSize; i++) {
             int listSize = crm.customerList("", "", "", date, date, i, 100).getJSONArray("list").size();
             listSizeTotal += listSize;
         }
@@ -89,7 +89,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         new ApiChecker.Builder().scenario("今日人数=按今日搜索展示列表条数").check(listSizeTotal == total, "pc端今日客戶人数!=按今日搜索展示列表条数").build().check();
     }
 
-    @Test(description = "", enabled = false)
+    @Test(enabled = false)
     public void salesCustomerManagement_3() {
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject response = crm.customerList("", "", "", "", "", 1, 10);
@@ -180,8 +180,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         int publicTotal1 = publicCustomerList1.getInteger("total");
         CommonUtil.valueView(publicTotal, publicTotal1);
         new ApiChecker.Builder().scenario("pc端将一个已存在客户的客户等级设置为G,公海列表数+1")
-                .check(publicTotal1 == publicTotal + 1, "原公海数量为" + publicTotal + "把一个客户等级改为公海后，公海数量为" + publicTotal1)
-                .build().check();
+                .check(publicTotal1 == publicTotal + 1, "原公海数量为" + publicTotal + "把一个客户等级改为公海后，公海数量为" + publicTotal1).build().check();
     }
 
     @Test
@@ -191,8 +190,7 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         int listSize = failureCustomerList.getJSONArray("list").size();
         int total = failureCustomerList.getInteger("total");
         new ApiChecker.Builder().scenario("pc销售客户管理战败共计人数=列表总条数")
-                .check(listSize == total, "pc销售客户管理战败共计人数为" + total + "列表总条数为" + listSize)
-                .build().check();
+                .check(listSize == total, "pc销售客户管理战败共计人数为" + total + "列表总条数为" + listSize).build().check();
     }
 
     @Test
@@ -314,15 +312,44 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void salesCustomerManagement_15() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
-        crm.publicCustomerList(date, date1, 1, 10);
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            crm.publicCustomerList(date, date1, 1, 100);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("开始时间<=结束时间,筛选出日期内划入公海得客户列表");
+        }
     }
 
-    @Test(enabled = false)
-    public void test() throws Exception {
+    @Test(description = "交车后，客户不回到公海")
+    public void salesCustomerManagement_16() {
         logger.logCaseStart(caseResult.getCaseName());
-        CommonUtil.loginApplet(EnumAppletCode.WM);
-        crm.appointmentMaintainRes(18L, "Max", "13373166806", "2020-08-29", "", 185L);
-        new ApiChecker.Builder().scenario("测试").build().check();
+        int remainDays = 1;
+        JSONArray list = crm.customerPage(1, 2 << 10, "", "", "").getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("customer_level_name").equals("D级")) {
+                Integer day = list.getJSONObject(i).getInteger("remain_days");
+                if (day == null) {
+                    remainDays = 0;
+                }
+            }
+        }
+        CommonUtil.valueView(remainDays);
+        new ApiChecker.Builder().scenario("交车后，客户不回到公海").check(remainDays == 0, "交车后，客户回到公海天数不等于0").build().check();
+    }
+
+    @Test(description = "小程序筛选")
+    public void salesCustomerManagement_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            crm.wechatCustomerList(date, date1, 1, 10);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc端小程序客户按照日期筛选-开始时间<=结束时间");
+        }
     }
 }

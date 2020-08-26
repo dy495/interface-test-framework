@@ -86,7 +86,7 @@ public class CommonUtil {
             }
         }
         double a;
-        a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.floor(listSize / pageSize) + 1 : 1;
+        a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 1 + 1;
         return (int) a;
     }
 

@@ -116,29 +116,35 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void registeredCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         int activityTaskId = 0;
+        int activityId = 0;
         try {
-            JSONObject response = crm.activityTaskPage(1, 10);
-            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
-            activityTaskId = json.getInteger("activity_task_id");
-            int activityId = json.getInteger("activity_id");
-            JSONObject startResponse = crm.customerTaskPage(10, 1, (long) activityId);
-            int size = startResponse.getJSONObject("data").getJSONArray("list").size();
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            JSONArray list = crm.activityTaskPage(1, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getBoolean("is_edit")) {
+                    activityTaskId = list.getJSONObject(i).getInteger("activity_task_id");
+                    activityId = list.getJSONObject(i).getInteger("activity_id");
+                }
+            }
+            CommonUtil.login(EnumAccount.ZJL);
+            int activityCustomer = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
+            CommonUtil.login(EnumAccount.XSGWTEMP);
             //添加报名信息
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
-            JSONObject endResponse = crm.customerTaskPage(10, 1, (long) activityId);
-            int size1 = endResponse.getJSONObject("data").getJSONArray("list").size();
-            Preconditions.checkArgument(size1 == size + 1, "添加报名人信息后，pc端任务活动未+1");
+            CommonUtil.login(EnumAccount.ZJL);
+            int activityCustomer1 = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
+            Preconditions.checkArgument(activityCustomer1 == activityCustomer + 1, "添加报名人信息后，pc端任务活动未+1");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             String customerId = null;
             JSONObject response2 = crm.activityTaskPage(1, 10);
-            JSONArray list = response2.getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("customer_list");
+            JSONArray list = response2.getJSONArray("list").getJSONObject(0).getJSONArray("customer_list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("customer_phone_number").equals("13454678912")) {
                     customerId = list.getJSONObject(i).getString("customer_id");
@@ -156,7 +162,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         //分配销售
         try {
             //登录前台账号
-            crm.login(EnumAccount.QT.getUsername(), EnumAccount.QT.getPassword());
+            CommonUtil.login(EnumAccount.QT);
             //创建接待
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
@@ -186,7 +192,7 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             int appointmentTodayNumber = CommonUtil.getIntField(response, "appointment_today_number");
             //登录小程序
             crm.appletLogin("qa_need_not_delete");
-            String data = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1));
+            String data = DateTimeUtil.addDayFormat(new Date(), 1);
             for (int i = 0; i < 2; i++) {
                 crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
             }
@@ -462,5 +468,10 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             }
         }
         return cancelNum;
+    }
+
+    @Test
+    public void test() {
+        CommonUtil.uploadShopCarPlate("京A69888", 0);
     }
 }
