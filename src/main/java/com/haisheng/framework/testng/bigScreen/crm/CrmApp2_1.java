@@ -153,17 +153,22 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
     @Test(description = "接待状态为接待中数量<=1")
     public void myReceptionList() {
         logger.logCaseStart(caseResult.getCaseName());
-        //获取我的接待数量
-        JSONObject response = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
-        JSONArray list = response.getJSONArray("list");
-        int a = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.getJSONObject(i).getString("user_status_name").equals("接待中")) {
-                a++;
+        try {
+            //获取我的接待数量
+            JSONObject response = crm.customerMyReceptionList("", "", "", 2 << 10, 1);
+            JSONArray list = response.getJSONArray("list");
+            int a = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("user_status_name").equals("接待中")) {
+                    a++;
+                }
             }
+            CommonUtil.valueView(a);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("接待状态为接待中数量<=1");
         }
-        CommonUtil.valueView(a);
-        new ApiChecker.Builder().scenario("接待状态为接待中数量<=1").check(a <= 1, "接待状态为接待中数量>1").build().check();
     }
 
     @Test(description = "共计接待=列表总数-等待中数量-去重手机号数量", enabled = false)
@@ -507,30 +512,39 @@ public class CrmApp2_1 extends TestCaseCommon implements TestCaseStd {
     @Test(description = "app我的客户页列表数=PC我的客户页列表数")
     public void myCustomerTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        JSONObject response = crm.customerPage(100, 1, "", "", "");
-        int total = CommonUtil.getIntField(response, "total");
-        JSONObject response1 = crm.customerList("", "", "", "", "", 1, 2 << 20);
-        JSONArray list = response1.getJSONArray("list");
-        CommonUtil.valueView(total, list.size());
-        new ApiChecker.Builder().scenario("app我的客户页列表数=PC我的客户页列表数")
-                .check(total == list.size(), "app我的客户页列表数!=PC我的客户页列表数").build().check();
+        try {
+            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            int total = CommonUtil.getIntField(response, "total");
+            JSONObject response1 = crm.customerList("", "", "", "", "", 1, 2 << 20);
+            JSONArray list = response1.getJSONArray("list");
+            CommonUtil.valueView(total, list.size());
+            Preconditions.checkArgument(total == list.size(), "app我的客户页列表数!=PC我的客户页列表数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app我的客户页列表数=PC我的客户页列表数");
+        }
     }
 
     @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
     public void testDrive() {
         logger.logCaseStart(caseResult.getCaseName());
-        JSONObject response = crm.driverTotal();
-        int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
-        JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
-        Set<String> set = new HashSet<>();
-        for (int i = 0; i < list.size(); i++) {
-            String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
-            set.add(phoneNumber);
+        try {
+            JSONObject response = crm.driverTotal();
+            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
+            JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
+            Set<String> set = new HashSet<>();
+            for (int i = 0; i < list.size(); i++) {
+                String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
+                set.add(phoneNumber);
+            }
+            CommonUtil.valueView(todayTestDriveTotal, set.size());
+            Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日试驾数=今日试驾列表手机号去重后列表数和");
         }
-        CommonUtil.valueView(todayTestDriveTotal, set.size());
-        new ApiChecker.Builder().scenario("今日试驾数=今日试驾列表手机号去重后列表数和")
-                .check(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和")
-                .build().check();
     }
 
     @Test(description = "全部试驾>=今日试驾")

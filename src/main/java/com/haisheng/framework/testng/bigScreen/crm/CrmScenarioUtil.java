@@ -2894,7 +2894,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param activityTaskId 活动任务Id
      * @param customerId     顾客id
      */
-    public JSONObject deleteCustomer(String activityTaskId, String customerId) {
+    public JSONObject deleteCustomer(String activityTaskId, Integer customerId) {
         String url = "/porsche/app/activity-task/deleteCustomer";
         JSONObject object = new JSONObject();
         object.put("activity_task_id", activityTaskId);
