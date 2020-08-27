@@ -89,7 +89,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * 上传车牌
+     * 上传日常进场车牌
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
@@ -118,13 +118,13 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("入场车牌号上传");
+            saveData("日常入场车牌号上传");
         }
     }
 
     /**
      *
-     * 上传车牌
+     * 上传日常离场车牌
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
@@ -148,10 +148,45 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("离场车牌号上传");
+            saveData("日常离场车牌号上传");
         }
     }
 
+
+    /**
+     *
+     * 上传赢识线上进场车牌
+     * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
+     *
+     */
+    @Test
+    public void uploadOnlineEnterShopCarPlate() {
+//        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
+//        String carNum = "鲁ABB1711";    //全新
+//        String carNum = "浙ABC1711";    //售前老客，售后新客
+        String carNum = "京ASD1235";    //售前老客，售后新客
+//        String carNum = "京A081800";    //售前新客，售后新客
+
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与线上环境的设置一致，不要修改
+        String deviceId = "7736789438301184";//线上设备
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{\"plate_num\":\"" + carNum +"\"," +
+                "\"plate_pic\":\"@0\"," +
+                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "}";
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, json);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("线上入场车牌号上传");
+        }
+    }
 
     //----------------------添加备注--------------------
     @Test

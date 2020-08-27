@@ -3942,4 +3942,41 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
+
+    /**
+     * 汽车赢识线上环境专用
+     * 上传车牌号
+     */
+    public JSONObject carUploadToOnline(String router, String deviceId, String[] resource, String json) throws Exception {
+        ApiResponse apiResponse = null;
+        CommonConfig commonConfig = new CommonConfig();
+        try {
+            Credential credential = new Credential("77327ffc83b27f6d", "7624d1e6e190fbc381d0e9e18f03ab81");
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid("uid_7fc78d24")
+                    .appId("111112a388c2")
+                    .dataDeviceId(deviceId)
+                    .requestId(requestId)
+                    .version("1.0")
+                    .dataResourceUnencryptedIdx(new Integer[]{0})
+                    .router(router)
+                    .dataResource(resource)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            ApiClient apiClient = new ApiClient(commonConfig.gatewayDeviceOnline, credential);
+            apiResponse = apiClient.doRequest(apiRequest);
+            caseResult.setResponse(JSON.toJSONString(apiResponse));
+
+            logger.printImportant(JSON.toJSONString(apiRequest));
+            logger.printImportant(JSON.toJSONString(apiResponse));
+
+            checkCode(commonConfig.gatewayDevice, apiResponse, router, StatusCode.SUCCESS);
+        } catch (Exception e) {
+            throw e;
+        }
+        return JSON.parseObject(JSON.toJSONString(apiResponse));
+    }
+
 }
