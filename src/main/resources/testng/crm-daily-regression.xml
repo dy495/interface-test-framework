@@ -16,6 +16,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_1"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPc2_0"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPc3_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.Crm2_1AppX"></class>
         </classes>
     </test>
