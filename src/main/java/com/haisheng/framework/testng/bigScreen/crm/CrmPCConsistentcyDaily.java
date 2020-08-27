@@ -13,9 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class CrmPCConsistentcyDaily {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,7 +24,7 @@ public class CrmPCConsistentcyDaily {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
 
-    Crm crm = new Crm();
+    Ignore_Crm crm = new Ignore_Crm();
 
     String majordomoSaleId = "uid_9c2b914d";
 

@@ -41,9 +41,14 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     String xs_name = "0805xsgw";//销售顾问
     String by_name = "lxqby";//保养顾问姓名
+<<<<<<< Updated upstream
     String by_name2 = "baoyang";
     String wx_name = "lxqwx";//维修顾问姓名
     String zjl_name = "zjl";
+=======
+    String wx_name = "lxqwx";//保养顾问姓名
+
+>>>>>>> Stashed changes
     String by_name_chinese = "吕保养";
     String pwd = "e10adc3949ba59abbe56e057f20f883e";//密码全部一致
     String qt_name = "qt";//前台账号
@@ -1075,6 +1080,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //        a[0] = userLoginName;
 
         //维修顾问登陆，点击接待按钮
+<<<<<<< Updated upstream
         crm.login(by_name, pwd);
         if (ifreception.equals("yes")) {
             crm.login(wx_name, pwd);
@@ -1085,6 +1091,15 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 a[2] = "未点击接待按钮";
             }
 
+=======
+        crm.login(wx_name,pwd);
+        if (ifreception.equals("yes")){
+            Long after_record_id = crm.reception_customer(repair_id).getLong("after_record_id");
+            a[2] = Long.toString(after_record_id);
+        }
+        else {
+            a[2] = "未点击接待按钮";
+>>>>>>> Stashed changes
         }
         return a;
     }

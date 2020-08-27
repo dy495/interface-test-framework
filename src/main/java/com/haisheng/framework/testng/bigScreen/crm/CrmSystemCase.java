@@ -130,7 +130,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test
     public void uploadLeaveShopCarPlate() {
-        String carNum = "京KD1001";
+        String carNum = "京A123456";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7724082825888768";
@@ -553,23 +553,16 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void customerListSearchDate() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+
         try {
-
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name,phone);
-            //完成接待
-
-
-            String starttime = dt.getHistoryDate(0);
+           String starttime = dt.getHistoryDate(0);
             String endtime = starttime;
             //查询
-            JSONArray list = crm.customerListPC("",-1,"","",starttime,endtime,1,1).getJSONArray("list");
+            JSONArray list = crm.customerListPC("",1,"","",starttime,endtime,1,50).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("service_date").equals(starttime),"查询结果与查询条件不一致");
+                String date = single.getString("service_date");
+                Preconditions.checkArgument(date.equals(starttime) || date==null ,"查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -743,28 +736,22 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void customerListzjlEditPhone() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+
         try {
 
-
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String phone1 = phone.substring(4);
-            String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
-            //完成接待
-
-
-            //总经理登陆
+            //销售总监登陆
             crm.login(cstm.xszj,cstm.pwd);
-            crm.customerEditPC(customerid,name,phone1,2);
-
-            //
-            crm.login(cstm.lxqgw,cstm.pwd);
+            //查询B级客户
+            JSONObject obj = crm.customerListPC("",2,"","","","",1,1).getJSONArray("list").getJSONObject(0);
+            Long customerid = obj.getLong("customer_id");
+            String name = obj.getString("customer_name");
+            String phone = obj.getString("customer_phone");
+            String phone1 = "zdh"+(int)((Math.random()*9+1)*100000);
+            //销售总监修改客户手机号
+            crm.customerEditRemarkPC(customerid,name,phone1,2L,"自动化销售总监修改手机号---------------");
             //再次查询，手机号应改变
-            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
-            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone1),"手机号未改变");
+            JSONObject obj2 = crm.customerListPC("",2,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj2.getString("customer_phone").equals(phone1),"手机号未改变");
 
 
         } catch (AssertionError e) {

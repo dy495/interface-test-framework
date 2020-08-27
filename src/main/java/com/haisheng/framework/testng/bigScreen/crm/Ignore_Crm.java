@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-public class Crm {
+public class Ignore_Crm {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";

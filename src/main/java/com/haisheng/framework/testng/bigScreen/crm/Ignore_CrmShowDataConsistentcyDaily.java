@@ -27,7 +27,7 @@ public class Ignore_CrmShowDataConsistentcyDaily {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
 
-    Crm crm = new Crm();
+    Ignore_Crm crm = new Ignore_Crm();
 
 
     //cycle_type="RECENT_SEVEN"最近七天，RECENT_THIRTY最近30天，RECENT_SIXTY，RECENT_NINETY
