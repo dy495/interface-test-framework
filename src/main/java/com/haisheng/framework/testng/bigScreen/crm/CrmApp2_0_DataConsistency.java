@@ -4,25 +4,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.rmi.AccessException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,9 +35,12 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     String xs_name = "0805xsgw";//销售顾问
     String by_name = "lxqby";//保养顾问姓名
+
     String by_name2 = "baoyang";
     String wx_name = "lxqwx";//维修顾问姓名
     String zjl_name = "zjl";
+
+
     String by_name_chinese = "吕保养";
     String pwd = "e10adc3949ba59abbe56e057f20f883e";//密码全部一致
     String qt_name = "qt";//前台账号
@@ -120,6 +117,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
      * ====================销售顾问======================
      */
 
+    @Ignore
     @Test
     public void addScheduledesc10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -134,8 +132,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             saveData("PC端添加工作安排，工作描述字数=10");
 
         }
-
-
     }
 
     /**
@@ -1075,6 +1071,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //        a[0] = userLoginName;
 
         //维修顾问登陆，点击接待按钮
+
         crm.login(by_name, pwd);
         if (ifreception.equals("yes")) {
             crm.login(wx_name, pwd);

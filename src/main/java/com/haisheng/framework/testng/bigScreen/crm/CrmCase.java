@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.ImageUtil;
 import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.*;
 
@@ -271,8 +272,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 //            String detail_time = detail.getString("pre_buy_time");
             Preconditions.checkArgument(name.equals(list_name) && name.equals(detail_name),"姓名不一致");
             Preconditions.checkArgument(level_id==list_level && level_id==detail_level,"等级不一致");
-            Preconditions.checkArgument(phone.equals(list_phone) && phone.equals(detail_phone),"手机号不一致");
-            Preconditions.checkArgument(sale_id.equals(list_sale) && sale_id.equals(detail_sale),"所属销售不一致");
+            Preconditions.checkArgument(phone1.equals(list_phone) && phone1.equals(detail_phone),"手机号不一致");
+            Preconditions.checkArgument(detail_sale.equals(list_sale),"所属销售不一致");
 //            Preconditions.checkArgument(likecar==list_like_car && likecar==detailt_like_car,"意向车型不一致");
 //            Preconditions.checkArgument(buycar==list_buycar && buycar==detail_buycar,"是否订车不一致");
 //            Preconditions.checkArgument(pretime.equals(list_time) && pretime.equals(detail_time),"预计购车时间不一致");
@@ -2079,6 +2080,36 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //销售登陆，获取当前接待id
         crm.login(userLoginName, pwd);
         return  userLoginName;
+    }
+
+
+
+
+    @Test(dataProvider = "car", dataProviderClass = CrmScenarioUtil.class)
+    public void uploadEnterShopCarPlate(String car) {
+
+        String carNum = car;
+
+
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与日常环境的设置一致，不要修改
+        String deviceId = "7709867521115136";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{\"plate_num\":\"" + carNum +"\"," +
+                "\"plate_pic\":\"@0\"," +
+                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "}";
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, json);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("入场车牌号上传");
+        }
     }
 
 
