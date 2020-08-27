@@ -29,10 +29,7 @@ import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CrmScenarioUtil extends TestCaseCommon {
 
@@ -1302,7 +1299,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //新建交车 2.1修改
-    public JSONObject deliverAdd(Long reception_id,Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
+    public JSONObject deliverAdd(Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
                                  Boolean accept_show, String sign_name_url) {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
@@ -1320,7 +1317,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("call", "先生");
         json1.put("id_card", "222402199708150628");
         json1.put("sign_name_url", sign_name_url);
-
 
 
         String json = json1.toJSONString();
@@ -2793,26 +2789,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
-    //--------------------------applet3.0------------------------
-
-    /**
-     * 小程序我的试驾列表
-     *
-     * @param lastValue 传<0的值表示此字段为空
-     */
-    public JSONObject appointmentList(Long lastValue, String type, Integer size) {
-        String url = "/WeChat-applet/porsche/a/appointment/list";
-        JSONObject object = new JSONObject();
-        if (lastValue <= 0) {
-            object.put("last_value", "");
-        }
-        if (lastValue > 0) {
-            object.put("last_value", lastValue);
-        }
-        object.put("type", type);
-        object.put("size", size);
-        return invokeApi(url, object);
-    }
 
     //--------------------------web2.0------------------------
 
@@ -2842,10 +2818,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject testDriverPage(String startDay, String endDay, Integer page, Integer size) {
         String url = "/porsche/order-manage/order/test-drive/page";
         JSONObject object = new JSONObject();
-        if (!startDay.equals("")) {
+        if (!StringUtils.isEmpty(startDay)) {
             object.put("start_day", startDay);
         }
-        if (!endDay.equals("")) {
+        if (!StringUtils.isEmpty(endDay)) {
             object.put("emd_day", endDay);
         }
         object.put("page", page);
@@ -2862,10 +2838,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject publicCustomerList(String startTime, String endTime, Integer size, Integer page) {
         String url = "/porsche/customer/public_customer_list";
         JSONObject object = new JSONObject();
-        if (!startTime.equals("")) {
+        if (!StringUtils.isEmpty(startTime)) {
             object.put("start_time", startTime);
         }
-        if (!endTime.equals("")) {
+        if (!StringUtils.isEmpty(endTime)) {
             object.put("end_time", endTime);
         }
         if (!(page <= 0)) {
@@ -2876,6 +2852,72 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         return invokeApi(url, object);
     }
+
+    //--------------------------web3.0------------------------
+
+    /**
+     * 查看消息详情接口
+     *
+     * @param id 消息id
+     */
+    public JSONObject messageDetail(Integer id) {
+        String url = "/porsche/message/detail";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 消息删除接口
+     *
+     * @param id 消息id
+     */
+    public JSONObject messageDelete(Integer id) {
+        String url = "/porsche/message/delete";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 新增消息接口
+     *
+     * @param customerTypes    客户类别  PRE_SALES:售前  AFTER_SALES：售后
+     * @param carTypes         车型 使用 https://winsense.yuque.com/staff-qt5ptf/umvi00/dyxsu5#mrKqG 车型列表
+     * @param customerLevel    客户级别 使用 https://winsense.yuque.com/staff-qt5ptf/umvi00/ksu0kd#11235be0 等级列表
+     * @param customerProperty 客户属性 LOST：流失客户，MAINTENANCE：保养客户，LOYAL：忠诚客户
+     * @param sendTime         格式yyyy-MM-dd HH:mm
+     * @param title            消息标题
+     * @param content          消息标题
+     * @param appointmentType  预约类型类型 TEST_DRIVE("试驾"), REPAIR("维修"), MAINTAIN("保养"), ACTIVITY("活动")
+     * @param activityId       预约类型为是时 不能为空，活动id使用3.2接口获取
+     */
+    public JSONObject messageAdd(String carTypes, String customerLevel, String customerProperty, String sendTime, String title, String content, String appointmentType, String activityId, String... customerTypes) {
+        String url = "/porsche/message/add";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(carTypes)) {
+            object.put("car_types", carTypes);
+        }
+        if (!StringUtils.isEmpty(customerLevel)) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!StringUtils.isEmpty(customerProperty)) {
+            object.put("customer_property", customerProperty);
+        }
+        if (!StringUtils.isEmpty(appointmentType)) {
+            object.put("appointment_type", appointmentType);
+        }
+        if (!StringUtils.isEmpty(activityId)) {
+            object.put("activity_id", activityId);
+        }
+        object.put("send_time", sendTime);
+        object.put("title", title);
+        object.put("content", content);
+        List<String> list = new ArrayList<>(Arrays.asList(customerTypes));
+        object.put("customer_types", list);
+        return invokeApi(url, object);
+    }
+
 
     //--------------------------app2.0------------------------
 
@@ -3004,10 +3046,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        if (!startTime.equals("")) {
+        if (!StringUtils.isEmpty(startTime)) {
             object.put("start_time", startTime);
         }
-        if (!endTime.equals("")) {
+        if (!StringUtils.isEmpty(endTime)) {
             object.put("end_time", endTime);
         }
         return invokeApi(url, object);
@@ -3282,7 +3324,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject importCustom(String type,File file) throws Exception {
+    public JSONObject importCustom(String type, File file) throws Exception {
         String url = "/porsche/import/customer";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -3301,13 +3343,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject customerMyReceptionList(String searchCondition, String searchDateStart, String searchDateEnd, Integer size, Integer page) {
         String url = "/porsche/app/customer/my-reception-list";
         JSONObject object = new JSONObject();
-        if (!searchCondition.equals("")) {
+        if (!StringUtils.isEmpty(searchCondition)) {
             object.put("search_condition", searchCondition);
         }
-        if (!searchDateStart.equals("")) {
+        if (!StringUtils.isEmpty(searchDateStart)) {
             object.put("search_date_start", searchDateStart);
         }
-        if (!searchDateEnd.equals("")) {
+        if (!StringUtils.isEmpty(searchDateEnd)) {
             object.put("search_date_end", searchDateEnd);
         }
         if (!(page <= 0)) {
@@ -3477,6 +3519,27 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         object.put("size", size);
         object.put("page", page);
+        return invokeApi(url, object);
+    }
+
+    //--------------------------applet3.0------------------------
+
+    /**
+     * 小程序我的试驾列表
+     *
+     * @param lastValue 传<0的值表示此字段为空
+     */
+    public JSONObject appointmentList(Long lastValue, String type, Integer size) {
+        String url = "/WeChat-applet/porsche/a/appointment/list";
+        JSONObject object = new JSONObject();
+        if (lastValue <= 0) {
+            object.put("last_value", "");
+        }
+        if (lastValue > 0) {
+            object.put("last_value", lastValue);
+        }
+        object.put("type", type);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 

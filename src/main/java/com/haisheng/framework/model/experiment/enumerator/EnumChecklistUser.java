@@ -9,7 +9,7 @@ import lombok.Getter;
  * @date 2020/7/24 14:31
  */
 public enum EnumChecklistUser {
-    WM("wm");
+    WM("王敏");
 
     EnumChecklistUser(String name) {
         this.name = name;

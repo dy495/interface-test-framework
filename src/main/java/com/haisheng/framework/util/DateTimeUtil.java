@@ -2,6 +2,7 @@ package com.haisheng.framework.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
@@ -619,8 +620,30 @@ public class DateTimeUtil {
      */
     public static Date addDay(Date date, int i) {
         long curr = date.getTime();
-        curr += (long) i * 24 * 60 * 60000;
+        curr += (long) i * 24 * 60 * 60 * 1000;
         return new Date(curr);
+    }
+
+    /**
+     * 给指定日期增加若干秒
+     *
+     * @param date 日期
+     * @param s    秒数
+     * @return 最后的日期
+     */
+    public static Date addSecond(Date date, int s) {
+        long curr = date.getTime();
+        curr += (long) s * 1000;
+        return new Date(curr);
+    }
+
+    @Test
+    public void test() {
+        Date date = new Date();
+        String s = getFormat(date, "yyyy-MM-dd HH:mm");
+        String y = getFormat(addSecond(date, 60), "yyyy-MM-dd HH:mm");
+        System.err.println(s);
+        System.err.println(y);
     }
 
     /**

@@ -1,19 +1,19 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author wangmin
@@ -66,6 +66,26 @@ public class CommonUtil {
     @SafeVarargs
     public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+    /**
+     * 时间格式判断
+     *
+     * @param date   实际日期
+     * @param format 比较的日期格式
+     * @return boolean
+     */
+    public static boolean isLegalDate(String date, String format) {
+        if (StringUtils.isEmpty(date) || date.length() < format.length()) {
+            return false;
+        }
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        try {
+            Date date1 = dateFormat.parse(date);
+            return date.equals(dateFormat.format(date1));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
