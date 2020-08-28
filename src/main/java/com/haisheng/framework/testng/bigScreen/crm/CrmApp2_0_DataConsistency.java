@@ -1,10 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -54,6 +56,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     //预约信息
     String customer_name = "lxq自动化";
     String customer_phone_number = "13400000000";
+    private String IpPort;
 
 
     /**
@@ -1411,5 +1414,18 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
 
     }
+
+    //接待列表导出
+    @Test
+    public void receptionExport() {
+        try {
+            String flag=crm.receptionExport();
+        } catch (Exception |AssertionError e) {
+            e.printStackTrace();
+        } finally{
+
+        }
+    }
+
 }
 

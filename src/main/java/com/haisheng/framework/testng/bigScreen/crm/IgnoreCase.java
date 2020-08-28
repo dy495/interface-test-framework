@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -1987,6 +1986,37 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("今日来访页面根据不存在的姓名+存在手机号+匹配的级别查询");
+        }
+
+    }
+
+    @Ignore
+    @Test
+    public void customerListSearchLevel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            customerid = creatCust(name,phone);
+            //完成接待
+
+
+            //查询
+            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日来访页面根据客户等级查询");
         }
 
     }

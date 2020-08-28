@@ -3341,7 +3341,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public String  outportC() throws Exception {
         String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
         JSONObject json = new JSONObject();
-
         String result = httpGet(url, JSON.toJSONString(json), IpPort);
         return result;
     }
@@ -3786,11 +3785,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 3.0数据分析 成交客户分析-市成交量
      */
-    public JSONObject city(String adcode, String cycle_type, String month, String car_type) throws Exception {
+    public JSONObject city(String cycle_type, String month, String car_type) throws Exception {
         String url = "/porsche/analysis2/deal/city";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
-        json.put("adcode", adcode);
         if (!month.equals("")) {
             json.put("month", month);
         }
@@ -4051,7 +4049,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
+    //接待列表导出
 
+    public String receptionExport() throws Exception {
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        JSONObject json = new JSONObject();
+        String result = httpGet(url, JSON.toJSONString(json), IpPort);
+        return result;
+    }
     /**
      * 汽车赢识线上环境专用
      * 上传车牌号

@@ -358,7 +358,6 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
-
     public String httpGet(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
