@@ -2,6 +2,7 @@ package com.haisheng.framework.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
@@ -619,22 +620,58 @@ public class DateTimeUtil {
      */
     public static Date addDay(Date date, int i) {
         long curr = date.getTime();
-        curr += (long) i * 24 * 60 * 60000;
+        curr += (long) i * 24 * 60 * 60 * 1000;
         return new Date(curr);
     }
 
-   /**当前时间的前后多少秒
-    * @description :
-    * @date :2020/8/14 16:43
-    **/
-    public String currentTimeB(String pattern,int time) throws Exception {
+    /**
+     * 给指定日期增加若干秒
+     *
+     * @param date 日期
+     * @param s    秒数
+     * @return 最后的日期
+     */
+    public static Date addSecond(Date date, int s) {
+        long curr = date.getTime();
+        curr += (long) s * 1000;
+        return new Date(curr);
+    }
+
+    @Test
+    public void test() {
+        Date date = new Date();
+        String s = getFormat(date, "yyyy-MM-dd HH:mm");
+        String y = getFormat(addSecond(date, 60), "yyyy-MM-dd HH:mm");
+        System.err.println(s);
+        System.err.println(y);
+    }
+
+    /**
+     * 给指定日期增加若干天并装换格式
+     *
+     * @param date 日期
+     * @param i    天数
+     * @return 最后的日期
+     */
+    public static String addDayFormat(Date date, int i) {
+        Date newDate = addDay(date, i);
+        return getFormat(newDate);
+    }
+
+    /**
+     * 当前时间的前后多少秒
+     *
+     * @description :
+     * @date :2020/8/14 16:43
+     **/
+    public String currentTimeB(String pattern, int time) throws Exception {
 
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Calendar c = Calendar.getInstance();
 
         Date today = new Date();
         c.setTime(today);
-        c.add(Calendar.SECOND,time);
+        c.add(Calendar.SECOND, time);
         Date m = c.getTime();
 
         return format.format(m);

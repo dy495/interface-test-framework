@@ -17,7 +17,7 @@ public class CrmStatistics {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    Crm crm = new Crm();
+    Ignore_Crm crm = new Ignore_Crm();
 
     HashMap<String, Integer> level = new HashMap<>();
     HashMap<String, Integer> source = new HashMap<>();

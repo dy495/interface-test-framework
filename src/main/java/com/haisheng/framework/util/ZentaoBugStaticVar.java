@@ -20,9 +20,12 @@ public class ZentaoBugStaticVar {
     //product
     public final static int PROD_EDGE_END = 1;
     public final static int PROD_CLOUD_SERVICE = 2;
+    public final static int PROD_MG_PLATFORM = 3;
     public final static int PROD_OPEN_PLATFORM = 4;
     public final static int PROD_SCREEN_BIG = 7;
     public final static int PROD_COMMODITY_SHLF = 8;
+    public final static int PROD_CRM = 10;
+    public final static int PROD_MENDIAN = 11;
 
     //checklist app ID
     public final static int APP_EDGE_END = 1;
@@ -41,6 +44,10 @@ public class ZentaoBugStaticVar {
         prodAppMap.put(PROD_OPEN_PLATFORM, APP_OPEN_PLATFORM);
         prodAppMap.put(PROD_SCREEN_BIG, APP_SCREEN_BIG);
         prodAppMap.put(PROD_COMMODITY_SHLF, APP_COMMODITY_SHLF);
+
+        prodAppMap.put(PROD_MG_PLATFORM, APP_MANAGE_PLATFORM);
+        prodAppMap.put(PROD_CRM, APP_SCREEN_BIG);
+        prodAppMap.put(PROD_MENDIAN, APP_SCREEN_BIG);
 
         return prodAppMap;
     }

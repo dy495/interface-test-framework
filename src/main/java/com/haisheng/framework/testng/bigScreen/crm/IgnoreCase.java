@@ -3,6 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.experiment.checker.ApiChecker;
+import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -10,10 +12,13 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 
 /**
@@ -2486,41 +2491,60 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         return customerid;
     }
 
-    //新建试驾+审核封装
-    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
-        String idCard = "110226198210260078";
-        String gender = "男";
-        String signTime = dt.getHistoryDate(0);
-        Long model = 1L;
-        String country = "中国";
-        String city = "图们";
-        String email = dt.getHistoryDate(0)+"@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
-        String driverLicensePhoto1Url = cstm.picurl;
-        String driverLicensePhoto2Url =  cstm.picurl;
-        String electronicContractUrl =  cstm.picurl;
 
-        String call="先生";
-        int driverid = crm.driveradd(driver.customerId,driver.name,idCard,gender,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
-        //销售总监登陆
-        crm.login(cstm.xszj,cstm.pwd);
-        crm.driverAudit(driverid,driver.auditStatus);
-        //最后销售要再登陆一次
 
+    @Test(description = "页面内容与pc我的回访一致", enabled = false)
+    public void returnVisit() {
+        logger.logCaseStart(caseResult.getCaseName());
+        //app端内容
+        String time = DateTimeUtil.getFormat(new Date());
+        JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
+        String customerPhone = CommonUtil.getStrField(response, 0, "customer_phone");
+        String belongsSaleName = CommonUtil.getStrField(response, 0, "belongs_sale_name");
+        String customerLevelName = CommonUtil.getStrField(response, 0, "customer_level_name");
+        String customerName = CommonUtil.getStrField(response, 0, "customer_name");
+        String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
+        //pc端内容
+        CommonUtil.login(EnumAccount.XSZJ);
+        JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
+        String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
+        String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
+        String pcCustomerName = CommonUtil.getStrField(response1, 0, "customer_name");
+        String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
+        String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
+        CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
+        new ApiChecker.Builder().scenario("页面内容与pc我的回访一致")
+                .check(belongsSaleName.equals(saleName), "app与pc回访所属销售不同")
+                .check(customerLevelName.equals(customerLevel + "级"), "app与pc客户等级不同")
+                .check(customerName.equals(pcCustomerName), "app与pc客户名称不同")
+                .check(likeCarName.equals(interestedCarModel), "app与pc客户意向车型不同")
+                .check(customerPhone.equals(customerPhoneNumber), "app与pc客户电话不同").build().check();
     }
 
-    //订车+交车封装
-    public void creatDeliver(Long customer_id,String deliver_car_time, Boolean accept_show) throws Exception {
-        //订车
-        crm.orderCar(customer_id);
-        //创建交车
-        String model = "911";
-        String path =  cstm.picurl;
-        crm.deliverAdd(customer_id,"name",deliver_car_time,model,path,accept_show,path);
+    @Test(description = "pc我的回访条数=app回访任务", enabled = false)
+    public void returnVisitNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String time = DateTimeUtil.getFormat(new Date());
+            JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
+            int appReturnVisitNum = response.getJSONArray("list").size();
+            int pcReturnVisitNum = 0;
+            CommonUtil.login(EnumAccount.XSZJ);
+            JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", "", "");
+            JSONArray list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("sale_name").equals("销售顾问temp")) {
+                    pcReturnVisitNum++;
+                }
+            }
+            CommonUtil.valueView(appReturnVisitNum, pcReturnVisitNum);
+            Preconditions.checkArgument(appReturnVisitNum == pcReturnVisitNum, "app端我的回访!=pc端我的回访数量");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("【pc我的回访】条数=回访任务");
+        }
     }
-
-
 
 
 }

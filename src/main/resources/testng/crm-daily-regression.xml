@@ -13,8 +13,10 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmAppletCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPcTwoSystemCase"></class>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_1"/>-->
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_0"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_1"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmApp2_0"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPc2_0"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPc3_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.Crm2_1AppX"></class>
         </classes>
     </test>

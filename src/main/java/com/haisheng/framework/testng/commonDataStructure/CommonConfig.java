@@ -10,6 +10,7 @@ public class CommonConfig {
     //网关信息
     public String gateway = "http://dev.api.winsenseos.cn/retail/api/data/biz";
     public String gatewayDevice = "http://dev.api.winsenseos.cn/retail/api/data/device";
+    public String gatewayDeviceOnline = "http://api.winsenseos.com/retail/api/data/device";
 
     //管理后台的应用信息
     public String uid = "uid_7fc78d24";
