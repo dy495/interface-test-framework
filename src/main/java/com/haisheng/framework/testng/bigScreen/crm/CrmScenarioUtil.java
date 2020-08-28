@@ -1791,8 +1791,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //看车详情
-    public JSONObject carOwner() throws Exception {
+    public JSONObject carOwner() {
         String url = "/WeChat-applet/porsche/car-owner-splendour/today-list";
+        String json = "{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //看车详情
+    public JSONObject shop()  {
+        String url = "/WeChat-applet/porsche/shop/current";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1922,7 +1929,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //活动报名顾客列表
-    public JSONObject activityList(Integer page, Integer size, Long activity_id) throws Exception {
+    public JSONObject activityList(Integer page, Integer size, Long activity_id) {
         String url = "/porsche/activity/customer/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
@@ -2550,7 +2557,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //人员管理-销售顾问列表
-    public JSONObject ManageList(Integer role_id) throws Exception {
+    public JSONObject ManageList(Integer role_id)  {
         String url = "/porsche/role-staff/manage/list";
         JSONObject json1 = new JSONObject();
         json1.put("role_id", role_id);
@@ -2559,7 +2566,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //人员管理-销售顾问列表
-    public JSONObject ManageListNoSelect(Integer role_id) throws Exception {
+    public JSONObject ManageListNoSelect(Integer role_id) {
         String url = "/porsche/role-staff/manage/list/no-selected";
         JSONObject json1 = new JSONObject();
         json1.put("role_id", role_id);
@@ -2568,7 +2575,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //人员管理-销售顾问列表
-    public JSONObject ManageAdd(Integer role_id, String uid) throws Exception {
+    public JSONObject ManageAdd(Integer role_id, String uid)  {
         String url = "/porsche/role-staff/manage/add";
         JSONObject json1 = new JSONObject();
         json1.put("role_id", role_id);
@@ -2578,7 +2585,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //删除销售排版中销售
-    public JSONObject ManageDelete(Integer id) throws Exception {
+    public JSONObject ManageDelete(Integer id)  {
         String url = "/porsche/role-staff/manage/delete/" + id;
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -3364,15 +3371,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject importCustom(String type, File file) throws Exception {
+
+    public JSONObject importCustom(String [] file,String name) throws Exception {
         String url = "/porsche/import/customer";
-        JSONObject json = new JSONObject();
-        json.put("type", type);
-        json.put("file", file);
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String filep[]=file;
+        String result = httpPostFile(url, filep,name, IpPort);
         return JSON.parseObject(result);
     }
-
+    public String  outportC() throws Exception {
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        JSONObject json = new JSONObject();
+        String result = httpGet(url, JSON.toJSONString(json), IpPort);
+        return result;
+    }
     /**
      * 我的接待查询接口
      *
@@ -3814,11 +3825,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 3.0数据分析 成交客户分析-市成交量
      */
-    public JSONObject city(String adcode, String cycle_type, String month, String car_type) throws Exception {
+    public JSONObject city(String cycle_type, String month, String car_type) throws Exception {
         String url = "/porsche/analysis2/deal/city";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
-        json.put("adcode", adcode);
         if (!month.equals("")) {
             json.put("month", month);
         }
@@ -3944,7 +3954,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return new String[]{
                 EnumAppletCode.WM.getCode(),
                 EnumAppletCode.XMF.getCode(),
-//                EnumAppletCode.LXQ.getCode()
+                EnumAppletCode.LXQ.getCode(),
+                EnumAppletCode.GLY.getCode()
         };
     }
 
@@ -4078,7 +4089,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
+    //接待列表导出
 
+    public String receptionExport() throws Exception {
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        JSONObject json = new JSONObject();
+        String result = httpGet(url, JSON.toJSONString(json), IpPort);
+        return result;
+    }
     /**
      * 汽车赢识线上环境专用
      * 上传车牌号

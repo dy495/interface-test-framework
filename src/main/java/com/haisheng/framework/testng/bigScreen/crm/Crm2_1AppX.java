@@ -17,10 +17,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +33,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
-    FileUtil file=new FileUtil();
     PackFunction pf=new PackFunction();
 
     /**
@@ -146,11 +141,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.appointmentEvaluate(appointmentId, "保养满意", array1);  //评价
             crm.login(pp.zongjingli,pp.adminpassword);
             JSONArray evaluateListB = crm.evaluateList(1, 10, "", "", "").getJSONArray("list");
-            int totalB = evaluateList.size();
+            int totalB = evaluateListB.size();
             Preconditions.checkArgument((totalB - total) == 1, "评价后，pc评价列表没+1");
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("保养评价");
@@ -369,11 +362,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date))&&(customer_name.equals(nameSelect)),"交车按交车时间{}查询，结果{}错误",select_date,timeSelect);
             }
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("交车组合查询，结果校验");
         }
     }
@@ -419,7 +410,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         try{
             JSONArray list=crm.driverSelect(1,10,select_date,select_date).getJSONArray("list");
             for(int i=0;i<list.size();i++){
-                String timeSelect=list.getJSONObject(i).getString("sign_time");
+                String timeSelect=list.getJSONObject(i).getString("sign_date");
                 Preconditions.checkArgument(timeSelect.equals(select_date),"交车按交车时间{}查询，结果{}错误",select_date,timeSelect);
             }
         }catch (AssertionError e){
@@ -447,11 +438,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date))&&(customer_name.equals(nameSelect)),"交车按交车时间{}查询，结果{}错误",select_date,timeSelect);
             }
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("试驾组合查询，结果校验");
         }
     }
@@ -500,11 +489,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String timeSelect=list.getJSONObject(i).getString("sign_time");
                 Preconditions.checkArgument(timeSelect.equals(select_date),"客户按交车时间{}查询，结果{}错误",select_date,timeSelect);
             }
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("客户按试驾日期查询，结果校验");
         }
     }
@@ -525,11 +512,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date))&&(customer_name.equals(nameSelect)),"客户按交车时间{}查询，结果{}错误",select_date,timeSelect);
             }
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("客户组合查询，结果校验");
         }
     }
@@ -555,11 +540,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Long code2=crm.createLine("诸葛自动",1,customer_phone,1,remark).getLong("code");
             Preconditions.checkArgument(code2==1001,"使用存在的手机号创建线索不应该成功");
 
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("创建线索");
         }
     }
@@ -584,21 +567,19 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             //小程序登录，查看最新交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data=crm.carOwnernew();
-            String customer_nameN=data.getString("customer_name");
-            String car_model=data.getString("car_model");
+//            String customer_nameN=data.getString("customer_name");
+//            String car_model=data.getString("car_model");
             String work=data.getString("work");
             String hobby=data.getString("hobby");
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
-            Preconditions.checkArgument(car_model.equals("911"),"最新交车信息校验失败");
+//            Preconditions.checkArgument(car_model.equals("911"),"最新交车信息校验失败");
             Preconditions.checkArgument(work.equals("金融 "),"最新交车信息校验失败");
             Preconditions.checkArgument(hobby.equals("宠物 "),"最新交车信息校验失败");
 
 
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("新建交车授权，是小程序最新车主风采");
         }
     }
@@ -626,7 +607,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String phone=object.getString("phone");
             pf.creatDeliver(reception_id,customer_id,customer_name,dt.getHistoryDate(0),true);
             //完成接待  `
-            crm.finishReception(customer_id, 7, customer_name, phone, pp.remark);   //TODO:完成接待参数
+            crm.finishReception(customer_id, 4, customer_name, phone, pp.remark);
 
             //小程序登录，查看交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
@@ -639,11 +620,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             }
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
             Preconditions.checkArgument(totalA-total==1,"建交车授权，applet车主风采列表没+1");
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("建交车授权，applet车主风采列表+1");
         }
     }
@@ -658,7 +637,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
        try{
            //创建活动，获取活动id
            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
-           Long activity_id=aid[1];
            Long id=aid[0];
            //app销售登录报名
            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
@@ -691,11 +669,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
            crm.articleDelete(id);
            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
 
-       }catch (AssertionError e){
+       }catch (AssertionError | Exception e){
            appendFailreason(e.toString());
-       }catch (Exception e){
-           appendFailreason(e.toString());
-       }finally {
+       } finally {
            saveData("app活动报名,任务人数于创建时相同，增加报名，任务人数+1");
        }
    }
@@ -713,7 +689,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             JSONObject dataTotal=crm.jiaocheTotal();
             int today_number=dataTotal.getInteger("today_deliver_car_total");
             JSONArray list=data.getJSONArray("list");
-            List<String> numList = new ArrayList<String>();
+            List<String> numList = new ArrayList<>();
             if(list==null||list.size()==0){
                 logger.info("今日无交车记录");
                 return;
@@ -722,16 +698,14 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String phone=list.getJSONObject(i).getString("customer_phone_number");
                 numList.add(phone);
             }
-            Set<String> numSet = new HashSet<String>();
+            Set<String> numSet = new HashSet<>();
             numSet.addAll(numList);
             int similar=numSet.size();
             Preconditions.checkArgument(similar==today_number,"今日交车数！=今日列表电话号码去重数");
 
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("交车 今日数=列表电话去重数");
         }
     }
@@ -748,7 +722,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             JSONObject dataTotal=crm.driverTotal();
             int today_number=dataTotal.getInteger("today_test_drive_total");
             JSONArray list=data.getJSONArray("list");
-            List<String> numList = new ArrayList<String>();
+            List<String> numList = new ArrayList<>();
             if(list==null||list.size()==0){
                 logger.info("今日无试驾记录");
                 return;
@@ -766,11 +740,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             int similar=numSet.size();
             Preconditions.checkArgument(similar==today_number,"试驾 今日数=列表电话去重数");
 
-        }catch (AssertionError e){
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("试驾 今日数=列表电话去重数");
         }
     }
