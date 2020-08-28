@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -3646,6 +3647,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 EnumAppletCode.WM.getCode(),
                 EnumAppletCode.XMF.getCode(),
 //                EnumAppletCode.LXQ.getCode()
+                EnumAppletCode.GLY.getCode(),
         };
     }
 
@@ -3756,7 +3758,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(JSON.toJSONString(apiResponse));
     }
 
+    //接待列表导出
 
-
+    public String receptionExport() throws Exception {
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        JSONObject json = new JSONObject();
+        String result = httpGet(url, JSON.toJSONString(json), IpPort);
+        return result;
+    }
 
 }

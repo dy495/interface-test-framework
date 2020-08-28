@@ -10,7 +10,8 @@ public enum EnumAppletCode {
 
     WM("w", "qa_need_not_delete2"),
     XMF("x", "qa_need_not_delete"),
-    LXQ("l", "qa_need_not_delete1");
+    LXQ("l", "qa_need_not_delete1"),
+    GLY("Max","AFhk0ye7mJLjpTdCJfnxAA==");
 
     EnumAppletCode(String weChatName, String code) {
         this.code = code;

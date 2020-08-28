@@ -344,6 +344,22 @@ public class TestCaseCommon {
         return response;
     }
 
+    public String httpGet(String path, String json, String IpPort) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.get(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
+
     public void initHttpConfig() {
         HttpClient client;
         try {
