@@ -9,21 +9,23 @@ public enum EnumAppointmentType {
     /**
      * 试驾
      */
-    TEST_DRIVE("TEST_DRIVE"),
+    TEST_DRIVE("TEST_DRIVE", "试驾"),
     /**
      * 保养
      */
-    MAINTAIN("MAINTAIN"),
+    MAINTAIN("MAINTAIN", "保养"),
     /**
      * 维修
      */
-    REPAIR("REPAIR");
+    REPAIR("REPAIR", "维修");
 
-
-    EnumAppointmentType(String type) {
+    EnumAppointmentType(String type, String name) {
         this.type = type;
+        this.name = name;
     }
 
     @Getter
     private final String type;
+    @Getter
+    private final String name;
 }

@@ -2150,7 +2150,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //pc车辆列表
-    public JSONObject carList() throws Exception {
+    public JSONObject carList() {
         String url = "/porsche/goods-manage/car-list";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -2158,7 +2158,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //pc车辆删除
-    public JSONObject carDelete(Integer id) throws Exception {
+    public JSONObject carDelete(Integer id) {
         String url = "/porsche/goods-manage/car-delete";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);
@@ -2787,6 +2787,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("page", page);
         object.put("size", size);
         return invokeApi(url, object);
+    }
+
+    /**
+     * 商品管理添加车辆接口
+     *
+     * @param appearancePic 外观照片
+     * @param bigPic        大图照片
+     * @param carDiscount   车辆优惠
+     * @param carIntroduce  车辆介绍
+     * @param carPic        车辆照片
+     * @param carTypeName   车型
+     * @param highestPrice  最高价
+     * @param interiorPic   内饰照片
+     * @param lowestPrice   最低价
+     * @param spacePic      空间照片
+     */
+    public JSONObject goodsManagerAddCar(String appearancePic, String bigPic, String carDiscount, String carIntroduce,
+                                         String carPic, String carTypeName, double highestPrice, String interiorPic,
+                                         double lowestPrice, String spacePic) throws Exception {
+        String url = "/porsche/goods-manage/add-car";
+        JSONObject object = new JSONObject();
+        object.put("car_type_name", carTypeName);
+        if (!(lowestPrice < 0)) {
+            object.put("lowest_price", lowestPrice);
+        }
+        if (!(highestPrice < 0)) {
+            object.put("highest_price", highestPrice);
+        }
+        if (!StringUtils.isEmpty(carDiscount)) {
+            object.put("car_discount", carDiscount);
+        }
+        object.put("car_introduce", carIntroduce);
+        object.put("car_pic", carPic);
+        object.put("big_pic", bigPic);
+        object.put("appearance_pic", appearancePic);
+        object.put("interior_pic", interiorPic);
+        object.put("space_pic", spacePic);
+        String request = JSON.toJSONString(object);
+        String result = httpPost(url, request, IpPort);
+        return JSON.parseObject(result);
     }
 
 
@@ -3922,7 +3962,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉C000008",
 //                "吉C000009",
 //                "吉C000000",
-               // "苏B123456"
+                // "苏B123456"
                 //"陕A123456" //0805xsgw 杨航
 //                "吉B000000",
 //                "吉B000001",
