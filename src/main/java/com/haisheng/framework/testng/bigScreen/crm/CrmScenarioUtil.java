@@ -3774,11 +3774,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 3.0数据分析 成交客户分析-市成交量
      */
-    public JSONObject city(String adcode, String cycle_type, String month, String car_type) throws Exception {
+    public JSONObject city(String cycle_type, String month, String car_type) throws Exception {
         String url = "/porsche/analysis2/deal/city";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
-        json.put("adcode", adcode);
         if (!month.equals("")) {
             json.put("month", month);
         }
