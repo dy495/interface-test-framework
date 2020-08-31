@@ -317,14 +317,14 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加车辆，数量+1 & 数据校验
+     * @description :添加车辆，车牌8位，数量+1 & 数据校验
      * @date :2020/7/10 18:03
      **/
     @Test(priority = 1)
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "辽GBBA26";
+            String plate_number = "辽GBBA260";
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -352,7 +352,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :添加重复车牌失败
+     * @description :添加重复车牌（车牌7位）失败
      * @date :2020/7/10 18:03
      **/
     @Test(priority = 1)
@@ -1461,8 +1461,52 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             checkArgument(totalA.equals(totalB), "pc把审核通过的报名活动加入黑名单,报名活动列表总数不变");
             crm.articleStatusChange(arcile_id);
             crm.articleDelete(arcile_id);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
 
+        }
+    }
+    /**
+     * @description :黑名单客户报名失败
+     * @date :2020/8/31 20:12
+     **/
+    @Test
+    public void blackJoin() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long[] aid = pf.createAArcile_id(dt.getHistoryDate(0), "9");
+            Long activity_id = aid[1];
+            Long arcile_id = aid[0];
+            String other_brand = "奥迪";
+            String customer_num = "2";
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
 
+            crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            crm.login(adminname, adminpassword);
+            JSONObject pcdata = crm.activityList(1, 10, activity_id);
+
+            //客户id
+            String customer_id = pcdata.getJSONArray("list").getJSONObject(0).getString("customer_id");
+            //crm.chackActivity(1,appointment_id);  //pc 审核通过
+            crm.blackadd(customer_id);                //加入黑名单
+           //报名其他活动失败
+            Long[] aid2 = pf.createAArcile_id(dt.getHistoryDate(0), "9");
+            Long activity_id2 = aid2[1];
+            Long arcile_id2 = aid2[0];
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            int code=crm.joinActivityCode(Long.toString(activity_id2), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num).getInteger("code");
+            crm.login(pp.zongjingli,pp.adminpassword);
+            //移除黑名单
+            crm.blackRemove(customer_id);
+            crm.articleStatusChange(arcile_id);
+            crm.articleDelete(arcile_id);
+
+            crm.articleStatusChange(arcile_id2);
+            crm.articleDelete(arcile_id2);
+            Preconditions.checkArgument(code==1001,"黑名单用户不能报名活动");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -1608,7 +1652,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void current(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

@@ -16,7 +16,7 @@ public class PackFunction {
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
         Long article_id;
         Long [] aid=new Long[2];
-            crm.login(pp.fuwuZongjian,pp.adminpassword);
+            crm.login(pp.zongjingli,pp.adminpassword);
             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
             int[] customer_level = {};
             String[] customer_property = {};
@@ -36,7 +36,7 @@ public class PackFunction {
             String reception_phone = "15037286013"; //接待人员电话
             String customer_max = "50";                    //人数上限
 
-            String activity_start = dt.getHistoryDate(0);
+            String activity_start = dt.getHistoryDate(1);
             String activity_end = dt.getHistoryDate(4);
             Integer role_id = 13;
             Boolean is_create_poster = true;//是否生成海报
