@@ -98,7 +98,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :试驾评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1 ok  TODO:
+     * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
      * @date :2020/8/2 10:29
      **/
     @Test(priority = 12)
@@ -132,7 +132,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             JSONObject ll3 = new JSONObject();
             ll3.put("score", score);
             ll3.put("type_comment", "试乘试驾体验评价");
-            ll3.put("type", "PROFESSIONAL");
+            ll3.put("type", "EXPERIENCE");
 
             JSONArray array1 = new JSONArray();
             array1.add(0, ll);
@@ -147,7 +147,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("保养评价");
+            saveData("试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1");
         }
     }
 
@@ -189,16 +189,18 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
             JSONObject ll3 = new JSONObject();
             ll3.put("score", score);
-//            ll3.put("type_comment", "试乘试驾体验评价");
-            ll3.put("type_comment", "销售接待专业评价");
-            ll3.put("type", "PROFESSIONAL");
+            ll3.put("type_comment", "试乘试驾体验评价");
+//            ll3.put("type_comment", "销售接待专业评价");
+//            ll3.put("type", "PROFESSIONAL");
+            ll3.put("type", "EXPERIENCE");
+
 
             JSONArray array1 = new JSONArray();
             array1.add(0, ll);
             array1.add(1, ll2);
             array1.add(2, ll3);
 
-            crm.appointmentEvaluate(id, "保养满意", array1);  //评价
+            crm.messageEvaluate(id, "保养满意", array1);  //评价
 
             Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
         } catch (AssertionError e) {
@@ -206,7 +208,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("保养评价");
+            saveData("接待小程序客户，发送评价消息，我的消息数量+1");
         }
     }
 
@@ -251,7 +253,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :交车  ok
+     * @description :创建新客交车,今日交车次数+1,总计+1  ok
      * @date :2020/8/10 16:45
      **/
     @Test(priority = 12)
@@ -289,7 +291,55 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("创建新客试驾,今日试驾次数+1,总计+1");
+            saveData("创建新客交车,今日交车次数+1,总计+1");
+        }
+    }
+
+    /**
+     * @description :交车不授权  ok
+     * @date :2020/8/10 16:45
+     **/
+    @Test(priority = 12)
+    public void testdeliverNotShow(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //applet登录，记录原始列表数
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            JSONArray list=crm.carOwner().getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            JSONObject object=pf.creatCust();
+            Long customer_id=object.getLong("customerId");
+            Long reception_id=object.getLong("reception_id");
+            String customer_name=object.getString("name");
+            String phone=object.getString("phone");
+            pf.creatDeliver(reception_id,customer_id,customer_name,dt.getHistoryDate(0),false);
+            //完成接待  `
+            crm.finishReception(customer_id, 4, customer_name, phone, pp.remark);
+
+            //小程序登录，查看交车
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            JSONArray listA=crm.carOwner().getJSONArray("list");
+            int totalA;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{
+                totalA=listA.size();
+            }
+            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            logger.info("交车前total{},交车后totalA{}",totalA,total);
+            Preconditions.checkArgument(totalA==total,"新建交车不授权，applet车主风采列表+1了");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("新建交车不授权，applet车主风采列表不+1");
         }
     }
 
@@ -629,7 +679,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
    /**
-    * @description :app活动报名,任务人数于创建时相同，增加报名，任务人数+1，  删除报名-1 0k
+    * @description :app活动报名,任务人数于创建时相同，增加报名，报名条数+1，  删除报名-1 0k
     * @date :2020/8/3 19:13
     **/
    @Test
@@ -662,9 +712,15 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             JSONObject responseA = crm.activityTaskPageX();
             JSONObject jsonA = responseA.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
            int totalA = jsonA.getJSONArray("customer_list").size();
+
+           int customerId = crm.activityTaskInfo( Integer.toString(activityTaskId)).getJSONArray("customer_list").getJSONObject(0).getInteger("customer_id");
+           crm.deleteCustomer(String.valueOf(activityTaskId), customerId);
+
+           int totalAfterDelet=crm.activityTaskPageX().getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("customer_list").size();
            //获取报名字段，校验
            Preconditions.checkArgument(task_customer_num == 5, "app报名活动，任务人数与活动创建时不一致");
            Preconditions.checkArgument(totalA-total == 1, "app报名活动，报名列表+1");
+           Preconditions.checkArgument(totalA-totalAfterDelet== 1, "app删除报名人，报名列表没-1");
 
            crm.articleStatusChange(id);
            crm.articleDelete(id);

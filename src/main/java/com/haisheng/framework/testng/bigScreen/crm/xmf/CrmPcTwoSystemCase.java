@@ -369,6 +369,34 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :pc内容运营，状态，删除文章排期中的活动 ok
+     * @date :2020/7/15 17:13
+     **/
+    @Test(priority = 1)
+    public void ActivityStatusChange(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(1),"8");
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            if(activity_id==null||id==null){
+                throw new Exception("创建文章获取id失败");
+            }
+            String total=crm.articlePage(1,10,positionList1).getString("total");
+            //删除排期活动成功 列表-1
+            Long code=crm.articleDelete(id).getLong("code");
+            //删除活动列表-1
+            String totalA=crm.articlePage(1,10,positionList1).getString("total");
+            Preconditions.checkArgument(code==1000,"删除排期活动不成功");
+            Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc删除排期中活动，活动列表-1");
+        }
+    }
+
+    /**
      * @description :banner 新建文章，管理文章列表+1,删除文章，列表-1  ok
      * @date :2020/7/15 17:34
      **/
@@ -478,7 +506,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)
+     * @description :新建文章，小程序显示文章内容校验(品牌文化、购买指南、、、、)
      * @date :2020/7/14 20:16
      **/
     @Test(dataProvider = "POSITIONS",dataProviderClass = CrmScenarioUtil.class)
@@ -854,6 +882,59 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("【人员管理】增删销售排班，列表+-1");
+        }
+    }
+
+    /**
+     * @description :增加顾问，下拉菜单+1
+     * @date :2020/8/31 17:39
+     **/
+    @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+    public void addGuwen(Integer role_ids){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            int num=listN.size();
+            //主账号登录
+            crm.login(baoshijie,adminpassword);
+            //创建销售/顾问
+            String userName = ""+ System.currentTimeMillis();
+            int roleId=role_ids; //销售顾问
+            String passwd="123456";
+
+            StringBuilder phone = new StringBuilder("1");
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone.append(a);
+            }
+            crm.addUser(userName,userName, phone.toString(),passwd,roleId);
+            JSONObject data=crm.userPage(1,100);
+            int total=data.getInteger("total");
+            JSONArray list;
+            if(total==200){
+                logger.info("用户数量已达上限");
+                return;
+            }
+            else if(total<100){
+                list = data.getJSONArray("list");
+            }else{
+                list=crm.userPage(2,100).getJSONArray("list");
+            }
+            crm.login(pp.zongjingli,pp.adminpassword);
+            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            JSONArray listA=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            int numA=listA.size();
+
+            Preconditions.checkArgument(numA-num==1,"增加顾问，下拉菜单没+1");
+//            //删除大池子
+            crm.login(baoshijie,adminpassword);
+            crm.userDel(userid);
+
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.zongjingli,pp.adminpassword);
+            saveData("人员管理，新增销售，pc人员管理 下拉列表数+1");
         }
     }
 
@@ -1736,7 +1817,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(adminname, adminpassword);
-            JSONArray list = crm.articlePage(2, 10, "CAR_ACTIVITY").getJSONArray("list");
+            JSONArray list = crm.articlePage(1, 10, "CAR_ACTIVITY").getJSONArray("list");
             for (int i = 0; i < 10; i++) {
                 Long id = list.getJSONObject(i).getLong("id");
                 crm.articleStatusChange(id);
