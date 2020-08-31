@@ -1,12 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm.gly;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
-import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -142,6 +141,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
      */
 
     //客户管理
+    @Ignore
     @Test //ok
     public void custChkallEQList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -163,6 +163,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     }
 
+    @Ignore
     @Test//ok
     public void custChkTotalGTNew() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -186,6 +187,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test//ok
     public void custChkAllGTTodatTotal() {
         logger.logCaseStart(caseResult.getCaseName());

@@ -3063,7 +3063,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * 销售排班接口
+     * 接待列表接口
      *
      * @param page      页码
      * @param size      页大小

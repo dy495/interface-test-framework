@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.Data;
+package com.haisheng.framework.testng.bigScreen.crm.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -24,6 +25,10 @@ import java.math.BigDecimal;
 public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
+    FileUtil fileUtil = new FileUtil();
+    public  String data = "data" + dt.getHistoryDate(0) +".txt";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
+
     int service = 0; //累计接待-  日
     int test_drive = 0; //累计试驾
     int deal = 0; //累计成交
@@ -618,6 +623,60 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
                 {Integer.toString(car_order),Integer.toString(car_funnel_deal),"订单","交车"}
 
         };
+    }
+
+
+
+    /**
+     * --------------------店面数据分析页 页面间一致性-------------------
+     */
+
+    @Ignore
+    @Test(priority = 1)
+    public void serviceChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待+今日老客接待").split("/")[1]);
+            Preconditions.checkArgument(service==yesterday,"累计接待=" + service + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-4个tab：累计接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待 之和");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void testDriverChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日试驾").split("/")[1]);
+            Preconditions.checkArgument(test_drive==yesterday,"累计试驾=" + test_drive + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void dealChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日交车").split("/")[1]);
+            Preconditions.checkArgument(test_drive==yesterday,"累计成交=" + test_drive + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
+        }
     }
 
 
