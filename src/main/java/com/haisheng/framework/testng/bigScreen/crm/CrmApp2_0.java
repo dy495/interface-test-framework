@@ -57,10 +57,10 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        CommonUtil.login(EnumAccount.XSGWTEMP);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        CommonUtil.login(EnumAccount.XSGWTEMP);
     }
 
     @Test(description = "全部预约人数>=今日预约人数")
@@ -197,9 +197,10 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             String data = DateTimeUtil.getFormat(new Date());
-            for (int i = 0; i < 2; i++) {
-                crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
-            }
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            //连续访问接口会失败，延迟3s
+            sleep(3);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
             CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject object1 = crm.appointmentDriverNum();
             //全部预约
@@ -224,24 +225,27 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc端试驾列表数
-            crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
-            JSONObject response = crm.testDriverPage("", "", 1, 10);
-            int pcTotal = 0;
+            CommonUtil.login(EnumAccount.ZJL);
+            JSONObject response = crm.testDriverPage("", "", 1, 2 << 10);
             JSONArray list = response.getJSONArray("list");
+            int pcTotal = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("sale_name").equals("销售顾问temp")) {
+                if (CommonUtil.getStrField(response, i, "sale_name").equals("销售顾问temp")) {
                     pcTotal++;
                 }
             }
             //app端预约数量
+            CommonUtil.login(EnumAccount.XSGWTEMP);
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
             int appTotal = CommonUtil.getIntField(response1, "total");
-            Preconditions.checkArgument(pcTotal == appTotal, "PC预约试驾，与当前登陆app接待销售不一致");
-            Preconditions.checkArgument(pcTotal == response1.getJSONArray("list").size(), "PC预约试驾与app预约列表数不一致");
+            int listSize = response1.getJSONArray("list").size();
+            CommonUtil.valueView(pcTotal, appTotal, listSize);
+            Preconditions.checkArgument(pcTotal == appTotal, "PC某个销售顾问预约试驾数！=该销售在【app-我的预约】记录总数量");
+            Preconditions.checkArgument(pcTotal == listSize, "PC某个销售顾问预约试驾数！=该销售在【app-我的预约】记录列表总数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("PC预约试驾，与当前登陆app接待销售一致的数量=列表数");
+            saveData("PC预约试驾按照销售顾问分类，与每个销售顾问app-我的预约列表数一致");
         }
     }
 
@@ -268,7 +272,6 @@ public class CrmApp2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
             saveData("客户小程序取消预约试驾,客户状态=已取消的数量+1");
         }
     }

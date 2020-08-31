@@ -41,17 +41,16 @@ public class CommonUtil {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
     }
 
-    @SafeVarargs
-    public static <T> List<String> getMoreParam(JSONObject object, T... param) {
+    public static List<String> getMoreParam(JSONObject object, String... param) {
         List<String> list = new ArrayList<>();
         Arrays.stream(param).forEach(e -> {
-            if (!(e instanceof String)) {
-                throw new DataExcept("param类型应为String类型");
+            if (StringUtils.isEmpty(e)) {
+                throw new DataExcept("param类型应为String类型且不能为空");
             } else {
                 if (!object.containsKey(e)) {
                     throw new DataExcept("object中不包含此key");
                 }
-                list.add(object.getString((String) e));
+                list.add(object.getString(e));
             }
         });
         return list;
@@ -175,7 +174,7 @@ public class CommonUtil {
      * @param carNum 车牌号
      * @param status 车辆进店状态 0入店/1出店
      */
-    public static void uploadShopCarPlate(String carNum, Integer status) {
+    public static void uploadShopCarPlate(String carNum, Integer status) throws Exception {
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String deviceId;
@@ -200,17 +199,13 @@ public class CommonUtil {
      * @param router   地址
      * @param deviceId deviceId
      */
-    private static void upload(String picPath, String carNum, String router, String deviceId) {
+    private static void upload(String picPath, String carNum, String router, String deviceId) throws Exception {
         ImageUtil imageUtil = new ImageUtil();
         String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         JSONObject object = new JSONObject();
         object.put("plate_num", carNum);
         object.put("plate_pic", "@0");
         object.put("time", System.currentTimeMillis());
-        try {
-            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
     }
 }
