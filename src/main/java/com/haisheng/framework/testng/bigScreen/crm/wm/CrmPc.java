@@ -19,7 +19,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
+public class CrmPc extends TestCaseCommon implements TestCaseStd {
+
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     @BeforeClass
@@ -40,7 +41,6 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        CommonUtil.login(EnumAccount.ZJL);
     }
 
     @AfterClass
@@ -52,11 +52,13 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        CommonUtil.login(EnumAccount.ZJL);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        CommonUtil.login(EnumAccount.ZJL);
     }
+
+//    ---------------------------------------------------2.0------------------------------------------------------------
 
     @Test(description = "pc端我的客户总数=列表的总数")
     public void salesCustomerManagement_1() {
@@ -425,7 +427,75 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(description = "战败筛选")
+    public void salesCustomerManagement_18() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            crm.failureCustomerList(date, date1, 1, 10);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc端战败客户按照日期筛选-开始时间<=结束时间");
+        }
+    }
+
+    @Test(description = "战败筛选")
+    public void salesCustomerManagement_19() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            crm.failureCustomerList(date1, date, 1, 10);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc端战败客户按照日期筛选-开始时间>结束时间,接口不限制，前端限制时间");
+        }
+    }
+
+    @Test(description = "新建一个G级客户")
+    public void customerRelations_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String phone = "13333333333";
+        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
+        try {
+            //公海客户数量
+            CommonUtil.login(EnumAccount.ZJL);
+            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 8, remark);
+            if (response.getString("message").equals("手机号码重复")) {
+                //删除客户
+                deleteCustomer(phone);
+                //再创建线索
+                crm.createLine("【自动化】王先生", 6, phone, 8, remark);
+            }
+            CommonUtil.login(EnumAccount.ZJL);
+            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            CommonUtil.valueView(publicTotal, publicTotal1);
+            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            deleteCustomer(phone);
+            saveData("新建一个G级客户,公海列表+1");
+        }
+    }
+
+    /**
+     * 删除客户
+     *
+     * @param phone 电话号
+     */
+    private void deleteCustomer(String phone) {
+        CommonUtil.login(EnumAccount.ZJL);
+        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
+        int customerId = CommonUtil.getIntField(response, 0, "customer_id");
+        crm.customerDelete(customerId);
+    }
+
+    @Test()
     public void marketingBoards_1() {
         logger.logCaseStart(caseResult.getCaseName());
         String path = "src/main/java/com/haisheng/framework/model/experiment/multimedia/goodsmanager/";
@@ -473,4 +543,5 @@ public class CrmPc2_0 extends TestCaseCommon implements TestCaseStd {
             saveData("商品管理中，各必须参数不填写创建车型&&全部填写创建车型");
         }
     }
+
 }

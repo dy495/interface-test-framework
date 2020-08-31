@@ -14,10 +14,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmApp2_1"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmApp2_0"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmPc2_0"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmPc3_0"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmApp"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmPc"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmApplet"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
 
         </classes>
