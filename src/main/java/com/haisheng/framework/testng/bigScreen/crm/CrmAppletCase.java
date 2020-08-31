@@ -1064,8 +1064,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             crm.login(adminname, adminpassword);
             String service_status_nameD = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             checkArgument(service_status_name.equals("预约中"), "预约记录接待状态错误");
-
             checkArgument(service_status_nameD.equals("已取消"), "预约记录接待状态错误");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
