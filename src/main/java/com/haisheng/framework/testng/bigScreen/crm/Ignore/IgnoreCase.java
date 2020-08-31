@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -2574,6 +2575,30 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("【pc我的回访】条数=回访任务");
+        }
+    }
+    @Test(description = "小程序“我的”预约试驾数=列表数", enabled = false)
+    public void appointmentTestDriver1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.loginApplet(EnumAppletCode.WM);
+            JSONObject response = crm.appointmentList(0L, "TEST_DRIVE", 100);
+            int total = CommonUtil.getIntField(response, "total");
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 20);
+            JSONArray list = response1.getJSONArray("list");
+            int num = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("customer_name").equals("【自动化】王")) {
+                    num++;
+                }
+            }
+            CommonUtil.valueView(total, num);
+            Preconditions.checkArgument(total == num, "小程序我的试驾列表数量！=app我的预约该顾客预约的次数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序“我的”预约试驾数=列表数");
         }
     }
 
