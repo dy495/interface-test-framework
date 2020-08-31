@@ -1064,8 +1064,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             crm.login(adminname, adminpassword);
             String service_status_nameD = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             checkArgument(service_status_name.equals("预约中"), "预约记录接待状态错误");
-
             checkArgument(service_status_nameD.equals("已取消"), "预约记录接待状态错误");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -1558,7 +1558,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void activityMessage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String type=pp.positions;    //ACTIVITY
+            String type="ACTIVITY";    //ACTIVITY
             //消息数量
             Long total=crm.appointmentList(0L,type,20).getLong("total");
            //创建活动
@@ -1572,17 +1572,13 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            Long total2=crm.appointmentList(0L,type,20).getLong("total");
 
             crm.login(adminname, adminpassword);
             crm.articleStatusChange(article_id);
             crm.articleDelete(article_id);
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            Long total2=crm.appointmentList(0L,type,20).getLong("total");
-//            crm.cancle(appointment_id);
             checkArgument((total2-total)==1,"预约活动，我的活动消息没+1");
-
-
-
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
         } finally {

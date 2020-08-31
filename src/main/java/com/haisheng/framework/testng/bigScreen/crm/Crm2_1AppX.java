@@ -573,8 +573,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String hobby=data.getString("hobby");
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
 //            Preconditions.checkArgument(car_model.equals("911"),"最新交车信息校验失败");
-            Preconditions.checkArgument(work.equals("金融 "),"最新交车信息校验失败");
-            Preconditions.checkArgument(hobby.equals("宠物 "),"最新交车信息校验失败");
+            Preconditions.checkArgument(work.equals("金融"),"最新交车信息校验失败");
+            Preconditions.checkArgument(hobby.equals("宠物"),"最新交车信息校验失败");
 
 
         }catch (AssertionError | Exception e){

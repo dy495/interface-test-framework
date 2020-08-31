@@ -315,7 +315,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void activityState(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(1),"8");
+            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
 //            Long activity_id=aid[1];
             Long id=aid[0];   //文章id
             String total=crm.articlePage(1,10,positionList1).getString("total");
@@ -1538,7 +1538,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              int[] customer_level = {};
              String[] customer_property = {};
              String sendTime;
-             sendTime = dt.currentTimeB("yyyy-MM-dd HH:mm",60);
+             sendTime = dt.currentTimeB("yyyy-MM-dd HH:mm",61);
 
              int[] car_types = {};
              String messageTitile = "暑期特惠" + dt.getHistoryDate(0);
