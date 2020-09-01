@@ -85,39 +85,27 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-//    /**
-//     *
-//     * ====================新建定检任务======================
-//     * */
-//    @Test
-//    public void createdScheduleCheck() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            String name="qingqingtest";
-//            String cycle="WEEK";
-//            JSONArray  jal=new JSONArray();
-//              jal.add(0,"MON");
-//              jal.add(0,"TUES");
-//            String send_time="09:00";
-//            String valid_start="2020-06-16";
-//            String valid_end="2020-07-16";
-//            JSONArray  shoplist=new JSONArray();
-//            shoplist.add(0,28758);
-//            shoplist.add(0,28760);
-//
-//            xd.scheduleCheckAdd(name,cycle,jal,send_time,valid_start,valid_end,xjy4,shoplist);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("PC端巡检配置新建定检任务");
-//        }
-//
-//    }
+    /**
+     *
+     * ====================新建定检任务======================
+     * */
+    @Test
+    public void createdScheduleCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("PC端巡检配置新建定检任务");
+        }
+
+    }
     /**
      *
      * ====================巡店中心列表======================

@@ -526,7 +526,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopMemberCountV3(String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/member/count";
+        String url = "/patrol/history/shop/member/new/count";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
@@ -544,7 +544,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopMemberV3(long shop_id, String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/member";
+        String url = "/patrol/history/shop/new/member";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
