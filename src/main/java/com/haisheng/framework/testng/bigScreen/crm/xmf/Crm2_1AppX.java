@@ -295,53 +295,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :交车不授权  ok
-     * @date :2020/8/10 16:45
-     **/
-    @Test(priority = 12)
-    public void testdeliverNotShow(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            //applet登录，记录原始列表数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONArray list=crm.carOwner().getJSONArray("list");
-            int total;
-            if(list==null||list.size()==0){
-                total=0;
-            }else{
-                total=list.size();
-            }
-            JSONObject object=pf.creatCust();
-            Long customer_id=object.getLong("customerId");
-            Long reception_id=object.getLong("reception_id");
-            String customer_name=object.getString("name");
-            String phone=object.getString("phone");
-            pf.creatDeliver(reception_id,customer_id,customer_name,dt.getHistoryDate(0),false);
-            //完成接待  `
-            crm.finishReception(customer_id, 4, customer_name, phone, pp.remark);
 
-            //小程序登录，查看交车
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONArray listA=crm.carOwner().getJSONArray("list");
-            int totalA;
-            if(listA==null||listA.size()==0){
-                totalA=0;
-            }else{
-                totalA=listA.size();
-            }
-            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
-            logger.info("交车前total{},交车后totalA{}",totalA,total);
-            Preconditions.checkArgument(totalA==total,"新建交车不授权，applet车主风采列表+1了");
-
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("新建交车不授权，applet车主风采列表不+1");
-        }
-    }
 
 
     /**
@@ -612,20 +566,21 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Long reception_id=object.getLong("reception_id");
             String customer_name=object.getString("name");
             String phone=object.getString("phone");
-            pf.creatDeliver(reception_id,customer_id,customer_name,dt.getHistoryDate(0),true);
+            pf.creatDeliver(reception_id,customer_id,"药不然",dt.getHistoryDate(0),true);
             //完成接待
             crm.finishReception(customer_id, 4, customer_name, phone, pp.remark);   //TODO:完成接待参数
             //小程序登录，查看最新交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data=crm.carOwnernew();
-//            String customer_nameN=data.getString("customer_name");
-//            String car_model=data.getString("car_model");
+            String customer_nameN=data.getString("customer_name");
+            String car_model=data.getString("car_model");
             String work=data.getString("work");
             String hobby=data.getString("hobby");
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
-//            Preconditions.checkArgument(car_model.equals("911"),"最新交车信息校验失败");
-            Preconditions.checkArgument(work.equals("金融"),"最新交车信息校验失败");
-            Preconditions.checkArgument(hobby.equals("宠物"),"最新交车信息校验失败");
+            Preconditions.checkArgument(car_model.equals("Taycan"),"最新交车信息校验失败");
+            Preconditions.checkArgument(work.equals("金融"),"最新交车信息校验工作显示错误");
+            Preconditions.checkArgument(hobby.equals("宠物"),"最新交车信息校验爱好显示错误");
+            Preconditions.checkArgument(customer_nameN.equals("药不然"),"最新交车信息校验车主名显示错误");
 
 
         }catch (AssertionError | Exception e){
@@ -670,11 +625,59 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 totalA=listA.size();
             }
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
-            Preconditions.checkArgument(totalA-total==1,"建交车授权，applet车主风采列表没+1");
+            Preconditions.checkArgument(totalA-total==1,"建交车授权，applet车主风采列表！=交车前"+totalA+"+交车后"+total);
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
         } finally {
             saveData("建交车授权，applet车主风采列表+1");
+        }
+    }
+
+    /**
+     * @description :交车不授权  ok
+     * @date :2020/8/10 16:45
+     **/
+    @Test()
+    public void testdeliverNotShow(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //applet登录，记录原始列表数
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            JSONArray list=crm.carOwner().getJSONArray("list");
+            int total;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            JSONObject object=pf.creatCust();
+            Long customer_id=object.getLong("customerId");
+            Long reception_id=object.getLong("reception_id");
+            String customer_name=object.getString("name");
+            String phone=object.getString("phone");
+            pf.creatDeliver(reception_id,customer_id,customer_name,dt.getHistoryDate(0),false);
+            //完成接待  `
+            crm.finishReception(customer_id, 4, customer_name, phone, pp.remark);
+
+            //小程序登录，查看交车
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            JSONArray listA=crm.carOwner().getJSONArray("list");
+            int totalA;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{
+                totalA=listA.size();
+            }
+            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            logger.info("交车前total{},交车后totalA{}",totalA,total);
+            Preconditions.checkArgument(totalA==total,"新建交车不授权，applet车主风采列表+1了");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("新建交车不授权，applet车主风采列表不+1");
         }
     }
 
