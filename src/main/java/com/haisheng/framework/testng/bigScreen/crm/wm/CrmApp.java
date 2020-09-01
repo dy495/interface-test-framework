@@ -21,6 +21,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * CRM-App 自动化用例
+ *
+ * @author wangmin
+ */
 public class CrmApp extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
@@ -63,7 +68,7 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
 //    ---------------------------------------------------2.0------------------------------------------------------------
 
     /**
-     * 工作管理-我的预约
+     * @description: 工作管理-我的预约
      */
     @Test(description = "全部预约人数>=今日预约人数")
     public void myAppointment_data_1() {
@@ -443,27 +448,10 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * 获取状态数量
-     */
-    private Integer getCancelNum(String serviceStatusName) {
-        CommonUtil.login(EnumAccount.XSGWTEMP);
-        JSONObject response = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-        JSONArray list = response.getJSONArray("list");
-        int cancelNum = 0;
-        //获取已取消数量
-        for (int i = 0; i < list.size(); i++) {
-            if (list.getJSONObject(i).getString("service_status_name").equals(serviceStatusName)) {
-                cancelNum++;
-            }
-        }
-        return cancelNum;
-    }
-
 //    ---------------------------------------------------2.1------------------------------------------------------------
 
     /**
-     * 客户管理-我的接待
+     * @description: 客户管理-我的接待
      */
     @Test(description = "接待状态为接待中数量<=1")
     public void myReception_data_1() {
@@ -679,7 +667,7 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 客户管理-我的交车
+     * @description: 客户管理-我的交车
      */
     @Test(description = "今日交车数=今日交车列表手机号去重后列数和")
     public void myDeliverCar_data_1() {
@@ -737,7 +725,7 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 客户管理-我的客户
+     * @description: 客户管理-我的客户
      */
     @Test(description = "全部客户=列表数")
     public void myCustomer_data_1() {
@@ -783,40 +771,33 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "前台分配新客，创建时手机号不存在,全部客户+1",enabled = false)
+    @Test(description = "前台分配新客，创建时手机号不存在,全部客户+1")
     public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        String repetitionPhone = "13333333333";
+        String phone = "13333333333";
         String remark = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         try {
-            //客户总数
             CommonUtil.login(EnumAccount.ZJL);
+            JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
+            if (!response.getJSONArray("list").isEmpty()) {
+                deleteCustomer(phone);
+            }
+            //客户总数
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            int newTotal = 0;
             //分配客户-获取客户id
             long customerId = getCustomerId();
-            //完成接待
-            JSONObject object = crm.customerFinishReception(EnumAccount.ZJL.getUid(), customerId, 3, "【自动化】刘", repetitionPhone, remark);
-            if (object.getString("message").equals("手机号码重复")) {
-                deleteCustomer(repetitionPhone);
-                newTotal = crm.customerPage(10, 1, "", "", "").getInteger("total");
-                crm.customerFinishReception(EnumAccount.ZJL.getUid(), customerId, 3, "【自动化】刘", repetitionPhone, remark);
-            }
             CommonUtil.login(EnumAccount.ZJL);
+            //完成接待
+            crm.customerFinishReception(EnumAccount.ZJL.getUid(), customerId, 3, "【自动化】刘", phone, remark);
             int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            CommonUtil.valueView(newTotal, total1);
-            Preconditions.checkArgument(total1 == newTotal + 1, "前台分配新客，创建时手机号不存在,全部客户没有+1");
+            CommonUtil.valueView(total, total1);
+            Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在,全部客户没有+1");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-
+            deleteCustomer(phone);
+            saveData("前台分配新客，创建时手机号不存在,全部客户+1");
         }
-
-    }
-
-    @Test(description = "前台分配新客，创建时手机号存在,全部客户+0", enabled = false)
-    public void myCustomer_data_5() {
-
     }
 
     @Test(description = "已订车=列表中是否订车为是的数量")
@@ -898,53 +879,47 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数", enabled = false)
+    @Test(description = "删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数")
     public void myCustomer_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String salePhone = "15321527989";
         String phone = "13333333333";
         String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        logger.logCaseStart(caseResult.getCaseName());
         //查询公海数量
-        crm.login(EnumAccount.XSZJ.getUsername(), EnumAccount.XSZJ.getPassword());
-        int total = CommonUtil.getIntField(crm.publicCustomerList("", "", 2 << 10, 1), "total");
         try {
+            //先删除15321527989顾问的账号
+            deleteSaleUser(salePhone);
+            //公海客户数量
+            int total = CommonUtil.getIntField(crm.publicCustomerList("", "", 10, 1), "total");
             //添加销售
-            CommonUtil.login(EnumAccount.BAOSHIJIE);
-            crm.addUser("zdhcs", EnumAccount.ZDHCS.getUsername(), "18989898989", EnumAccount.ZDHCS.getPassword(), 13);
-            //登录
+            crm.addUser(EnumAccount.ZDHCS.getUsername(), EnumAccount.ZDHCS.getUsername(), salePhone, EnumAccount.ZDHCS.getPassword(), 13);
             CommonUtil.login(EnumAccount.ZDHCS);
             //创建线索
-            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 2, remark);
+            JSONObject response = crm.createLine("【自动化】王", 6, phone, 2, remark);
             if (response.getString("message").equals("联系方式系统中已存在~")) {
                 //删除客户
                 deleteCustomer(phone);
                 //再创建线索
                 crm.createLine("【自动化】王先生", 6, phone, 2, remark);
             }
-            //获取新增顾问id
-            String userId = null;
-            JSONArray userList = crm.userPage(1, 100).getJSONArray("list");
-            for (int i = 0; i < userList.size(); i++) {
-                if (userList.getJSONObject(i).getString("user_phone").equals("18989898989")) {
-                    userId = userList.getJSONObject(i).getString("user_id");
-                }
-            }
-            //删除销售
-            CommonUtil.login(EnumAccount.BAOSHIJIE);
-            crm.userDel(userId);
+            CommonUtil.login(EnumAccount.ZJL);
+            //删除此新增的顾问
+            deleteSaleUser(salePhone);
             //公海数量+1
-            CommonUtil.login(EnumAccount.XSZJ);
-            int total1 = CommonUtil.getIntField(crm.publicCustomerList("", "", 2 << 10, 1), "total");
+            int total1 = CommonUtil.getIntField(crm.publicCustomerList("", "", 10, 1), "total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "删除所属销售，公海数量未增加");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
+            //删除新增的客户
+            deleteCustomer(phone);
             saveData("删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数");
         }
     }
 
     /**
-     * 客户管理-我的试驾
+     * @description: 客户管理-我的试驾
      */
     @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
     public void myTestDriver_data_1() {
@@ -983,8 +958,11 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description: 前台销售排班
+     */
     @Test(description = "销售排班")
-    public void saleOrder() {
+    public void saleOrder_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取销售排班
@@ -998,7 +976,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             saveData("销售排班");
         }
     }
-
 
     @Test(description = "回访详情")
     public void returnVisitTaskInfo() {
@@ -1069,31 +1046,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    @Test(description = "前台分配新客，创建时手机号不存在，全部客户+1", enabled = false)
-    public void create() {
-        String phone = "13333333332";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        Long customerId = 13997L;
-        //获取客户列表
-        int total = CommonUtil.getIntField(getCustomerList(20), "total");
-        try {
-//            Long customerId = getCustomerId();
-            //完成接待
-            crm.finishReception(customerId, 7, "【自动化】王敏先生", phone, remark);
-            //获取客户列表
-            int total1 = CommonUtil.getIntField(getCustomerList(10), "total");
-            CommonUtil.valueView(total, total1);
-            Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在，全部客户未+1");
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            //删除客户
-            deleteCustomer(phone);
-            saveData("前台分配新客，创建时手机号不存在，全部客户+1");
-        }
-    }
-
     @Test(enabled = false)
     public void test() {
         Long customerId = 13997L;
@@ -1107,20 +1059,40 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+//    ---------------------------------------------------私有方法区-------------------------------------------------------
+
     /**
-     * 获取顾客id
-     * 前台分配销售，顾问接待后
+     * 获取状态数量
+     *
+     * @param serviceStatusName 服务状态名称：已取消、预约中、已接待
+     */
+    private Integer getCancelNum(String serviceStatusName) {
+        CommonUtil.login(EnumAccount.XSGWTEMP);
+        JSONObject response = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
+        JSONArray list = response.getJSONArray("list");
+        int cancelNum = 0;
+        //获取已取消数量
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("service_status_name").equals(serviceStatusName)) {
+                cancelNum++;
+            }
+        }
+        return cancelNum;
+    }
+
+    /**
+     * 前台分配销售，顾问接待后获取顾客id
      *
      * @return customerId
      */
-    private long getCustomerId() throws Exception {
+    private long getCustomerId() {
         CommonUtil.login(EnumAccount.ZJL);
         long customerId;
         //获取当前空闲第一位销售id
         String saleId = CommonUtil.getStrField(crm.freeSaleList(), 0, "sale_id");
         //获取销售账号名
         String userLoginName = "";
-        JSONArray userList = crm.userPage(1, 100).getJSONArray("list");
+        JSONArray userList = crm.userUserPage(1, 100).getJSONArray("list");
         for (int i = 0; i < userList.size(); i++) {
             JSONObject obj = userList.getJSONObject(i);
             if (obj.getString("user_id").equals(saleId)) {
@@ -1138,13 +1110,17 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     /**
      * 删除客户
      *
-     * @param phone 电话号
+     * @param phone 客户电话号
      */
     private void deleteCustomer(String phone) {
         CommonUtil.login(EnumAccount.ZJL);
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-        int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-        crm.customerDelete(customerId);
+        if (!response.getJSONArray("list").isEmpty()) {
+            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
+            crm.customerDelete(customerId);
+        } else {
+            System.err.println(response.getString("message"));
+        }
     }
 
     /**
@@ -1153,7 +1129,24 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
      * @return 客户列表
      */
     private JSONObject getCustomerList(Integer size) {
-        CommonUtil.login(EnumAccount.XSZJ);
+        CommonUtil.login(EnumAccount.ZJL);
         return crm.customerList("", "", "", "", "", 1, size);
+    }
+
+    /**
+     * 删除
+     *
+     * @param phone 角色电话
+     */
+    private void deleteSaleUser(String phone) throws Exception {
+        CommonUtil.login(EnumAccount.ZJL);
+        JSONArray userList = crm.userUserPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userList.size(); i++) {
+            if (userList.getJSONObject(i).getString("user_phone").equals(phone)) {
+                String userId = userList.getJSONObject(i).getString("user_id");
+                //删除销售
+                crm.userDel(userId);
+            }
+        }
     }
 }

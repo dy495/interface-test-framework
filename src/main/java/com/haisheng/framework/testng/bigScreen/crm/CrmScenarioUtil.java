@@ -619,15 +619,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //查询正在接待顾客id
-    public JSONObject userInfService() throws Exception {
+    public JSONObject userInfService() {
         String url = "/porsche/app/customer/userInfService";
-
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        JSONObject objte = JSON.parseObject(res);
-        return JSON.parseObject(res).getJSONObject("data");
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
     }
 
 
@@ -1496,17 +1491,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject userUserPage(int page, int size) {
+        String url = "/porsche/user/userPage";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     //删除账号
     public JSONObject userDel(String userId) throws Exception {
         String url = "/porsche/user/delete";
-
-        String json =
-                "{\n" +
-                        "    \"user_id\":\"" + userId + "\"\n" +
-                        "}";
-
-        String res = httpPost(url, json, IpPort);
-
+        JSONObject object = new JSONObject();
+        object.put("user_id", userId);
+        String res = httpPost(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -1686,6 +1684,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //评价
     public JSONObject messageEvaluate(Long appointment_id, String suggestion, JSONArray evaluate_list) throws Exception {
         String url = "/WeChat-applet/porsche/a/message/evaluate/" + appointment_id;
@@ -2358,7 +2357,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject freeSaleList() throws Exception {
+    public JSONObject freeSaleList() {
         String url = "/porsche/app/sale-reception/freeSaleList";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
