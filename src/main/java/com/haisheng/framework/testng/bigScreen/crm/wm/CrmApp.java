@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -725,7 +726,47 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description: 客户管理-我的客户
+     * @description: 客户管理-我的试驾
+     */
+    @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
+    public void myTestDriver_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.driverTotal();
+            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
+            JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
+            Set<String> set = new HashSet<>();
+            for (int i = 0; i < list.size(); i++) {
+                String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
+                set.add(phoneNumber);
+            }
+            CommonUtil.valueView(todayTestDriveTotal, set.size());
+            Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日试驾数=今日试驾列表手机号去重后列表数和");
+        }
+    }
+
+    @Test(description = "全部试驾>=今日试驾")
+    public void myTestDriver_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.driverTotal();
+            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
+            int testDriveTotal = CommonUtil.getIntField(response, "test_drive_total");
+            CommonUtil.valueView(testDriveTotal, testDriveTotal);
+            Preconditions.checkArgument(testDriveTotal >= todayTestDriveTotal, "全部试驾<今日试驾");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部试驾>=今日试驾");
+        }
+    }
+
+    /**
+     * @description: 工作管理-我的客户
      */
     @Test(description = "全部客户=列表数")
     public void myCustomer_data_1() {
@@ -919,42 +960,97 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description: 客户管理-我的试驾
+     * 工作管理-我的回访
      */
-    @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
-    public void myTestDriver_data_1() {
+    @Test(description = "开始时间<=结束时间,成功")
+    public void myReturnVisit_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            JSONObject response = crm.driverTotal();
-            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
-            JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
-            Set<String> set = new HashSet<>();
-            for (int i = 0; i < list.size(); i++) {
-                String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
-                set.add(phoneNumber);
-            }
-            CommonUtil.valueView(todayTestDriveTotal, set.size());
-            Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");
+            int listSize = crm.returnVisitTaskPage(1, 10, date, date1).getJSONArray("list").size();
+            Preconditions.checkArgument(listSize != 0, "回访查询失败");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("今日试驾数=今日试驾列表手机号去重后列表数和");
+            saveData("我的回访按照时间筛选，开始时间<=结束时间");
         }
     }
 
-    @Test(description = "全部试驾>=今日试驾")
-    public void myTestDriver_data_2() {
+    @Test(description = "仅输入开始时间")
+    public void myReturnVisit_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
         try {
-            JSONObject response = crm.driverTotal();
-            int todayTestDriveTotal = CommonUtil.getIntField(response, "today_test_drive_total");
-            int testDriveTotal = CommonUtil.getIntField(response, "test_drive_total");
-            CommonUtil.valueView(testDriveTotal, testDriveTotal);
-            Preconditions.checkArgument(testDriveTotal >= todayTestDriveTotal, "全部试驾<今日试驾");
-        } catch (AssertionError | Exception e) {
+            int listSize = crm.returnVisitTaskPage(1, 10, date, "").getJSONArray("list").size();
+            Preconditions.checkArgument(listSize != 0, "回访查询失败");
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("全部试驾>=今日试驾");
+            saveData("我的回访按照时间筛选，进输入开始时间");
+        }
+    }
+
+    @Test(description = "仅输入结束时间")
+    public void myReturnVisit_function_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        try {
+            int listSize = crm.returnVisitTaskPage(1, 10, "", date).getJSONArray("list").size();
+            Preconditions.checkArgument(listSize != 0, "回访查询失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，进输入开始时间");
+        }
+    }
+
+    @Test(description = "结束时间>开始时间")
+    public void myReturnVisit_function_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            boolean flag = false;
+            String list = crm.returnVisitTaskPage(1, 10, date1, date).getString("list");
+            if (StringUtils.isEmpty(list)) {
+                flag = true;
+            }
+            Preconditions.checkArgument(flag, "结束时间>开始时间,查询成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，结束时间>开始时间");
+        }
+    }
+
+    @Test(description = "排序,一级：未联系在上，已联系在下", enabled = false)
+    public void myReturnVisit_function_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            int s = 0;
+            int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
+            int page1 = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < page1; i++) {
+                JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("task_status_name").equals("未完成")) {
+                        s++;
+                    }
+                }
+            }
+            CommonUtil.valueView(s);
+            int page2 = CommonUtil.pageTurning(s, 100);
+            for (int i = 1; i < page2; i++) {
+                JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    Preconditions.checkArgument(list.getJSONObject(j).getString("task_status_name").equals("未完成"));
+
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
         }
     }
 
@@ -1081,7 +1177,8 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 前台分配销售，顾问接待后获取顾客id
+     * 前台分配销售
+     * 顾问接待后获取顾客id
      *
      * @return customerId
      */
@@ -1121,16 +1218,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         } else {
             System.err.println(response.getString("message"));
         }
-    }
-
-    /**
-     * 获取客户列表
-     *
-     * @return 客户列表
-     */
-    private JSONObject getCustomerList(Integer size) {
-        CommonUtil.login(EnumAccount.ZJL);
-        return crm.customerList("", "", "", "", "", 1, size);
     }
 
     /**

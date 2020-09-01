@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
