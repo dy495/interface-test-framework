@@ -18,6 +18,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmPc"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.CrmApplet"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
 
         </classes>
     </test>
