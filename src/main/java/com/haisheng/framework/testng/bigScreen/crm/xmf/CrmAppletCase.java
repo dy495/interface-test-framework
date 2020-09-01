@@ -161,6 +161,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void driver_dateConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
@@ -499,7 +500,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String appointment_time = "09:00";
-            long timelist = timeList("REAPIR",2);
+            long timelist = pf.timeList("REAPIR",2,appointment_date);
 
             JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
             //预约成功
@@ -588,7 +589,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             }
             String my_car_id = list.getJSONObject(0).getString("my_car_id");
             String appointment_time = "09:00";
-            long timelist = timeList("MAINTAIN",1);
+            long timelist = pf.timeList("MAINTAIN",1,appointment_time);
 
             JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
 
@@ -986,7 +987,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void timeListR() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String appointment_date=dt.getHistoryDate(5);
+            String appointment_date=dt.getHistoryDate(0);
             crm.appletLoginToken(EnumAppletCode.WM.getCode());
             String type = "MAINTAIN";
             String appointment_time = "11:00";
@@ -994,7 +995,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.timeList(type, appointment_date).getJSONArray("list");
             Integer leftNum = list.getJSONObject(i).getInteger("left_num");
             //预约
-            long timelist = timeList(type,i);
+            long timelist = pf.timeList(type,i,appointment_date);
             JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
             Long appoint_id = data.getLong("appointment_id");
             JSONArray list2 = crm.timeList(type, appointment_date).getJSONArray("list");
@@ -1464,8 +1465,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
+
 
         }
     }
@@ -1510,8 +1512,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            saveData("黑名单用户不能报名活动");
 
         }
     }

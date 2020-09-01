@@ -1672,7 +1672,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("other_brand", other_brand);
         json1.put("customer_number", customer_number);
         String json = json1.toJSONString();
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
 

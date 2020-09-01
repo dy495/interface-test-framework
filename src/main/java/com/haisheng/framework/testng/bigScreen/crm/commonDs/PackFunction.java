@@ -214,4 +214,8 @@ public class PackFunction {
         crm.addCarPc(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
     }
 
+    public Long timeList(String type,int i,String appointment_date) throws Exception {
+        return crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(i).getLong("id");
+    }
+
 }
