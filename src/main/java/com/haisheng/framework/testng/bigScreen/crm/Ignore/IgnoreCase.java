@@ -1,12 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm.Ignore;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.checker.ApiChecker;
 import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -1991,6 +1992,37 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
+    @Test
+    public void customerListSearchLevel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            customerid = creatCust(name,phone);
+            //完成接待
+
+
+            //查询
+            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日来访页面根据客户等级查询");
+        }
+
+    }
+
 
     /**
      *
@@ -2543,6 +2575,30 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("【pc我的回访】条数=回访任务");
+        }
+    }
+    @Test(description = "小程序“我的”预约试驾数=列表数", enabled = false)
+    public void appointmentTestDriver1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.loginApplet(EnumAppletCode.WM);
+            JSONObject response = crm.appointmentList(0L, "TEST_DRIVE", 100);
+            int total = CommonUtil.getIntField(response, "total");
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 20);
+            JSONArray list = response1.getJSONArray("list");
+            int num = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("customer_name").equals("【自动化】王")) {
+                    num++;
+                }
+            }
+            CommonUtil.valueView(total, num);
+            Preconditions.checkArgument(total == num, "小程序我的试驾列表数量！=app我的预约该顾客预约的次数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序“我的”预约试驾数=列表数");
         }
     }
 

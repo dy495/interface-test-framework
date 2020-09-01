@@ -637,15 +637,6 @@ public class DateTimeUtil {
         return new Date(curr);
     }
 
-    @Test
-    public void test() {
-        Date date = new Date();
-        String s = getFormat(date, "yyyy-MM-dd HH:mm");
-        String y = getFormat(addSecond(date, 60), "yyyy-MM-dd HH:mm");
-        System.err.println(s);
-        System.err.println(y);
-    }
-
     /**
      * 给指定日期增加若干天并装换格式
      *

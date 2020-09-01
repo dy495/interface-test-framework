@@ -14,13 +14,13 @@ public class PackFunction {
     FileUtil file=new FileUtil();
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
-        Long article_id=0L;
+        Long article_id;
         Long [] aid=new Long[2];
-            crm.login(pp.fuwuZongjian,pp.adminpassword);
+            crm.login(pp.zongjingli,pp.adminpassword);
             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
-            int[] customer_level = {};           //TODO:客户等级
+            int[] customer_level = {};
             String[] customer_property = {};
-            String positions = "CAR_ACTIVITY"; //投放位置车型推荐 单选
+            String positions = pp.positions; //投放位置车型推荐 单选
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {1};
             String article_title = "app任务报名品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
@@ -28,18 +28,19 @@ public class PackFunction {
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks = "品牌上新，优惠多多，限时4天,备注";
 
-            boolean is_online_activity = true;  //是否线上报名活动
+            boolean is_online_activity;  //是否线上报名活动
+            is_online_activity = true;
 //            String reception_name = manage(13)[0];  //接待人员名
 //            String reception_phone = manage(13)[1]; //接待人员电话
             String reception_name = "xx";  //接待人员名
             String reception_phone = "15037286013"; //接待人员电话
             String customer_max = "50";                    //人数上限
 
-            String activity_start = dt.getHistoryDate(0);
+            String activity_start = dt.getHistoryDate(1);
             String activity_end = dt.getHistoryDate(4);
             Integer role_id = 13;
             Boolean is_create_poster = true;//是否生成海报
-            Integer task_customer_num=5;
+            int task_customer_num=5;
             //新建文章并返回文章/活动id
             article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title,false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
             Long activity_id=crm.appartilceDetail(article_id,positions).getLong("activity_id");
@@ -48,15 +49,29 @@ public class PackFunction {
         return aid;
     }
 
+    //创建文章返回文章id
+    public Long createArcile(String positionsA,String article_title)throws Exception{
+        String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
+        int[] customer_level = {};                                //客户等级
+        String[] customer_property = {};
+        String valid_start = dt.getHistoryDate(0);
+        String valid_end = dt.getHistoryDate(4);
+        int[] car_types = {};
+        String article_bg_pic = file.texFile(pp.filePath);  //base 64
+        String article_remarks = "品牌上新，优惠多多，限时4天,备注";
+        //新建文章，获取id
+        return crm.createArticleReal(positionsA,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,false,article_bg_pic,pp.article_content,article_remarks,false).getLong("id");
+    }
+
     //前台点击创建接待按钮创建顾客
     public JSONObject creatCust() throws Exception {
         //前台登陆
         crm.login(pp.qiantai, pp.adminpassword);
         String name="auto"+dt.getHHmm(0);
-        String phone = "1";
+        StringBuilder phone = new StringBuilder("1");
         for (int i = 0; i < 10; i++) {
             String a = Integer.toString((int) (Math.random() * 10));
-            phone = phone + a;
+            phone.append(a);
         }
         JSONObject jsonP=new JSONObject();
         //获取当前空闲第一位销售id
@@ -78,9 +93,9 @@ public class PackFunction {
         Long receiptId=data.getJSONArray("list").getJSONObject(0).getLong("id");
         Long customerID=data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         //创建某级客户
-        crm.customerEdit_onlyNec(customerID, 7, name, phone, "自动化---------创建----------H级客户");
+        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
         jsonP.put("name",name);
-        jsonP.put("phone",phone);
+        jsonP.put("phone", phone.toString());
         jsonP.put("reception_id",receiptId);
         jsonP.put("customerId",customerID);
         jsonP.put("userLoginName",userLoginName);
@@ -158,7 +173,8 @@ public class PackFunction {
         //预约试驾成功后，页面显示数据
         Long appointment_id = data.getLong("appointment_id");
         //前台分配老客
-        JSONObject json=creatCustOld(pp.customer_phone_number);
+        JSONObject json;
+        json = creatCustOld(pp.customer_phone_number);
         Long id=json.getLong("id");
         Long customerId=json.getLong("customerId");
         String userLoginName=json.getString("userLoginName");
@@ -180,11 +196,22 @@ public class PackFunction {
             String name = list.getJSONObject(i).getString("name");
             if (name.equals(guwen)) {
                 num = list.getJSONObject(i).getInteger("num");
-            } else {
-                continue;
             }
         }
         return num;
+    }
+    public void createCar(String car_type_name) throws Exception{
+
+        double lowest_price=88.99;
+        double highest_price=888.99;
+        String car_discount="跑车多数人知道，少数人了解";
+        String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
+        String car_pic=file.texFile(pp.filePath);  //base 64
+        String big_pic=file.texFile(pp.filePath);  //base 64
+        String interior_pic=file.texFile(pp.filePath);  //base 64
+        String space_pic=file.texFile(pp.filePath);  //base 64
+        String appearance_pic=file.texFile(pp.filePath);  //base 64
+        crm.addCarPc(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
     }
 
 }

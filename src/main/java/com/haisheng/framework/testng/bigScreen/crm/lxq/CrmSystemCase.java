@@ -1,8 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -464,20 +465,20 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void customerListSearchName() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name,phone);
-            //完成接待
-
+            JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            String search_name = obj.getString("customer_name");
 
             //姓名查询
-            JSONObject obj = crm.customerListPC("",-1,name,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
-            String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+            int total = crm.customerListPC("",-1,search_name,"",0,0,1,50).getInteger("total");
+
+            Preconditions.checkArgument(total >= 1, "无查询结果");
+            for(int i = 0 ; i < total ; i++){
+                JSONObject o = crm.customerListPC("",-1,search_name,"",0,0,1,total).getJSONArray("list").getJSONObject(i);
+                String name = o.getString("customer_name");
+                Preconditions.checkArgument(name.contains(search_name),"查询结果与查询条件不一致");
+            }
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -493,23 +494,15 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void customerListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
         try {
 
-
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
-            String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
-            //完成接待
-
-
-
-            //查询
-            JSONObject obj = crm.customerListPC("",-1,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            //获取手机号
+            JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
+            //查询
+            JSONObject obj1 = crm.customerListPC("",-1,"",search_phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            String search_phone1 = obj1.getString("customer_phone");
+            Preconditions.checkArgument(search_phone.equals(search_phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -520,35 +513,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
-    public void customerListSearchLevel() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        try {
-
-
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name,phone);
-            //完成接待
-
-
-            //查询
-            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
-                JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
-            }
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("今日来访页面根据客户等级查询");
-        }
-
-    }
 
     @Test
     public void customerListSearchDate() {

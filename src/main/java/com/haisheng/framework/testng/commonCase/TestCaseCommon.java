@@ -343,7 +343,21 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+    public String httpPostFile(String path, String[] filepath,String name, String IpPort) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
+        config.url(queryUrl).files(filepath,name,true);
+        logger.info("{} json param: {}", path, filepath,name);
+        long start = System.currentTimeMillis();
 
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
     public String httpGet(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
@@ -372,8 +386,7 @@ public class TestCaseCommon {
             return;
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
-        Header[] headers = null;
-
+        Header[] headers;
         if (authorization.contains("qa_need")) {
             headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                     .other("shop_id", commonConfig.shopId)
@@ -392,11 +405,6 @@ public class TestCaseCommon {
                 .headers(headers)
                 .client(client);
     }
-
-    public String getGatewayDailyIpPort() {
-        return "http://dev.store.winsenseos.cn";
-    }
-
 
     public String getProscheShop() {
         return "22728";
@@ -479,5 +487,12 @@ public class TestCaseCommon {
 
     }
 
-
+    /**
+     * 线程等待
+     *
+     * @param second 秒
+     */
+    public void sleep(long second) throws InterruptedException {
+        Thread.sleep(second * 1000);
+    }
 }

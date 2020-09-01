@@ -1,14 +1,16 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -23,6 +25,10 @@ import java.math.BigDecimal;
 public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
+    FileUtil fileUtil = new FileUtil();
+    public  String data = "data" + dt.getHistoryDate(0) +".txt";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
+
     int service = 0; //累计接待-  日
     int test_drive = 0; //累计试驾
     int deal = 0; //累计成交
@@ -70,6 +76,13 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     int order_second = 0;//再次
 
     int funnel_deal = 0; //交车
+
+    //[车型漏斗]
+    int car_clue = 0; //线索
+    int car_receive = 0 ; //接待
+    int car_testDriver = 0; //试驾
+    int car_order = 0; //订单
+    int car_funnel_deal = 0;//交车
 
 
     /**
@@ -202,6 +215,24 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
             JSONObject obj6 = array.getJSONObject(4);
             funnel_deal = obj6.getInteger("value");//交车
+
+            //[车型漏斗]
+            JSONArray array1 = crm.saleFunnel("DAY","","").getJSONObject("car_type").getJSONArray("list");
+
+            JSONObject car_obj2= array1.getJSONObject(0);
+            car_clue = car_obj2.getInteger("value"); //线索
+
+            JSONObject car_obj3 = array1.getJSONObject(1);
+            car_receive = car_obj3.getInteger("value"); //接待
+
+            JSONObject car_obj4 = array1.getJSONObject(2);
+            car_testDriver = car_obj4.getInteger("value"); //试驾
+
+            JSONObject car_obj5 = array1.getJSONObject(3);
+            car_order = car_obj5.getInteger("value");//订单
+
+            JSONObject car_obj6 = array1.getJSONObject(4);
+            car_funnel_deal = car_obj6.getInteger("value");//交车
 
 
         } catch (AssertionError e) {
@@ -487,134 +518,166 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+
     @Ignore
-    @Test(priority = 1)
-    public void serviceDayWeek() {
+    @Test(priority = 1,dataProvider = "FOUR_TAB")
+    public void fourtabChk(String small, String big, String small1, String big1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(service<=week_service,"日累计接待" + service +" > " + "周累计接待" + week_service);
+            int s = Integer.parseInt(small);
+            int b = Integer.parseInt(big);
+            Preconditions.checkArgument(s <= b,small1 + s +" > " + big1 + b);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【日】累计接待<=【周】累计接待");
+            saveData("店面数据分析："+small1+"<="+big1);
         }
     }
 
     @Ignore
-    @Test(priority = 1)
-    public void serviceWeekMonth() {
+    @Test(priority = 1,dataProvider = "BUS_CAR")
+    public void busniessChkCar(String bus, String car, String bus1, String car1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(week_service<=month_service,"周累计接待" + week_service +" > " + "月累计接待" + month_service);
+            int s = Integer.parseInt(bus);
+            int b = Integer.parseInt(car);
+            Preconditions.checkArgument(s == b,bus1 + s +" != " + car1 + b);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【周】累计接待<=【月】累计接待");
+            saveData("店面数据分析："+bus1+"=="+car1);
         }
     }
 
     @Ignore
-    @Test(priority = 1)
-    public void serviceMonthQuarter() {
+    @Test(priority = 1,dataProvider = "CAR_FUNNEL")
+    public void carFunnelChk(String bus, String car, String bus1, String car1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(month_service<=quarter_service,"月累计接待" + month_service +" > " + "季累计接待" + quarter_service);
+            int s = Integer.parseInt(bus);
+            int b = Integer.parseInt(car);
+            Preconditions.checkArgument(s >= b,bus1 + s +" < " + car1 + b);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【月】累计接待<=【季】累计接待");
+            saveData("店面数据分析-车型漏斗："+bus1+">="+car1);
         }
     }
 
+
+
+    @DataProvider(name = "FOUR_TAB")
+    public  Object[][] four_tab() {
+        return new String[][]{
+                {Integer.toString(service),Integer.toString(week_service),"【日】累计接待","【周】累计接待"},
+                {Integer.toString(week_service),Integer.toString(month_service),"【周】累计接待","【月】累计接待"},
+                {Integer.toString(month_service),Integer.toString(quarter_service),"【月】累计接待","【季】累计接待"},
+                {Integer.toString(quarter_service),Integer.toString(year_service),"【季】累计接待","【年】累计接待"},
+
+                {Integer.toString(test_drive),Integer.toString(week_test_drive),"【日】累计试驾","【周】累计试驾"},
+                {Integer.toString(week_test_drive),Integer.toString(month_test_drive),"【周】累计试驾","【月】累计试驾"},
+                {Integer.toString(month_test_drive),Integer.toString(quarter_test_drive),"【月】累计试驾","【季】累计试驾"},
+                {Integer.toString(quarter_test_drive),Integer.toString(year_test_drive),"【季】累计试驾","【年】累计试驾"},
+
+                {Integer.toString(deal),Integer.toString(week_deal),"【日】累计成交","【周】累计成交"},
+                {Integer.toString(week_deal),Integer.toString(month_deal),"【周】累计成交","【月】累计成交"},
+                {Integer.toString(month_deal),Integer.toString(quarter_deal),"【月】累计成交","【季】累计成交"},
+                {Integer.toString(quarter_deal),Integer.toString(year_deal),"【季】累计成交","【年】累计成交"},
+
+                {Integer.toString(delivery),Integer.toString(week_delivery),"【日】累计交车","【周】累计交车"},
+                {Integer.toString(week_delivery),Integer.toString(month_delivery),"【周】累计交车","【月】累计交车"},
+                {Integer.toString(month_delivery),Integer.toString(quarter_delivery),"【月】累计交车","【季】累计交车"},
+                {Integer.toString(quarter_delivery),Integer.toString(year_delivery),"【季】累计交车","【年】累计交车"}
+
+        };
+    }
+
+    @DataProvider(name = "BUS_CAR")
+    public  Object[][] Bus_car() {
+        return new String[][]{
+                {Integer.toString(clue),Integer.toString(car_clue),"【业务漏斗】线索","【车型漏斗】线索"},
+                {Integer.toString(receive),Integer.toString(car_receive),"【业务漏斗】接待","【车型漏斗】接待"},
+                {Integer.toString(testDriver),Integer.toString(car_testDriver),"【业务漏斗】试驾","【车型漏斗】试驾"},
+                {Integer.toString(order),Integer.toString(car_order),"【业务漏斗】订单","【车型漏斗】订单"},
+                {Integer.toString(funnel_deal),Integer.toString(car_funnel_deal),"【业务漏斗】交车","【车型漏斗】交车"}
+
+        };
+    }
+
+    @DataProvider(name = "CAR_FUNNEL")
+    public  Object[][] car_funnel() {
+        return new String[][]{
+                {Integer.toString(car_clue),Integer.toString(car_receive),"线索","接待"},
+                {Integer.toString(car_receive),Integer.toString(car_testDriver),"接待","试驾"},
+                {Integer.toString(car_receive),Integer.toString(car_order),"接待","订单"},
+                {Integer.toString(car_order),Integer.toString(car_funnel_deal),"订单","交车"}
+
+        };
+    }
+
+
+
+    /**
+     * --------------------店面数据分析页 页面间一致性-------------------
+     */
+
     @Ignore
     @Test(priority = 1)
-    public void serviceQuarterYear() {
+    public void serviceChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(quarter_service<=year_service,"季累计接待" + quarter_service +" > " + "年累计接待" + year_service);
-
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待+今日老客接待").split("/")[1]);
+            Preconditions.checkArgument(service==yesterday,"累计接待=" + service + "前一日=" + yesterday);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【季】累计接待<=【年】累计接待");
+            saveData("店面数据分析-4个tab：累计接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待 之和");
         }
     }
 
     @Ignore
     @Test(priority = 1)
-    public void driverDayWeek() {
+    public void testDriverChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(test_drive<=week_test_drive,"日累计试驾" + test_drive +" > " + "周累计试驾" + week_test_drive);
-
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日试驾").split("/")[1]);
+            Preconditions.checkArgument(test_drive==yesterday,"累计试驾=" + test_drive + "前一日=" + yesterday);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【日】累计试驾<=【周】累计试驾");
+            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
         }
     }
 
     @Ignore
     @Test(priority = 1)
-    public void driverWeekMonth() {
+    public void dealChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Preconditions.checkArgument(week_test_drive<=month_test_drive,"周累计试驾" + week_test_drive +" > " + "月累计试驾" + month_test_drive);
-
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日交车").split("/")[1]);
+            Preconditions.checkArgument(test_drive==yesterday,"累计成交=" + test_drive + "前一日=" + yesterday);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：【周】累计试驾<=【月】累计试驾");
+            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
         }
     }
-
-    @Ignore
-    @Test(priority = 1)
-    public void driverMonthQuarter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Preconditions.checkArgument(month_test_drive<=quarter_test_drive,"月累计试驾" + month_test_drive +" > " + "季累计试驾" + quarter_test_drive);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析：【月】累计试驾<=【季】累计试驾");
-        }
-    }
-
-    @Ignore
-    @Test(priority = 1)
-    public void driverQuarterYear() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Preconditions.checkArgument(quarter_test_drive<=year_test_drive,"季累计试驾" + quarter_test_drive +" > " + "年累计试驾" + year_test_drive);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析：【季】累计试驾<=【年】累计试驾");
-        }
-    }
-
 
 
 
@@ -736,6 +799,50 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("[成交客户分析] 车主性别分析 性别之和=100%");
+        }
+    }
+
+    @Test
+    public void wholeCountry100() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray array = crm.wholeCountry("DAY","","").getJSONArray("list");
+            double sum = 0;
+            for (int i = 0 ; i < array.size();i++){
+                sum = sum + array.getJSONObject(i).getDouble("percentage");
+            }
+            double abs = 1 - sum ;
+            Preconditions.checkArgument(Math.abs(abs)<=1,"总和为"+ sum);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("[成交客户分析] 全国各省成交量 成交量百分比之和=100%");
+        }
+    }
+
+    @Test
+    public void city100() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray array = crm.city("DAY","","").getJSONArray("list");
+            double sum = 0;
+            for (int i = 0 ; i < array.size();i++){
+                sum = sum + array.getJSONObject(i).getDouble("percentage");
+            }
+            double abs = 1 - sum ;
+            Preconditions.checkArgument(Math.abs(abs)<=1,"总和为"+ sum);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("[成交客户分析] 苏州各区成交量 成交量百分比之和=100%");
         }
     }
 

@@ -1,6 +1,7 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm.lxq;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -26,7 +27,8 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
     FileUtil fileUtil = new FileUtil();
-
+    public  String data = "data" + dt.getHistoryDate(0) +".txt";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
 
 
     /**
@@ -66,7 +68,7 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-       crm.login(cstm.lxqgw,cstm.pwd);
+       crm.login(cstm.xszj,cstm.pwd);
 
     }
 
@@ -94,19 +96,30 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
     public void savedata() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONObject obj = crm.shopPannel("DAY","","");
-            int service = obj.getInteger("service");
-            int test_drive = obj.getInteger("test_drive");
-            String data = "data" + dt.getHistoryDate(0) +".txt";
-
-
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
             filePath = filePath.replace("/",File.separator);
 
-
+            //今日新客接待+今日老客接待
+            JSONObject obj = crm.customerReceptionTotalInfo();
+            int todaynew = obj.getInteger("today_new_customer");
+            int todayold = obj.getInteger("total_old_customer");
+            int all = todaynew + todayold;
             //存
-            fileUtil.appendContentToFile(filePath,"service/"+service);
+            fileUtil.appendContentToFile(filePath,"今日新客接待+今日老客接待/"+all);
+            fileUtil.appendContentToFile(filePath,"今日新客接待1/"+todaynew);
+            fileUtil.appendContentToFile(filePath,"今日老客接待1/"+todayold);
+
+            //今日交车
+            JSONObject obj1 = crm.deliverCarTotal();
+            int todaydeliver = obj1.getInteger("today_deliver_car_total");
+            //存
+            fileUtil.appendContentToFile(filePath,"今日交车/"+todaydeliver);
+
+            //今日试驾
+            JSONObject obj2 = crm.driverTotal();
+            int todaydriver = obj2.getInteger("today_test_drive_total");
+            //存
+            fileUtil.appendContentToFile(filePath,"今日试驾/"+todaydriver);
+
 
             //取
             System.out.println(fileUtil.findLineByKey(filePath,"service"));
