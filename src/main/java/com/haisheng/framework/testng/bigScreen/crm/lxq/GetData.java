@@ -120,9 +120,30 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
             //存
             fileUtil.appendContentToFile(filePath,"今日试驾/"+todaydriver);
 
+            //今日线索
+            JSONObject obj3 = crm.receptionPage(1,1,dt.getHistoryDate(0),dt.getHistoryDate(0));
+            int todaycust = obj3.getInteger("all_customer_num");
+            //存
+            fileUtil.appendContentToFile(filePath,"今日线索/"+todaycust);
+
 
             //取
             System.out.println(fileUtil.findLineByKey(filePath,"service"));
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("存数据");
+        }
+    }
+
+    @Test
+    public void test() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            dt.calTimeHourDiff("15:00","16:01");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

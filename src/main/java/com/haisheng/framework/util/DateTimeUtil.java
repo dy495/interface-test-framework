@@ -2,8 +2,6 @@ package com.haisheng.framework.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.jooq.util.derby.sys.Sys;
-import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -291,7 +289,7 @@ public class DateTimeUtil {
         return today;
     }
 
-    @Test
+
     public long calTimeDiff(String left, String right) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
 
@@ -313,6 +311,23 @@ public class DateTimeUtil {
 
         System.out.println("" + day + "天" + hour + "小时" + min + "分" + s + "秒");
         return secondDiff;
+    }
+
+    public int calTimeHourDiff(String left, String right) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+
+        java.util.Date leftVal = df.parse(left);
+
+        java.util.Date rightVal = df.parse(right);
+
+        Long l = rightVal.getTime() - leftVal.getTime();
+
+
+        Long min = ((l / (60 * 1000)));
+
+
+        System.out.println( min + "分" );
+        return min.intValue();
     }
 
     public Timestamp currentDateToTimestamp() throws ParseException {

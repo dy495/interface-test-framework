@@ -26,7 +26,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
     FileUtil fileUtil = new FileUtil();
-    public  String data = "data" + dt.getHistoryDate(0) +".txt";
+    public  String data = "data" + dt.getHistoryDate(-1) +".txt";
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
 
     int service = 0; //累计接待-  日
@@ -669,15 +669,216 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日交车").split("/")[1]);
-            Preconditions.checkArgument(test_drive==yesterday,"累计成交=" + test_drive + "前一日=" + yesterday);
+            Preconditions.checkArgument(deal>=yesterday,"累计成交=" + deal + "前一日=" + yesterday);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
+            saveData("店面数据分析-4个tab：累计成交>=【前一日】【销售总监-app-我的交车】今日交车 之和");
         }
     }
+
+    @Ignore
+    @Test(priority = 1)
+    public void deliveryChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日交车").split("/")[1]);
+            Preconditions.checkArgument(delivery==yesterday,"累计交车=" + delivery + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-4个tab：累计交车=【前一日】【销售总监-app-我的交车】今日交车 之和");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void receiveChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待+今日老客接待").split("/")[1]);
+            Preconditions.checkArgument(receive==yesterday,"接待=" + receive + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-漏斗：接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void recpChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
+            Preconditions.checkArgument(recp==yesterday,"接待线索=" + recp + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-漏斗：接待线索=【前一日】【销售总监-app-销售接待】今日新客接待");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void receive_secondChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日老客接待1").split("/")[1]);
+            Preconditions.checkArgument(receive_second==yesterday,"再次接待=" + receive_second + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-漏斗：再次接待=【前一日】【销售总监-app-我的接待】今日老客接待");
+        }
+    }
+
+//    @Ignore
+//    @Test(priority = 1)
+//    public void creatChk() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
+//            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日线索").split("/")[1]);
+//            int yesterday = clue - newa ;
+//            Preconditions.checkArgument(creat==yesterday,"创建线索=" + creat + "前一日=" + yesterday);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+//        }
+//    }
+
+    @Ignore
+    @Test
+    public void recpTimeChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int less10 = 0;
+            int less30 = 0;
+            int less60 = 0;
+            int less120 = 0;
+            int more120 = 0;
+
+            String time = dt.getHistoryDate(-1);
+            int total = crm.receptionPage(1,1,time,time).getInteger("total");
+            int a = 0;
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+
+                    JSONArray list = crm.receptionPage(i,50,time,time).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        String start = list.getJSONObject(j).getString("enter_time_str");
+                        String end = list.getJSONObject(j).getString("leave_time_str");
+                        int diff = dt.calTimeHourDiff(start,end);
+                        if (diff < 10){
+                            less10 = less10 + 1;
+                        }
+                        else if (diff < 30){
+                            less30 = less30 +1;
+                        }
+                        else if (diff < 60){
+                            less60 = less60 +1;
+                        }
+                        else if (diff < 120){
+                            less120 = less120 +1;
+                        }
+                        else {
+                            more120 = more120 + 1;
+                        }
+                    }
+                }
+            } else {
+                JSONArray list = crm.receptionPage(1,50,time,time).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String start = list.getJSONObject(j).getString("enter_time_str");
+                    String end = list.getJSONObject(j).getString("leave_time_str");
+                    int diff = dt.calTimeHourDiff(start,end);
+                    if (diff < 10){
+                        less10 = less10 + 1;
+                    }
+                    else if (diff < 30){
+                        less30 = less30 +1;
+                    }
+                    else if (diff < 60){
+                        less60 = less60 +1;
+                    }
+                    else if (diff < 120){
+                        less120 = less120 +1;
+                    }
+                    else {
+                        more120 = more120 + 1;
+                    }
+                }
+            }
+            JSONArray array = crm.receptTime("DAY","","").getJSONArray("list");
+            int l10 = array.getJSONObject(0).getInteger("value");
+            int l30 = array.getJSONObject(1).getInteger("value");
+            int l60 = array.getJSONObject(2).getInteger("value");
+            int l120 = array.getJSONObject(3).getInteger("value");
+            int g120 = array.getJSONObject(4).getInteger("value");
+
+            Preconditions.checkArgument(less10==l10,"10分钟内：组数=" + l10 + "接待列表组数=" + less10);
+            Preconditions.checkArgument(less30==l30,"10~30分钟：组数=" + l30 + "接待列表组数=" + less30);
+            Preconditions.checkArgument(less60==l60,"30～60分钟：组数=" + l60 + "接待列表组数=" + less60);
+            Preconditions.checkArgument(less120==l120,"60～120分钟：组数=" + l120 + "接待列表组数=" + less120);
+            Preconditions.checkArgument(more120==g120,"大于120分钟：组数=" + more120 + "接待列表组数=" + g120);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-客户接待时长分析：时间段内组数=【前一日】【销售总监-app-销售接待】对应接待时长的数量");
+        }
+    }
+
+
+
+
+
+    /**
+     * --------------------潜在客户分析页 页面内一致性-------------------
+     */
+
+    @Ignore
+    @Test(priority = 1)
+    public void creatChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
+            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日线索").split("/")[1]);
+            int yesterday = clue - newa ;
+            Preconditions.checkArgument(creat==yesterday,"创建线索=" + creat + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+        }
+    }
+
+
+
 
 
 
