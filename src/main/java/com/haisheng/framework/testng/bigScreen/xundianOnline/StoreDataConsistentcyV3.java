@@ -989,9 +989,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
 
-            Preconditions.checkArgument((c_count == cust_uv),"累计的顾客总人数" + c_count + ">累计的顾客之和=" + cust_uv);
-            Preconditions.checkArgument((o_count == channel_uv),"累计的全渠道会员总人数" + o_count + ">累计的30天全渠道会员之和=" + channel_uv);
-            Preconditions.checkArgument((p_count == pay_uv),"累计的付费总人数" + p_count + ">累计的付费会员之和=" + pay_uv);
+            Preconditions.checkArgument((c_count == cust_uv),"累计的顾客总人数" + c_count + "=累计的顾客之和=" + cust_uv);
+            Preconditions.checkArgument((o_count == channel_uv),"累计的全渠道会员总人数" + o_count + "=累计的30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((p_count == pay_uv),"累计的付费总人数" + p_count + "=累计的付费会员之和=" + pay_uv);
 
 
         } catch (AssertionError e) {
@@ -1000,7 +1000,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("所选周期30天的顾客总人数<=所有门店30天顾客之和|所选周期30天的全渠道会员总人数<=所有门店30天全渠道会员之和|所选周期30天的付费会员总人数<=所有门店30天付费会员之和");
+            saveData("累计顾客总人数==所有门店顾客之和|累计全渠道会员总人数==所有门店全渠道会员之和|累计付费会员总人数==所有门店付费会员之和");
         }
 
     }
