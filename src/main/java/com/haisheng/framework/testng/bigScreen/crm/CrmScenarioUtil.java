@@ -4251,7 +4251,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json.put("sale_type", sale_type);
         json.put("size", size);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
+        return JSON.parseObject(result);
     }
     public JSONObject modifyPasswordJk(String oldPassword,String newPassword) throws Exception {
         String url="/porsche/app/user/modifyPassword";
