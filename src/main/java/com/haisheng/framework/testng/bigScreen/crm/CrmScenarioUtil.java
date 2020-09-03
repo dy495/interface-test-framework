@@ -2570,6 +2570,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    public JSONObject registeredCustomer1(Long activity_task_id, String customer_name, String customer_phone_number) throws Exception {
+        String url = "/porsche/app/activity-task/registeredCustomer";
+        JSONObject json1 = new JSONObject();
+        json1.put("activity_task_id", activity_task_id);
+        json1.put("customer_name", customer_name);
+        json1.put("customer_phone_number", customer_phone_number);
+        String json = json1.toJSONString();
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
 
     //活动：添加报名人信息
     public Long registeredCustomerCode(Long activity_task_id, String customer_name, String customer_phone_number) throws Exception {
@@ -2581,6 +2591,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String json = json1.toJSONString();
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res).getLong("code");
+    }
+
+    //活动：活动报名人数
+    public JSONObject TaskInfo(Long activity_task_id, String customer_phone_number) throws Exception {
+        String url = "/porsche/app/activity-task/info";
+        JSONObject json1 = new JSONObject();
+        json1.put("activity_task_id", activity_task_id);
+        json1.put("customer_phone_number", customer_phone_number);
+        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     //人员管理-销售顾问列表
@@ -4210,6 +4230,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject modifyPasswordJk(String oldPassword,String newPassword) throws Exception {
+        String url="/porsche/app/user/modifyPassword";
+        JSONObject json = new JSONObject();
+        json.put("oldPassword", oldPassword);
+        json.put("newPassword", newPassword);
+        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result);
+
     }
 
 }

@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.spi.LocaleNameProvider;
 
 
 /**
@@ -32,6 +33,7 @@ import java.util.List;
  */
 
 public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCaseStd {
+
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
@@ -83,7 +85,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常-gly");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -112,6 +114,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        crm.login(xs_name, pwd);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -1157,7 +1160,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
     //销售接待--接待率=今日接待/今日线索*100
-
     @Test
     public void receptionRatio() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1288,7 +1290,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @Test
     public void xsCreateLine() {
         logger.logCaseStart(caseResult.getCaseName());
-        String CustomerPhone = "13373166806";
+        String CustomerPhone = "13373166000";
         try {
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
@@ -1342,7 +1344,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             object.put("customerid", customerid);
             //创建某级客户
             String name = "翠花";
-            String phone = "13388888666";
+            String phone = "13388888677";
             object.put("name", name);
             object.put("phone", phone);
             JSONObject customer = crm.finishReception(customerid, 3, name, phone, "自动化---------创建----------客户");
@@ -1355,10 +1357,10 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             appendFailreason(e.toString());
         } finally {
             crm.login(zjl_name, pwd);
-            JSONObject responZjl = crm.customerListPC("13388888666", 1, 10);
+            JSONObject responZjl = crm.customerListPC("13388888677", 1, 10);
             long customerId = responZjl.getJSONArray("list").getJSONObject(0).getInteger("customer_id");
             crm.customerDeletePC(customerId);
-            saveData("今天销售创建线索->今日线索+1");
+            saveData("今天销售创建客户->今日线索+1");
         }
 
 
@@ -1370,31 +1372,33 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void TodayDriveSum() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-        crm.login(qt_name, pwd);
-        JSONObject response = crm.receptionPage(1, 10, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        int todayTestDrive = response.getInteger("today_test_drive_num");
-        crm.login(bsj_name, pwd);
-        int pages = crm.userPage(1, 10).getInteger("pages");
-        int max = 0;
-        if (pages != 0) {
-            for (int page = 1; page <= pages; page++) {
-                JSONObject responseBsj = crm.userPage(page, 10);
-                JSONArray list = responseBsj.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
-                        String userLoginName = list.getJSONObject(i).getString("user_login_name");
-                        crm.login(userLoginName, "e10adc3949ba59abbe56e057f20f883e");
-                        int todayTestDriveTotal = crm.driverTotal().getInteger("today_test_drive_total");
-                        max += todayTestDriveTotal;
+            crm.login(qt_name, pwd);
+            JSONObject response = crm.receptionPage(1, 10, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+            int todayTestDrive = response.getInteger("today_test_drive_num");
+            System.out.println("今日试驾的数量" + todayTestDrive);
+            crm.login(bsj_name, pwd);
+            int pages = crm.userPage(1, 10).getInteger("pages");
+            int max = 0;
+            if (pages != 0) {
+                for (int page = 1; page <= pages; page++) {
+                    JSONObject responseBsj = crm.userPage(page, 10);
+                    JSONArray list = responseBsj.getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
+                            String userLoginName = list.getJSONObject(i).getString("user_login_name");
+                            crm.login(userLoginName, "e10adc3949ba59abbe56e057f20f883e");
+                            int todayTestDriveTotal = crm.driverTotal().getInteger("today_test_drive_total");
+                            max += todayTestDriveTotal;
+
+                        }
                     }
                 }
             }
-        }
-            logger.info("max:{}=todaysum:{}",max,todayTestDrive);
-            Preconditions.checkArgument(max==todayTestDrive, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
-        }catch(Exception|AssertionError e){
+            logger.info("max:{}=todaysum:{}", max, todayTestDrive);
+            Preconditions.checkArgument(max == todayTestDrive, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
         }
     }
@@ -1406,28 +1410,28 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void TodayDuySum() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-        crm.login(qt_name, pwd);
-        JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        int todayBuyCarNum = response.getInteger("today_buy_car_num");
-        crm.login(bsj_name, pwd);
-        int pages = crm.userPage(1, 10).getInteger("pages");
-        int max = 0;
-        for (int page = 1; page <= pages; page++) {
-            JSONArray list = crm.userPage(page, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
-                    String userLoginName = list.getJSONObject(i).getString("user_login_name");
-                    crm.login(userLoginName, EnumAccount.XSGWTEMP.getPassword());
-                    int todayOrder = crm.customerReceptionTotalInfo().getInteger("today_order");
-                    max += todayOrder;
+            crm.login(qt_name, pwd);
+            JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+            int todayBuyCarNum = response.getInteger("today_buy_car_num");
+            crm.login(bsj_name, pwd);
+            int pages = crm.userPage(1, 10).getInteger("pages");
+            int max = 0;
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = crm.userPage(page, 10).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
+                        String userLoginName = list.getJSONObject(i).getString("user_login_name");
+                        crm.login(userLoginName, EnumAccount.XSGWTEMP.getPassword());
+                        int todayOrder = crm.customerReceptionTotalInfo().getInteger("today_order");
+                        max += todayOrder;
+                    }
                 }
             }
-        }
-            logger.info("max:{}=todaysum:{}",max,todayBuyCarNum);
+            logger.info("max:{}=todaysum:{}", max, todayBuyCarNum);
             Preconditions.checkArgument(max == todayBuyCarNum, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max);
-        }catch(AssertionError|Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和");
         }
     }
@@ -1437,7 +1441,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @Test(enabled = true)
     public void DeliverCarSum() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayDeliverCarNum = response.getInteger("today_deliver_car_num");
@@ -1445,7 +1449,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
-                JSONArray list =  crm.userPage(page, 10).getJSONArray("list");
+                JSONArray list = crm.userPage(page, 10).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
@@ -1456,76 +1460,299 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
             Preconditions.checkArgument(max == todayDeliverCarNum, "今日交车的数量为：" + todayDeliverCarNum + "  " + "：各销售交车累计为" + max);
-    }catch(Exception|AssertionError e){
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("销售接待--今日交车=所有销售【客户管理-我的交车】今日交车 之和");
         }
 
     }
+
     //接待列表导出
     @Test
     public void receptionExport() {
         try {
-            String flag=crm.receptionExport();
-        } catch (Exception |AssertionError e) {
+            String flag = crm.receptionExport();
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
 
-        } finally{
+        } finally {
         }
     }
 
     //APP销售接待列表数==PC销售接待列表数
     @Test
-    public void receptionNumber(){
+    public void receptionNumber() {
 
         try {
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2);
             int allCustomerNum = response.getInteger("total");
-            System.out.println("App列表数   :"+allCustomerNum);
-            JSONObject response1 = crm.receptionPage1(1,"PRE_SALES",10);
+            System.out.println("App列表数   :" + allCustomerNum);
+            JSONObject response1 = crm.receptionPage1(1, "PRE_SALES", 10);
             int todayDeliverCarNum = response1.getInteger("total");
-            System.out.println("PC列表数   :"+todayDeliverCarNum);
+            System.out.println("PC列表数   :" + todayDeliverCarNum);
             Preconditions.checkArgument(allCustomerNum == todayDeliverCarNum, "APP列表数：" + allCustomerNum + "  " + "PC列表数" + todayDeliverCarNum);
-        } catch (Exception |AssertionError e) {
+        } catch (Exception | AssertionError e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             saveData("APP销售接待列表数==PC销售接待列表数");
         }
     }
 
     //V2.1活动报名-是否完成，未完成高亮，已完成不高亮
-//    @Test
-//    public void activityTaskPage() {
-//        try {
-//            crm.login(xs_name, pwd);
-//            JSONObject response = crm.activityTaskPage(1,2<<10);
-//            JSONArray list = response.getJSONArray("list");
-//            System.out.println("list的返回值为    ："+list);
-//            if (list.size() > 1) {
-//                System.out.println();
-//                for (int i = 0; i < list.size(); i++) {
-//                    String taskStatusName = list.getJSONObject(i).getString("activity_task_status_name");
-//                    Boolean isHighlight = list.getJSONObject(i).getBoolean("is_highlight");
-//                    if (taskStatusName.equals("未完成")) {
-//                        Preconditions.checkArgument(isHighlight == true, "报名活动未完成的不高亮");
-//                        System.out.println("未完成高亮     -------");
-//                    } else {
-//                        Preconditions.checkArgument(isHighlight == false, "报名活动已完成的高亮");
-//                        System.out.println("已完成不高亮     -------");
-//                    }
-//                }
-//            } else {
-//                Preconditions.checkArgument(list == null, "活动报名没有数据，列表长度不为空");
-//                System.out.println("list == null     -------");
-//            }
-//        }catch(Exception |AssertionError e){
-//            appendFailreason(e.toString());
-//        }finally{
-//           // saveData("V2.1活动报名-是否完成，未完成高亮，已完成不高亮");
-//        }
-//    }
+    @Test
+    public void activityTaskPage() {
+        try {
+            crm.login(xs_name, pwd);
+            JSONObject response = crm.activityTaskPage(1, 10);
+            JSONArray list = response.getJSONArray("list");
+            int pages = response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                if (list.size() > 1) {
+                    for (int i = 0; i < list.size(); i++) {
+                        String taskStatusName = list.getJSONObject(i).getString("activity_task_status_name");
+                        Boolean isHighlight = list.getJSONObject(i).getBoolean("is_highlight");
+                        if (taskStatusName.equals("未完成")) {
+                            Preconditions.checkArgument(isHighlight == true, "报名活动未完成的不高亮");
+                        } else {
+                            Preconditions.checkArgument(isHighlight == false, "报名活动已完成的高亮");
+                        }
+                    }
+                } else {
+                    Preconditions.checkArgument(list == null, "活动报名没有数据，列表长度不为空");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("V2.1活动报名-是否完成，未完成高亮，已完成不高亮--gly");
+        }
+    }
+
+    //活动报名-当前日期>=开始日期，填写报名置灰，当前日期<开始日期，，填写报名，高亮可点击
+    @Test
+    public void activityIsEdit() {
+        try {
+            crm.login(xs_name, pwd);
+            JSONObject response = crm.activityTaskPage(1, 10);
+            JSONArray list = response.getJSONArray("list");
+            String nowTime = DateTimeUtil.getFormat(new Date());
+            int pages = response.getInteger("pages");
+            System.out.println("list的长度___:" + (list.size()));
+            for (int page = 1; page <= pages; page++) {
+                if (list.size() > 1) {
+                    for (int i = 0; i < list.size(); i++) {
+                        String date = list.getJSONObject(i).getString("activity_start");
+                        Boolean isEdit = list.getJSONObject(i).getBoolean("is_edit");
+                        System.out.println("活动报名时间   :" + date);
+                        System.out.println("当前时间   :" + nowTime);
+                        if (date.compareTo(nowTime) > 0) {
+                            Preconditions.checkArgument(isEdit == true, "活动报名时间大于当前时间，活动报名不可以");
+                        } else {
+                            Preconditions.checkArgument(isEdit == false, "报名活动小于当前时间，活动可以报名");
+                        }
+                    }
+                } else {
+                    Preconditions.checkArgument(list == null, "活动报名没有数据，列表长度不为空");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("活动报名-当前日期>=开始日期，填写报名置灰，当前日期<开始日期，，填写报名，高亮可点击");
+        }
+    }
+
+    //活动报名-添加报名人信息并删除--正常
+    @Test(enabled = true)
+    public void registeredCustomer() {
+        try {
+            crm.login(xs_name, pwd);
+            String phone = "17737771311";
+            crm.registeredCustomer(12298L, "哈自动化77777777", phone);
+            JSONObject response = crm.TaskInfo(12298L, phone);
+            JSONArray list = response.getJSONArray("customer_list");
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    String phone1 = list.getJSONObject(i).getString("customer_phone_number");
+                    if (phone1.equals(phone)) {
+                        String cumId = response.getString("customer_id");
+                        crm.deleteCustomerX("12298", cumId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("活动报名-添加报名人信息并删除--正常");
+        }
+    }
+
+    //活动报名-添加报名人信息--异常--手机号12位
+    @Test(enabled = true)
+    public void registeredCustomer2() {
+        try {
+            crm.login(xs_name, pwd);
+            String phone = "177377711311";
+            String message = crm.registeredCustomer1(12298L, "哈哈哈", phone).getString("message");
+            System.out.println("message1---- " + message);
+            Preconditions.checkArgument(message.equals("请输入有效手机号码"), "12位手机号码验证");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("活动报名-添加报名人信息--异常--手机号12位");
+        }
+    }
+
+    //活动报名-添加报名人信息--异常--手机号11位+数字+标点+中文
+    @Test(enabled = true)
+    public void registeredCustomer3() {
+        try {
+            crm.login(xs_name, pwd);
+            String phone = "1773@@拉拉**";
+            String message = crm.registeredCustomer1(12298L, "哈哈哈", phone).getString("message");
+            System.out.println("message1---- " + message);
+            Preconditions.checkArgument(message.equals("请输入有效手机号码"), "12位手机号码验证");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("活动报名-添加报名人信息--异常--手机号11位+数字+标点+中文");
+        }
+    }
+
+    //活动报名-添加报名人信息--异常--姓名12位中文
+    @Test(enabled = true)
+    public void registeredCustomer4() {
+        try {
+            crm.login(xs_name, pwd);
+            String phone = "17737771311";
+            String message1 = crm.registeredCustomer1(12298L, "哈哈哈哈哈哈哈哈哈哈哈哈", phone).getString("message");
+            System.out.println("message1---- " + message1);
+            Preconditions.checkArgument(message1.equals("客户名称长度不能超过十个字"), "12位姓名验证");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("活动报名-添加报名人信息--异常--姓名12位");
+        }
+    }
+
+    //活动报名-添加报名人信息--异常--姓名12位英文+数字+标点符号
+    @Test(enabled = true)
+    public void registeredCustomer5() {
+        try {
+            crm.login(xs_name, pwd);
+            String phone = "17737771311";
+            String message1 = crm.registeredCustomer1(12298L, "哈哈哈哈哈￥%…………*111", phone).getString("message");
+            System.out.println("message1---- " + message1);
+            Preconditions.checkArgument(message1.equals("您只能输入长度不超过10的汉字"), "12位姓名验证");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("活动报名-添加报名人信息--异常--姓名12位英文+数字+标点符号");
+        }
+    }
+
+    //报名活动-添加版名人数在0到50之间
+    @Test
+    public void activityTaskInfo() {
+        try {
+            crm.login(xs_name, pwd);
+            JSONObject response = crm.TaskInfo(12298L, "17737370002");
+            JSONArray list = response.getJSONArray("customer_list");
+            Preconditions.checkArgument(list.size() <= 50 && list.size() >= 0, "活动报名超过50人或少于0人");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("报名活动-添加版名人数在0到50之间");
+        }
+    }
+
+    //删除销售顾问
+    public void delectXS(String phone) {
+        try {
+            crm.login("baoshijie", pwd);
+            JSONObject response1 = crm.userPage(1, 10);
+            int pages = response1.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONObject response2 = crm.userPage(page, 10);
+                JSONArray list = response2.getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String userPhone = list.getJSONObject(i).getString("user_phone");
+                    if (userPhone.equals(phone)) {
+                        String userId = response2.getJSONArray("list").getJSONObject(i).getString("user_id");
+                        System.out.println("-----userId----" + userId);
+                        crm.userDel(userId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //修改密码-填写全部必填项：原密码、新密码、新密码确认
+    @Test
+    public void modifyPassword() {
+        try {
+            String phone = "13378909876";
+            //确认销售顾问账号是否存在，如果存在-删除
+            delectXS(phone);
+//            delectXS(phone);
+            //创建销售顾问账号
+            crm.login("baoshijie", pwd);
+            String userName = "Max哈";
+            String userLoginName = "xsgwmax";
+            String passwd = "e10adc3949ba59abbe56e057f20f883e";
+            int roleId = 13;
+            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId);
+            //修改密码
+            crm.login("xsgwmax", pwd);
+            String oldPassword = "e10adc3949ba59abbe56e057f20f883e";
+            String newPassword = "b7769b49af4953a5093a54e3d313c1c5";
+            crm.modifyPasswordJk(oldPassword, newPassword);
+            //删除销售顾问账号
+            delectXS(phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("修改密码-填写全部必填项：原密码、新密码、新密码确认");
+        }
+    }
+
+
+    //修改密码-填写全部必填项：新密码输入长度21位--1234!@#$我们111111111111111qq
+    @Test
+    public void modifyPassword1() {
+        try {
+            String phone = "13378909876";
+            //确认销售顾问账号是否存在，如果存在-删除
+            delectXS(phone);
+            //创建销售顾问账号
+            crm.login("baoshijie", pwd);
+            String userName = "Max哈";
+            String userLoginName = "xsgwmax";
+            String passwd = "e10adc3949ba59abbe56e057f20f883e";
+            int roleId = 13;
+            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId);
+            //修改密码
+            crm.login("xsgwmax", pwd);
+            String oldPassword = "e10adc3949ba59abbe56e057f20f883e";
+            String newPassword = "860591a9-d852-4c93-8f34-0232d559bc04";
+            String message = crm.modifyPasswordJk(oldPassword, newPassword).getString("message");
+            System.out.println("------修改密码成功");
+            Preconditions.checkArgument(message.equals("系统异常"), "密码21位且存在中文+符号");
+            //删除销售顾问账号
+            delectXS(phone);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            saveData("修改密码-填写全部必填项：新密码输入长度21位--1234!@#$我们111111111111111qq");
+        }
+    }
+
+
 
 }
 
