@@ -52,7 +52,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常 lxq");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -94,7 +94,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    @Test
+    //@Test
     public void uploadEnterShopCarPlate() {
 //        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
 //        String carNum = "鲁ABB1711";    //全新
@@ -129,7 +129,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    @Test
+    //@Test
     public void uploadLeaveShopCarPlate() {
         String carNum = "京A123456";
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
@@ -165,8 +165,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
 //        String carNum = "鲁ABB1711";    //全新
 //        String carNum = "浙ABC1711";    //售前老客，售后新客
-        String carNum = "京ASD1235";    //售前老客，售后新客
+        //String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
+        String carNum = "吉D000010";
+
+
 
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与线上环境的设置一致，不要修改
@@ -179,7 +182,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 "\"time\":\""+System.currentTimeMillis()+"\"" +
                 "}";
         try {
-            crm.carUploadToDaily(router, deviceId, resource, json);
+            crm.carUploadToOnline(router, deviceId, resource, json);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -448,6 +451,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             customerid = creatCust(name,phone);
             //完成接待
 
+            crm.login(cstm.xszj,cstm.pwd);
             //直接点击查询
             int total = crm.customerListPC("",-1,"","",0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total>=1,"我的客户数量期待>=1，实际="+total);
@@ -467,6 +471,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(cstm.xszj,cstm.pwd);
             JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_name = obj.getString("customer_name");
 
@@ -496,6 +501,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(cstm.xszj,cstm.pwd);
             //获取手机号
             JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
@@ -519,6 +525,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
+            crm.login(cstm.xszj,cstm.pwd);
            String starttime = dt.getHistoryDate(0);
             String endtime = starttime;
             //查询
@@ -728,7 +735,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test
     public void customerListsaleEditsale() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -794,7 +801,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test
     public void customerListsaleEditSeveral() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;

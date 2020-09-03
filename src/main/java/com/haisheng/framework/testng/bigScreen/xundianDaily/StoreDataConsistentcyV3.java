@@ -923,17 +923,15 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type,month).getJSONArray("trend_list");
             for(int i=0;i<trend_list.size();i++) {
-                Integer customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv");
-                Integer omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv");
-                Integer paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv");
-                if(customer_uv == null||omni_uv ==null ||paid_uv ==null){
-                    customer_uv = 0;
+                if(i-trend_list.size()==-1){
+                    Integer customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    Integer omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                    Integer paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_total");
+                    if(customer_uv == null||omni_uv ==null ||paid_uv ==null){
+                        customer_uv = 0;
+                    }
                 }
-                else {
-                    c_count += customer_uv;
-                    o_count += omni_uv;
-                    p_count += paid_uv;
-                }
+
             }
 
 
@@ -952,22 +950,22 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     if(uv == null){
                         uv = 0;
                     }
-                    if(type =="顾客"){
+                    if(type =="CUSTOMER"){
                         cust_uv += uv;
                     }
-                    if(type =="全渠道会员"){
+                    if(type =="OMNI_CHANNEL"){
                         channel_uv += uv;
                     }
-                    if(type =="付费会员"  ){
+                    if(type =="PAID"  ){
                         pay_uv += uv;
                     }
                 }
 
             }
 
-            Preconditions.checkArgument((c_count <= cust_uv),"所选周期30天的顾客总人数" + c_count + ">所有门店30天顾客之和=" + cust_uv);
-            Preconditions.checkArgument((o_count <= channel_uv),"所选周期30天的全渠道会员总人数" + o_count + ">所有门店30天全渠道会员之和=" + channel_uv);
-            Preconditions.checkArgument((p_count <= pay_uv),"所选周期30天的付费总人数" + p_count + ">所有门店30天付费会员之和=" + pay_uv);
+            Preconditions.checkArgument((c_count == cust_uv),"累计的顾客总人数" + c_count + ">累计的顾客之和=" + cust_uv);
+            Preconditions.checkArgument((o_count == channel_uv),"累计的全渠道会员总人数" + o_count + ">累计的30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((p_count == pay_uv),"累计的付费总人数" + p_count + ">累计的付费会员之和=" + pay_uv);
 
 
         } catch (AssertionError e) {
