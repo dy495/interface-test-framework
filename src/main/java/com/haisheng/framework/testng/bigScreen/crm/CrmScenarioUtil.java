@@ -3042,6 +3042,24 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //--------------------------app2.1------------------------
 
     /**
+     * 客户级别列表接口
+     */
+    public JSONObject appCustomerLevelList() {
+        String url = "/porsche/app/customer/customer-level/list";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 创建线索枚举接口
+     */
+    public JSONObject afterSaleEnumInfo() {
+        String url = "/porsche/app/after_sale/enum_info";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
      * 销售排班列表接口
      */
     public JSONObject saleOrderList() {
@@ -3304,9 +3322,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/app/customer/create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
-        json.put("like_car", like_car);
+        if (!(like_car <= 0)) {
+            json.put("like_car", like_car);
+        }
         json.put("customer_phone", customer_phone);
-        json.put("customer_level", customer_level);
+        if (!(customer_level <= 0)) {
+            json.put("customer_level", customer_level);
+        }
         json.put("remark", remark);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result);
