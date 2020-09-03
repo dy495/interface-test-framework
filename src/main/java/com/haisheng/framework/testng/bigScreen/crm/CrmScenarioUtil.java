@@ -16,9 +16,8 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.StatusCode;
-import com.sun.tools.doclets.internal.toolkit.util.Extern;
+import com.haisheng.framework.util.HttpExecutorUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -27,6 +26,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
@@ -946,12 +946,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     public JSONObject customerListPC(String customerPhone, int page, int size) {
         String url = "/porsche/customer/list";
+        JSONObject json=new JSONObject();
+        json.put("customer_phone",customerPhone);
+        json.put("page",page);
+        json.put("size",size);
 
-        String json = "{\n" + "  " + " \"page\":" + page + ",\n" +
-                "   \"size\":" + size + "\n" +
-                "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2063,6 +2063,37 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    public JSONObject createArticlecode(String positions, String valid_start, String valid_end, String[] customer_types, int[] car_types, int[] customer_level, String[] customer_property, String article_title, Boolean is_pic_content, String article_bg_pic, String article_content, String article_remarks, boolean is_online_activity, String reception_name, String reception_phone, String customer_max, String simulation_num, String activity_start, String activity_end, Integer role_id, String task_customer_num, Boolean is_create_poster
+    ) throws Exception {
+        String url = "/porsche/article/add";
+        JSONObject json1 = new JSONObject();
+        json1.put("position", positions);
+        json1.put("valid_start", valid_start);
+        json1.put("valid_end", valid_end);
+        json1.put("customer_types", customer_types);
+        json1.put("car_types", car_types);
+        json1.put("customer_level", customer_level);
+        json1.put("customer_property", customer_property);
+        json1.put("article_title", article_title);
+        json1.put("is_pic_content", is_pic_content);
+        json1.put("article_bg_pic", article_bg_pic);
+        json1.put("article_content", article_content);
+        json1.put("article_remarks", article_remarks);
+        json1.put("is_online_activity", is_online_activity);
+        json1.put("reception_name", reception_name);
+        json1.put("reception_phone", reception_phone);
+        json1.put("customer_max", customer_max);
+        json1.put("simulation_count", simulation_num);
+        json1.put("activity_start", activity_start);
+        json1.put("activity_end", activity_end);
+        json1.put("role_id", role_id);
+        json1.put("task_customer_num", task_customer_num);
+        json1.put("is_create_poster", is_create_poster);
+        String json = json1.toJSONString();
+
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
 
     //新建文章
     public JSONObject createArticleReal(String positions, String valid_start, String valid_end, String[] customer_types, int[] car_types, int[] customer_level, String[] customer_property, String article_title, Boolean is_pic_content, String article_bg_pic, String article_content, String article_remarks, boolean is_online_activity
@@ -3044,6 +3075,24 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //--------------------------app2.1------------------------
 
     /**
+     * 客户级别列表接口
+     */
+    public JSONObject appCustomerLevelList() {
+        String url = "/porsche/app/customer/customer-level/list";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 创建线索枚举接口
+     */
+    public JSONObject afterSaleEnumInfo() {
+        String url = "/porsche/app/after_sale/enum_info";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
      * 销售排班列表接口
      */
     public JSONObject saleOrderList() {
@@ -3314,9 +3363,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/app/customer/create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
-        json.put("like_car", like_car);
+        if (!(like_car <= 0)) {
+            json.put("like_car", like_car);
+        }
         json.put("customer_phone", customer_phone);
-        json.put("customer_level", customer_level);
+        if (!(customer_level <= 0)) {
+            json.put("customer_level", customer_level);
+        }
         json.put("remark", remark);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result);
@@ -3407,11 +3460,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject importCustom(String[] file, String name) throws Exception {
+    public JSONObject importCustom(String file, String type) throws Exception {
         String url = "/porsche/import/customer";
-        String filep[] = file;
-        String result = httpPostFile(url, filep, name, IpPort);
-        return JSON.parseObject(result);
+//        String result = httpPostFile(url, file, type, IpPort);
+        HttpExecutorUtil httpExecutorUtil = new HttpExecutorUtil();
+        Map<String, String> headers = new ConcurrentReferenceHashMap<>();
+        headers.put("Authorization", super.authorization);
+        headers.put("shop_id", "22728");
+        httpExecutorUtil.uploadFile(IpPort+url, file, headers, type);
+        return JSON.parseObject(httpExecutorUtil.getResponse());
     }
 
     public String outportC() throws Exception {
@@ -3989,10 +4046,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                EnumAppletCode.WM.getCode(),
                 EnumAppletCode.XMF.getCode(),
-                EnumAppletCode.LXQ.getCode(),
-                EnumAppletCode.GLY.getCode()
+                EnumAppletCode.BB.getCode(),
+//                EnumAppletCode.WM.getCode(),
+//                EnumAppletCode.LXQ.getCode(),
+//                EnumAppletCode.GLY.getCode()
         };
     }
 
@@ -4003,7 +4061,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉A000001"
                 //"吉A000002"
                 //"吉A000003"
-                "吉A000004"// 客户4 没人脸 0805xsgw
+                //"吉A000004"// 客户4 没人脸 0805xsgw
 //                "吉C000005",
 //                "吉C000006",
 //                "吉C000007",
@@ -4012,19 +4070,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉C000000",
                 // "苏B123456"
                 //"陕A123456" //0805xsgw 杨航
-//                "吉B000000",
-//                "吉B000001",
-//                "吉B000002",
-//                "吉B000003",
-//                "吉B000004",
-//                "吉B000005",
-//                "吉B000006",
-//                "吉B000007",
-//                "吉B000008",
-//                "吉B000009",
-//                "吉B000010",
-//                "吉B000011",
-//                "吉B000012"
+                "吉D000000",
+                "吉D000001",
+                "吉D000002",
+                "吉D000003",
+                "吉D000004",
+                "吉D000005",
+                "吉D000006",
+                "吉D000007",
+                "吉D000008",
+                "吉D000009",
+                "吉D000010",
+                "吉D000011",
+                "吉D000012"
 
         };
     }
