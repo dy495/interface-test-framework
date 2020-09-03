@@ -119,7 +119,7 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         List<String> array = CommonUtil.getMoreParam(list, "customer_id", "customer_name", "customer_phone", "belongs_sale_id");
         System.out.println(array);
     }
-    
+
     @Test(description = "pc销售客户管理公海共计人数=列表总条数")
     public void salesCustomerManagement_4() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -824,7 +824,6 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
                     id = list.getJSONObject(i).getInteger("id");
                 }
             }
-
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
@@ -903,5 +902,10 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
         int customerId = CommonUtil.getIntField(response, 0, "customer_id");
         crm.customerDelete(customerId);
+    }
+
+    @Test
+    public void test() throws Exception {
+        CommonUtil.uploadShopCarPlate("京AG66666", 0);
     }
 }

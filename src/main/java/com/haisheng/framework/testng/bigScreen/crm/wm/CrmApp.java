@@ -1112,7 +1112,7 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(response3.getString("message").equals("顾客等级不能为空"), "顾客等级为空也可创建成功");
             //不填备注
             JSONObject response4 = crm.createLine("望京", 1, phone, 1, "");
-            Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息不能为空也可创建成功");
+            Preconditions.checkArgument(response4.getString("message").equals("备注信息20-200字之间"), "备注信息为空也可创建成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1449,9 +1449,9 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("task_status_name").equals("未完成")) {
-                        boolean showPic = list.getJSONObject(j).getBoolean("show_pic");
-                        Preconditions.checkArgument(!showPic, "无图片的回访任务可以查看");
+                    if (!list.getJSONObject(j).getBoolean("show_pic")) {
+                        String taskStatusName = list.getJSONObject(j).getString("task_status_name");
+                        Preconditions.checkArgument(taskStatusName.equals("未完成"));
                     }
                 }
             }
