@@ -38,6 +38,11 @@ public enum EnumAccount {
     QT("qt", "e10adc3949ba59abbe56e057f20f883e", "uid_05e8599f"),
 
     /**
+     * cpxsgw
+     */
+    CPXSGW("cpxsgw", "e10adc3949ba59abbe56e057f20f883e", "uid_3dd67680"),
+
+    /**
      * 管理员
      */
     BAOSHIJIE("baoshijie", "e10adc3949ba59abbe56e057f20f883e", "uid_827f10a3");

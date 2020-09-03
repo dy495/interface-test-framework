@@ -372,8 +372,56 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+    /*
+10.1 新建定检规则(2020-08-13)
+*/
+    public JSONObject scheduleRuleAdd(String name,String start_time,String end_time,int interval_hour,JSONArray shop_list) throws Exception {
+        String url = "/patrol/schedule-rule/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"start_time\" :\"" + start_time + "\",\n" +
+                        "\"end_time\" :\"" + end_time + "\",\n" +
+                        "\"interval_hour\" :" + interval_hour + ",\n" +
+                        "\"shop_list\" :" + shop_list + "\n" +
+                        "} ";
 
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
+        return JSON.parseObject(res);
+    }
+
+    /*
+   10.2 定检规则详情页(2020-08-13)
+   */
+    public JSONObject scheduleRuleDetail(long id) throws Exception {
+        String url = "/patrol/schedule-rule/detail";
+        String json =
+                "{" +
+
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /*
+  10.3 定检规则列表(2020-08-13)
+  */
+    public JSONObject scheduleRuleList(long id) throws Exception {
+        String url = "/patrol/schedule-rule/list";
+        String json =
+                "{" +
+
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
 
 
 

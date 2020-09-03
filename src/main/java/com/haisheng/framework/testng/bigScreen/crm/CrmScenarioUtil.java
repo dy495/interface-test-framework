@@ -3064,6 +3064,24 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //--------------------------app2.1------------------------
 
     /**
+     * 客户级别列表接口
+     */
+    public JSONObject appCustomerLevelList() {
+        String url = "/porsche/app/customer/customer-level/list";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 创建线索枚举接口
+     */
+    public JSONObject afterSaleEnumInfo() {
+        String url = "/porsche/app/after_sale/enum_info";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    /**
      * 销售排班列表接口
      */
     public JSONObject saleOrderList() {
@@ -3334,9 +3352,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/app/customer/create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
-        json.put("like_car", like_car);
+        if (!(like_car <= 0)) {
+            json.put("like_car", like_car);
+        }
         json.put("customer_phone", customer_phone);
-        json.put("customer_level", customer_level);
+        if (!(customer_level <= 0)) {
+            json.put("customer_level", customer_level);
+        }
         json.put("remark", remark);
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result);
@@ -4023,7 +4045,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉A000001"
                 //"吉A000002"
                 //"吉A000003"
-                "吉A000004"// 客户4 没人脸 0805xsgw
+                //"吉A000004"// 客户4 没人脸 0805xsgw
 //                "吉C000005",
 //                "吉C000006",
 //                "吉C000007",
@@ -4032,19 +4054,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉C000000",
                 // "苏B123456"
                 //"陕A123456" //0805xsgw 杨航
-//                "吉B000000",
-//                "吉B000001",
-//                "吉B000002",
-//                "吉B000003",
-//                "吉B000004",
-//                "吉B000005",
-//                "吉B000006",
-//                "吉B000007",
-//                "吉B000008",
-//                "吉B000009",
-//                "吉B000010",
-//                "吉B000011",
-//                "吉B000012"
+                "吉D000000",
+                "吉D000001",
+                "吉D000002",
+                "吉D000003",
+                "吉D000004",
+                "吉D000005",
+                "吉D000006",
+                "吉D000007",
+                "吉D000008",
+                "吉D000009",
+                "吉D000010",
+                "吉D000011",
+                "吉D000012"
 
         };
     }
