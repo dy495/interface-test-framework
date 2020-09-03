@@ -903,9 +903,4 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         int customerId = CommonUtil.getIntField(response, 0, "customer_id");
         crm.customerDelete(customerId);
     }
-
-    @Test
-    public void test() throws Exception {
-        CommonUtil.uploadShopCarPlate("京AG66666", 0);
-    }
 }
