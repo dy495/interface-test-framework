@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
+import java.util.List;
+
 public class PackFunction {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
@@ -213,9 +215,62 @@ public class PackFunction {
         String appearance_pic=file.texFile(pp.filePath);  //base 64
         crm.addCarPc(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
     }
+    //创建车辆
+    public Long createCarcode(String car_type_name) throws Exception{
 
-    public Long timeList(String type,int i,String appointment_date) throws Exception {
+        double lowest_price=88.99;
+        double highest_price=8888.99;
+        String car_discount="跑车多数人知道，少数人了解";
+        String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
+        String car_pic=file.texFile(pp.filePath);  //base 64
+        String big_pic=file.texFile(pp.filePath);  //base 64
+        String interior_pic=file.texFile(pp.filePath);  //base 64
+        String space_pic=file.texFile(pp.filePath);  //base 64
+        String appearance_pic=file.texFile(pp.filePath);  //base 64
+        Long code=crm.addCarPccode(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
+        return code;
+    }
+    //预约剩余时段次数查询
+    public Long appointmentTimeList(String type,int i,String appointment_date) throws Exception {
         return crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(i).getLong("id");
     }
+    public JSONObject appointmentTimeListO(String type,int i,String appointment_date) throws Exception {
+        JSONObject data=crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(i);
+        Long id=data.getLong("id");
+        String time=data.getString("start_time");
+        JSONObject object=new JSONObject();
+        object.put("time_id",id);
+        object.put("start_time",time);
+        return object;
+    }
+   //删除文本中手机号用户
+    public void deleteUser(String filePath){
+        List<String> list=file.getFileContent(filePath);
+        for(String value : list){
+            JSONArray anwer=crm.customerListPC(value,1,10).getJSONArray("list");
+            Long customer_id=anwer.getJSONObject(0).getLong("customer_id");
+            if(anwer.size()!=0){
+                crm.customerDeletePC(customer_id);
+            }
+        }
+    }
 
+    //查询活动列表，已下架状态，显示中状态，总列数
+    public int [] statusNum() throws Exception {
+        JSONObject data = crm.articlePage(1, 10, pp.positions);
+        int[] aa = {0,0,0,0};
+        aa[2]= data.getInteger("total");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            String status = list.getJSONObject(i).getString("status_name");
+            if (status.equals("显示中")) {
+                aa[0]++;
+            } else if (status.equals("已下架")) {
+                aa[1]++;
+            }else if(status.equals("排期中")){
+                aa[3]++;
+            }
+        }
+        return aa;
+    }
 }

@@ -200,7 +200,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             array1.add(1, ll2);
             array1.add(2, ll3);
 
-            crm.messageEvaluate(id, "保养满意", array1);  //评价
+            crm.messageEvaluate(id, "我的消息-保养满意", array1);  //评价
 
             Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
         } catch (AssertionError e) {
@@ -724,14 +724,14 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
            Preconditions.checkArgument(task_customer_num == 5, "app报名活动，任务人数与活动创建时不一致");
            Preconditions.checkArgument(totalA-total == 1, "app报名活动，报名列表+1");
            Preconditions.checkArgument(totalA-totalAfterDelet== 1, "app删除报名人，报名列表没-1");
-
+           crm.login(pp.zongjingli,pp.adminpassword);
            crm.articleStatusChange(id);
            crm.articleDelete(id);
-           crm.login(pp.xiaoshouGuwen, pp.adminpassword);
 
        }catch (AssertionError | Exception e){
            appendFailreason(e.toString());
        } finally {
+           crm.login(pp.xiaoshouGuwen, pp.adminpassword);
            saveData("app活动报名,任务人数于创建时相同，增加报名，任务人数+1");
        }
    }

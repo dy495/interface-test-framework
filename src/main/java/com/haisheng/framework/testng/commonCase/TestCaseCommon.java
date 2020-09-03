@@ -25,6 +25,8 @@ import org.testng.Assert;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -343,11 +345,13 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
-    public String httpPostFile(String path, String[] filepath,String name, String IpPort) throws Exception {
+    public String httpPostFile(String path, String[] filepath,String type, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
-        config.url(queryUrl).files(filepath,name,true);
-        logger.info("{} json param: {}", path, filepath,name);
+        Map<String, Object> map = new HashMap<>();
+        map.put("type",type);
+        config.url(queryUrl).files(filepath,"file",true).map(map);
+        logger.info("{} json param: {}", path, filepath,type);
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
@@ -387,11 +391,12 @@ public class TestCaseCommon {
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         Header[] headers;
-        if (authorization.contains("qa_need")) {
+//        if (authorization.contains("qa_need")) {
+        if (3>2) {
             headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                     .other("shop_id", commonConfig.shopId)
                     .userAgent(userAgent)
-                    .referer("https://servicewechat.com/wx0cf070e8eed63e90/")
+                    .referer("https://servicewechat.com/wx5102264595be8c23/")
                     .authorization(authorization)
                     .build();
         } else {

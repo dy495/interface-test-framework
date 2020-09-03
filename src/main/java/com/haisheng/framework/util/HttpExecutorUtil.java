@@ -547,4 +547,37 @@ public class HttpExecutorUtil {
             return false;
         }
     }
+
+    public boolean uploadFile(String url, String filePath, Map<String, String> header, String type) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        for (String key : header.keySet()) {
+            httpPost.addHeader(key, header.get(key));
+        }
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        // 把文件加到HTTP的post请求中
+        File pictureAFile = new File(filePath);
+        builder.addBinaryBody(
+                "file",
+                new FileInputStream(pictureAFile),
+                ContentType.APPLICATION_OCTET_STREAM,
+                pictureAFile.getName()
+        );
+        builder.addTextBody("type", type, ContentType.MULTIPART_FORM_DATA);
+
+        HttpEntity multipart = builder.build();
+        httpPost.setEntity(multipart);
+        CloseableHttpResponse response = httpClient.execute(httpPost);
+        HttpEntity responseEntity = response.getEntity();
+        this.response = EntityUtils.toString(responseEntity, "UTF-8");
+        logger.info("response: " + this.response);
+
+        if (null != this.response) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
