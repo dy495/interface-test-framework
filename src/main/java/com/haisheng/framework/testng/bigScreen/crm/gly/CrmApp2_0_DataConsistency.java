@@ -1740,8 +1740,5 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             saveData("修改密码-填写全部必填项：新密码输入长度21位--1234!@#$我们111111111111111qq");
         }
     }
-
-
-
 }
 
