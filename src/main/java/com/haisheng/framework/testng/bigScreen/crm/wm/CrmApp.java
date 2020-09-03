@@ -48,7 +48,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        CommonUtil.login(EnumAccount.ZJL);
     }
 
     @AfterClass
@@ -158,11 +157,7 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             //回访
             String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
             String picture = new ImageUtil().getImageBinary(picPath);
-            JSONArray array = new JSONArray();
-            JSONObject object = new JSONObject();
-            object.put("return_visit_pic", picture);
-            array.add(object);
-            crm.returnVisitTaskExecute(taskId, common, data, "ANSWER", array, false);
+            crm.returnVisitTaskExecute(taskId, common, "", data, "ANSWER", false, picture);
             //获取
             int x = 0;
             JSONArray s = crm.appointmentTestDriverList("", "", "", 1, 100).getJSONArray("list");
@@ -446,6 +441,68 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("创建接待");
+        }
+    }
+
+    /**
+     * @description: 售后-工作管理-我的回访
+     */
+    @Test(description = "开始时间<=结束时间,成功")
+    public void afterSaleMyReturnVisit_function_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            crm.afterSale_VisitRecordList(1, 1, "", date, date1);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，开始时间<=结束时间");
+        }
+    }
+
+    @Test(description = "仅输入开始时间")
+    public void afterSaleMyReturnVisit_function_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        try {
+            crm.afterSale_VisitRecordList(1, 10, "", date, "");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，进输入开始时间");
+        }
+    }
+
+    @Test(description = "仅输入结束时间")
+    public void afterSaleMyReturnVisit_function_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        try {
+            crm.afterSale_VisitRecordList(1, 10, "", "", date);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，进输入开始时间");
+        }
+    }
+
+    @Test(description = "结束时间>开始时间")
+    public void afterSaleMyReturnVisit_function_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            boolean flag = false;
+            JSONArray list = crm.afterSale_VisitRecordList(1, 10, "", date1, date).getJSONArray("list");
+            if (list.size() == 0) {
+                flag = true;
+            }
+            Preconditions.checkArgument(flag, "结束时间>开始时间,查询成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访按照时间筛选，结束时间>开始时间");
         }
     }
 
@@ -1314,10 +1371,11 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
                 for (int j = 0; j < list.size(); j++) {
                     if (list.getJSONObject(j).getString("customer_type_name").equals("成交")) {
                         String customerPhone = list.getJSONObject(j).getString("customer_phone");
+                        CommonUtil.valueView(customerPhone);
                         CommonUtil.login(EnumAccount.ZJL);
                         JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
                         String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                        CommonUtil.valueView(j, ifByCarName, customerPhone);
+                        CommonUtil.valueView(j, ifByCarName);
                         Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
                         CommonUtil.login(EnumAccount.XSGWTEMP);
                     }
@@ -1330,23 +1388,93 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访客户")
+    @Test(description = "回访类型:预约，预约记录中存在")
     public void myReturnVisit_function_12() {
         logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("customer_type_name").equals("预约")) {
+                    String customerPhone;
+                    customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    if (StringUtils.isEmpty(customerPhone)) {
+                        customerPhone = list.getJSONObject(i - 2).getString("customer_phone");
+                        CommonUtil.valueView(customerPhone);
+                    }
+                    CommonUtil.valueView("电话号是" + customerPhone);
+                    JSONObject result = crm.appointmentTestDriverList(customerPhone, "", "", 1, 10);
+                    JSONArray list1 = result.getJSONArray("list");
+                    CommonUtil.valueView(list1);
+                    Preconditions.checkArgument(list1.size() >= 1, "回访类型:预约，预约记录中不存在此电话号");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访类型:预约，工作管理-我的预约中存该手机号");
+        }
+    }
+
+    @Test(description = "查看,有截图,show_pic字段为true")
+    public void myReturnVisit_function_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("task_status_name").equals("已完成")) {
+                        boolean showPic = list.getJSONObject(j).getBoolean("show_pic");
+                        int taskId = list.getJSONObject(j).getInteger("task_id");
+                        JSONArray picList = crm.showPicResult(taskId).getJSONArray("data").getJSONObject(0).getJSONArray("pic_list");
+                        Preconditions.checkArgument(showPic, "已完成的回访任务无法查看");
+                        Preconditions.checkArgument(picList.size() > 0, "已完成的回访任务无截图");
+                    }
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访,查看已完成任务,有图片,show_pic字段为true");
+        }
+    }
+
+    @Test(description = "查看,无截图置灰,show_pic字段为false")
+    public void myReturnVisit_function_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("task_status_name").equals("未完成")) {
+                        boolean showPic = list.getJSONObject(j).getBoolean("show_pic");
+                        Preconditions.checkArgument(!showPic, "无图片的回访任务可以查看");
+                    }
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访,未完成任务无图片,按钮置灰,show_pic字段为false");
+        }
+    }
+
+    @Test(description = "回访客户,接听,是否完成=已完成")
+    public void myReturnVisit_function_15() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
         try {
             //获取回访列表
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 1, "task_id");
             //回访
-            String data = DateTimeUtil.addDayFormat(new Date(), 1);
-            String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
-            String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
-            String picture = new ImageUtil().getImageBinary(picPath);
-            JSONArray array = new JSONArray();
-            JSONObject object = new JSONObject();
-            object.put("return_visit_pic", picture);
-            array.add(object);
-            crm.returnVisitTaskExecute(taskId, common, data, "ANSWER", array, false);
+            crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picture);
             CommonUtil.valueView(taskId);
             String taskStatusName = null;
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
@@ -1369,6 +1497,264 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "回访客户,其他,是否完成=已完成")
+    public void myReturnVisit_function_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            //获取回访列表
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 1, "task_id");
+            //回访
+            crm.returnVisitTaskExecute(taskId, common, "", date, "OTHER", false, picture);
+            CommonUtil.valueView(taskId);
+            String taskStatusName = null;
+            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int j = 1; j < s; j++) {
+                JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getInteger("task_id") == taskId) {
+                        taskStatusName = list.getJSONObject(i).getString("task_status_name");
+                    }
+                }
+            }
+            assert taskStatusName != null;
+            CommonUtil.valueView(taskStatusName);
+            Preconditions.checkArgument(taskStatusName.equals("已完成"), "完成回访后,是否完成状态未变为已完成");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访客户");
+        }
+    }
+
+    @Test(description = "回访客户,无人接听,是否完成=未完成")
+    public void myReturnVisit_function_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        int taskId = 0;
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "NO_ONE_ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("成功"));
+            //验证是否完成为未完成
+            JSONArray list = crm.returnVisitTaskPage(1, 10, "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getInteger("task_id") == taskId) {
+                    String taskStatusName = list.getJSONObject(i).getString("task_status_name");
+                    CommonUtil.valueView(taskStatusName);
+                    Preconditions.checkArgument(taskStatusName.equals("未完成"), "第一次回访为无人接听时,回访任务状态不为未完成");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picPath);
+            saveData("回访选择第一次无人接听时,是否完成=未完成");
+        }
+    }
+
+    @Test(description = "回访客户,挂断,是否完成=未完成")
+    public void myReturnVisit_function_18() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "HANG_UP", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("成功"));
+            //验证是否完成为未完成
+            JSONArray list = crm.returnVisitTaskPage(1, 10, "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getInteger("task_id") == taskId) {
+                    String taskStatusName = list.getJSONObject(i).getString("task_status_name");
+                    CommonUtil.valueView(taskStatusName);
+                    Preconditions.checkArgument(taskStatusName.equals("未完成"), "第一次回访为挂断时,回访任务状态不为未完成");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访选择第一次挂断时,是否完成=未完成");
+        }
+    }
+
+    @Test(description = "回访客户,稍后联系,是否完成=未完成")
+    public void myReturnVisit_function_19() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "CONTACT_LATER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("成功"));
+            //验证是否完成为未完成
+            JSONArray list = crm.returnVisitTaskPage(1, 10, "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getInteger("task_id") == taskId) {
+                    String taskStatusName = list.getJSONObject(i).getString("task_status_name");
+                    CommonUtil.valueView(taskStatusName);
+                    Preconditions.checkArgument(taskStatusName.equals("未完成"), "第一次回访为稍后联系时,回访任务状态不为未完成");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访选择第一次稍后联系时,是否完成=未完成");
+        }
+    }
+
+    @Test(description = "回访客户,错号,是否完成=已完成,所有等级产生的回访任务取消", enabled = false)
+    public void myReturnVisit_function_20() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+    }
+
+    @Test(description = "回访记录,内容,汉字英文数字符号,10-200字")
+    public void myReturnVisit_function_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String common = "(壬戌之秋)7w既望%苏子与客泛舟游于赤壁之下@清风徐来水波不兴。举酒属客，诵明月之诗，歌窈窕之章。少焉，月出于东山之上，徘徊于斗牛之间。白露横江，水光接天。纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。\n" +
+                "于是饮酒乐甚，扣舷而歌之。歌曰：“桂棹兮兰桨，击空明兮溯流光。渺渺兮予怀，望美人兮天一方。”客有吹洞箫者，倚歌而和之。其声呜呜然，如怨如慕，如泣如诉";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("成功"), "回访记录200字,回访失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访记录,内容,汉字英文数字符号,10-200字");
+        }
+    }
+
+    @Test(description = "回访截图,2张-3张")
+    public void myReturnVisit_function_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String common = "举酒属客，诵明月之诗，歌窈窕之章";
+        String picPath = "src/main/java/com/haisheng/framework/model/experiment/multimedia/goodsmanager/";
+        String picture1 = new ImageUtil().getImageBinary(picPath + "车辆照片.jpg");
+        String picture2 = new ImageUtil().getImageBinary(picPath + "外观照片.jpg");
+        String picture3 = new ImageUtil().getImageBinary(picPath + "大图照片.jpg");
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访2张图片
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "CONTACT_LATER", false, picture1, picture2);
+            Preconditions.checkArgument(result.getString("message").equals("成功"), "回访截图2张,回访失败");
+            //回访3张图片
+            JSONObject result1 = crm.returnVisitTaskExecute(taskId, common, "", date, "CONTACT_LATER", false, picture1, picture2, picture3);
+            Preconditions.checkArgument(result1.getString("message").equals("成功"), "回访截图3张,回访失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访截图,2张-3张");
+        }
+    }
+
+    @Test(description = "回访记录,200字以上")
+    public void myReturnVisit_function_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String common = "壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴。举酒属客，诵明月之诗，歌窈窕之章。少焉，月出于东山之上，徘徊于斗牛之间。白露横江，水光接天。纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。\n" +
+                "于是饮酒乐甚，扣舷而歌之。歌曰：“桂棹兮兰桨，击空明兮溯流光。渺渺兮予怀，望美人兮天一方。”客有吹洞箫者，倚歌而和之。其声呜呜然，如怨如慕，如泣如诉，余音袅袅，不绝如缕。舞幽壑之潜蛟，泣孤舟之嫠妇。\n" +
+                "苏子愀然，正襟危坐而问客曰：“何为其然也？”客曰：“月明星稀，乌鹊南飞，此非曹孟德之诗乎？西望夏口，东望武昌，山川相缪，郁乎苍苍，此非孟德之困于周郎者乎？方其破荆州，下江陵，顺流而东也，舳舻千里，旌旗蔽空，酾酒临江，横槊赋诗，固一世之雄也，而今安在哉？况吾与子渔樵于江渚之上，侣鱼虾而友麋鹿，驾一叶之扁舟，举匏樽以相属。寄蜉蝣于天地，渺沧海之一粟。哀吾生之须臾，羡长江之无穷。挟飞仙以遨游，抱明月而长终。知不可乎骤得，托遗响于悲风。”";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("下次回访内容长度必须在10和200之间"), "下次回访内容长度必须在10和200之外也可以回访成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("回访记录,内容,汉字英文数字符号,200字以上");
+        }
+    }
+
+    @Test(description = "下次回访日期,昨天及之前")
+    public void myReturnVisit_function_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        String common = "壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("回访日期不允许在今日之前"), "下次回访日期在今日之前也可以回访成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("昨天及之前不可做为下次回访日期");
+        }
+    }
+
+    @Test(description = "我的回访,不可以修改为订单客户")
+    public void myReturnVisit_function_25() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String common = "壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "4", date, "ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("不可以修改为订单客户"), "修改为订单客户也可以回访成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访,不可以修改为订单客户");
+        }
+    }
+
+    @Test(description = "我的回访,不可以修改为订单客户")
+    public void myReturnVisit_function_26() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String common = "壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
+            //回访
+            JSONObject result = crm.returnVisitTaskExecute(taskId, common, "4", date, "ANSWER", false, picture);
+            Preconditions.checkArgument(result.getString("message").equals("不可以修改为订单客户"), "修改为订单客户也可以回访成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的回访,不可以修改为订单客户");
+        }
+    }
+
     /**
      * @description: 前台销售排班
      */
@@ -1388,36 +1774,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访详情")
-    public void returnVisitTaskInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        int taskId = 18600;
-        try {
-//            //获取回访列表
-//            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-//            int x = CommonUtil.pageTurning(total, 100);
-//            int taskId = 0;
-//            for (int i = 1; i < x; i++) {
-//                JSONObject response = crm.returnVisitTaskPage(i, 100, "", "");
-//                JSONArray list = response.getJSONArray("list");
-//                for (int j = 0; i < list.size(); j++) {
-//                    if (list.getJSONObject(j).getString("task_status_name").equals("已完成")) {
-//                        taskId = list.getJSONObject(i).getInteger("task_id");
-//                        break;
-//                    }
-//                }
-//            }
-            //获取回访详情
-            JSONArray picList = crm.returnVisitTaskInfo(taskId).getJSONArray("data").getJSONObject(0).getJSONArray("pic_list");
-            CommonUtil.valueView(taskId);
-            Preconditions.checkArgument(picList != null, "回访图片为空");
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("获取回访详情");
-        }
-    }
-
     @Test(enabled = false)
     public void afterSaleCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1429,19 +1785,6 @@ public class CrmApp extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("售后客户标记");
-        }
-    }
-
-    @Test(enabled = false)
-    public void test() {
-        Long customerId = 13997L;
-        String phone = "13333333332";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        try {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
-            crm.finishReception(customerId, 6, "【自动化】王先生", phone, remark);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
         }
     }
 
