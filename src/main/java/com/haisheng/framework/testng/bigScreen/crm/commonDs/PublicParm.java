@@ -20,6 +20,9 @@ public class PublicParm {
     public Integer car_type = 1;
 //    public String car_type_name = "Panamera";
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
+    public String textPath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/deleteList";
+    public String nomalFileModel = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/nomalFileModel";
+    public String abnomalFileModel = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/abnomalFileModel";
 
 
     public String positions = "CAR_ACTIVITY";
