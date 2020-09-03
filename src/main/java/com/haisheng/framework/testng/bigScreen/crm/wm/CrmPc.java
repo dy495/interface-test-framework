@@ -20,6 +20,11 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * CRM-PC 自动化用例
+ *
+ * @author wangmin
+ */
 public class CrmPc extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
@@ -114,8 +119,7 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         List<String> array = CommonUtil.getMoreParam(list, "customer_id", "customer_name", "customer_phone", "belongs_sale_id");
         System.out.println(array);
     }
-
-
+    
     @Test(description = "pc销售客户管理公海共计人数=列表总条数")
     public void salesCustomerManagement_4() {
         logger.logCaseStart(caseResult.getCaseName());
