@@ -565,7 +565,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopMemberCountV3(String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/member/count";
+        String url = "/patrol/history/shop/member/new/count";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
@@ -583,7 +583,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopMemberV3(long shop_id, String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/member";
+        String url = "/patrol/history/shop/new/member";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -606,6 +606,24 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:8.5.7 门店列表-云中客的
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberTotalListV3(long shop_id,Integer page,Integer size) throws Exception {
+        String url = "/patrol/member/total/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"page\" :" + page+",\n" +
+                        "\"size\" :" + size + "\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);

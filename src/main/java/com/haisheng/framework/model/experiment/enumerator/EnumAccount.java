@@ -3,6 +3,8 @@ package com.haisheng.framework.model.experiment.enumerator;
 import lombok.Getter;
 
 /**
+ * 人员账号
+ *
  * @author wangmin
  * @date 2020/7/24 16:54
  */
@@ -23,6 +25,11 @@ public enum EnumAccount {
     ZDHCS("zdhcs", "e10adc3949ba59abbe56e057f20f883e", ""),
 
     /**
+     * 销售顾问
+     */
+    CPXSGW("cpxsgw", "e10adc3949ba59abbe56e057f20f883e", "uid_3dd67680"),
+
+    /**
      * 销售总监
      */
     XSZJ("xszj", "e10adc3949ba59abbe56e057f20f883e", "uid_c643c797"),
@@ -38,9 +45,9 @@ public enum EnumAccount {
     QT("qt", "e10adc3949ba59abbe56e057f20f883e", "uid_05e8599f"),
 
     /**
-     * cpxsgw
+     * 服务总监
      */
-    CPXSGW("cpxsgw", "e10adc3949ba59abbe56e057f20f883e", "uid_3dd67680"),
+    FWZJ("fwzj", "e10adc3949ba59abbe56e057f20f883e", "uid_d3fcde5c"),
 
     /**
      * 管理员
