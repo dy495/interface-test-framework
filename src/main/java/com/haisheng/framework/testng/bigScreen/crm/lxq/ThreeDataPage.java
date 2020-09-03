@@ -77,6 +77,10 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
     int funnel_deal = 0; //交车
 
+    String enter_rate = ""; //到店率
+    String driver_rate = ""; //试驾率
+    String deal_rate = ""; //成交率
+
     //[车型漏斗]
     int car_clue = 0; //线索
     int car_receive = 0 ; //接待
@@ -109,7 +113,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常 lxq");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -216,6 +220,12 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             JSONObject obj6 = array.getJSONObject(4);
             funnel_deal = obj6.getInteger("value");//交车
 
+            JSONObject busrate = crm.saleFunnel("DAY","","").getJSONObject("business");
+            enter_rate = busrate.getString("enter_percentage"); //到店率
+            driver_rate = busrate.getString("test_drive_percentage"); //试驾率
+            deal_rate = busrate.getString("deal_percentage"); //成交率
+
+
             //[车型漏斗]
             JSONArray array1 = crm.saleFunnel("DAY","","").getJSONObject("car_type").getJSONArray("list");
 
@@ -284,18 +294,92 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(priority = 1)
-    public void serviceETdelivery() {
+    public void dealETdelivery() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Preconditions.checkArgument(service>=delivery,"累计接待" + service +" < " + "累计交车" + delivery);
+            Preconditions.checkArgument(deal>=delivery,"累计成交" + deal +" < " + "累计交车" + delivery);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析：累计接待>=累计交车");
+            saveData("店面数据分析：累计成交>=累计交车");
+        }
+    }
+
+    @Test(priority = 1)
+    public void allEQAlone_4tab() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int service1 = 0;
+            int test_drive1 = 0;
+            int deal1 = 0;
+            int delivery1 = 0;
+            JSONArray array = crm.allSale().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                String saleid = array.getJSONObject(i).getString("sale_id");
+                JSONObject obj1 = crm.shopPannel("DAY","",saleid);
+                service1 = service1 + obj1.getInteger("service"); //累计接待
+                test_drive1 = obj1.getInteger("test_drive"); //累计试驾
+                deal1 = obj1.getInteger("deal"); //累计成交
+                delivery1 = obj1.getInteger("delivery"); //累计交车
+            }
+            Preconditions.checkArgument(service==service1,"各销售累计接待"+ service1 +"！= 不选销售顾问累计接待" + service );
+            Preconditions.checkArgument(test_drive==test_drive1,"各销售累计试驾"+ test_drive1 +"！= 不选销售顾问累计试驾" + test_drive );
+            Preconditions.checkArgument(deal==deal1,"各销售累计成交"+ deal1 +"！= 不选销售顾问累计成交" + deal );
+            Preconditions.checkArgument(delivery==delivery1,"各销售累计交车"+ delivery1 +"！= 不选销售顾问累计交车" + delivery );
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析：4个tab【不选销售顾问】累计数据=各个销售顾问累计数据之和");
+        }
+    }
+
+    @Test(priority = 1)
+    public void allEQAlone_rectime() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int all_10 = 0;
+            int all_30 = 0;
+            int all_60 = 0;
+            int all_120l = 0;
+            int all_120g = 0;
+            JSONArray array = crm.allSale().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                String saleid = array.getJSONObject(i).getString("sale_id");
+                JSONArray array0 = crm.receptTime("DAY","",saleid).getJSONArray("list");
+                all_10 = all_10 + array0.getJSONObject(0).getInteger("value");
+                all_30 = all_30 + array0.getJSONObject(1).getInteger("value");
+                all_60 = all_60 + array0.getJSONObject(2).getInteger("value");
+                all_120l = all_120l + array0.getJSONObject(3).getInteger("value");
+                all_120g = all_120g + array0.getJSONObject(4).getInteger("value");
+            }
+            JSONArray array1 = crm.receptTime("DAY","","").getJSONArray("list");
+            int l10 = array1.getJSONObject(0).getInteger("value");
+            int l30 = array1.getJSONObject(1).getInteger("value");
+            int l60 = array1.getJSONObject(2).getInteger("value");
+            int l120 = array1.getJSONObject(3).getInteger("value");
+            int g120 = array1.getJSONObject(4).getInteger("value");
+
+            Preconditions.checkArgument(all_10==l10,"10分钟内：不选销售累计组数" + l10 + " != 各销售接待组数之和" + all_10);
+            Preconditions.checkArgument(all_30==l30,"10~30分钟：不选销售累计组数" + l30 + " != 各销售接待组数之和" + all_30);
+            Preconditions.checkArgument(all_60==l60,"30～60分钟：不选销售累计组数" + l60 + " != 各销售接待组数之和" + all_60);
+            Preconditions.checkArgument(all_120l==l120,"60～120分钟：不选销售累计组数" + l120 + " != 各销售接待组数之和" + all_120l);
+            Preconditions.checkArgument(all_120g==g120,"大于120分钟：不选销售累计组数" + g120 + " != 各销售接待组数之和" + all_120g);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析：各时间段接待时长【不选销售顾问】接待组数=各个销售顾问接待组数之和");
         }
     }
 
@@ -432,6 +516,30 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             saveData("【店面数据分析】业务漏斗：订单>=交车");
         }
     }
+
+    @Ignore
+    @Test(priority = 1,dataProvider = "BUS_RATE")
+    public void businessrate(String fz, String fm, String fzstr, String fmstr,String rate,String show) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int fz1 = Integer.parseInt(fz);
+            int fm1 = Integer.parseInt(fm);
+            double a = (double) fz1 / fm1;
+            BigDecimal bd   =   new   BigDecimal(a);
+            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+
+            Preconditions.checkArgument(jisuan.equals(show), "展示" + show + " != 计算结果" + jisuan);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("【店面数据分析】业务漏斗："+rate+" = "+fzstr+" / "+fmstr);
+        }
+    }
+
+
 
     @Test(priority = 1)
     public void businessServiceEQRecSum() {
@@ -572,6 +680,17 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("店面数据分析-车型漏斗："+bus1+">="+car1);
         }
+    }
+
+
+    @DataProvider(name = "BUS_RATE")
+    public  Object[][] bus_rate() {
+        return new String[][]{
+                {Integer.toString(car_receive),Integer.toString(car_clue),"接待","线索","到店率",enter_rate},
+                {Integer.toString(car_testDriver),Integer.toString(car_receive),"试驾","接待","试驾率",driver_rate},
+                {Integer.toString(car_order),Integer.toString(car_testDriver),"订单","试驾","成交率",deal_rate}
+
+        };
     }
 
 
@@ -743,23 +862,23 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Ignore
-//    @Test(priority = 1)
-//    public void creatChk() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
-//            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日线索").split("/")[1]);
-//            int yesterday = clue - newa ;
-//            Preconditions.checkArgument(creat==yesterday,"创建线索=" + creat + "前一日=" + yesterday);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
-//        }
-//    }
+    @Ignore
+    @Test(priority = 1)
+    public void creatChk() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
+            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日线索").split("/")[1]);
+            int yesterday = clue - newa ;
+            Preconditions.checkArgument(creat==yesterday,"创建线索=" + creat + "前一日=" + yesterday);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+        }
+    }
 
     @Ignore
     @Test
@@ -839,7 +958,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(less30==l30,"10~30分钟：组数=" + l30 + "接待列表组数=" + less30);
             Preconditions.checkArgument(less60==l60,"30～60分钟：组数=" + l60 + "接待列表组数=" + less60);
             Preconditions.checkArgument(less120==l120,"60～120分钟：组数=" + l120 + "接待列表组数=" + less120);
-            Preconditions.checkArgument(more120==g120,"大于120分钟：组数=" + more120 + "接待列表组数=" + g120);
+            Preconditions.checkArgument(more120==g120,"大于120分钟：组数=" + g120 + "接待列表组数=" + more120);
 
 
         } catch (AssertionError e) {
@@ -861,19 +980,43 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
     @Ignore
     @Test(priority = 1)
-    public void creatChk() {
+    public void age100() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日新客接待1").split("/")[1]);
-            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath,"今日线索").split("/")[1]);
-            int yesterday = clue - newa ;
-            Preconditions.checkArgument(creat==yesterday,"创建线索=" + creat + "前一日=" + yesterday);
+            JSONArray array = crm.customerAge("DAY","","","").getJSONArray("list");
+            double a0 = array.getJSONObject(0).getDouble("percentage");
+            double a1 = array.getJSONObject(1).getDouble("percentage");
+            double a2 = array.getJSONObject(2).getDouble("percentage");
+            double a3 = array.getJSONObject(3).getDouble("percentage");
+            double a4 = array.getJSONObject(4).getDouble("percentage");
+            double a5 = array.getJSONObject(5).getDouble("percentage");
+            double all = a0 + a1 + a2 + a3 + a4 + a5;
+            Preconditions.checkArgument(all==1,"百分比之和为" + all);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+            saveData("潜在客户分析-潜在年龄分布：各年龄段百分比之和=100%");
+        }
+    }
+
+    @Ignore
+    @Test(priority = 1)
+    public void gender100() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray array = crm.customerGender("DAY","","","").getJSONArray("list");
+            double a0 = array.getJSONObject(0).getDouble("percentage");
+            double a1 = array.getJSONObject(1).getDouble("percentage");
+            double all = a0 + a1;
+            Preconditions.checkArgument(all==1,"百分比之和为" + all);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("潜在客户分析-潜在性别分布：男+女百分比之和=100%");
         }
     }
 
@@ -1044,6 +1187,28 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("[成交客户分析] 苏州各区成交量 成交量百分比之和=100%");
+        }
+    }
+
+    @Test
+    public void partLTCity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray array = crm.city("DAY","","").getJSONArray("list");
+            int sum = 0;
+            for (int i = 0 ; i < array.size();i++){
+                sum = sum + array.getJSONObject(i).getInteger("value");
+            }
+            int jiangsu = crm.wholeCountry("DAY","","").getJSONArray("list").getJSONObject(0).getInteger("value");
+            Preconditions.checkArgument(sum<=jiangsu,"苏州各区之和" + sum + "> 江苏"+ jiangsu);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("[成交客户分析] 苏州各区成交量之和<=江苏成交量");
         }
     }
 

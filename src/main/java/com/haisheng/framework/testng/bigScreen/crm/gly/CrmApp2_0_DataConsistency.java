@@ -11,7 +11,9 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.springframework.beans.propertyeditors.CurrencyEditor;
 import org.testng.annotations.*;
 
 import java.io.FileInputStream;
@@ -1148,21 +1150,13 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
 
-//    //销售接待--今日接待=列表总数手机号去重
+    /**
+     * @author : guoliya
+     * @date :  2020/8/24
+     */
 
-    @Test
-    public void TodayReception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        crm.login(qt_name, pwd);
-        JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
-        System.out.println("response   " + response);
-        int todayReptionNum = response.getInteger("today_reception_num");
-        System.out.println("todayReptionNum   " + todayReptionNum);
 
-    }
-
-//    //销售接待--接待率=今日接待/今日线索*100
-//   有问题 ，没有调试完   文字需要修改
+    //销售接待--接待率=今日接待/今日线索*100
 
     @Test
     public void receptionRatio() {
@@ -1290,7 +1284,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //    //销售接待--今天销售创建线索->今日线索+1
+    //销售接待--今天销售创建线索->今日线索+1
     @Test
     public void xsCreateLine() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1317,6 +1311,59 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
 
     }
+
+    //销售接待--今天销售创建客户->今日线索+1
+    @Test
+    public void xsCreateCustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = new JSONObject();
+            //前台登陆
+            crm.login(qt_name, pwd);
+            JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+            int allCustomerNum = response.getInteger("all_customer_num");
+            Long customerid = -1L;
+            //获取当前空闲第一位销售id
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String userLoginName = "";
+            JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+            for (int i = 0; i < userlist.size(); i++) {
+                JSONObject obj = userlist.getJSONObject(i);
+                if (obj.getString("user_id").equals(sale_id)) {
+                    userLoginName = obj.getString("user_login_name");
+                }
+            }
+            object.put("loginname", userLoginName);
+            //创建接待
+            crm.creatReception("FIRST_VISIT");
+            //销售登陆，获取当前接待id
+            crm.login(userLoginName, pwd);
+            customerid = crm.userInfService().getLong("customer_id");
+            object.put("customerid", customerid);
+            //创建某级客户
+            String name = "翠花";
+            String phone = "13388888666";
+            object.put("name", name);
+            object.put("phone", phone);
+            JSONObject customer = crm.finishReception(customerid, 3, name, phone, "自动化---------创建----------客户");
+            crm.login(qt_name, pwd);
+            JSONObject response1 = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
+            int allCustomerNum1 = response1.getInteger("all_customer_num");
+            Preconditions.checkArgument(allCustomerNum1 == allCustomerNum + 1, "没有创建线索之前数据为：" + allCustomerNum1 + "  创建线索之后数据为：" + allCustomerNum);
+
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(zjl_name, pwd);
+            JSONObject responZjl = crm.customerListPC("13388888666", 1, 10);
+            long customerId = responZjl.getJSONArray("list").getJSONObject(0).getInteger("customer_id");
+            crm.customerDeletePC(customerId);
+            saveData("今天销售创建线索->今日线索+1");
+        }
+
+
+    }
+
 
     //销售接待--今日试驾=所有销售 【客户管理-我的试驾】今日试驾之和
     @Test(enabled = true)
@@ -1416,18 +1463,69 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
 
     }
-
     //接待列表导出
     @Test
     public void receptionExport() {
         try {
             String flag=crm.receptionExport();
         } catch (Exception |AssertionError e) {
-            e.printStackTrace();
-        } finally{
+            appendFailreason(e.toString());
 
+        } finally{
         }
     }
+
+    //APP销售接待列表数==PC销售接待列表数
+    @Test
+    public void receptionNumber(){
+
+        try {
+            crm.login(qt_name, pwd);
+            JSONObject response = crm.receptionPage(1, 2);
+            int allCustomerNum = response.getInteger("total");
+            System.out.println("App列表数   :"+allCustomerNum);
+            JSONObject response1 = crm.receptionPage1(1,"PRE_SALES",10);
+            int todayDeliverCarNum = response1.getInteger("total");
+            System.out.println("PC列表数   :"+todayDeliverCarNum);
+            Preconditions.checkArgument(allCustomerNum == todayDeliverCarNum, "APP列表数：" + allCustomerNum + "  " + "PC列表数" + todayDeliverCarNum);
+        } catch (Exception |AssertionError e) {
+            e.printStackTrace();
+        }finally{
+            saveData("APP销售接待列表数==PC销售接待列表数");
+        }
+    }
+
+    //V2.1活动报名-是否完成，未完成高亮，已完成不高亮
+//    @Test
+//    public void activityTaskPage() {
+//        try {
+//            crm.login(xs_name, pwd);
+//            JSONObject response = crm.activityTaskPage(1,2<<10);
+//            JSONArray list = response.getJSONArray("list");
+//            System.out.println("list的返回值为    ："+list);
+//            if (list.size() > 1) {
+//                System.out.println();
+//                for (int i = 0; i < list.size(); i++) {
+//                    String taskStatusName = list.getJSONObject(i).getString("activity_task_status_name");
+//                    Boolean isHighlight = list.getJSONObject(i).getBoolean("is_highlight");
+//                    if (taskStatusName.equals("未完成")) {
+//                        Preconditions.checkArgument(isHighlight == true, "报名活动未完成的不高亮");
+//                        System.out.println("未完成高亮     -------");
+//                    } else {
+//                        Preconditions.checkArgument(isHighlight == false, "报名活动已完成的高亮");
+//                        System.out.println("已完成不高亮     -------");
+//                    }
+//                }
+//            } else {
+//                Preconditions.checkArgument(list == null, "活动报名没有数据，列表长度不为空");
+//                System.out.println("list == null     -------");
+//            }
+//        }catch(Exception |AssertionError e){
+//            appendFailreason(e.toString());
+//        }finally{
+//           // saveData("V2.1活动报名-是否完成，未完成高亮，已完成不高亮");
+//        }
+//    }
 
 }
 
