@@ -114,7 +114,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        crm.login(xs_name, pwd);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -1488,10 +1487,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2);
             int allCustomerNum = response.getInteger("total");
-            System.out.println("App列表数   :" + allCustomerNum);
             JSONObject response1 = crm.receptionPage1(1, "PRE_SALES", 10);
-            int todayDeliverCarNum = response1.getInteger("total");
-            System.out.println("PC列表数   :" + todayDeliverCarNum);
+            int todayDeliverCarNum = response1.getJSONObject("data").getInteger("total");
             Preconditions.checkArgument(allCustomerNum == todayDeliverCarNum, "APP列表数：" + allCustomerNum + "  " + "PC列表数" + todayDeliverCarNum);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -1501,7 +1498,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     //V2.1活动报名-是否完成，未完成高亮，已完成不高亮
-    @Test
+    @Test(enabled = true)
     public void activityTaskPage() {
         try {
             crm.login(xs_name, pwd);
@@ -1531,7 +1528,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     //活动报名-当前日期>=开始日期，填写报名置灰，当前日期<开始日期，，填写报名，高亮可点击
-    @Test
+    @Test(enabled = true)
     public void activityIsEdit() {
         try {
             crm.login(xs_name, pwd);
@@ -1539,14 +1536,11 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONArray list = response.getJSONArray("list");
             String nowTime = DateTimeUtil.getFormat(new Date());
             int pages = response.getInteger("pages");
-            System.out.println("list的长度___:" + (list.size()));
             for (int page = 1; page <= pages; page++) {
                 if (list.size() > 1) {
                     for (int i = 0; i < list.size(); i++) {
                         String date = list.getJSONObject(i).getString("activity_start");
                         Boolean isEdit = list.getJSONObject(i).getBoolean("is_edit");
-                        System.out.println("活动报名时间   :" + date);
-                        System.out.println("当前时间   :" + nowTime);
                         if (date.compareTo(nowTime) > 0) {
                             Preconditions.checkArgument(isEdit == true, "活动报名时间大于当前时间，活动报名不可以");
                         } else {
@@ -1585,7 +1579,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            saveData("活动报名-添加报名人信息并删除--正常");
+            //saveData("活动报名-添加报名人信息并删除--正常");
         }
     }
 
@@ -1596,7 +1590,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(xs_name, pwd);
             String phone = "177377711311";
             String message = crm.registeredCustomer1(12298L, "哈哈哈", phone).getString("message");
-            System.out.println("message1---- " + message);
             Preconditions.checkArgument(message.equals("请输入有效手机号码"), "12位手机号码验证");
         } catch (Exception e) {
             e.printStackTrace();
@@ -1612,7 +1605,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(xs_name, pwd);
             String phone = "1773@@拉拉**";
             String message = crm.registeredCustomer1(12298L, "哈哈哈", phone).getString("message");
-            System.out.println("message1---- " + message);
             Preconditions.checkArgument(message.equals("请输入有效手机号码"), "12位手机号码验证");
         } catch (Exception e) {
             e.printStackTrace();
@@ -1628,7 +1620,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(xs_name, pwd);
             String phone = "17737771311";
             String message1 = crm.registeredCustomer1(12298L, "哈哈哈哈哈哈哈哈哈哈哈哈", phone).getString("message");
-            System.out.println("message1---- " + message1);
             Preconditions.checkArgument(message1.equals("客户名称长度不能超过十个字"), "12位姓名验证");
         } catch (Exception e) {
             e.printStackTrace();
@@ -1643,7 +1634,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             crm.login(xs_name, pwd);
             String phone = "17737771311";
-            String message1 = crm.registeredCustomer1(12298L, "哈哈哈哈哈￥%…………*111", phone).getString("message");
+            String message1 = crm.registeredCustomer1(12298L, "**%*****", phone).getString("message");
             System.out.println("message1---- " + message1);
             Preconditions.checkArgument(message1.equals("您只能输入长度不超过10的汉字"), "12位姓名验证");
         } catch (Exception e) {
@@ -1654,7 +1645,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     //报名活动-添加版名人数在0到50之间
-    @Test
+    @Test(enabled = true)
     public void activityTaskInfo() {
         try {
             crm.login(xs_name, pwd);
@@ -1698,7 +1689,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             String phone = "13378909876";
             //确认销售顾问账号是否存在，如果存在-删除
             delectXS(phone);
-//            delectXS(phone);
             //创建销售顾问账号
             crm.login("baoshijie", pwd);
             String userName = "Max哈";
@@ -1740,7 +1730,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             String oldPassword = "e10adc3949ba59abbe56e057f20f883e";
             String newPassword = "860591a9-d852-4c93-8f34-0232d559bc04";
             String message = crm.modifyPasswordJk(oldPassword, newPassword).getString("message");
-            System.out.println("------修改密码成功");
             Preconditions.checkArgument(message.equals("系统异常"), "密码21位且存在中文+符号");
             //删除销售顾问账号
             delectXS(phone);
