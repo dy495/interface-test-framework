@@ -542,10 +542,12 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(listSize + 1 == listSize1, "售后回访页条数未+1");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
+        } finally {
+            saveData("小程序预约今日的保养/维修（不取消）,售后回访页条数+1,售后回访页 全部回访+1,今日回访+1");
         }
     }
 
-    @Test(description = "小程序预约今日的保研/维修（取消）", priority = 2)
+    @Test(description = "小程序预约今日的保养/维修（取消）", priority = 2)
     public void afterSaleMyReturnVisit_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -584,6 +586,8 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(listSize == listSize1 + 1, "售后回访页条数未-1");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
+        } finally {
+            saveData("小程序预约今日的保养/维修（取消）,售后回访页条数-1,售后回访页 全部回访-1,今日回访-1");
         }
     }
 
