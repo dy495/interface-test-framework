@@ -374,6 +374,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户看不见消息");
             Preconditions.checkArgument(!result2, "小程序售后客户能看见消息");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -417,6 +418,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(!result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -460,6 +462,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -505,6 +508,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -533,6 +537,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约维修按钮");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -561,10 +566,29 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
+            deleteStationMessage();
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
             saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
+    }
+
+//    ---------------------------------------------------私有方法区-------------------------------------------------------
+
+    /**
+     * 删除站内消息
+     */
+    private void deleteStationMessage() throws Exception {
+        CommonUtil.login(EnumAccount.ZJL);
+        JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
+        int id = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("title").equals("自动化站内消息-待删")
+                    && list.getJSONObject(i).getString("status_name").equals("发送成功")) {
+                id = list.getJSONObject(i).getInteger("id");
+            }
+        }
+        crm.messageDelete(id);
     }
 }
