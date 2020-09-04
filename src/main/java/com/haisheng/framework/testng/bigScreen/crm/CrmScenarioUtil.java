@@ -2518,7 +2518,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //售后：回访操作
-    public JSONObject afterSale_addVisitRecord(Long id, String return_visit_pic, String comment, String next_return_visit_time) throws Exception {
+    public JSONObject afterSale_addVisitRecord(Long id, String return_visit_pic, String comment, String next_return_visit_time) {
         String url = "/porsche/app/return-visit-record/execute";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);

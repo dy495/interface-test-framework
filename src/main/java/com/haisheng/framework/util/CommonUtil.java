@@ -21,6 +21,7 @@ import java.util.*;
  */
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     public static String getStrField(JSONObject response, String field) {

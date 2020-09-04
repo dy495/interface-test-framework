@@ -338,7 +338,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
