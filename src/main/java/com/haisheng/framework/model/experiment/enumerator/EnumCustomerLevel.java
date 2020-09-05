@@ -8,7 +8,9 @@ import lombok.Getter;
 public enum EnumCustomerLevel {
     G("公海", 8, "G"),
 
-    F("战败", 6, "F");
+    F("战败", 6, "F"),
+
+    D("订车", 4, "D");
 
     EnumCustomerLevel(String name, int customerLevel, String customerLevelName) {
         this.name = name;

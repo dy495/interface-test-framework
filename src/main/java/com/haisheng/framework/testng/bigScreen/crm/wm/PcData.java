@@ -10,7 +10,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -19,8 +18,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class CrmPc extends TestCaseCommon implements TestCaseStd {
-
+public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     @BeforeClass
@@ -60,8 +58,11 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
 
 //    ---------------------------------------------------2.0------------------------------------------------------------
 
-    @Test(description = "pc端我的客户总数=列表的总数")
-    public void salesCustomerManagement_1() {
+    /**
+     * @description: 销售客户管理-我的客户
+     */
+    @Test(description = "全部-pc端我的客户总数=列表的总数")
+    public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
@@ -82,8 +83,24 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "今日人数=按今日搜索展示列表条数")
-    public void salesCustomerManagement_2() {
+    @Test(description = "公海-共计人数=列表总条数")
+    public void myCustomer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
+            int total = CommonUtil.getIntField(response, "total");
+            int listSize = response.getJSONArray("list").size();
+            CommonUtil.valueView(total, listSize);
+            Preconditions.checkArgument(total == listSize, "pc销售客户管理公海共计人数=列表总数");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc销售客户管理公海共计人数=列表总条数");
+        }
+    }
+
+    @Test(description = "公海-今日人数=按今日搜索展示列表条数")
+    public void myCustomer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
@@ -100,55 +117,12 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("今日人数=按今日搜索展示列表条数");
+            saveData("pc端-公海今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(enabled = false)
-    public void salesCustomerManagement_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        JSONObject response = crm.customerList("", "", "", "", "", 1, 10);
-        JSONObject list = response.getJSONArray("list").getJSONObject(0);
-        CommonUtil.valueView(list);
-        CommonUtil.getMoreParam(list, "customer_id", "customer_name", "customer_phone", "belongs_sale_id");
-    }
-
-
-    @Test(description = "pc销售客户管理公海共计人数=列表总条数")
-    public void salesCustomerManagement_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
-            int total = CommonUtil.getIntField(response, "total");
-            int listSize = response.getJSONArray("list").size();
-            CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "pc销售客户管理公海共计人数=列表总数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc销售客户管理公海共计人数=列表总条数");
-        }
-    }
-
-    @Test
-    public void salesCustomerManagement_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String date = DateTimeUtil.getFormat(new Date());
-            JSONObject response = crm.publicCustomerList(date, date, 2 << 10, 1);
-            int today = CommonUtil.getIntField(response, "today");
-            int listSize = response.getJSONArray("list").size();
-            CommonUtil.valueView(today, listSize);
-            Preconditions.checkArgument(today == listSize, "pc销售客户管理公海共计人数=列表总数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc销售客户管理公海共计人数=列表总条数");
-        }
-    }
-
-    @Test()
-    public void salesCustomerManagement_6() {
+    @Test(description = "公海-勾选两个客户分配给销售A,销售A客户名下客户数量+2,列表数-2,减2改为减1操作")
+    public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             CommonUtil.login(EnumAccount.XSGWTEMP);
@@ -181,8 +155,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_7() {
+    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1")
+    public void myCustomer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //变换所属销售前公海数量
@@ -217,8 +191,36 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_8() {
+    @Test(description = "公海-新建一个G级客户，公海列表数+1")
+    public void myCustomer_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String phone = "13333333333";
+        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
+        try {
+            //公海客户数量
+            CommonUtil.login(EnumAccount.ZJL);
+            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 8, remark);
+            if (response.getString("message").equals("手机号码重复")) {
+                //删除客户
+                deleteCustomer(phone);
+                //再创建线索
+                crm.createLine("【自动化】王先生", 6, phone, 8, remark);
+            }
+            CommonUtil.login(EnumAccount.ZJL);
+            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            CommonUtil.valueView(publicTotal, publicTotal1);
+            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            deleteCustomer(phone);
+            saveData("新建一个G级客户,公海列表+1");
+        }
+    }
+
+    @Test(description = "战败-共计人数=列表总条数")
+    public void myCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject failureCustomerList = crm.failureCustomerList("", "", 1, 2 << 10);
@@ -233,8 +235,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_9() {
+    @Test(description = "战败-今日人数=按今日搜索展示列表条数")
+    public void myCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
@@ -249,13 +251,16 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_10() {
+    @Test(description = "战败-将一个客户的等级修改为F,战败客户列表数量+1,该销售名下客户数量-1")
+    public void myCustomer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //变换所属销售前战败数量
             int publicTotal = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            //获取一名客户信息
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            int customerNum = crm.customerPage(10, 1, "", "", "").getInteger("total");
+            CommonUtil.login(EnumAccount.ZJL);
+            //获取一名客户信
             JSONObject customerList = crm.customerList("", "", "", "", "", 1, 10);
             int customerId = 0;
             String customerName = null;
@@ -263,7 +268,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
             JSONArray list = customerList.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (!list.getJSONObject(i).getString("customer_level_name").equals("G")
-                        && !list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGWTEMP.getUid())) {
+                        && list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGWTEMP.getUid())
+                        && !list.getJSONObject(i).getString("customer_phone").equals("15321527989")) {
                     customerId = list.getJSONObject(i).getInteger("customer_id");
                     customerName = list.getJSONObject(i).getString("customer_name");
                     customerPhone = list.getJSONObject(i).getString("customer_phone");
@@ -273,17 +279,20 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
             crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getCustomerLevel(), EnumAccount.XSGWTEMP.getUid());
             //变换所属销售后战败列表数
             int publicTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1);
-            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原战败数量为" + publicTotal + "把一个客户等级改为战败后，公海数量为" + publicTotal1);
+            CommonUtil.login(EnumAccount.XSGWTEMP);
+            int customerNum1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
+            CommonUtil.valueView(publicTotal, publicTotal1, customerNum, customerNum1);
+            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原战败数量为" + publicTotal + "把一个客户等级改为战败后，战败数量为" + publicTotal1);
+            Preconditions.checkArgument(customerNum == customerNum1 + 1, "该销售名下原有客户：" + customerNum + "把一个客户等级改为战败后，客户数量为" + customerNum1);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端将一个已存在客户的客户等级设置为F,战败列表数+1");
+            saveData("pc端将一个已存在客户的客户等级设置为F,战败列表数+1,该销售名下客户数量-1");
         }
     }
 
-    @Test
-    public void salesCustomerManagement_11() {
+    @Test(description = "将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1")
+    public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //战败列表数
@@ -306,8 +315,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_12() {
+    @Test(description = "小程序-共计人数=列表总条数")
+    public void myCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject weChatCustomerList = crm.wechatCustomerList("", "", 1, 2 << 10);
@@ -322,8 +331,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_13() {
+    @Test(description = "小程序-今日人数=按今日搜索展示列表条数")
+    public void myCustomer_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
@@ -339,8 +348,8 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_14() {
+    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数")
+    public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             CommonUtil.loginApplet(EnumAppletCode.WM);
@@ -376,112 +385,7 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void salesCustomerManagement_15() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
-        try {
-            crm.publicCustomerList(date, date1, 1, 100);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("开始时间<=结束时间,筛选出日期内划入公海得客户列表");
-        }
-    }
-
-    @Test(description = "交车后，客户不回到公海")
-    public void salesCustomerManagement_16() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int remainDays = 1;
-            JSONArray list = crm.customerPage(1, 2 << 10, "", "", "").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("customer_level_name").equals("D级")) {
-                    Integer day = list.getJSONObject(i).getInteger("remain_days");
-                    if (day == null) {
-                        remainDays = 0;
-                    }
-                }
-            }
-            CommonUtil.valueView(remainDays);
-            Preconditions.checkArgument(remainDays == 0, "交车后，客户回到公海天数不等于0");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("交车后，客户不回到公海");
-        }
-    }
-
-    @Test(description = "小程序筛选")
-    public void salesCustomerManagement_17() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
-        try {
-            crm.wechatCustomerList(date, date1, 1, 10);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc端小程序客户按照日期筛选-开始时间<=结束时间");
-        }
-    }
-
-    @Test(description = "战败筛选")
-    public void salesCustomerManagement_18() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
-        try {
-            crm.failureCustomerList(date, date1, 1, 10);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc端战败客户按照日期筛选-开始时间<=结束时间");
-        }
-    }
-
-    @Test(description = "战败筛选")
-    public void salesCustomerManagement_19() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
-        try {
-            crm.failureCustomerList(date1, date, 1, 10);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc端战败客户按照日期筛选-开始时间>结束时间,接口不限制，前端限制时间");
-        }
-    }
-
-    @Test(description = "新建一个G级客户")
-    public void customerRelations_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String phone = "13333333333";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        try {
-            //公海客户数量
-            CommonUtil.login(EnumAccount.ZJL);
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 8, remark);
-            if (response.getString("message").equals("手机号码重复")) {
-                //删除客户
-                deleteCustomer(phone);
-                //再创建线索
-                crm.createLine("【自动化】王先生", 6, phone, 8, remark);
-            }
-            CommonUtil.login(EnumAccount.ZJL);
-            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1);
-            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            deleteCustomer(phone);
-            saveData("新建一个G级客户,公海列表+1");
-        }
-    }
+//    ---------------------------------------------------私有方法区-------------------------------------------------------
 
     /**
      * 删除客户
@@ -494,54 +398,4 @@ public class CrmPc extends TestCaseCommon implements TestCaseStd {
         int customerId = CommonUtil.getIntField(response, 0, "customer_id");
         crm.customerDelete(customerId);
     }
-
-    @Test()
-    public void marketingBoards_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String path = "src/main/java/com/haisheng/framework/model/experiment/multimedia/goodsmanager/";
-        String bigPic = new ImageUtil().getImageBinary(path + "大图照片.jpg");
-        String interiorPic = new ImageUtil().getImageBinary(path + "内饰照片.jpg");
-        String spacePic = new ImageUtil().getImageBinary(path + "空间照片.jpg");
-        String appearancePic = new ImageUtil().getImageBinary(path + "外观照片.jpg");
-        String carPic = new ImageUtil().getImageBinary(path + "车辆照片.jpg");
-        String carTypeName = "凯迪拉克CT6";
-        String carIntroduce = "无介绍";
-        try {
-            String message = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, "", carTypeName, 10, interiorPic, 20, spacePic).getString("message");
-            String message1 = crm.goodsManagerAddCar("", bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, spacePic).getString("message");
-            String message2 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, "", 20, spacePic).getString("message");
-            String message3 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
-            String message4 = crm.goodsManagerAddCar(appearancePic, "", "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
-            String message5 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, -1, interiorPic, 20, spacePic).getString("message");
-            String message6 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, -1, spacePic).getString("message");
-            String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
-            String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
-            String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
-            String message10 = crm.goodsManagerAddCar(appearancePic, bigPic, "", carIntroduce, carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
-            Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
-            Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
-            Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
-            Preconditions.checkArgument(message3.equals("车辆空间图片不能为空"), "pc商品管理，空间照片为空也可创建成功");
-            Preconditions.checkArgument(message4.equals("车辆大图不能为空"), "pc商品管理，大图照片为空也可创建成功");
-            Preconditions.checkArgument(message5.equals("车辆最高价格不能为空"), "pc商品管理，最高价格为空也可创建成功");
-            Preconditions.checkArgument(message6.equals("车辆最低价格不能为空"), "pc商品管理，最低价格为空也可创建成功");
-            Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
-            Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
-            Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
-            Preconditions.checkArgument(message10.equals("成功"), "所有必填项全正确填写，车型创建失败");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            int id = 0;
-            JSONObject result = crm.carList();
-            int size = result.getJSONArray("list").size() - 1;
-            String carName = CommonUtil.getStrField(result, size, "car_type_name");
-            if (carName.equals(carTypeName)) {
-                id = CommonUtil.getIntField(result, size, "id");
-            }
-            crm.carDelete(id);
-            saveData("商品管理中，各必须参数不填写创建车型&&全部填写创建车型");
-        }
-    }
-
 }

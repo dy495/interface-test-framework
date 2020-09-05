@@ -939,20 +939,18 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            int c_count = 0;
-            int o_count = 0;
-            int p_count = 0;
 
-            int cust_uv = 0;
-            int channel_uv = 0;
-            int pay_uv = 0;
+
+            Integer customer_uv = 0;
+            Integer omni_uv = 0;
+            Integer paid_uv = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type,month).getJSONArray("trend_list");
             for(int i=0;i<trend_list.size();i++) {
                 if(i-trend_list.size()==-1){
-                    Integer customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
-                    Integer omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    Integer paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_total");
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                     omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                     paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_total");
                     if(customer_uv == null||omni_uv ==null ||paid_uv ==null){
                         customer_uv = 0;
                     }
@@ -967,31 +965,34 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String member_type="";
             Integer member_type_order=null;
             JSONArray member_list = Md.shopPageMemberV3(district_code,shop_type,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
-
+            Integer cust_uv = 0;
+            Integer channel_uv = 0;
+            Integer pay_uv = 0;
             for(int j=0;j<member_list.size();j++){
                 JSONArray memb_info = member_list.getJSONObject(j).getJSONArray("member_info");
+
                 for(int k=0;k<memb_info.size();k++){
                     String type = memb_info.getJSONObject(k).getString("type");
                     Integer uv = memb_info.getJSONObject(k).getInteger("uv");
                     if(uv == null){
                         uv = 0;
                     }
-                    if(type =="CUSTOMER"){
+                    if(type.equals("CUSTOMER")){
                         cust_uv += uv;
                     }
-                    if(type =="OMNI_CHANNEL"){
+                    if(type.equals("OMNI_CHANNEL")){
                         channel_uv += uv;
                     }
-                    if(type =="PAID"  ){
+                    if(type.equals("PAID")){
                         pay_uv += uv;
                     }
                 }
 
             }
 
-            Preconditions.checkArgument((c_count == cust_uv),"累计的顾客总人数" + c_count + "=累计的顾客之和=" + cust_uv);
-            Preconditions.checkArgument((o_count == channel_uv),"累计的全渠道会员总人数" + o_count + "=累计的30天全渠道会员之和=" + channel_uv);
-            Preconditions.checkArgument((p_count == pay_uv),"累计的付费总人数" + p_count + "=累计的付费会员之和=" + pay_uv);
+            Preconditions.checkArgument((customer_uv == cust_uv),"累计的顾客总人数" + customer_uv + "=累计的顾客之和=" + cust_uv);
+            Preconditions.checkArgument((omni_uv == channel_uv),"累计的全渠道会员总人数" + omni_uv + "=累计的30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((paid_uv == pay_uv),"累计的付费总人数" + paid_uv + "=累计的付费会员之和=" + pay_uv);
 
 
         } catch (AssertionError e) {
@@ -1067,7 +1068,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                }
 
             }
-            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在+pv="+today_pv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1111,6 +1112,42 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         } finally {
 
             saveData("uv与pv之间的比例要保持在1：4的范围间");
+        }
+
+    }
+
+
+    /**
+     *
+     * ====================云中客中累计不为0，事件也不能为0========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void custmerWithThing(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+             JSONArray trend_list = Md.historyShopMemberV3(shop_id,cycle_type,month).getJSONArray("trend_list");
+            int count1= trend_list.size();
+            int customer_uv_total = 0;
+            int customer_uv_new_today = 0;
+            for(int i=0;i<count1;i++){
+                if(i == count1 - 1){
+                    customer_uv_total = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                }
+            }
+            Integer total = Md.memberTotalListV3(shop_id,page,size).getInteger("total");
+
+
+            Preconditions.checkArgument((customer_uv_total != 0 && total !=0),"累计顾客为："+customer_uv_total+"事件为"+total);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("累计顾客与事件是否异常，有累计顾客但无事件或有事件无累计顾客");
         }
 
     }

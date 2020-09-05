@@ -10,7 +10,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +21,7 @@ import java.util.*;
  */
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     public static String getStrField(JSONObject response, String field) {
@@ -140,7 +140,7 @@ public class CommonUtil {
      * @param customerName 客户姓名
      */
     public static void deleteCustomer(String customerName) {
-        login(EnumAccount.XSZJ);
+        login(EnumAccount.ZJL);
         JSONObject response = crm.customerList(customerName, "", "", "", "", 1, 1000);
         JSONArray list = response.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
