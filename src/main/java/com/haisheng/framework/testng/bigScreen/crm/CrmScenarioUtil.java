@@ -2462,6 +2462,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //售后：客户管理->列表展示
+    public JSONObject afterSaleCustomerList(String search_condition, String search_date_start, String search_date_end, int page, int size) throws Exception {
+        String url = "/porsche/app/after_sale/after-sale-customer-list";
+        JSONObject json1 = new JSONObject();
+        if (!search_condition.equals("")) {
+            json1.put("search_condition", search_condition);
+        }
+        if (!search_date_start.equals("")) {
+            json1.put("search_date_start", search_date_start);
+        }
+        if (!search_date_end.equals("")) {
+            json1.put("search_date_end", search_date_end);
+        }
+        if (page != -1) {
+            json1.put("page", page);
+        }
+        if (size != -1) {
+            json1.put("size", size);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //售后：客户管理->统计数据
     public JSONObject afterSale_custTotal() throws Exception {
         String url = "/porsche/app/after_sale/reception_after_customer_total";
