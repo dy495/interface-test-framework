@@ -13,9 +13,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.springframework.beans.propertyeditors.CurrencyEditor;
 import org.testng.annotations.*;
-import sun.java2d.ScreenUpdateManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
