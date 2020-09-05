@@ -189,10 +189,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
             JSONObject ll3 = new JSONObject();
             ll3.put("score", score);
-            ll3.put("type_comment", "试乘试驾体验评价");
-//            ll3.put("type_comment", "销售接待专业评价");
-//            ll3.put("type", "PROFESSIONAL");
-            ll3.put("type", "EXPERIENCE");
+            ll3.put("type_comment", "销售接待专业评价");
+            ll3.put("type", "PROFESSIONAL");
+//            ll3.put("type", "EXPERIENCE");
+//            ll3.put("type_comment", "试乘试驾体验评价");
+
 
 
             JSONArray array1 = new JSONArray();
@@ -629,7 +630,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
         } finally {
-            saveData("建交车授权，applet车主风采列表+1");
+            saveData("新建交车授权，applet车主风采列表+1");
         }
     }
 

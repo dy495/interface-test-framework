@@ -1887,7 +1887,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :导入，正常导入，随即删除导入成功的客户
       * @date :2020/8/17 21:04
       **/
-//     @Test
+     @Test
      public void importCustomer(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -1898,12 +1898,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                  logger.info("导入文件:{}",filename);
                  long code=crm.importCustom(filename,type).getLong("code");
                  logger.info("返回值：{}",code);
+                 pf.deleteUser(pp.textPath);   //删除导入的客户
                  Preconditions.checkArgument(code==1000,"导入正常模板文件失败");
              }
          }catch (AssertionError | Exception e){
              appendFailreason(e.toString());
          } finally {
-             pf.deleteUser(pp.textPath);   //删除导入的客户
              saveData("客户导入，正常导入");
          }
      }
