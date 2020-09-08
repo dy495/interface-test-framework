@@ -572,12 +572,11 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject historyShopMemberCountV3(String cycle_type, String month) throws Exception {
+    public JSONObject historyShopMemberCountV3(String cycle_type) throws Exception {
         String url = "/patrol/history/shop/member/new/count";
         String json =
                 "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\"\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\"\n"+
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
