@@ -987,9 +987,17 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
+
+            //客户累计趋势
+            JSONArray custList = Md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近7天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id_t+"请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近7天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id_t+"请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近7天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1032,9 +1040,19 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             if(showList != null){
                 result=true;
             }
+
+            //客户累计趋势
+            JSONArray custList = Md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
+
+
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近14天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id_t+"请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近14天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id_t+"请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近14天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1079,10 +1097,18 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
+            //客户累计趋势
+            JSONArray custList = Md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
+
 
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近30天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id_t+"请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近30天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id_t+"请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近30天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1127,9 +1153,17 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             }
 
 
+            //客户累计趋势
+            JSONArray custList = Md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
+
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近60天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id_t+"请线上确认最近60天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近60天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id_t+"请线上确认最近60天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近60天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id_t+"请线上确认");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
