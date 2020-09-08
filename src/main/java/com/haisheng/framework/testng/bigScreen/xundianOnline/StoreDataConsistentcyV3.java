@@ -965,9 +965,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String member_type="";
             Integer member_type_order=null;
             JSONArray member_list = Md.shopPageMemberV3(district_code,shop_type,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
-            Integer cust_uv = 0;
-            Integer channel_uv = 0;
-            Integer pay_uv = 0;
+            int cust_uv = 0;
+            int channel_uv = 0;
+            int  pay_uv = 0;
             for(int j=0;j<member_list.size();j++){
                 JSONArray memb_info = member_list.getJSONObject(j).getJSONArray("member_info");
 
