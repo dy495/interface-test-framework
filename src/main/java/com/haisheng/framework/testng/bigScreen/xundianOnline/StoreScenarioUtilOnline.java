@@ -114,6 +114,15 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         };
     }
+    @DataProvider(name = "SHOP_ID_T")
+    public static Object[] shop_id_t() {
+
+        return new Long[]{
+               15615l,//小天才西溪天街店
+                15617l //小天才滨江宝龙店
+
+        };
+    }
 
     @DataProvider(name = "END_TIME_TYPE")
     public static Object[] endTimeType() {

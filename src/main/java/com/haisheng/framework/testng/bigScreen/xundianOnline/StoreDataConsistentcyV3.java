@@ -1034,7 +1034,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((count == pv),"百果园实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -1043,7 +1043,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+            saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
         }
 
     }
@@ -1151,5 +1151,237 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+    /**
+     *
+     * ====================选择自然月的数据展示是否正常========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForMo(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "";
+            String month = "2020-08";
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int uv_Sum = 0;
+            Integer uv =0;
+            for(int i=0;i<trend_list.size();i++){
+                uv = trend_list.getJSONObject(i).getInteger("uv");
+                if(uv !=null ){
+                    uv_Sum += uv;
+                }
+            }
+            //获取过点客群总人次&总人数
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            int uv1 = pass_by.get("uv1");
 
+            //获取客群时段分布
+            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
+
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-自然月9月的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认自然月9月的数据为0是否为正常，");
+            Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-自然月9月的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-自然月9月的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("历史客流-选择自然月9月的数据是否正常");
+        }
+
+    }
+
+    /**
+     *
+     * ====================选择最近7天的数据展示是否正常========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForS(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "RECENT_SEVEN";
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int uv_Sum = 0;
+            Integer uv =0;
+            for(int i=0;i<trend_list.size();i++){
+                uv = trend_list.getJSONObject(i).getInteger("uv");
+                if(uv !=null ){
+                    uv_Sum += uv;
+                }
+            }
+            //获取过点客群总人次&总人数
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            int uv1 = pass_by.get("uv1");
+
+            //获取客群时段分布
+            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
+
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近7天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
+            Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近7天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-最近7天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("历史客流-选择最近7天的数据是否正常");
+        }
+
+    }
+    /**
+     *
+     * ====================选择最近14天的数据展示是否正常========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForF(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "RECENT_FOURTEEN";
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int uv_Sum = 0;
+            Integer uv =0;
+            for(int i=0;i<trend_list.size();i++){
+                uv = trend_list.getJSONObject(i).getInteger("uv");
+                if(uv !=null ){
+                    uv_Sum += uv;
+                }
+
+            }
+            //获取过点客群总人次&总人数
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            int uv1 = pass_by.get("uv1");
+
+            //获取客群时段分布
+            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近14天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
+            Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近14天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-最近14天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("历史客流-选择最近14天的数据是否正常");
+        }
+
+    }
+
+    /**
+     *
+     * ====================选择最近30天的数据展示是否正常========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForT(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "RECENT_THIRTY";
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int uv_Sum = 0;
+            Integer uv =0;
+            for(int i=0;i<trend_list.size();i++){
+                uv = trend_list.getJSONObject(i).getInteger("uv");
+                if(uv !=null ){
+                    uv_Sum += uv;
+                }
+
+            }
+            //获取过点客群总人次&总人数
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            int uv1 = pass_by.get("uv1");
+
+            //获取客群时段分布
+            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
+
+
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近30天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
+            Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近30天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-最近30天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("历史客流-选择最近30天的数据是否正常");
+        }
+
+    }
+    /**
+     *
+     * ====================选择最近60天的数据展示是否正常========================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForSix(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "RECENT_SIXTY";
+            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int uv_Sum = 0;
+            Integer uv =0;
+            for(int i=0;i<trend_list.size();i++){
+                uv = trend_list.getJSONObject(i).getInteger("uv");
+                if(uv !=null ){
+                    uv_Sum += uv;
+                }
+
+            }
+            //获取过点客群总人次&总人数
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            int uv1 = pass_by.get("uv1");
+
+            //获取客群时段分布
+            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
+
+
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近60天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近60天数据为0是否为正常，");
+            Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近60天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近60天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-最近60天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("选择最近60天的数据是否正常");
+        }
+
+    }
 }

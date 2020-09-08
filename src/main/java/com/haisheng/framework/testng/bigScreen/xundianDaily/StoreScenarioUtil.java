@@ -573,7 +573,24 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    /**
+     * @description:8.5.7 门店列表-云中客的
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberTotalListV3(long shop_id,Integer page,Integer size) throws Exception {
+        String url = "/patrol/member/total/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"page\" :" + page+",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
 
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     /**--------------------------------------------------------8.6 客群漏斗------------------------------------------------------------**/
     /**
