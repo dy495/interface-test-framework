@@ -702,7 +702,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             Integer omni_uv = 0;
             Integer paid_uv = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type,month).getJSONArray("trend_list");
+            JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
             for(int i=0;i<trend_list.size();i++) {
                 if(i-trend_list.size()==-1){
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
