@@ -90,7 +90,6 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return new Long[]{
                 246l,
-                1928l,
                 1910l,
                 1912l,
                 1914l,

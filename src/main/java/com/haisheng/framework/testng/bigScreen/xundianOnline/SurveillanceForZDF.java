@@ -126,7 +126,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
                 }
 
             }
-            Preconditions.checkArgument(today_pv < 800 && today_pv < 0 ,"昨日周大福的历史客流到店人次超过800或低于了50，现在的pv="+today_pv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(today_pv < 800 && today_pv >30 ,"今日周大福的历史客流到店人次超过800或低于了50，现在的pv="+today_pv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {

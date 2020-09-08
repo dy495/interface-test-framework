@@ -149,7 +149,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 count += todayUv;
 
             }
-            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count);
+            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -187,8 +187,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            int passUv = uv2 + uvIn1;
 //            Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
 //            Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"兴趣客群总人次"+uvIn1);
-            Preconditions.checkArgument(pv1== pv2,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 );
-            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 );
+            Preconditions.checkArgument(pv1== pv2,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -251,8 +251,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int pv2 = enter.get("pv2");
             int uv1 = enter.get("uv1");
             int uv2 = enter.get("uv2");
-            Preconditions.checkArgument(pv1== pv2,"进店客群总人次=" + pv1 + "各个门的进店人次之和=" + pv2);
-            Preconditions.checkArgument(uv1== uv2,"进店客群总人数=" + uv1 + "各个门的进店人数之和=" + uv2);
+            Preconditions.checkArgument(pv1== pv2,"进店客群总人次=" + pv1 + "各个门的进店人次之和=" + pv2+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv1== uv2,"进店客群总人数=" + uv1 + "各个门的进店人数之和=" + uv2+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -288,8 +288,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            int intUv = uv2 + uvEn1;
 //            Preconditions.checkArgument(pv1== intPv,"兴趣客群总人次=" + pv1 + "各个门的兴趣人次之和=" + pv2 + "+ 进店客群的总人次" + pvEn1);
 //            Preconditions.checkArgument(uv1== intUv,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2 + "+ 进店客群的总人数"+ uvEn1);
-            Preconditions.checkArgument(pv1== pv2,"兴趣客群总人次=" + pv1 + "各个门的兴趣人次之和=" + pv2 );
-            Preconditions.checkArgument(uv1== uv2,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2 );
+            Preconditions.checkArgument(pv1== pv2,"兴趣客群总人次=" + pv1 + "各个门的兴趣人次之和=" + pv2 +"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv1== uv2,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2 +"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -316,8 +316,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int pv2 = deal.get("pv2");
             int uv1 = deal.get("uv1");
             int uv2 = deal.get("uv2");
-            Preconditions.checkArgument(pv1== pv2,"交客客群总人次=" + pv1 + "会员+非会员的人次之和=" + pv2);
-            Preconditions.checkArgument(uv1== uv2,"交易客群总人数=" + uv1 + "会员+非会员的人数之和=" + uv2);
+            Preconditions.checkArgument(pv1== pv2,"交客客群总人次=" + pv1 + "会员+非会员的人次之和=" + pv2+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv1== uv2,"交易客群总人数=" + uv1 + "会员+非会员的人数之和=" + uv2+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -353,14 +353,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 result=true;
             }
 
-            Preconditions.checkArgument( result=true,"过店客群" + pv1 + "兴趣客群pv" + pv2+ "进店客群" + pv3 +"进店客群" + pv4);
+            Preconditions.checkArgument( result=true,"过店客群" + pv1 + "兴趣客群pv" + pv2+ "进店客群" + pv3 +"进店客群" + pv4+"。报错门店的shopId="+shop_id);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
 
-            saveData("过店客群pv>=兴趣客群pv>=进店客群pv");
+            saveData("过店客群pv>=兴趣客群pv>=进店客群pv"+"。报错门店的shopId="+shop_id);
         }
 
     }
@@ -625,7 +625,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("消费者到店趋势中各天pv累计==到店客群总人次");
+            saveData("消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_id);
 
         }
 
@@ -722,7 +722,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("各个客群总人次==到店时段分布中各个客群各个时段pv累计");
+            saveData("各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_id);
 
         }
 
@@ -769,9 +769,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 
 
-            Preconditions.checkArgument((interestRate.equals(rate) ),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
-            Preconditions.checkArgument((enterRate.equals(rate1) ),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
-            Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立");
+            Preconditions.checkArgument((interestRate.equals(rate) ),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((enterRate.equals(rate1) ),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立"+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -808,7 +808,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
             int values2 = values/values1;
             int result = Math.abs(averageFlow-values2);
-            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流uv=" + values2);
+            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流uv=" + values2+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -873,10 +873,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             double theError1 = Math.abs(result1-count);
             double theError2 = Math.abs(result2-count1);
             double theError3 = Math.abs(resultOther-theResult);
-            Preconditions.checkArgument(theError1 <1,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
-            Preconditions.checkArgument(theError2 <1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
-            Preconditions.checkArgument(resultAll<=101 && resultAll>=99,"男性比例+女性比例" + resultAll + "不在99-101的范围间" );
-            Preconditions.checkArgument(theError3 <1,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
+            Preconditions.checkArgument(theError1 <1,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(theError2 <1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(resultAll<=101 && resultAll>=99,"男性比例+女性比例" + resultAll + "不在99-101的范围间"+"。报错门店的shopId="+shop_id );
+            Preconditions.checkArgument(theError3 <1,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -1034,7 +1034,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv);
+            Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -1068,7 +1068,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                }
 
             }
-            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1102,7 +1102,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 pv = pv+1;
                 scrole= pv/uv;
             }
-            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv);
+            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv +"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -1111,7 +1111,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("uv与pv之间的比例要保持在1：4的范围间");
+            saveData("uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
         }
 
     }
@@ -1138,7 +1138,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total = Md.memberTotalListV3(shop_id,page,size).getInteger("total");
 
 
-            Preconditions.checkArgument((customer_uv_total != 0 && total !=0),"累计顾客为："+customer_uv_total+"事件为"+total);
+            Preconditions.checkArgument((customer_uv_total != 0 && total !=0),"累计顾客为："+customer_uv_total+"事件为"+total+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
