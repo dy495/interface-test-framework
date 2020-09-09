@@ -287,6 +287,16 @@ public class GetPvUv {
 
             expectUv_enter = 3;
             expectUv_leave = 6;
+        } else if (sampleVideo.contains("yingshi20200909_1m")){
+            expectPv = 13;
+            expectUv = 13;
+
+            expectPv_enter = 13;
+            expectPv_leave = 5;
+
+            expectUv_enter = 13;
+            expectUv_leave = 5;
+
         } else {
             //for new temp video
             expectPv = 100;
