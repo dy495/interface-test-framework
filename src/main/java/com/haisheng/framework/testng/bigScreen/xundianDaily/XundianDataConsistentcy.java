@@ -150,7 +150,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 
             //新增一个执行清单
             int startM=2;
-            String name= dt.getHHmm(startM);
+            String name= dt.getHHmm(startM)+"qingqing";
             String desc="是青青创建的哦，为了测试用的";
             JSONArray  items=new JSONArray();//new一个数组
             JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
