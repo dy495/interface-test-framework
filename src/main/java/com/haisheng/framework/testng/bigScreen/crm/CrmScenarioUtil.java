@@ -946,10 +946,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     public JSONObject customerListPC(String customerPhone, int page, int size) {
         String url = "/porsche/customer/list";
-        JSONObject json=new JSONObject();
-        json.put("customer_phone",customerPhone);
-        json.put("page",page);
-        json.put("size",size);
+        JSONObject json = new JSONObject();
+        json.put("customer_phone", customerPhone);
+        json.put("page", page);
+        json.put("size", size);
 
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
@@ -2063,6 +2063,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     public JSONObject createArticlecode(String positions, String valid_start, String valid_end, String[] customer_types, int[] car_types, int[] customer_level, String[] customer_property, String article_title, Boolean is_pic_content, String article_bg_pic, String article_content, String article_remarks, boolean is_online_activity, String reception_name, String reception_phone, String customer_max, String simulation_num, String activity_start, String activity_end, Integer role_id, String task_customer_num, Boolean is_create_poster
     ) throws Exception {
         String url = "/porsche/article/add";
@@ -2623,6 +2624,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     public JSONObject registeredCustomer1(Long activity_task_id, String customer_name, String customer_phone_number) throws Exception {
         String url = "/porsche/app/activity-task/registeredCustomer";
         JSONObject json1 = new JSONObject();
@@ -3062,6 +3064,74 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("content", content);
         List<String> list = new ArrayList<>(Arrays.asList(customerTypes));
         object.put("customer_types", list);
+        return invokeApi(url, object);
+    }
+
+    //--------------------------web4.0------------------------
+
+    /**
+     * 新建车系接口
+     *
+     * @param carStyleName 车系名称
+     */
+    public JSONObject carStyleAddNewCar(String carStyleName) {
+        String url = "/porsche/car-style/add-new-car";
+        JSONObject object = new JSONObject();
+        object.put("car_style_name", carStyleName);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 启用or禁用车系接口
+     *
+     * @param takeEffect 是
+     */
+    public JSONObject carStyleTaskEffect(boolean takeEffect) {
+        String url = "/porsche/car-style/take-effect";
+        JSONObject object = new JSONObject();
+        object.put("take_effect", takeEffect);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 修改车系接口
+     *
+     * @param carStyleId   车系id
+     * @param carStyleName 车系名称
+     */
+    public JSONObject carStyleEditCar(long carStyleId, String carStyleName) {
+        String url = "/porsche/car-style/edit-car";
+        JSONObject object = new JSONObject();
+        object.put("car_style_id", carStyleId);
+        object.put("car_style_name", carStyleName);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 车系列表-其他编辑页面的下拉列表接口
+     *
+     * @param carStyleId   车系id
+     * @param carStyleName 车系名称
+     */
+    public JSONObject carStyleList(long carStyleId, String carStyleName) {
+        String url = "/porsche/car-style/car_style_list";
+        JSONObject object = new JSONObject();
+        object.put("car_style_id", carStyleId);
+        object.put("car_style_name", carStyleName);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 新建车型接口
+     *
+     * @param carStyleId   车系id
+     * @param carModelName 车型名称
+     */
+    public JSONObject carModelAddNewCar(long carStyleId, String carModelName) {
+        String url = "/porsche/car-model/add-new-car";
+        JSONObject object = new JSONObject();
+        object.put("car_style_id", carStyleId);
+        object.put("car_model_name", carModelName);
         return invokeApi(url, object);
     }
 
@@ -3534,7 +3604,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         Map<String, String> headers = new ConcurrentReferenceHashMap<>();
         headers.put("Authorization", super.authorization);
         headers.put("shop_id", "22728");
-        httpExecutorUtil.uploadFile(IpPort+url, file, headers, type);
+        httpExecutorUtil.uploadFile(IpPort + url, file, headers, type);
         return JSON.parseObject(httpExecutorUtil.getResponse());
     }
 
@@ -4336,8 +4406,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-    public JSONObject modifyPasswordJk(String oldPassword,String newPassword) throws Exception {
-        String url="/porsche/app/user/modifyPassword";
+
+    public JSONObject modifyPasswordJk(String oldPassword, String newPassword) throws Exception {
+        String url = "/porsche/app/user/modifyPassword";
         JSONObject json = new JSONObject();
         json.put("oldPassword", oldPassword);
         json.put("newPassword", newPassword);

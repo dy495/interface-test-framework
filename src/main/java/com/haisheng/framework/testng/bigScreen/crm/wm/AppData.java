@@ -929,21 +929,15 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "创建线索,全部客户+1")
     public void myCustomer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
         String phone = "13333333333";
         String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        int total;
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSZJ);
-            total = CommonUtil.getIntField(crm.customerPage(1, 10, "", "", ""), "total");
+            CommonUtil.login(EnumAccount.ZJL);
+            deleteCustomer(phone);
+            int total = CommonUtil.getIntField(crm.customerPage(1, 10, "", "", ""), "total");
             //创建线索
-            JSONObject response = crm.createLine("【自动化】王先生", 6, phone, 2, remark);
-            if (response.getString("message").equals("联系方式系统中已存在~")) {
-                //删除客户
-                deleteCustomer(phone);
-                total = CommonUtil.getIntField(crm.customerPage(1, 10, "", "", ""), "total");
-                crm.createLine("【自动化】王先生", 6, phone, 2, remark);
-            }
+            crm.createLine("【自动化】王先生", 6, phone, 2, remark);
             int total1 = CommonUtil.getIntField(crm.customerPage(1, 10, "", "", ""), "total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
