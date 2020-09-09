@@ -161,14 +161,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-    //@Test
+    @Test
     public void uploadOnlineEnterShopCarPlate() {
 //        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
 //        String carNum = "鲁ABB1711";    //全新
 //        String carNum = "浙ABC1711";    //售前老客，售后新客
         //String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
-        String carNum = "吉D000010";
+        String carNum = "吉E000010";
 
 
 
