@@ -984,7 +984,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      *
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      * */
-    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    @Test
     public void yesterdayTotal(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -1009,7 +1009,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv),"百果园实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((count == pv),"实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -1018,7 +1018,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+            saveData("实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
         }
 
     }
