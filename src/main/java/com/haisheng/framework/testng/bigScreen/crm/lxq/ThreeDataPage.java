@@ -27,7 +27,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     CustomerInfo cstm = new CustomerInfo();
     FileUtil fileUtil = new FileUtil();
     public  String data = "data" + dt.getHistoryDate(-1) +".txt";
-    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/lxq" + data;
 
     int service = 0; //累计接待-  日
     int test_drive = 0; //累计试驾
