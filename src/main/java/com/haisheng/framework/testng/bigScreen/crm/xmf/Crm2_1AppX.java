@@ -808,6 +808,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void beanch(){
+        logger.info("切换还在吗");
+    }
+
 
 
 

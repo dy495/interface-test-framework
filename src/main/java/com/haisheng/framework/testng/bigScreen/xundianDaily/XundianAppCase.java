@@ -755,7 +755,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :9.现场巡店\远程巡店留痕不超过五张 ok
      * @date :2020/6/29 15:56
      **/
-   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+//   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
    public void PictureMoreFiveA(String check_type){
        logger.logCaseStart(caseResult.getCaseName());
        try {
