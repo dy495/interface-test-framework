@@ -4593,5 +4593,38 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
         return JSON.parseObject(result);
     }
+    //DCC创建线索
+    public JSONObject dccCreate(String customer_name,String customer_phone,String plate_number){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json=new JSONObject();
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("plate_number",plate_number);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //DCC创建线索
+    public JSONObject dcclist(String customer_phone,String customer_name,String start_time,String end_time,int page,int size){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_phone",customer_phone);
+        json1.put("customer_name",customer_name);
+        json1.put("start_time",start_time);
+        json1.put("end_time",end_time);
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
+    public JSONObject dcclist(int page,int size){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
 
 }

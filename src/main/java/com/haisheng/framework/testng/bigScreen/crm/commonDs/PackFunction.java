@@ -8,12 +8,19 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
 import java.util.List;
+import java.util.Random;
 
 public class PackFunction {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file=new FileUtil();
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
+    }
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
         Long article_id;
@@ -24,7 +31,7 @@ public class PackFunction {
             String[] customer_property = {};
             String positions = pp.positions; //投放位置车型推荐 单选
             String valid_end = dt.getHistoryDate(4);
-            int[] car_types = {1};
+            int[] car_types = {};
             String article_title = "app任务报名品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
             String article_bg_pic = file.texFile(pp.filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
