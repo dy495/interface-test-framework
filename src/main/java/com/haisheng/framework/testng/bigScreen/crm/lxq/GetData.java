@@ -28,7 +28,7 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
     CustomerInfo cstm = new CustomerInfo();
     FileUtil fileUtil = new FileUtil();
     public  String data = "data" + dt.getHistoryDate(0) +".txt";
-    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/" + data;
+    public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/lxq/" + data;
 
 
     /**

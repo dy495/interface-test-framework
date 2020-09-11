@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 public enum EnumTestProduce {
 
-    CRM_DAILY("CRM 日常-wm");
+    CRM_DAILY("CRM 日常 wm");
 
     EnumTestProduce(String name) {
         this.name = name;

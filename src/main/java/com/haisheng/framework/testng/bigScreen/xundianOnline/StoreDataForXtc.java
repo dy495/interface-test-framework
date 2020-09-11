@@ -918,7 +918,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             String cycle_type = "";
-            String month = "2020-08";
+            String month = "2020-09";
             JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id_t).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;

@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -21,6 +23,8 @@ import java.lang.reflect.Method;
 public class XundianCase extends TestCaseCommon implements TestCaseStd {
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
+    int page = 1;
+    int size =50;
 
 
 
@@ -87,14 +91,65 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================新建定检任务======================
+     * ====================定检规则======================
      * */
     @Test
     public void createdScheduleCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
+            String end_time= "03:00";//获取当前时间
+            int  interval_hour= 1; //间隔时间;
+            String start_time="09:00"; //今天日期;;
+            String name = "青青测试用";
+            JSONArray  shoplist=new JSONArray();
+            shoplist.add(0,4116);
 
+            //新建定检规则
+            JSONObject res =xd.scheduleRuleAdd(name,start_time,end_time,interval_hour,shoplist);
+            int code = res.getInteger("code");
+
+
+
+            //----------------------获取列表刚刚我新建的定检规则的id
+            JSONObject response = xd.scheduleRuleList(page,size);
+            JSONArray list = response.getJSONArray("list");
+            int id = 0;
+            int status = 0;
+            for(int i=0;i<list.size();i++){
+                String the_name = list.getJSONObject(i).getString("name");
+                if(the_name.equals(name)){
+                    id = list.getJSONObject(i).getInteger("id");
+                    status = list.getJSONObject(i).getInteger("status");
+                }
+            }
+
+            //将新建的定检规则设置为开或者关(0为关，1为开)
+            int code_swi = 0;
+            if(status == 0){
+                 code_swi = xd.scheduleRuleSwith(id,status).getInteger("code");
+            }else {
+                code_swi = xd.scheduleRuleSwith(id,status).getInteger("code");
+            }
+
+
+            //编辑定检规则
+            int interval_hours = 2;
+            JSONObject response_two = xd.scheduleRuleEdit(name,start_time,end_time,interval_hours,shoplist,id);
+            int code_two = response_two.getInteger("code");
+
+
+            //删除定检规则
+            JSONArray  rule_ids=new JSONArray();
+            rule_ids.add(0,id);
+            JSONObject res_thr = xd.scheduleRuleDelete(rule_ids);
+            int code_thr = res_thr.getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1000,"新建定检规则失败，code="+code);
+            Preconditions.checkArgument(code_swi == 1000,"定检规则的开关按钮启动失败，code="+code_swi);
+            Preconditions.checkArgument(code_two == 1000,"编辑定检规则失败，code="+code_two);
+            Preconditions.checkArgument(code_thr == 1000,"删除定检规则失败，code="+code_thr);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

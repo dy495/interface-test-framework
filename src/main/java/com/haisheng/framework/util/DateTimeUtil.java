@@ -326,7 +326,7 @@ public class DateTimeUtil {
         Long min = ((l / (60 * 1000)));
 
 
-        System.out.println( min + "分" );
+        System.out.println(min + "分");
         return min.intValue();
     }
 
@@ -662,6 +662,26 @@ public class DateTimeUtil {
     public static String addDayFormat(Date date, int i) {
         Date newDate = addDay(date, i);
         return getFormat(newDate);
+    }
+
+    /**
+     * 将时间转为unix时间戳
+     *
+     * @param str 时间字符串
+     * @return String 单位ms
+     */
+    public static String dateToStamp(String str) {
+        String res = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date;
+        try {
+            date = simpleDateFormat.parse(str);
+            long ts = date.getTime();
+            res = String.valueOf(ts);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     /**

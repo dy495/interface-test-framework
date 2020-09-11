@@ -3,13 +3,15 @@ package com.haisheng.framework.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
-import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -208,5 +210,27 @@ public class CommonUtil {
         object.put("plate_pic", "@0");
         object.put("time", System.currentTimeMillis());
         crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+    }
+
+    /**
+     * 添加配置
+     */
+    public static void addConfig() {
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        TestCaseCommon testCaseCommon = new TestCaseCommon();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        testCaseCommon.beforeClassInit(commonConfig);
+        logger.debug("crm: " + crm);
     }
 }

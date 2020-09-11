@@ -410,12 +410,62 @@ public class XundianScenarioUtil extends TestCaseCommon {
     /*
   10.3 定检规则列表(2020-08-13)
   */
-    public JSONObject scheduleRuleList(long id) throws Exception {
+    public JSONObject scheduleRuleList(int page,int size) throws Exception {
         String url = "/patrol/schedule-rule/list";
         String json =
                 "{" +
 
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /*
+10.3 编辑定检规则(2020-08-13)
+*/
+    public JSONObject scheduleRuleEdit(String name,String start_time,String end_time,int interval_hour,JSONArray shop_list,int id) throws Exception {
+        String url = "/patrol/schedule-rule/edit";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"start_time\" :\"" + start_time + "\",\n" +
+                        "\"end_time\" :\"" + end_time + "\",\n" +
+                        "\"interval_hour\" :" + interval_hour + ",\n" +
+                        "\"shop_list\" :" + shop_list + ",\n" +
                         "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /*
+10.3 删除定检规则(2020-08-13)
+*/
+    public JSONObject scheduleRuleDelete(JSONArray rule_ids) throws Exception {
+        String url = "/patrol/schedule-rule/delete";
+        String json =
+                "{" +
+                        "\"rule_ids\" :" + rule_ids + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+    /*
+   10.3 定检规则的开关(2020-08-13)
+   */
+    public JSONObject scheduleRuleSwith(int id,int status) throws Exception {
+        String url = "/patrol/schedule-rule/switch";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"status\" :" + status + "\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);

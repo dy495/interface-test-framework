@@ -18,6 +18,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.StatusCode;
 import com.haisheng.framework.util.HttpExecutorUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -72,6 +73,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
+            System.out.println(response);
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
@@ -3132,6 +3134,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("car_style_id", carStyleId);
         object.put("car_model_name", carModelName);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 新增试驾车接口
+     *
+     * @param carName            试驾车名字
+     * @param carStyleId         试驾车系id
+     * @param carModelId         试驾车型id
+     * @param plateNumber        车牌号
+     * @param vehicleChassisCode 车架号
+     * @param serviceTimeStart   服役开始时间
+     * @param serviceTimeEnd     服役结束时间
+     */
+    public JSONObject testDriveCarAdd(String carName, long carStyleId, long carModelId, String plateNumber, String vehicleChassisCode, long serviceTimeStart, long serviceTimeEnd) {
+        String url = "/porsche/test-drive-car/management/add";
+        JSONObject object = new JSONObject();
+        object.put("car_name", carName);
+        object.put("car_style_id", carStyleId);
+        object.put("car_model_id", carModelId);
+        object.put("plate_number", plateNumber);
+        object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("service_time_start", serviceTimeStart);
+        object.put("service_time_end", serviceTimeEnd);
         return invokeApi(url, object);
     }
 

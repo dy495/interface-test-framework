@@ -751,58 +751,58 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * @description :9.现场巡店\远程巡店留痕不超过五张 ok
-     * @date :2020/6/29 15:56
-     **/
-   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
-   public void PictureMoreFiveA(String check_type){
-       logger.logCaseStart(caseResult.getCaseName());
-       try {
-           //巡检员3登录
-           xd.applogin(adminNamex,adminPasswdx);
-           JSONObject list=xd.checkStartapp(shop_idX,check_type,1);
-           logger.info("!!!!!!!!!!!!!!!!正在：{}巡店!!!!!!!!!!!!",check_type);
-           long patrol_id=list.getLong("id");//巡检记录id
-           JSONArray check_lists=list.getJSONArray("check_lists");
-           long list_id=check_lists.getJSONObject(0).getLong("id");
-
-           //获取json array 下标0 的
-           JSONObject check_items=check_lists.getJSONObject(0);
-
-           long item_id=check_items.getJSONArray("check_items").getJSONObject(0).getLong("id");
-           String pic_list0=getPicList(filepath);
-           String pic_list1=getPicList(filepath);
-           String pic_list2=getPicList(filepath);
-           String pic_list3=getPicList(filepath);
-           String pic_list4=getPicList(filepath);
-           String pic_list5=getPicList(filepath);
-
-           // 上传6个list
-           List<String> pic_listT=new ArrayList<String>();
-           pic_listT.add(pic_list0);
-           pic_listT.add(pic_list1);
-           pic_listT.add(pic_list2);
-           pic_listT.add(pic_list3);
-           pic_listT.add(pic_list4);
-           pic_listT.add(pic_list5);
-
-//            提交留痕照片
-          int code = xd.appchecksItemSubmitY(shop_idX,patrol_id,list_id,item_id,pic_listT);
-
-           logger.info("{}",code);
-           Preconditions.checkArgument(code==1001,"六张不合格图片上传成功");
-           xd.logout();
-
-       } catch (AssertionError e) {
-           appendFailreason(e.toString());
-       } catch (Exception e) {
-           appendFailreason(e.toString());
-       }
-       finally {
-           saveData("app6次留痕异常验证");
-       }
-   }
+//    /**
+//     * @description :9.现场巡店\远程巡店留痕不超过五张 ok
+//     * @date :2020/6/29 15:56
+//     **/
+//   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+//   public void PictureMoreFiveA(String check_type){
+//       logger.logCaseStart(caseResult.getCaseName());
+//       try {
+//           //巡检员3登录
+//           xd.applogin(adminNamex,adminPasswdx);
+//           JSONObject list=xd.checkStartapp(shop_idX,check_type,1);
+//           logger.info("!!!!!!!!!!!!!!!!正在：{}巡店!!!!!!!!!!!!",check_type);
+//           long patrol_id=list.getLong("id");//巡检记录id
+//           JSONArray check_lists=list.getJSONArray("check_lists");
+//           long list_id=check_lists.getJSONObject(0).getLong("id");
+//
+//           //获取json array 下标0 的
+//           JSONObject check_items=check_lists.getJSONObject(0);
+//
+//           long item_id=check_items.getJSONArray("check_items").getJSONObject(0).getLong("id");
+//           String pic_list0=getPicList(filepath);
+//           String pic_list1=getPicList(filepath);
+//           String pic_list2=getPicList(filepath);
+//           String pic_list3=getPicList(filepath);
+//           String pic_list4=getPicList(filepath);
+//           String pic_list5=getPicList(filepath);
+//
+//           // 上传6个list
+//           List<String> pic_listT=new ArrayList<String>();
+//           pic_listT.add(pic_list0);
+//           pic_listT.add(pic_list1);
+//           pic_listT.add(pic_list2);
+//           pic_listT.add(pic_list3);
+//           pic_listT.add(pic_list4);
+//           pic_listT.add(pic_list5);
+//
+////            提交留痕照片
+//          int code = xd.appchecksItemSubmitY(shop_idX,patrol_id,list_id,item_id,pic_listT);
+//
+//           logger.info("{}",code);
+//           Preconditions.checkArgument(code==1001,"六张不合格图片上传成功");
+//           xd.logout();
+//
+//       } catch (AssertionError e) {
+//           appendFailreason(e.toString());
+//       } catch (Exception e) {
+//           appendFailreason(e.toString());
+//       }
+//       finally {
+//           saveData("app6次留痕异常验证");
+//       }
+//   }
 
    /**
     * @description :10、查看处理结果复检说明为空异常

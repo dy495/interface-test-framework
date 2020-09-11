@@ -700,9 +700,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             //获取过店客群总人次
-            String interestRate = Md.historyShopConversionV3(shop_id, cycle_type, month).getString("interest_percentage");
-            String enterRate = Md.historyShopConversionV3(shop_id, cycle_type, month).getString("enter_percentage");
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONObject res = Md.historyShopConversionV3(shop_id, cycle_type, month);
+            String interestRate =res.getString("interest_percentage");
+            String enterRate =res.getString("enter_percentage");
+            JSONArray ldlist = res.getJSONArray("list");
 
 
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
@@ -755,8 +756,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
             int values = 0;
             int values1 = 0;//值不为Null的个数，求平均值时用
-            int averageFlow = Md.historyShopTrendsV3(cycle_type, month, shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
-            JSONArray trendList = Md.historyShopTrendsV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONObject res = Md.historyShopTrendsV3(cycle_type, month, shop_id);
+            int averageFlow = res.getInteger("average_daily_passenger_flow");//获取每天得日均客流
+            JSONArray trendList = res.getJSONArray("trend_list");
             for (int i = 0; i < trendList.size(); i++) {
                 Integer value = trendList.getJSONObject(i).getInteger("uv");
                 if (value != null && value != 0) {
@@ -967,7 +969,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
     @Test
-    public void yesterdayTotal(long shop_id) {
+    public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
@@ -1020,9 +1022,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 if (count != null) {
                     today_pv += count;
                 }
-//                if(today_pv<=50){
-//                    list.getJSONObject(i).getInteger("today_pv");
-//                }
 
             }
             Preconditions.checkArgument(today_pv < 800 && today_pv > 50, "实时到店人次超过800或低于了50，现在pv=" + today_pv + "需线上确认数据是否有异常" + "。报错门店的shopId=" + shop_id);
@@ -1133,21 +1132,30 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             for (int j = 0; j < list1.size(); j++) {
 
                 customer_id = list1.getJSONObject(j).getString("customer_id");
+
                 enter_total = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
-                total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//获取所有留痕事件的和
-                deal = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_deal_times");//获取累计交易的次数
-                JSONArray thingsList = Md.memberDetail(shop_id, customer_id, page, 50).getJSONArray("list");//获取事件中门店下单的次数
-                face_url = Md.memberDetail(shop_id, customer_id, page, 50).getString("face_url");//或者每个人物的脸部图片地址
-                for (int k = 0; k < thingsList.size(); k++) {
-                    String mark = thingsList.getJSONObject(k).getString("mark");
-                    member_type = list1.getJSONObject(k).getString("member_type");
-                    if (member_type.equals("全渠道会员")) {
-                        member_id = list1.getJSONObject(j).getString("member_id");
-                    }
-                    if (mark.equals("门店下单")) {
-                        deal_times += 1;
+
+                int t = CommonUtil.pageTurning(enter_total, 50);
+                for (int l = 1; l < t; l++){
+                    JSONObject res = Md.memberDetail(shop_id, customer_id, l, size);
+                    enter_total = res.getInteger("total_visit_times");//累计到店次数
+                    total_sum = res.getInteger("total");//获取所有留痕事件的和
+                    deal = res.getInteger("total_deal_times");//获取累计交易的次数
+
+                    JSONArray thingsList = res.getJSONArray("list");//获取事件中门店下单的次数
+                    face_url = res.getString("face_url");//或者每个人物的脸部图片地址
+                    for (int k = 0; k < thingsList.size(); k++) {
+                        String mark = thingsList.getJSONObject(k).getString("mark");
+                        member_type = list1.getJSONObject(k).getString("member_type");
+                        if (member_type.equals("全渠道会员")) {
+                            member_id = list1.getJSONObject(k).getString("member_id");
+                        }
+                        if (mark.equals("门店下单")) {
+                            deal_times += 1;
+                        }
                     }
                 }
+
             }
 //            int s = CommonUtil.pageTurning(total, 50);
 //            for (int i = 1; i < s; i++) {
@@ -1162,14 +1170,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                    enter_total = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
 //                    total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//获取所有留痕事件的和
 //                    deal = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_deal_times");//获取累计交易的次数
-//                    JSONArray thingsList = Md.memberDetail(shop_id, customer_id, l, 50).getJSONArray("list");//获取事件中门店下单的次数
-//                        face_url = Md.memberDetail(shop_id, customer_id, l, 50).getString("face_url");//或者每个人物的脸部图片地址
-//                        for (int k = 0; k < thingsList.size(); k++) {
-//                            String mark = thingsList.getJSONObject(k).getString("mark");
-//                            if (mark.equals("门店下单")) {
-//                                deal_times += 1;
-//                            }
-//                        }
 //
 //                    int t = CommonUtil.pageTurning(enter_total, 50);
 //                    for (int l = 1; l < t; l++){
@@ -1190,7 +1190,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             Preconditions.checkArgument((enter_total == total_sum), "累计进店次数：" + enter_total + "留痕事件总条数" + total_sum + "。报错门店的shopId=" + shop_id);
             Preconditions.checkArgument((deal_times == deal), "累计交易次数：" + deal + "留痕事件中门店下单次数" + deal_times + "。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument((face_url.equals("") ), "人物ID"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument((face_url.equals("") ), "人物ID:"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
             Preconditions.checkArgument(( member_id != ""), "全渠道会员的会员ID会空"+customer_id +"。报错门店的shopId=" + shop_id);
 
         } catch (AssertionError e) {

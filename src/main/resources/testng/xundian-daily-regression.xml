@@ -13,6 +13,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCaseX"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianAppCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreCaseV3"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataConsistentcyV3"></class>
         </classes>
     </test>
