@@ -871,7 +871,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void createPlan(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String working_date=dt.getHistoryDate(0);
+            String working_date=dt.getHistoryDate(1);
             String working_time=dt.currentTimeB("HH:mm",240);
             JSONObject data=crm.workPlanList();
             Long total=data.getLong("total");
@@ -886,7 +886,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Long total2=data2.getLong("total");
             crm.planCancle(planId);     //取消计划
             Preconditions.checkArgument(total2-total==1,"新建工作计划，列表+1");
-            Preconditions.checkArgument(total2-total==1,"注销试驾车型，试驾车列表没-1");
 
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
