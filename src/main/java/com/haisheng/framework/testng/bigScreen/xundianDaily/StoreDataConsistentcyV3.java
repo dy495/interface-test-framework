@@ -1022,9 +1022,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 if (count != null) {
                     today_pv += count;
                 }
-//                if(today_pv<=50){
-//                    list.getJSONObject(i).getInteger("today_pv");
-//                }
 
             }
             Preconditions.checkArgument(today_pv < 800 && today_pv > 50, "实时到店人次超过800或低于了50，现在pv=" + today_pv + "需线上确认数据是否有异常" + "。报错门店的shopId=" + shop_id);
