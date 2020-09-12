@@ -11,17 +11,15 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.spi.LocaleNameProvider;
 
 
 /**
@@ -37,6 +35,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     String xs_name = "0805xsgw";//销售顾问
     String by_name = "lxqby";//保养顾问姓名
+    String by_name3 = "baoyangr";//保养顾问姓名
 
     String by_name2 = "baoyang";
     String wx_name = "lxqwx";//维修顾问姓名
@@ -126,7 +125,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -189,7 +187,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     @Ignore
-    @Test//ok
+    @Test
     public void custChkAllGTTodatTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -212,7 +210,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void afterSaleAddremarks21() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -243,8 +241,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 String search_remark = obj.getString("remark");
                 Preconditions.checkArgument(!search_remark.equals(dt.getHistoryDate(0) + "1Z！@#自动化备注1"), "包含第一条备注");
             }
-
-
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -321,6 +317,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    //存在脏数据，所以会报错
     @Test
     public void afterSaleMaintainAllLEList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -354,7 +351,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     JSONObject obj = maintain.getJSONObject(i);
                     if (obj.getString("customer_type_name").equals("新客")) {
                         String reception_sale_name = obj.getString("reception_sale_name");
-                        Preconditions.checkArgument(reception_sale_name.equals(by_name_chinese), "所属顾问为" + reception_sale_name);
+                        Preconditions.checkArgument(reception_sale_name.equals(by_name), "所属顾问为" + reception_sale_name);
                     }
                 }
             }
@@ -368,6 +365,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test
     public void afterSaleChk1Maintain1Num() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -422,6 +420,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test
     public void afterSaleChk1Maintain2Num() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -486,6 +485,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test
     public void afterSaleChk2Maintain1Num() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -539,9 +539,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-
+    //存在脏数据，所以会报错
     //我的预约-预约维修
-
     @Test
     public void afterSaleRepairAllGEToday() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -609,6 +608,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test
     public void afterSaleChk1Repair1Num() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -658,6 +658,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    @Ignore
     @Test
     public void afterSaleChk1Repair2Num() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -722,115 +723,153 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    //1.全部回访=列表条数
     @Test
     public void afterSalesReturnVisit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             crm.login(by_name2, pwd);
-
             //1.全部回访=列表条数
-            JSONObject obj = crm.afterSale_VisitRecordList(1, 50, "", "", "");
+            JSONObject obj = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            int pages = obj.getInteger("pages");
             Integer total = obj.getInteger("total");//全部回访条数
-            JSONArray list = obj.getJSONArray("list");
             int listTotal = 0;//列表的条数
-            for (int j = 0; j < list.size(); j++) {
-                Integer id = list.getJSONObject(j).getInteger("id");
-                if (id != null) {
-                    listTotal++;
-                }
-            }
-
-
-            //2.今日回访=任务日期为今天的条数
-            JSONObject obj1 = crm.afterSale_VisitRecordList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
-            Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
-            JSONArray todayList = obj1.getJSONArray("list");
-            int todayListTotal = 0;
-            for (int k = 0; k < todayList.size(); k++) {
-                Integer id = todayList.getJSONObject(k).getInteger("id");
-                if (id != null) {
-                    todayListTotal++;
-                }
-            }
-
-            //3.全部回访>=今日回访
-            boolean flag = false;
-            if (total >= todayListTotal) {
-                flag = true;
-            }
-
-            //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
-            boolean isTrueOrF1 = false;
-            boolean isTrueOrF2 = false;
-            for (int i = 0; i < list.size(); i++) {
-                String taskTime = list.getJSONObject(i).getString("return_visit_date");
-                String today_time = dt.getHistoryDate(0);
-                String yester_time = dt.getHistoryDate(-1);
-                if (taskTime.equals(today_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF1 = true;
-
-                    }
-                }
-                if (taskTime.equals(yester_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF2 = true;
-
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list1 = crm.afterSale_VisitRecordList(page, 10, "", "", "").getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    Integer id = list1.getJSONObject(j).getInteger("id");
+                    if (id != null) {
+                        listTotal++;
                     }
                 }
             }
-
-
-            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于工作管理中我的回访-售后回访中任务日期为今天的条数" + todayListTotal);
-            Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 == true, "回访任务日期为今天的回访任务是否完成=未完成");
-            Preconditions.checkArgument(isTrueOrF2 == true, "回访任务日期为昨天的回访任务是否完成=未完成");
+            System.out.println("listTotal------"+listTotal);
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-售后回访中的全部回访" + total + "不等于后工作管理中我的回访-售后回访中的列表条数" + listTotal);
-
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("售后工作管理中我的回访-售后回访的数据一致性");
+            saveData("全部回访=列表条数");
 
         }
     }
+
+//      2.今日回访=任务日期为今天的条数
+        @Test
+        public void afterSalesReturnVisit1() {
+            logger.logCaseStart(caseResult.getCaseName());
+            try{
+            crm.login(by_name2, pwd);
+            JSONObject obj1 = crm.afterSale_VisitRecordList(1, 10, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
+            Integer total = obj1.getInteger("total");
+            int pages1 = obj1.getInteger("pages");
+            Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
+            int todayListTotal = 0;
+            for(int i=1;i<=pages1;i++){
+                JSONArray todayList1 = crm.afterSale_VisitRecordList(i, 10, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+                for (int k = 0; k < todayList1.size(); k++) {
+                    Integer id = todayList1.getJSONObject(k).getInteger("id");
+                    if (id != null) {
+                        todayListTotal++;
+                    }
+                }
+            }
+            boolean flag = false;
+            if (total >= todayListTotal) {
+                flag = true;
+            }
+            Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
+            Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于后工作管理中我的回访-售后回访中任务日期为今天的条数" + todayListTotal);
+            } catch (AssertionError e) {
+            appendFailreason(e.toString());
+         } catch (Exception e) {
+            appendFailreason(e.toString());
+         } finally {
+            saveData("今日回访=任务日期为今天的条数");
+
+         }
+        }
+
+   //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
+    @Test(enabled = false)
+    public void afterSalesReturnVisit2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.login(by_name2, pwd);
+            JSONObject obj = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONArray list=obj.getJSONArray("list");
+            String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+            ImageUtil imageUtil = new ImageUtil();
+            String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+            String returnVisitPic=resource[0];
+            for (int i = 0; i < list.size(); i++) {
+                String taskTime = list.getJSONObject(i).getString("return_visit_date");
+                String today_time = dt.getHistoryDate(0);
+                if (taskTime.equals(today_time)) {
+                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+                    if (isTrue.equals("未完成")) {
+                        Long id= Long.valueOf(list.getJSONObject(i).getInteger("id"));
+                        System.out.println("---id-----"+id);
+                        JSONObject response=crm.afterSale_addVisitRecord(id,returnVisitPic,"回访测试回访测试回访测hi吧多久啊圣诞节爱神的箭kkk ","2020-11-15");
+                        System.out.println("---response-----"+response);
+                        JSONArray obj1 = crm.afterSale_VisitRecordList(1, 10, "", "", "").getJSONArray("list");
+
+                        isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+                        Preconditions.checkArgument(isTrue=="已完成" ,"回访任务日期为今天的回访任务是否完成=未完成");
+                        break;
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+        appendFailreason(e.toString());
+    } catch (Exception e) {
+        appendFailreason(e.toString());
+    } finally {
+        saveData("售后工作管理中我的回访-售后回访的数据一致性");
+
+    }
+
+    }
+
 
     @Test
     public void afterSalesfirstmMintain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             crm.login(by_name2, pwd);
-
             //1.全部回访=列表条数
             JSONObject obj = crm.afterSale_firstmMintainRecordList(1, 50, "", "", "");
             Integer total = obj.getInteger("total");//全部回访条数
-            JSONArray list = obj.getJSONArray("list");
+            JSONArray list=obj.getJSONArray("list");
+            int pages = obj.getInteger("pages");
             int listTotal = 0;//列表的条数
-            for (int j = 0; j < list.size(); j++) {
-                Integer id = list.getJSONObject(j).getInteger("id");
-                if (id != null) {
-                    listTotal++;
+            for(int page=1;page<=pages;page++){
+                JSONArray list1= crm.afterSale_firstmMintainRecordList(page, 50, "", "", "").getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    Integer id = list1.getJSONObject(j).getInteger("id");
+                    if (id != null) {
+                        listTotal++;
+                    }
                 }
             }
-
 
             //2.今日回访=任务日期为今天的条数
             JSONObject obj1 = crm.afterSale_firstmMintainRecordList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
-            JSONArray todayList = obj1.getJSONArray("list");
+            System.out.println("todayViNum-------"+todayViNum);
+            int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
-            for (int k = 0; k < todayList.size(); k++) {
-                Integer id = todayList.getJSONObject(k).getInteger("id");
-                if (id != null) {
-                    todayListTotal++;
+            for(int i=1;i<=pages1;i++){
+                JSONArray todayList= crm.afterSale_firstmMintainRecordList(i, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+                for (int k = 0; k < todayList.size(); k++) {
+                    Integer id = todayList.getJSONObject(k).getInteger("id");
+                    if (id != null) {
+                        todayListTotal++;
+                    }
                 }
+
             }
 
             //3.全部回访>=今日回访
@@ -839,50 +878,42 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 flag = true;
             }
 
-            //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
-            boolean isTrueOrF1 = false;
-            boolean isTrueOrF2 = false;
-            for (int i = 0; i < list.size(); i++) {
-                String taskTime = list.getJSONObject(i).getString("return_visit_date");
-                String today_time = dt.getHistoryDate(0);
-                String yester_time = dt.getHistoryDate(-1);
-
-                if (taskTime.equals(today_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF1 = true;
-
-                    }
-                } else {
-                    isTrueOrF1 = false;
-                }
-                if (taskTime.equals(yester_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF2 = true;
-
-                    }
-                } else {
-                    isTrueOrF2 = false;
-                }
-
-            }
-
-
+//            //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
+//            boolean isTrueOrF1 = false;
+//            boolean isTrueOrF2 = false;
+//            for (int i = 0; i < list.size(); i++) {
+//                String taskTime = list.getJSONObject(i).getString("return_visit_date");
+//                String today_time = dt.getHistoryDate(0);
+//                String yester_time = dt.getHistoryDate(-1);
+//
+//                if (taskTime.equals(today_time)) {
+//                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+//                    if (isTrue.equals("已完成")) {
+//                        isTrueOrF1 = true;
+//                    }
+//                } else {
+//                    isTrueOrF1 = false;
+//                }
+//                if (taskTime.equals(yester_time)) {
+//                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+//                    if (isTrue.equals("已完成")) {
+//                        isTrueOrF2 = true;
+//                    }
+//                } else {
+//                    isTrueOrF2 = false;
+//                }
+//            }
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-首保提醒中的全部回访" + total + "不等于售后后工作管理中我的回访-首保提醒中的列表条数" + listTotal);
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于后工作管理中我的回访-售后回访中任务日期为今天的条数" + todayListTotal);
             Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 == true, "回访任务日期为今天的回访任务是否完成=未完成");
-            Preconditions.checkArgument(isTrueOrF2 == true, "回访任务日期为昨天的回访任务是否完成=未完成");
-
-
+//            Preconditions.checkArgument(isTrueOrF1 == true, "回访任务日期为今天的回访任务是否完成=未完成");
+//            Preconditions.checkArgument(isTrueOrF2 == true, "回访任务日期为昨天的回访任务是否完成=未完成");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("售后工作管理中我的回访-首保提醒的数据一致性");
-
+           saveData("售后工作管理中我的回访-首保提醒的数据一致性");
         }
     }
 
@@ -890,18 +921,20 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSalescustomerChurnWarn() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             crm.login(by_name2, pwd);
-
             //1.全部回访=列表条数
             JSONObject obj = crm.afterSale_customerChurnWarningList(1, 50, "", "", "");
             Integer total = obj.getInteger("total");//全部回访条数
+            int pages = obj.getInteger("pages");
             JSONArray list = obj.getJSONArray("list");
             int listTotal = 0;//列表的条数
-            for (int j = 0; j < list.size(); j++) {
-                Integer id = list.getJSONObject(j).getInteger("id");
-                if (id != null) {
-                    listTotal++;
+            for(int page=1;page<=pages;page++){
+                JSONArray list1 = crm.afterSale_customerChurnWarningList(1, 50, "", "", "").getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    Integer id = list1.getJSONObject(j).getInteger("id");
+                    if (id != null) {
+                        listTotal++;
+                    }
                 }
             }
 
@@ -909,14 +942,18 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             //2.今日回访=任务日期为今天的条数
             JSONObject obj1 = crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
-            JSONArray todayList = obj1.getJSONArray("list");
+            int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
-            for (int k = 0; k < todayList.size(); k++) {
-                Integer id = todayList.getJSONObject(k).getInteger("id");
-                if (id != null) {
-                    todayListTotal++;
+            for(int i=1;i<=pages;i++){
+                JSONArray  todayList= crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+                for (int k = 0; k < todayList.size(); k++) {
+                    Integer id = todayList.getJSONObject(k).getInteger("id");
+                    if (id != null) {
+                        todayListTotal++;
+                    }
                 }
             }
+
 
             //3.全部回访>=今日回访
             boolean flag = false;
@@ -924,41 +961,36 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 flag = true;
             }
 
-            //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
-            boolean isTrueOrF1 = false;
-            boolean isTrueOrF2 = false;
-            for (int i = 0; i < list.size(); i++) {
-                String taskTime = list.getJSONObject(i).getString("return_visit_date");
-                String today_time = dt.getHistoryDate(0);
-                String yester_time = dt.getHistoryDate(-1);
-
-                if (taskTime.equals(today_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF1 = true;
-
-                    }
-                } else {
-                    isTrueOrF1 = false;
-                }
-                if (taskTime.equals(yester_time)) {
-                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
-                    if (isTrue.equals("已完成")) {
-                        isTrueOrF2 = true;
-
-                    }
-                } else {
-                    isTrueOrF2 = false;
-                }
-
-            }
-
-
+//            //4.回访任务日期为今天的回访任务，是否完成=已完成   //5.回访任务日期为昨天的回访任务，是否完成=已完成
+//            boolean isTrueOrF1 = false;
+//            boolean isTrueOrF2 = false;
+//            for (int i = 0; i < list.size(); i++) {
+//                String taskTime = list.getJSONObject(i).getString("return_visit_date");
+//                String today_time = dt.getHistoryDate(0);
+//                String yester_time = dt.getHistoryDate(-1);
+//
+//                if (taskTime.equals(today_time)) {
+//                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+//                    if (isTrue.equals("已完成")) {
+//                        isTrueOrF1 = true;
+//                    }
+//                } else {
+//                    isTrueOrF1 = false;
+//                }
+//                if (taskTime.equals(yester_time)) {
+//                    String isTrue = list.getJSONObject(i).getString("return_visit_status_name");
+//                    if (isTrue.equals("已完成")) {
+//                        isTrueOrF2 = true;
+//                    }
+//                } else {
+//                    isTrueOrF2 = false;
+//                }
+//            }
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-流失预警中的全部回访" + total + "不等于售后工作管理中我的回访-流失预警中的列表条数" + listTotal);
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-流失预警中的今日回访" + todayViNum + "不等于售后工作管理中我的回访-流失预警中任务日期为今天的条数" + todayListTotal);
             Preconditions.checkArgument(flag == true, "全部回访" + total + "大于今日回访" + todayListTotal);
-            Preconditions.checkArgument(isTrueOrF1 == true, "回访任务日期为今天的回访任务是否完成=未完成");
-            Preconditions.checkArgument(isTrueOrF2 == true, "回访任务日期为昨天的回访任务是否完成=未完成");
+//            Preconditions.checkArgument(isTrueOrF1 == true, "回访任务日期为今天的回访任务是否完成=未完成");
+//            Preconditions.checkArgument(isTrueOrF2 == true, "回访任务日期为昨天的回访任务是否完成=未完成");
 
 
         } catch (AssertionError e) {
@@ -971,7 +1003,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void afterSaleChk2Repair1Num() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1024,28 +1056,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
         }
     }
-    //我的回访-售后回访
-
-
-    //我的回访-流失预警
-
-    //活动报名
-
-    //---------------------------
-
-
-//    //小程序添加车辆信息
-//    public Long addcar () throws Exception {
-//        int cartype = 1;
-//        String plate_number = "吉A";
-//        for (int i = 0; i < 5;i++){
-//            String a = Integer.toString((int)(Math.random()*10));
-//            plate_number = plate_number + a;
-//        }
-//        Long carid = crm.myCarAdd(cartype,plate_number).getLong("my_car_id");
-//        return carid;
-//    }
-
 
     // 小程序预约维修，售后顾问点击接待按钮yes/不点击接待no
     public String[] repair(String date, Long carid, String ifreception) throws Exception {
@@ -1169,10 +1179,10 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             //接待率
             String todayReceptionRatio = response.getString("today_reception_ratio");
             String result = null;
-            if (todayReptionNum == 0 && allCustomerNum != 0) {
+            if (allCustomerNum == 0 && todayReptionNum != 0) {
                 result = "100";
-                Preconditions.checkArgument(todayReceptionRatio.equals(result + "%"), "接待率：" + todayReceptionRatio + "  " + "今日接待/今日线索*100：" + result);
-            } else if (todayReptionNum == 0 && allCustomerNum == 0 || todayReptionNum != 0 && allCustomerNum == 0) {
+                Preconditions.checkArgument(todayReceptionRatio.equals(result), "接待率：" + todayReceptionRatio + "  " + "今日接待/今日线索*100：" + result);
+            } else if (todayReptionNum == 0 && allCustomerNum == 0 || allCustomerNum != 0 && todayReptionNum == 0) {
                 result = "0";
                 Preconditions.checkArgument(todayReceptionRatio.equals(result), "接待率：" + todayReceptionRatio + "  " + "今日接待/今日线索*100：" + result);
             } else {
@@ -1182,7 +1192,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            //saveData("销售接待--接待率=今日接待/今日线索*100");
+            saveData("销售接待--接待率=今日接待/今日线索*100");
         }
     }
 
@@ -1232,7 +1242,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             //订车率
             String todayBuyCaratio = response.getString("today_buy_car_ratio");
             String result = null;
-            System.out.println("订车率" + todayBuyCaratio + "   订单/试驾" + new DecimalFormat("#").format(Math.round(todayBuyCarNum / todayestDriveNum * 100)));
             if (todayestDriveNum == 0 && todayBuyCarNum != 0) {
                 result = "100";
                 Preconditions.checkArgument(todayBuyCaratio.equals(result), "订单率：" + todayBuyCaratio + "  " + "订单/试驾*100：" + result);
@@ -1355,6 +1364,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(zjl_name, pwd);
             JSONObject responZjl = crm.customerListPC("13388888677", 1, 10);
             long customerId = responZjl.getJSONArray("list").getJSONObject(0).getInteger("customer_id");
+            System.out.println("customerId      "+customerId);
             crm.customerDeletePC(customerId);
             saveData("今天销售创建客户->今日线索+1");
         }
@@ -1485,7 +1495,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.receptionPage(1, 2);
             int allCustomerNum = response.getInteger("total");
             JSONObject response1 = crm.receptionPage1(1, "PRE_SALES", 10);
-            int todayDeliverCarNum = response1.getJSONObject("data").getInteger("total");
+            int todayDeliverCarNum = response1.getInteger("total");
             Preconditions.checkArgument(allCustomerNum == todayDeliverCarNum, "APP列表数：" + allCustomerNum + "  " + "PC列表数" + todayDeliverCarNum);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -1555,20 +1565,21 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //活动报名-添加报名人信息并删除--正常
+    //活动报名-添加报名人信息并删除
     @Test(enabled = true)
     public void registeredCustomer() {
         try {
             crm.login(xs_name, pwd);
-            String phone = "17737771311";
-            crm.registeredCustomer(12298L, "哈自动化77777777", phone);
+            String phone = "17737771881";
+            crm.registeredCustomer(12298L, "哈自动化啦", phone);
             JSONObject response = crm.TaskInfo(12298L, phone);
             JSONArray list = response.getJSONArray("customer_list");
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
                     String phone1 = list.getJSONObject(i).getString("customer_phone_number");
                     if (phone1.equals(phone)) {
-                        String cumId = response.getString("customer_id");
+                        String cumId = list.getJSONObject(i).getString("customer_id");
+                        System.out.println("-------------==="+cumId);
                         crm.deleteCustomerX("12298", cumId);
                     }
                 }
@@ -1576,7 +1587,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("活动报名-添加报名人信息并删除--正常");
+            saveData("活动报名-添加报名人信息并删除");
         }
     }
 
@@ -1836,16 +1847,18 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     JSONObject responseBsj = crm.userPage(page, 10);
                     JSONArray list = responseBsj.getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        if (list.getJSONObject(i).getString("role_name").equals("保养顾问") || list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
+                        if (list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
                             String userLoginName = list.getJSONObject(i).getString("user_login_name");
                             System.out.println(userLoginName);
                             crm.login(userLoginName, "e10adc3949ba59abbe56e057f20f883e");
                             int monthReceptionCar1 = crm.afterSale_custList("","","",1,10).getInteger("month_repaired_car");
+                            System.out.println("----销售顾问接待数量----"+monthReceptionCar1);
                             max += monthReceptionCar1;
                             System.out.println(monthReceptionCar1);
                         }
                     }
                 }
+            System.out.println("总监本月接待维修车辆为   " + monthRepairedCar + "各个顾问本月接待维修车辆之和  " + max);
             Preconditions.checkArgument(max == monthRepairedCar, "总监本月接待维修车辆为   " + monthRepairedCar + "各个顾问本月接待维修车辆之和  " + max);
         } catch (Exception |AssertionError e) {
             appendFailreason(e.toString());
@@ -1906,7 +1919,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     JSONObject responseBsj = crm.userPage(page, 10);
                     JSONArray list = responseBsj.getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        if (list.getJSONObject(i).getString("role_name").equals("保养顾问") || list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
+                        if ( list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
                             String userLoginName = list.getJSONObject(i).getString("user_login_name");
                             System.out.println(userLoginName);
                             crm.login(userLoginName, "e10adc3949ba59abbe56e057f20f883e");
@@ -1972,7 +1985,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //今日新增车辆=今日筛选，车牌号去重---数据有问题
+    //今日新增车辆=今日筛选，车牌号去重
     @Test(enabled = false)
     public void todayNewCarCompare(){
         crm.login("baoyangr", pwd);
