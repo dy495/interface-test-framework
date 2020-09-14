@@ -59,7 +59,9 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
+
     public String IpPort = EnumAddress.PORSCHEONLINE.getAddress();
+
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -87,7 +89,9 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public void appletLoginLxq(String code) {
+
+    //小程序登录
+    public void appletLogin(String code) {
         initHttpConfig();
         String path = "/WeChat-applet-login";
         String loginUrl = IpPort + path;
@@ -99,7 +103,8 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         try {
             response = HttpClientUtil.post(config);
 //            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            authorization = "qa_need_not_delete1";
+            authorization = "qa_need_not_delete";
+
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
             appendFailreason(e.toString());
@@ -107,6 +112,8 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         //saveData("登陆");
     }
+
+
 
     /**
      * 小程序通用登录
@@ -3931,7 +3938,10 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     public JSONObject shopPannel(String cycle_type, String month, String sale_id) throws Exception {
         String url = "/porsche/analysis2/shop/pannel";
         JSONObject json = new JSONObject();
-        json.put("cycle_type", cycle_type);
+
+        if (!cycle_type.equals("")) {
+            json.put("cycle_type", cycle_type);
+        }
         if (!month.equals("")) {
             json.put("month", month);
         }
