@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -19,8 +19,6 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * CRM-App-System 自动化用例
@@ -33,21 +31,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
-        //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
-        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
-        //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
-        //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
-        beforeClassInit(commonConfig);
-        logger.debug("crm: " + crm);
+        CommonUtil.addConfig();
     }
 
     @AfterClass
@@ -544,21 +528,17 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("customer_type_name").equals("成交")) {
-                        String customerPhone = list.getJSONObject(j).getString("customer_phone");
-                        CommonUtil.valueView(customerPhone);
-                        CommonUtil.login(EnumAccount.ZJL);
-                        JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
-                        String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                        CommonUtil.valueView(j, ifByCarName);
-                        Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
-                        CommonUtil.login(EnumAccount.XSGWTEMP);
-                    }
+            CommonUtil.login(EnumAccount.ZJL);
+            JSONArray list = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
+            for (int i = 0; i < 100; i++) {
+                if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    CommonUtil.valueView(customerPhone);
+                    JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
+                    String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
+                    CommonUtil.valueView(i, ifByCarName);
+                    CommonUtil.log("--------------------分割线--------------------");
+                    Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -574,14 +554,14 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             JSONArray list = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("customer_type_name").equals("预约")) {
+                if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.APPOINTMENT.getName())) {
                     String customerPhone;
                     customerPhone = list.getJSONObject(i).getString("customer_phone");
                     if (StringUtils.isEmpty(customerPhone)) {
                         customerPhone = list.getJSONObject(i - 2).getString("customer_phone");
                         CommonUtil.valueView(customerPhone);
                     }
-                    CommonUtil.valueView("电话号是" + customerPhone);
+                    CommonUtil.valueView("电话号是:" + customerPhone);
                     JSONObject result = crm.appointmentTestDriverList(customerPhone, "", "", 1, 10);
                     JSONArray list1 = result.getJSONArray("list");
                     CommonUtil.valueView(list1);
@@ -607,6 +587,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     if (list.getJSONObject(j).getString("task_status_name").equals("已完成")) {
                         boolean showPic = list.getJSONObject(j).getBoolean("show_pic");
                         int taskId = list.getJSONObject(j).getInteger("task_id");
+                        CommonUtil.valueView(showPic, taskId);
                         JSONArray picList = crm.showPicResult(taskId).getJSONArray("data").getJSONObject(0).getJSONArray("pic_list");
                         Preconditions.checkArgument(showPic, "已完成的回访任务无法查看");
                         Preconditions.checkArgument(picList.size() > 0, "已完成的回访任务无截图");

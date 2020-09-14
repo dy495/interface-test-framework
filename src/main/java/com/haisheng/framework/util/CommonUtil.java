@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +22,6 @@ import java.util.*;
  */
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
-
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     public static String getStrField(JSONObject response, String field) {
@@ -68,6 +66,11 @@ public class CommonUtil {
     @SafeVarargs
     public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+
+    public static void log(String s) {
+        logger.info(s);
     }
 
     /**

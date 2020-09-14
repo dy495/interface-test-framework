@@ -72,7 +72,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
-            System.out.println(response);
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {

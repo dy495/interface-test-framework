@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.customer.EnumReceptionType;
 import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

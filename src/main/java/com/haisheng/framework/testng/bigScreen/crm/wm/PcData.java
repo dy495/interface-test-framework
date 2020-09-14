@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -178,7 +179,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getCustomerLevel(), EnumAccount.XSGWTEMP.getUid());
+            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getId(), EnumAccount.XSGWTEMP.getUid());
             //变换所属销售后公海列表数
             JSONObject publicCustomerList1 = crm.publicCustomerList("", "", 10, 1);
             int publicTotal1 = publicCustomerList1.getInteger("total");
@@ -276,7 +277,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getCustomerLevel(), EnumAccount.XSGWTEMP.getUid());
+            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getId(), EnumAccount.XSGWTEMP.getUid());
             //变换所属销售后战败列表数
             int publicTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
             CommonUtil.login(EnumAccount.XSGWTEMP);

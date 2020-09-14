@@ -1,8 +1,10 @@
-package com.haisheng.framework.model.experiment.enumerator;
+package com.haisheng.framework.model.experiment.enumerator.customer;
 
 import lombok.Getter;
 
 /**
+ * 客户到店状态
+ *
  * @author wangmin
  * @date 2020/8/12 18:27
  */
