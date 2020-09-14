@@ -18,7 +18,7 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class PcData extends TestCaseCommon implements TestCaseStd {
+public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
 
     @BeforeClass

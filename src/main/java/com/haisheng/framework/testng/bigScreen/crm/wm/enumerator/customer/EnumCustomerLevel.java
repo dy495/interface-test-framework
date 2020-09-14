@@ -7,24 +7,25 @@ import lombok.Getter;
  */
 public enum EnumCustomerLevel {
 
-    H("H级", 1, "H"),
+    H("H级", 1, "H", ""),
 
-    A("A级", 2, "A"),
+    A("A级", 2, "A", ""),
 
-    B("B级", 3, "B"),
+    B("B级", 3, "B", ""),
 
-    C("C级", 4, "C"),
+    C("C级", 4, "C", ""),
 
-    G("公海", 14, "G"),
+    G("G级", 14, "G", "公海"),
 
-    F("战败", 6, "F"),
+    F("F级", 6, "F", "战败"),
 
-    D("订车", 4, "D");
+    D("D级", 4, "D", "");
 
-    EnumCustomerLevel(String name, int id, String level) {
+    EnumCustomerLevel(String name, int id, String level, String des) {
         this.name = name;
         this.id = id;
         this.level = level;
+        this.des = des;
     }
 
     @Getter
@@ -35,5 +36,8 @@ public enum EnumCustomerLevel {
 
     @Getter
     private final String level;
+
+    @Getter
+    private final String des;
 
 }
