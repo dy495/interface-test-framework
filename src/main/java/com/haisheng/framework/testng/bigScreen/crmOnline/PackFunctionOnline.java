@@ -11,7 +11,7 @@ import com.haisheng.framework.util.FileUtil;
 import java.util.List;
 
 public class PackFunctionOnline {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp=new PublicParmOnline();
     FileUtil file=new FileUtil();

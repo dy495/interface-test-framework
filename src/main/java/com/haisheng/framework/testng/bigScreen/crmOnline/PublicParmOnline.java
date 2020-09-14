@@ -1,13 +1,13 @@
 package com.haisheng.framework.testng.bigScreen.crmOnline;
 
 public class PublicParmOnline {
-    public String superManger = "baoshijie";    //超级管理员
+    public String superManger = "demo";    //超级管理员
     public String superPassword = "f2064e9d2477a6bc75c132615fe3294c";    //超级管理员
 
     public String qiantai = "qt";
     public String qtpassword = "e85823b4e7db1064f4301e1c74978199";
 
-    public String zongjingli = "xx";    //总经理
+    public String zongjingli = "zjl";    //总经理
     public String adminpassword = "eccd898ab480ff8ee1ba168f4ca3de2c";
 
     //售后 预约保养 维修 服务总监fuwuZongjian

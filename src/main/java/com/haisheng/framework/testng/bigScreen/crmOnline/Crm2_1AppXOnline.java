@@ -257,7 +257,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :创建新客交车,今日交车次数+1,总计+1  ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testdeliver(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

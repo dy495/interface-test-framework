@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 public enum EnumAddress {
     PORSCHE("http://dev.porsche.dealer-ydauto.winsenseos.cn"),
-    PORSCHEONLINE("http://porsche.dealer-ydauto.winsenseos.com/");
+    PORSCHEONLINE("http://porsche.dealer-ydauto.winsenseos.com");
 
     EnumAddress(String address) {
         this.address = address;
