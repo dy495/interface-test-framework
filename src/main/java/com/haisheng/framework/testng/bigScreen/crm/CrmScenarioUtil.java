@@ -11,7 +11,6 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
-import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -3858,7 +3857,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      */
     private JSONObject invokeApi(String url, JSONObject requestBody) {
         if (StringUtils.isEmpty(url)) {
-            throw new DataExcept("url不可为空");
+            throw new RuntimeException("url不可为空");
         }
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);

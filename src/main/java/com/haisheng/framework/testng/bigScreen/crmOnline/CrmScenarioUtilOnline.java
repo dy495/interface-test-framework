@@ -11,7 +11,6 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
-import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -59,9 +58,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-
-    public String IpPort = EnumAddress.PORSCHEONLINE.getAddress();
-
+    public String IpPort = EnumAddress.PORSCHE_ONLINE.getAddress();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -88,32 +85,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
-
-
-    //小程序登录
-    public void appletLogin(String code) {
-        initHttpConfig();
-        String path = "/WeChat-applet-login";
-        String loginUrl = IpPort + path;
-        String json = "{ \"code\":\"" + code + "\"}";
-        config.url(loginUrl)
-                .json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-//            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            authorization = "qa_need_not_delete";
-
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        //saveData("登陆");
-    }
-
-
 
     /**
      * 小程序通用登录
@@ -2744,7 +2715,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumShopId.PORSCHE_SHOP.getShopId());
+        object.put("shop_id", EnumShopId.PORSCHE_SHOP_ONLINE.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);
@@ -3818,7 +3789,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
      */
     private JSONObject invokeApi(String url, JSONObject requestBody) {
         if (StringUtils.isEmpty(url)) {
-            throw new DataExcept("url不可为空");
+            throw new RuntimeException("url不可为空");
         }
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);

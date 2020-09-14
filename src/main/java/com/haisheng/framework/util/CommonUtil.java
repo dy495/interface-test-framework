@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.*;
-import com.haisheng.framework.model.experiment.excep.DataExcept;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import java.util.*;
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    private static final CrmScenarioUtilOnline crmOnline = CrmScenarioUtilOnline.getInstance();
 
     public static String getStrField(JSONObject response, String field) {
         String value = response.getString(field);
@@ -46,10 +48,10 @@ public class CommonUtil {
         List<String> list = new ArrayList<>();
         Arrays.stream(param).forEach(e -> {
             if (StringUtils.isEmpty(e)) {
-                throw new DataExcept("param类型应为String类型且不能为空");
+                throw new RuntimeException("param类型应为String类型且不能为空");
             } else {
                 if (!object.containsKey(e)) {
-                    throw new DataExcept("object中不包含此key");
+                    throw new RuntimeException("object中不包含此key");
                 }
                 list.add(object.getString(e));
             }
@@ -104,10 +106,10 @@ public class CommonUtil {
     public static int pageTurning(double listSize, double pageSize) {
         if (listSize < 0 || pageSize < 0) {
             if (listSize < 0) {
-                throw new DataExcept("listSize不可为负数");
+                throw new RuntimeException("listSize不可为负数");
             }
             if (pageSize < 0) {
-                throw new DataExcept("pageSize不可为负数");
+                throw new RuntimeException("pageSize不可为负数");
             }
         }
         double a;
@@ -122,9 +124,13 @@ public class CommonUtil {
      */
     public static void login(EnumAccount enumAccount) {
         if (enumAccount == null) {
-            throw new DataExcept("enumAccount is null");
+            throw new RuntimeException("enumAccount is null");
         }
-        crm.login(enumAccount.getUsername(), enumAccount.getPassword());
+        if (enumAccount.getEnvironment().equals("daily")) {
+            crm.login(enumAccount.getUsername(), enumAccount.getPassword());
+        } else {
+            crmOnline.login(enumAccount.getUsername(), enumAccount.getPassword());
+        }
     }
 
     /**
@@ -134,7 +140,7 @@ public class CommonUtil {
      */
     public static void loginApplet(EnumAppletCode appletCode) {
         if (appletCode == null) {
-            throw new DataExcept("appletCode is null");
+            throw new RuntimeException("appletCode is null");
         }
         crm.appletLoginToken(appletCode.getCode());
     }
@@ -192,7 +198,7 @@ public class CommonUtil {
                 deviceId = "7724082825888768";
                 break;
             default:
-                throw new DataExcept("状态值只能为0或1");
+                throw new RuntimeException("状态值只能为0或1");
         }
         upload(picPath, carNum, router, deviceId);
     }
@@ -218,7 +224,7 @@ public class CommonUtil {
     /**
      * 添加配置
      */
-    public static void addConfig() {
+    public static void addConfigDaily() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         TestCaseCommon testCaseCommon = new TestCaseCommon();
@@ -233,6 +239,28 @@ public class CommonUtil {
         commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        testCaseCommon.beforeClassInit(commonConfig);
+        logger.debug("crm: " + crm);
+    }
+
+    /**
+     * 添加线上配置
+     */
+    public static void addConfigOnline() {
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        TestCaseCommon testCaseCommon = new TestCaseCommon();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
         testCaseCommon.beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }

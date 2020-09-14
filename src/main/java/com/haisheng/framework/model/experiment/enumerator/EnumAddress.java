@@ -3,14 +3,20 @@ package com.haisheng.framework.model.experiment.enumerator;
 import lombok.Getter;
 
 /**
- * 网址枚举
+ * 产品网址枚举
  *
  * @author wangmin
  * @date 2020/7/24 15:33
  */
 public enum EnumAddress {
+    /**
+     * 保时捷日常
+     */
     PORSCHE("http://dev.porsche.dealer-ydauto.winsenseos.cn"),
-    PORSCHEONLINE("http://porsche.dealer-ydauto.winsenseos.com");
+    /**
+     * 保时捷线上
+     */
+    PORSCHE_ONLINE("http://porsche.dealer-ydauto.winsenseos.com");
 
     EnumAddress(String address) {
         this.address = address;

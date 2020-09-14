@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.enumerator.customer;
+package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer;
 
 import lombok.Getter;
 
@@ -11,11 +11,11 @@ public enum EnumCustomerLevel {
 
     A("A级", 2, "A"),
 
-    B("B级", 2, "B"),
+    B("B级", 3, "B"),
 
-    C("C级", 2, "C"),
+    C("C级", 4, "C"),
 
-    G("公海", 8, "G"),
+    G("公海", 14, "G"),
 
     F("战败", 6, "F"),
 

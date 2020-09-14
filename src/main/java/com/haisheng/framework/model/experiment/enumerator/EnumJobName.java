@@ -9,7 +9,10 @@ import lombok.Getter;
  * @date 2020/7/24 15:07
  */
 public enum EnumJobName {
-    CRM_DAILY_TEST("crm-daily-test");
+
+    CRM_DAILY_TEST("crm-daily-test"),
+
+    CRM_ONLINE_test("crm-online-test");
 
     EnumJobName(String jobName) {
         this.jobName = jobName;

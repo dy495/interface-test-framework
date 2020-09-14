@@ -3,10 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm.Ignore;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.checker.ApiChecker;
-import com.haisheng.framework.model.experiment.enumerator.EnumAccount;
-import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -32,10 +30,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     CustomerInfo cstm = new CustomerInfo();
 
 
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     *
      */
     @BeforeClass
     @Override
@@ -70,7 +66,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-       crm.login(cstm.lxqgw,cstm.pwd);
+        crm.login(cstm.lxqgw, cstm.pwd);
 
     }
 
@@ -82,7 +78,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: get a fresh case ds to save case result, such as result/response
-     *
      */
     @BeforeMethod
     @Override
@@ -94,10 +89,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     *
      * 上传车牌
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
-     *
      */
     @Test
     public void uploadEnterShopCarPlate() {
@@ -108,9 +101,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         ImageUtil imageUtil = new ImageUtil();
         String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
-        String json = "{\"plate_num\":\"" + carNum +"\"," +
+        String json = "{\"plate_num\":\"" + carNum + "\"," +
                 "\"plate_pic\":\"@0\"," +
-                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "\"time\":\"" + System.currentTimeMillis() + "\"" +
                 "}";
         try {
             crm.carUploadToDaily(router, deviceId, resource, json);
@@ -124,10 +117,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     *
      * 上传车牌
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
-     *
      */
     @Test
     public void uploadLeaveShopCarPlate() {
@@ -138,9 +129,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         ImageUtil imageUtil = new ImageUtil();
         String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
-        String json = "{\"plate_num\":\"" + carNum +"\"," +
+        String json = "{\"plate_num\":\"" + carNum + "\"," +
                 "\"plate_pic\":\"@0\"," +
-                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "\"time\":\"" + System.currentTimeMillis() + "\"" +
                 "}";
         try {
             crm.carUploadToDaily(router, deviceId, resource, json);
@@ -154,9 +145,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     *
      * ====================PC工作安排  V3.0取消页面======================
-     * */
+     */
 
     @Ignore
     @Test
@@ -166,15 +156,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+            String endtime = dt.getHHmm(10 + startM);//1分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename, scheduledesc, scheduledate, starttime, endtime).getLong("id");
 
             //删除工作安排
             crm.scheduleDel_PC(scheduleid);
@@ -199,17 +189,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="";
-            for(int i = 0; i < 200;i++){
+            String scheduledesc = "";
+            for (int i = 0; i < 200; i++) {
                 scheduledesc = scheduledesc + "啊";
             }
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+            String endtime = dt.getHHmm(10 + startM);//1分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename, scheduledesc, scheduledate, starttime, endtime).getLong("id");
 
             //删除工作安排
             crm.scheduleDel_PC(scheduleid);
@@ -233,18 +223,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服";
+            String scheduledesc = "交车服务描述交车服";
 
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            String endtime = dt.getHHmm(10 + startM);//1分钟之后
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -265,21 +255,21 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
             String scheduledesc = "";
-            for(int i = 0; i < 200;i++){
+            for (int i = 0; i < 200; i++) {
                 scheduledesc = scheduledesc + "啊";
             }
 
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            String endtime = dt.getHHmm(10 + startM);//1分钟之后
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -301,18 +291,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="添加工作安排，开始时间>结束时间";
+            String scheduledesc = "添加工作安排，开始时间>结束时间";
 
             int startM = 60;
-            String starttime = dt.getHHmm(10+startM);//当前时间
+            String starttime = dt.getHHmm(10 + startM);//当前时间
             String endtime = dt.getHHmm(startM);//1分钟之后
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
 
         } catch (AssertionError e) {
@@ -335,23 +325,23 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+            String endtime = dt.getHHmm(10 + startM);//1分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename, scheduledesc, scheduledate, starttime, endtime).getLong("id");
 
             //创建时间重叠的工作安排
-            String starttime1 = dt.getHHmm(5+startM);
-            String endtime1 = dt.getHHmm(15+startM);
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime1,endtime1);
+            String starttime1 = dt.getHHmm(5 + startM);
+            String endtime1 = dt.getHHmm(15 + startM);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime1, endtime1);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
             //删除工作安排
             crm.scheduleDel_PC(scheduleid);
 
@@ -375,18 +365,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
 
             String starttime = dt.getHHmm(-15);//15分钟前
             String endtime = dt.getHHmm(-5);//5分钟前
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -408,18 +398,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
             int startM = 60;
             String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(5+startM);//1分钟之后
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            String endtime = dt.getHHmm(5 + startM);//1分钟之后
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -441,18 +431,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
 
             String starttime = dt.getHHmm(-5);//5分钟前
             String endtime = dt.getHHmm(-15);//15分钟前
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -474,18 +464,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
 
             String starttime = dt.getHHmm(5);//5分钟前
             String endtime = starttime;//5分钟前
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -500,25 +490,25 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Ignore
-    @Test(dataProvider = "ERR_FORMAT",dataProviderClass = CrmScenarioUtil.class)
+    @Test(dataProvider = "ERR_FORMAT", dataProviderClass = CrmScenarioUtil.class)
     public void addScheduleFormatErr1(String errformat) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String scheduledate = dt.getHistoryDate(0); //今天日期
 
             //查看数量
-            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int total1 = crm.scheduleList_PC(1, 1, scheduledate, "").getInteger("total");
             //创建工作安排
             String schedulename = "回访工作";
-            String scheduledesc="交车服务描述交车服务";
+            String scheduledesc = "交车服务描述交车服务";
 
 
             String starttime = errformat;//格式异常
             String endtime = starttime;
-            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename, scheduledesc, scheduledate, starttime, endtime);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+            Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -533,35 +523,32 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
     /**
-     *
      * ====================PC我的回访 V3。0取消页面====================== 修改数据库
-     * */
+     */
 
     //--------------------------查询--------------------
-
     @Ignore
     @Test
     public void taskListSearchAll() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String name = ""+System.currentTimeMillis();
-            String phone = "zdh"+(int)((Math.random()*9+1)*100000);
+            String name = "" + System.currentTimeMillis();
+            String phone = "zdh" + (int) ((Math.random() * 9 + 1) * 100000);
             String desc = "创建H级客户自动化------------------------------------";
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //直接点击查询
-            int total = crm.taskList_PC("",-1,1,1,"").getInteger("total");
-            Preconditions.checkArgument(total>=1,"我的回访数量期待>=1，实际="+total);
+            int total = crm.taskList_PC("", -1, 1, 1, "").getInteger("total");
+            Preconditions.checkArgument(total >= 1, "我的回访数量期待>=1，实际=" + total);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -577,15 +564,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchName() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -593,9 +580,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //姓名查询
-            JSONObject obj = crm.customerListPC("",-1,name,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", -1, name, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_name.equals(name), "查询结果与查询条件不一致");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -612,24 +599,24 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
             String desc = "创建H级客户自动化------------------------------------";
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",-1,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", -1, "", phone1, 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -644,24 +631,24 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchLevel() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONArray list = crm.customerListPC("",7,"","",0,0,1,1).getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            JSONArray list = crm.customerListPC("", 7, "", "", 0, 0, 1, 1).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("customer_level").equals("7"),"查询结果与查询条件不一致");
+                Preconditions.checkArgument(single.getString("customer_level").equals("7"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -677,17 +664,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameYPhoneY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
             String desc = "创建H级客户自动化------------------------------------";
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -695,10 +682,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",-1,name,phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", -1, name, phone1, 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_phone.equals(phone1)&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -713,15 +700,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -729,10 +716,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",7,name,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", 7, name, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -747,15 +734,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -763,10 +750,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",7,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", 7, "", phone1, 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -781,15 +768,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameYPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -797,11 +784,11 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",7,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("", 7, "", phone1, 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1) && search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -816,14 +803,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameYPhoneN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -831,9 +818,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.customerListPC("",-1,name,phone+"1",0,0,1,1).getInteger("total");
+            int total = crm.customerListPC("", -1, name, phone + "1", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"有查询结果");
+            Preconditions.checkArgument(total == 0, "有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -848,22 +835,22 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.customerListPC("",3,name,"",0,0,1,1).getInteger("total");
+            int total = crm.customerListPC("", 3, name, "", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -878,22 +865,22 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchPhoneYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.customerListPC("",3,"",phone,0,0,1,1).getInteger("total");
+            int total = crm.customerListPC("", 3, "", phone, 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -908,21 +895,21 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void taskListSearchNameNPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            String phone = ""+System.currentTimeMillis();
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.customerListPC("",7,name+"1",phone,0,0,1,1).getInteger("total");
+            int total = crm.customerListPC("", 7, name + "1", phone, 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -940,15 +927,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitComment10() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name =""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
+            String name = "" + System.currentTimeMillis();
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -956,17 +943,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 10 ; i++){
+            for (int i = 0; i < 10; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
 
             //查看顾客详情，回访记录条数
             int list = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-            Preconditions.checkArgument(list==1,"添加失败");
+            Preconditions.checkArgument(list == 1, "添加失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -982,14 +969,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitComment200() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -999,17 +986,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 200 ; i++){
+            for (int i = 0; i < 200; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
 
             //查看顾客详情，回访记录条数
             int list = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-            Preconditions.checkArgument(list==1,"添加失败");
+            Preconditions.checkArgument(list == 1, "添加失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1025,14 +1012,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitnum50() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1040,19 +1027,19 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 20 ; i++){
+            for (int i = 0; i < 20; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            for (int i = 0 ;i < 50;i++){
-                crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            for (int i = 0; i < 50; i++) {
+                crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
             }
 
             //查看顾客详情，回访记录条数
             int list = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-            Preconditions.checkArgument(list==50,"添加50条失败");
+            Preconditions.checkArgument(list == 50, "添加50条失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1067,15 +1054,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     //@Test //前端校验
     public void addVisitnum51() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
 
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1083,19 +1070,19 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 20 ; i++){
+            for (int i = 0; i < 20; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            for (int i = 0 ;i < 50;i++){
-                crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            for (int i = 0; i < 50; i++) {
+                crm.customerEditVisitPC(customerid, name, phone, level_id, visit);
             }
-            JSONObject obj = crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            JSONObject obj = crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1111,14 +1098,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitComment9() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1126,16 +1113,16 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 9 ; i++){
+            for (int i = 0; i < 9; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            JSONObject obj = crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            JSONObject obj = crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1151,13 +1138,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitComment201() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1165,16 +1152,16 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 201 ; i++){
+            for (int i = 0; i < 201; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            JSONObject obj = crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            JSONObject obj = crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1190,13 +1177,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitComment0() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1207,12 +1194,12 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
             String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            JSONObject obj = crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            JSONObject obj = crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1227,13 +1214,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     //@Test //前端做了校验
     public void addVisitYesterday() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1241,16 +1228,16 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 10 ; i++){
+            for (int i = 0; i < 10; i++) {
                 comment = comment + "回";
             }
             String date = dt.getHistoryDate(-1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            JSONObject obj = crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date);
+            JSONObject obj = crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1266,14 +1253,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitButtonToContactED() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             String phone1 = phone.substring(3);
             //完成接待
 
@@ -1285,16 +1272,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String date = dt.getHistoryDate(0);
             String tomorrow = dt.getHistoryDate(1);
 
-            Long taskid = crm.taskList_PC(date,0,1,1,phone).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long taskid = crm.taskList_PC(date, 0, 1, 1, phone).getJSONArray("list").getJSONObject(0).getLong("id");
 
             //添加前，不在已联系中
-            int totalbefore = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
+            int totalbefore = crm.taskList_PC(date, 0, 1, 1, phone).getInteger("total");
             //添加回访记录
-            crm.customerEditVisitPC_button(customerid,taskid,tomorrow,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+            crm.customerEditVisitPC_button(customerid, taskid, tomorrow, "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
             //查询有结果
-            int totalafter = crm.taskList_PC(date,1,1,1,phone).getInteger("total");
-            Preconditions.checkArgument(totalafter==1,"记录未出现在已联系中");
-
+            int totalafter = crm.taskList_PC(date, 1, 1, 1, phone).getInteger("total");
+            Preconditions.checkArgument(totalafter == 1, "记录未出现在已联系中");
 
 
         } catch (AssertionError e) {
@@ -1311,14 +1297,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitDetialNotToContactED() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1327,23 +1313,22 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             //添加前，在未联系
             String date = dt.getHistoryDate(0);
-            int totalbefore = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
+            int totalbefore = crm.taskList_PC(date, 0, 1, 1, phone).getInteger("total");
 
             //详情页添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
-            for (int i = 0; i < 10 ; i++){
+            for (int i = 0; i < 10; i++) {
                 comment = comment + "回";
             }
             String date2 = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date2);
-            crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+            visit.put("comment", comment);
+            visit.put("next_return_visit_date", date2);
+            crm.customerEditVisitPCNotChk(customerid, name, phone, level_id, visit);
 
             //添加后，在未联系
-            int totalafter = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
-            Preconditions.checkArgument(totalafter==1,"记录不在未联系中");
-
+            int totalafter = crm.taskList_PC(date, 0, 1, 1, phone).getInteger("total");
+            Preconditions.checkArgument(totalafter == 1, "记录不在未联系中");
 
 
         } catch (AssertionError e) {
@@ -1361,13 +1346,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitRemark20() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1377,14 +1362,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 20 ; i++){
+            for (int i = 0; i < 20; i++) {
                 comment = comment + "备";
             }
-            crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+            crm.customerEditRemarkPC(customerid, name, phone, level_id, comment);
 
             //查看顾客详情，备注条数
             int list = crm.customerDetailPC(customerid).getJSONArray("remark").size();
-            Preconditions.checkArgument(list==2,"添加失败");
+            Preconditions.checkArgument(list == 2, "添加失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1399,14 +1384,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitRemark200() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1416,14 +1401,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 200 ; i++){
+            for (int i = 0; i < 200; i++) {
                 comment = comment + "备";
             }
-            crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
+            crm.customerEditRemarkPC(customerid, name, phone1, level_id, comment);
 
             //查看顾客详情，备注条数
             int list = crm.customerDetailPC(customerid).getJSONArray("remark").size();
-            Preconditions.checkArgument(list==2,"添加失败");
+            Preconditions.checkArgument(list == 2, "添加失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1438,14 +1423,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitRemarkNum50() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1455,17 +1440,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 20 ; i++){
+            for (int i = 0; i < 20; i++) {
                 comment = comment + "备";
             }
-            for (int i = 0; i < 49;i++){
-                crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
+            for (int i = 0; i < 49; i++) {
+                crm.customerEditRemarkPC(customerid, name, phone1, level_id, comment);
             }
 
 
             //查看顾客详情，备注条数
             int list = crm.customerDetailPC(customerid).getJSONArray("remark").size();
-            Preconditions.checkArgument(list==50,"添加失败");
+            Preconditions.checkArgument(list == 50, "添加失败");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1480,14 +1465,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     //@Test //前端校验
     public void addVisitRemark19() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1497,13 +1482,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 19 ; i++){
+            for (int i = 0; i < 19; i++) {
                 comment = comment + "备";
             }
-            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid,name,phone,level_id,comment);
+            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid, name, phone, level_id, comment);
             int code = obj.getInteger("code");
             String message = obj.getString("messge");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code + "，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1518,13 +1503,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     //@Test //前端校验
     public void addVisitRemark201() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1534,13 +1519,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 200 ; i++){
+            for (int i = 0; i < 200; i++) {
                 comment = comment + "备";
             }
-            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid,name,phone,level_id,comment);
+            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid, name, phone, level_id, comment);
             int code = obj.getInteger("code");
             String message = obj.getString("messge");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code + "，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1555,15 +1540,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void addVisitRemarkNum51() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1573,17 +1558,17 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             //添加备注
             JSONObject visit = new JSONObject();
             String comment = ""; //备注内容
-            for (int i = 0; i < 20 ; i++){
+            for (int i = 0; i < 20; i++) {
                 comment = comment + "备";
             }
-            for (int i = 0; i < 49;i++){
-                crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+            for (int i = 0; i < 49; i++) {
+                crm.customerEditRemarkPC(customerid, name, phone, level_id, comment);
             }
 
-            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid,name,phone,level_id,comment);
+            JSONObject obj = crm.customerEditRemarkPCNotChk(customerid, name, phone, level_id, comment);
             int code = obj.getInteger("code");
             String message = obj.getString("messge");
-            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code + "，提示语：" + message);
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1596,30 +1581,28 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
     /**
-     *
      * ====================今日来访======================
-     * */
+     */
     //----------------------查询--------------------
     @Ignore
     @Test
     public void todayListSearchAll() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
             //直接点击查询
-            int total = crm.todayListPC(-1,"","","",0,0,1,1).getInteger("total");
-            Preconditions.checkArgument(total>=1,"今日来访数量期待>=1，实际="+total);
+            int total = crm.todayListPC(-1, "", "", "", 0, 0, 1, 1).getInteger("total");
+            Preconditions.checkArgument(total >= 1, "今日来访数量期待>=1，实际=" + total);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1635,15 +1618,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchName() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1651,9 +1634,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //姓名查询
-            JSONObject obj = crm.todayListPC(-1,name,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(-1, name, "", "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_name.equals(name), "查询结果与查询条件不一致");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1670,14 +1653,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1685,9 +1668,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(-1,"",phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(-1, "", phone1, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1702,14 +1685,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchLevel() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1717,10 +1700,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            JSONArray list = crm.todayListPC(7, "", "", "", 0, 0, 1, 1).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
+                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1736,15 +1719,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameYPhoneY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1752,10 +1735,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(-1,name,phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(-1, name, phone1, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_phone.equals(phone1)&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1770,13 +1753,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1784,10 +1767,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(7,name,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(7, name, "", "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1802,15 +1785,15 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String phone1 = phone.substring(3);
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1818,10 +1801,10 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(7,"",phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(7, "", phone1, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1836,13 +1819,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameYPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             String phone1 = phone.substring(3);
             //完成接待
 
@@ -1851,11 +1834,11 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(7,name,phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(7, name, phone1, "", 0, 0, 1, 1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1) && search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1870,13 +1853,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameYPhoneN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1884,9 +1867,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.todayListPC(-1,name,phone+"1","",0,0,1,1).getInteger("total");
+            int total = crm.todayListPC(-1, name, phone + "1", "", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"有查询结果");
+            Preconditions.checkArgument(total == 0, "有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1901,14 +1884,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1916,9 +1899,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.todayListPC(5,name,"","",0,0,1,1).getInteger("total");
+            int total = crm.todayListPC(5, name, "", "", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1933,13 +1916,13 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchPhoneYLevelN() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1947,9 +1930,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.todayListPC(3,"",phone,"",0,0,1,1).getInteger("total");
+            int total = crm.todayListPC(3, "", phone, "", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1964,14 +1947,14 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void todayListSearchNameNPhoneYLevelY() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
@@ -1979,9 +1962,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            int total = crm.todayListPC(7,name+"1",phone,"",0,0,1,1).getInteger("total");
+            int total = crm.todayListPC(7, name + "1", phone, "", 0, 0, 1, 1).getInteger("total");
 
-            Preconditions.checkArgument(total==0,"不应有查询结果");
+            Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1996,22 +1979,22 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void customerListSearchLevel() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
+        Long customerid = -1L;
         try {
 
 
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
+            long level_id = 7L;
+            String phone = "" + System.currentTimeMillis();
             String name = phone;
-            customerid = creatCust(name,phone);
+            customerid = creatCust(name, phone);
             //完成接待
 
 
             //查询
-            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            JSONArray list = crm.todayListPC(7, "", "", "", 0, 0, 1, 1).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
+                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -2323,7 +2306,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 //    }
 
 
-
     /**
      *
      * ====================展厅接待======================
@@ -2413,9 +2395,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     *
      * ====================状态流转======================
-     * */
+     */
     //@Test
 //    public void  RecToRec(){
 //        logger.logCaseStart(caseResult.getCaseName());
@@ -2437,9 +2418,8 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 //            saveData("空闲转空闲");
 //        }
 //    }
-
     @Test //服务端没做校验
-    public void  RecToIn(){
+    public void RecToIn() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            //完成接待
@@ -2461,8 +2441,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 //                    crm.userDel(userid);
 //                }
 //            }
-            Long cid = creatCust("aa","aa"); //898
-
+            Long cid = creatCust("aa", "aa"); //898
 
 
         } catch (AssertionError e) {
@@ -2489,7 +2468,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     //前台点击创建接待按钮创建顾客
     public Long creatCust(String name, String phone) throws Exception {
         //前台登陆
-        crm.login(cstm.qt,cstm.pwd);
+        crm.login(cstm.qt, cstm.pwd);
         Long customerid = -1L;
         //获取当前空闲第一位销售id
 
@@ -2509,20 +2488,18 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         crm.login(userLoginName, cstm.pwd);
         customerid = crm.userInfService().getLong("customer_id");
         //创建某级客户
-        if (name.equals("")){
+        if (name.equals("")) {
             String name1 = "zdh";
-            String phone1 = "zdh"+(int)((Math.random()*9+1)*100000);
+            String phone1 = "zdh" + (int) ((Math.random() * 9 + 1) * 100000);
             JSONObject customer = crm.finishReception(customerid, 7, name1, phone1, "自动化---------创建----------H级客户");
 
-        }
-        else {
+        } else {
             JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "自动化---------创建----------H级客户");
 
         }
 
         return customerid;
     }
-
 
 
     @Test(description = "页面内容与pc我的回访一致", enabled = false)
@@ -2537,7 +2514,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         String customerName = CommonUtil.getStrField(response, 0, "customer_name");
         String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
         //pc端内容
-        CommonUtil.login(EnumAccount.XSZJ);
+        CommonUtil.login(EnumAccount.ZJL);
         JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
         String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
         String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
@@ -2545,12 +2522,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
         String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
         CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
-        new ApiChecker.Builder().scenario("页面内容与pc我的回访一致")
-                .check(belongsSaleName.equals(saleName), "app与pc回访所属销售不同")
-                .check(customerLevelName.equals(customerLevel + "级"), "app与pc客户等级不同")
-                .check(customerName.equals(pcCustomerName), "app与pc客户名称不同")
-                .check(likeCarName.equals(interestedCarModel), "app与pc客户意向车型不同")
-                .check(customerPhone.equals(customerPhoneNumber), "app与pc客户电话不同").build().check();
     }
 
     @Test(description = "pc我的回访条数=app回访任务", enabled = false)
@@ -2561,7 +2532,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
             int appReturnVisitNum = response.getJSONArray("list").size();
             int pcReturnVisitNum = 0;
-            CommonUtil.login(EnumAccount.XSZJ);
+            CommonUtil.login(EnumAccount.ZJL);
             JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", "", "");
             JSONArray list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -2577,29 +2548,30 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             saveData("【pc我的回访】条数=回访任务");
         }
     }
+
     @Test(description = "小程序“我的”预约试驾数=列表数", enabled = false)
     public void appointmentTestDriver1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject response = crm.appointmentList(0L, "TEST_DRIVE", 100);
-            int total = CommonUtil.getIntField(response, "total");
-            CommonUtil.login(EnumAccount.XSGWTEMP);
-            JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 20);
-            JSONArray list = response1.getJSONArray("list");
-            int num = 0;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("customer_name").equals("【自动化】王")) {
-                    num++;
-                }
-            }
-            CommonUtil.valueView(total, num);
-            Preconditions.checkArgument(total == num, "小程序我的试驾列表数量！=app我的预约该顾客预约的次数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("小程序“我的”预约试驾数=列表数");
-        }
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            CommonUtil.loginApplet(EnumAppletCode.WM);
+//            JSONObject response = crm.appointmentList(0L, "TEST_DRIVE", 100);
+//            int total = CommonUtil.getIntField(response, "total");
+//            CommonUtil.login(EnumAccount.XSGWTEMP);
+//            JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 20);
+//            JSONArray list = response1.getJSONArray("list");
+//            int num = 0;
+//            for (int i = 0; i < list.size(); i++) {
+//                if (list.getJSONObject(i).getString("customer_name").equals("【自动化】王")) {
+//                    num++;
+//                }
+//            }
+//            CommonUtil.valueView(total, num);
+//            Preconditions.checkArgument(total == num, "小程序我的试驾列表数量！=app我的预约该顾客预约的次数");
+//        } catch (Exception | AssertionError e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("小程序“我的”预约试驾数=列表数");
+//        }
     }
 
 

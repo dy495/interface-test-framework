@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.enumerator.*;
-import com.haisheng.framework.model.experiment.enumerator.customer.EnumCustomerType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -31,7 +31,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        CommonUtil.addConfig();
+        CommonUtil.addConfigDaily();
     }
 
     @AfterClass
@@ -43,7 +43,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.XSGWTEMP);
+        CommonUtil.login(EnumAccount.XSGW);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -57,7 +57,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         int activityTaskId = 0;
         int activityId = 0;
         try {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
+            CommonUtil.login(EnumAccount.XSGW);
             JSONArray list = crm.activityTaskPage(1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getBoolean("is_edit")) {
@@ -68,7 +68,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.login(EnumAccount.ZJL);
             int activityCustomer = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
-            CommonUtil.login(EnumAccount.XSGWTEMP);
+            CommonUtil.login(EnumAccount.XSGW);
             //添加报名信息
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
@@ -78,7 +78,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
+            CommonUtil.login(EnumAccount.XSGW);
             int customerId = 0;
             JSONArray list = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -103,7 +103,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
                 //登录销售账号
-                CommonUtil.login(EnumAccount.XSGWTEMP);
+                CommonUtil.login(EnumAccount.XSGW);
                 long customerId = crm.userInfService().getLong("customer_id");
                 //完成接待
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
@@ -401,7 +401,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
+            CommonUtil.login(EnumAccount.XSGW);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
             int page1 = CommonUtil.pageTurning(total, 100);
@@ -456,7 +456,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGWTEMP);
+            CommonUtil.login(EnumAccount.XSGW);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
