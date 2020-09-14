@@ -49,7 +49,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
 
 
@@ -57,7 +57,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上X");
