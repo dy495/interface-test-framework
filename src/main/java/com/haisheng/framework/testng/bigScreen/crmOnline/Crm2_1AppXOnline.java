@@ -33,7 +33,7 @@ import java.util.Set;
 public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
+    PublicParmOnline pp=new PublicParmOnline();
     PackFunctionOnline pf=new PackFunctionOnline();
 
     /**
@@ -60,7 +60,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上X");
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -69,11 +69,11 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = getProscheShopOline();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(pp.xiaoshouGuwen, pp.adminpassword);
+        crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
 
 
     }
@@ -101,7 +101,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
      * @date :2020/8/2 10:29
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void driverEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -155,7 +155,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :直接接待老客，为小程序接待评价提供消息
      * @date :2020/8/22 14:05
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void acceptEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -218,7 +218,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :试驾   ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testderver(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -536,7 +536,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String car_model=data.getString("car_model");
             String work=data.getString("work");
             String hobby=data.getString("hobby");
-            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
             Preconditions.checkArgument(car_model.equals("Taycan"),"最新交车信息校验失败");
             Preconditions.checkArgument(work.equals("金融"),"最新交车信息校验工作显示错误");
             Preconditions.checkArgument(hobby.equals("宠物"),"最新交车信息校验爱好显示错误");
@@ -584,7 +584,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             }else{
                 totalA=listA.size();
             }
-            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
             Preconditions.checkArgument(totalA-total==1,"建交车授权，applet车主风采列表！=交车前"+totalA+"+交车后"+total);
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
@@ -628,7 +628,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             }else{
                 totalA=listA.size();
             }
-            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
             logger.info("交车前total{},交车后totalA{}",totalA,total);
             Preconditions.checkArgument(totalA==total,"新建交车不授权，applet车主风采列表+1了");
 
@@ -653,7 +653,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
            Long id=aid[0];
            //app销售登录报名
-           crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+           crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
            JSONObject response = crm.activityTaskPageX();
            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);   //新建的活动在pad端的位置需要确认 TODO:
            int activityTaskId = json.getInteger("activity_task_id");
@@ -691,7 +691,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
        }catch (AssertionError | Exception e){
            appendFailreason(e.toString());
        } finally {
-           crm.login(pp.xiaoshouGuwen, pp.adminpassword);
+           crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
            saveData("app活动报名,任务人数于创建时相同，增加报名，任务人数+1");
        }
    }

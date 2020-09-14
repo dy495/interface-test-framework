@@ -414,6 +414,9 @@ public class TestCaseCommon {
     public String getProscheShop() {
         return "22728";
     }
+    public String getProscheShopOline() {
+        return "12928";
+    }
 
 
     public String getXundianShop() {

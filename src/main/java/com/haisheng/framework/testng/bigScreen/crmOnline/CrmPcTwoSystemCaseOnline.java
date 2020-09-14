@@ -32,13 +32,15 @@ import java.util.*;
 public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
+    PublicParmOnline pp=new PublicParmOnline();
     PackFunction pf=new PackFunction();
     FileUtil file=new FileUtil();
     public String adminname=pp.zongjingli;    //pc登录密码，最好销售总监或总经理权限
     public String adminpassword=pp.adminpassword;
     public String baoshijie=pp.superManger;
+    public String supPass=pp.superPassword;
     public String xiaoshou=pp.xiaoshouGuwen;     //销售顾问
+    public String xiaoshouPassword=pp.xsgwPassword;     //销售顾问
 
     public Integer car_type = pp.car_type;
     public Long activity_id =43L;
@@ -85,7 +87,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常x");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上x");
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -94,7 +96,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = getProscheShopOline();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -870,7 +872,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
             int num=listN.size();
             //主账号登录
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,supPass);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=role_ids; //销售顾问
@@ -901,7 +903,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
             Preconditions.checkArgument(numA-num==1,"增加顾问，下拉菜单没+1");
 //            //删除大池子
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,supPass);
             crm.userDel(userid);
 
         }catch (AssertionError | Exception e){
@@ -921,7 +923,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //主账号登录
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,supPass);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=13; //销售顾问
@@ -952,7 +954,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             JSONArray listA=crm.ManageList(roleId).getJSONArray("list");
             int totalA=listA.size();   //删除前小池子数量
             //删除大池子
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,supPass);
             crm.userDel(userid);
 
             crm.login(adminname,adminpassword);
@@ -1028,7 +1030,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             //crm中校色数统计
             int crmRoleTotal=0;
             //100以内
-            crm.login("baoshijie",adminpassword);
+            crm.login(baoshijie,supPass);
             JSONObject data=crm.userPage(1,100);
             int crmTotal=data.getInteger("total");
             JSONArray listC=data.getJSONArray("list");
@@ -1075,7 +1077,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
 //            Long activity_id=aid[1];
             Long id=aid[0];
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1113,7 +1115,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
 //            Long activity_id=aid[1];
             Long id=aid[0];
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1152,7 +1154,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long id=aid[0];
             JSONObject data=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
             int total=data.getInteger("total");
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1200,7 +1202,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
@@ -1219,7 +1221,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             int total=data.getInteger("total");
 
             //删除报名客户
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             crm.deleteCustomerX(Integer.toString(activityTaskId),Long.toString(customer_id) );
             //删除后，任务人数
             crm.login(adminname,adminpassword);
@@ -1517,7 +1519,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
       * @description :站内消息与小程序收到的消息一致性校验 ok
       * @date :2020/8/12 17:51
       **/
-     @Test(dataProvider = "APPOINTMENT_TYPE",dataProviderClass = CrmScenarioUtil.class)
+//     @Test(dataProvider = "APPOINTMENT_TYPE",dataProviderClass = CrmScenarioUtil.class)
      public void messageInter(String appointment_type){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -1843,7 +1845,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @description :app活动报名，小程序报名人数不变
      * @date :2020/9/2 15:29
      **/
-    @Test
+//    @Test
     public void appNoReleteApplet(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1856,7 +1858,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Integer registered_num = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数
             //app报名
-            crm.login(xiaoshou,adminpassword);
+            crm.login(xiaoshou,xiaoshouPassword);
             JSONObject response = crm.activityTaskPageX();
             JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");

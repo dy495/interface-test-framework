@@ -13,7 +13,7 @@ import java.util.List;
 public class PackFunctionOnline {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
+    PublicParmOnline pp=new PublicParmOnline();
     FileUtil file=new FileUtil();
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
@@ -69,7 +69,7 @@ public class PackFunctionOnline {
     //前台点击创建接待按钮创建顾客
     public JSONObject creatCust() throws Exception {
         //前台登陆
-        crm.login(pp.qiantai, pp.adminpassword);
+        crm.login(pp.qiantai, pp.qtpassword);
         String name="auto"+dt.getHHmm(0);
         StringBuilder phone = new StringBuilder("1");
         for (int i = 0; i < 10; i++) {
@@ -109,7 +109,7 @@ public class PackFunctionOnline {
     public JSONObject creatCustOld(String phone) throws Exception {
         JSONObject jsonCO=new JSONObject();
         //前台登陆
-        crm.login(pp.qiantai, pp.adminpassword);
+        crm.login(pp.qiantai, pp.qtpassword);
         //搜索手机号
         JSONObject data=crm.phoneCheck(phone);
         Long customer_id=data.getLong("customer_id");
