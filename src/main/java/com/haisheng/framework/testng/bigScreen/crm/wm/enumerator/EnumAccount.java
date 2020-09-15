@@ -14,53 +14,59 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e", "uid_41786c76", "daily"),
+    XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e", "uid_41786c76", "daily", "销售顾问temp"),
 
     /**
      * 销售顾问
      */
-    ZDHCS("zdhcs", "e10adc3949ba59abbe56e057f20f883e", "", "daily"),
+    ZDHCS("zdhcs", "e10adc3949ba59abbe56e057f20f883e", "", "daily", ""),
 
     /**
      * 总经理
      */
-    ZJL("zjl", "e10adc3949ba59abbe56e057f20f883e", "uid_d3d35577", "daily"),
+    ZJL("zjl", "e10adc3949ba59abbe56e057f20f883e", "uid_d3d35577", "daily", ""),
 
     /**
      * 前台
      */
-    QT("qt", "e10adc3949ba59abbe56e057f20f883e", "uid_05e8599f", "daily"),
+    QT("qt", "e10adc3949ba59abbe56e057f20f883e", "uid_05e8599f", "daily", ""),
 
     /**
      * 服务总监
      */
-    FWZJ("fwzj", "e10adc3949ba59abbe56e057f20f883e", "uid_d3fcde5c", "daily"),
+    FWZJ("fwzj", "e10adc3949ba59abbe56e057f20f883e", "uid_d3fcde5c", "daily", ""),
 
     /**
      * 管理员
      */
-    BAOSHIJIE("baoshijie", "e10adc3949ba59abbe56e057f20f883e", "uid_827f10a3", "daily"),
+    BAOSHIJIE("baoshijie", "e10adc3949ba59abbe56e057f20f883e", "uid_827f10a3", "daily", ""),
 
 
     /**
      * 保时捷线上销售顾问
      */
-    XSGW_ONLINE("11", new MD5Util().getMD5("11"), "uid_c01f9419", "online"),
+    XSGW_ONLINE("11", new MD5Util().getMD5("11"), "uid_c01f9419", "online", "11"),
+
+    /**
+     * 保养顾问
+     */
+    BYGW_ONLINE("55", new MD5Util().getMD5("55"), "uid_b4c2c8e2", "online", "保养顾问"),
 
     /**
      * 保时捷线上总经
      */
-    ZJL_ONLINE("zjl", new MD5Util().getMD5("zjl"), "uid_a6452755", "online");
+    ZJL_ONLINE("zjl", new MD5Util().getMD5("zjl"), "uid_a6452755", "online", "总经理");
 
-    EnumAccount(String username, String password, String uid, String environment) {
-        this.username = username;
+    EnumAccount(String account, String password, String uid, String environment, String username) {
+        this.account = account;
         this.password = password;
         this.uid = uid;
         this.environment = environment;
+        this.username = username;
     }
 
     @Getter
-    private final String username;
+    private final String account;
 
     @Getter
     private final String password;
@@ -70,6 +76,9 @@ public enum EnumAccount {
 
     @Getter
     private final String environment;
+
+    @Getter
+    private final String username;
 }
 
 

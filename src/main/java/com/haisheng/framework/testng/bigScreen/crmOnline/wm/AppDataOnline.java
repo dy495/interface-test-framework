@@ -1,13 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm;
+package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumReceptionType;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.util.CommonUtil;
@@ -23,18 +23,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * CRM-App-Data 自动化用例
- *
- * @author wangmin
- */
-public class AppData extends TestCaseCommon implements TestCaseStd {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
 
     @BeforeClass
     @Override
     public void initial() {
-        CommonUtil.addConfigDaily();
+        CommonUtil.addConfigOnline();
     }
 
     @AfterClass
@@ -46,13 +41,13 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.XSGW);
+        CommonUtil.login(EnumAccount.XSGW_ONLINE);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
-//    ---------------------------------------------------2.0------------------------------------------------------------
+    //    ---------------------------------------------------2.0------------------------------------------------------------
 
     /**
      * @description: 工作管理-我的预约
@@ -162,7 +157,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序取消预约试驾，客户状态=已取消的数量+1")
+    @Test(description = "客户小程序取消预约试驾，客户状态=已取消的数量+1", enabled = false)
     public void myAppointment_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         //更新小程序token
@@ -188,7 +183,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序取消预约试驾，列表数不变")
+    @Test(description = "客户小程序取消预约试驾，列表数不变", enabled = false)
     public void myAppointment_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         //更新小程序token
@@ -218,7 +213,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序预约试驾，列表条数+1、客户状态=预约中数量+1，列表信息与小程序新建预约时信息一致、预约日期、联系人、试驾车型、联系电话")
+    @Test(description = "客户小程序预约试驾，列表条数+1、客户状态=预约中数量+1，列表信息与小程序新建预约时信息一致、预约日期、联系人、试驾车型、联系电话", enabled = false)
     public void myAppointment_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String data = DateTimeUtil.getFormat(new Date());
@@ -266,7 +261,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "同一客户，一天内小程序预约试驾2次,列表条数+2、今日预约人数+1、全部预约+1")
+    @Test(description = "同一客户，一天内小程序预约试驾2次,列表条数+2、今日预约人数+1、全部预约+1", enabled = false)
     public void myAppointment_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -304,7 +299,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "两个客户，预约今天/明天明天试驾,列表条数+2、今日预约人数+2、全部预约+2")
+    @Test(description = "两个客户，预约今天/明天明天试驾,列表条数+2、今日预约人数+2、全部预约+2", enabled = false)
     public void myAppointment_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -341,17 +336,17 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc端试驾列表数
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_ONLINE);
             JSONObject response = crm.testDriverPage("", "", 1, 2 << 10);
             JSONArray list = response.getJSONArray("list");
             int pcTotal = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (CommonUtil.getStrField(response, i, "sale_name").equals("销售顾问temp")) {
+                if (CommonUtil.getStrField(response, i, "sale_name").equals(EnumAccount.XSGW_ONLINE.getUsername())) {
                     pcTotal++;
                 }
             }
             //app端预约数量
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_ONLINE);
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
             int appTotal = CommonUtil.getIntField(response1, "total");
             int listSize = response1.getJSONArray("list").size();
@@ -372,7 +367,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void afterSaleMyReturnVisit_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.FWZJ);
+            CommonUtil.login(EnumAccount.ZJL_ONLINE);
             int total = crm.afterSale_VisitRecordList(1, 100, "", "", "").getInteger("total");
             int listSize = 0;
             int s = CommonUtil.pageTurning(total, 100);
@@ -383,7 +378,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "售后-我的回访-全部回访=列表条数");
+            Preconditions.checkArgument(total == listSize, "售后--我的回访-全部回访=列表条数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -396,10 +391,11 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
+            CommonUtil.login(EnumAccount.ZJL_ONLINE);
             JSONObject response = crm.afterSale_VisitRecordList(1, 100, "", date, date);
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int listSize = response.getJSONArray("list").size();
-            Preconditions.checkArgument(todayReturnVisitNumber == listSize, "服务-今日回访!=任务日期为今天的条数");
+            Preconditions.checkArgument(todayReturnVisitNumber == listSize, "服务--今日回访!=任务日期为今天的条数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -411,10 +407,11 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void afterSaleMyReturnVisit_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            CommonUtil.login(EnumAccount.ZJL_ONLINE);
             JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int total = response.getInteger("total");
-            Preconditions.checkArgument(total >= todayReturnVisitNumber, "服务-全部回访<今日回访");
+            Preconditions.checkArgument(total >= todayReturnVisitNumber, "服务--全部回访<今日回访");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -430,23 +427,25 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(EnumAccount.FWZJ);
-            int id = 0;
-            JSONArray list = crm.afterSale_VisitRecordList(1, 100, "", date, date).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("return_visit_status_name").equals("未完成")) {
-                    id = list.getJSONObject(i).getInteger("id");
-                    break;
-                }
-            }
+            //获取一个当天的回访任务
+            int id = createReturnVisitTask();
+            //回访
             crm.afterSale_addVisitRecord((long) id, picture, comment, date);
-            JSONArray list1 = crm.afterSale_VisitRecordList(1, 100, "", date, date).getJSONArray("list");
-            for (int k = 0; k < list1.size(); k++) {
-                if (list1.getJSONObject(k).getInteger("id") == id) {
-                    String returnVisitStatusName = list1.getJSONObject(k).getString("return_visit_status_name");
-                    Preconditions.checkArgument(returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
+            int total = crm.afterSale_VisitRecordList(1, 10, "", date, date).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            String returnVisitStatusName = null;
+            for (int j = 1; j < s; j++) {
+                JSONArray list1 = crm.afterSale_VisitRecordList(1, 100, "", date, date).getJSONArray("list");
+                for (int k = 0; k < list1.size(); k++) {
+                    if (list1.getJSONObject(k).getInteger("id") == id) {
+                        returnVisitStatusName = list1.getJSONObject(k).getString("return_visit_status_name");
+                        CommonUtil.valueView(returnVisitStatusName);
+
+                    }
                 }
             }
+            assert returnVisitStatusName != null;
+            Preconditions.checkArgument(returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -484,7 +483,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("服务--回访任务日期为今天的回访任务，是否完成=未完成");
+            saveData("服务--回访任务日期为今天之前的回访任务，是否完成=未完成");
         }
     }
 
@@ -1193,5 +1192,33 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
         throw new RuntimeException("该用户小程序没有绑定车");
+    }
+
+    /**
+     * 创建一个当天回访任务
+     */
+    private int createReturnVisitTask() {
+        String date = DateTimeUtil.getFormat(new Date());
+        CommonUtil.login(EnumAccount.ZJL_ONLINE);
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        int total = crm.afterSale_VisitRecordList(1, 100, "", "", "").getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        int id = 0;
+        for (int i = 1; i < s; i++) {
+            JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
+            //查询非今日且回访未完成的任务
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")
+                        && !list.getJSONObject(j).getString("return_visit_date").equals(date)) {
+                    //获取回访id
+                    id = list.getJSONObject(j).getInteger("id");
+                }
+            }
+        }
+        //回访
+        crm.afterSale_addVisitRecord((long) id, picture, comment, date);
+        return id;
     }
 }
