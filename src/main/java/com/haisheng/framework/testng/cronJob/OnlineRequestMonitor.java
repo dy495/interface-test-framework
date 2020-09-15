@@ -26,8 +26,8 @@ public class OnlineRequestMonitor {
     private DateTimeUtil dt   = new DateTimeUtil();
     private String TODAY  = dt.getHistoryDate(0);
     private String HOUR   = dt.getCurrentHour();
-    private final float HOUR_DIFF_RANGE = 0.5f;
-    private final float DAY_DIFF_RANGE  = 0.1f;
+    private final float HOUR_DIFF_RANGE = 2f;
+    private final float DAY_DIFF_RANGE  = 1f;
 
     private boolean DEBUG = false;
     final String RISK_MAX = "高危险报警";
@@ -244,40 +244,41 @@ public class OnlineRequestMonitor {
             //数据缩水100%
             dataUnit.diffRange = -1;
         } else {
+//非0数据暂不做校验，鉴于目前诸多场地不稳定
             if (0 == dataUnit.history) {
-                //数据增长100%
-                dataUnit.diffRange = 1;
+                //历史数据为0时不报警
+                dataUnit.diffRange = 0;
             } else {
                 dataUnit.diffRange = (float) dataUnit.diffValue / (float) dataUnit.history;
             }
-            DecimalFormat df = new DecimalFormat("#.00");
-            if (dataUnit.diffValue > 0) {
-                float enlarge  = dataUnit.diffRange;
-                String percent = df.format(enlarge*100) + "%";
-
-                if (HOUR.equals("ALL")) {
-                    if (enlarge > DAY_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 今日较昨日【全天数据量】扩大 " + percent;
-                    }
-                } else {
-                    if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                    }
-                }
-            } else if (dataUnit.diffValue < 0) {
-                float shrink = dataUnit.diffRange * (-1);
-                String percent = df.format(shrink*100) + "%";
-
-                if (HOUR.equals("ALL")) {
-                    if (shrink > DAY_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 今日较昨日【全天数据量】缩小 " + percent;
-                    }
-                } else {
-                    if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量缩小 " + percent;
-                    }
-                }
-            }
+//            DecimalFormat df = new DecimalFormat("#.00");
+//            if (dataUnit.diffValue > 0) {
+//                float enlarge  = dataUnit.diffRange;
+//                String percent = df.format(enlarge*100) + "%";
+//
+//                if (HOUR.equals("ALL")) {
+//                    if (enlarge > DAY_DIFF_RANGE) {
+//                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 今日较昨日【全天数据量】扩大 " + percent;
+//                    }
+//                } else {
+//                    if (enlarge > HOUR_DIFF_RANGE) {
+//                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量扩大 " + percent;
+//                    }
+//                }
+//            } else if (dataUnit.diffValue < 0) {
+//                float shrink = dataUnit.diffRange * (-1);
+//                String percent = df.format(shrink*100) + "%";
+//
+//                if (HOUR.equals("ALL")) {
+//                    if (shrink > DAY_DIFF_RANGE) {
+//                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 今日较昨日【全天数据量】缩小 " + percent;
+//                    }
+//                } else {
+//                    if (shrink > HOUR_DIFF_RANGE) {
+//                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量缩小 " + percent;
+//                    }
+//                }
+//            }
 
         }
 

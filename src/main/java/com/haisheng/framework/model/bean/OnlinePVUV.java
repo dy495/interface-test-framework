@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 
 @Data
 public class OnlinePVUV implements Serializable {
-    private int pvEnter;
-    private int pvLeave;
-    private int uvEnter;
-    private int uvLeave;
+    private int pvEnter = 0;
+    private int pvLeave = 0;
+    private int uvEnter = 0;
+    private int uvLeave = 0;
     private String com;
     private String date;
     private String hour; //all--oneday, 1--00:00~01:00  24--23:00~24:00

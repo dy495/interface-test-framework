@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.text.DecimalFormat;
@@ -149,7 +150,10 @@ public class PVUVMonitor {
 
     }
 
-    @Test
+    /**
+     * 锦华停电中，暂停监控
+     * */
+    //@Test
     public void getHistoryDataJinhuaOnline() {
         String shopId = "4283";
         String appId  = "5f20ed10b9cb";
@@ -160,17 +164,75 @@ public class PVUVMonitor {
 
     }
 
-    @Test
-    public void getHistoryDataBaiguoyuanOnline() {
-        String shopId = "246";
+    /**
+     * 百果园
+     * */
+    @Test(dataProvider = "baiguoyuan")
+    public void getHistoryDataBaiguoyuanOnline(String shopId) {
+        //String shopId = "246";
         String appId  = "2cf019f4c443";
-        String com    = "百果园-常丰店";
+        String com    = "百果园-"+shopId;
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
 
-        logger.info("PASS getHistoryDataBaiguoyuanOnline");
+        logger.info("PASS getHistoryDataBaiguoyuanOnline-"+shopId);
 
     }
 
+    /**
+     * 小天才
+     * */
+    @Test(dataProvider = "xiaotiancai")
+    public void getHistoryDataXiaotiancaiOnline(String shopId) {
+        //String shopId = "15617";
+        String appId  = "4f4dc399f4ed";
+        String com    = "小天才-"+shopId;
+        getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataXiaotiancaiOnline-"+shopId);
+
+    }
+
+
+    @DataProvider(name = "baiguoyuan")
+    public static Object[] baiguoyuan() {
+
+        return new String[] {
+                "246",
+                "1958",
+                "1956",
+                "1954",
+                "1952",
+                "1950",
+                "1946",
+                "1944",
+                "1942",
+                "1940",
+                "1938",
+                "1936",
+                "1934",
+                "1932",
+                "1930",
+                "1928",
+                "1926",
+                "1924",
+                "1922",
+                "1920",
+                "1918",
+                "1916",
+                "1914",
+                "1912",
+                "1910"
+        };
+    }
+
+    @DataProvider(name = "xiaotiancai")
+    public static Object[] xiaotiancai() {
+
+        return new String[] {
+                "15615",
+                "15617"
+        };
+    }
 
 
     private void realTimeMonitor(String url, String shopId, String appId, String com) {
@@ -260,7 +322,7 @@ public class PVUVMonitor {
         }
 
         String response = sendRequest(com, url, json);
-        checkCode(response, StatusCode.SUCCESS, com + "环境监测-历史统计查询-返回值异常");
+        checkCode(response, StatusCode.SUCCESS, com + " 环境监测-历史统计查询-返回值异常");
         OnlinePVUV onlinePVUV = saveData(response, com, date);
         checkResult(onlinePVUV, com, dayWeek, HOUR);
 
@@ -341,6 +403,10 @@ public class PVUVMonitor {
 
         DiffData diffData = new DiffData();
 
+        if (null == history ) {
+            //数据库中无数据，则初始化历史数据
+            history = new OnlinePvuvCheck();
+        }
         String dingMsg = checkDiff(com, hour, "uv_enter", current.getUvEnter(), history.getUvEnter(), diffData.uvEnterDiff);
         dingMsg += checkDiff(com, hour, "pv_enter", current.getPvEnter(), history.getPvEnter(), diffData.pvEnterDiff);
 
@@ -379,8 +445,8 @@ public class PVUVMonitor {
             diffDataUnit.diffRange = -1;
         } else {
             if (0 == history) {
-                //数据增长100%
-                diffDataUnit.diffRange = 1;
+                //历史数据为0时不报警
+                diffDataUnit.diffRange = 0;
             } else {
                 diffDataUnit.diffRange = (float) diff / (float) history;
             }
@@ -540,7 +606,23 @@ public class PVUVMonitor {
         Assert.assertTrue(false);
 
     }
+    private void dingPushFinal() {
+        if (!DEBUG && FAIL) {
+            AlarmPush alarmPush = new AlarmPush();
 
+            alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+
+            //15011479599 谢志东
+            //13436941018 吕雪晴
+            //15084928847 黄青青
+            //13581630214 马琨
+            //18513118484 杨航
+            //15898182672 华成裕
+            //18810332354 刘峤
+            String[] rd = {"13436941018", "15084928847", "13581630214", "15898182672", "18513118484"};
+            alarmPush.alarmToRd(rd);
+        }
+    }
 
 
     @BeforeSuite
@@ -558,6 +640,7 @@ public class PVUVMonitor {
             onlineRequestMonitor.initial();
             onlineRequestMonitor.requestNumberMonitor();
             onlineRequestMonitor.clean();
+            dingPushFinal();
         } else {
             logger.info("do NOT trigger device request monitor");
         }

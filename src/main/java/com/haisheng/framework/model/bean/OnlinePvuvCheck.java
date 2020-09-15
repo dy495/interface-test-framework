@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 
 @Data
 public class OnlinePvuvCheck implements Serializable {
-    private int pvEnter;
-    private int pvLeave;
-    private int uvEnter;
-    private int uvLeave;
+    private int pvEnter = 0;
+    private int pvLeave = 0;
+    private int uvEnter = 0;
+    private int uvLeave = 0;
     private String date;
 }
