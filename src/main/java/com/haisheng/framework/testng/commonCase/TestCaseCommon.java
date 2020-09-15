@@ -420,9 +420,7 @@ public class TestCaseCommon {
 
 
 
-    public String getProscheShopOnline() {
-        return "12928";
-    }
+
 
     public String getXundianShop() {
         return "4116";

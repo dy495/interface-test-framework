@@ -11,6 +11,7 @@ public class CustomerInfoOnline {
     public final String pwdzj = "b1d8fcdf6d0db7011c71fc30e7aef4a4";//总监密码 //zj
     public final String pwdzjl = "";//总经理密码 //zjl
     public final String pwd11 = "6512bd43d9caa6e02c990b0a82652dca";//11密码 //11
+    public final String pwd = "a806f5026dabadc5cff19211d9f4afa2";//ys123456
     //账号
     public final String gly = "";//超级管理员
     public final String xsgw = ""; //销售顾问

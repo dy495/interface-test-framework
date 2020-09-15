@@ -126,12 +126,12 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOnline();
+        commonConfig.shopId = getProscheShopOline();
 
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(cstm.zj,cstm.pwdzj);
+        crm.login(cstm.zj,cstm.pwd);
 
     }
 
@@ -158,9 +158,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     public void getnum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.zj,cstm.pwdzj);
+            crm.login(cstm.zj,cstm.pwd);
             //4个tab数据 --日
-            JSONObject obj1 = crm.shopPannel("","","");
+            JSONObject obj1 = crm.shopPannel("DAY","","");
             service = obj1.getInteger("service"); //累计接待
             test_drive = obj1.getInteger("test_drive"); //累计试驾
             deal = obj1.getInteger("deal"); //累计成交
@@ -533,7 +533,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1,dataProvider = "BUS_RATE")
+    //@Test(priority = 1,dataProvider = "BUS_RATE")
     public void businessrate(String fz, String fm, String fzstr, String fmstr,String rate,String show) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -966,7 +966,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void carOwnerPersonalPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -991,7 +991,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void carOwnerBusinessPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1080,7 +1080,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test  参数要改
     public void city100() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1102,7 +1102,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test 参数要改
     public void partLTCity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -556,6 +556,25 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject customerEditRemarkPC(Long customer_id, String name, String phone, Long level) throws Exception {
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_level\" :\"" + level + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n"
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
     public JSONObject customerEditRemarkPCNotChk(Long customer_id, String name, String phone, Long level, String remark) throws Exception {
         String url = "/porsche/customer/edit";
 
@@ -1308,7 +1327,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
      * 人脸排除-上传图片
      */
     public JSONObject faceOutUpload(String path) throws Exception {
-        String url = "http://dev.porsche.dealer-ydauto.winsenseos.cn/porsche/user/faceOutUpload";
+        String url = "http://porsche.dealer-ydauto.winsenseos.com/porsche/user/faceOutUpload";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);

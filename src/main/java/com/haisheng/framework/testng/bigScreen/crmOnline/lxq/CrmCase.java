@@ -11,12 +11,14 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 
 /**
@@ -67,10 +69,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOnline();
+        commonConfig.shopId = getProscheShopOline();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
+        crm.login(cstm.lxqsale,cstm.pwd11);
 
 
     }
@@ -193,62 +196,54 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 //
 //
 //
-//    /**
-//     * ==============PC-人脸排除=================
-//     * */
-//    @Test
-//    public void faceOut() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            crm.login(cstm.baoshijie,cstm.pwd);
-//
-//            JSONObject data = crm.faceOutList(1, 200);
-//            int beforeAdd = data.getInteger("total");
-//            List<Integer> idList = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
-//            //上传人脸
-//            crm.faceOutUpload(cstm.jpgPath);
-//
-//            //人脸数量+1
-//            data = crm.faceOutList(1, 200);
-//            int afterAdd = data.getInteger("total");
-//            int diff = afterAdd - beforeAdd;
-//            Preconditions.checkArgument(diff==1,"人脸排除，新增上传1人，总数未+1");
-//
-//            //获取人脸id
-//            List<Integer> idList2 = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
-//            List<Integer> diffList = crm.getDiff(idList, idList2);
-//
-//            //删除人脸
-//            if (diffList.size() == 1) {
-//                for (Integer id : diffList) {
-//                    crm.faceOutDel(id);
-//                }
-//            }
-//
-//            //人脸数量-1
-//            int afterSub = crm.faceOutList(1, 200).getInteger("total");
-//            Preconditions.checkArgument(afterSub==beforeAdd,"人脸排除，删除1人，期待：" + beforeAdd + ", 实际：" + afterSub);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("人脸排除-新增、删除验证");
-//        }
-//
-//
-//    }
-//
-//
-//
-//
-//
-//
-//
-//
+    /**
+     * ==============PC-人脸排除=================
+     * */
+    @Test
+    public void faceOut() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            crm.login(cstm.zjl,cstm.pwdzjl);
+
+            JSONObject data = crm.faceOutList(1, 200);
+            int beforeAdd = data.getInteger("total");
+            List<Integer> idList = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
+            //上传人脸
+            crm.faceOutUpload(cstm.jpgPath);
+
+            //人脸数量+1
+            data = crm.faceOutList(1, 200);
+            int afterAdd = data.getInteger("total");
+            int diff = afterAdd - beforeAdd;
+            Preconditions.checkArgument(diff==1,"人脸排除，新增上传1人，总数未+1");
+
+            //获取人脸id
+            List<Integer> idList2 = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
+            List<Integer> diffList = crm.getDiff(idList, idList2);
+
+            //删除人脸
+            if (diffList.size() == 1) {
+                for (Integer id : diffList) {
+                    crm.faceOutDel(id);
+                }
+            }
+
+            //人脸数量-1
+            int afterSub = crm.faceOutList(1, 200).getInteger("total");
+            Preconditions.checkArgument(afterSub==beforeAdd,"人脸排除，删除1人，期待：" + beforeAdd + ", 实际：" + afterSub);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(cstm.lxqsale,cstm.pwd11);
+            saveData("人脸排除-新增、删除验证");
+        }
+
+
+    }
 
 
     /**
@@ -430,9 +425,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //获取手机号
             JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
+            System.out.println(search_phone);
             //查询
             JSONObject obj1 = crm.customerListPC("",-1,"",search_phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone1 = obj1.getString("customer_phone");
+            System.out.println(search_phone1);
             Preconditions.checkArgument(search_phone.equals(search_phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -744,171 +741,66 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================登陆======================
      * */
-//    @Test
-//    public void  loginExist(){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            crm.login(cstm.baoshijie,cstm.pwd);
-//            String userName = ""+ System.currentTimeMillis();
-//            String userLoginName=userName;
-//            String phone = "1";
-//            for (int i = 0; i < 10;i++){
-//                String a = Integer.toString((int)(Math.random()*10));
-//                phone = phone + a;
-//            }
-//
-//            String passwd=cstm.pwd;
-//            int roleId=13; //销售顾问
-//            //添加账号
-//            crm.addUser(userName,userLoginName,phone,passwd,roleId);
-//            int a = 0;
-//            int total = crm.userPage(1,1).getInteger("total");
-//            String userid = "";
-//            if (total > 50) {
-//                if (total % 50 == 0) {
-//                    a = total / 50;
-//                } else {
-//                    a = (int) Math.ceil(total / 50) + 1;
-//                }
-//                for (int i = 1; i <= a; i++) {
-//                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
-//                    for (int j = 0; j < list.size(); j++) {
-//                        JSONObject single = list.getJSONObject(j);
-//                        if (single.getString("user_login_name").equals(userLoginName)){
-//                            userid = single.getString("user_id"); //获取用户id
-//                        }
-//                    }
-//                }
-//            } else {
-//                JSONArray list = crm.userPage(1,50).getJSONArray("list");
-//                for (int j = 0; j < list.size(); j++) {
-//                    JSONObject single = list.getJSONObject(j);
-//                    if (single.getString("user_login_name").equals(userLoginName)){
-//                        userid = single.getString("user_id"); //获取用户id
-//                    }
-//                }
-//            }
-//            int code = crm.tryLogin(userLoginName,passwd).getInteger("code");
-//            Preconditions.checkArgument(code==1000,"登陆失败");
-//
-//
-//            //删除账号
-//            crm.userDel(userid);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("使用存在的销售账号登陆");
-//        }
-//    }
-//
-//    @Test
-//    public void  loginExistWrongPwd(){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            crm.login(cstm.baoshijie,cstm.pwd);
-//            String userName = ""+ System.currentTimeMillis();
-//            String userLoginName=userName;
-//            String phone = "1";
-//            for (int i = 0; i < 10;i++){
-//                String a = Integer.toString((int)(Math.random()*10));
-//                phone = phone + a;
-//            }
-//
-//            String passwd=cstm.pwd;
-//            int roleId=13; //销售顾问
-//            //添加账号
-//            crm.addUser(userName,userLoginName,phone,passwd,roleId);
-//            int a = 0;
-//            int total = crm.userPage(1,1).getInteger("total");
-//            String userid = "";
-//            if (total > 50) {
-//                if (total % 50 == 0) {
-//                    a = total / 50;
-//                } else {
-//                    a = (int) Math.ceil(total / 50) + 1;
-//                }
-//                for (int i = 1; i <= a; i++) {
-//                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
-//                    for (int j = 0; j < list.size(); j++) {
-//                        JSONObject single = list.getJSONObject(j);
-//                        if (single.getString("user_login_name").equals(userLoginName)){
-//                            userid = single.getString("user_id"); //获取用户id
-//                        }
-//                    }
-//                }
-//            } else {
-//                JSONArray list = crm.userPage(1,50).getJSONArray("list");
-//                for (int j = 0; j < list.size(); j++) {
-//                    JSONObject single = list.getJSONObject(j);
-//                    if (single.getString("user_login_name").equals(userLoginName)){
-//                        userid = single.getString("user_id"); //获取用户id
-//                    }
-//                }
-//            }
-//            int code = crm.tryLogin(userLoginName,passwd+"1").getInteger("code");
-//            Preconditions.checkArgument(code!=1000,"登陆成功");
-//
-//
-//            //删除账号
-//            crm.userDel(userid);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("使用存在的销售账号，错误的密码登陆");
-//        }
-//    }
-//
-//    @Test
-//    public void  loginExistWrongAcc(){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            int code = crm.tryLogin("1@q啊～","1").getInteger("code");
-//            Preconditions.checkArgument(code!=1000,"登陆成功");
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("使用不存在的销售账号登陆");
-//        }
-//    }
-//
-//
-//
-//
-//    /**
-//     *
-//     * ====================人脸排除======================
-//     * */
-//    @Test(dataProvider = "NO_FACE",dataProviderClass = CrmScenarioUtil.class)
-//    public void faceOutNoFace(String path) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            crm.login(cstm.baoshijie,cstm.pwd);
-//            //上传图片
-//            int code = crm.faceOutUpload(path).getInteger("code");
-//            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("人脸排除上传识别不出人脸的图片");
-//        }
-//    }
+
+
+    @Test
+    public void  loginExistWrongPwd(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int code = crm.tryLogin(cstm.lxqsale,cstm.pwd123456).getInteger("code");
+            Preconditions.checkArgument(code!=1000,"登陆成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("使用存在的销售账号，错误的密码登陆");
+        }
+    }
+
+    @Test
+    public void  loginExistWrongAcc(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int code = crm.tryLogin("1@q啊～","1").getInteger("code");
+            Preconditions.checkArgument(code!=1000,"登陆成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("使用不存在的销售账号登陆");
+        }
+    }
+
+    /**
+     *
+     * ====================人脸排除======================
+     * */
+    @Test(dataProvider = "NO_FACE",dataProviderClass = CrmScenarioUtil.class)
+    public void faceOutNoFace(String path) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            crm.login(cstm.zjl,cstm.pwdzjl);
+            //上传图片
+            int code = crm.faceOutUpload(path).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(cstm.lxqsale,cstm.pwd11);
+            saveData("人脸排除上传识别不出人脸的图片");
+        }
+    }
 
 
 
