@@ -150,9 +150,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())) {
                         Integer day = list.getJSONObject(i).getInteger("remain_days");
-                        if (day == null) {
-                            remainDays = 0;
-                        }
+                        remainDays = day == null ? 0 : 1;
                         customerId = list.getJSONObject(i).getInteger("customer_id");
                         break;
                     }
@@ -160,9 +158,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             JSONArray list1 = crm.publicCustomerList("", "", 2 << 10, 1).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
-                if (list1.getJSONObject(i).getInteger("customer_id") == customerId) {
-                    flag = true;
-                }
+                flag = list1.getJSONObject(i).getInteger("customer_id") == customerId;
             }
             CommonUtil.valueView(remainDays, flag);
             Preconditions.checkArgument(!flag, "交车后，客户进入了公海");
@@ -180,7 +176,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "商品管理-添加商品")
     public void goodsManager_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
-
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/goodsmanager/";
         String bigPic = new ImageUtil().getImageBinary(path + "大图照片.jpg");
         String interiorPic = new ImageUtil().getImageBinary(path + "内饰照片.jpg");
@@ -212,13 +207,10 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
             Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
             Preconditions.checkArgument(message10.equals("成功"), "所有必填项全正确填写，车型创建失败");
-            int id = 0;
             JSONObject result = crm.carList();
             int size = result.getJSONArray("list").size() - 1;
             String carName = CommonUtil.getStrField(result, size, "car_type_name");
-            if (carName.equals(carTypeName)) {
-                id = CommonUtil.getIntField(result, size, "id");
-            }
+            int id = carName.equals(carTypeName) ? CommonUtil.getIntField(result, size, "id") : 0;
             crm.carDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -330,20 +322,12 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "任何状态均可删除")
     public void stationMessage_5() {
         logger.logCaseStart(caseResult.getCaseName());
-        int messageId = 0;
-        String title = "自动化站内消息-待删";
-        String content = "自动化";
-        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
-        CommonUtil.valueView(sendDate);
         try {
-            crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
             JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
+            int messageId = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("status_name").equals("发送成功")) {
-                    messageId = list.getJSONObject(i).getInteger("id");
-                }
+                messageId = list.getJSONObject(i).getString("status_name").equals("发送成功") ? list.getJSONObject(i).getInteger("id") : 0;
             }
-            //删除消息
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -352,7 +336,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -361,7 +345,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             boolean result1 = false;
             boolean result2 = false;
-            crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES");
+            int id = response.getInteger("id");
             sleep(70);
             //登陆小程序-售前可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
@@ -388,7 +373,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户看不见消息");
             Preconditions.checkArgument(!result2, "小程序售后客户能看见消息");
-            deleteStationMessage();
+            crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -396,7 +381,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -405,34 +390,29 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             boolean result1 = false;
             boolean result2 = false;
-            crm.messageAdd("", "", "", sendDate, title, content, "", "", "AFTER_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "AFTER_SALES");
+            int id = response.getInteger("id");
             sleep(70);
             //登陆小程序-售前可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("title").equals(title)
+                result1 = list.getJSONObject(i).getString("title").equals(title)
                         && list.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list.getJSONObject(i).getBoolean("is_read")) {
-                    result1 = true;
-                    break;
-                }
+                        && !list.getJSONObject(i).getBoolean("is_read");
             }
             //登陆小程序-售后不可见消息
             CommonUtil.loginApplet(EnumAppletCode.XMF);
             JSONArray list1 = crm.messageList(20, "MSG").getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
-                if (list1.getJSONObject(i).getString("title").equals(title)
+                result2 = list1.getJSONObject(i).getString("title").equals(title)
                         && list1.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list1.getJSONObject(i).getBoolean("is_read")) {
-                    result2 = true;
-                    break;
-                }
+                        && !list1.getJSONObject(i).getBoolean("is_read");
             }
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(!result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
-            deleteStationMessage();
+            crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -440,7 +420,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -449,34 +429,29 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             boolean result1 = false;
             boolean result2 = false;
-            crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
+            int id = response.getInteger("id");
             sleep(70);
             //登陆小程序-售前可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("title").equals(title)
+                result1 = list.getJSONObject(i).getString("title").equals(title)
                         && list.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list.getJSONObject(i).getBoolean("is_read")) {
-                    result1 = true;
-                    break;
-                }
+                        && !list.getJSONObject(i).getBoolean("is_read");
             }
             //登陆小程序-售后不可见消息
             CommonUtil.loginApplet(EnumAppletCode.XMF);
             JSONArray list1 = crm.messageList(20, "MSG").getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
-                if (list1.getJSONObject(i).getString("title").equals(title)
+                result2 = list1.getJSONObject(i).getString("title").equals(title)
                         && list1.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list1.getJSONObject(i).getBoolean("is_read")) {
-                    result2 = true;
-                    break;
-                }
+                        && !list1.getJSONObject(i).getBoolean("is_read");
             }
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
-            deleteStationMessage();
+            crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -489,11 +464,12 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "Chinese&&English is No.1 in use!";
         String content = "aba aba 123456!@#$%^&*,待删除";
-        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
+        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 100), "yyyy-MM-dd HH:mm");
         try {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
-            int id = Integer.parseInt(response.getString("id"));
+            int id = response.getInteger("id");
             Preconditions.checkArgument(id != 0, "创建站内消息失败");
+            crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -501,7 +477,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -509,20 +485,19 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         String appointmentType = EnumAppointmentType.TEST_DRIVE.getType();
         try {
-            crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
-                    id = list.getJSONObject(i).getInteger("id");
-                }
+                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
-            deleteStationMessage();
+            crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -530,7 +505,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -538,20 +513,19 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         String appointmentType = EnumAppointmentType.REPAIR.getType();
         try {
-            crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
-                    id = list.getJSONObject(i).getInteger("id");
-                }
+                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约维修按钮");
-            deleteStationMessage();
+            crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -559,7 +533,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void stationMessage_12() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -567,42 +541,23 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         String appointmentType = EnumAppointmentType.MAINTAIN.getType();
         try {
-            crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
-                    id = list.getJSONObject(i).getInteger("id");
-                }
+                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
-            deleteStationMessage();
+            crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
             saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
-    }
-
-//    ---------------------------------------------------私有方法区-------------------------------------------------------
-
-    /**
-     * 删除站内消息
-     */
-    private void deleteStationMessage() throws Exception {
-        CommonUtil.login(EnumAccount.ZJL);
-        JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
-        int id = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.getJSONObject(i).getString("title").equals("自动化站内消息-待删")
-                    && list.getJSONObject(i).getString("status_name").equals("发送成功")) {
-                id = list.getJSONObject(i).getInteger("id");
-            }
-        }
-        crm.messageDelete(id);
     }
 }
