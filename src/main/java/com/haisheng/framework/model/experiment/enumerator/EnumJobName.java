@@ -12,7 +12,7 @@ public enum EnumJobName {
 
     CRM_DAILY_TEST("crm-daily-test"),
 
-    CRM_ONLINE_test("crm-online-test");
+    CRM_ONLINE_TEST("crm-online-test");
 
     EnumJobName(String jobName) {
         this.jobName = jobName;
