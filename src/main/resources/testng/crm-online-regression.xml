@@ -16,6 +16,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AppSystemOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.ThreeDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.CrmCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.gly.CrmAPPOnline"/>
         </classes>
     </test>
 </suite>
