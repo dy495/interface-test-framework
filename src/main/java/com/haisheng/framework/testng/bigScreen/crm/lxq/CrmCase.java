@@ -1967,6 +1967,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String list_date = obj.getString("day_date");
                 Preconditions.checkArgument(list_date.equals(today),"接待日期为"+ list_date);
             }
+
+
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {

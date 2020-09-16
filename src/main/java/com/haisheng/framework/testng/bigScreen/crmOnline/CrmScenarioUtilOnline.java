@@ -883,7 +883,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\":" + getProscheShop() + ",\n";
+                        "   \"shop_id\":" + getProscheShopOline() + ",\n";
 
         if (!StringUtils.isEmpty(customerPhone)) {
             json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
@@ -936,7 +936,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\":" + getProscheShop() + ",\n";
+                        "   \"shop_id\":" + getProscheShopOline() + ",\n";
 
         if (!StringUtils.isEmpty(customerPhone)) {
             json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
@@ -987,7 +987,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getProscheShopOline() + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
@@ -1332,7 +1332,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization);
-        httppost.addHeader("shop_id", getProscheShop());
+        httppost.addHeader("shop_id", getProscheShopOline());
         File file = new File(path);
         MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
         if (file.toString().contains("png")) {

@@ -20,9 +20,9 @@ public class CustomerInfoOnline {
     public final String zj = "zj"; //总监
     public final String zjl = "zjl"; //总经理
     public final String qt = "qt"; //前台
-    public final Long lxqid = 3709L; //lxq自动化要用的客户 别删
-    public final String lxqname = "暴徒妹妹（自动化-别删）";
-    public final String lxqphone = "19999999999";
+    public final Long lxqid = 838L; //lxq自动化要用的客户 别删
+    public final String lxqname = "刘（自动化-别动）";
+    public final String lxqphone = "15567898766";
     public final Long lxqlevel = 15L;
     public final String lxqsale = "11";
     public final String phone11 = "13436941018";

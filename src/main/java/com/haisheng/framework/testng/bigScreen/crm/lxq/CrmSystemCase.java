@@ -1718,10 +1718,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
-            JSONArray array = crm.userPage(1,100).getJSONArray("list");
+            JSONArray array = crm.userPage(1,50).getJSONArray("list");
             for (int i = 0 ; i< array.size();i++){
                 JSONObject obj = array.getJSONObject(i);
-                if (obj.getString("user_name").contains("159")){
+                if (obj.getString("user_name").contains("160")){
                     crm.userDel(obj.getString("user_id"));
                 }
             }
