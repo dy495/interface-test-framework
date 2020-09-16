@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -2514,7 +2514,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         String customerName = CommonUtil.getStrField(response, 0, "customer_name");
         String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
         //pc端内容
-        CommonUtil.login(EnumAccount.ZJL);
+        CommonUtil.login(EnumAccount.ZJL_DAILY);
         JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
         String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
         String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
@@ -2532,7 +2532,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
             int appReturnVisitNum = response.getJSONArray("list").size();
             int pcReturnVisitNum = 0;
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_DAILY);
             JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", "", "");
             JSONArray list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {

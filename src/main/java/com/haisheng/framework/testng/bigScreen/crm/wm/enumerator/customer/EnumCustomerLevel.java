@@ -15,11 +15,13 @@ public enum EnumCustomerLevel {
 
     C("C级", 4, "C", ""),
 
-    G("G级", 14, "G", "公海"),
+    D("D级", 4, "D", "交车"),
+
+    O("O级", 5, "O", "订车"),
 
     F("F级", 6, "F", "战败"),
 
-    D("D级", 4, "D", "");
+    G("G级", 14, "G", "公海");
 
     EnumCustomerLevel(String name, int id, String level, String des) {
         this.name = name;

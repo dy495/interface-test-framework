@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -43,7 +43,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.XSGW);
+        CommonUtil.login(EnumAccount.XSGW_DAILY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -57,7 +57,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         int activityTaskId = 0;
         int activityId = 0;
         try {
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_DAILY);
             JSONArray list = crm.activityTaskPage(1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getBoolean("is_edit")) {
@@ -66,19 +66,19 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     break;
                 }
             }
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_DAILY);
             int activityCustomer = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_DAILY);
             //添加报名信息
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_DAILY);
             int activityCustomer1 = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
             Preconditions.checkArgument(activityCustomer1 == activityCustomer + 1, "添加报名人信息后，pc端任务活动未+1");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_DAILY);
             int customerId = 0;
             JSONArray list = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -98,12 +98,12 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         //分配销售
         try {
             //登录前台账号
-            CommonUtil.login(EnumAccount.QT);
+            CommonUtil.login(EnumAccount.QT_DAILY);
             //创建接待
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
                 //登录销售账号
-                CommonUtil.login(EnumAccount.XSGW);
+                CommonUtil.login(EnumAccount.XSGW_DAILY);
                 long customerId = crm.userInfService().getLong("customer_id");
                 //完成接待
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
@@ -401,7 +401,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_DAILY);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
             int page1 = CommonUtil.pageTurning(total, 100);
@@ -456,7 +456,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(EnumAccount.XSGW_DAILY);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
@@ -500,7 +500,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.getFormat(new Date());
         String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_DAILY);
             JSONArray list = crm.returnVisitTaskPage(1, 100, date, date1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("customer_type_name").equals("潜客")) {
@@ -528,7 +528,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(EnumAccount.ZJL_DAILY);
             JSONArray list = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
             for (int i = 0; i < 100; i++) {
                 if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
@@ -957,7 +957,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
      * @param phone 客户电话号
      */
     private void deleteCustomer(String phone) {
-        CommonUtil.login(EnumAccount.ZJL);
+        CommonUtil.login(EnumAccount.ZJL_DAILY);
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
         if (!response.getJSONArray("list").isEmpty()) {
             int customerId = CommonUtil.getIntField(response, 0, "customer_id");
