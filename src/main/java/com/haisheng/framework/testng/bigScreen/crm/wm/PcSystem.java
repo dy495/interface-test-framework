@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class PcSystem extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    private static final EnumAccount zjl = EnumAccount.ZJL;
+    private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
 
     @BeforeClass
     @Override

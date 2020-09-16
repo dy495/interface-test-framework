@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -1333,7 +1333,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
-                        crm.login(userLoginName, EnumAccount.XSGW.getPassword());
+                        crm.login(userLoginName, EnumAccount.XSGW_DAILY.getPassword());
                         int todayOrder = crm.customerReceptionTotalInfo().getInteger("today_order");
                         max += todayOrder;
                     }
@@ -1365,7 +1365,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("role_name").equals("销售顾问") || list.getJSONObject(i).getString("role_name").equals("DCC销售顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
-                        crm.login(userLoginName, EnumAccount.XSGW.getPassword());
+                        crm.login(userLoginName, EnumAccount.XSGW_DAILY.getPassword());
                         int todayDeliverCarTotal = crm.deliverCarTotal().getInteger("today_deliver_car_total");
                         max += todayDeliverCarTotal;
                     }
