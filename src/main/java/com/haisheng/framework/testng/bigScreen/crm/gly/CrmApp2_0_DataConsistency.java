@@ -180,7 +180,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户管理：今日接待售后车辆>=今日新增售后车辆");
-
         }
     }
 
@@ -2002,6 +2001,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             saveData("APP-我的客户-总监的今日新增车辆=各个顾问的今日新增之和");
         }
     }
+
+    
 }
 
 
