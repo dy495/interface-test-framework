@@ -4036,6 +4036,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/analysis2/deal/city";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
+        json.put("adcode", 320500);
         if (!month.equals("")) {
             json.put("month", month);
         }
