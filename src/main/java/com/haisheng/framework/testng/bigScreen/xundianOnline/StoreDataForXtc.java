@@ -58,25 +58,15 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
+
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
         commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214"};
 
-        //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
 
-        //set shop id
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 

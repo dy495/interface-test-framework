@@ -58,11 +58,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
+
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
         //replace product name for ding push
@@ -71,12 +67,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214"};
 
-        //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
@@ -1161,7 +1151,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             String cycle_type = "";
-            String month = "2020-08";
+            String month = "2020-09";
             JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;

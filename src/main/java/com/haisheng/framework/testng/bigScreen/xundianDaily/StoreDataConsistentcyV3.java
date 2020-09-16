@@ -59,11 +59,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
+
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
@@ -81,11 +77,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         //15898182672 华成裕
         //18810332354 刘峤
 
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
 
-        //set shop id
+
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 

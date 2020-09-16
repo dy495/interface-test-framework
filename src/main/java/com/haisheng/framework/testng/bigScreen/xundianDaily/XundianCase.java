@@ -45,20 +45,10 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
 
-        //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
         commonConfig.shopId = getXundianShop(); //要改！！！

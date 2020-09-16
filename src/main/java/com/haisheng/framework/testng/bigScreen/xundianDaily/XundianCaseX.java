@@ -298,30 +298,30 @@ public class XundianCaseX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     *6. 删除定检任务 ok
-     */
-    @Test
-    public void ScheduleCheckDelete(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-//            JSONArray list = xd.scheduleCheckList(10, 1).getJSONArray("list");
-            JSONObject list1=xd.scheduleCheckList(10,1);
-            JSONArray list=list1.getJSONArray("list");
-            if (list.size()==0){
-                throw new Exception("定检任务列表为空");
-            }
-            long id=list.getJSONObject(0).getLong("id");
-            logger.info("{}",id);
-            xd.scheduleCheckDelete(id);
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("删除定检任务");
-        }
-    }
+//    /**
+//     *6. 删除定检任务 ok
+//     */
+//    @Test
+//    public void ScheduleCheckDelete(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+////            JSONArray list = xd.scheduleCheckList(10, 1).getJSONArray("list");
+//            JSONObject list1=xd.scheduleCheckList(10,1);
+//            JSONArray list=list1.getJSONArray("list");
+//            if (list.size()==0){
+//                throw new Exception("定检任务列表为空");
+//            }
+//            long id=list.getJSONObject(0).getLong("id");
+//            logger.info("{}",id);
+//            xd.scheduleCheckDelete(id);
+//        }catch (AssertionError e){
+//            appendFailreason(e.toString());
+//        }catch (Exception e){
+//            appendFailreason(e.toString());
+//        }finally {
+//            saveData("删除定检任务");
+//        }
+//    }
 
     /**
      * 7.case1:最多5次留痕 留痕6次  ok

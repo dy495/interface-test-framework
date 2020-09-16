@@ -52,19 +52,13 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         CommonConfig commonConfig = new CommonConfig();
 
 
-        //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
+
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
 
 
@@ -79,11 +73,8 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         //18672733045 高凯
         //15898182672 华成裕
         //18810332354 刘峤
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
 
-        //set shop id
+
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
@@ -357,7 +348,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
              JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
              long id = list.getJSONObject(0).getInteger("id");
              int startM=2;
-             String name= dt.getHHmm(startM);
+             String name= dt.getHHmm(startM)+"qingqing";
              String desc = list.getJSONObject(0).getString("desc");
              JSONArray  items=new JSONArray();//new一个数组
              JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
