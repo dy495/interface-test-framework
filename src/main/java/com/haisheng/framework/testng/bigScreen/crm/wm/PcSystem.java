@@ -10,7 +10,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -29,27 +28,13 @@ import java.util.List;
  * @author wangmin
  */
 public class PcSystem extends TestCaseCommon implements TestCaseStd {
-
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    private static final EnumAccount zjl = EnumAccount.ZJL;
 
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
-        //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
-        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
-        //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
-        //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
-        beforeClassInit(commonConfig);
-        logger.debug("crm: " + crm);
+        CommonUtil.addConfigDaily();
     }
 
     @AfterClass
@@ -61,7 +46,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.ZJL);
+        CommonUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -233,15 +218,13 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             for (int i = 1; i < CommonUtil.pageTurning(total, 100); i++) {
                 JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("customer_types").contains("销售/售后")
+                    flag = list.getJSONObject(j).getString("customer_types").contains("销售/售后")
                             || list.getJSONObject(j).getString("customer_types").contains("销售")
-                            || list.getJSONObject(j).getString("customer_types").contains("售后")) {
-                        flag = true;
-                    }
+                            || list.getJSONObject(j).getString("customer_types").contains("售后");
                 }
             }
             CommonUtil.valueView(flag);
-            Preconditions.checkArgument(flag, "站内消息投放人群不正确");
+            Preconditions.checkArgument(flag, "站内消息投放人群不正确,人群不含销售、售后、销售/售后");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -297,24 +280,22 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "倒叙排列-最新的在最上方")
     public void stationMessage_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        int messageId = 0;
         String title = "自动化站内消息-待删";
         String content = "自动化";
         Date date = DateTimeUtil.addDay(new Date(), 1);
         String sendDate = DateTimeUtil.getFormat(date, "yyyy-MM-dd HH:mm");
         try {
             crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
-            messageId = crm.messagePage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("id");
+            int messageId = crm.messagePage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("id");
             String content1 = crm.messageDetail(messageId).getString("content");
             String title1 = crm.messageDetail(messageId).getString("title");
             CommonUtil.valueView(title, title1, content, content1);
             Preconditions.checkArgument(content.equals(content1), "新创建的文章未排列在第一位");
             Preconditions.checkArgument(title.equals(title1), "新创建的文章未排列在第一位");
+            crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            //删除消息
-            crm.messageDelete(messageId);
             saveData("站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
         }
     }
@@ -336,7 +317,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -381,7 +362,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -420,7 +401,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -477,7 +458,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -505,7 +486,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -533,7 +514,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void stationMessage_12() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";

@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -258,7 +259,7 @@ public class CommonUtil {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
+        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
         testCaseCommon.beforeClassInit(commonConfig);

@@ -24,6 +24,7 @@ import java.util.List;
 
 public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
 
     @BeforeClass
     @Override
@@ -40,7 +41,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.ZJL_ONLINE);
+        CommonUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);

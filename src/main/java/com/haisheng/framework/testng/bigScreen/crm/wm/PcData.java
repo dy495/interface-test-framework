@@ -23,6 +23,8 @@ import java.util.Date;
 
 public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    private static final EnumAccount zjl = EnumAccount.ZJL;
+    private static final EnumAccount xs = EnumAccount.XSGW;
 
     @BeforeClass
     @Override
@@ -39,13 +41,13 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.ZJL);
+        CommonUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
-    //    ---------------------------------------------------2.0------------------------------------------------------------
+//    ---------------------------------------------------2.0------------------------------------------------------------
 
     /**
      * @description: 销售客户管理-我的客户
@@ -114,16 +116,16 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int customerTotal = crm.customerPage(100, 1, "", "", "").getInteger("total");
             //公海人数总量
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             JSONObject publicCustomerList = crm.publicCustomerList("", "", 10, 1);
             String phone = CommonUtil.getStrField(publicCustomerList, 0, "customer_phone");
             int customerId = CommonUtil.getIntField(publicCustomerList, 0, "customer_id");
             int publicTotal = publicCustomerList.getInteger("total");
             //把公海分配销售
-            crm.customerAllot(EnumAccount.XSGW.getUid(), customerId);
+            crm.customerAllot(xs.getUid(), customerId);
             //分配之后公海总数
             JSONObject publicCustomerList1 = crm.publicCustomerList("", "", 10, 1);
             int publicTotal1 = publicCustomerList1.getInteger("total");
@@ -131,7 +133,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             JSONObject result = crm.customerList("", phone, "", "", "", 1, 10);
             String customerLevelName = CommonUtil.getStrField(result, 0, "customer_level_name");
             //分配之后后销售名下客户数量
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int customerTotal1 = crm.customerPage(100, 1, "", "", "").getInteger("total");
             CommonUtil.valueView(customerTotal, customerTotal1, publicTotal, publicTotal1);
             Preconditions.checkArgument(customerTotal1 == customerTotal + 1, "公海客户分配给销售顾问后，该销售名下客户数量未+1");
@@ -149,9 +151,9 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //变换所属销售前公海数量
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //获取一名客户信息
             int customerId = 0;
@@ -161,17 +163,17 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size(); i++) {
                 if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.G.getLevel())
                         && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getLevel())
-                        && list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGW.getUid())) {
+                        && list.getJSONObject(i).getString("belongs_sale_id").equals(xs.getUid())) {
                     customerId = list.getJSONObject(i).getInteger("customer_id");
                     customerName = list.getJSONObject(i).getString("customer_name");
                     customerPhone = list.getJSONObject(i).getString("customer_phone");
                 }
             }
             //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getId(), EnumAccount.XSGW.getUid());
+            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getId(), xs.getUid());
             //变换所属销售后公海列表数
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1, total, total1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原公海数量为" + publicTotal + "把一个客户等级改为公海后，公海数量为" + publicTotal1);
@@ -191,7 +193,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         try {
             //公海客户数量
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             JSONObject response = crm.createLine(name, 6, phone, 8, remark);
             if (response.getString("message").equals("手机号码重复")) {
@@ -200,7 +202,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
                 //再创建线索
                 crm.createLine(name, 6, phone, EnumCustomerLevel.G.getId(), remark);
             }
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
@@ -249,9 +251,9 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //变换所属销售前公海数量
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             int publicTotal = crm.failureCustomerList("", "", 1, 10).getInteger("total");
             //获取一名客户信息
             int customerId = 0;
@@ -261,17 +263,17 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size(); i++) {
                 if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.F.getLevel())
                         && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getLevel())
-                        && list.getJSONObject(i).getString("belongs_sale_id").equals(EnumAccount.XSGW.getUid())) {
+                        && list.getJSONObject(i).getString("belongs_sale_id").equals(xs.getUid())) {
                     customerId = list.getJSONObject(i).getInteger("customer_id");
                     customerName = list.getJSONObject(i).getString("customer_name");
                     customerPhone = list.getJSONObject(i).getString("customer_phone");
                 }
             }
             //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getId(), EnumAccount.XSGW.getUid());
+            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getId(), xs.getUid());
             //变换所属销售后战败列表数
             int publicTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            CommonUtil.login(EnumAccount.XSGW);
+            CommonUtil.login(xs);
             int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1, total, total1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原战败数量为" + publicTotal + "把一个客户等级改为战败后，战败数量为" + publicTotal1);
@@ -340,7 +342,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
+    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数")
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -351,7 +353,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             int testDriverTotal = response.getInteger("total");
             int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
             int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");
-            CommonUtil.login(EnumAccount.ZJL);
+            CommonUtil.login(zjl);
             JSONArray list = crm.wechatCustomerList("", "", 1, 2 << 10).getJSONArray("list");
             int appointmentTestDriver = 0;
             int appointmentMend = 0;
@@ -385,7 +387,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
      * @param phone 电话号
      */
     private void deleteCustomer(String phone) {
-        CommonUtil.login(EnumAccount.ZJL);
+        CommonUtil.login(zjl);
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
         int customerId = CommonUtil.getIntField(response, 0, "customer_id");
         crm.customerDelete(customerId);
