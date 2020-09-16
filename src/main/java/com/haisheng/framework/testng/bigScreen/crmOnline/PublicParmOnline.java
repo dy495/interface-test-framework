@@ -5,10 +5,10 @@ public class PublicParmOnline {
     public String superPassword = "f2064e9d2477a6bc75c132615fe3294c";    //超级管理员
 
     public String qiantai = "qt";
-    public String qtpassword = "e85823b4e7db1064f4301e1c74978199";
+    public String qtpassword = "a806f5026dabadc5cff19211d9f4afa2";
 
     public String zongjingli = "zjl";    //总经理
-    public String adminpassword = "eccd898ab480ff8ee1ba168f4ca3de2c";
+    public String adminpassword = "a806f5026dabadc5cff19211d9f4afa2";
 
     //售后 预约保养 维修 服务总监fuwuZongjian
     public String fuwuZongjian = "baoyang";    //服务总监
@@ -18,7 +18,7 @@ public class PublicParmOnline {
     public Long mycarId = 419L;   //车id待定
 
     public String xiaoshouGuwen = "11";      //销售账号
-    public String xsgwPassword="6512bd43d9caa6e02c990b0a82652dca";
+    public String xsgwPassword="a806f5026dabadc5cff19211d9f4afa2";
 
     public String xiaoshouZongjian = "xszj";      //销售总监账号 密码123456，同总经理
 
