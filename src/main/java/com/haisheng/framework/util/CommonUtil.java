@@ -73,7 +73,7 @@ public class CommonUtil {
 
 
     public static void log(String s) {
-        logger.info(s);
+        logger.info("---------------------------------------{}---------------------------------------", s);
     }
 
     /**

@@ -3,6 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
@@ -27,6 +29,9 @@ import java.util.Date;
  */
 public class AppSystem extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
+    private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
+    private static final EnumAccount qt = EnumAccount.QT_DAILY;
 
     @BeforeClass
     @Override
@@ -43,7 +48,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(EnumAccount.XSGW_DAILY);
+        CommonUtil.login(xs);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -57,7 +62,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         int activityTaskId = 0;
         int activityId = 0;
         try {
-            CommonUtil.login(EnumAccount.XSGW_DAILY);
+            CommonUtil.login(xs);
             JSONArray list = crm.activityTaskPage(1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getBoolean("is_edit")) {
@@ -66,19 +71,19 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     break;
                 }
             }
-            CommonUtil.login(EnumAccount.ZJL_DAILY);
+            CommonUtil.login(zjl);
             int activityCustomer = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
-            CommonUtil.login(EnumAccount.XSGW_DAILY);
+            CommonUtil.login(xs);
             //添加报名信息
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
-            CommonUtil.login(EnumAccount.ZJL_DAILY);
+            CommonUtil.login(zjl);
             int activityCustomer1 = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
             Preconditions.checkArgument(activityCustomer1 == activityCustomer + 1, "添加报名人信息后，pc端任务活动未+1");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            CommonUtil.login(EnumAccount.XSGW_DAILY);
+            CommonUtil.login(xs);
             int customerId = 0;
             JSONArray list = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -98,12 +103,12 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         //分配销售
         try {
             //登录前台账号
-            CommonUtil.login(EnumAccount.QT_DAILY);
+            CommonUtil.login(qt);
             //创建接待
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
                 //登录销售账号
-                CommonUtil.login(EnumAccount.XSGW_DAILY);
+                CommonUtil.login(xs);
                 long customerId = crm.userInfService().getLong("customer_id");
                 //完成接待
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
@@ -166,11 +171,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.getFormat(new Date());
         String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            boolean flag = false;
+            boolean flag;
             JSONArray list = crm.afterSale_VisitRecordList(1, 10, "", date1, date).getJSONArray("list");
-            if (list.size() == 0) {
-                flag = true;
-            }
+            flag = list.size() == 0;
             Preconditions.checkArgument(flag, "结束时间>开始时间,查询成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -184,31 +187,33 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "创建线索,客户姓名为汉字-长度1-10")
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
-        String phone = "13333333333";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
+        EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
+        String name = customerInfo.getName();
+        String phone = customerInfo.getPhone();
+        String remark = customerInfo.getRemark();
+        int customerLevel = EnumCustomerLevel.B.getId();
         String str = "!@#$%^&*()12345678历史记录计算机asdfghj";
         try {
-            deleteCustomer(phone);
+            deleteCustomer(customerInfo.getPhone());
             //汉字，10字之内
-            JSONObject response = crm.createLine("【自动化】王", 6, phone, 2, remark);
+            JSONObject response = crm.createLine(name, 6, phone, customerLevel, remark);
             Preconditions.checkArgument(response.getString("message").equals("成功"), "客户姓名为汉字，长度1-10个字内创建线索失败");
-            deleteCustomer(phone);
+            deleteCustomer(customerInfo.getPhone());
             //汉字，1字
-            JSONObject response1 = crm.createLine("王", 6, phone, 2, remark);
+            JSONObject response1 = crm.createLine("王", 6, phone, customerLevel, remark);
             Preconditions.checkArgument(response1.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(phone);
+            deleteCustomer(customerInfo.getPhone());
             //汉字，10个字
-            JSONObject response2 = crm.createLine("语言是一种通用的面向", 6, phone, 2, remark);
+            JSONObject response2 = crm.createLine("语言是一种通用的面向", 6, phone, customerLevel, remark);
             Preconditions.checkArgument(response2.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(phone);
+            deleteCustomer(customerInfo.getPhone());
             //备注包含中英文、汉字、符号、数字
-            JSONObject response3 = crm.createLine("望京", 6, phone, 2, str);
+            JSONObject response3 = crm.createLine("望京", 6, phone, customerLevel, str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(phone);
+            deleteCustomer(customerInfo.getPhone());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            deleteCustomer(phone);
             saveData("创建线索,客户姓名为汉字，长度1-10，备注20-200字之内");
         }
     }
@@ -240,7 +245,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "客户级别,下拉，HABCFG")
     public void myCustomer_function_3() {
         logger.logCaseStart(caseResult.getCaseName());
-        String strings = "G,F,C,B,A,H";
+        String strings = "H,A,B,C,F,G";
         try {
             JSONArray list = crm.appCustomerLevelList().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -258,29 +263,30 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "创建线索，不填写必填项")
     public void myCustomer_function_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        String phone = "13333333333";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
+        String phone = EnumCustomerInfo.CUSTOMER_1.getPhone();
+        String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
+        int customerLevel = EnumCustomerLevel.B.getId();
         try {
             deleteCustomer(phone);
             //不填客户名称
-            JSONObject response = crm.createLine("", 6, phone, 2, remark);
+            JSONObject response = crm.createLine("", 6, phone, customerLevel, remark);
             Preconditions.checkArgument(response.getString("message").equals("顾客姓名不能为空"), "顾客姓名为空也可创建成功");
             //不填意向车型
-            JSONObject response1 = crm.createLine("望京", 0, phone, 2, remark);
+            JSONObject response1 = crm.createLine("望京", 0, phone, customerLevel, remark);
             Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
             //不填电话
-            JSONObject response2 = crm.createLine("望京", 1, "", 2, remark);
+            JSONObject response2 = crm.createLine("望京", 1, "", customerLevel, remark);
             Preconditions.checkArgument(response2.getString("message").equals("顾客手机号不能为空"), "顾客手机号为空也可创建成功");
             //不填客户级别
             JSONObject response3 = crm.createLine("望京", 1, phone, 0, remark);
             Preconditions.checkArgument(response3.getString("message").equals("顾客等级不能为空"), "顾客等级为空也可创建成功");
             //不填备注
-            JSONObject response4 = crm.createLine("望京", 1, phone, 1, "");
-            Preconditions.checkArgument(response4.getString("message").equals("备注信息20-200字之间"), "备注信息为空也可创建成功");
+            JSONObject response4 = crm.createLine("望京", 1, phone, customerLevel, "");
+            Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
+            deleteCustomer(phone);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            deleteCustomer(phone);
             saveData("创建线索，不填写必填项");
         }
     }
@@ -288,42 +294,28 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "创建线索，填写全部必填项,备注长度201，联系方式：系统存在")
     public void myCustomer_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
-        String phone = "15321527989";
-        String remark = "七月七日长生殿，夜半无人私语时。在天愿作比翼鸟，在地愿为连理枝。天长地久有时尽，此恨绵绵无绝期。";
-        String remarks = "汉皇重色思倾国，御宇多年求不得。\n" +
-                "杨家有女初长成，养在深闺人未识。\n" +
-                "天生丽质难自弃，一朝选在君王侧。\n" +
-                "回眸一笑百媚生，六宫粉黛无颜色。\n" +
-                "春寒赐浴华清池，温泉水滑洗凝脂。\n" +
-                "侍儿扶起娇无力，始是新承恩泽时。\n" +
-                "云鬓花颜金步摇，芙蓉帐暖度春宵。\n" +
-                "春宵苦短日高起，从此君王不早朝。\n" +
-                "承欢侍宴无闲暇，春从春游夜专夜。\n" +
-                "后宫佳丽三千人，三千宠爱在一身。\n" +
-                "金屋妆成娇侍夜，玉楼宴罢醉和春。\n" +
-                "姊妹弟兄皆列土，可怜光彩生门户。\n" +
-                "遂令天下父母心，不重生男重生女。\n" +
-                "骊宫高处入青云，仙乐风飘处处闻。\n" +
-                "缓歌慢舞凝丝竹，尽日君王看不足。\n" +
-                "渔阳鼙鼓动地来，惊破霓裳羽衣曲。\n" +
-                "九重城阙烟尘生，千乘万骑西南行。\n" +
-                "翠华摇摇行复止，西出都门百余里。\n" +
-                "六军不发无奈何，宛转蛾眉马前死。\n" +
-                "花钿委地无人收，翠翘金雀玉搔头。\n" +
-                "君王掩面救不得，回看血泪相和流。\n" +
-                "黄埃散漫风萧索，云栈萦纡登剑阁。\n" +
-                "峨嵋山下少人行，旌旗无光日色薄。\n" +
-                "蜀江水碧蜀山青，圣主朝朝暮暮情。\n" +
-                "行宫见月伤心色，夜雨闻铃肠断声。\n" +
-                "天旋地转回龙驭，到此踌躇不能去。\n" +
-                "马嵬坡下泥土中，不见玉颜空死处。\n" +
-                "君臣相顾尽沾衣，东望都门信马归。\n";
+        String name = EnumCustomerInfo.CUSTOMER_1.getName();
+        String phone = EnumCustomerInfo.CUSTOMER_1.getPhone();
+        String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
+        String remarks = EnumCustomerInfo.CUSTOMER_2.getRemark();
+        int customerLevel = EnumCustomerLevel.B.getId();
         try {
-            //存在的电话号
-            JSONObject response = crm.createLine("王", 6, phone, 2, remark);
+            String customerPhone = null;
+            CommonUtil.login(zjl);
+            //获取一个存在的电话号码
+            JSONArray list = crm.customerPage(10, 1, "", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                customerPhone = list.getJSONObject(i).getString("customer_phone");
+                if (customerPhone == null) {
+                    customerPhone = list.getJSONObject(i + 1).getString("customer_phone");
+                }
+            }
+            //创建存在的电话号
+            JSONObject response = crm.createLine(name, 6, customerPhone, customerLevel, remark);
             Preconditions.checkArgument(response.getString("message").equals("手机号码重复"), "手机号码重复也可创建成功");
             //备注长度201
-            JSONObject response4 = crm.createLine("望京", 1, phone, 1, remarks);
+            deleteCustomer(phone);
+            JSONObject response4 = crm.createLine(name, 1, phone, customerLevel, remarks);
             Preconditions.checkArgument(response4.getString("message").equals("备注信息20-200字之间"), "备注信息超过200字也可创建成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -341,8 +333,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.getFormat(new Date());
         String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            int listSize = crm.returnVisitTaskPage(1, 10, date, date1).getJSONArray("list").size();
-            Preconditions.checkArgument(listSize != 0, "回访查询失败");
+            crm.returnVisitTaskPage(1, 10, date, date1).getJSONArray("list");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -355,8 +346,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            int listSize = crm.returnVisitTaskPage(1, 10, date, "").getJSONArray("list").size();
-            Preconditions.checkArgument(listSize != 0, "回访查询失败");
+            crm.returnVisitTaskPage(1, 10, date, "").getJSONArray("list");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -369,8 +359,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            int listSize = crm.returnVisitTaskPage(1, 10, "", date).getJSONArray("list").size();
-            Preconditions.checkArgument(listSize != 0, "回访查询失败");
+            crm.returnVisitTaskPage(1, 10, "", date).getJSONArray("list");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -384,11 +373,8 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.getFormat(new Date());
         String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            boolean flag = false;
             String list = crm.returnVisitTaskPage(1, 10, date1, date).getString("list");
-            if (StringUtils.isEmpty(list)) {
-                flag = true;
-            }
+            boolean flag = StringUtils.isEmpty(list);
             Preconditions.checkArgument(flag, "结束时间>开始时间,查询成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -401,7 +387,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGW_DAILY);
+            CommonUtil.login(xs);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
             int page1 = CommonUtil.pageTurning(total, 100);
@@ -442,6 +428,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     String customerPhone = list.getJSONObject(j).getString("customer_phone");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(customerPhone), "我的回访存在空电话号码");
                     Preconditions.checkArgument(customerPhone.length() == 11, "我的回访存在非11位电话号，电话号为：" + customerPhone);
                 }
             }
@@ -456,14 +443,14 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.XSGW_DAILY);
+            CommonUtil.login(xs);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     String belongsSaleName = list.getJSONObject(i).getString("belongs_sale_name");
-                    Preconditions.checkArgument(belongsSaleName.equals("销售顾问temp"), "我的回访列表，存在非当前登录账号的回访任务。所属销售为：" + belongsSaleName);
+                    Preconditions.checkArgument(belongsSaleName.equals(xs.getUsername()), "我的回访列表，存在非当前登录账号的回访任务。所属销售为：" + belongsSaleName);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -497,24 +484,24 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "回访类型:潜客，创建接待时“订车”标记为否的客户")
     public void myReturnVisit_function_10() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            CommonUtil.login(EnumAccount.ZJL_DAILY);
-            JSONArray list = crm.returnVisitTaskPage(1, 100, date, date1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("customer_type_name").equals("潜客")) {
-                    String customerPhone;
-                    customerPhone = list.getJSONObject(i).getString("customer_phone");
-                    if (StringUtils.isEmpty(customerPhone)) {
-                        customerPhone = list.getJSONObject(i - 2).getString("customer_phone");
-                        CommonUtil.valueView(customerPhone);
+            CommonUtil.login(zjl);
+            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+                JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.PROSPECTIVE_CUSTOMER.getName())) {
+                        String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                        if (StringUtils.isEmpty(customerPhone)) {
+                            continue;
+                        }
+                        CommonUtil.valueView("电话号是" + customerPhone);
+                        JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
+                        String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
+                        CommonUtil.valueView(ifByCarName);
+                        Preconditions.checkArgument(ifByCarName.equals("否"), "回访类型:潜客，创建接待时不是“订车”标记为否的客户");
+                        CommonUtil.log("分割线");
                     }
-                    CommonUtil.valueView("电话号是" + customerPhone);
-                    JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
-                    String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                    CommonUtil.valueView(ifByCarName);
-                    Preconditions.checkArgument(ifByCarName.equals("否"), "回访类型:潜客，创建接待时不是“订车”标记为否的客户");
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -528,17 +515,23 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(EnumAccount.ZJL_DAILY);
-            JSONArray list = crm.returnVisitTaskPage(1, 100, "", "").getJSONArray("list");
-            for (int i = 0; i < 100; i++) {
-                if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
-                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
-                    CommonUtil.valueView(customerPhone);
-                    JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
-                    String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                    CommonUtil.valueView(i, ifByCarName);
-                    CommonUtil.log("--------------------分割线--------------------");
-                    Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
+            CommonUtil.login(zjl);
+            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+                JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
+                        String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                        if (StringUtils.isEmpty(customerPhone)) {
+                            continue;
+                        }
+                        CommonUtil.valueView("电话号是" + customerPhone);
+                        JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
+                        String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
+                        CommonUtil.valueView(ifByCarName);
+                        Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
+                        CommonUtil.log("分割线");
+                    }
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -558,14 +551,14 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     String customerPhone;
                     customerPhone = list.getJSONObject(i).getString("customer_phone");
                     if (StringUtils.isEmpty(customerPhone)) {
-                        customerPhone = list.getJSONObject(i - 2).getString("customer_phone");
-                        CommonUtil.valueView(customerPhone);
+                        continue;
                     }
                     CommonUtil.valueView("电话号是:" + customerPhone);
                     JSONObject result = crm.appointmentTestDriverList(customerPhone, "", "", 1, 10);
                     JSONArray list1 = result.getJSONArray("list");
                     CommonUtil.valueView(list1);
-                    Preconditions.checkArgument(list1.size() >= 1, "回访类型:预约，预约记录中不存在此电话号");
+                    Preconditions.checkArgument(list1.size() >= 1, "回访类型:预约，预约记录中不存在此电话号" + "电话号是：" + customerPhone);
+                    CommonUtil.log("分割线");
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -591,6 +584,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                         JSONArray picList = crm.showPicResult(taskId).getJSONArray("data").getJSONObject(0).getJSONArray("pic_list");
                         Preconditions.checkArgument(showPic, "已完成的回访任务无法查看");
                         Preconditions.checkArgument(picList.size() > 0, "已完成的回访任务无截图");
+                        CommonUtil.log("分割线");
                     }
                 }
             }
@@ -612,7 +606,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 for (int j = 0; j < list.size(); j++) {
                     if (!list.getJSONObject(j).getBoolean("show_pic")) {
                         String taskStatusName = list.getJSONObject(j).getString("task_status_name");
-                        Preconditions.checkArgument(taskStatusName.equals("未完成"));
+                        CommonUtil.valueView(taskStatusName);
+                        Preconditions.checkArgument(taskStatusName.equals("未完成"), "五截图的回访任务taskStatusName不为未完成");
+                        CommonUtil.log("分割线");
                     }
                 }
             }
@@ -700,10 +696,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
-        int taskId = 0;
         try {
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
-            taskId = CommonUtil.getIntField(response, 0, "task_id");
+            int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
             JSONObject result = crm.returnVisitTaskExecute(taskId, common, "", date, "NO_ONE_ANSWER", false, picture);
             Preconditions.checkArgument(result.getString("message").equals("成功"));
@@ -716,10 +711,10 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(taskStatusName.equals("未完成"), "第一次回访为无人接听时,回访任务状态不为未完成");
                 }
             }
+            crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picPath);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            crm.returnVisitTaskExecute(taskId, common, "", date, "ANSWER", false, picPath);
             saveData("回访选择第一次无人接听时,是否完成=未完成");
         }
     }
@@ -792,8 +787,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_21() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
-        String common = "(壬戌之秋)7w既望%苏子与客泛舟游于赤壁之下@清风徐来水波不兴。举酒属客，诵明月之诗，歌窈窕之章。少焉，月出于东山之上，徘徊于斗牛之间。白露横江，水光接天。纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。\n" +
-                "于是饮酒乐甚，扣舷而歌之。歌曰：“桂棹兮兰桨，击空明兮溯流光。渺渺兮予怀，望美人兮天一方。”客有吹洞箫者，倚歌而和之。其声呜呜然，如怨如慕，如泣如诉";
+        String common = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890[]@-+~！#$^&()={}|;:'\"<>.?/·！￥" +
+                "……（）——【】、；：”‘《》。？、,%* 浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。\n" +
+                "于是饮酒乐甚，扣舷而歌之。歌曰：“桂棹兮兰桨，击空明兮溯流光。渺渺兮予怀，望美人兮天一方。“";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
@@ -814,7 +810,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         String common = "举酒属客，诵明月之诗，歌窈窕之章";
-        String picPath = "src/main/java/com/haisheng/framework/model/experiment/multimedia/goodsmanager/";
+        String picPath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/goodsmanager/";
         String picture1 = new ImageUtil().getImageBinary(picPath + "车辆照片.jpg");
         String picture2 = new ImageUtil().getImageBinary(picPath + "外观照片.jpg");
         String picture3 = new ImageUtil().getImageBinary(picPath + "大图照片.jpg");
@@ -838,9 +834,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_23() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
-        String common = "壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴。举酒属客，诵明月之诗，歌窈窕之章。少焉，月出于东山之上，徘徊于斗牛之间。白露横江，水光接天。纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。\n" +
-                "于是饮酒乐甚，扣舷而歌之。歌曰：“桂棹兮兰桨，击空明兮溯流光。渺渺兮予怀，望美人兮天一方。”客有吹洞箫者，倚歌而和之。其声呜呜然，如怨如慕，如泣如诉，余音袅袅，不绝如缕。舞幽壑之潜蛟，泣孤舟之嫠妇。\n" +
-                "苏子愀然，正襟危坐而问客曰：“何为其然也？”客曰：“月明星稀，乌鹊南飞，此非曹孟德之诗乎？西望夏口，东望武昌，山川相缪，郁乎苍苍，此非孟德之困于周郎者乎？方其破荆州，下江陵，顺流而东也，舳舻千里，旌旗蔽空，酾酒临江，横槊赋诗，固一世之雄也，而今安在哉？况吾与子渔樵于江渚之上，侣鱼虾而友麋鹿，驾一叶之扁舟，举匏樽以相属。寄蜉蝣于天地，渺沧海之一粟。哀吾生之须臾，羡长江之无穷。挟飞仙以遨游，抱明月而长终。知不可乎骤得，托遗响于悲风。”";
+        String common = EnumCustomerInfo.CUSTOMER_2.getRemark();
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
@@ -888,7 +882,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
             JSONObject result = crm.returnVisitTaskExecute(taskId, common, "4", date, "ANSWER", false, picture);
-            Preconditions.checkArgument(result.getString("message").equals("不可以修改为订单客户"), "修改为订单客户也可以回访成功");
+            Preconditions.checkArgument(result.getString("message").equals("不允许修改订单客户的等级"), "修改为订单客户也可以回访成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -908,7 +902,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
             JSONObject result = crm.returnVisitTaskExecute(taskId, common, "4", date, "ANSWER", false, picture);
-            Preconditions.checkArgument(result.getString("message").equals("不可以修改为订单客户"), "修改为订单客户也可以回访成功");
+            Preconditions.checkArgument(result.getString("message").equals("不允许修改订单客户的等级"), "修改为订单客户也可以回访成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -957,13 +951,13 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
      * @param phone 客户电话号
      */
     private void deleteCustomer(String phone) {
-        CommonUtil.login(EnumAccount.ZJL_DAILY);
+        CommonUtil.login(zjl);
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
         if (!response.getJSONArray("list").isEmpty()) {
             int customerId = CommonUtil.getIntField(response, 0, "customer_id");
             crm.customerDelete(customerId);
         } else {
-            System.out.println(response.getString("message"));
+            CommonUtil.valueView(response.getString("message"));
         }
     }
 }

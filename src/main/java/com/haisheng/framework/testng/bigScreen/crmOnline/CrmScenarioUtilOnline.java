@@ -574,7 +574,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
 
-
     public JSONObject customerEditRemarkPCNotChk(Long customer_id, String name, String phone, Long level, String remark) throws Exception {
         String url = "/porsche/customer/edit";
 
@@ -4200,7 +4199,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         };
     }
-
 
 
     /**

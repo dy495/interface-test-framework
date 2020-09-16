@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale;
 
 import com.haisheng.framework.util.MD5Util;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 /**
  * 人员账号
@@ -14,53 +15,57 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XSGW_DAILY("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e", "uid_41786c76", "daily", "销售顾问temp"),
+    XSGW_DAILY("xsgwtemp", getPassword("123456"), "uid_41786c76", "daily", "销售顾问temp"),
 
     /**
      * 销售顾问
      */
-    XS_DAILY("xs", "e10adc3949ba59abbe56e057f20f883e", "", "daily", "xs"),
+    XS_DAILY("xs", getPassword("123456"), "", "daily", "xs"),
 
     /**
      * 总经理
      */
-    ZJL_DAILY("zjl", "e10adc3949ba59abbe56e057f20f883e", "uid_d3d35577", "daily", ""),
+    ZJL_DAILY("zjl", getPassword("123456"), "uid_d3d35577", "daily", ""),
 
     /**
      * 前台
      */
-    QT_DAILY("qt", "e10adc3949ba59abbe56e057f20f883e", "uid_05e8599f", "daily", ""),
+    QT_DAILY("qt", getPassword("123456"), "uid_05e8599f", "daily", ""),
 
     /**
      * 服务总监
      */
-    FWZJ_DAILY("fwzj", "e10adc3949ba59abbe56e057f20f883e", "uid_d3fcde5c", "daily", ""),
+    FWZJ_DAILY("fwzj", getPassword("123456"), "uid_d3fcde5c", "daily", ""),
 
     /**
      * 管理员
      */
-    BAOSHIJIE_DAILY("baoshijie", "e10adc3949ba59abbe56e057f20f883e", "uid_827f10a3", "daily", ""),
+    BAOSHIJIE_DAILY("baoshijie", getPassword("123456"), "uid_827f10a3", "daily", ""),
 
 
     /**
      * 保时捷线上销售顾问
      */
-    XSGW_ONLINE("11", new MD5Util().getMD5("ys123456"), "uid_c01f9419", "online", "11"),
+    XSGW_ONLINE("11", getPassword("ys123456"), "uid_c01f9419", "online", "11"),
 
     /**
      * 销售顾问
      */
-    XS_ONLINE("xs", new MD5Util().getMD5("ys123456"), "", "online", "xs"),
+    XS_ONLINE("xs", getPassword("ys123456"), "", "online", "xs"),
+    /**
+     * 前台
+     */
+    QT_ONLINE("qt", getPassword("ys123456"), "uid_8ef9ee4c", "online", "销售前台"),
 
     /**
      * 保养顾问
      */
-    BYGW_ONLINE("55", new MD5Util().getMD5("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
+    BYGW_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
 
     /**
      * 保时捷线上总经
      */
-    ZJL_ONLINE("zjl", new MD5Util().getMD5("ys123456"), "uid_a6452755", "online", "总经理");
+    ZJL_ONLINE("zjl", getPassword("ys123456"), "uid_a6452755", "online", "总经理");
 
     EnumAccount(String account, String password, String uid, String environment, String username) {
         this.account = account;
@@ -84,6 +89,13 @@ public enum EnumAccount {
 
     @Getter
     private final String username;
+
+    private static String getPassword(String s) {
+        if (StringUtils.isEmpty(s)) {
+            throw new RuntimeException("password is null");
+        }
+        return new MD5Util().getMD5(s);
+    }
 }
 
 
