@@ -4814,6 +4814,50 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    @DataProvider(name = "ADD_CAR")
+    public  Object[][] add_car() {
+        return new String[][]{
+                {"ZDH"+(int)((Math.random()*9+1)*10),"苏ZDH"+(int)((Math.random()*9+1)*100),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号7位，车架号17位
+                {"ZDH20WEIAAAAA"+(int)((Math.random()*9+1)*1000000),"苏ZDH"+(int)((Math.random()*9+1)*1000),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号8位，车架号17位
+
+
+        };
+    }
+    @DataProvider(name = "EMAIL")
+    public  Object[] email() {
+        return new String[]{
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
+                "1@qq.com",
+                "12345Lxsd67890@gmail.com",
+                "1234567890@baiyahoo.com",
+                "wertyui@baimsn.com",
+                "WERTY@hotmail.com",
+                "_____@aol.com",
+                "KJHGFYTU@ask.com",
+                "12KKJ567890@live.com",
+                "123OOO000@0355.net",
+                "1234567890@163.net",
+                "1234567890@263.net",
+                "1234567890@3721.net",
+                "2842726905@qq.com",
+        };
+    }
+
+    @DataProvider(name = "EMAILERR")
+    public  Object[] emailerr() {
+        return new String[]{
+                "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
+                "汉字@qq.com", //汉字
+                "gmail.com", //没@
+                "1234567890", //纯数字
+                "wertyui", //纯英文
+                "WERTY@hotmail。com", //点为中文
+                "～！@#¥%……&*（@qq.com", //标点符号
+                "KJHGFYTU@ask—com",
+                "12KKJ567890@live_com",
+        };
+    }
+
 
 }
 

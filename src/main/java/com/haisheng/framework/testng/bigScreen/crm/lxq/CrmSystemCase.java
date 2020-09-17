@@ -1740,7 +1740,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * ====================   4.0  试驾车管理======================
      * */
 
-    @Test(dataProvider = "ADD_CAR")
+    @Test(dataProvider = "ADD_CAR",dataProviderClass = CrmScenarioUtil.class)
     public void  addtestcar(String name,String car,String carid){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1831,8 +1831,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int code9 = crm.carManagementAddNotChk(name,1L,37L,car,carid,endtime,starttime).getInteger("code"); //服役结束时间<服役开始时间
             int code10 = crm.carManagementAddNotChk(name,1L,37L,car,carid,yesterday,starttime).getInteger("code"); //服役开始时间<当前时间
             //有bug 先注掉
-            //int code6 = crm.carManagementAddNotChk(name,1L,37L,car,caridnum,starttime,endtime).getInteger("code"); //车架号纯数字
-            //int code7 = crm.carManagementAddNotChk(name,1L,37L,car,carideng,starttime,endtime).getInteger("code"); //车架号纯字母
+            int code6 = crm.carManagementAddNotChk(name,1L,37L,car,caridnum,starttime,endtime).getInteger("code"); //车架号纯数字
+            int code7 = crm.carManagementAddNotChk(name,1L,37L,car,carideng,starttime,endtime).getInteger("code"); //车架号纯字母
 
 
 
@@ -1844,8 +1844,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code8==1001,"车牌号8位纯数字成功");
             Preconditions.checkArgument(code9==1001,"服役结束时间<服役开始时间成功");
             Preconditions.checkArgument(code10==1001,"服役开始时间<当前时间成功");
-//            Preconditions.checkArgument(code6==1001,"车架号17位纯数字成功");
-//            Preconditions.checkArgument(code7==1001,"车架号17位纯字母成功");
+            Preconditions.checkArgument(code6==1001,"车架号17位纯数字成功");
+            Preconditions.checkArgument(code7==1001,"车架号17位纯字母成功");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1948,52 +1948,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "ADD_CAR")
-    public  Object[][] add_car() {
-        return new String[][]{
-                {"ZDH"+(int)((Math.random()*9+1)*10),"苏ZDH"+(int)((Math.random()*9+1)*100),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号7位，车架号17位
-                {"ZDH20WEIAAAAA"+(int)((Math.random()*9+1)*1000000),"苏ZDH"+(int)((Math.random()*9+1)*1000),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号8位，车架号17位
 
 
-        };
-    }
-    @DataProvider(name = "EMAIL")
-    public  Object[] email() {
-        return new String[]{
-                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
-                "1@qq.com",
-                "12345Lxsd67890@gmail.com",
-                "1234567890@baiyahoo.com",
-                "wertyui@baimsn.com",
-                "WERTY@hotmail.com",
-                "_____@aol.com",
-                "KJHGFYTU@ask.com",
-                "12KKJ567890@live.com",
-                "123OOO000@0355.net",
-                "1234567890@163.net",
-                "1234567890@263.net",
-                "1234567890@3721.net",
-                "2842726905@qq.com",
-        };
-    }
 
-    @DataProvider(name = "EMAILERR")
-    public  Object[] emailerr() {
-        return new String[]{
-                "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
-                "汉字@qq.com", //汉字
-                "gmail.com", //没@
-                "1234567890", //纯数字
-                "wertyui", //纯英文
-                "WERTY@hotmail。com", //点为中文
-                "～！@#¥%……&*（@qq.com", //标点符号
-                "KJHGFYTU@ask—com",
-                "12KKJ567890@live_com",
-        };
-    }
-
-
-    @Test(dataProvider = "EMAIL")
+    @Test(dataProvider = "EMAIL",dataProviderClass = CrmScenarioUtil.class)
     public void  emailConfig(String email){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2011,7 +1969,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "EMAILERR")
+    @Test(dataProvider = "EMAILERR",dataProviderClass = CrmScenarioUtil.class)
     public void  emailConfigErr(String email){
         logger.logCaseStart(caseResult.getCaseName());
         try {
