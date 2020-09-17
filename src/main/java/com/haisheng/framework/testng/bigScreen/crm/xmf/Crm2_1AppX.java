@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
@@ -19,10 +20,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @description :2.1交车、试驾、客户relate----xia
@@ -808,9 +806,92 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void beanch(){
+        logger.info("line-------crm4.0-----");
+    }
+    /**
+     * @description :新建、注销试驾车，试驾车列表+-1
+     * @date :2020/9/10 16:21
+     **/
 
+//    @Test
+    public void shijiache(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.driverCarList();
+            Long total=data.getLong("total");
+            long id=pf.newCarDriver();    //新建试驾车，获取试驾车id
+            JSONObject data2=crm.driverCarList();
+            Long total2=data2.getLong("total");
+            crm.carLogout(id);    //注销试驾车
+            JSONObject data3=crm.driverCarList();
+            Long total3=data3.getLong("total");
+            Preconditions.checkArgument(total2-total==1,"新增试驾车型，试驾车列表没+1");
+            Preconditions.checkArgument(total2-total3==1,"注销试驾车型，试驾车列表没-1");
 
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建、注销试驾车，试驾车列表+-1");
+        }
+    }
+    /**
+     * @description :新建、注销试驾车，app预约试驾页试驾车列表+-1
+     * @date :2020/9/10 19:36
+     **/
 
+    @Test
+    public void shijiacheNum(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.driverCarList();  //TODO:
+            Long total=data.getLong("total");
+            long id=pf.newCarDriver();    //新建试驾车，获取试驾车id
+            JSONObject data2=crm.driverCarList();
+            Long total2=data2.getLong("total");
+            crm.carLogout(id);    //注销试驾车
+            JSONObject data3=crm.driverCarList();
+            Long total3=data3.getLong("total");
+            Preconditions.checkArgument(total2-total==1,"新增试驾车型，试驾车列表没+1");
+            Preconditions.checkArgument(total2-total3==0,"注销试驾车型，试驾车列表没-1");
 
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建试驾车，试驾车下拉菜单+1");
+        }
+    }
+
+    /**
+     * @description :新建工作计划，列表+1
+     * @date :2020/9/10 19:59
+     **/
+//    @Test
+    public void createPlan(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String working_date=dt.getHistoryDate(1);
+            String working_time=dt.currentTimeB("HH:mm",240);
+            JSONObject data=crm.workPlanList();
+            Long total=data.getLong("total");
+            Long customer_id=crm.searchByPhone(pp.customer_phone_number).getLong("customer_id");
+            String taskType=crm.taskEnum().getJSONArray("task_enum").getJSONObject(0).getString("task_enum_type");
+
+            String plate_number="";
+            String remark="工作计划一二三四五六七八九十";
+           //新建工作计划
+            Long planId=crm.addplan(taskType,customer_id,working_date,working_time,plate_number,remark).getLong("work_plan_id");
+            JSONObject data2=crm.workPlanList();
+            Long total2=data2.getLong("total");
+            crm.planCancle(planId);     //取消计划
+            Preconditions.checkArgument(total2-total==1,"新建工作计划，列表+1");
+
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建工作计划，列表+1");
+        }
+    }
 
 }

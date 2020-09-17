@@ -1158,7 +1158,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //新建试驾 3.0,增删部分无用参数
     public JSONObject driveradd3(Long receptionId, Long customer_id, String customerName, String phone,
                                  Long activity, Long model, String country, String city, String email, String address, String ward_name, String driverLicensePhoto1Url,
-                                 String driverLicensePhoto2Url, String electronicContractUrl, String sign_date, String sign_time, String call) {
+                                 String driverLicensePhoto2Url, String electronicContractUrl, String sign_date, String sign_time, String call,String apply_time,Long test_drive_car) {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         String json =
@@ -1180,6 +1180,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "    \"sign_date\":\"" + sign_date + "\",\n" +
                         "    \"sign_time\":\"" + sign_time + "\",\n" +
                         "    \"call\":\"" + call + "\"" +
+                        "    \"apply_time\":\"" + apply_time + "\"" +
+                        "    \"test_drive_car\":\"" + test_drive_car + "\"" +
                         "}";
 
 
@@ -1312,7 +1314,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //新建交车 2.1修改
     public JSONObject deliverAdd(Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
-                                 Boolean accept_show, String sign_name_url) {
+                                 Boolean accept_show, String sign_name_url,String vehicle_chassis_code) {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", customer_id);
@@ -1329,6 +1331,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("call", "先生");
         json1.put("id_card", "222402199708150628");
         json1.put("sign_name_url", sign_name_url);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
 
 
         String json = json1.toJSONString();
@@ -4444,6 +4447,212 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result);
 
+    }
+    //crm4.0  车系
+    public JSONObject carStyleList(){
+        String url="/WeChat-applet/porsche/car-style/list";
+        String json="{}";
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
+    /**
+     * @description :车型
+     * @date :2020/9/10 14:47
+     **/
+    public JSONObject carModelList(Long car_style){
+        String url="/WeChat-applet/porsche/car-model/list";
+        JSONObject json=new JSONObject();
+        json.put("car_style",car_style);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //预约试驾取消
+    public JSONObject appCanle(Long id){
+        String url="/porsche/daily-work/test-drive/app/cancel";
+        JSONObject json=new JSONObject();
+        json.put("id",id);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //添加试驾车
+    public JSONObject carManagementAdd(String car_name,Long car_style_id,Long car_model_id,String plate_number,String vehicle_chassis_code,Long service_time_start,Long service_time_end){
+        String url="/porsche/test-drive-car/management/add";
+        JSONObject json1=new JSONObject();
+        json1.put("car_name",car_name);
+        json1.put("car_style_id",car_style_id);
+        json1.put("car_model_id",car_model_id);
+        json1.put("plate_number",plate_number);
+        json1.put("vehicle_chassis_code",vehicle_chassis_code);
+        json1.put("service_time_start",service_time_start);
+        json1.put("service_time_end",service_time_end);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+   //试驾车注销
+    public JSONObject carLogout(Long id) {
+        String url = "/porsche/test-drive-car/management/logout";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+    //试驾车列表
+    public JSONObject driverCarList() {
+        String url = "/porsche/test-drive-car/management/list";
+        String json="{}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //crm4.0 -----------pc--------------------
+    //新建车系
+    public JSONObject addCarStyle(String car_style_name){
+        String url="/porsche/car-style/add-new-car";
+        JSONObject json=new JSONObject();
+        json.put("car_style_name",car_style_name);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //禁用车系
+    public JSONObject carStyleEffect(Long car_style_id,boolean take_effect){
+        String url="/porsche/car-style/take-effect";
+        JSONObject json=new JSONObject();
+        json.put("car_style_id",car_style_id);
+        json.put("take_effect",take_effect);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //修改车系
+    public JSONObject editCar(Long car_style_id,String car_style_name){
+        String url="/porsche/car-style/edit-car";
+        JSONObject json=new JSONObject();
+        json.put("car_style_id",car_style_id);
+        json.put("car_style_name",car_style_name);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //车系列表
+    public JSONObject carStyleList(int page,int size){
+        String url="/porsche/car-style/car_style_list";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //新建车型
+    public JSONObject addCarmodel(long car_style_id,String car_model_name){
+        String url="/porsche/car-model/add-new-car";
+        JSONObject json=new JSONObject();
+        json.put("car_style_id",car_style_id);
+        json.put("car_model_name",car_model_name);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //禁用车型
+    public JSONObject carmodelEffect(Long car_model_id,boolean take_effect){
+        String url="/porsche/car-model/take-effect";
+        JSONObject json=new JSONObject();
+        json.put("car_model_id",car_model_id);
+        json.put("take_effect",take_effect);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //修改车型
+    public JSONObject editCarmodel(Long car_model_id,String car_model_name){
+        String url="/porsche/car-model/edit-car";
+        JSONObject json=new JSONObject();
+        json.put("car_model_id",car_model_id);
+        json.put("car_model_name",car_model_name);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //车型列表
+    public JSONObject carmodelList(Long car_style_id,int page,int size){
+        String url="/porsche/car-style/car_style_list";
+        JSONObject json=new JSONObject();
+        json.put("car_style_id",car_style_id);
+        json.put("page",page);
+        json.put("size",size);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //工作计划枚举
+    public JSONObject taskEnum(){
+        String url="/porsche/work-plan/task-enum";
+        JSONObject json=new JSONObject();
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    } //新建计划
+    public JSONObject addplan(String task_enum_type,Long customer_id,String working_date,String working_time,String plate_number,String remark){
+        String url="/porsche/work-plan/add";
+        JSONObject json1=new JSONObject();
+        json1.put("task_enum_type",task_enum_type);
+        json1.put("customer_id",customer_id);
+        json1.put("working_date",working_date);
+        json1.put("working_time",working_time);
+        json1.put("plate_number",plate_number);
+        json1.put("remark",remark);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
+    //工作计划取消
+    public JSONObject planCancle(Long work_plan_id){
+        String url="/porsche/work-plan/cancel";
+        JSONObject json=new JSONObject();
+        json.put("work_plan_id",work_plan_id);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //工作计划列表
+    public JSONObject workPlanList(){
+        String url="/porsche/work-plan/list";
+        JSONObject json=new JSONObject();
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //手机号搜索手机号
+    public JSONObject searchByPhone(String customer_phone){
+        String url="/porsche/app/customer/search-by-phone";
+        JSONObject json=new JSONObject();
+        json.put("customer_phone",customer_phone);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //DCC创建线索
+    public JSONObject dccCreate(String customer_name,String customer_phone,String plate_number){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json=new JSONObject();
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("plate_number",plate_number);
+        String result=httpPostWithCheckCode(url,json.toJSONString(),IpPort);
+        return JSON.parseObject(result);
+    }
+    //DCC创建线索
+    public JSONObject dcclist(String customer_phone,String customer_name,String start_time,String end_time,int page,int size){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_phone",customer_phone);
+        json1.put("customer_name",customer_name);
+        json1.put("start_time",start_time);
+        json1.put("end_time",end_time);
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
+    public JSONObject dcclist(int page,int size){
+        String url="/porsche/app/customer/dcc-create";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+        String result=httpPostWithCheckCode(url,json,IpPort);
+        return JSON.parseObject(result);
     }
 
 }

@@ -8,13 +8,19 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
 import java.util.List;
+import java.util.Random;
 
 public class PackFunction {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file=new FileUtil();
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
 
+        return num;
+    }
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
         Long article_id;
@@ -150,9 +156,10 @@ public class PackFunction {
         String electronicContractUrl = file.texFile(pp.filePath);
         String sign_date=dt.getHistoryDate(0);
         String sign_time=dt.getHHmm(0);
-
         String call="MEN";
-        int driverid = crm.driveradd3(receptionId,customer_id,name,phone,2L,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call).getInteger("id");
+        String apply_time="";   //TODO：参数待定
+        Long test_drive_car=1L;
+        int driverid = crm.driveradd3(receptionId,customer_id,name,phone,2L,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call,apply_time,test_drive_car).getInteger("id");
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
         crm.driverAudit(driverid,audit_status);
@@ -167,7 +174,8 @@ public class PackFunction {
         //创建交车
         Long model = 3L;
         String path = file.texFile(pp.filePath);
-        crm.deliverAdd(reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path);
+        String vehicle_chassis_code="";  //TODO:底盘号
+        crm.deliverAdd(reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path,vehicle_chassis_code);
     }
     //老客试驾完成接待---for评价
     public Long driverEva()throws Exception{
@@ -273,5 +281,27 @@ public class PackFunction {
             }
         }
         return aa;
+    }
+
+    //小程序获取车型id
+    public long[] carModelId(){
+        JSONArray list=crm.carStyleList().getJSONArray("list");
+        long id[]={0,0};
+        id[0]=list.getJSONObject(0).getLong("id");
+        JSONArray list2=crm.carModelList(id[0]).getJSONArray("list");
+        id[2]=list2.getJSONObject(0).getLong("id");
+        return id;
+    }
+
+    public long newCarDriver()throws Exception{
+        Random r=new Random();
+        String carName="试驾车"+ dt.getHHmm(0);
+//        long id[]=carModelId();      //0 试驾车系id, 1 车型id
+        String plate_number="京Z12Q"+r.nextInt(1000);
+        String vehicle_chassis_code="ASDDFHGJ123456"+r.nextInt(100);
+        Long start=dt.getHistoryDateTimestamp(1);
+        long end=dt.getHistoryDateTimestamp(3);
+        JSONObject data=crm.carManagementAdd(carName,1L,37L,plate_number,vehicle_chassis_code,start,end);
+        return data.getLong("test_car_id");
     }
 }
