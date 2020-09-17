@@ -12,8 +12,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.CrmPcTwoSystemCaseOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AppDataOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AppSystemOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.ThreeDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.CrmCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.gly.CrmAPPOnline"/>
         </classes>
     </test>
 </suite>

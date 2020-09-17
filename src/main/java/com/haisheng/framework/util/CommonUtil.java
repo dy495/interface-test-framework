@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -73,7 +73,7 @@ public class CommonUtil {
 
 
     public static void log(String s) {
-        logger.info(s);
+        logger.info("---------------------------------------{}---------------------------------------", s);
     }
 
     /**
@@ -152,7 +152,7 @@ public class CommonUtil {
      * @param customerName 客户姓名
      */
     public static void deleteCustomer(String customerName) {
-        login(EnumAccount.ZJL);
+        login(EnumAccount.ZJL_DAILY);
         JSONObject response = crm.customerList(customerName, "", "", "", "", 1, 1000);
         JSONArray list = response.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {

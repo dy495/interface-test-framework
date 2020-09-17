@@ -1,19 +1,18 @@
-package com.haisheng.framework.testng.bigScreen.crm.gly;
-
+package com.haisheng.framework.testng.bigScreen.crmOnline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,27 +24,22 @@ import java.util.*;
 
 /**
  * @author : guoliya
- * @date :  2020/08/20
+ * @date :  2020/09/14
  */
 
-public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCaseStd {
+public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
+CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
+    CustomerInfoOnline cstm = new CustomerInfoOnline();
 
-
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-
-    String xs_name = "0805xsgw";//销售顾问
-    String by_name = "lxqby";//保养顾问姓名
-
-    String by_name2 = "baoyang";
-    String wx_name = "lxqwx";//维修顾问姓名
-    String zjl_name = "zjl";
-     String fwzj_name="baoyang";//服务总监
-
-
-    String pwd = "e10adc3949ba59abbe56e057f20f883e";//密码全部一致
-    String qt_name = "qt";//前台账号
-    String bsj_name = "baoshijie";
-
+    String bsj_name = cstm.gly;//超级管理员--demo
+    String xs_name =cstm.lxqsale ;//销售顾问--11
+    String by_name = cstm.bygw;//保养顾问--baoyang
+    String fwzj_name=cstm.fwzj;//服务总监--fwzj
+    String wx_name = cstm.wxgw;//维修顾问--66
+    String zjl_name = cstm.zjl;//总经理账号--zjl
+    String pwd = cstm.pwd;//密码全部一致
+    String demoPassword = cstm.demoPassword;//超级管理员demo账号的密码
+    String qt_name = cstm.qt;//前台账号
     //我的车辆信息
     Long my_car_id = 61L;
     String plate_number = "吉A66ZDH";
@@ -53,7 +47,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     //预约信息
     String customer_name = "自动化哈";
     String customer_phone_number = "13400000000";
-    private String IpPort;
 
 
     /**
@@ -68,7 +61,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "lxq";
 
 
@@ -76,24 +69,23 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常-gly");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上 gly");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
         //crm.login(sh_name1, sh_pwd1);
-
     }
 
     @AfterClass
@@ -299,22 +291,21 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             crm.login(by_name, pwd);
             JSONObject obj = crm.mainAppointmentDriverNum();
-            System.out.println("     ---"+obj);
             int total = obj.getInteger("appointment_total_number");
             int today = obj.getInteger("appointment_today_number");
-            Preconditions.checkArgument(total >= today, "全部预约保养" + total + "<今日预约保养" + today);
+            Preconditions.checkArgument(total >= today, "全部预约保养" + today + "<今日预约保养" + today);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData("全部预约保养>=今日预约保养");
+            saveData("全部预约保养>=今日预约保养");
 
         }
     }
 
-    //APP-全部预约保养<=列表数--存在脏数据，所以会报错
+    //APP-全部预约保养<=列表数
     @Test
     public void afterSaleMaintainAllLEList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -349,7 +340,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     JSONObject obj = maintain.getJSONObject(i);
                     if (obj.getString("customer_type_name").equals("新客")) {
                         String userName = obj.getString("user_name");
-                        Preconditions.checkArgument(userName.equals(by_name), "所属顾问为" + userName);}
+                        Preconditions.checkArgument(userName.equals(by_name), "所属顾问为" + userName);
+                    }
                 }
             }
         } catch (AssertionError e) {
@@ -387,7 +379,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             int changetoday1 = today_after - today_bef;
             int changelist = total1 - total;
             //小程序取消预约
-            crm.appletLoginLxq("");
+
+            crm.appletLoginToken(EnumAppletCode.GLY.getCode());
             crm.cancle(id);
             //销售登陆查看统计数据
             crm.login(by_name, pwd);
@@ -1167,7 +1160,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             int allCustomerNum = response.getInteger("all_customer_num");
             crm.login(xs_name, pwd);
             crm.createLine("Max(自动化)", 2, CustomerPhone, 1, "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦");
-            crm.login(qt_name, pwd);
+        crm.login(qt_name, pwd);
             JSONObject response1 = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int allCustomerNum1 = response1.getInteger("all_customer_num");
             Preconditions.checkArgument(allCustomerNum1 == allCustomerNum + 1, "没有创建线索之前数据为：" + allCustomerNum + "  创建线索之后数据为：" + allCustomerNum1);
@@ -1240,7 +1233,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.receptionPage(1, 10, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayTestDrive = response.getInteger("today_test_drive_num");
             System.out.println("今日试驾的数量" + todayTestDrive);
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             if (pages != 0) {
@@ -1277,7 +1270,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayBuyCarNum = response.getInteger("today_buy_car_num");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
@@ -1309,7 +1302,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.login(qt_name, pwd);
             JSONObject response = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int todayDeliverCarNum = response.getInteger("today_deliver_car_num");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
@@ -1663,7 +1656,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.afterSale_custList("", "", "", 1, 10);
             //接待数量
             int monthReceptionCar = response.getInteger("month_reception_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max=0;
@@ -1696,7 +1689,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.afterSale_custList("", "", "", 1, 10);
             //接待数量
             int monthRepairedCar = response.getInteger("month_repaired_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max=0;
@@ -1731,7 +1724,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.afterSale_custList("", "", "", 1, 10);
             //接待数量
             int todayReceptionCar = response.getInteger("today_reception_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max=0;
@@ -1766,7 +1759,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject response = crm.afterSale_custList("", "", "", 1, 10);
             //接待数量
             int todayRepairedCar = response.getInteger("today_repaired_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max=0;
@@ -1916,7 +1909,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
             int totalReceptionCar=response.getInteger("total_reception_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
@@ -1948,7 +1941,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
             int monthReceptionCar=response.getInteger("month_reception_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
@@ -1979,7 +1972,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
             int todayNewCar=response.getInteger("today_new_car");
-            crm.login(bsj_name, pwd);
+            crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
@@ -2003,6 +1996,4 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 }
-
-
 

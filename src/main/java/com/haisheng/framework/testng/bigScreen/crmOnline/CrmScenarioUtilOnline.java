@@ -574,7 +574,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
 
-
     public JSONObject customerEditRemarkPCNotChk(Long customer_id, String name, String phone, Long level, String remark) throws Exception {
         String url = "/porsche/customer/edit";
 
@@ -4036,6 +4035,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/analysis2/deal/city";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
+        json.put("adcode", 320500);
         if (!month.equals("")) {
             json.put("month", month);
         }
@@ -4199,7 +4199,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         };
     }
-
 
 
     /**

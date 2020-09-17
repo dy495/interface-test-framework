@@ -541,7 +541,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int fm1 = Integer.parseInt(fm);
             double a = (double) fz1 / fm1;
             BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+            String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
 
             Preconditions.checkArgument(jisuan.equals(show), "展示" + show + " != 计算结果" + jisuan);
 
@@ -966,7 +966,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void carOwnerPersonalPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -975,12 +975,14 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int personal = array.getJSONObject(0).getInteger("value");
             int business = array.getJSONObject(1).getInteger("value");
             int all = personal + business;
-            double a = (double) personal / all;
-            BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-            String personalPer = array.getJSONObject(0).getString("percent");
+            if (all>0){
+                double a = (double) personal / all;
+                BigDecimal bd   =   new   BigDecimal(a);
+                String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+                String personalPer = array.getJSONObject(0).getString("percent");
+                Preconditions.checkArgument(jisuan.equals(personalPer) ,"不等于");
+            }
 
-            Preconditions.checkArgument(jisuan.equals(personalPer) ,"不等于");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -991,21 +993,25 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+   @Test
     public void carOwnerBusinessPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray array = crm.carOwner("DAY","","").getJSONArray("ratio_list");
+            JSONArray array = crm.carOwner("ALL","","").getJSONArray("ratio_list");
             int personal = array.getJSONObject(0).getInteger("value");
             int business = array.getJSONObject(1).getInteger("value");
             int all = personal + business;
-            double a = (double) business / all;
-            BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-            String businessPer = array.getJSONObject(1).getString("percent");
+            if (all>0){
+                double a = (double) business / all;
+                BigDecimal bd   =   new   BigDecimal(a);
+                String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+                String businessPer = array.getJSONObject(1).getString("percent");
 
-            Preconditions.checkArgument(jisuan.equals(businessPer) ,"不等于");
+                Preconditions.checkArgument(jisuan.equals(businessPer) ,"不等于");
+            }
+
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1080,7 +1086,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test  参数要改
+    @Test
     public void city100() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1102,18 +1108,22 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test 参数要改
+    @Test
     public void partLTCity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray array = crm.city("DAY","","").getJSONArray("list");
+            JSONArray array = crm.city("ALL","","").getJSONArray("list");
             int sum = 0;
             for (int i = 0 ; i < array.size();i++){
                 sum = sum + array.getJSONObject(i).getInteger("value");
             }
-            int jiangsu = crm.wholeCountry("DAY","","").getJSONArray("list").getJSONObject(0).getInteger("value");
-            Preconditions.checkArgument(sum<=jiangsu,"苏州各区之和" + sum + "> 江苏"+ jiangsu);
+            int a = crm.wholeCountry("ALL","","").getJSONArray("list").size();
+            if (a > 0 ){
+                int jiangsu = crm.wholeCountry("ALL","","").getJSONArray("list").getJSONObject(0).getInteger("value");
+                Preconditions.checkArgument(sum<=jiangsu,"苏州各区之和" + sum + "> 江苏"+ jiangsu);
+            }
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

@@ -599,19 +599,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            int count = 0;
-            //获取到店趋势数据
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-            for (int i = 0; i < trend_list.size(); i++) {
-                JSONObject jsonObject = trend_list.getJSONObject(i);
-                if (jsonObject != null) {
-                    Integer pv = jsonObject.getInteger("pv");
-                    if (pv != null) {
-                        count++;//不为空的数据的数量
-                    }
-
-                }
-            }
+//            int count = 0;
+//            //获取到店趋势数据
+//            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            for (int i = 0; i < trend_list.size(); i++) {
+//                JSONObject jsonObject = trend_list.getJSONObject(i);
+//                if (jsonObject != null) {
+//                    Integer pv = jsonObject.getInteger("pv");
+//                    if (pv != null) {
+//                        count++;//不为空的数据的数量
+//                    }
+//
+//                }
+//            }
 
             //获取交易客群总人次
             JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -638,6 +638,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int times3 = 0;
             int times4 = 0;
             //获取各个客群时段分布的总和
+            int count =30;
             JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             for (int i = 0; i < showList.size(); i++) {
                 Integer deal_pv = showList.getJSONObject(i).getInteger("deal_pv");
