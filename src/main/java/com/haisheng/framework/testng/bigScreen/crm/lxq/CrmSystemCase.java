@@ -1856,6 +1856,98 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void  addtestcarLogout(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            //新增
+            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+            //注销
+            crm.carLogout(test_car_id);
+            boolean exit = false;
+            JSONArray array = crm.driverCarList().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getLong("test_car_id") == test_car_id){
+                    exit = true;
+                    break;
+                }
+            }
+            Preconditions.checkArgument(exit==true,"注销后车辆不存在");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("注销试驾车，该车辆仍在列表中");
+        }
+    }
+
+    @Test
+    public void  addtestcarEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long starttimenew = dt.getHistoryDateTimestamp(2);
+            String startdate = dt.getHistoryDate(2);
+
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            Long endtimenew = dt.getHistoryDateTimestamp(3);
+            String enddate = dt.getHistoryDate(3);
+
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carnew = "吉ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            String caridnew = "ZDHZDHGGG"+(long)((Math.random()*9+1)*10000000);
+            String name = "ZDH"+(int)((Math.random()*9+1)*100);
+            String namenew = "GGG"+(int)((Math.random()*9+1)*100);
+            //新增
+            int test_car_id = crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime).getInteger("test_car_id");
+
+            //修改
+            crm.carManagementEdit(test_car_id,namenew,1L,37L,carnew,caridnew,starttimenew,endtimenew);
+            String startresult = "";
+            String endtimeresult = "";
+            String carresult = "";
+            String caridresult = "";
+            String nameresult = "";
+
+            JSONArray array = crm.driverCarList().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getLong("test_car_id") == test_car_id){
+                    startresult = obj.getString("service_time_start_date");
+                    endtimeresult = obj.getString("service_time_end_date");
+                    nameresult = obj.getString("car_name");
+                    carresult = obj.getString("plate_number");
+                    caridresult = obj.getString("vehicle_chassis_code");
+                }
+            }
+
+            Preconditions.checkArgument(startresult.equals(startdate),"开始服役时间未更新");
+            Preconditions.checkArgument(endtimeresult.equals(enddate),"结束服役时间未更新");
+            Preconditions.checkArgument(nameresult.equals(namenew),"车辆名称未更新");
+            Preconditions.checkArgument(carresult.equals(carnew),"车牌号未更新");
+            Preconditions.checkArgument(caridresult.equals(caridnew),"车架号未更新");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("修改试驾车，判断信息是否更新");
+        }
+    }
+
 
     @DataProvider(name = "ADD_CAR")
     public  Object[][] add_car() {
