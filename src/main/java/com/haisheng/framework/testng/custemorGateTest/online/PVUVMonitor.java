@@ -198,20 +198,22 @@ public class PVUVMonitor {
 
     }
 
-
+    /**
+    * 1958、1922 调试AI摄像头，故暂不监控
+    * */
     @DataProvider(name = "baiguoyuan")
     public static Object[] baiguoyuan() {
 
         return new String[] {
                 "246",
-                "1958",
+//                "1958",
                 "1956",
                 "1954",
                 "1952",
                 "1950",
                 "1946",
                 "1944",
-                "1942",
+//                "1942",
                 "1940",
                 "1938",
                 "1936",
@@ -631,19 +633,20 @@ public class PVUVMonitor {
         String zeroComDetail = "";
         int diffSize = 0;
         String diffComDetail = "";
+        int indexBegin = (key+"-").length();
         for (int i=0; i<recordList.size(); i++) {
             String record = recordList.get(i);
             if (record.contains("数据量为 0")) {
                 zeroSize++;
-                zeroComDetail += record.substring(record.indexOf(key+"-"), record.indexOf("-数据异常")) + "  ";
+                zeroComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
             } else {
                 diffSize++;
-                diffComDetail += record.substring(record.indexOf(key+"-"), record.indexOf("-数据异常")) + "  ";
+                diffComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
             }
         }
-        summary += "\n以下" + zeroSize + "个店铺数据量为0\n" + zeroComDetail;
+        summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
         if (diffSize > 0) {
-            summary += "\n以下" + diffSize + "个店铺数据量波动过大\n" + diffComDetail;
+            summary += "\n以下" + diffSize + "个店铺数据量波动过大\n\n" + diffComDetail;
         }
 
         alarmPush.onlineMonitorPvuvAlarm(summary);
