@@ -102,7 +102,9 @@ public class PackFunction {
         Long receiptId=data.getJSONArray("list").getJSONObject(0).getLong("id");
         Long customerID=data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         //创建某级客户
-        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
+//        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
+        crm.customerEdit_onlyNec(receiptId,customerID, name);
+
         jsonP.put("name",name);
         jsonP.put("phone", phone.toString());
         jsonP.put("reception_id",receiptId);
@@ -157,8 +159,9 @@ public class PackFunction {
         String sign_date=dt.getHistoryDate(0);
         String sign_time=dt.getHHmm(0);
         String call="MEN";
-        String apply_time="";   //TODO：参数待定
+        String apply_time="";    //TODO：参数待定
         Long test_drive_car=1L;
+        crm.driverTimelist(37L);
         int driverid = crm.driveradd3(receptionId,customer_id,name,phone,2L,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call,apply_time,test_drive_car).getInteger("id");
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
@@ -292,13 +295,13 @@ public class PackFunction {
         id[2]=list2.getJSONObject(0).getLong("id");
         return id;
     }
-
+    //添加试驾车
     public long newCarDriver()throws Exception{
         Random r=new Random();
         String carName="试驾车"+ dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
-        String plate_number="京Z12Q"+r.nextInt(1000);
-        String vehicle_chassis_code="ASDDFHGJ123456"+r.nextInt(100);
+        String plate_number="京Z12Q1"+r.nextInt(100);
+        String vehicle_chassis_code="ASDDFHGJ123456"+(int)(Math.random()*(200-100+1)+200);
         Long start=dt.getHistoryDateTimestamp(1);
         long end=dt.getHistoryDateTimestamp(3);
         JSONObject data=crm.carManagementAdd(carName,1L,37L,plate_number,vehicle_chassis_code,start,end);
