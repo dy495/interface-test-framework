@@ -1570,14 +1570,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param appointmentDate     预约日期
      * @param carType             预约车型 4：718/1-6：不知道
      */
-    public JSONObject appointmentTestDrive(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType) {
+    public JSONObject appointmentTestDrive(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType,Integer car_model) {
         String url = "/WeChat-applet/porsche/a/appointment/test-drive";
         JSONObject object = new JSONObject();
-        object.put("gender", gender);
+        object.put("customer_gender", gender);
         object.put("customer_name", customerName);
         object.put("customer_phone_number", customerPhoneNumber);
         object.put("appointment_date", appointmentDate);
         object.put("car_type", carType);
+        object.put("car_model", car_model);
         return invokeApi(url, object);
     }
 
@@ -1642,7 +1643,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //活动报名
-    public JSONObject joinActivity(String activity_id, String customer_name, String customer_phone_number, String appointment_date, Integer car_type, String other_brand, String customer_number) throws Exception {
+    public JSONObject joinActivity(String activity_id, String customer_name, String customer_phone_number, String appointment_date, Integer car_type, String other_brand, String customer_number,Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/activity";
         JSONObject json1 = new JSONObject();
         json1.put("activity_id", activity_id);
@@ -1651,6 +1652,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("car_type", car_type);
+        json1.put("car_model", car_model);
         json1.put("other_brand", other_brand);
         json1.put("customer_number", customer_number);
         String json = json1.toJSONString();
@@ -1659,7 +1661,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //活动报名
-    public JSONObject joinActivityCode(String activity_id, String customer_name, String customer_phone_number, String appointment_date, Integer car_type, String other_brand, String customer_number) throws Exception {
+    public JSONObject joinActivityCode(String activity_id, String customer_name, String customer_phone_number, String appointment_date, Integer car_type, String other_brand, String customer_number,Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/activity";
         JSONObject json1 = new JSONObject();
         json1.put("activity_id", activity_id);
@@ -1668,6 +1670,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("car_type", car_type);
+        json1.put("car_model", car_model);
         json1.put("other_brand", other_brand);
         json1.put("customer_number", customer_number);
         String json = json1.toJSONString();
@@ -1725,10 +1728,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //添加车辆
-    public JSONObject myCarAdd(Integer car_type, String plate_number) throws Exception {
+    public JSONObject myCarAdd(Integer car_type, String plate_number,Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/my-car/add";
         JSONObject json = new JSONObject();
         json.put("car_type", car_type);
+        json.put("car_model", car_model);
         json.put("plate_number", plate_number);
 
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
@@ -1845,7 +1849,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject addCheckListEmpty(String customer_name, String customer_phone, String appointment_date, Integer car_type, String emptyPara, String message) throws Exception {
+    public JSONObject addCheckListEmpty(String customer_name, String customer_phone, String appointment_date, Integer car_type, String emptyPara, String message,Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/test-drive";
 
         JSONObject json1 = new JSONObject();
@@ -1853,6 +1857,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("customer_phone_number", customer_phone);
         json1.put("appointment_date", appointment_date);
         json1.put("car_type", car_type);
+        json1.put("car_model", car_model);
         json1.put(emptyPara, "");
 
         String json = json1.toJSONString();
@@ -2129,8 +2134,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject appartilceDetail(Long id, String article_type) throws Exception {
-        String url = "/WeChat-applet/porsche/article/detail/" + id;
+        String url = "/WeChat-applet/porsche/article/detail";
         JSONObject json = new JSONObject();
+        json.put("id", id);
         json.put("article_type", article_type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -4207,7 +4213,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public static Object[] appletTokens() {
         return new String[]{
                 EnumAppletCode.XMF.getCode(),
-                EnumAppletCode.BB.getCode(),
+//                EnumAppletCode.BB.getCode(),
 //                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
 //                EnumAppletCode.GLY.getCode()

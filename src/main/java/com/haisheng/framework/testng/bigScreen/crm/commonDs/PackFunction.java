@@ -14,6 +14,7 @@ public class PackFunction {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file=new FileUtil();
+
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
         Long article_id;
@@ -24,7 +25,7 @@ public class PackFunction {
             String[] customer_property = {};
             String positions = pp.positions; //投放位置车型推荐 单选
             String valid_end = dt.getHistoryDate(4);
-            int[] car_types = {1};
+            int[] car_types = {};
             String article_title = "app任务报名品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
             String article_bg_pic = file.texFile(pp.filePath);  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
@@ -171,7 +172,7 @@ public class PackFunction {
     //老客试驾完成接待---for评价
     public Long driverEva()throws Exception{
         crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-        JSONObject data = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number,dt.getHistoryDate(0) , pp.car_type);
+        JSONObject data = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number,dt.getHistoryDate(0) , pp.car_type,pp.car_model);
         //预约试驾成功后，页面显示数据
         Long appointment_id = data.getLong("appointment_id");
         //前台分配老客

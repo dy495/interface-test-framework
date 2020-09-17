@@ -40,6 +40,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public String xiaoshou=pp.xiaoshouGuwen;     //销售顾问
 
     public Integer car_type = pp.car_type;
+    public Integer car_model = pp.car_model;
     public Long activity_id =43L;
     public String filePath=pp.filePath;
 
@@ -745,7 +746,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String customer_phone_number = "15037286013";
             String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
             Integer car_type = 1;
-            crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+            crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num,car_model);
 //            String appointment_id=data1.getString("appointment_id");
             //crm.cancle(Long.parseLong(appointment_id));  //取消活动报名
             crm.login(adminname,adminpassword);

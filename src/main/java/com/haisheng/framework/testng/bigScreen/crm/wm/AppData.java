@@ -120,7 +120,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.loginApplet(EnumAppletCode.WM);
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             //电话预约已完成数量
             int phoneAppointmentNum = 0;
             CommonUtil.login(EnumAccount.XSGW);
@@ -170,7 +170,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         String data = DateTimeUtil.getFormat(new Date());
         try {
             //预约试驾
-            JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //已取消数量
             int cancelNum1 = getCancelNum("已取消");
@@ -195,7 +195,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         CommonUtil.loginApplet(EnumAppletCode.WM);
         String data = DateTimeUtil.getFormat(new Date());
         try {
-            JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            JSONObject response = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //获取列表总数
             CommonUtil.login(EnumAccount.XSGW);
@@ -231,7 +231,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int appointmentNum = getCancelNum("预约中");
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject result = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            JSONObject result = crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             int appointmentId = CommonUtil.getIntField(result, "appointment_id");
             //列表条数
             CommonUtil.login(EnumAccount.XSGW);
@@ -281,10 +281,10 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             String data = DateTimeUtil.getFormat(new Date());
-            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             //连续访问接口会失败，延迟3s
             sleep(3);
-            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 4);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", data, 1,36);
             CommonUtil.login(EnumAccount.XSGW);
             JSONObject object1 = crm.appointmentDriverNumber();
             //全部预约
@@ -317,9 +317,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int listSize = crm.appointmentTestDriverList("", "", "", 1, 2 << 10).getJSONArray("list").size();
             //两个人预约试驾-今明两天
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", date, 4);
+            crm.appointmentTestDrive("MALE", "【自动化】王", "15321527989", date, 1,36);
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            crm.appointmentTestDrive("MALE", "【自动化】李", "18888888888", date1, 4);
+            crm.appointmentTestDrive("MALE", "【自动化】李", "18888888888", date1, 1,36);
             CommonUtil.valueView(todayNumber, totalNumber, listSize);
             CommonUtil.login(EnumAccount.ZJL);
             JSONObject response1 = crm.appointmentDriverNumber();
