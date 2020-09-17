@@ -461,7 +461,14 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject data=crm.customerSelect(1,10);
             String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone=data.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+            JSONArray ll=data.getJSONArray("list");
+            String customer_phone="";
+            for(int i=0;i<ll.size();i++){
+                String temp_phone=ll.getJSONObject(i).getString("customer_phone");
+                if(temp_phone!=null) {
+                    customer_phone = temp_phone;
+                }
+            }
             JSONArray list=crm.customerSelect(1,10,customer_name).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");

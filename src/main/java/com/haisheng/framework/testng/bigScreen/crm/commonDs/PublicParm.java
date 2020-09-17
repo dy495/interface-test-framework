@@ -18,6 +18,7 @@ public class PublicParm {
     public String customer_name = "@@@2";
     public String customer_phone_number = "15037286013";
     public Integer car_type = 1;
+    public Integer car_model = 36;
     //    public String car_type_name = "Panamera";
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
     public String textPath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/deleteList";
