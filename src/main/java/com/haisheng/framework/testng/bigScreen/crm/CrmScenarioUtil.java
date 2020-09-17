@@ -4489,6 +4489,23 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result=httpPostWithCheckCode(url,json,IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    //添加试驾车不校验
+    public JSONObject carManagementAddNotChk(String car_name,Long car_style_id,Long car_model_id,String plate_number,String vehicle_chassis_code,Long service_time_start,Long service_time_end) throws Exception {
+        String url="/porsche/test-drive-car/management/add";
+        JSONObject json1=new JSONObject();
+        json1.put("car_name",car_name);
+        json1.put("car_style_id",car_style_id);
+        json1.put("car_model_id",car_model_id);
+        json1.put("plate_number",plate_number);
+        json1.put("vehicle_chassis_code",vehicle_chassis_code);
+        json1.put("service_time_start",service_time_start);
+        json1.put("service_time_end",service_time_end);
+        String json=json1.toJSONString();
+        String result=httpPost(url,json,IpPort);
+        return JSON.parseObject(result);
+    }
+
    //试驾车注销
     public JSONObject carLogout(Long id) {
         String url = "/porsche/test-drive-car/management/logout";
