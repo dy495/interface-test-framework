@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -66,7 +67,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
 
         commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
+        commonConfig.pushRd = new String[]{"13581630214","18810332354", "15084928847"};
         //13436941018 吕雪晴
         //17610248107 廖祥茹
         //15084928847 黄青青
@@ -1114,10 +1115,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int total = response.getInteger("total");
 
             JSONArray list = response.getJSONArray("list");
-            int enter_total = 0;
-            int total_sum = 0;
+            boolean listResult = false;
+            Integer enter_total = 0;
+            Integer total_sum = 0;
             int deal_times = 0;
-            int deal = 0;
+            Integer deal = 0;
             String customer_id = "";
             String face_url = "";
             String member_type = "";
@@ -1126,28 +1128,53 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             for (int j = 0; j < list1.size(); j++) {
 
                 customer_id = list1.getJSONObject(j).getString("customer_id");
+                member_type = list1.getJSONObject(j).getString("member_type");
+                if (member_type.equals("OMNI_CHANNEL")) {
+                    member_id = list1.getJSONObject(j).getString("member_id");
+                    if(member_id == null){
+                        member_id = "";
+                    }
+                }
 
-                enter_total = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
+                total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
+                if(total_sum==null){
+                    total_sum=0;
+                }
 
-                int t = CommonUtil.pageTurning(enter_total, 50);
+                int t = CommonUtil.pageTurning(total_sum, 50);
                 for (int l = 1; l < t; l++){
                     JSONObject res = Md.memberDetail(shop_id, customer_id, l, size);
                     enter_total = res.getInteger("total_visit_times");//累计到店次数
-                    total_sum = res.getInteger("total");//获取所有留痕事件的和
-                    deal = res.getInteger("total_deal_times");//获取累计交易的次数
+                    //或者每个人物的脸部图片地址
+                    face_url = res.getString("face_url");
+                    if(face_url==null){
+                        face_url="";
 
-                    JSONArray thingsList = res.getJSONArray("list");//获取事件中门店下单的次数
-                    face_url = res.getString("face_url");//或者每个人物的脸部图片地址
-                    for (int k = 0; k < thingsList.size(); k++) {
-                        String mark = thingsList.getJSONObject(k).getString("mark");
-                        member_type = list1.getJSONObject(k).getString("member_type");
-                        if (member_type.equals("全渠道会员")) {
-                            member_id = list1.getJSONObject(k).getString("member_id");
-                        }
-                        if (mark.equals("门店下单")) {
-                            deal_times += 1;
+                    }
+                    if(enter_total == null){
+                        enter_total=0;
+                    }
+
+                    deal = res.getInteger("total_deal_times");//获取累计交易的次数
+                    if(deal == null){
+                        deal=0;
+                    }
+
+                    //获取事件中门店下单的次数
+                    JSONArray thingsList = res.getJSONArray("list");
+
+                    if(thingsList.size()==0 && enter_total !=0 || deal !=0){
+                        listResult=true;
+                    }else {
+                        for (int k = 0; k < thingsList.size(); k++) {
+                            String mark = thingsList.getJSONObject(k).getString("mark");
+                            if (mark.equals("门店下单")) {
+                                deal_times += 1;
+                            }
                         }
                     }
+
+
                 }
 
             }
@@ -1181,11 +1208,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                }
 //            }
 
-
-            Preconditions.checkArgument((enter_total == total_sum), "累计进店次数：" + enter_total + "留痕事件总条数" + total_sum + "。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument((deal_times == deal), "累计交易次数：" + deal + "留痕事件中门店下单次数" + deal_times + "。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument((face_url.equals("") ), "人物ID:"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument(( member_id != ""), "全渠道会员的会员ID会空"+customer_id +"。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument(listResult, "人物详情的留痕记录数据为空,  " + "人物ID="+customer_id+"。  该人物的进店次数为"+enter_total+"。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument(enter_total.equals(total_sum), "累计进店次数：" + enter_total + "。人物ID="+customer_id+ "留痕事件总条数" + total_sum + "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument(deal_times == deal, "累计交易次数：" + deal + "留痕事件中门店下单次数" + deal_times + "。人物ID="+customer_id+ "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument(!StringUtils.isEmpty(face_url), "人物ID:"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument(!StringUtils.isEmpty(member_id), "全渠道会员的会员ID为空"+customer_id +"。报错门店的shopId=" + shop_id);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
