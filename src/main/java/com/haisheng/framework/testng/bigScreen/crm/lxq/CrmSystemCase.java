@@ -1948,7 +1948,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @DataProvider(name = "ADD_CAR")
     public  Object[][] add_car() {
         return new String[][]{
@@ -1958,7 +1957,76 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
         };
     }
+    @DataProvider(name = "EMAIL")
+    public  Object[] email() {
+        return new String[]{
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
+                "1@qq.com",
+                "12345Lxsd67890@gmail.com",
+                "1234567890@baiyahoo.com",
+                "wertyui@baimsn.com",
+                "WERTY@hotmail.com",
+                "_____@aol.com",
+                "KJHGFYTU@ask.com",
+                "12KKJ567890@live.com",
+                "123OOO000@0355.net",
+                "1234567890@163.net",
+                "1234567890@263.net",
+                "1234567890@3721.net",
+                "2842726905@qq.com",
+        };
+    }
 
+    @DataProvider(name = "EMAILERR")
+    public  Object[] emailerr() {
+        return new String[]{
+                "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
+                "汉字@qq.com", //汉字
+                "gmail.com", //没@
+                "1234567890", //纯数字
+                "wertyui", //纯英文
+                "WERTY@hotmail。com", //点为中文
+                "～！@#¥%……&*（@qq.com", //标点符号
+                "KJHGFYTU@ask—com",
+                "12KKJ567890@live_com",
+        };
+    }
+
+
+    @Test(dataProvider = "EMAIL")
+    public void  emailConfig(String email){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+            crm.mailConfig(email);
+            String result = crm.mailDetail().getString("email");
+            Preconditions.checkArgument(result.equals(email),"配置后，邮箱未改变");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("配置收件箱，邮箱格式，长度1-100");
+        }
+    }
+
+    @Test(dataProvider = "EMAILERR")
+    public void  emailConfigErr(String email){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+            int code = crm.mailConfigNotChk(email).getInteger("code");
+            Preconditions.checkArgument(code==1001,"邮箱为"+ email + "时修改成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("配置收件箱，邮箱格式/长度不正确");
+        }
+    }
 
 
 }
