@@ -517,7 +517,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数+1 ok
      * @date :2020/7/14 11:35
      **/
-    @Test
+//    @Test
     public void goodsManage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -979,7 +979,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int total=data.getInteger("total");
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
             if(listN==null||listN.size()==0){
-                throw new Exception("未创建销售顾问，无法排班");
+                logger.warn("未创建销售顾问，无法排班");
+                return;
             }
             //增加排班
             String uid=listN.getJSONObject(0).getString("uid");
@@ -1132,7 +1133,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
         } finally {
-            saveData("活动报名，添加报过名的电话，失败");
+            saveData("app活动报名，添加报过名的电话，失败");
         }
     }
 
@@ -1492,7 +1493,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :车型推荐车数量==商品管理数量 ok
      * @date :2020/8/12 17:22
      **/
-     @Test
+//     @Test
     public void carCommend(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
