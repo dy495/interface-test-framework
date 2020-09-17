@@ -976,4 +976,20 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(response.getString("message"));
         }
     }
+
+    @Test(enabled = false)
+    public void test() throws Exception {
+        int total = crm.userPage(1, 10).getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        for (int i = 1; i < s; i++) {
+            JSONArray list = crm.userPage(i, 100).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("user_name").contains("1600")
+                        && list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
+                    String uid = list.getJSONObject(j).getString("uid_1318c0d3");
+                    crm.userDel(uid);
+                }
+            }
+        }
+    }
 }
