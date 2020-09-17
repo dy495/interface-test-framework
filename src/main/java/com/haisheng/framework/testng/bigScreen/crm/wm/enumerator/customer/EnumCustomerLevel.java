@@ -7,13 +7,13 @@ import lombok.Getter;
  */
 public enum EnumCustomerLevel {
 
-    H("H级", 1, "H", ""),
+    H("H级", 7, "H", ""),
 
-    A("A级", 2, "A", ""),
+    A("A级", 1, "A", ""),
 
-    B("B级", 3, "B", ""),
+    B("B级", 2, "B", ""),
 
-    C("C级", 4, "C", ""),
+    C("C级", 3, "C", ""),
 
     D("D级", 4, "D", "交车"),
 
@@ -21,7 +21,7 @@ public enum EnumCustomerLevel {
 
     F("F级", 6, "F", "战败"),
 
-    G("G级", 14, "G", "公海");
+    G("G级", 8, "G", "公海");
 
     EnumCustomerLevel(String name, int id, String level, String des) {
         this.name = name;
