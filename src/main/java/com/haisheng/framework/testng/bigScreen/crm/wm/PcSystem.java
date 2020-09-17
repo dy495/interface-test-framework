@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -34,7 +35,21 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        CommonUtil.addConfigDaily();
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        beforeClassInit(commonConfig);
+        logger.debug("crm: " + crm);
     }
 
     @AfterClass
@@ -541,4 +556,13 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
     }
+
+//    ---------------------------------------------------4.0------------------------------------------------------------
+
+    @Test
+    public void myCustomer_function_6() {
+
+    }
 }
+
+
