@@ -18,6 +18,8 @@ public class QADbUtil {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
     private SqlSession rdDailySqlSession = null;
+    private SqlSessionFactory sessionFactory = null;
+    private SqlSessionFactory rdSessionFactory = null;
 
 
     public QADbUtil() {
@@ -26,7 +28,7 @@ public class QADbUtil {
 
     public void openConnection() {
         logger.debug("open db connection");
-        SqlSessionFactory sessionFactory = null;
+//        SqlSessionFactory sessionFactory = null;
         String resource = "configuration.xml";
         try {
             sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
@@ -41,6 +43,11 @@ public class QADbUtil {
 
     }
 
+    public void getNewSqlSession() {
+        sqlSession.close();
+        sqlSession = sessionFactory.openSession();
+    }
+
     public void closeConnection() {
         logger.debug("close db connection");
         sqlSession.close();
@@ -48,18 +55,21 @@ public class QADbUtil {
 
     public void openConnectionRdDaily() {
         logger.debug("open rd daily db connection");
-        SqlSessionFactory sessionFactory = null;
+//        SqlSessionFactory sessionFactory = null;
         String resource = "configuration-rd-daily.xml";
         try {
-            sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
+            rdSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
                     resource));
-            rdDailySqlSession = sessionFactory.openSession();
+            rdDailySqlSession = rdSessionFactory.openSession();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
+    public void getNewRdSqlSession() {
+        rdDailySqlSession.close();
+        rdDailySqlSession = rdSessionFactory.openSession();
     }
 
     public void closeConnectionRdDaily() {
@@ -68,6 +78,7 @@ public class QADbUtil {
     }
 
     public void updateRetrunVisitTimeToToday(long customerId) {
+        getNewRdSqlSession();
         IReturnVisitDao returnVisitDao = rdDailySqlSession.getMapper(IReturnVisitDao.class);
 
         DateTimeUtil dt = new DateTimeUtil();
@@ -80,12 +91,14 @@ public class QADbUtil {
     }
 
     public void updateReportTime(ReportTime reportTime) {
+        getNewRdSqlSession();
         IReportTimeDao reportTimeDao = rdDailySqlSession.getMapper(IReportTimeDao.class);
         reportTimeDao.updateReportTime(reportTime);
         rdDailySqlSession.commit();
     }
 
     public void updateProtectTime(ProtectTime protectTime) {
+        getNewRdSqlSession();
         IProtectTimeDao protectTimeDao = rdDailySqlSession.getMapper(IProtectTimeDao.class);
         protectTimeDao.updateProtectTime(protectTime);
         rdDailySqlSession.commit();
@@ -99,6 +112,7 @@ public class QADbUtil {
         } else {
             logger.info("save case result to db");
         }
+        getNewSqlSession();
         logger.debug("sqlSession: " + sqlSession);
         ICaseDao caseDao = sqlSession.getMapper(ICaseDao.class);
 
@@ -117,6 +131,7 @@ public class QADbUtil {
     }
 
     public void saveShelfAccuracy(Shelf shelf) {
+        getNewSqlSession();
         IShelfDao shelfDao = sqlSession.getMapper(IShelfDao.class);
 
         shelfDao.insert(shelf);
@@ -125,6 +140,7 @@ public class QADbUtil {
     }
 
     public List<Shelf> getShelfAccuracy(String date) {
+        getNewSqlSession();
         IShelfDao shelfDao = sqlSession.getMapper(IShelfDao.class);
 
         List<Shelf> accuracyList = shelfDao.query(date);
@@ -134,6 +150,7 @@ public class QADbUtil {
     }
 
     public List<BaiguoyuanBindUser> getBaiguoyuanBindAccuracy(String date, String shopId) {
+        getNewSqlSession();
         IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
 
         List<BaiguoyuanBindUser> userList = baiguoyuanDao.getUserList(date, shopId);
@@ -143,6 +160,7 @@ public class QADbUtil {
     }
 
     public int removeBaiguoyuanBindUser(String date, String shopId) {
+        getNewSqlSession();
         IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
 
         int num = baiguoyuanDao.removeData(date, shopId);
@@ -153,6 +171,7 @@ public class QADbUtil {
     }
 
     public void saveBaiguoyuanMetrics(BaiguoyuanBindMetrics bindMetrics) {
+        getNewSqlSession();
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
         metricsDao.insert(bindMetrics);
@@ -161,6 +180,7 @@ public class QADbUtil {
     }
 
     public void saveBaiguoyuanMetrics(List<BaiguoyuanBindMetrics> bindMetricsList) {
+        getNewSqlSession();
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
         for (BaiguoyuanBindMetrics bindMetrics : bindMetricsList) {
@@ -172,6 +192,7 @@ public class QADbUtil {
     }
 
     public List<BaiguoyuanBindMetrics> getBaiguoyuanMetrics(String date, String shopId) {
+        getNewSqlSession();
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
         return metricsDao.getMetricsAccuracy(date, shopId);
@@ -179,12 +200,14 @@ public class QADbUtil {
     }
 
     public OnlinePvuvCheck selectOnlinePvUv(String com, String date, String hour) {
+        getNewSqlSession();
         IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
 
         return onlinePvUvDao.selectData(com, date, hour);
     }
 
     public void updateOnlinePvUvDiff(OnlinePVUV onlinePVUV) {
+        getNewSqlSession();
         IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
         onlinePvUvDao.updateDiff(onlinePVUV);
 
@@ -193,6 +216,7 @@ public class QADbUtil {
     }
 
     public void saveOnlinePvUv(OnlinePVUV onlinePVUV) {
+        getNewSqlSession();
         IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
         onlinePvUvDao.insert(onlinePVUV);
 
@@ -201,6 +225,7 @@ public class QADbUtil {
     }
 
     public void saveYuexiuOnlineUvGap(OnlineYuexiuUvGap onlineYuexiuUvGap) {
+        getNewSqlSession();
         IOnlineYuexiuShopDatangGapDao onlineYuexiuShopDatangGapDao = sqlSession.getMapper(IOnlineYuexiuShopDatangGapDao.class);
         onlineYuexiuShopDatangGapDao.insert(onlineYuexiuUvGap);
 
@@ -209,6 +234,7 @@ public class QADbUtil {
     }
 
     public void saveYuexiuOnlineCustomerSearch(OnlineYuexiuCustomerSearch onlineYuexiu) {
+        getNewSqlSession();
         IOnlineYuexiuCustomerSearchDao onlineYuexiuDao = sqlSession.getMapper(IOnlineYuexiuCustomerSearchDao.class);
         onlineYuexiuDao.insert(onlineYuexiu);
 
@@ -217,7 +243,7 @@ public class QADbUtil {
     }
 
     public void saveDataToDb(IShelfSensorIndices sensorIndex) {
-
+        getNewSqlSession();
         IShelfSensorIndicesDao sensorTestDao = sqlSession.getMapper(IShelfSensorIndicesDao.class);
         sensorTestDao.insert(sensorIndex);
 
@@ -225,6 +251,7 @@ public class QADbUtil {
     }
 
     public void saveEdgePvRgn(EdgePvRgn edgePvRgn) {
+        getNewSqlSession();
         IEdgePvDao edgePvDao = sqlSession.getMapper(IEdgePvDao.class);
         edgePvDao.insert(edgePvRgn);
 
@@ -232,30 +259,35 @@ public class QADbUtil {
     }
 
     public List<EdgePvAccuracy> getEdgePvAccuracy(String day) {
+        getNewSqlSession();
         IEdgePvDao edgePvDao = sqlSession.getMapper(IEdgePvDao.class);
         return edgePvDao.getAccuracyByDay(day);
     }
 
 
     public List<String> selectOnlineReqDeviceList(String date) {
+        getNewSqlSession();
         IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
 
         return dao.getDeviceIdList(date);
     }
 
     public Integer selectOnlineReqNum(String deviceId, String date, String hour) {
+        getNewSqlSession();
         IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
 
         return dao.selectData(deviceId, date, hour);
     }
 
     public List<OnlineReqNum> selectOnlineReqNumByDate(String date, String hour) {
+        getNewSqlSession();
         IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
 
         return dao.selectDataByDate(date, hour);
     }
 
     public void updateOnlineReqNumDiff(OnlineReqNum onlineData) {
+        getNewSqlSession();
         IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
         dao.updateDiff(onlineData);
 
@@ -264,18 +296,21 @@ public class QADbUtil {
     }
 
     public List<OnlineScopeInfo> selectScopeInfo() {
+        getNewSqlSession();
         IOnlineScopeInfoDao dao = sqlSession.getMapper(IOnlineScopeInfoDao.class);
 
         return dao.selectData();
     }
 
     public List<OnlineAlgorithmMerge> selectAlgorithmMergeData(String date) {
+        getNewSqlSession();
         IOnlineAlgorithmMergeDao dao = sqlSession.getMapper(IOnlineAlgorithmMergeDao.class);
 
         return dao.selectDataByDate(date);
     }
 
     public void saveFeidanPicSearch(FeidanPicSearch feidanPicSearch) {
+        getNewSqlSession();
         IFeidanPicSearchDao feidanPicSearchDao = sqlSession.getMapper(IFeidanPicSearchDao.class);
         feidanPicSearchDao.insert(feidanPicSearch);
 
