@@ -555,7 +555,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :商品管理。pc删除车型，车辆列表-1 ok
      * @date :2020/7/15 18:34
      **/
-    @Test
+//    @Test
     public void CardeleteConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -628,7 +628,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致） ok
      * @date :2020/7/14 18:34
      **/
-    @Test
+//    @Test
     public void watchCarConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -676,7 +676,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :商品管理。pc新建车型，车辆列表+1；删除车辆-1,信息校验
      * @date :2020/7/14 18:34
      **/
-    @Test
+//    @Test
     public void CarlistConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
