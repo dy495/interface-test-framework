@@ -103,7 +103,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
         //String carNum = "苏ZDH197";    //试驾车未注销
-        String carNum = "京A11111";    //试驾车已注销
+        //String carNum = "京A1ER19";    //试驾车已注销
+        String carNum = "京Q11115";
 
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
@@ -549,6 +550,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //----------------------展示--------------------
+
+    @Ignore
     @Test
     public void customerListShowAll() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -572,6 +575,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //----------------------删除--------------------
+    @Ignore
     @Test
     public void customerListDel() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -640,6 +644,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void customerListDelServiced() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -672,6 +677,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //---------------------编辑顾客信息-------------
+    @Ignore
     @Test
     public void customerListsaleEditPhone() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -707,6 +713,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void customerListzjlEditPhone() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -769,6 +776,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void customerListzjlEditsale() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -842,42 +850,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //---------------------销售状态-------------
 
-    //@Test
-    //app点击创建顾客按钮时，会调用修改销售状态的接口，状态不是自动转的，用例作废
-    public void customerListsaleStatus() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid=-1L;
-        try {
-
-            long level_id=7L;
-            String phone = ""+System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name,phone);
-
-            //查看销售状态
-            String status1 = crm.userStatus().getString("user_status");
-            Preconditions.checkArgument(status1.equals("BUSY"),"销售创建客户后，状态期待为BUSY，实际为"+ status1);
-
-
-            //完成接待
-
-
-            //查看销售状态
-            String status2 = crm.userStatus().getString("user_status");
-            Preconditions.checkArgument(status2.equals("RECEPTIVE"),"销售完成接待后，状态期待为RECEPTIVE，实际为"+ status1);
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("销售顾问状态");
-        }
-
-    }
 
 
     /**
@@ -1427,166 +1400,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     *
-     * ====================展厅接待======================
-     * */
-
-//    @Test
-//    public void inToWait() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //销售自动化转为空闲
-//            crm.updateStatus("RECEPTIVE");
-//            //销售自动化2创建客户
-//            crm.login(salename2,salepwd2);
-//            String phone = "1";
-//            for (int i = 0; i < 10;i++){
-//                String a = Integer.toString((int)(Math.random()*10));
-//                phone = phone + a;
-//            }
-//            String name = phone;
-//            //获取顾客id
-//            Long customerid = crm.getCustomerId();
-//            //创建某级客户
-//            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-//            //完成接待之前为接待中,总经理登陆 接待中转等待
-//            crm.login(cstm.xszj,cstm.pwd);
-//            //展厅接待列表获取该记录id
-//            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
-//            //修改客户状态 0:接待中, 1:离店, 2:等待中
-//            int code = crm.reception(orderid,sale_id,2).getInteger("code");
-//            //完成接待
-//            crm.login(salename2,salepwd2);
-//
-//
-//            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//           crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("展厅接待接待中客户转等待");
-//        }
-//    }
-//
-//    @Test
-//    public void inToLeave() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //销售自动化转为空闲
-//            crm.updateStatus("RECEPTIVE");
-//            //销售自动化2创建客户
-//            crm.login(salename2,salepwd2);
-//            crm.updateStatus("RECEPTIVE");
-//            String phone = "1";
-//            for (int i = 0; i < 10;i++){
-//                String a = Integer.toString((int)(Math.random()*10));
-//                phone = phone + a;
-//            }
-//            String name = phone;
-//            //获取顾客id
-//            Long customerid = crm.getCustomerId();
-//            //创建某级客户
-//            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-//            //完成接待之前为接待中,总经理登陆 接待中转等待
-//            crm.login(cstm.xszj,cstm.pwd);
-//            //展厅接待列表获取该记录id
-//            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
-//            //修改客户状态 0:接待中, 1:离店, 2:等待中
-//            String leavetime = dt.getHHmm(0);
-//            int code = crm.reception(orderid,sale_id,1).getInteger("code");
-//            //完成接待
-////            crm.login(salename2,salepwd2);
-////
-//
-//            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//           crm.login(cstm.lxqgw,cstm.pwd);
-//            saveData("展厅接待接待中客户转离店");
-//        }
-//    }
 
 
-    /**
-     *
-     * ====================状态流转======================
-     * */
-    //@Test
-//    public void  RecToRec(){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //完成接待
-//
-//            //转为空闲，保证当前状态=空闲
-//            crm.updateStatus("RECEPTIVE");
-//            //空闲转空闲
-//            crm.updateStatus("RECEPTIVE");
-//            //查询当前状态=空闲
-//            String now = crm.userStatus().getString("user_status");
-//            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("空闲转空闲");
-//        }
-//    }
-
-    //@Test //服务端没做校验
-    public void  RecToIn(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-//            //完成接待
-//
-//            //转为空闲，保证当前状态=空闲
-//            crm.updateStatus("RECEPTIVE");
-//            //空闲转接待中
-//            crm.updateStatus("IN_RECEPTION");
-//            //查询当前状态=空闲
-//            String now = crm.userStatus().getString("user_status");
-//            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
-
-            //删除账号
-//            JSONArray list = crm.userPage(1,100).getJSONArray("list");
-//            for (int j = 0; j < list.size(); j++) {
-//                JSONObject single = list.getJSONObject(j);
-//                if (single.getString("user_login_name").contains("159")){
-//                    String userid = single.getString("user_id"); //获取用户id
-//                    crm.userDel(userid);
-//                }
-//            }
-            Long cid = creatCust("aa","aa"); //898
-
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("XXXXXX");
-        }
-    }
-
-
-    //创建顾客
-//    public Long creatCust(String name, String phone) throws Exception {
-//        //获取顾客id
-//        Long customerid = crm.getCustomerId();
-//        //创建某级客户
-//        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-//        return  customerid;
-//
-//    }
 
 
     //前台点击创建接待按钮创建顾客
@@ -1990,6 +1805,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.lxqgw,cstm.pwd);
 
             String name = "自动化";
+            String nameno = "      ";
             String name51 = "姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位123451";
             String phone = "139000"+(int)((Math.random()*9+1)*10000);
             String phone12 = "1390001"+(int)((Math.random()*9+1)*10000); //手机号12位
@@ -2001,18 +1817,21 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String carno = "AZDH"+(int)((Math.random()*9+1)*1000);
 
             int code = crm.dccCreateNotChk(name51,phone,car7).getInteger("code"); //姓名51位
+
             int code1 = crm.dccCreateNotChk(name,phone12,car8).getInteger("code"); //手机号12位
             int code2 = crm.dccCreateNotChk(name,phone10,"").getInteger("code"); //手机号10位
             int code3 = crm.dccCreateNotChk(name,phone,car6).getInteger("code"); //车牌号6位
             int code4 = crm.dccCreateNotChk(name,phone,car9).getInteger("code"); //车牌号9位
             int code5 = crm.dccCreateNotChk(name,phone,carno).getInteger("code"); //车牌号非
+            int code6 = crm.dccCreateNotChk(nameno,phone,car7).getInteger("code"); //姓名为空
 
             Preconditions.checkArgument(code==1001,"姓名51位期待1001，实际"+ code);
-            Preconditions.checkArgument(code1==1001,"手机号12位期待1001，实际"+ code1);
-            Preconditions.checkArgument(code2==1001,"手机号10位期待1001，实际"+ code2);
-            Preconditions.checkArgument(code3==1001,"车牌号6位期待1001，实际"+ code3);
-            Preconditions.checkArgument(code4==1001,"车牌号9位期待1001，实际"+ code4);
-            Preconditions.checkArgument(code5==1001,"非车牌号格式期待1001，实际"+ code5);
+            Preconditions.checkArgument(code1==1001,"手机号12位"+phone12+"期待1001，实际"+ code1);
+            Preconditions.checkArgument(code2==1001,"手机号10位"+phone10+"期待1001，实际"+ code2);
+            Preconditions.checkArgument(code3==1001,"车牌号6位"+car6+"期待1001，实际"+ code3);
+            Preconditions.checkArgument(code4==1001,"车牌号9位"+car9+"期待1001，实际"+ code4);
+            Preconditions.checkArgument(code5==1001,"非车牌号格式"+carno+"期待1001，实际"+ code5);
+            Preconditions.checkArgument(code6==1001,"姓名为空格时期待1001，实际"+ code6);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -2023,7 +1842,58 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void  addDccCustRe(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.lxqgw,cstm.pwd);
 
+            String name = "自动化";
+            String phone = "139000"+(int)((Math.random()*9+1)*10000);
+            String phone1 = "139001"+(int)((Math.random()*9+1)*10000);
+            String car7 = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car8 = "苏ZDH"+(int)((Math.random()*9+1)*1000);
+
+
+            crm.dccCreate(name,phone,car7);
+            int code = crm.dccCreateNotChk(name,phone,car8).getInteger("code"); //已存在手机号
+            Preconditions.checkArgument(code==1001,"使用已存在手机号期待1001，实际"+ code);
+            int code1 = crm.dccCreateNotChk(name,phone1,car7).getInteger("code"); //已存在客户的车牌号
+            Preconditions.checkArgument(code1==1001,"使用已存在客户的车牌号期待1001，实际"+ code1);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            //新增
+            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+
+
+            int code2 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表未注销的车牌号
+            Preconditions.checkArgument(code2==1001,"使用试驾车列表未注销的车牌号"+car+"期待1001，实际"+ code2);
+
+            //注销
+            crm.carLogout(test_car_id);
+            int code3 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表已注销的车牌号
+            Preconditions.checkArgument(code3==1000,"使用试驾车列表已注销的车牌号"+car+"期待1000，实际"+ code3);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建dcc线索-使用存在手机号/车牌号期待失败");
+        }
+    }
+
+
+
+
+    /**
+     *
+     * ====================   4.0  收件箱  ======================
+     * */
 
     @Test(dataProvider = "EMAIL",dataProviderClass = CrmScenarioUtil.class)
     public void  emailConfig(String email){

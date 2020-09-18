@@ -4812,7 +4812,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
             json.put("plate_number", plate_number);
         }
         String result = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
+        return JSON.parseObject(result);
     }
 
     //DCC创建线索

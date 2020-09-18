@@ -2575,4 +2575,521 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Test
+    public void addVisitRemarkChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String phone1 = phone.substring(3);
+            customerid = creatCust(name,phone);
+
+            //完成接待
+
+
+            //修改创建时间为昨天
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+
+            //查看顾客详情，备注条数
+            int listbefore = crm.customerDetailPC(customerid).getJSONArray("remark").size();
+
+            //添加备注
+            JSONObject visit = new JSONObject();
+            String comment = ""; //备注内容
+            for (int i = 0; i < 20 ; i++){
+                comment = comment + "备";
+            }
+            crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
+
+            //查看顾客详情，备注条数
+            int listafter = crm.customerDetailPC(customerid).getJSONArray("remark").size();
+            int change = listafter - listbefore;
+            Preconditions.checkArgument(change==1,"备注数增加"+change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("添加备注，备注条数+1");
+        }
+
+    }
+
+    @Test
+    public void addVisitCommentChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
+            String name = phone;
+            customerid = creatCust(name,phone);
+
+            //完成接待
+
+
+            //修改创建时间为昨天
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+
+
+            //添加回访记录
+            JSONObject visit = new JSONObject();
+            String comment = ""; //回访内容
+            for (int i = 0; i < 10 ; i++){
+                comment = comment + "回";
+            }
+            String date = dt.getHistoryDate(1);
+            visit.put("comment",comment);
+            visit.put("next_return_visit_date",date);
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
+
+            //查看顾客详情，回访记录条数
+            int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
+
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
+            //查看顾客详情，回访记录条数
+            int listafter = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
+            int change = listafter - listbefore;
+            Preconditions.checkArgument(change==1,"回访记录数量增加了"+change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("添加回访，回访记录数量+1");
+        }
+
+    }
+
+    /**
+     *
+     * ====================展厅接待======================
+     * */
+
+//    @Test
+//    public void inToWait() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //销售自动化转为空闲
+//            crm.updateStatus("RECEPTIVE");
+//            //销售自动化2创建客户
+//            crm.login(salename2,salepwd2);
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = phone;
+//            //获取顾客id
+//            Long customerid = crm.getCustomerId();
+//            //创建某级客户
+//            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+//            //完成接待之前为接待中,总经理登陆 接待中转等待
+//            crm.login(cstm.xszj,cstm.pwd);
+//            //展厅接待列表获取该记录id
+//            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
+//            //修改客户状态 0:接待中, 1:离店, 2:等待中
+//            int code = crm.reception(orderid,sale_id,2).getInteger("code");
+//            //完成接待
+//            crm.login(salename2,salepwd2);
+//
+//
+//            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//           crm.login(cstm.lxqgw,cstm.pwd);
+//            saveData("展厅接待接待中客户转等待");
+//        }
+//    }
+//
+//    @Test
+//    public void inToLeave() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //销售自动化转为空闲
+//            crm.updateStatus("RECEPTIVE");
+//            //销售自动化2创建客户
+//            crm.login(salename2,salepwd2);
+//            crm.updateStatus("RECEPTIVE");
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            String name = phone;
+//            //获取顾客id
+//            Long customerid = crm.getCustomerId();
+//            //创建某级客户
+//            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+//            //完成接待之前为接待中,总经理登陆 接待中转等待
+//            crm.login(cstm.xszj,cstm.pwd);
+//            //展厅接待列表获取该记录id
+//            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
+//            //修改客户状态 0:接待中, 1:离店, 2:等待中
+//            String leavetime = dt.getHHmm(0);
+//            int code = crm.reception(orderid,sale_id,1).getInteger("code");
+//            //完成接待
+////            crm.login(salename2,salepwd2);
+////
+//
+//            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//           crm.login(cstm.lxqgw,cstm.pwd);
+//            saveData("展厅接待接待中客户转离店");
+//        }
+//    }
+
+
+    //---------------------销售状态-------------
+
+    //@Test
+    //app点击创建顾客按钮时，会调用修改销售状态的接口，状态不是自动转的，用例作废
+    public void customerListsaleStatus() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            customerid = creatCust(name,phone);
+
+            //查看销售状态
+            String status1 = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(status1.equals("BUSY"),"销售创建客户后，状态期待为BUSY，实际为"+ status1);
+
+
+            //完成接待
+
+
+            //查看销售状态
+            String status2 = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(status2.equals("RECEPTIVE"),"销售完成接待后，状态期待为RECEPTIVE，实际为"+ status1);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问状态");
+        }
+
+    }
+
+
+    //----------------------展示--------------------
+    @Test
+    public void customerListShowAll() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            crm.login(cstm.lxqgw,cstm.pwd);
+            //查询
+            JSONArray list = crm.customerListPC("",-1,"","","","",1,50).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("belongs_sale_name").equals(cstm.lxqgw),"展示信息不正确");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面所属销售的顾客信息");
+        }
+
+    }
+
+    //----------------------删除--------------------
+    @Test
+    public void customerListDel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String phone1 = phone.substring(3);
+            customerid = creatCust(name,phone);
+            //完成接待
+
+            //姓名+手机号查询
+            int total = crm.customerListPC("",-1,name,phone1,0,0,1,1).getInteger("total");
+            Preconditions.checkArgument(total==1,"删除前查询，期待有一条记录，实际"+total);
+
+            //总经理登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            //删除顾客
+            crm.customerDeletePC(customerid);
+
+            //销售顾问登陆
+            crm.login(cstm.lxqgw,cstm.pwd);
+            //再次查询应无结果
+            int total2 = crm.customerListPC("",-1,name,phone1,0,0,1,1).getInteger("total");
+            Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(cstm.lxqgw,cstm.pwd);
+            saveData("我的客户页面删除后再查询");
+        }
+
+    }
+
+    //@Test
+    public void customerListDelInService() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            customerid = creatCust(name,phone);
+            //总经理登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            //删除顾客
+            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+            crm.login(cstm.lxqgw,cstm.pwd);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(cstm.lxqgw,cstm.pwd);
+            saveData("删除接待中客户");
+        }
+
+    }
+
+    @Test
+    public void customerListDelServiced() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            customerid = creatCust(name,phone);
+
+            //总经理登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            //删除顾客
+            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除失败");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(cstm.lxqgw,cstm.pwd);
+            saveData("删除已完成接待客户");
+        }
+
+    }
+
+
+
+    //---------------------编辑顾客信息-------------
+    @Test
+    public void customerListsaleEditPhone() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+
+            customerid = creatCust(name,phone);
+            //完成接待
+
+
+            crm.customerEditPC(customerid,name,"12312341234",2);
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone1),"手机号改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问修改顾客手机号");
+        }
+
+    }
+
+    @Test
+    public void customerListzjlEditPhone() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+
+            //销售总监登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            //查询B级客户
+            JSONObject obj = crm.customerListPC("",2,"","","","",1,1).getJSONArray("list").getJSONObject(0);
+            Long customerid = obj.getLong("customer_id");
+            String name = obj.getString("customer_name");
+            String phone = obj.getString("customer_phone");
+            String phone1 = "zdh"+(int)((Math.random()*9+1)*100000);
+            //销售总监修改客户手机号
+            crm.customerEditRemarkPC(customerid,name,phone1,2L,"自动化销售总监修改手机号---------------");
+            //再次查询，手机号应改变
+            JSONObject obj2 = crm.customerListPC("",2,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj2.getString("customer_phone").equals(phone1),"手机号未改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售总监修改顾客手机号");
+        }
+
+    }
+
+    //@Test
+    public void customerListsaleEditsale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            customerid = creatCust(name,phone);
+
+            //销售总监登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            crm.customerEditsale(customerid,name,phone.substring(3),"uid_9c2b914d");
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getString("belongs_sale_id").equals("uid_9c2b914d"),"所属顾问改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售总监修改顾客所属顾问");
+        }
+
+    }
+
+    @Test
+    public void customerListzjlEditsale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+
+            customerid = creatCust(name,phone);
+            //完成接待
+
+
+            //总经理登陆
+            crm.login(cstm.xszj,cstm.pwd);
+            crm.customerEditsale(customerid,name,phone.substring(3),"uid_8861b7fd");
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            crm.login(cstm.lxqgw,cstm.pwd);
+            Preconditions.checkArgument(obj.getString("belongs_sale_id").equals("uid_8861b7fd"),"所属顾问未改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("总经理修改顾客所属顾问");
+        }
+
+    }
+
+    //@Test
+    public void customerListsaleEditSeveral() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String phone1 = phone.substring(3);
+            String desc = "创建H级客户自动化------------------------------------";
+
+            String time = dt.getHistoryDate(0);
+
+            customerid = creatCust(name,phone);
+            //完成接待
+
+
+            crm.customerEditPC(customerid,name,phone1,2,2,0,time,1,1,0);
+
+            //再次查询
+            JSONObject obj = crm.customerListPC("",-1,name,phone1,"","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getInteger("like_car")==2,"like_car修改失败");
+            Preconditions.checkArgument(obj.getInteger("pay_type")==0,"pay_type修改失败");
+            Preconditions.checkArgument(obj.getInteger("show_price")==1,"show_price修改失败");
+            Preconditions.checkArgument(obj.getInteger("test_drive_car")==1,"test_drive_car修改失败");
+            Preconditions.checkArgument(obj.getInteger("visit_count")==0,"visit_count修改失败");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问修改顾客多项信息");
+        }
+
+    }
+
+
+
+
 }
