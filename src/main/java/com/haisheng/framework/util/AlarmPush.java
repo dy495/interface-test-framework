@@ -335,7 +335,7 @@ public class AlarmPush {
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         DateTimeUtil dt = new DateTimeUtil();
 
-        String msg = "### " + "日常回归发现异常，请及时查看" + "\n";
+        String msg = "### " + "回归发现异常，请及时查看" + "\n";
         msg += "\n\n#### " + dt.getHistoryDate(0) + " " + dt.getCurrentHourMinutesSec() +"\n";
         msg += "\n\n#### " + content + "\n";
 
