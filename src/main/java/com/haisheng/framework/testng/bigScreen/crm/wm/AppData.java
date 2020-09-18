@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumReceptionType;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -33,7 +34,21 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        CommonUtil.addConfigDaily();
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        beforeClassInit(commonConfig);
+        logger.debug("crm: " + crm);
     }
 
     @AfterClass
@@ -51,7 +66,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    //    ---------------------------------------------------2.0------------------------------------------------------------
+//    ---------------------------------------------------2.0------------------------------------------------------------
 
     /**
      * @description: 工作管理-我的预约
@@ -119,7 +134,8 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.loginApplet(EnumAppletCode.WM);
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1,36);
+
             //电话预约已完成数量
             int phoneAppointmentNum = 0;
             CommonUtil.login(xs);
@@ -170,7 +186,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //更新小程序token
             CommonUtil.loginApplet(EnumAppletCode.WM);
             //预约试驾
-            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+
+            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1,36);
+
             int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //已取消数量
             int cancelNum1 = getCancelNum("已取消");
@@ -196,7 +214,8 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         try {
             //更新小程序token
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1,36);
+
             int appointmentId = CommonUtil.getIntField(response, "appointment_id");
             //获取列表总数
             CommonUtil.login(xs);
@@ -232,7 +251,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int appointmentNum = getCancelNum("预约中");
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject result = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+
+            JSONObject result = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1,36);
+
             int appointmentId = CommonUtil.getIntField(result, "appointment_id");
             //列表条数
             CommonUtil.login(xs);
@@ -284,11 +305,13 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             String data = DateTimeUtil.getFormat(new Date());
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1,36);
             //连续访问接口会失败，延迟3s
             sleep(3);
-            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), data, 4);
+            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), data, 1,36);
             CommonUtil.login(xs);
+
             JSONObject object1 = crm.appointmentDriverNumber();
             //全部预约
             int appointmentTotalNumber1 = object1.getInteger("appointment_total_number");
@@ -322,9 +345,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int listSize = crm.appointmentTestDriverList("", "", "", 1, 2 << 10).getJSONArray("list").size();
             //两个人预约试驾-今明两天
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 4);
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 1,36);
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), date1, 4);
+            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), date1, 1,36);
             CommonUtil.valueView(todayNumber, totalNumber, listSize);
             CommonUtil.login(zjl);
             JSONObject response1 = crm.appointmentDriverNumber();

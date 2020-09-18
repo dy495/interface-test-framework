@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline;
 
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.MD5Util;
 
 public class CustomerInfoOnline {
     DateTimeUtil dt = new DateTimeUtil();
@@ -23,10 +22,7 @@ public class CustomerInfoOnline {
     public final String fwzj="fwzj";//服务总监
     public final String zjl = "zjl"; //总经理
     public final String qt = "qt"; //前台
-    public final Long lxqid = 3709L; //lxq自动化要用的客户 别删
-    public final String lxqname = "暴徒妹妹（自动化-别删）";
-    public final String lxqphone = "19999999999";
-    public final Long lxqlevel = 15L;
+
     public final String lxqsale = "11";
     public final String phone11 = "13436941018";
     public final String saleid11 = "uid_c01f9419"; //11的id

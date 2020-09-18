@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -10,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -36,7 +38,21 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        CommonUtil.addConfigDaily();
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        beforeClassInit(commonConfig);
+        logger.debug("crm: " + crm);
     }
 
     @AfterClass
@@ -958,6 +974,22 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             crm.customerDelete(customerId);
         } else {
             CommonUtil.valueView(response.getString("message"));
+        }
+    }
+
+    @Test(enabled = false)
+    public void test() throws Exception {
+        int total = crm.userPage(1, 10).getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        for (int i = 1; i < s; i++) {
+            JSONArray list = crm.userPage(i, 100).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("user_name").contains("1600")
+                        && list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
+                    String uid = list.getJSONObject(j).getString("uid_1318c0d3");
+                    crm.userDel(uid);
+                }
+            }
         }
     }
 }

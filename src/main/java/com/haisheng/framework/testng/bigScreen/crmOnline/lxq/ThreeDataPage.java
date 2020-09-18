@@ -541,7 +541,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int fm1 = Integer.parseInt(fm);
             double a = (double) fz1 / fm1;
             BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+            String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
 
             Preconditions.checkArgument(jisuan.equals(show), "展示" + show + " != 计算结果" + jisuan);
 
@@ -966,7 +966,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void carOwnerPersonalPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -975,12 +975,14 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int personal = array.getJSONObject(0).getInteger("value");
             int business = array.getJSONObject(1).getInteger("value");
             int all = personal + business;
-            double a = (double) personal / all;
-            BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-            String personalPer = array.getJSONObject(0).getString("percent");
+            if (all>0){
+                double a = (double) personal / all;
+                BigDecimal bd   =   new   BigDecimal(a);
+                String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+                String personalPer = array.getJSONObject(0).getString("percent");
+                Preconditions.checkArgument(jisuan.equals(personalPer) ,"不等于");
+            }
 
-            Preconditions.checkArgument(jisuan.equals(personalPer) ,"不等于");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -991,7 +993,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+   @Test
     public void carOwnerBusinessPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1000,14 +1002,16 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int personal = array.getJSONObject(0).getInteger("value");
             int business = array.getJSONObject(1).getInteger("value");
             int all = personal + business;
-            double a = (double) business / all;
-            BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-            System.out.println(jisuan.substring(3));
-            String businessPer = array.getJSONObject(1).getString("percent");
-            System.out.println(business);
+            if (all>0){
+                double a = (double) business / all;
+                BigDecimal bd   =   new   BigDecimal(a);
+                String jisuan   =   bd.setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+                String businessPer = array.getJSONObject(1).getString("percent");
 
-            //Preconditions.checkArgument(jisuan.equals(businessPer) ,"不等于");
+                Preconditions.checkArgument(jisuan.equals(businessPer) ,"不等于");
+            }
+
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

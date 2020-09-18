@@ -1718,7 +1718,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
-            JSONArray array = crm.userPage(1,50).getJSONArray("list");
+            JSONArray array = crm.userPage(1,100).getJSONArray("list");
             for (int i = 0 ; i< array.size();i++){
                 JSONObject obj = array.getJSONObject(i);
                 if (obj.getString("user_name").contains("160")){
@@ -1731,6 +1731,258 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("删除账号");
+        }
+    }
+
+
+    /**
+     *
+     * ====================   4.0  试驾车管理======================
+     * */
+
+    @Test(dataProvider = "ADD_CAR",dataProviderClass = CrmScenarioUtil.class)
+    public void  addtestcar(String name,String car,String carid){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+            int total = crm.driverCarList().getInteger("total");
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime);
+            JSONObject obj = crm.driverCarList();
+            int total2 = obj.getInteger("total");
+            int add = total2 - total;
+            String car_name = obj.getJSONArray("list").getJSONObject(0).getString("car_name");
+            String plate_number = obj.getJSONArray("list").getJSONObject(0).getString("plate_number");
+            String vehicle_chassis_code = obj.getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
+
+            Preconditions.checkArgument(add==1,"新建试驾车，列表数据增加了"+ add);
+            Preconditions.checkArgument(car_name.equals(name),"新建试驾车，新建时名称为"+ name+", 列表展示为"+ car_name);
+            Preconditions.checkArgument(plate_number.equals(car),"新建试驾车，新建时车牌号为"+ car+", 列表展示为"+ plate_number);
+            Preconditions.checkArgument(vehicle_chassis_code.equals(carid),"新建试驾车，新建时车架号为"+ carid+", 列表展示为"+ vehicle_chassis_code);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建试驾车-名字20位+车牌7位/8位");
+        }
+    }
+
+    @Test
+    public void  addtestcarExist(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+           //新增
+            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+            //注销
+            crm.carLogout(test_car_id);
+
+            int code1 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000),starttime,endtime).getInteger("code"); //车牌重复
+            int code2 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,"苏ZDH"+(int)((Math.random()*9+1)*100),carid,starttime,endtime).getInteger("code"); //车架重复
+            Preconditions.checkArgument(code1==1000,"车牌重复时失败");
+            Preconditions.checkArgument(code2!=1000,"车架号重复时成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建试驾车-车牌号和已注销车牌重复可成功，车架号和已注销的重复应失败");
+        }
+    }
+
+    @Test
+    public void  addtestcarErr(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long yesterday = dt.getHistoryDateTimestamp(-1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            String name = "ZDH"+(int)((Math.random()*9+1)*10);
+            //新增
+            String name21 = "123456789012345678901";
+            String car6 = "苏ZDH"+(int)((Math.random()*9+1)*10);
+            String car9 = "苏ZDH"+(int)((Math.random()*9+1)*10000);
+            String carno = "11111111";
+            String carid16 = "ZDHZDHZDH"+(long)((Math.random()*9+1)*1000000);
+            String carid18 = "ZDHZDHZDH"+(long)((Math.random()*9+1)*100000000);
+            String caridnum = "0000000000"+(long)((Math.random()*9+1)*10000000);
+            String carideng = "ZDHZDHZDHZDHZDHZD";
+
+            int code1 = crm.carManagementAddNotChk(name21,1L,37L,car,carid,starttime,endtime).getInteger("code"); //名字21位
+            int code2 = crm.carManagementAddNotChk(name,1L,37L,car6,carid,starttime,endtime).getInteger("code"); //车牌号6位
+            int code3 = crm.carManagementAddNotChk(name,1L,37L,car9,carid,starttime,endtime).getInteger("code"); //车牌号9位
+            int code4 = crm.carManagementAddNotChk(name,1L,37L,car,carid16,starttime,endtime).getInteger("code"); //车架号16位
+            int code5 = crm.carManagementAddNotChk(name,1L,37L,car,carid18,starttime,endtime).getInteger("code"); //车架号18位
+            int code8 = crm.carManagementAddNotChk(name,1L,37L,carno,carid,starttime,endtime).getInteger("code"); //车牌号8位纯数字
+            int code9 = crm.carManagementAddNotChk(name,1L,37L,car,carid,endtime,starttime).getInteger("code"); //服役结束时间<服役开始时间
+            int code10 = crm.carManagementAddNotChk(name,1L,37L,car,carid,yesterday,starttime).getInteger("code"); //服役开始时间<当前时间
+            //有bug 先注掉
+            int code6 = crm.carManagementAddNotChk(name,1L,37L,car,caridnum,starttime,endtime).getInteger("code"); //车架号纯数字
+            int code7 = crm.carManagementAddNotChk(name,1L,37L,car,carideng,starttime,endtime).getInteger("code"); //车架号纯字母
+
+
+
+            Preconditions.checkArgument(code1==1001,"名字21位成功");
+            Preconditions.checkArgument(code2==1001,"车牌号6位成功");
+            Preconditions.checkArgument(code3==1001,"车牌号9位成功");
+            Preconditions.checkArgument(code4==1001,"车架号16位成功");
+            Preconditions.checkArgument(code5==1001,"车架号18位成功");
+            Preconditions.checkArgument(code8==1001,"车牌号8位纯数字成功");
+            Preconditions.checkArgument(code9==1001,"服役结束时间<服役开始时间成功");
+            Preconditions.checkArgument(code10==1001,"服役开始时间<当前时间成功");
+            Preconditions.checkArgument(code6==1001,"车架号17位纯数字成功");
+            Preconditions.checkArgument(code7==1001,"车架号17位纯字母成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建试驾车-名字车牌号车架号内容校验");
+        }
+    }
+
+    @Test
+    public void  addtestcarLogout(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            //新增
+            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+            //注销
+            crm.carLogout(test_car_id);
+            boolean exit = false;
+            JSONArray array = crm.driverCarList().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getLong("test_car_id") == test_car_id){
+                    exit = true;
+                    break;
+                }
+            }
+            Preconditions.checkArgument(exit==true,"注销后车辆不存在");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("注销试驾车，该车辆仍在列表中");
+        }
+    }
+
+    @Test
+    public void  addtestcarEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+
+            Long starttime = dt.getHistoryDateTimestamp(1);
+            Long starttimenew = dt.getHistoryDateTimestamp(2);
+            String startdate = dt.getHistoryDate(2);
+
+            Long endtime = dt.getHistoryDateTimestamp(2);
+            Long endtimenew = dt.getHistoryDateTimestamp(3);
+            String enddate = dt.getHistoryDate(3);
+
+            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String carnew = "吉ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            String caridnew = "ZDHZDHGGG"+(long)((Math.random()*9+1)*10000000);
+            String name = "ZDH"+(int)((Math.random()*9+1)*100);
+            String namenew = "GGG"+(int)((Math.random()*9+1)*100);
+            //新增
+            int test_car_id = crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime).getInteger("test_car_id");
+
+            //修改
+            crm.carManagementEdit(test_car_id,namenew,1L,37L,carnew,caridnew,starttimenew,endtimenew);
+            String startresult = "";
+            String endtimeresult = "";
+            String carresult = "";
+            String caridresult = "";
+            String nameresult = "";
+
+            JSONArray array = crm.driverCarList().getJSONArray("list");
+            for (int i = 0; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getLong("test_car_id") == test_car_id){
+                    startresult = obj.getString("service_time_start_date");
+                    endtimeresult = obj.getString("service_time_end_date");
+                    nameresult = obj.getString("car_name");
+                    carresult = obj.getString("plate_number");
+                    caridresult = obj.getString("vehicle_chassis_code");
+                }
+            }
+
+            Preconditions.checkArgument(startresult.equals(startdate),"开始服役时间未更新");
+            Preconditions.checkArgument(endtimeresult.equals(enddate),"结束服役时间未更新");
+            Preconditions.checkArgument(nameresult.equals(namenew),"车辆名称未更新");
+            Preconditions.checkArgument(carresult.equals(carnew),"车牌号未更新");
+            Preconditions.checkArgument(caridresult.equals(caridnew),"车架号未更新");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("修改试驾车，判断信息是否更新");
+        }
+    }
+
+
+
+
+    @Test(dataProvider = "EMAIL",dataProviderClass = CrmScenarioUtil.class)
+    public void  emailConfig(String email){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+            crm.mailConfig(email);
+            String result = crm.mailDetail().getString("email");
+            Preconditions.checkArgument(result.equals(email),"配置后，邮箱未改变");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("配置收件箱，邮箱格式，长度1-100");
+        }
+    }
+
+    @Test(dataProvider = "EMAILERR",dataProviderClass = CrmScenarioUtil.class)
+    public void  emailConfigErr(String email){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.xszj,cstm.pwd);
+            int code = crm.mailConfigNotChk(email).getInteger("code");
+            Preconditions.checkArgument(code==1001,"邮箱为"+ email + "时修改成功");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("配置收件箱，邮箱格式/长度不正确");
         }
     }
 

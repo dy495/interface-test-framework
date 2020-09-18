@@ -18,7 +18,11 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PVUVMonitor {
 
@@ -51,6 +55,8 @@ public class PVUVMonitor {
     boolean FAIL  = false;
 
     boolean DEBUG = false;
+
+    ConcurrentHashMap<String, ArrayList<String>> ALARM_STACK = new ConcurrentHashMap<String, ArrayList<String>>();
 
     //@Test
     public void getRealTimeDataYingshiDaily() {
@@ -192,13 +198,15 @@ public class PVUVMonitor {
 
     }
 
-
+    /**
+    * 1958、1922 调试AI摄像头，故暂不监控
+    * */
     @DataProvider(name = "baiguoyuan")
     public static Object[] baiguoyuan() {
 
         return new String[] {
                 "246",
-                "1958",
+//                "1958",
                 "1956",
                 "1954",
                 "1952",
@@ -215,7 +223,7 @@ public class PVUVMonitor {
                 "1928",
                 "1926",
                 "1924",
-                "1922",
+//                "1922",
                 "1920",
                 "1918",
                 "1916",
@@ -562,7 +570,18 @@ public class PVUVMonitor {
 
     private void pushDiffMsg(String dingMsg) {
         if (! StringUtils.isEmpty(dingMsg)) {
-            dingPush(dingMsg);
+            //dingPush(dingMsg);
+            //分类存储dingding推送消息，最终一起推送
+            String com = dingMsg.substring(0, dingMsg.indexOf("-"));
+            ArrayList<String> list = null;
+            if (ALARM_STACK.containsKey(com)) {
+                list = ALARM_STACK.get(com);
+            } else {
+                list = new ArrayList();
+                ALARM_STACK.put(com, list);
+            }
+            list.add(dingMsg);
+            this.FAIL = true;
         }
     }
 
@@ -606,11 +625,60 @@ public class PVUVMonitor {
         Assert.assertTrue(false);
 
     }
+
+    private void multipleShopAlarm(AlarmPush alarmPush, String key) {
+        ArrayList<String> recordList = ALARM_STACK.get(key);
+        String summary = key + "有" + recordList.size() + "个店铺报警";
+        int zeroSize = 0;
+        String zeroComDetail = "";
+        int diffSize = 0;
+        String diffComDetail = "";
+        int indexBegin = (key+"-").length();
+        for (int i=0; i<recordList.size(); i++) {
+            String record = recordList.get(i);
+            if (record.contains("数据量为 0")) {
+                zeroSize++;
+                zeroComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
+            } else {
+                diffSize++;
+                diffComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
+            }
+        }
+        summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
+        if (diffSize > 0) {
+            summary += "\n以下" + diffSize + "个店铺数据量波动过大\n\n" + diffComDetail;
+        }
+
+        alarmPush.onlineMonitorPvuvAlarm(summary);
+    }
+
+    private void oneShopAlarm(AlarmPush alarmPush, String key) {
+        ArrayList<String> recordList = ALARM_STACK.get(key);
+        String record = "";
+        for (int i=0; i<recordList.size(); i++) {
+            record = recordList.get(i) + "\n";
+        }
+        alarmPush.onlineMonitorPvuvAlarm(record);
+    }
+
     private void dingPushFinal() {
         if (!DEBUG && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+
+            if (ALARM_STACK.size() > 0) {
+                for(String key : ALARM_STACK.keySet()) {
+
+                    if (key.contains("百果园") || key.contains("小天才")) {
+                        multipleShopAlarm(alarmPush, key);
+                    } else {
+                        oneShopAlarm(alarmPush, key);
+                    }
+
+                }
+
+            }
 
             //15011479599 谢志东
             //13436941018 吕雪晴

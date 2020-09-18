@@ -20,6 +20,7 @@ public class ChecklistRun {
     int APP_ID_BIG_SCREEN = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     int MENJIN_BE_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
     int CRM_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+    int MENDIAN_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
 
 
     @Test
@@ -34,6 +35,7 @@ public class ChecklistRun {
         checklistRun.runChecklist(APP_ID_BIG_SCREEN, MENJIN_BE_CONF_ID);
         checklistRun.runChecklist(APP_ID_BIG_SCREEN, AI_LIVING_AREA_CONF_ID);
         checklistRun.runChecklist(APP_ID_BIG_SCREEN, CRM_CONF_ID);
+        checklistRun.runChecklist(APP_ID_BIG_SCREEN, MENDIAN_CONF_ID);
     }
 
 }

@@ -88,7 +88,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             String customer_phone_numbera = "15037286014";
             String date = dt.getHistoryDate(0);
             String appointment_time = "23:00";
-            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1).getLong("appointment_id");
+            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1,36).getLong("appointment_id");
             // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             crm.cancle(appoint_id);
         } catch (AssertionError | Exception e) {

@@ -229,7 +229,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             //2.预约试驾
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             String plate_number = "津GBBA29";
-            crm.myCarAdd(car_type, plate_number);
+            crm.myCarAdd(car_type, plate_number,pp.car_model);
             JSONArray list = crm.myCarList().getJSONArray("list");
             if (list == null) {
                 throw new Exception("暂无车辆");

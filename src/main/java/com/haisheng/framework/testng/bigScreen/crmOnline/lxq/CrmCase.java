@@ -31,10 +31,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     CustomerInfoOnline cstm = new CustomerInfoOnline();
 
-    Long customerid = cstm.lxqid;
-    long level_id=cstm.lxqlevel;
-    String phone = cstm.lxqphone;
-    String name = cstm.lxqname;
+    Long customerid = 838L;
+    String phone = "15567898766";
+    String name = "刘（自动化-别动）";
+    Long level_id = 15L;
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -695,7 +695,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = crm.tryLogin(cstm.lxqsale,cstm.pwd123456).getInteger("code");
+            int code = crm.tryLogin(cstm.lxqsale,"1").getInteger("code");
             Preconditions.checkArgument(code!=1000,"登陆成功");
 
         } catch (AssertionError e) {

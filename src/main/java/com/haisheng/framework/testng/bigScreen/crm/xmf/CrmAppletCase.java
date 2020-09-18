@@ -43,6 +43,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public String customer_phone_number = pp.customer_phone_number;
     public String appointment_date = dt.getHistoryDate(0);  //预约日期取当前天的前一天
     public Integer car_type = 1;
+    public Integer car_model = 36;
     public String car_type_name = "Panamera";
     public Long activity_id = 34L;
 
@@ -89,7 +90,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常X");
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -134,12 +135,12 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String caseDesc = "";
         try {
-            Integer car_type = 1;   //试驾车型
+//            Integer car_type = 1;   //试驾车型
             Object[][] objects = emptyParaCheckList();
             for (Object[] object : objects) {
                 String emptyPara = object[0].toString();
                 caseDesc = "预约试驾" + emptyPara + "为空！";
-                crm.addCheckListEmpty(customer_name, customer_phone_number, appointment_date, car_type, emptyPara, object[1].toString());
+                crm.addCheckListEmpty(customer_name, customer_phone_number, appointment_date, car_type, emptyPara, object[1].toString(),car_model);
             }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -157,7 +158,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type,car_model);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
 //            String appointment_statusA = data.getString("appointment_status");
@@ -238,7 +239,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //2.预约试驾
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type,car_model);
             Long appoint_id = data.getLong("appointment_id");
 
             //预约试驾后：  pc销售总监权限登录
@@ -329,7 +330,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 count = list.size();
             }
-            crm.myCarAdd(car_type, plate_number);
+            crm.myCarAdd(car_type, plate_number,car_model);
             JSONArray listB = crm.myCarList().getJSONArray("list");
             int aftercount = listB.size();
             String car_type_nameBefore = listB.getJSONObject(0).getString("car_type_name");
@@ -357,7 +358,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         try {
             String plate_number = "豫GBBA96";
 
-            crm.myCarAdd(car_type, plate_number);
+            crm.myCarAdd(car_type, plate_number,car_model);
             Long code = crm.myCarAddCode(car_type, plate_number);
             JSONArray listB = crm.myCarList().getJSONArray("list");
             Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
@@ -380,7 +381,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String plate_number = "豫GBBA25";
-            crm.myCarAdd(car_type, plate_number);
+            crm.myCarAdd(car_type, plate_number,car_model);
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -427,7 +428,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < limit; i++) {
                 String plate_number;
                 plate_number = "豫GBBA3" + i;
-                crm.myCarAdd(car_type, plate_number);
+                crm.myCarAdd(car_type, plate_number,car_model);
             }
             //删除新增的车辆
             JSONArray listB = crm.myCarList().getJSONArray("list");
@@ -493,7 +494,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void appointmentStstus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type,car_model);
             Long appoint_id = data.getLong("appointment_id");
             //预约试驾后：  pc销售总监总经理权限登录
             crm.login(adminname, adminpassword);
@@ -532,7 +533,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             String yuyueriqi = dt.getHistoryDate(0);
-            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             //报名提交后
             String appointment_idA = data.getString("appointment_id");
 //            String appointment_statusA = data.getString("appointment_status");
@@ -638,7 +639,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String other_brand = "奥迪";
             String customer_num = "2";
             String time = dt.getHistoryDate(0);
-            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             String appointment_id = data.getString("appointment_id");
             crm.cancle(Long.parseLong(appointment_id));  //取消活动报名
             //活动报名后
@@ -703,7 +704,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String other_brand = "奥迪";
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
 
             JSONObject data = crm.appartilceDetail(article_id, positions);
             Integer registered_num = data.getInteger("registered_num");  //文章详情
@@ -754,7 +755,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             String other_brand = "奥迪";
             String customer_num = "2";
-            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             String appointment_id = data1.getString("appointment_id");
             JSONObject data = crm.appartilceDetail(article_id, positions);
             Integer registered_num = data.getInteger("registered_num");  //文章详情
@@ -835,7 +836,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Integer registered_num = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");
             String other_brand = "奥迪";
             String customer_num = "2";
-            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             //需求变更，审核不通过也显示再小程序已报名人数中
             // String appointment_id=data.getString("appointment_id");
 //            crm.login(adminname,adminpassword);
@@ -879,7 +880,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
 
-            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             String appointment_id = data.getString("appointment_id");
             Integer registered_num = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");  //小程序活动报名人数
 
@@ -925,7 +926,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
 
-            crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             crm.login(adminname, adminpassword);
             JSONObject pcdata = crm.activityList(1, 10, activity_id);
 
@@ -938,7 +939,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Long activity_id2 = aid2[1];
             Long arcile_id2 = aid2[0];
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int code=crm.joinActivityCode(Long.toString(activity_id2), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num).getInteger("code");
+            int code=crm.joinActivityCode(Long.toString(activity_id2), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model).getInteger("code");
             crm.login(pp.zongjingli,pp.adminpassword);
             //移除黑名单
             crm.blackRemove(customer_id);
@@ -989,7 +990,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //小程序预约
-            Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type).getLong("appointment_id");
+            Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type,car_model).getLong("appointment_id");
             //pc查看预约次数
             crm.login(pp.zongjingli,pp.adminpassword);
             JSONArray ord=crm.appointmentpage(1,10).getJSONArray("list");
@@ -997,7 +998,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //预约
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type).getLong("appointment_id");
+            Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type,car_model).getLong("appointment_id");
 
             crm.login(pp.zongjingli,pp.adminpassword);
             int num2=crm.appointmentpage(1,10).getJSONArray("list").getJSONObject(0).getInteger("order_number");
@@ -1023,7 +1024,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String type="TEST_DRIVE";    //ACTIVITY
             //消息数量
             Long total=crm.appointmentList(0L,type,20).getLong("total");
-            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type);
+            JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type,car_model);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
             Long total2=crm.appointmentList(0L,type,20).getLong("total");
@@ -1057,7 +1058,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String other_brand = "奥迪";
             String customer_num = "2";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+            JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
             Long total2=crm.appointmentList(0L,type,20).getLong("total");
 
             crm.login(adminname, adminpassword);
@@ -1126,11 +1127,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String other_brand = "奥迪";
             String customer_num = "2";
             for (int i = 0; i < 3; i++) {
-                JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num);
+                JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model);
                 String appointment_id = data1.getString("appointment_id");
                 crm.cancle(Long.parseLong(appointment_id));  //取消预约
             }
-            Long code1 = crm.joinActivityCode(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num).getLong("code");
+            Long code1 = crm.joinActivityCode(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num,car_model).getLong("code");
             checkArgument(code1 == 1001, "报名取消三次后再报名应该失败");
 
             crm.login(adminname, adminpassword);

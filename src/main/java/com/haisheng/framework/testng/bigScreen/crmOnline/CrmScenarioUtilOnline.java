@@ -3575,7 +3575,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         HttpExecutorUtil httpExecutorUtil = new HttpExecutorUtil();
         Map<String, String> headers = new ConcurrentReferenceHashMap<>();
         headers.put("Authorization", super.authorization);
-        headers.put("shop_id", "22728");
+        headers.put("shop_id", getProscheShopOline());
         httpExecutorUtil.uploadFile(IpPort + url, file, headers, type);
         return JSON.parseObject(httpExecutorUtil.getResponse());
     }
