@@ -293,7 +293,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(response3.getString("message").equals("顾客等级不能为空"), "顾客等级为空也可创建成功");
             //不填备注
             JSONObject response4 = crm.createLine("望京", 1, phone, customerLevel, "");
-            Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
+            Preconditions.checkArgument(response4.getString("message").equals("备注信息20-200字之间") || response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
             deleteCustomer(phone);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -429,11 +429,13 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "手机号为11位手机号")
+    @Test(description = "手机号为11位手机号", enabled = false)
     public void myReturnVisit_function_7() {
         logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -15);
         try {
-            JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
+            JSONObject response = crm.returnVisitTaskPage(1, 10, startDate, endDate);
             int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");

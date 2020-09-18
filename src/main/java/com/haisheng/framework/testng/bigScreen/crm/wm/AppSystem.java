@@ -959,6 +959,67 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+//    -----------------------------------------------------V4.0---------------------------------------------------------
+
+    @Test(description = "正常搜索")
+    public void myCustomer_function_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
+        try {
+            CommonUtil.login(zjl);
+            int total = crm.dccList("啦", "", "", "", "1", "10").getInteger("total");
+            int total1 = crm.dccList("139", "", "", "", "1", "10").getInteger("total");
+            int total2 = crm.dccList("", "", startDate, endDate, "1", "10").getInteger("total");
+            int total3 = crm.dccList("啦", "", startDate, endDate, "1", "10").getInteger("total");
+            int total4 = crm.dccList("139", "", startDate, endDate, "1", "10").getInteger("total");
+            int total5 = crm.dccList("", "", "", "", "1", "10").getInteger("total");
+            int total6 = crm.dccList("", String.valueOf(EnumCustomerLevel.C.getId()), "", "", "1", "10").getInteger("total");
+            Preconditions.checkArgument(total > 0, "dcc客户按照客户名称模糊搜索失败");
+            Preconditions.checkArgument(total1 > 0, "dcc客户按照电话模糊搜索失败");
+            Preconditions.checkArgument(total2 > 0, "按照日期筛选，开始时间<=结束时间失败");
+            Preconditions.checkArgument(total3 > 0, "按照客户名称+日期筛选失败");
+            Preconditions.checkArgument(total4 > 0, "按照联系电话+日期筛选失败");
+            Preconditions.checkArgument(total5 > 0, "搜索全部客户失败");
+            Preconditions.checkArgument(total6 > 0, "按照等级筛选失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("dcc客户筛选，按照客户名称/电话模糊搜索");
+        }
+    }
+
+    @Test(description = "异常搜索")
+    public void myCustomer_function_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
+        try {
+            int total = crm.dccList("$", "", "", "", "1", "10").getInteger("total");
+            int total1 = crm.dccList("111", "", "", "", "1", "10").getInteger("total");
+            int total2 = crm.dccList("", String.valueOf(EnumCustomerLevel.O.getId()), "", "", "1", "10").getInteger("total");
+            int total3 = crm.dccList("", "", endDate, startDate, "1", "10").getInteger("total");
+            int total4 = crm.dccList("139", "", date, "", "1", "10").getInteger("total");
+            int total5 = crm.dccList("111", "", date, "", "1", "10").getInteger("total");
+            int total6 = crm.dccList("啦", "", date, "", "1", "10").getInteger("total");
+            int total7 = crm.dccList("$", "", date, "", "1", "10").getInteger("total");
+            Preconditions.checkArgument(total == 0, "查询不存在的用户查出了结果");
+            Preconditions.checkArgument(total1 == 0, "查询不存在的联系电话查出了结果");
+            Preconditions.checkArgument(total2 == 0, "查询不存在的等级查出了结果");
+            Preconditions.checkArgument(total3 == 0, "开始时间>结束时间查出了结果");
+            Preconditions.checkArgument(total4 == 0, "手机号存在，开始日期>当前日期，查出了结果");
+            Preconditions.checkArgument(total5 == 0, "手机号不存在，开始日期>当前日期，查出了结果");
+            Preconditions.checkArgument(total6 == 0, "姓名存在，开始日期>当前日期，查出了结果");
+            Preconditions.checkArgument(total7 == 0, "姓名不存在，开始日期>当前日期，查出了结果");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("dcc客户筛选，筛选不存在的客户信息，数据为空");
+        }
+    }
+
+
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
     /**

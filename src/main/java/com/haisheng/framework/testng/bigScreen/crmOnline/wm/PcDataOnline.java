@@ -158,7 +158,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1")
+    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1", enabled = false)
     public void myCustomer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -182,7 +182,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getId(), xs.getUid());
+            crm.customerEdit((long) customerId, customerName, customerPhone, 14, xs.getUid());
             //变换所属销售后公海列表数
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.login(xs);
@@ -206,15 +206,9 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         try {
             //公海客户数量
             CommonUtil.login(zjl);
+            deleteCustomer(phone);
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            JSONObject response = crm.createLine(name, 6, phone, 8, remark);
-            if (response.getString("message").equals("手机号码重复")) {
-                //删除客户
-                deleteCustomer(phone);
-                //再创建线索
-                crm.createLine(name, 6, phone, EnumCustomerLevel.G.getId(), remark);
-            }
-            CommonUtil.login(zjl);
+            crm.createLine(name, 6, phone, 14, remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
@@ -303,17 +297,20 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         try {
             //战败列表数
             JSONObject failureCustomerList = crm.failureCustomerList("", "", 1, 10);
-            int customerId = CommonUtil.getIntField(failureCustomerList, 0, "customer_id");
-            int failureTotal = failureCustomerList.getInteger("total");
-            //公海列表数
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            //战败转公海
-            crm.failureCustomerToPublic(customerId);
-            int failureTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1, failureTotal, failureTotal1, customerId);
-            Preconditions.checkArgument(failureTotal == failureTotal1 + 1, "战败转移公海前战败数量为" + failureTotal + "战败转公海后战败数量为" + failureTotal1);
-            Preconditions.checkArgument(publicTotal == publicTotal1 - 1, "战败转移公海前公海数量为" + failureTotal + "战败转公海后公海数量为" + failureTotal1);
+            JSONArray list = failureCustomerList.getJSONArray("list");
+            if (!list.isEmpty()) {
+                int customerId = list.getJSONObject(0).getInteger("customer_id");
+                int failureTotal = failureCustomerList.getInteger("total");
+                //公海列表数
+                int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+                //战败转公海
+                crm.failureCustomerToPublic(customerId);
+                int failureTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
+                int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+                CommonUtil.valueView(publicTotal, publicTotal1, failureTotal, failureTotal1, customerId);
+                Preconditions.checkArgument(failureTotal == failureTotal1 + 1, "战败转移公海前战败数量为" + failureTotal + "战败转公海后战败数量为" + failureTotal1);
+                Preconditions.checkArgument(publicTotal == publicTotal1 - 1, "战败转移公海前公海数量为" + failureTotal + "战败转公海后公海数量为" + failureTotal1);
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -396,12 +393,17 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * 删除客户
      *
-     * @param phone 电话号
+     * @param phone 客户电话号
      */
     private void deleteCustomer(String phone) {
         CommonUtil.login(zjl);
         JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-        int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-        crm.customerDelete(customerId);
+        if (!response.getJSONArray("list").isEmpty()) {
+            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
+            crm.customerDelete(customerId);
+        } else {
+            CommonUtil.valueView(response.getString("message"));
+        }
     }
+
 }

@@ -190,7 +190,6 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
             String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
             String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
-//            String message10 = crm.goodsManagerAddCar(appearancePic, bigPic, "", carIntroduce, carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
             Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
             Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
             Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
@@ -201,12 +200,10 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
             Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
             Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
-//            Preconditions.checkArgument(message10.equals("成功"), "所有必填项全正确填写，车型创建失败");
             JSONObject result = crm.carList();
             int size = result.getJSONArray("list").size() - 1;
             String carName = CommonUtil.getStrField(result, size, "car_type_name");
             int id = carName.equals(carTypeName) ? CommonUtil.getIntField(result, size, "id") : 0;
-            crm.carDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -268,7 +265,8 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             for (int i = 1; i < CommonUtil.pageTurning(total, 100); i++) {
                 JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("status_name").equals("排期中")) {
+                    if (list.getJSONObject(j).getString("status_name").equals("排期中")
+                            || list.getJSONObject(j).getString("status_name").equals("发送成功")) {
                         id = list.getJSONObject(i).getInteger("id");
                         title = list.getJSONObject(i).getString("title");
                         break;
@@ -277,9 +275,8 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             }
             JSONObject result = crm.messageDetail(id);
             String title1 = result.getString("title");
-            assert title != null;
             CommonUtil.valueView(title, title1);
-            Preconditions.checkArgument(title.equals(title1), "排期中的站内消息可以查看操作");
+            Preconditions.checkArgument(title != null && title.equals(title1), "排期中的站内消息可以查看操作");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

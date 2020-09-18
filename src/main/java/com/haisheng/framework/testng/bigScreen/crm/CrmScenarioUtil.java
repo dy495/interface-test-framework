@@ -3901,6 +3901,29 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * DCC客户列表接口
+     */
+    public JSONObject dccList(String searchCondition, String customerLevel, String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/customer/dcc-list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(searchCondition)) {
+            object.put("search_condition", searchCondition);
+        }
+        if (!StringUtils.isEmpty(customerLevel)) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     //--------------------------applet3.0------------------------
 
     /**
@@ -4282,7 +4305,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return new String[]{
                 EnumAppletCode.XMF.getCode(),
 //                EnumAppletCode.BB.getCode(),
-//                EnumAppletCode.WM.getCode(),
+                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
 //                EnumAppletCode.GLY.getCode()
         };

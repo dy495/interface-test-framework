@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    WM("w", "6ZfjZPQanxoYmJQmAhFS6w==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
     XMF("@@@", "/RCWZyxWt1xQ8HpgiDKgSQ==", ""),
     BB("北北", "DJi5GeKsEMIMe3H4XEeqmw==", ""),    //请勿使用
     LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", ""),

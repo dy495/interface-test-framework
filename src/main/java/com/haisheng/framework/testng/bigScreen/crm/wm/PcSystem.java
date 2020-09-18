@@ -558,11 +558,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     }
 
 //    ---------------------------------------------------4.0------------------------------------------------------------
-
-    @Test
-    public void myCustomer_function_6() {
-
-    }
 }
 
 

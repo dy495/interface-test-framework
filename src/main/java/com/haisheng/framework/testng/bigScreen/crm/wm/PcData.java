@@ -161,7 +161,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1")
+    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1", enabled = false)
     public void myCustomer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -196,7 +196,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端将一个已存在客户的客户等级设置为G,公海列表数+1");
+//            saveData("pc端将一个已存在客户的客户等级设置为G,公海列表数+1");
         }
     }
 
@@ -261,7 +261,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "战败-将一个客户的等级修改为F,战败客户列表数量+1,该销售名下客户数量-1")
+    @Test(description = "战败-将一个客户的等级修改为F,战败客户列表数量+1,该销售名下客户数量-1", enabled = false)
     public void myCustomer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -362,10 +362,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject response = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100);
-            int id = CommonUtil.getIntField(response, 0, "id");
-            String phone = crm.appointmentInfo((long) id).getString("phone");
-            int testDriverTotal = response.getInteger("total");
+            int testDriverTotal = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100).getInteger("total");
             int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
             int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");
             CommonUtil.login(zjl);
@@ -373,20 +370,17 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             int appointmentTestDriver = 0;
             int appointmentMend = 0;
             int appointmentMaintain = 0;
-            String appointment = null;
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletCode.WM.getWeChatId())) {
                     appointmentTestDriver = list.getJSONObject(i).getInteger("appointment_test_driver");
                     appointmentMaintain = list.getJSONObject(i).getInteger("appointment_maintain");
                     appointmentMend = list.getJSONObject(i).getInteger("appointment_mend");
-                    appointment = list.getJSONObject(i).getString("appointment");
                 }
             }
-            CommonUtil.valueView(testDriverTotal, maintainTotal, repairTotal, phone, appointmentTestDriver, appointmentMaintain, appointmentMend, appointment);
+            CommonUtil.valueView(testDriverTotal, maintainTotal, repairTotal, appointmentTestDriver, appointmentMaintain, appointmentMend);
             Preconditions.checkArgument(testDriverTotal == appointmentTestDriver, "pc端预约试驾次数为：" + testDriverTotal + "小程序我的试驾预约总数：" + appointmentTestDriver);
             Preconditions.checkArgument(maintainTotal == appointmentMaintain, "pc端预约保养次数为：" + maintainTotal + "小程序我的保养预约总数：" + appointmentMaintain);
             Preconditions.checkArgument(repairTotal == appointmentMend, "pc端预约维修次数为：" + repairTotal + "小程序我的维修预约总数：" + appointmentMend);
-            Preconditions.checkArgument(phone.equals(appointment), "最新预约手机号与pc端小程序预约电话不一致");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

@@ -1032,7 +1032,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
                     int remainDays = list.getJSONObject(i).getInteger("remain_days");
                     CommonUtil.valueView(remainDays);
                     Preconditions.checkArgument(remainDays < 90, "app，我的客户列表中存在剩余天数>90的记录，" + "天数为：" + remainDays);
-                    Preconditions.checkArgument(remainDays >= 1, "app，我的客户列表中存在剩余天数<1的记录，" + "天数为：" + remainDays);
+                    Preconditions.checkArgument(remainDays >= 0, "app，我的客户列表中存在剩余天数<1的记录，" + "天数为：" + remainDays);
                 }
             }
         } catch (Exception | AssertionError e) {
