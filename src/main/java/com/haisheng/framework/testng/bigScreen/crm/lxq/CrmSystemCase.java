@@ -904,7 +904,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=userLoginName;
             int roleId=13; //销售顾问
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
             String userid = "";
@@ -968,7 +968,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=userLoginName;
             int roleId=13; //销售顾问
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             //查询userid
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
@@ -1058,7 +1058,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                     phone = phone + a;
                 }
                 //添加账号
-                crm.addUser(userName,newloginname,phone,passwd,roleId);
+                crm.addUser(userName,newloginname,phone,passwd,roleId,"","");
                 before_total = before_total +1;
             }
             String userid = "";
@@ -1103,7 +1103,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                     phone = phone + a;
                 }
                 //添加账号
-                crm.addUser(userName,newloginname,phone,passwd,roleId);
+                crm.addUser(userName,newloginname,phone,passwd,roleId,"","");
                 before_total = before_total +1;
             }
             int code = crm.addUserNotChk(userName,userLoginName,"19900000000",passwd,roleId).getInteger("code");
@@ -1147,7 +1147,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=cstm.pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
             String userid = "";
@@ -1209,7 +1209,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=cstm.pwd;
             int roleId=Integer.parseInt(role);
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
             String userid = "";
@@ -1276,7 +1276,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
             String userid = "";
@@ -1337,7 +1337,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
             int a = 0;
             int total = crm.userPage(1,1).getInteger("total");
             String userid = "";

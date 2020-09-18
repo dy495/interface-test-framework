@@ -1558,7 +1558,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             String userLoginName = "xsgwmax";
             String passwd = "e10adc3949ba59abbe56e057f20f883e";
             int roleId = 13;
-            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId);
+            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId,"","");
             //修改密码
             crm.login("xsgwmax", pwd);
             String oldPassword = "e10adc3949ba59abbe56e057f20f883e";
@@ -1587,7 +1587,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             String userLoginName = "xsgwmax";
             String passwd = "e10adc3949ba59abbe56e057f20f883e";
             int roleId = 13;
-            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId);
+            JSONObject response = crm.addUser(userName, userLoginName, phone, passwd, roleId,"","");
             //修改密码
             crm.login("xsgwmax", pwd);
             String oldPassword = "e10adc3949ba59abbe56e057f20f883e";

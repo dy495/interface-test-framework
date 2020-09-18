@@ -881,7 +881,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone.append(a);
             }
-            crm.addUser(userName,userName, phone.toString(),passwd,roleId);
+            crm.addUser(userName,userName, phone.toString(),passwd,roleId,"","");
             JSONObject data=crm.userPage(1,100);
             int total=data.getInteger("total");
             JSONArray list;
@@ -932,7 +932,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone.append(a);
             }
-            crm.addUser(userName,userName, phone.toString(),passwd,roleId);
+            crm.addUser(userName,userName, phone.toString(),passwd,roleId,"","");
             JSONObject data=crm.userPage(1,100);
             int total=data.getInteger("total");
             JSONArray list;

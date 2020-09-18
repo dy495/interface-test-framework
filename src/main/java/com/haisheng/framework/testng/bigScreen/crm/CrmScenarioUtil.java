@@ -1511,20 +1511,23 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 创建账号
      */
-    public JSONObject addUser(String userName, String userLoginName, String phone, String passwd, int roleId) throws Exception {
+    public JSONObject addUser(String userName, String userLoginName, String phone, String passwd, int roleId, String platNumber1, String platNumber2) {
         String url = "/porsche/user/add";
-
-        String json =
-                "{\n" +
-                        "  \"user_name\":\"" + userName + "\",\n" +
-                        "  \"user_login_name\":\"" + userLoginName + "\",\n" +
-                        "  \"user_phone\":\"" + phone + "\",\n" +
-                        "  \"password\":\"" + passwd + "\",\n" +
-                        "  \"role_id\":" + roleId +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
+        JSONObject object = new JSONObject();
+        object.put("user_name", userName);
+        object.put("user_login_name", userLoginName);
+        object.put("user_phone", phone);
+        object.put("password", passwd);
+        object.put("role_id", roleId);
+        List<String> list = new ArrayList<>();
+        if (!StringUtils.isEmpty(platNumber1)) {
+            list.add(platNumber1);
+        }
+        if (!StringUtils.isEmpty(platNumber2)) {
+            list.add(platNumber2);
+        }
+        object.put("plate_number", list);
+        String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -3232,6 +3235,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * dcc客户列表
+     */
+    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page,
+                              int size) {
+        String url = "/porsche/customer/dcc-list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerName)) {
+            object.put("customer_name", customerName);
+        }
+        if (!StringUtils.isEmpty(customerPhone)) {
+            object.put("customer_phone", customerPhone);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
 
     //--------------------------app2.0------------------------
 
@@ -3870,10 +3897,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
      */
-    public JSONObject saleReception(String receptionType) {
+    public JSONObject saleReception(String receptionType,JSONArray customer,JSONArray newCustomer) {
         String url = "/porsche/app/sale-reception/reception";
         JSONObject object = new JSONObject();
         object.put("reception_type", receptionType);
+        object.put("customer_list", customer);
+        object.put("new_customer_list", newCustomer);
         return invokeApi(url, object);
     }
 
@@ -4843,7 +4872,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
-
     //查看收件箱已配置邮箱
     public JSONObject mailDetail() {
         String url = "/porsche/daily-work/test-drive/app/mail-detail";
@@ -4853,7 +4881,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ADD_CAR")
-    public static Object[][] add_car() {
+    public  Object[][] add_car() {
         return new String[][]{
                 {"ZDH"+(int)((Math.random()*9+1)*10),"苏ZDH"+(int)((Math.random()*9+1)*100),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号7位，车架号17位
                 {"ZDH20WEIAAAAA"+(int)((Math.random()*9+1)*1000000),"苏ZDH"+(int)((Math.random()*9+1)*1000),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号8位，车架号17位
@@ -4861,8 +4889,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         };
     }
+
     @DataProvider(name = "EMAIL")
-    public static Object[] email() {
+    public Object[] email() {
         return new String[]{
                 "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
                 "1@qq.com",
@@ -4882,7 +4911,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "EMAILERR")
-    public static Object[] emailerr() {
+    public Object[] emailerr() {
         return new String[]{
                 "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
                 "汉字@qq.com", //汉字

@@ -182,6 +182,16 @@ public class CommonUtil {
     }
 
     /**
+     * 获取随机数
+     *
+     * @param digitNumber 位数
+     * @return String
+     */
+    public static String getRandom(int digitNumber) {
+        return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
+    }
+
+    /**
      * 车辆进店车牌号上传
      *
      * @param carNum 车牌号
