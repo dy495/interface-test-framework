@@ -94,14 +94,16 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
      *
      */
-//    @Test
+    @Test
     public void uploadEnterShopCarPlate() {
 //        String carNum = "黑ABC1357";     //售前新，售后老（维修+保养）
 //        String carNum = "鲁ABB1711";    //全新
-        String carNum = "浙ABC1711";    //售前老客，售后新客
+//        String carNum = "浙ABC1711";    //售前老客，售后新客
 //        String carNum = "京D738848";    //售前老客，售后新客
 //        String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
+        //String carNum = "苏ZDH197";    //试驾车未注销
+        String carNum = "京A11111";    //试驾车已注销
 
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
@@ -1747,7 +1749,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.xszj,cstm.pwd);
             int total = crm.driverCarList().getInteger("total");
             Long starttime = dt.getHistoryDateTimestamp(1);
-            Long endtime = dt.getHistoryDateTimestamp(2);
+            Long endtime = dt.getHistoryDateTimestamp(31);
             crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime);
             JSONObject obj = crm.driverCarList();
             int total2 = obj.getInteger("total");
@@ -1949,8 +1951,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
     @Test(dataProvider = "EMAIL",dataProviderClass = CrmScenarioUtil.class)
     public void  emailConfig(String email){
         logger.logCaseStart(caseResult.getCaseName());
@@ -1985,6 +1985,79 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("配置收件箱，邮箱格式/长度不正确");
         }
     }
+
+
+    /**
+     *
+     * ====================   4.0  创建DCC线索  ======================
+     * */
+
+    @Test(dataProvider = "DCCCREAT",dataProviderClass = CrmScenarioUtil.class)
+    public void  addDccCust(String name, String phone,String car){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.lxqgw,cstm.pwd);
+
+            int total1 = crm.dcclist(1,1).getInteger("total");
+            crm.dccCreate(name,phone,car);
+            JSONObject obj = crm.dcclist(1,1);
+            int total2 = obj.getInteger("total");
+            int change = total2- total1;
+            String phoneresult = obj.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+            String nameresult = obj.getJSONArray("list").getJSONObject(0).getString("customer_name");
+            Preconditions.checkArgument(change==1,"新建dcc线索后，列表数增加了"+change);
+            Preconditions.checkArgument(phoneresult.equals(phone),"列表中手机号为"+ phoneresult+", 新建时手机号为" + phone);
+            Preconditions.checkArgument(nameresult.equals(name),"列表中客户名称为"+ nameresult+", 新建时客户名称为" + name);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建dcc线索-校验姓名/手机号/车牌号格式");
+        }
+    }
+
+    @Test
+    public void  addDccCustErr(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(cstm.lxqgw,cstm.pwd);
+
+            String name = "自动化";
+            String name51 = "姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位123451";
+            String phone = "139000"+(int)((Math.random()*9+1)*10000);
+            String phone12 = "1390001"+(int)((Math.random()*9+1)*10000); //手机号12位
+            String phone10 = "13900"+(int)((Math.random()*9+1)*10000); //手机号10位
+            String car7 = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car8 = "苏ZDH"+(int)((Math.random()*9+1)*1000);
+            String car6 = "苏ZDH"+(int)((Math.random()*9+1)*10);
+            String car9 = "苏ZDH"+(int)((Math.random()*9+1)*10000);
+            String carno = "AZDH"+(int)((Math.random()*9+1)*1000);
+
+            int code = crm.dccCreateNotChk(name51,phone,car7).getInteger("code"); //姓名51位
+            int code1 = crm.dccCreateNotChk(name,phone12,car8).getInteger("code"); //手机号12位
+            int code2 = crm.dccCreateNotChk(name,phone10,"").getInteger("code"); //手机号10位
+            int code3 = crm.dccCreateNotChk(name,phone,car6).getInteger("code"); //车牌号6位
+            int code4 = crm.dccCreateNotChk(name,phone,car9).getInteger("code"); //车牌号9位
+            int code5 = crm.dccCreateNotChk(name,phone,carno).getInteger("code"); //车牌号非
+
+            Preconditions.checkArgument(code==1001,"姓名51位期待1001，实际"+ code);
+            Preconditions.checkArgument(code1==1001,"手机号12位期待1001，实际"+ code1);
+            Preconditions.checkArgument(code2==1001,"手机号10位期待1001，实际"+ code2);
+            Preconditions.checkArgument(code3==1001,"车牌号6位期待1001，实际"+ code3);
+            Preconditions.checkArgument(code4==1001,"车牌号9位期待1001，实际"+ code4);
+            Preconditions.checkArgument(code5==1001,"非车牌号格式期待1001，实际"+ code5);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建dcc线索-姓名/手机号/车牌号格式不正确");
+        }
+    }
+
 
 
 }

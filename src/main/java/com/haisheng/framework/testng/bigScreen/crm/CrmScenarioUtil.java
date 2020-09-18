@@ -4619,7 +4619,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject carLogout(Long id) {
         String url = "/porsche/test-drive-car/management/logout";
         JSONObject json = new JSONObject();
-        json.put("id", id);
+        json.put("test_car_id", id);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
@@ -4767,14 +4767,28 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
         json.put("customer_phone", customer_phone);
-        json.put("plate_number", plate_number);
+        if (!plate_number.equals("")){
+            json.put("plate_number", plate_number);
+        }
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //创建线索不校验
+    public JSONObject dccCreateNotChk(String customer_name, String customer_phone, String plate_number) throws Exception {
+        String url = "/porsche/app/customer/dcc-create";
+        JSONObject json = new JSONObject();
+        json.put("customer_name", customer_name);
+        json.put("customer_phone", customer_phone);
+        if (!plate_number.equals("")){
+            json.put("plate_number", plate_number);
+        }
+        String result = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     //DCC创建线索
     public JSONObject dcclist(String customer_phone, String customer_name, String start_time, String end_time, int page, int size) {
-        String url = "/porsche/app/customer/dcc-create";
+        String url = "/porsche/app/customer/dcc-list";
         JSONObject json1 = new JSONObject();
         json1.put("customer_phone", customer_phone);
         json1.put("customer_name", customer_name);
@@ -4788,7 +4802,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject dcclist(int page, int size) {
-        String url = "/porsche/app/customer/dcc-create";
+        String url = "/porsche/app/customer/dcc-list";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);
@@ -4838,7 +4852,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ADD_CAR")
-    public  Object[][] add_car() {
+    public static Object[][] add_car() {
         return new String[][]{
                 {"ZDH"+(int)((Math.random()*9+1)*10),"苏ZDH"+(int)((Math.random()*9+1)*100),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号7位，车架号17位
                 {"ZDH20WEIAAAAA"+(int)((Math.random()*9+1)*1000000),"苏ZDH"+(int)((Math.random()*9+1)*1000),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号8位，车架号17位
@@ -4847,7 +4861,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
     @DataProvider(name = "EMAIL")
-    public  Object[] email() {
+    public static Object[] email() {
         return new String[]{
                 "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
                 "1@qq.com",
@@ -4867,7 +4881,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "EMAILERR")
-    public  Object[] emailerr() {
+    public static Object[] emailerr() {
         return new String[]{
                 "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
                 "汉字@qq.com", //汉字
@@ -4881,6 +4895,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
+    @DataProvider(name = "DCCCREAT")
+    public static Object[][] dcc_creat() {
+        return new String[][]{
+                {"ZDH","139000"+(int)((Math.random()*9+1)*10000),""}, //名字3位，手机号，不填车牌号
+                {"姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位"+(int)((Math.random()*9+1)*10000),"139000"+(int)((Math.random()*9+1)*10000),""}, //名字50位，手机号，不填车牌号
+                {"!@#$%^&*()}{:?><~!","139000"+(int)((Math.random()*9+1)*10000),"苏ZDH"+(int)((Math.random()*9+1)*100)}, //名字符号，手机号，车牌号7位
+                {"啊","139000"+(int)((Math.random()*9+1)*10000),"苏ZDH"+(int)((Math.random()*9+1)*1000)}, //名字1位，手机号，车牌号8位
+
+
+        };
+    }
 
 }
 
