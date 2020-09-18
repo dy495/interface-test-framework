@@ -4843,6 +4843,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
+
     //查看收件箱已配置邮箱
     public JSONObject mailDetail() {
         String url = "/porsche/daily-work/test-drive/app/mail-detail";
@@ -4906,6 +4907,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         };
     }
+
+
+
+
+
 
 }
 
