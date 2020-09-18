@@ -200,10 +200,6 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
             Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
             Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
-            JSONObject result = crm.carList();
-            int size = result.getJSONArray("list").size() - 1;
-            String carName = CommonUtil.getStrField(result, size, "car_type_name");
-            int id = carName.equals(carTypeName) ? CommonUtil.getIntField(result, size, "id") : 0;
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

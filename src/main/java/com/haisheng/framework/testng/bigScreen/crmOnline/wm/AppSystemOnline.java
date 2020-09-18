@@ -657,9 +657,8 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            assert taskStatusName != null;
             CommonUtil.valueView(taskStatusName);
-            Preconditions.checkArgument(taskStatusName.equals("已完成"), "完成回访后,是否完成状态未变为已完成");
+            Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态未变为已完成");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -692,9 +691,8 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            assert taskStatusName != null;
             CommonUtil.valueView(taskStatusName);
-            Preconditions.checkArgument(taskStatusName.equals("已完成"), "完成回访后,是否完成状态未变为已完成");
+            Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态未变为已完成");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {

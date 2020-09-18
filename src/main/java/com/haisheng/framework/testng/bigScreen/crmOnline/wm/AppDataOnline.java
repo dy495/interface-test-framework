@@ -265,11 +265,10 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
                     customerPhoneNumber = list.getJSONObject(i).getString("customer_phone_number");
                 }
             }
-            assert appointmentDate != null;
             int appointmentNum1 = getCancelNum("预约中");
             Integer total2 = CommonUtil.getIntField(response2, "total");
             CommonUtil.valueView(total1, total2, appointmentNum, appointmentNum1, appointmentDate, carType, customerName, customerPhoneNumber);
-            Preconditions.checkArgument(appointmentDate.equals(data), "app我的预约记录中预约日期与小程序不一致");
+            Preconditions.checkArgument(appointmentDate != null && appointmentDate.equals(data), "app我的预约记录中预约日期与小程序不一致");
             Preconditions.checkArgument(customerName.equals(customerInfo.getName()), "app我的预约记录中客户名称与小程序不一致");
             Preconditions.checkArgument(carType == 4, "app我的预约记录中试驾车型与小程序不一致");
             Preconditions.checkArgument(customerPhoneNumber.equals(customerInfo.getPhone()), "app我的预约记录中联系电话与小程序不一致");
