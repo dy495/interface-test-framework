@@ -443,7 +443,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(description = "站内消息内容可包括中英文，符号，数字，空格")
     public void stationMessage_9() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "Chinese&&English is No.1 in use!";
