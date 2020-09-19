@@ -1,4 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crmOnline.gly;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
@@ -14,6 +15,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,13 +30,13 @@ import java.util.*;
  */
 
 public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
-CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     CustomerInfoOnline cstm = new CustomerInfoOnline();
 
     String bsj_name = cstm.gly;//超级管理员--demo
-    String xs_name =cstm.lxqsale ;//销售顾问--11
+    String xs_name = cstm.lxqsale;//销售顾问--11
     String by_name = cstm.bygw;//保养顾问--baoyang
-    String fwzj_name=cstm.fwzj;//服务总监--fwzj
+    String fwzj_name = cstm.fwzj;//服务总监--fwzj
     String wx_name = cstm.wxgw;//维修顾问--66
     String zjl_name = cstm.zjl;//总经理账号--zjl
     String pwd = cstm.pwd;//密码全部一致
@@ -577,15 +579,15 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(wx_name, pwd);
-            JSONObject response=crm.repairAppointmentlist();
+            JSONObject response = crm.repairAppointmentlist();
             JSONArray maintain = response.getJSONArray("list");
-            int pages=response.getInteger("pages");
+            int pages = response.getInteger("pages");
             int size = maintain.size();
-            for(int page=1;page<=pages;page++){
+            for (int page = 1; page <= pages; page++) {
                 if (size > 0) {
                     for (int i = 0; i < size; i++) {
                         JSONObject obj = maintain.getJSONObject(i);
-                        if (obj.getString("customer_type_name").equals("新客")&&obj.getString("service_status_name").equals("预约中")) {
+                        if (obj.getString("customer_type_name").equals("新客") && obj.getString("service_status_name").equals("预约中")) {
                             String userName = obj.getString("user_name");
                             Preconditions.checkArgument(userName.equals(wx_name), "所属顾问为" + userName);
                         }
@@ -736,7 +738,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     }
                 }
             }
-            System.out.println("listTotal------"+listTotal);
+            System.out.println("listTotal------" + listTotal);
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-售后回访中的全部回访" + total + "不等于后工作管理中我的回访-售后回访中的列表条数" + listTotal);
 
         } catch (AssertionError e) {
@@ -753,14 +755,14 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
     @Test
     public void afterSalesReturnVisit1() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             crm.login(by_name, pwd);
             JSONObject obj1 = crm.afterSale_VisitRecordList(1, 10, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
             Integer total = obj1.getInteger("total");
             int pages1 = obj1.getInteger("pages");
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
             int todayListTotal = 0;
-            for(int i=1;i<=pages1;i++){
+            for (int i = 1; i <= pages1; i++) {
                 JSONArray todayList1 = crm.afterSale_VisitRecordList(i, 10, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
                 for (int k = 0; k < todayList1.size(); k++) {
                     Integer id = todayList1.getJSONObject(k).getInteger("id");
@@ -794,11 +796,11 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             //1.全部回访=列表条数
             JSONObject obj = crm.afterSale_firstmMintainRecordList(1, 50, "", "", "");
             Integer total = obj.getInteger("total");//全部回访条数
-            JSONArray list=obj.getJSONArray("list");
+            JSONArray list = obj.getJSONArray("list");
             int pages = obj.getInteger("pages");
             int listTotal = 0;//列表的条数
-            for(int page=1;page<=pages;page++){
-                JSONArray list1= crm.afterSale_firstmMintainRecordList(page, 50, "", "", "").getJSONArray("list");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list1 = crm.afterSale_firstmMintainRecordList(page, 50, "", "", "").getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
                     Integer id = list1.getJSONObject(j).getInteger("id");
                     if (id != null) {
@@ -810,11 +812,11 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             //2.今日回访=任务日期为今天的条数
             JSONObject obj1 = crm.afterSale_firstmMintainRecordList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
-            System.out.println("todayViNum-------"+todayViNum);
+            System.out.println("todayViNum-------" + todayViNum);
             int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
-            for(int i=1;i<=pages1;i++){
-                JSONArray todayList= crm.afterSale_firstmMintainRecordList(i, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+            for (int i = 1; i <= pages1; i++) {
+                JSONArray todayList = crm.afterSale_firstmMintainRecordList(i, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
                 for (int k = 0; k < todayList.size(); k++) {
                     Integer id = todayList.getJSONObject(k).getInteger("id");
                     if (id != null) {
@@ -840,6 +842,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             saveData("APP-售后工作-我的回访-首保提醒-数据一致性验证");
         }
     }
+
     //    APP-售后工作-我的回访-流失预警-数据一致性验证
     @Test
     public void afterSalescustomerChurnWarn() {
@@ -852,7 +855,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             int pages = obj.getInteger("pages");
             JSONArray list = obj.getJSONArray("list");
             int listTotal = 0;//列表的条数
-            for(int page=1;page<=pages;page++){
+            for (int page = 1; page <= pages; page++) {
                 JSONArray list1 = crm.afterSale_customerChurnWarningList(1, 50, "", "", "").getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
                     Integer id = list1.getJSONObject(j).getInteger("id");
@@ -867,8 +870,8 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
             int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
-            for(int i=1;i<=pages;i++){
-                JSONArray  todayList= crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+            for (int i = 1; i <= pages; i++) {
+                JSONArray todayList = crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
                 for (int k = 0; k < todayList.size(); k++) {
                     Integer id = todayList.getJSONObject(k).getInteger("id");
                     if (id != null) {
@@ -1160,7 +1163,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             int allCustomerNum = response.getInteger("all_customer_num");
             crm.login(xs_name, pwd);
             crm.createLine("Max(自动化)", 2, CustomerPhone, 1, "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦");
-        crm.login(qt_name, pwd);
+            crm.login(qt_name, pwd);
             JSONObject response1 = crm.receptionPage(1, 2, DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()));
             int allCustomerNum1 = response1.getInteger("all_customer_num");
             Preconditions.checkArgument(allCustomerNum1 == allCustomerNum + 1, "没有创建线索之前数据为：" + allCustomerNum + "  创建线索之后数据为：" + allCustomerNum1);
@@ -1214,7 +1217,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             appendFailreason(e.toString());
         } finally {
             crm.login(zjl_name, pwd);
-            JSONObject responZjl = crm.customerListPC("13388115577", 1, 2<<100);
+            JSONObject responZjl = crm.customerListPC("13388115577", 1, 2 << 100);
             long customerId = responZjl.getJSONArray("list").getJSONObject(0).getInteger("customer_id");
             crm.customerDeletePC(customerId);
             saveData("今天销售创建客户->今日线索+1");
@@ -1264,7 +1267,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
     //销售接待--今日订车=所有销售【客户管理-我的接待】今日订单之和
 
     @Test(enabled = true)
-    public void TodayDuySum(){
+    public void TodayDuySum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(qt_name, pwd);
@@ -1431,7 +1434,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     String phone1 = list.getJSONObject(i).getString("customer_phone_number");
                     if (phone1.equals(phone)) {
                         String cumId = list.getJSONObject(i).getString("customer_id");
-                        JSONObject la=crm.deleteCustomerX("228", cumId);
+                        JSONObject la = crm.deleteCustomerX("228", cumId);
                     }
                 }
             }
@@ -1536,7 +1539,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     }
                 }
             }
-        } catch (Exception|AssertionError e) {
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         }
     }
@@ -1649,7 +1652,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
     }
 
     //总监本月接待售后车辆=各个顾问本月接待售后车辆之和----现在数据存在问题----郭丽雅
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void monthReceptionCarCompeare() {
         try {
             crm.login(fwzj_name, pwd);
@@ -1659,7 +1662,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
-            int max=0;
+            int max = 0;
             for (int page = 1; page <= pages; page++) {
                 JSONObject responseBsj = crm.userPage(page, 10);
                 JSONArray list = responseBsj.getJSONArray("list");
@@ -1668,7 +1671,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         System.out.println(userLoginName);
                         crm.login(userLoginName, pwd);
-                        int monthReceptionCar1 = crm.afterSale_custList("","","",1,10).getInteger("month_reception_car");
+                        int monthReceptionCar1 = crm.afterSale_custList("", "", "", 1, 10).getInteger("month_reception_car");
                         max += monthReceptionCar1;
                     }
                 }
@@ -1676,13 +1679,13 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             Preconditions.checkArgument(max == monthReceptionCar, "总监本月接待售后车辆为   " + monthReceptionCar + "各个顾问本月接待售后车辆之和  " + max);
         } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("总监本月接待售后车辆=各个顾问本月接待售后车辆之和");
         }
     }
 
     //总监本月完成维修车辆=各个顾问本月完成维修车辆之和----现在数据存在问题----郭丽雅
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void monthRepairedCarCompeare() {
         try {
             crm.login(fwzj_name, pwd);
@@ -1692,26 +1695,26 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
-            int max=0;
+            int max = 0;
             for (int page = 1; page <= pages; page++) {
                 JSONObject responseBsj = crm.userPage(page, 10);
                 JSONArray list = responseBsj.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问")||list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
+                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         System.out.println(userLoginName);
                         crm.login(userLoginName, pwd);
-                        int monthReceptionCar1 = crm.afterSale_custList("","","",1,10).getInteger("month_repaired_car");
-                        System.out.println("----销售顾问接待数量----"+monthReceptionCar1);
+                        int monthReceptionCar1 = crm.afterSale_custList("", "", "", 1, 10).getInteger("month_repaired_car");
+                        System.out.println("----销售顾问接待数量----" + monthReceptionCar1);
                         max += monthReceptionCar1;
                     }
                 }
             }
             System.out.println("总监本月完成维修车辆为   " + monthRepairedCar + "各个顾问本月完成维修车辆之和  " + max);
             Preconditions.checkArgument(max == monthRepairedCar, "总监本月完成维修车辆为   " + monthRepairedCar + "各个顾问本月完成维修车辆之和  " + max);
-        } catch (Exception |AssertionError e) {
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("总监本月完成维修车辆=各个顾问本月完成维修车辆之和");
         }
     }
@@ -1727,7 +1730,7 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
-            int max=0;
+            int max = 0;
             if (pages != 0) {
                 for (int page = 1; page <= pages; page++) {
                     JSONObject responseBsj = crm.userPage(page, 10);
@@ -1737,16 +1740,16 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                             String userLoginName = list.getJSONObject(i).getString("user_login_name");
                             System.out.println(userLoginName);
                             crm.login(userLoginName, pwd);
-                            int monthReceptionCar1 = crm.afterSale_custList("","","",1,10).getInteger("today_reception_car");
+                            int monthReceptionCar1 = crm.afterSale_custList("", "", "", 1, 10).getInteger("today_reception_car");
                             max += monthReceptionCar1;
                         }
                     }
                 }
             }
             Preconditions.checkArgument(max == todayReceptionCar, "总监本月接待售后车辆为   " + todayReceptionCar + "各个顾问本月接待售后车辆之和  " + max);
-        } catch (Exception |AssertionError e) {
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("总监今日接待售后车辆=各个顾问今日接待售后车辆之和");
         }
     }
@@ -1762,153 +1765,153 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
             crm.login(bsj_name, demoPassword);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
-            int max=0;
+            int max = 0;
             for (int page = 1; page <= pages; page++) {
                 JSONObject responseBsj = crm.userPage(page, 10);
                 JSONArray list = responseBsj.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    if ( list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
+                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         System.out.println(userLoginName);
                         crm.login(userLoginName, pwd);
-                        int monthReceptionCar1 = crm.afterSale_custList("","","",1,10).getInteger("today_repaired_car");
+                        int monthReceptionCar1 = crm.afterSale_custList("", "", "", 1, 10).getInteger("today_repaired_car");
                         max += monthReceptionCar1;
                     }
                 }
             }
             Preconditions.checkArgument(max == todayRepairedCar, "总监今日接待维修车辆为   " + todayRepairedCar + "各个顾问今日接待维修车辆之和  " + max);
-        } catch (Exception |AssertionError e) {
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("总监今日完成维修车辆=各个顾问今日完成维修车辆之和");
         }
     }
 
     //我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆
     @Test
-    public void afterSaleustomerCar(){
+    public void afterSaleustomerCar() {
         crm.login(by_name, pwd);
         try {
-            JSONObject response=crm.afterSaleCustomerList("","","",1,10);
-            int totalReceptionarCar=response.getInteger("total_reception_car");
-            int monthReceptionCar=response.getInteger("month_reception_car");
-            int todayNewCar=response.getInteger("today_new_car");
-            Preconditions.checkArgument(totalReceptionarCar >= monthReceptionCar&&monthReceptionCar>=todayNewCar, "\n" + " 我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆异常");
+            JSONObject response = crm.afterSaleCustomerList("", "", "", 1, 10);
+            int totalReceptionarCar = response.getInteger("total_reception_car");
+            int monthReceptionCar = response.getInteger("month_reception_car");
+            int todayNewCar = response.getInteger("today_new_car");
+            Preconditions.checkArgument(totalReceptionarCar >= monthReceptionCar && monthReceptionCar >= todayNewCar, "\n" + " 我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆异常");
         } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆");
         }
     }
 
     //我的客户--全部车辆=列表数车牌号去重
     @Test(enabled = true)
-    public void todayNewCarCarCompare(){
+    public void todayNewCarCarCompare() {
         crm.login(by_name, pwd);
         try {
-            int sum=0;
-            JSONObject response=crm.afterSaleCustomerList("","","",1,10);
-            int totalReceptionCar=response.getInteger("total_reception_car");
-            int pages=response.getInteger("pages");
-            for(int page =1;page<=pages;page++){
-                JSONObject response1=crm.afterSaleCustomerList("","","",page,2<<10);
-                JSONArray list=response1.getJSONArray("list");
-                for(int i=0;i<list.size();i++){
-                    String plateNumber=list.getJSONObject(i).getString("plate_number");
+            int sum = 0;
+            JSONObject response = crm.afterSaleCustomerList("", "", "", 1, 10);
+            int totalReceptionCar = response.getInteger("total_reception_car");
+            int pages = response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONObject response1 = crm.afterSaleCustomerList("", "", "", page, 2 << 10);
+                JSONArray list = response1.getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String plateNumber = list.getJSONObject(i).getString("plate_number");
                     sum++;
-                    for(int j=i+1;j<list.size();j++){
-                        String plateNumber1 =list.getJSONObject(j).getString("plate_number");
-                        if(plateNumber.equals(plateNumber1)){
+                    for (int j = i + 1; j < list.size(); j++) {
+                        String plateNumber1 = list.getJSONObject(j).getString("plate_number");
+                        if (plateNumber.equals(plateNumber1)) {
                             sum--;
                         }
                     }
                 }
             }
-            Preconditions.checkArgument(totalReceptionCar == sum , "\n" + " 我的客户--全部车辆为 "+totalReceptionCar+"列表数车牌号去重 "+sum);
-        } catch (Exception |AssertionError e) {
+            Preconditions.checkArgument(totalReceptionCar == sum, "\n" + " 我的客户--全部车辆为 " + totalReceptionCar + "列表数车牌号去重 " + sum);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户--全部车辆=列表数车牌号去重");
         }
     }
 
     //今日新增车辆=今日筛选，车牌号去重
     @Test(enabled = true)
-    public void todayNewCarCompare(){
+    public void todayNewCarCompare() {
         crm.login(by_name, pwd);
         try {
-            int sum=0;
-            JSONObject response=crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int todayNewCar=response.getInteger("today_new_car");
-            int pages=response.getInteger("pages");
-            for(int page =1;page<=pages;page++){
-                JSONObject response1=crm.afterSaleCustomerList("","","",page,2<<10);
-                JSONArray list=response1.getJSONArray("list");
-                for(int i=0;i<list.size();i++){
-                    String plateNumber=list.getJSONObject(i).getString("plate_number");
+            int sum = 0;
+            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int todayNewCar = response.getInteger("today_new_car");
+            int pages = response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONObject response1 = crm.afterSaleCustomerList("", "", "", page, 2 << 10);
+                JSONArray list = response1.getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String plateNumber = list.getJSONObject(i).getString("plate_number");
                     sum++;
-                    for(int j=i+1;j<list.size();j++){
-                        String plateNumber1 =list.getJSONObject(j).getString("plate_number");
-                        if(plateNumber.equals(plateNumber1)){
+                    for (int j = i + 1; j < list.size(); j++) {
+                        String plateNumber1 = list.getJSONObject(j).getString("plate_number");
+                        if (plateNumber.equals(plateNumber1)) {
                             sum--;
                         }
                     }
                 }
             }
-            Preconditions.checkArgument(todayNewCar == sum , "\n" + " 我的客户--今日新增车辆为 "+todayNewCar+"列表数车牌号去重 "+sum);
-        } catch (Exception |AssertionError e) {
+            Preconditions.checkArgument(todayNewCar == sum, "\n" + " 我的客户--今日新增车辆为 " + todayNewCar + "列表数车牌号去重 " + sum);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-今日新增车辆=今日筛选，车牌号去重");
         }
     }
 
     //APP-我的客户-本月新增车辆<=【我的接待】本月接待售后车辆
     @Test
-    public void monthReceptionCompare(){
+    public void monthReceptionCompare() {
         crm.login(by_name, pwd);
         try {
             //我的客户-本月新增车辆
-            JSONObject  response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int monthReceptionCar=response.getInteger("month_reception_car");
+            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int monthReceptionCar = response.getInteger("month_reception_car");
             //【我的接待】本月接待售后车辆
             JSONObject response1 = crm.afterSale_custList("", "", "", 1, 10);
             int monthReceptionCar1 = response1.getInteger("month_reception_car");
-            Preconditions.checkArgument(monthReceptionCar <= monthReceptionCar1 , "\n" + "【我的接待】本月接待售后车辆"+monthReceptionCar1+"我的客户-本月新增车辆 "+monthReceptionCar);
-        } catch (Exception|AssertionError e) {
+            Preconditions.checkArgument(monthReceptionCar <= monthReceptionCar1, "\n" + "【我的接待】本月接待售后车辆" + monthReceptionCar1 + "我的客户-本月新增车辆 " + monthReceptionCar);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户-本月新增车辆<=【我的接待】本月接待售后车辆");
         }
     }
 
     //APP-我的客户-今日新增车辆<=【我的接待】今日接待售后车辆
     @Test
-    public void todayReceptionCompare(){
+    public void todayReceptionCompare() {
         crm.login(by_name, pwd);
         try {
             //我的客户-本月新增车辆
-            JSONObject  response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int todayNewCar=response.getInteger("today_new_car");
+            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int todayNewCar = response.getInteger("today_new_car");
             //【我的接待】本月接待售后车辆
             JSONObject response1 = crm.afterSale_custList("", "", "", 1, 10);
             int todaycarReceptionCar1 = response1.getInteger("today_reception_car");
-            Preconditions.checkArgument(todayNewCar <= todaycarReceptionCar1 , "\n" + "【我的接待】今日接待售后车辆"+todaycarReceptionCar1+"我的客户-今日新增车辆 "+todayNewCar);
-        } catch (Exception|AssertionError e) {
+            Preconditions.checkArgument(todayNewCar <= todaycarReceptionCar1, "\n" + "【我的接待】今日接待售后车辆" + todaycarReceptionCar1 + "我的客户-今日新增车辆 " + todayNewCar);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户-今日新增车辆<=【我的接待】今日接待售后车辆");
         }
     }
 
     //APP-我的客户-总监的全部车辆=各个顾问的全部车辆之和-----现在计算结果有问题，已提bug--郭丽雅
     @Test(enabled = true)
-    public void comparezXTotal(){
-        crm.login(fwzj_name,pwd);
-        JSONObject  response = null;
+    public void comparezXTotal() {
+        crm.login(fwzj_name, pwd);
+        JSONObject response = null;
         try {
-            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int totalReceptionCar=response.getInteger("total_reception_car");
+            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int totalReceptionCar = response.getInteger("total_reception_car");
             crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
@@ -1919,28 +1922,28 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         crm.login(userLoginName, pwd);
-                        int totalReceptionCarGw =  crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10).getInteger("total_reception_car");
+                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("total_reception_car");
                         max += totalReceptionCarGw;
                     }
                 }
             }
-            System.out.println("总监的全部车辆"+totalReceptionCar+"各个顾问的全部车辆之和"+max);
-            Preconditions.checkArgument(totalReceptionCar==max,"总监的全部车辆"+totalReceptionCar+"各个顾问的全部车辆之和"+max);
-        } catch (Exception |AssertionError e) {
+            System.out.println("总监的全部车辆" + totalReceptionCar + "各个顾问的全部车辆之和" + max);
+            Preconditions.checkArgument(totalReceptionCar == max, "总监的全部车辆" + totalReceptionCar + "各个顾问的全部车辆之和" + max);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户-总监的全部车辆=各个顾问的全部车辆之和");
         }
     }
 
     //APP-我的客户-总监的本月新增=各个顾问的本月新增之和-----现在计算结果有问题，不过结果都是0，现在case稳定运行--郭丽雅
     @Test(enabled = true)
-    public void comparezXMouth(){
-        crm.login(fwzj_name,pwd);
-        JSONObject  response = null;
+    public void comparezXMouth() {
+        crm.login(fwzj_name, pwd);
+        JSONObject response = null;
         try {
-            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int monthReceptionCar=response.getInteger("month_reception_car");
+            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int monthReceptionCar = response.getInteger("month_reception_car");
             crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
@@ -1951,27 +1954,27 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         crm.login(userLoginName, pwd);
-                        int totalReceptionCarGw =  crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10).getInteger("month_reception_car");
+                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("month_reception_car");
                         max += totalReceptionCarGw;
                     }
                 }
             }
-            Preconditions.checkArgument(monthReceptionCar==max,"总监的本月新增车辆"+monthReceptionCar+"各个顾问的全部本月新增车辆之和"+max);
-        } catch (Exception |AssertionError e) {
+            Preconditions.checkArgument(monthReceptionCar == max, "总监的本月新增车辆" + monthReceptionCar + "各个顾问的全部本月新增车辆之和" + max);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户-总监的本月新增=各个顾问的本月新增之和");
         }
     }
 
     //APP-我的客户-总监的今日新增车辆=各个顾问的今日新增之和------现在计算结果有问题，不过结果都是0，现在case稳定运行--郭丽雅
     @Test(enabled = true)
-    public void comparezXToday(){
-        crm.login(fwzj_name,pwd);
-        JSONObject  response = null;
+    public void comparezXToday() {
+        crm.login(fwzj_name, pwd);
+        JSONObject response = null;
         try {
-            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10);
-            int todayNewCar=response.getInteger("today_new_car");
+            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
+            int todayNewCar = response.getInteger("today_new_car");
             crm.login(bsj_name, demoPassword);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
@@ -1982,16 +1985,16 @@ CrmScenarioUtilOnline crm=CrmScenarioUtilOnline.getInstance();
                     if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
                         String userLoginName = list.getJSONObject(i).getString("user_login_name");
                         crm.login(userLoginName, pwd);
-                        int totalReceptionCarGw =  crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()),1,10).getInteger("today_new_car");
+                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("today_new_car");
                         max += totalReceptionCarGw;
                     }
                 }
             }
-            System.out.println("总监的本日新增车辆"+todayNewCar+"各个顾问的本日新增车辆之和"+max);
-            Preconditions.checkArgument(todayNewCar==max,"总监的本日新增车辆"+todayNewCar+"各个顾问的本日新增车辆之和"+max);
-        } catch (Exception |AssertionError e) {
+            System.out.println("总监的本日新增车辆" + todayNewCar + "各个顾问的本日新增车辆之和" + max);
+            Preconditions.checkArgument(todayNewCar == max, "总监的本日新增车辆" + todayNewCar + "各个顾问的本日新增车辆之和" + max);
+        } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
-        }finally{
+        } finally {
             saveData("APP-我的客户-总监的今日新增车辆=各个顾问的今日新增之和");
         }
     }
