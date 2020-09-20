@@ -104,7 +104,28 @@ public class XundianScenarioUtil extends TestCaseCommon {
                         + "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
+    }
+    /*
+  3.6 编辑定检任务
+  */
+    public JSONObject scheduleCheckEdit(long id,String name,String cycle,JSONArray dates,String send_time,String valid_start,String valid_end,String inspector_id,JSONArray shop_list) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"cycle\" :\"" + cycle + "\",\n" +
+                        "\"dates\" :" + dates + ",\n" +
+                        "\"send_time\" :\"" + send_time + "\",\n" +
+                        "\"valid_start\" :\"" + valid_start + "\",\n" +
+                        "\"valid_end\" :\"" + valid_end + "\",\n" +
+                        "\"inspector_id\" :\"" + inspector_id + "\",\n" +
+                        "\"shop_list\" :" + shop_list + "\n"
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res);
     }
 
     /*

@@ -127,55 +127,55 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             saveData("pc门店列表中门店=app巡店中心中门店");
         }
     }
-    /**
-     *
-     * ====================执行清单数=增删改之后的清单数======================
-     * */
-    @Test
-    public void checkListDataComparison() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //获取执行清单列表的数量total
-            int total = xd.checklistPage(page,size).getInteger("total");
-
-            //新增一个执行清单
-            int startM=2;
-            String name= dt.getHHmm(startM)+"qingqing";
-            String desc="是青青创建的哦，为了测试用的";
-            JSONArray  items=new JSONArray();//new一个数组
-            JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
-            jsonObject.put("order",0);
-            jsonObject.put("title","我是青青第一线");
-            jsonObject.put("comment","要怎么检查啊啊");
-            items.add(0,jsonObject);
-            JSONArray  shoplist=new JSONArray();
-              shoplist.add(0,28764);
-              xd.checkListAdd(name,desc,items,shoplist);
-
-            int Newtotal=xd.checklistPage(page,size).getInteger("total");
-            int num = Newtotal - 1;
-            Preconditions.checkArgument(total == num,"执行清单数" + total + "不等于新增后的执行清单数=" + num);
-
-            //删除一个执行清单
-            JSONArray list=xd.checklistPage(page,size).getJSONArray("list");
-            long id=list.getJSONObject(0).getInteger("id");//获取列表中的执行清单Id
-            xd.checkListDelete(id);
-            int NewDeletotal=xd.checklistPage(page,size).getInteger("total");
-            int checklist=NewDeletotal;
-            Preconditions.checkArgument(total == checklist,"执行清单数=" + total + "不等于删除后的执行清单数=" + checklist);
-
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("执行清单数=增删改之后的清单数");
-        }
-    }
+//    /**
+//     *
+//     * ====================执行清单数=增删改之后的清单数======================
+//     * */
+//    @Test
+//    public void checkListDataComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //获取执行清单列表的数量total
+//            int total = xd.checklistPage(page,size).getInteger("total");
+//
+//            //新增一个执行清单
+//            int startM=2;
+//            String name= dt.getHHmm(startM)+"qingqing";
+//            String desc="是青青创建的哦，为了测试用的";
+//            JSONArray  items=new JSONArray();//new一个数组
+//            JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
+//            jsonObject.put("order",0);
+//            jsonObject.put("title","我是青青第一线");
+//            jsonObject.put("comment","要怎么检查啊啊");
+//            items.add(0,jsonObject);
+//            JSONArray  shoplist=new JSONArray();
+//              shoplist.add(0,28764);
+//              xd.checkListAdd(name,desc,items,shoplist);
+//
+//            int Newtotal=xd.checklistPage(page,size).getInteger("total");
+//            int num = Newtotal - 1;
+//            Preconditions.checkArgument(total == num,"执行清单数" + total + "不等于新增后的执行清单数=" + num);
+//
+//            //删除一个执行清单
+//            JSONArray list=xd.checklistPage(page,size).getJSONArray("list");
+//            long id=list.getJSONObject(0).getInteger("id");//获取列表中的执行清单Id
+//            xd.checkListDelete(id);
+//            int NewDeletotal=xd.checklistPage(page,size).getInteger("total");
+//            int checklist=NewDeletotal;
+//            Preconditions.checkArgument(total == checklist,"执行清单数=" + total + "不等于删除后的执行清单数=" + checklist);
+//
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("执行清单数=增删改之后的清单数");
+//        }
+//    }
 
 
     /**

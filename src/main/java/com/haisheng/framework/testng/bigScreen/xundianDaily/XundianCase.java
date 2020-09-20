@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -23,6 +24,7 @@ import java.lang.reflect.Method;
 public class XundianCase extends TestCaseCommon implements TestCaseStd {
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
+    String test = "uid_ef6d2de5";
     int page = 1;
     int size =50;
 
@@ -77,6 +79,125 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+    }
+    /**
+     *
+     * ====================定检规则======================
+     * */
+    @Test
+    public void checkListAdd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新增一个执行清单
+            int startM=2;
+            String name= dt.getHHmm(startM)+"qingqing";
+            String desc="是青青创建的哦，为了测试用的";
+            JSONArray  items=new JSONArray();//new一个数组
+            JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
+            jsonObject.put("order",0);
+            jsonObject.put("title","我是青青第一线");
+            jsonObject.put("comment","要怎么检查啊啊");
+            items.add(0,jsonObject);
+            JSONArray  shoplist=new JSONArray();
+              shoplist.add(0,28764);
+              JSONObject res = xd.checkListAdd(name,desc,items,shoplist);
+              int code_add = res.getInteger("code");
+
+
+              //获取执行清单列表，取第一个执行清单的id值
+             JSONArray list = xd.checklistPage(page,size).getJSONArray("list");
+             long id = list.getJSONObject(0).getInteger("id");
+
+
+              //编辑一个执行清单
+            String name_one= dt.getHHmm(startM)+"qingqingb";
+            JSONObject res_one = xd.checkListEdit((long) id,name_one,desc,items,shoplist);
+            int code_edit = res_one.getInteger("code");
+
+
+            //删除一个执行清单
+            JSONObject res_delete = xd.checkListDelete(id);
+            int code_delete = res_delete.getInteger("code");
+
+
+
+            Preconditions.checkArgument(code_add == 1000,"新建执行清单失败，code="+code_add);
+            Preconditions.checkArgument(!StringUtils.isEmpty(list) ,"执行清单列表获取异常");
+            Preconditions.checkArgument(code_edit == 1000,"编辑执行清单失败，code="+code_edit);
+            Preconditions.checkArgument(code_delete == 1000,"删除执行清单失败，code="+code_delete);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("PC端巡检配置新建定检任务");
+        }
+
+    }
+
+    /**
+     *
+     * ====================定检任务======================
+     * */
+    @Test
+    public void scheduleRuleAdd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新建定检任务
+            int startM=1;
+            String names= "qingqing" + dt.getHHmm(startM);
+            String cycle="WEEK";
+            JSONArray  jal=new JSONArray();
+            jal.add(0,"MON");
+            jal.add(0,"TUES");
+            jal.add(0,"WED");
+            jal.add(0,"THUR");
+            jal.add(0,"FRI");
+            jal.add(0,"SAT");
+            jal.add(0,"SUN");
+            String send_time=dt.getHHmm(0);
+            String valid_start=dt.getHistoryDate(0); ;
+            String valid_end=dt.getHistoryDate(startM); ;
+            JSONArray  shoplist=new JSONArray();
+            shoplist.add(0,28760);
+            JSONObject res = xd.scheduleCheckAdd(names,cycle,jal,send_time,valid_start,valid_end,test,shoplist);
+            int code_add=res.getInteger("code");
+
+            //获取定检任务列表，取第一个执行清单的id值
+            JSONArray list = xd.scheduleCheckPage(page,size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+
+            //编辑一个定检任务
+            String name_one= dt.getHHmm(startM)+"qingqinga";
+            JSONObject res_one = xd.scheduleCheckEdit(id,name_one,cycle,jal,send_time,valid_start,valid_end,test,shoplist);
+            int code_edit = res_one.getInteger("code");
+
+
+           //删除一个定检任务
+            JSONObject res_delete = xd.scheduleCheckDelete(id);
+            int code_delete = res_delete.getInteger("code");
+
+
+            Preconditions.checkArgument(code_add == 1000,"新建定检任务失败，code="+code_add);
+            Preconditions.checkArgument(!StringUtils.isEmpty(list) ,"定检任务列表获取异常");
+            Preconditions.checkArgument(code_edit == 1000,"编辑定检任务失败，code="+code_edit);
+            Preconditions.checkArgument(code_delete == 1000,"删除定检任务失败，code="+code_delete);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("PC端巡检配置新建定检任务");
+        }
+
     }
 
     /**

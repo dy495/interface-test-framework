@@ -1102,7 +1102,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * ====================客户详情累计交易的次数==留痕事件中门店下单的次数/累计到店的数据==留痕事件中进店次数+门店下单的次数========================
+     * ====================客户详情累计交易的次数==留痕事件中门店下单的次数|||累计到店的数据==留痕事件中进店次数+门店下单的次数========================
      */
     @Test
     public void custInfoData() {
@@ -1120,6 +1120,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total_sum = 0;
             int deal_times = 0;
             Integer deal = 0;
+            int enterDealAll_sum = 0;
             String customer_id = "";
             String face_url = "";
             String member_type = "";
@@ -1134,6 +1135,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     if(member_id == null){
                         member_id = "";
                     }
+                    Preconditions.checkArgument(!StringUtils.isEmpty(member_id), "人物ID为："+customer_id +"的全渠道会员的会员ID为空"+member_id +"。  报错门店的shopId=" + shop_id);
+                }else if(member_type.equals("CUSTOMER")){
+                    member_id = list1.getJSONObject(j).getString("member_id");
+                    if(member_id == null){
+                        member_id = "";
+                    }else {
+                        Preconditions.checkArgument(StringUtils.isEmpty(member_id), "人物ID为："+customer_id +"的会员ID不为空，会员ID为："+member_id +"。  报错门店的shopId=" + shop_id);
+                    }
                 }
 
                 total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
@@ -1145,20 +1154,24 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 for (int l = 1; l < t; l++){
                     JSONObject res = Md.memberDetail(shop_id, customer_id, l, size);
                     enter_total = res.getInteger("total_visit_times");//累计到店次数
-                    //或者每个人物的脸部图片地址
-                    face_url = res.getString("face_url");
-                    if(face_url==null){
-                        face_url="";
-
-                    }
                     if(enter_total == null){
                         enter_total=0;
                     }
-
                     deal = res.getInteger("total_deal_times");//获取累计交易的次数
                     if(deal == null){
                         deal=0;
                     }
+                    //交易次数+进店次数
+                    enterDealAll_sum = enter_total + deal;
+                    //或者每个人物的脸部图片地址
+                    face_url = res.getString("face_url");
+                    if(face_url==null){
+                        face_url="";
+                    }
+
+                    Preconditions.checkArgument(!StringUtils.isEmpty(face_url), "人物ID为:"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
+                    Preconditions.checkArgument(enterDealAll_sum == total_sum, "人物ID为："+customer_id +"的【累计进店次数】+【累计交易次数】=" + enterDealAll_sum +  "不等于留痕事件总条数=" + total_sum + "。报错门店的shopId=" + shop_id);
+
 
                     //获取事件中门店下单的次数
                     JSONArray thingsList = res.getJSONArray("list");
@@ -1171,9 +1184,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                             if (mark.equals("门店下单")) {
                                 deal_times += 1;
                             }
+                            Preconditions.checkArgument(deal_times == deal, "人物ID为:"+customer_id+"累计交易次数：" + deal + "不等于留痕事件中门店下单次数" + deal_times + "。报错门店的shopId=" + shop_id);
                         }
                     }
-
+//                    Preconditions.checkArgument(listResult, "人物ID为:"+customer_id+"人物详情的留痕事件为空 " +"但是该人物的进店次数为："+enter_total+"交易次数为："+deal+"。报错门店的shopId=" + shop_id);
 
                 }
 
@@ -1208,11 +1222,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                }
 //            }
 
-            Preconditions.checkArgument(listResult, "人物详情的留痕记录数据为空,  " + "人物ID="+customer_id+"。  该人物的进店次数为"+enter_total+"。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument(enter_total.equals(total_sum), "累计进店次数：" + enter_total + "。人物ID="+customer_id+ "留痕事件总条数" + total_sum + "。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument(deal_times == deal, "累计交易次数：" + deal + "留痕事件中门店下单次数" + deal_times + "。人物ID="+customer_id+ "。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument(!StringUtils.isEmpty(face_url), "人物ID:"+customer_id+"的半身照为空" +"。报错门店的shopId=" + shop_id);
-            Preconditions.checkArgument(!StringUtils.isEmpty(member_id), "全渠道会员的会员ID为空"+customer_id +"。报错门店的shopId=" + shop_id);
+
+
+
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1220,7 +1233,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("客户详情累计交易的次数==留痕事件中门店下单的次数/累计到店的数据==留痕事件中进店次数+门店下单的次数");
+            saveData("客户详情累计交易的次数==留痕事件中门店下单的次数||累计到店的数据==留痕事件中进店次数+门店下单的次数||门店客户的照片不能为空||全渠道会员一定有会员ID||顾客没有会员ID");
         }
 
     }
