@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -204,29 +205,24 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
+        EnumCarModel carModel = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
         String name = customerInfo.getName();
-        String phone = customerInfo.getPhone();
         String remark = customerInfo.getRemark();
-        int customerLevel = EnumCustomerLevel.B.getId();
+        String customerLevel = String.valueOf(EnumCustomerLevel.B.getId());
         String str = "!@#$%^&*()12345678历史记录计算机asdfghj";
         try {
-            deleteCustomer(customerInfo.getPhone());
             //汉字，10字之内
-            JSONObject response = crm.createLine(name, 6, phone, customerLevel, remark);
+            JSONObject response = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("成功"), "客户姓名为汉字，长度1-10个字内创建线索失败");
-            deleteCustomer(customerInfo.getPhone());
             //汉字，1字
-            JSONObject response1 = crm.createLine("王", 6, phone, customerLevel, remark);
+            JSONObject response1 = crm.customerCreate("王", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
             Preconditions.checkArgument(response1.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(customerInfo.getPhone());
             //汉字，10个字
-            JSONObject response2 = crm.createLine("语言是一种通用的面向", 6, phone, customerLevel, remark);
+            JSONObject response2 = crm.customerCreate("我的名字十个字不信你数", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(customerInfo.getPhone());
             //备注包含中英文、汉字、符号、数字
-            JSONObject response3 = crm.createLine("望京", 6, phone, customerLevel, str);
+            JSONObject response3 = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
-            deleteCustomer(customerInfo.getPhone());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -241,13 +237,13 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.afterSaleEnumInfo();
             JSONArray carTypes = response.getJSONArray("car_types");
             for (int i = 0; i < carTypes.size(); i++) {
-                String carTypeName = carTypes.getJSONObject(i).getString("car_type_name");
-                int carType = carTypes.getJSONObject(i).getInteger("car_type");
+                String carModelName = carTypes.getJSONObject(i).getString("car_model_name");
+                int carModel = carTypes.getJSONObject(i).getInteger("car_model");
                 JSONArray carList = crm.carList().getJSONArray("list");
                 for (int j = 0; j < carList.size(); j++) {
-                    if (carList.getJSONObject(j).getInteger("id") == carType) {
+                    if (carList.getJSONObject(j).getInteger("id") == carModel) {
                         String carTypeName1 = carList.getJSONObject(j).getString("car_type_name");
-                        Preconditions.checkArgument(carTypeName.equals(carTypeName1), "创建线索中意向车型与商品管理中车辆不一致");
+                        Preconditions.checkArgument(carModelName.equals(carTypeName1), "创建线索中意向车型与商品管理中车辆不一致");
                     }
                 }
             }
@@ -279,27 +275,26 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "创建线索，不填写必填项")
     public void myCustomer_function_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        String phone = EnumCustomerInfo.CUSTOMER_1.getPhone();
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
-        int customerLevel = EnumCustomerLevel.B.getId();
+        EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+        String customerLevel = String.valueOf(EnumCustomerLevel.B.getId());
         try {
-            deleteCustomer(phone);
+            String phone = getDistinctPhone();
             //不填客户名称
-            JSONObject response = crm.createLine("", 6, phone, customerLevel, remark);
+            JSONObject response = crm.customerCreate("", customerLevel, phone, car.getModelId(), car.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("顾客姓名不能为空"), "顾客姓名为空也可创建成功");
             //不填意向车型
-            JSONObject response1 = crm.createLine("望京", 0, phone, customerLevel, remark);
-            Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
+//            JSONObject response1 = crm.customerCreate("望京", customerLevel, phone, "", "", remark);
+//            Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
             //不填电话
-            JSONObject response2 = crm.createLine("望京", 1, "", customerLevel, remark);
+            JSONObject response2 = crm.customerCreate("望京", customerLevel, "", car.getModelId(), car.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("顾客手机号不能为空"), "顾客手机号为空也可创建成功");
             //不填客户级别
-            JSONObject response3 = crm.createLine("望京", 1, phone, 0, remark);
+            JSONObject response3 = crm.customerCreate("望京", "", phone, car.getModelId(), car.getStyleId(), remark);
             Preconditions.checkArgument(response3.getString("message").equals("顾客等级不能为空"), "顾客等级为空也可创建成功");
             //不填备注
-            JSONObject response4 = crm.createLine("望京", 1, phone, customerLevel, "");
+            JSONObject response4 = crm.customerCreate("望京", customerLevel, phone, car.getModelId(), car.getStyleId(), "");
             Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
-            deleteCustomer(phone);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -311,13 +306,13 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
-        String phone = EnumCustomerInfo.CUSTOMER_1.getPhone();
+        EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         String remarks = EnumCustomerInfo.CUSTOMER_2.getRemark();
-        int customerLevel = EnumCustomerLevel.B.getId();
+        String customerLevel = String.valueOf(EnumCustomerLevel.B.getId());
         try {
+            String phone = getDistinctPhone();
             String customerPhone = null;
-            CommonUtil.login(zjl);
             //获取一个存在的电话号码
             JSONArray list = crm.customerPage(10, 1, "", "", "").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -327,12 +322,11 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //创建存在的电话号
-            JSONObject response = crm.createLine(name, 6, customerPhone, customerLevel, remark);
-            Preconditions.checkArgument(response.getString("message").equals("手机号码重复"), "手机号码重复也可创建成功");
+            JSONObject response = crm.customerCreate(name, customerLevel, customerPhone, car.getModelId(), car.getStyleId(), remark);
+            Preconditions.checkArgument(response.getString("message").equals("当前手机号已被使用！请重新输入"), "手机号码重复也可创建成功");
             //备注长度201
-            deleteCustomer(phone);
-            JSONObject response4 = crm.createLine(name, 1, phone, customerLevel, remarks);
-            Preconditions.checkArgument(response4.getString("message").equals("备注信息20-200字之间"), "备注信息超过200字也可创建成功");
+            JSONObject response1 = crm.customerCreate(name, customerLevel, phone, car.getModelId(), car.getStyleId(), remarks);
+            Preconditions.checkArgument(response1.getString("message").equals("备注信息20-200字之间"), "备注信息超过200字也可创建成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -527,6 +521,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description: 有垃圾数据-回访电话号非电话格式
+     */
     @Test(description = "回访类型:成交，创建接待时“订车”标记为是的客户")
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -584,7 +581,10 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "查看,有截图,show_pic字段为true")
+    /**
+     * @description: 可能逻辑有改动，暂时关闭修改
+     */
+    @Test(description = "查看,有截图,show_pic字段为true", enabled = false)
     public void myReturnVisit_function_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -623,7 +623,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     if (!list.getJSONObject(j).getBoolean("show_pic")) {
                         String taskStatusName = list.getJSONObject(j).getString("task_status_name");
                         CommonUtil.valueView(taskStatusName);
-                        Preconditions.checkArgument(taskStatusName.equals("未完成"), "五截图的回访任务taskStatusName不为未完成");
+                        Preconditions.checkArgument(taskStatusName.equals("未完成"), "无截图的回访任务taskStatusName不为未完成");
                         CommonUtil.log("分割线");
                     }
                 }
@@ -1022,20 +1022,34 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
+//    /**
+//     * 删除客户
+//     *
+//     * @param phone 客户电话号
+//     */
+//    private void deleteCustomer(String phone) {
+//        CommonUtil.login(zjl);
+//        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
+//        if (!response.getJSONArray("list").isEmpty()) {
+//            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
+//            crm.customerDelete(customerId);
+//        } else {
+//            CommonUtil.valueView(response.getString("message"));
+//        }
+//    }
+
+
     /**
-     * 删除客户
+     * 获取非重复电话号
      *
-     * @param phone 客户电话号
+     * @return phone
      */
-    private void deleteCustomer(String phone) {
+    private String getDistinctPhone() {
         CommonUtil.login(zjl);
-        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-        if (!response.getJSONArray("list").isEmpty()) {
-            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-            crm.customerDelete(customerId);
-        } else {
-            CommonUtil.valueView(response.getString("message"));
-        }
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 
     @Test(enabled = false)

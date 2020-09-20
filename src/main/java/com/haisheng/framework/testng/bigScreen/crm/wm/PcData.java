@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
@@ -26,6 +27,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
+    private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
 
     @BeforeClass
     @Override
@@ -196,7 +198,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData("pc端将一个已存在客户的客户等级设置为G,公海列表数+1");
+            saveData("pc端将一个已存在客户的客户等级设置为G,公海列表数+1");
         }
     }
 
@@ -204,24 +206,15 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
-        String phone = EnumCustomerInfo.CUSTOMER_1.getPhone();
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         try {
-            //公海客户数量
-            CommonUtil.login(zjl);
+            String phone = getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            JSONObject response = crm.createLine(name, 6, phone, 8, remark);
-            if (response.getString("message").equals("手机号码重复")) {
-                //删除客户
-                deleteCustomer(phone);
-                //再创建线索
-                crm.createLine(name, 6, phone, EnumCustomerLevel.G.getId(), remark);
-            }
-            CommonUtil.login(zjl);
+            //创建线索
+            crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
-            deleteCustomer(phone);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -391,14 +384,25 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
     /**
-     * 删除客户
+     * 获取非重复电话号
      *
-     * @param phone 电话号
+     * @return phone
      */
-    private void deleteCustomer(String phone) {
+    private String getDistinctPhone() {
         CommonUtil.login(zjl);
-        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-        int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-        crm.customerDelete(customerId);
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
+    }
+
+    @Test(enabled = false)
+    public void test() throws Exception {
+        String name = "huawei";
+        String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
+        String phone = getDistinctPhone();
+        //创建线索
+        crm.customerCreate(name, "2", phone, car.getModelId(), car.getStyleId(), remark);
+//        CommonUtil.uploadShopCarPlate("冀A151381", 0);
     }
 }

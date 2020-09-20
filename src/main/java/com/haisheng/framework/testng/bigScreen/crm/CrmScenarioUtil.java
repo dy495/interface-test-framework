@@ -3675,6 +3675,38 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
+    /**
+     * 创建线索
+     *
+     * @param intentionCarModel 车型编号
+     * @param intentionCarStyle 车系编号
+     */
+    public JSONObject customerCreate(String customerName, String customerLevel, String customerPhone, String intentionCarModel, String intentionCarStyle, String remark) throws Exception {
+        String url = "/porsche/app/customer/create";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerName)) {
+            object.put("customer_name", customerName);
+        }
+        if (!StringUtils.isEmpty(customerPhone)) {
+            object.put("customer_phone", customerPhone);
+        }
+        if (!StringUtils.isEmpty(customerLevel)) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!StringUtils.isEmpty(intentionCarModel)) {
+            object.put("intention_car_model", intentionCarModel);
+        }
+        if (!StringUtils.isEmpty(intentionCarStyle)) {
+            object.put("intention_car_style", intentionCarStyle);
+        }
+        if (!StringUtils.isEmpty(remark)) {
+            object.put("remark", remark);
+        }
+        String request = JSON.toJSONString(object);
+        String result = httpPost(url, request, IpPort);
+        return JSON.parseObject(result);
+    }
+
     public JSONObject deliverCarList(int page, int size) throws Exception {
         String url = "/porsche/daily-work/deliver-car/list";
         JSONObject json = new JSONObject();
@@ -3936,7 +3968,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
      *
      * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
      */
-    public JSONObject saleReception(String receptionType,JSONArray customer,JSONArray newCustomer) {
+    public JSONObject saleReception(String receptionType, JSONArray customer, JSONArray newCustomer) {
         String url = "/porsche/app/sale-reception/reception";
         JSONObject object = new JSONObject();
         object.put("reception_type", receptionType);
@@ -4835,19 +4867,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
         json.put("customer_phone", customer_phone);
-        if (!plate_number.equals("")){
+        if (!plate_number.equals("")) {
             json.put("plate_number", plate_number);
         }
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //创建线索不校验
     public JSONObject dccCreateNotChk(String customer_name, String customer_phone, String plate_number) throws Exception {
         String url = "/porsche/app/customer/dcc-create";
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
         json.put("customer_phone", customer_phone);
-        if (!plate_number.equals("")){
+        if (!plate_number.equals("")) {
             json.put("plate_number", plate_number);
         }
         String result = httpPost(url, json.toJSONString(), IpPort);
@@ -4937,10 +4970,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ADD_CAR")
-    public  Object[][] add_car() {
+    public Object[][] add_car() {
         return new String[][]{
-                {"ZDH"+(int)((Math.random()*9+1)*10),"苏ZDH"+(int)((Math.random()*9+1)*100),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号7位，车架号17位
-                {"ZDH20WEIAAAAA"+(int)((Math.random()*9+1)*1000000),"苏ZDH"+(int)((Math.random()*9+1)*1000),"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000)}, //名字5位，车牌号8位，车架号17位
+                {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
+                {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
 
 
         };
@@ -4984,18 +5017,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
     @DataProvider(name = "DCCCREAT")
     public static Object[][] dcc_creat() {
         return new String[][]{
-                {"ZDH","139000"+(int)((Math.random()*9+1)*10000),""}, //名字3位，手机号，不填车牌号
-                {"姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位"+(int)((Math.random()*9+1)*10000),"139000"+(int)((Math.random()*9+1)*10000),""}, //名字50位，手机号，不填车牌号
-                {"!@#$%^&*()}{:?><~!","139000"+(int)((Math.random()*9+1)*10000),"苏ZDH"+(int)((Math.random()*9+1)*100)}, //名字符号，手机号，车牌号7位
-                {"啊","139000"+(int)((Math.random()*9+1)*10000),"苏ZDH"+(int)((Math.random()*9+1)*1000)}, //名字1位，手机号，车牌号8位
+                {"ZDH", "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字3位，手机号，不填车牌号
+                {"姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位" + (int) ((Math.random() * 9 + 1) * 10000), "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字50位，手机号，不填车牌号
+                {"!@#$%^&*()}{:?><~!", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100)}, //名字符号，手机号，车牌号7位
+                {"啊", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000)}, //名字1位，手机号，车牌号8位
 
 
         };
     }
-
-
-
-
 
 
 }

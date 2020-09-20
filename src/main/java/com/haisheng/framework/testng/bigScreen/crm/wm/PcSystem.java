@@ -195,7 +195,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
             String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
             String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
-//            String message10 = crm.goodsManagerAddCar(appearancePic, bigPic, "", carIntroduce, carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
             Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
             Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
             Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
@@ -206,12 +205,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
             Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
             Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
-//            Preconditions.checkArgument(message10.equals("成功"), "所有必填项全正确填写，车型创建失败");
-            JSONObject result = crm.carList();
-            int size = result.getJSONArray("list").size() - 1;
-            String carName = CommonUtil.getStrField(result, size, "car_type_name");
-            int id = carName.equals(carTypeName) ? CommonUtil.getIntField(result, size, "id") : 0;
-            crm.carDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -332,7 +325,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "站内消息配置人群为销售，小程序销售可见消息，售后不可见消息")
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -377,7 +370,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "站内消息配置人群为销售，小程序销售不可见消息，售后可见消息")
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -416,7 +409,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息")
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -455,7 +448,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(description = "站内消息内容可包括中英文，符号，数字，空格")
     public void stationMessage_9() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "Chinese&&English is No.1 in use!";
@@ -473,7 +466,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "pc创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页")
     public void stationMessage_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -501,7 +494,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "pc创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页")
     public void stationMessage_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -529,7 +522,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test()
+    @Test(description = "pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页")
     public void stationMessage_12() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";

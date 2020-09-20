@@ -1147,21 +1147,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         return customerId;
     }
 
-//    /**
-//     * 删除客户
-//     *
-//     * @param phone 客户电话号
-//     */
-//    private void deleteCustomer(String phone) {
-//        CommonUtil.login(zjl);
-//        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-//        if (!response.getJSONArray("list").isEmpty()) {
-//            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-//            crm.customerDelete(customerId);
-//        } else {
-//            CommonUtil.valueView(response.getString("message"));
-//        }
-//    }
 
     /**
      * 删除
