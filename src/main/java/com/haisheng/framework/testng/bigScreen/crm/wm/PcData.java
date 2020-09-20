@@ -395,14 +395,4 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
         return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
-
-    @Test(enabled = false)
-    public void test() throws Exception {
-        String name = "huawei";
-        String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
-        String phone = getDistinctPhone();
-        //创建线索
-        crm.customerCreate(name, "2", phone, car.getModelId(), car.getStyleId(), remark);
-//        CommonUtil.uploadShopCarPlate("冀A151381", 0);
-    }
 }

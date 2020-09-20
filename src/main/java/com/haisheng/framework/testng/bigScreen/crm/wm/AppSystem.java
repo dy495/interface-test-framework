@@ -1022,23 +1022,6 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
-//    /**
-//     * 删除客户
-//     *
-//     * @param phone 客户电话号
-//     */
-//    private void deleteCustomer(String phone) {
-//        CommonUtil.login(zjl);
-//        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-//        if (!response.getJSONArray("list").isEmpty()) {
-//            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-//            crm.customerDelete(customerId);
-//        } else {
-//            CommonUtil.valueView(response.getString("message"));
-//        }
-//    }
-
-
     /**
      * 获取非重复电话号
      *
@@ -1050,21 +1033,5 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
         return a == 0 && b == 0 ? phone : getDistinctPhone();
-    }
-
-    @Test(enabled = false)
-    public void test() throws Exception {
-        int total = crm.userPage(1, 10).getInteger("total");
-        int s = CommonUtil.pageTurning(total, 100);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.userPage(i, 100).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("user_name").contains("1600")
-                        && list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
-                    String uid = list.getJSONObject(j).getString("uid_1318c0d3");
-                    crm.userDel(uid);
-                }
-            }
-        }
     }
 }
