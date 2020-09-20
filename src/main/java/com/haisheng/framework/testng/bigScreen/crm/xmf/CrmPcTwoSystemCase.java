@@ -1889,7 +1889,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :导入，正常导入，随即删除导入成功的客户
       * @date :2020/8/17 21:04
       **/
-     @Test
+//     @Test
      public void importCustomer(){
          logger.logCaseStart(caseResult.getCaseName());
          try{

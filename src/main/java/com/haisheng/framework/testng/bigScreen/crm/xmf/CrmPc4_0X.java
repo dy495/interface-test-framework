@@ -179,29 +179,6 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             saveData("禁用车型，小程序车型列表-1");
         }
     }
-    /**
-     * @description :新建Dcc线索，Dcc列表总数+1
-     * @date :2020/9/11 21:17
-     **/
 
-    @Test
-    public void CreateDcc(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-           int total=crm.dcclist(1,100).getInteger("total");
-           String name="dcc"+dt.getHHmm(0);
-            Random random = new Random();
-            String phone = "177" + (random.nextInt(89999999) + 10000000);
-           String plateNum="京K8S123";
-           crm.dccCreate(name,phone,plateNum);
-            int total2=crm.dcclist(1,100).getInteger("total");
-            Preconditions.checkArgument(total2-total==1,"新建Dcc线索，Dcc列表总数+1");
-        }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            crm.login(pp.zongjingli,pp.adminpassword);
-            saveData("新建Dcc线索，Dcc列表总数+1");
-        }
-    }
 
 }

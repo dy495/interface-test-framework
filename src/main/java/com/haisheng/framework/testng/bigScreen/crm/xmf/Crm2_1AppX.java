@@ -217,22 +217,31 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :试驾   ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testderver(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+
+//            String time=apply_time1.toString();
             //销售总监今日试驾总数
             crm.login(pp.xiaoshouZongjian,pp.adminpassword);
             JSONObject dataTotal=crm.driverTotal();
             int today_number=dataTotal.getInteger("today_test_drive_total");
             int totalNum=dataTotal.getInteger("test_drive_total");
 
-            JSONObject jsonObject=pf.creatCust();  //创建新客
-            String customer_name=jsonObject.getString("name");
-            String phone=jsonObject.getString("phone");
-            Long reception_id=jsonObject.getLong("reception_id");
-            Long customer_id=jsonObject.getLong("customerId");
-            String userLoginName=jsonObject.getString("userLoginName");
+//            JSONObject jsonObject=pf.creatCust();  //创建新客
+//            String customer_name=jsonObject.getString("name");
+//            String phone=jsonObject.getString("phone");
+//            Long reception_id=jsonObject.getLong("reception_id");
+//            Long customer_id=jsonObject.getLong("customerId");
+//            String userLoginName=jsonObject.getString("userLoginName");
+
+            crm.login("0818xsgw",pp.adminpassword);
+            String customer_name="auto";
+            String phone="17834873689";
+            Long reception_id=3382L;
+            Long customer_id=37381L;
+            String userLoginName="销售顾问xia";
             pf.creatDriver(reception_id,customer_id,customer_name,phone,1);  //新客试驾
 
             JSONObject dataTotal2=crm.driverTotal();
@@ -805,6 +814,31 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("试驾 今日数=列表电话去重数");
+        }
+    }
+
+    /**
+     * @description :新建Dcc线索，Dcc列表总数+1
+     * @date :2020/9/11 21:17
+     **/
+
+//    @Test
+    public void CreateDcc(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            int total=crm.dcclist(1,100).getInteger("total");
+            String name="dcc"+dt.getHHmm(0);
+            Random random = new Random();
+            String phone = "177" + (random.nextInt(89999999) + 10000000);
+            String plateNum="京K8S123";
+            crm.dccCreate(name,phone,plateNum);
+            int total2=crm.dcclist(1,100).getInteger("total");
+            Preconditions.checkArgument(total2-total==1,"新建Dcc线索，Dcc列表总数+1");
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            crm.login(pp.zongjingli,pp.adminpassword);
+            saveData("新建Dcc线索，Dcc列表总数+1");
         }
     }
 

@@ -103,8 +103,32 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
         //String carNum = "苏ZDH197";    //试驾车未注销
+
         //String carNum = "京A1ER19";    //试驾车已注销
-        String carNum = "京Q11115";
+        String carNum = "京A1DF91";    //试驾车已注销
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与日常环境的设置一致，不要修改
+        String deviceId = "7709867521115136";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{\"plate_num\":\"" + carNum +"\"," +
+                "\"plate_pic\":\"@0\"," +
+                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "}";
+        try {
+            for(int i=0;i<10;i++){
+            crm.carUploadToDaily(router, deviceId, resource, json);}
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("日常入场车牌号上传");
+        }
+    }
+
+    public void uploadEnterShopCarPlatex(String carNum) {
 
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
@@ -117,13 +141,20 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 "\"time\":\""+System.currentTimeMillis()+"\"" +
                 "}";
         try {
-            crm.carUploadToDaily(router, deviceId, resource, json);
+                crm.carUploadToDaily(router, deviceId, resource, json);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("日常入场车牌号上传");
+        }
+    }
+    @Test
+    public void heiping(){
+        for(int i=0;i<10;i++){
+            String carNum = "京A1DF9"+i;    //试驾车已注销
+            uploadEnterShopCarPlatex(carNum);
         }
     }
 

@@ -6,7 +6,9 @@ import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import org.jooq.True;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,8 +17,9 @@ public class PackFunction {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file=new FileUtil();
+    Random random = new Random();
+
     public String genPhoneNum() {
-        Random random = new Random();
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
@@ -47,7 +50,7 @@ public class PackFunction {
 
             String activity_start = dt.getHistoryDate(1);
             String activity_end = dt.getHistoryDate(4);
-            Integer role_id = 13;
+            Integer role_id = 16;  //13 销售  15定损（原维修顾问）     16服务
             Boolean is_create_poster = true;//是否生成海报
             int task_customer_num=5;
             //新建文章并返回文章/活动id
@@ -93,8 +96,16 @@ public class PackFunction {
                 userLoginName = obj.getString("user_login_name");
             }
         }
+        boolean isDes= true;
+        String nameQt="auto";
+        JSONObject list=new JSONObject();
+        JSONArray ll=new JSONArray();
+        list.put("customer_name",nameQt);
+        list.put("is_decision",isDes);
+        ll.add(0,list);
+
         //创建接待
-        crm.creatReception("FIRST_VISIT");
+        crm.creatReception2("FIRST_VISIT",ll);
         crm.login(userLoginName, pp.adminpassword);
 
         JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
@@ -158,26 +169,28 @@ public class PackFunction {
         String electronicContractUrl = file.texFile(pp.filePath);
         String sign_date=dt.getHistoryDate(0);
         String sign_time=dt.getHHmm(0);
-        String call="MEN";
-        String apply_time="";    //TODO：参数待定
-        Long test_drive_car=1L;
-        crm.driverTimelist(37L);
-        int driverid = crm.driveradd3(receptionId,customer_id,name,phone,2L,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call,apply_time,test_drive_car).getInteger("id");
+        String call = "WOMEN";
+        Long test_drive_car=37L;   //试驾车id
+        JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
+        String apply_time = timelist.getString(0);
+
+//        Long apply_time = dt.getHistoryDateTimestamp(1);
+        int driverid = crm.driveradd4(receptionId,customer_id,name,phone,2L,model,country,city,address,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call,apply_time.toString(),test_drive_car).getInteger("id");
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
         crm.driverAudit(driverid,audit_status);
         //最后销售要再登陆一次
-
     }
 
     //订车+交车封装  copy lxq debug ok
     public void creatDeliver(Long reception_id,Long customer_id,String customer_name,String deliver_car_time, Boolean accept_show) throws Exception {
         //订车
-        crm.orderCar(customer_id);
+//        crm.orderCar(customer_id);
+        String vehicle_chassis_code="ASD123456"+(random.nextInt(89999999) + 10000000);
+        crm.addOrderCar(customer_id.toString(),reception_id.toString(),vehicle_chassis_code);
         //创建交车
-        Long model = 3L;
+        Long model = 36L;
         String path = file.texFile(pp.filePath);
-        String vehicle_chassis_code="";  //TODO:底盘号
         crm.deliverAdd(reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path,vehicle_chassis_code);
     }
     //老客试驾完成接待---for评价
