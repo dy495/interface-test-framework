@@ -382,47 +382,47 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
-    /**
-     *
-     * ====================巡店执行清单==执行清单中的总项数======================
-     * */
-    @Test
-    public void  CheckListNoDataComparison() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //获取执行清单的id
-            JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-            JSONArray items= xd.checkListDetail(id).getJSONArray("items");
-            String name = xd.checkListDetail(id).getString("name");
-            //执行清单中的总项数
-            int size5 = items.size();
-            long shop_id = 4116;
-            String check_type = "REMOTE";
-            Integer reset = 1;
-            Long task_id = null;
-
-            //获取巡店某个执行清单的项数
-            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
-            int total = 0;
-            for(int i = 0;i < checklists.size();i++){
-                String names = checklists.getJSONObject(i).getString("name");//遍历每一个name在下一步去做比较，如果name一样，则获取这个Name地total
-                if (names.equals(name)){
-                    total = checklists.getJSONObject(i).getInteger("total");
-                }
-            }
-
-            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("巡店执行清单==执行清单中的总项数");
-        }
-    }
+//    /**
+//     *
+//     * ====================巡店执行清单==执行清单中的总项数======================
+//     * */
+//    @Test
+//    public void  CheckListNoDataComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //获取执行清单的id
+//            JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
+//            long id = list.getJSONObject(0).getInteger("id");
+//            JSONArray items= xd.checkListDetail(id).getJSONArray("items");
+//            String name = xd.checkListDetail(id).getString("name");
+//            //执行清单中的总项数
+//            int size5 = items.size();
+//            long shop_id = 4116;
+//            String check_type = "REMOTE";
+//            Integer reset = 1;
+//            Long task_id = null;
+//
+//            //获取巡店某个执行清单的项数
+//            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
+//            int total = 0;
+//            for(int i = 0;i < checklists.size();i++){
+//                String names = checklists.getJSONObject(i).getString("name");//遍历每一个name在下一步去做比较，如果name一样，则获取这个Name地total
+//                if (names.equals(name)){
+//                    total = checklists.getJSONObject(i).getInteger("total");
+//                }
+//            }
+//
+//            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("巡店执行清单==执行清单中的总项数");
+//        }
+//    }
 
     /**
      *
