@@ -390,22 +390,10 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-//            int count = 0;
-//            //获取到店趋势数据
-//            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id_t).getJSONArray("trend_list");
-//            for(int i=0;i<trend_list.size();i++){
-//                JSONObject jsonObject = trend_list.getJSONObject(i);
-//                if(jsonObject != null){
-//                    Integer pv = jsonObject.getInteger("pv");
-//                    if(pv != null){
-//                        count ++;//不为空的数据的数量
-//                    }
-//
-//                }
-//            }
+
 
             //获取交易客群总人次
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id_t,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = Md.historyShopConversionV3(shop_id_t,"RECENT_FOURTEEN",month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
             int value1 = deal.get("pv1");
 
@@ -429,8 +417,8 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             int times3 = 0;
             int times4 = 0;
             //获取各个客群时段分布的总和
-            int count = 30;
-            JSONArray showList = Md.historyShopHourV3(shop_id_t,cycle_type,month).getJSONArray("list");
+            int count = 14;
+            JSONArray showList = Md.historyShopHourV3(shop_id_t,"RECENT_FOURTEEN",month).getJSONArray("list");
             for(int i=0;i<showList.size();i++){
                 Integer deal_pv = showList.getJSONObject(i).getInteger("deal_pv");
                 Integer enter_pv = showList.getJSONObject(i).getInteger("enter_pv");
@@ -458,10 +446,10 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             int result2 = Math.abs(value2-times2);
             int result3 = Math.abs(value3-times3);
             int result4 = Math.abs(value4-times4);
-            Preconditions.checkArgument(result1<=720,"交易客群总人次=" + value1 + "时段分布中各个时段交易pv累计=" + times1);
-            Preconditions.checkArgument(result2<=720,"进店客群总人次=" + value2 + "时段分布中各个时段进店pv累计=" + times2);
-            Preconditions.checkArgument(result3<=720,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
-            Preconditions.checkArgument(result4<=720,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
+            Preconditions.checkArgument(result1<=346,"交易客群总人次=" + value1 + "时段分布中各个时段交易pv累计=" + times1);
+            Preconditions.checkArgument(result2<=346,"进店客群总人次=" + value2 + "时段分布中各个时段进店pv累计=" + times2);
+            Preconditions.checkArgument(result3<=346,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
+            Preconditions.checkArgument(result4<=346,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
 
 
 
