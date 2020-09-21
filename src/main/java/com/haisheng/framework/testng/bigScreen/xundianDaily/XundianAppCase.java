@@ -28,12 +28,12 @@ import java.util.List;
 public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtilX xd = XundianScenarioUtilX.getInstance();
-    public Long shop_idX=28762L;  //巡检员现场巡店的店铺id
+    public Long shop_idX=28758l;  //巡检员现场巡店的店铺id
     //app 巡检员账号
-    public String adminNamex = "xunjianyuan3@winsense.ai";
+    public String adminNamex = "xunjianyuan1@winsense.ai";
     public String adminPasswdx = "e10adc3949ba59abbe56e057f20f883e";
     //app对应店长账号
-    public String dzName="dianzhang3@winsense.ai";
+    public String dzName="dianzhang1@winsense.ai";
     public String dzPassword="e10adc3949ba59abbe56e057f20f883e";
 
     //主账号

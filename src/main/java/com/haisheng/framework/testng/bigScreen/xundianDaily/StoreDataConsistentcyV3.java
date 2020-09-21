@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import jdk.nashorn.internal.ir.IdentNode;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
@@ -961,7 +962,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * ====================累计顾客的总数==昨天的累计客户+今天新增的（顾客+全渠道会员）之和======================
+     * ====================累计顾客的总数（所有店）==前天的累计客户+今天新增的（顾客+全渠道会员+付费会员）之和======================
      */
     @Test
     public void memberTotalCount() {
@@ -970,35 +971,40 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
 
             Integer customer_uv = 0;
-            Integer omni_uv = 0;
-            Integer paid_uv = 0;
+            Integer customer_uv_new_today = 0;
+            Integer customer_uv_01 = 0;
+            Integer omni_uv_today = 0;
+            Integer paid_uv_today = 0;
+            Integer omni_uv_total = 0;
+            Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
             for (int i = 0; i < trend_list.size(); i++) {
-                if (customer_uv == null || omni_uv == null || paid_uv == null) {
-                    customer_uv = 0;
-                }
-                //获取昨天的累计客户总数,今天新增的全渠道会员、付费会员
+
+                //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
-                    omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
-
+                    omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
+                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
+                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
                 }
 
                 //获取前天的累计顾客总数
                 if(i - trend_list.size() == -2){
-                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
             }
-            int qa_customer_uv = customer_uv +omni_uv +paid_uv;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
 
 
 
-            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=昨天的累计客户+今天新增的（顾客+全渠道会员）之和=" + qa_customer_uv);
-
+            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv);
+            Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+今天新增的（全渠道会员）之和=" + qa_omni_uv);
 
 
         } catch (AssertionError e) {
@@ -1007,7 +1013,72 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("累计顾客的总数==昨天的累计客户+今天新增的（顾客+全渠道会员）之和");
+            saveData("（所有门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
+        }
+
+    }
+
+    /**
+     * ====================累计顾客的总数(单店)==前天的累计客户+今天新增的（顾客+全渠道会员+付费会员）之和======================
+     */
+    @Test
+    public void shop_memberTotalCount() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+
+            Integer customer_uv = 0;
+            Integer customer_uv_new_today = 0;
+            Integer customer_uv_01 = 0;
+            Integer omni_uv_today = 0;
+            Integer paid_uv_today = 0;
+            Integer omni_uv_total = 0;
+            Integer omni_uv_total_01 = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+            JSONArray trend_list = Md.historyShopMemberV3(shop_id,cycle_type, month).getJSONArray("trend_list");
+            for (int i = 0; i < trend_list.size(); i++) {
+
+                //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
+                if (i - trend_list.size() == -1) {
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
+                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
+                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
+
+//                    if (customer_uv == null && omni_uv_today == null && paid_uv_today == null && customer_uv_new_today == null && omni_uv_total == null) {
+//                        customer_uv = 0;
+//                        paid_uv_today = 0;
+//                        omni_uv_today = 0;
+//                        customer_uv_new_today = 0;
+//                        omni_uv_total = 0;
+//                    }
+                }
+
+                //获取前天的累计顾客总数
+                if(i - trend_list.size() == -2){
+                    customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                }
+
+            }
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
+
+
+
+
+            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id);
+            Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+昨天新增的（全渠道会员）之和=" + qa_omni_uv +"。报错门店shop_id="+shop_id);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("（单个门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
         }
 
     }
