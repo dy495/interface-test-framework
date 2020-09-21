@@ -970,9 +970,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
 
-            Preconditions.checkArgument((customer_uv == cust_uv),"累计的顾客总人数" + customer_uv + "=累计的顾客之和=" + cust_uv);
-            Preconditions.checkArgument((omni_uv == channel_uv),"累计的全渠道会员总人数" + omni_uv + "=累计的30天全渠道会员之和=" + channel_uv);
-            Preconditions.checkArgument((paid_uv == pay_uv),"累计的付费总人数" + paid_uv + "=累计的付费会员之和=" + pay_uv);
+            Preconditions.checkArgument((customer_uv == cust_uv),"累计的顾客总人数" + customer_uv + "！=累计的顾客之和=" + cust_uv);
+            Preconditions.checkArgument((omni_uv == channel_uv),"累计的全渠道会员总人数" + omni_uv + "！=累计的30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((paid_uv == pay_uv),"累计的付费总人数" + paid_uv + "！=累计的付费会员之和=" + pay_uv);
 
 
         } catch (AssertionError e) {
