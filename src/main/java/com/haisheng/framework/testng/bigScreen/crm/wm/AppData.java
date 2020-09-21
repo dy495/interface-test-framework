@@ -116,11 +116,12 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Integer repairTotal = Integer.parseInt(crm.repairAppointmentlist().getString("total"));
             CommonUtil.valueView(testDriverTotalNumber, testDriveTotal, maintainTotalNumber, maintainTotal);
             Preconditions.checkArgument(testDriverTotalNumber <= testDriveTotal, "全部预约试驾数>预约试驾任务列表数");
-            Preconditions.checkArgument(maintainTotalNumber <= maintainTotal, "售后--全部预约车辆>售后预约列表数");
+            Preconditions.checkArgument(maintainTotalNumber <= maintainTotal, "售后保养--全部预约车辆>售后预约列表数");
+            Preconditions.checkArgument(repairTotalNumber<=repairTotal,"售后维修--全部预约车辆>售后预约列表数");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData("全部预约人数<=列表数");
+            saveData("全部预约人数<=列表数");
         }
     }
 
