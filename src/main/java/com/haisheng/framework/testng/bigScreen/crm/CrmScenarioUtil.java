@@ -4509,19 +4509,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                "吉C000000",
                 // "苏B123456"
                 //"陕A123456" //0805xsgw 杨航
-                "吉D000000",
-                "吉D000001",
-                "吉D000002",
-                "吉D000003",
-                "吉D000004",
-                "吉D000005",
-                "吉D000006",
-                "吉D000007",
-                "吉D000008",
-                "吉D000009",
-                "吉D000010",
-                "吉D000011",
-                "吉D000012"
+//                "吉E000000",
+//                "吉E000001",
+//                "吉E000002",
+//                "吉E000003",
+//                "吉E000004",
+//                "吉E000005",
+//                "吉E000006",
+//                "吉E000007",
+//                "吉E000008",
+//                "吉E000009",
+//                "吉E000010"
+                "吉Q6465Q"
 
         };
     }
@@ -5062,7 +5061,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ADD_CAR")
+<<<<<<< Updated upstream
     public Object[][] add_car() {
+=======
+    public  static  Object[][] add_car() {
+>>>>>>> Stashed changes
         return new String[][]{
                 {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
                 {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
@@ -5072,7 +5075,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "EMAIL")
-    public Object[] email() {
+    public  static  Object[] email() {
         return new String[]{
                 "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
                 "1@qq.com",
@@ -5092,7 +5095,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "EMAILERR")
-    public Object[] emailerr() {
+    public static  Object[] emailerr() {
         return new String[]{
                 "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
                 "汉字@qq.com", //汉字

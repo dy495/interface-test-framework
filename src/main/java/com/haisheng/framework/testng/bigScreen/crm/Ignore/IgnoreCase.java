@@ -88,33 +88,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * 上传车牌
-     * 接口说明：https://winsense.yuque.com/staff-qt5ptf/umvi00/mhinpu
-     */
-    @Test
-    public void uploadEnterShopCarPlate() {
-        String carNum = "鲁A081711";
-        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
-        //设备与日常环境的设置一致，不要修改
-        String deviceId = "7709867521115136";
-        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
-        ImageUtil imageUtil = new ImageUtil();
-        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
-        String json = "{\"plate_num\":\"" + carNum + "\"," +
-                "\"plate_pic\":\"@0\"," +
-                "\"time\":\"" + System.currentTimeMillis() + "\"" +
-                "}";
-        try {
-            crm.carUploadToDaily(router, deviceId, resource, json);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("入场车牌号上传");
-        }
-    }
+
 
     /**
      * 上传车牌
@@ -3089,6 +3063,33 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+
+
+    @Test(dataProvider = "car",dataProviderClass = CrmScenarioUtil.class)
+    public void uploadEnterShopCarPlate(String car) {
+
+        String carNum = car;
+
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        //设备与日常环境的设置一致，不要修改
+        String deviceId = "7709867521115136";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{\"plate_num\":\"" + carNum +"\"," +
+                "\"plate_pic\":\"@0\"," +
+                "\"time\":\""+System.currentTimeMillis()+"\"" +
+                "}";
+        try {
+            crm.carUploadToDaily(router, deviceId, resource, json);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("日常入场车牌号上传");
+        }
+    }
 
 
 

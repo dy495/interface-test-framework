@@ -115,6 +115,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      */
 
 
+    @Ignore
     @Test
     public void addVisitRemarkChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -160,6 +161,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitCommentChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -209,6 +211,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void addVisitChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -234,6 +237,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Ignore
     @Test
     public void customerChkListAndDetail() {
         logger.logCaseStart(caseResult.getCaseName());
