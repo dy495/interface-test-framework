@@ -92,16 +92,17 @@ public class PackFunction {
         JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
         for (int i = 0; i < userlist.size(); i++) {
             JSONObject obj = userlist.getJSONObject(i);
+
             if (obj.getString("user_id").equals(sale_id)) {
                 userLoginName = obj.getString("user_login_name");
             }
         }
         boolean isDes= true;
-        String nameQt="auto";
         JSONObject list=new JSONObject();
         JSONArray ll=new JSONArray();
-        list.put("customer_name",nameQt);
+        list.put("customer_name",name);
         list.put("is_decision",isDes);
+        list.put("sale_id",sale_id);
         ll.add(0,list);
 
         //创建接待
@@ -114,7 +115,7 @@ public class PackFunction {
         Long customerID=data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         //创建某级客户
 //        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
-        crm.customerEdit_onlyNec(receiptId,customerID, name);
+//        crm.customerEdit_onlyNec(receiptId,customerID, name);
 
         jsonP.put("name",name);
         jsonP.put("phone", phone.toString());
@@ -158,24 +159,15 @@ public class PackFunction {
     //新建试驾+审核封装 ok
     public void creatDriver(Long receptionId,Long customer_id,String name,String phone, int audit_status) throws Exception {  //1-通过，2-拒绝
 
-        Long model = 1L;
-        String country = "中国";
-        String city = "图们";
-        String email = dt.getHistoryDate(0)+"@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
-        String driverLicensePhoto2Url = file.texFile(pp.filePath);
-        String electronicContractUrl = file.texFile(pp.filePath);
         String sign_date=dt.getHistoryDate(0);
         String sign_time=dt.getHHmm(0);
-        String call = "WOMEN";
         Long test_drive_car=37L;   //试驾车id
         JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
         String apply_time = timelist.getString(0);
 
 //        Long apply_time = dt.getHistoryDateTimestamp(1);
-        int driverid = crm.driveradd4(receptionId,customer_id,name,phone,2L,model,country,city,address,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,sign_date,sign_time,call,apply_time.toString(),test_drive_car).getInteger("id");
+        int driverid = crm.driveradd4(receptionId,customer_id,name,phone,driverLicensePhoto1Url,sign_date,sign_time,apply_time.toString(),test_drive_car).getInteger("id");
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
         crm.driverAudit(driverid,audit_status);
@@ -187,11 +179,11 @@ public class PackFunction {
         //订车
 //        crm.orderCar(customer_id);
         String vehicle_chassis_code="ASD123456"+(random.nextInt(89999999) + 10000000);
-        crm.addOrderCar(customer_id.toString(),reception_id.toString(),vehicle_chassis_code);
+        Long car_id=crm.addOrderCar(customer_id.toString(),reception_id.toString(),vehicle_chassis_code).getLong("car_id");
         //创建交车
-        Long model = 36L;
+        Long model = crm.customerOrderCar(customer_id.toString()).getJSONArray("list").getJSONObject(0).getLong("car_model_id");
         String path = file.texFile(pp.filePath);
-        crm.deliverAdd(reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path,vehicle_chassis_code);
+        crm.deliverAdd(car_id,reception_id,customer_id,customer_name,deliver_car_time,model,path,accept_show,path,vehicle_chassis_code);
     }
     //老客试驾完成接待---for评价
     public Long driverEva()throws Exception{
@@ -314,7 +306,7 @@ public class PackFunction {
         String carName="试驾车"+ dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
         String plate_number="京Z12Q1"+r.nextInt(100);
-        String vehicle_chassis_code="ASDDFHGJ123456"+(int)(Math.random()*(200-100+1)+200);
+        String vehicle_chassis_code="ASD145656"+(random.nextInt(89999999) + 10000000);
         Long start=dt.getHistoryDateTimestamp(1);
         long end=dt.getHistoryDateTimestamp(3);
         JSONObject data=crm.carManagementAdd(carName,1L,37L,plate_number,vehicle_chassis_code,start,end);

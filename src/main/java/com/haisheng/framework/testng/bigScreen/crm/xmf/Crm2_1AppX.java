@@ -576,18 +576,25 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Long reception_id=object.getLong("reception_id");
             String customer_name=object.getString("name");
             String phone=object.getString("phone");
+            String sale_id=object.getString("sale_id");
             pf.creatDeliver(reception_id,customer_id,"药不然",dt.getHistoryDate(0),true);
             //完成接待
-            crm.finishReception(customer_id, reception_id,customer_name);   //TODO:完成接待参数
+            JSONObject list=new JSONObject();
+            JSONArray ll=new JSONArray();
+            list.put("phone",phone);
+            list.put("phone_order",0);
+            ll.add(0,list);
+            crm.finishReception2(sale_id,customer_id, reception_id,customer_name,list,"FU");   //TODO:完成接待参数
             //小程序登录，查看最新交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data=crm.carOwnernew();
             String customer_nameN=data.getString("customer_name");
-            String car_model=data.getString("car_model");
+            String car_model=data.getString("car_model_name");
+            String car_style=data.getString("car_style_name");
             String work=data.getString("work");
             String hobby=data.getString("hobby");
             crm.login(pp.xiaoshouGuwen,pp.adminpassword);
-            Preconditions.checkArgument(car_model.equals("Taycan"),"最新交车信息校验失败");
+            Preconditions.checkArgument(car_style.equals("Panamera"),"最新交车信息校验失败");
             Preconditions.checkArgument(work.equals("金融"),"最新交车信息校验工作显示错误");
             Preconditions.checkArgument(hobby.equals("宠物"),"最新交车信息校验爱好显示错误");
             Preconditions.checkArgument(customer_nameN.equals("药不然"),"最新交车信息校验车主名显示错误");
