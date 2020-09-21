@@ -961,6 +961,58 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
 
     /**
+     * ====================累计顾客的总数==昨天的累计客户+今天新增的（顾客+全渠道会员）之和======================
+     */
+    @Test
+    public void memberTotalCount() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+
+            Integer customer_uv = 0;
+            Integer omni_uv = 0;
+            Integer paid_uv = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+            JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
+            for (int i = 0; i < trend_list.size(); i++) {
+                if (customer_uv == null || omni_uv == null || paid_uv == null) {
+                    customer_uv = 0;
+                }
+                //获取昨天的累计客户总数,今天新增的全渠道会员、付费会员
+                if (i - trend_list.size() == -1) {
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
+                    paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
+
+                }
+
+                //获取前天的累计顾客总数
+                if(i - trend_list.size() == -2){
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                }
+
+            }
+            int qa_customer_uv = customer_uv +omni_uv +paid_uv;
+
+
+
+
+            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=昨天的累计客户+今天新增的（顾客+全渠道会员）之和=" + qa_customer_uv);
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("累计顾客的总数==昨天的累计客户+今天新增的（顾客+全渠道会员）之和");
+        }
+
+    }
+
+    /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
     @Test
