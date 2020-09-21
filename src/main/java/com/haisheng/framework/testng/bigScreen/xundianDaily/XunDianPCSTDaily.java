@@ -962,50 +962,50 @@ public class XunDianPCSTDaily {
         }
     }
 
-    /**
-     * 新建定检任务-日期/有效期验证
-     */
-    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
-    public void scheduleCheckMonthEdit(String validStart, String validEnd, int dates, String sendTime, int expectCode) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "新建定检任务-列表-编辑-列表-9删除-列表";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            新建定检任务
-            String name = "别删!!!!!!!";
-            String cycle = "MONTH";
-
-            long scheduleId = 406L;
-
-            if (expectCode == 1000) {
-                xunDian.scheduleCheckEdit(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
-                        inspectorId, shopId);
-            } else {
-                String res = xunDian.scheduleCheckEditNoCode(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
-                        inspectorId, shopId);
-
-                xunDian.checkCode(res, expectCode, "dates=" + dates + "，validStart=" + validStart +
-                        ",validEnd=" + validEnd + ",sendTime=" + sendTime);
-            }
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
+//    /**
+//     * 新建定检任务-日期/有效期验证
+//     */
+//    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
+//    public void scheduleCheckMonthEdit(String validStart, String validEnd, int dates, String sendTime, int expectCode) {
+//
+//        String ciCaseName = new Object() {
+//        }.getClass().getEnclosingMethod().getName();
+//
+//        String caseName = ciCaseName;
+//
+//        String caseDesc = "新建定检任务-列表-编辑-列表-9删除-列表";
+//
+//        logger.info("\n\n" + caseName + "\n");
+//
+//        try {
+//
+////            新建定检任务
+//            String name = "别删!!!!!!!";
+//            String cycle = "MONTH";
+//
+//            long scheduleId = 406L;
+//
+//            if (expectCode == 1000) {
+//                xunDian.scheduleCheckEdit(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+//                        inspectorId, shopId);
+//            } else {
+//                String res = xunDian.scheduleCheckEditNoCode(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+//                        inspectorId, shopId);
+//
+//                xunDian.checkCode(res, expectCode, "dates=" + dates + "，validStart=" + validStart +
+//                        ",validEnd=" + validEnd + ",sendTime=" + sendTime);
+//            }
+//
+//        } catch (AssertionError e) {
+//            failReason = e.toString();
+//            aCase.setFailReason(failReason);
+//        } catch (Exception e) {
+//            failReason = e.toString();
+//            aCase.setFailReason(failReason);
+//        } finally {
+//            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//        }
+//    }
 
 //    -----------------------------------------------巡店中心----------------------------------------------------------
 
