@@ -167,7 +167,7 @@ public class PackFunction {
         String apply_time = timelist.getString(0);
 
 //        Long apply_time = dt.getHistoryDateTimestamp(1);
-        int driverid = crm.driveradd4(receptionId,customer_id,name,phone,driverLicensePhoto1Url,sign_date,sign_time,apply_time.toString(),test_drive_car).getInteger("id");
+        int driverid = crm.driveradd5(receptionId,customer_id,name,phone,driverLicensePhoto1Url,sign_date,sign_time,apply_time.toString(),test_drive_car).getInteger("id");
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
         crm.driverAudit(driverid,audit_status);

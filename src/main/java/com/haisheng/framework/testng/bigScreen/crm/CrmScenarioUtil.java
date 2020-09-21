@@ -1312,7 +1312,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-    public JSONObject driveradd(Long receptionId, Long customer_id, String customerName, String phone, String driverLicensePhoto1Url,
+    public JSONObject driveradd5(Long receptionId, Long customer_id, String customerName, String phone, String driverLicensePhoto1Url,
                                   String sign_date, String sign_time, String apply_time, Long test_drive_car) {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
