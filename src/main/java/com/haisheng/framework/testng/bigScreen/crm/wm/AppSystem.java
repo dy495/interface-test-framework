@@ -429,6 +429,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     * @description: 回访数据中存在空电话号，垃圾数据
+     */
     @Test(description = "手机号为11位手机号")
     public void myReturnVisit_function_7() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -471,7 +474,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "列表项包括:所属销售、客户等级、客户名称、联系电话、意向车型、回访类型、是否完成")
+    @Test(description = "列表项包括:所属销售、客户等级、客户名称、联系电话、意向车系、回访类型、是否完成")
     public void myReturnVisit_function_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -481,7 +484,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_level_name"), "接口返回参数中不包含字段：customer_level_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_name"), "接口返回参数中不包含字段：customer_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_phone"), "接口返回参数中不包含字段：customer_phone");
-                Preconditions.checkArgument(list.getJSONObject(i).containsKey("like_car_name"), "接口返回参数中不包含字段：like_car_name");
+                Preconditions.checkArgument(list.getJSONObject(i).containsKey("intention_car_style_name"), "接口返回参数中不包含字段：intention_car_style_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_type_name"), "接口返回参数中不包含字段：customer_type_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("task_status_name"), "接口返回参数中不包含字段：task_status_name");
             }
@@ -819,6 +822,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
+            CommonUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
@@ -842,6 +846,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picture2 = new ImageUtil().getImageBinary(picPath + "外观照片.jpg");
         String picture3 = new ImageUtil().getImageBinary(picPath + "大图照片.jpg");
         try {
+            CommonUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访2张图片

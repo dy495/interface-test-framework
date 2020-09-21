@@ -408,7 +408,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期）  //TODO:四个位置之和
      * @date :2020/8/2 15:49
      **/
-    @Test
+    @Test(enabled = false)
     public void bannerAndArticle(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

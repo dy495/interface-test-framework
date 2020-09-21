@@ -3745,6 +3745,22 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    /**
+     * 微信我的消息列表接口
+     *
+     * @param lastValue
+     * @param size
+     * @return
+     */
+    public JSONObject wechatMessageList(String lastValue, int size) {
+        String url = "/WeChat-applet/porsche/a/message/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+
     //applet 我的消息分页
     public JSONObject messageDetail(Long id) throws Exception {
         String url = "/WeChat-applet/porsche/a/message/detail/" + id;

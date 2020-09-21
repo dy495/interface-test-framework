@@ -328,7 +328,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "站内消息配置人群为销售，小程序销售可见消息，售后不可见消息")
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
-        String title = "自动化站内消息-待删";
+        String title = "销售可见消息-待删";
         String content = "自动化";
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         try {
@@ -336,25 +336,23 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             boolean result2 = false;
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES");
             int id = response.getInteger("id");
-            sleep(70);
+            sleep(80);
             //登陆小程序-售前可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
-                        && list.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list.getJSONObject(i).getBoolean("is_read")) {
+                        && list.getJSONObject(i).getString("date").equals(sendDate)) {
                     result1 = true;
                     break;
                 }
             }
             //登陆小程序-售后不可见消息
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            JSONArray list1 = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
-                        && list1.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list1.getJSONObject(i).getBoolean("is_read")) {
+                        && list1.getJSONObject(i).getString("date").equals(sendDate)) {
                     result2 = true;
                     break;
                 }
@@ -362,6 +360,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户看不见消息");
             Preconditions.checkArgument(!result2, "小程序售后客户能看见消息");
+            CommonUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -370,10 +369,10 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "站内消息配置人群为销售，小程序销售不可见消息，售后可见消息")
+    @Test(description = "站内消息配置人群为售后，小程序销售不可见消息，售后可见消息")
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
-        String title = "自动化站内消息-待删";
+        String title = "售后可见消息-待删";
         String content = "自动化";
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         try {
@@ -381,26 +380,31 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             boolean result2 = false;
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "AFTER_SALES");
             int id = response.getInteger("id");
-            sleep(70);
-            //登陆小程序-售前可见消息
+            sleep(80);
+            //登陆小程序-售前不可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                result1 = list.getJSONObject(i).getString("title").equals(title)
-                        && list.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list.getJSONObject(i).getBoolean("is_read");
+                if (list.getJSONObject(i).getString("title").equals(title)
+                        && list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    result1 = true;
+                    break;
+                }
             }
-            //登陆小程序-售后不可见消息
+            //登陆小程序-售后可见消息
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            JSONArray list1 = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
-                result2 = list1.getJSONObject(i).getString("title").equals(title)
-                        && list1.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list1.getJSONObject(i).getBoolean("is_read");
+                if (list1.getJSONObject(i).getString("title").equals(title)
+                        && list1.getJSONObject(i).getString("date").equals(sendDate)) {
+                    result2 = true;
+                    break;
+                }
             }
             CommonUtil.valueView(result1, result2);
-            Preconditions.checkArgument(!result1, "小程序销售客户能看见消息");
-            Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
+            Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
+            Preconditions.checkArgument(!result2, "小程序售后客户不能看见消息");
+            CommonUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -412,7 +416,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息")
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
-        String title = "自动化站内消息-待删";
+        String title = "销售/售后均可见消息-待删";
         String content = "自动化";
         String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         try {
@@ -420,26 +424,31 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             boolean result2 = false;
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES", "AFTER_SALES");
             int id = response.getInteger("id");
-            sleep(70);
+            sleep(80);
             //登陆小程序-售前可见消息
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                result1 = list.getJSONObject(i).getString("title").equals(title)
-                        && list.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list.getJSONObject(i).getBoolean("is_read");
+                if (list.getJSONObject(i).getString("title").equals(title)
+                        && list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    result1 = true;
+                    break;
+                }
             }
-            //登陆小程序-售后不可见消息
+            //登陆小程序-售后可见消息
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            JSONArray list1 = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
-                result2 = list1.getJSONObject(i).getString("title").equals(title)
-                        && list1.getJSONObject(i).getString("date").equals(sendDate)
-                        && !list1.getJSONObject(i).getBoolean("is_read");
+                if (list1.getJSONObject(i).getString("title").equals(title)
+                        && list1.getJSONObject(i).getString("date").equals(sendDate)) {
+                    result2 = true;
+                    break;
+                }
             }
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
+            CommonUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -478,14 +487,17 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
+                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                }
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
+            CommonUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -506,14 +518,17 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
+                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                }
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约维修按钮");
+            CommonUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -534,14 +549,17 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int messageId = response.getInteger("id");
             sleep(80);
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONArray list = crm.messageList(20, "MSG").getJSONArray("list");
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
-                id = list.getJSONObject(i).getString("date").equals(sendDate) ? list.getJSONObject(i).getInteger("id") : 0;
+                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                }
             }
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
+            CommonUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
