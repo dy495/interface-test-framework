@@ -52,13 +52,10 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
-        commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
-
         //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
 
         //set shop id
         commonConfig.shopId = getXundianShop(); //要改！！！
