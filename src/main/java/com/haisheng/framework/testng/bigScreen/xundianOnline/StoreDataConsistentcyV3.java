@@ -1038,38 +1038,38 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-    /**
-     *
-     * ====================百果园线上实时客流监控======================
-     * */
-    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void  surveDataReal(long shop_id){
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            JSONArray list = Md.realTimeShopPvV3(shop_id).getJSONArray("list");
-            int today_pv =0;
-            for(int i=0;i<list.size();i++){
-                Integer count =list.getJSONObject(i).getInteger("today_pv");
-                if(count != null ){
-                    today_pv += count;
-                }
-//                if(today_pv<=50){
-//                    list.getJSONObject(i).getInteger("today_pv");
+//    /**
+//     *
+//     * ====================百果园线上实时客流监控======================
+//     * */
+//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void  surveDataReal(long shop_id){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            JSONArray list = Md.realTimeShopPvV3(shop_id).getJSONArray("list");
+//            int today_pv =0;
+//            for(int i=0;i<list.size();i++){
+//                Integer count =list.getJSONObject(i).getInteger("today_pv");
+//                if(count != null ){
+//                    today_pv += count;
 //                }
-
-            }
-            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("监控百果园今日实时人次是否异常，小于800高于50为正常");
-        }
-
-    }
+////                if(today_pv<=50){
+////                    list.getJSONObject(i).getInteger("today_pv");
+////                }
+//
+//            }
+//            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("监控百果园今日实时人次是否异常，小于800高于50为正常");
+//        }
+//
+//    }
 
 
     /**
