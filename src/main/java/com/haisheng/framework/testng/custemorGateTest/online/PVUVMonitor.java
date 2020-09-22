@@ -649,8 +649,11 @@ public class PVUVMonitor {
             summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
 
             if (key.contains("百果园")) {
-                //百果园数据为0时，单独发到【百果园盒子准备】群
-                alarmPush.baiguoyuanZeroAlarm(summary);
+                //百果园数据为0且只在10点时段，单独发到【百果园盒子准备】群
+                DateTimeUtil dt = new DateTimeUtil();
+                if (dt.getCurrentHour().contains("10")) {
+                    alarmPush.baiguoyuanZeroAlarm(summary);
+                }
             }
         }
         if (diffSize > 0) {
