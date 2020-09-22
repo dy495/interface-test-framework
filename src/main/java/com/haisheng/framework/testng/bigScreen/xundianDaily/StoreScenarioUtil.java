@@ -71,7 +71,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return new String[]{
                 "RECENT_SEVEN",
-                "RECENT_THIRTY",
+                "RECENT_FOURTEEN",
                 "RECENT_THIRTY",
                 "RECENT_SIXTY"
         };

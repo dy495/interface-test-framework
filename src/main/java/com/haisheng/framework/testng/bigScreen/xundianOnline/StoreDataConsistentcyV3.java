@@ -1227,7 +1227,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                             Preconditions.checkArgument(deal_times == deal, "人物ID为:"+customer_id+"累计交易次数：" + deal + "不等于留痕事件中门店下单次数" + deal_times + "。报错门店的shopId=" + shop_id);
                         }
                     }
-//                    Preconditions.checkArgument(listResult, "人物ID为:"+customer_id+"人物详情的留痕事件为空 " +"但是该人物的进店次数为："+enter_total+"交易次数为："+deal+"。报错门店的shopId=" + shop_id);
+//                    Preconditions.checkArgument(listResult, "人物ID为:"+customer_id+"人物详情的留痕事件为空 "+"。报错门店的shopId=" + shop_id);
 
                 }
 

@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
-    long shop_id = 13134;
+    long shop_id = 13134l;
     int startM=2;
     String cycle_type ="RECENT_THIRTY";
     String month = "";

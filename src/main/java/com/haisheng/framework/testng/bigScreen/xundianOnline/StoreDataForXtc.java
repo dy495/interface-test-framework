@@ -911,7 +911,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
         try {
 //            customer_id
             //根据门店id获取customer_id
-            JSONObject response = Md.memberTotalListV3(shop_id_t, page, size);
+            JSONObject response = Md.memberTotalListV3(shop_id_t, 2, size);
             int total = response.getInteger("total");
 
             JSONArray list = response.getJSONArray("list");
@@ -987,7 +987,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
                             Preconditions.checkArgument(deal_times == deal, "人物ID为:"+customer_id+"累计交易次数：" + deal + "不等于留痕事件中门店下单次数" + deal_times + "。报错门店的shopId=" + shop_id_t);
                         }
                     }
-//                    Preconditions.checkArgument(listResult, "人物ID为:"+customer_id+"人物详情的留痕事件为空 " +"但是该人物的进店次数为："+enter_total+"交易次数为："+deal+"。报错门店的shopId=" + shop_id);
+//                    Preconditions.checkArgument(listResult, "人物ID为:"+customer_id+"人物详情的留痕事件为空 " +"。报错门店的shopId=" + shop_id);
 
                 }
 

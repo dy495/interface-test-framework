@@ -27,7 +27,7 @@ import java.util.List;
 
 public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
-    XundianScenarioUtilX xd = XundianScenarioUtilX.getInstance();
+    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     public Long shop_idX=28758l;  //巡检员现场巡店的店铺id
     //app 巡检员账号
     public String adminNamex = "xunjianyuan1@winsense.ai";
@@ -229,7 +229,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :1.app现场、远程巡店 处理结果全部合格，不产生待办事项
      * @date :2020/6/26 20:46
      **/
-    @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+    @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtil.class)
     public void SpotRemoteXundian(String check_type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -337,7 +337,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      *               优先级靠后等待其他用例执行完，用户待办事项中有数据
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 5,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+    @Test(priority = 5,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtil.class)
     public void dealdaiban(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -655,7 +655,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :8.巡检员3 现场巡检，不合格，店长3处理，数据信息校验：1.店长待办事项中信息校验  2.店长已完成待办事项数据校验 ok
      * @date :2020/6/28 14:51
      **/
-    @Test(priority =1,dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+    @Test(priority =1,dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtil.class)
     public void checkDealResultNo(String check_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -904,7 +904,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :11.处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
+    @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtil.class)
     public void dealdaibanFive(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1015,47 +1015,8 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     *
-     */
-    @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
-
-
-
-        //replace checklist app id and conf id
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
-//
-//
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
-
-        //replace ding push conf
-
-        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = getXunDianShop(); //这里要改！！！！！
-        beforeClassInit(commonConfig);
-
-        logger.debug("xundian " + xd);
-
 
     }
 
