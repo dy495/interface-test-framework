@@ -644,7 +644,15 @@ public class PVUVMonitor {
                 diffComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
             }
         }
-        summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
+
+        if (zeroSize > 0) {
+            summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
+
+            if (key.contains("百果园")) {
+                //百果园数据为0时，单独发到【百果园盒子准备】群
+                alarmPush.baiguoyuanZeroAlarm(summary);
+            }
+        }
         if (diffSize > 0) {
             summary += "\n以下" + diffSize + "个店铺数据量波动过大\n\n" + diffComDetail;
         }
