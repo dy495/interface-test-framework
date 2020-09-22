@@ -53,7 +53,66 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         String pic_list0=pic.getString("pic_path");
         return pic_list0;
     }
+    /**
+     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+     */
+    @BeforeClass
+    @Override
+    public void initial() {
+        logger.debug("before classs initial");
+        CommonConfig commonConfig = new CommonConfig();
 
+        //replace checklist app id and conf id
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = "青青";
+
+//        //replace backend gateway url
+//        //commonConfig.gateway = "";
+//
+//        //replace jenkins job name
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
+
+        //replace product name for ding push
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
+
+        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
+        //replace ding push conf
+        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
+        //13436941018 吕雪晴
+        //17610248107 廖祥茹
+        //15084928847 黄青青
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //commonConfig.pushRd = {"1", "2"};
+
+        //set shop id
+        commonConfig.shopId = getXundianShop(); //要改！！！
+        beforeClassInit(commonConfig);
+
+        logger.debug("store " + xd);
+
+        xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+
+
+    }
+
+    @AfterClass
+    @Override
+    public void clean() {
+        afterClassClean();
+    }
+
+    @Override
+    public void createFreshCase(Method method) {
+
+    }
 
     //app定检任务巡店，check_result=2 不合格 1 合格,数组存储巡检结果 a[0]合格数，a[1]不合格数
     public int[] xundianapparray(Integer check_result,Long shop_id,String comment,String check_type,Long task_id,String date){
@@ -180,13 +239,13 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void daibanThingDingjian() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            xd.logout();
+//            xd.logout();
             //1.店长登录，记录原始待办事项数
-            xd.applogin(dzName,dzPassword);
+            xd.login(dzName,dzPassword);
             int tasksNum=xd.taskDetail().getInteger("tasks");
             logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
             xd.logout();
-            xd.applogin(adminNamex,adminPasswdx);
+            xd.login(adminNamex,adminPasswdx);
             //2.巡检员登录，进行一次定检巡检，记录不合格项数
             //获取待办实现未完成列表 0 待办 1已完成
             JSONObject data = xd.Task_list(0, 10, null);
@@ -1015,32 +1074,6 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Override
-    public void initial() {
 
-    }
-
-    @AfterClass
-    @Override
-    public void clean() {
-        afterClassClean();
-    }
-
-    /**
-     * @description: get a fresh case ds to save case result, such as result/response
-     *
-     */
-    @BeforeMethod
-    @Override
-    public void createFreshCase(Method method) {
-        logger.debug("beforeMethod");
-        caseResult = getFreshCaseResult(method);
-        logger.debug("case: " + caseResult);
-    }
-
-    @BeforeClass
-    public void login() {
-        xd.applogin(adminNamex,adminPasswdx);
-    }
 
 }

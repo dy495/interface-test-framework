@@ -429,6 +429,9 @@ public class TestCaseCommon {
     public String getXunDianShop() {
         return "4116";
     }
+    public String getXunDianShopOnline() {
+        return "13260";
+    }
 
 
     private void dingPushFinal(boolean isFAIL) {

@@ -394,7 +394,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/activity/add";
         String json =
                 "{" +
-                        "\"activity_description\" :" + activity_description + ",\n" +
+                        "\"activity_description\" :\"" + activity_description + "\",\n" +
                         "\"activity_type\" :\"" + activity_type + "\",\n" +
                         "\"start_date\" :\"" + start_date + "\",\n" +
                         "\"end_date\" :\"" + end_date + "\",\n" +
@@ -403,7 +403,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**---------------------------------8.4 实时客流-------------------------**/

@@ -9,7 +9,7 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianDataConsistentcy"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCaseOnline"></class>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianAppCase"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreCaseV3"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataConsistentcyV3"></class>

@@ -20,6 +20,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     String shopManager = "";
     int page = 1;
     int size = 10;
+    long shop_id = 4116l;
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -89,36 +90,37 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-//    /**
-//     * ====================添加事件(结束时间为开始时间&结束时间大于开始时间)======================
-//     */
-//    @Test(dataProvider = "END_TIME_TYPE", dataProviderClass = StoreScenarioUtil.class)
-//    public void thingAddT1(String endTimeType) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack = false;
-//        try {
-//            //新增一个正常进行的添加事项
-//            String activity_description = "店庆店庆店庆店庆店庆";
-//            String activity_type = "NEW_COMMODITY";
-//            String start_date = dt.getHistoryDate(0); //今天日期;
-//            String end_date = endTimeType;
-//
-//            int code = Md.activityAddV3(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
-//
-//
-//            Preconditions.checkArgument(code == 1000, "添加事项不成功");
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("添加事件(结束时间为开始时间&结束时间大于开始时间)");
-//        }
-//
-//    }
+    /**
+     * ====================添加事件(结束时间为开始时间&结束时间大于开始时间)======================
+     */
+    @Test
+    public void thingAddT1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            Md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            //新增一个正常进行的添加事项
+            String activity_description = "店庆店庆店庆店庆店庆";
+            String activity_type = "NEW_COMMODITY";
+            String start_date = dt.getHistoryDate(0); //今天日期;
+            String end_date = dt.getHistoryDate(0);;
+
+            int code = Md.activityAddV3(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1000, "添加事项不成功");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("添加事件(结束时间为开始时间&结束时间大于开始时间)");
+        }
+
+    }
 
     /**
      * ====================列表页排序按照上个整点计算的今日到访人次排序(人次从大到小排序)======================

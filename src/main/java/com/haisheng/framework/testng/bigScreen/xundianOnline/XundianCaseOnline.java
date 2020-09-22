@@ -1,13 +1,15 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,14 +32,14 @@ import java.util.List;
  * @date :  2020/05/30
  */
 
-public class XundianCase extends TestCaseCommon implements TestCaseStd {
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    String xjy4="uid_663ad653";
-    String test = "uid_ef6d2de5";
+public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
+    String xjy4="uid_9e7bc0a2";
+    String test = "uid_9e7bc0a2";
     int page = 1;
     int size =50;
-    public String adminName = "yuexiu@test.com";
-    public String adminPasswd = "f5b3e737510f31b88eb2d4b5d0cd2fb4";
+    public String adminName = "salesdemo@winsense.ai";
+    public String adminPasswd = "c216d5045fbeb18bcca830c235e7f3c8";
     public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
 
 
@@ -70,21 +72,24 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
+        //replace product name for ding push
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
 
-        //set shop id
-        commonConfig.shopId = getXundianShop(); //要改！！！
+        commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214","18810332354", "15084928847"};
+
+        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("xundian " + xd);
 
-        xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        xd.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
 
 
     }
@@ -126,17 +131,17 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             jsonObject.put("comment","要怎么检查啊啊");
             items.add(0,jsonObject);
             JSONArray  shoplist=new JSONArray();
-              shoplist.add(0,28764);
-              JSONObject res = xd.checkListAdd(name,desc,items,shoplist);
-              int code_add = res.getInteger("code");
+            shoplist.add(0,13260);
+            JSONObject res = xd.checkListAdd(name,desc,items,shoplist);
+            int code_add = res.getInteger("code");
 
 
-              //获取执行清单列表，取第一个执行清单的id值
-             JSONArray list = xd.checklistPage(page,size).getJSONArray("list");
-             long id = list.getJSONObject(0).getInteger("id");
+            //获取执行清单列表，取第一个执行清单的id值
+            JSONArray list = xd.checklistPage(page,size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
 
 
-              //编辑一个执行清单
+            //编辑一个执行清单
             String name_one= dt.getHHmm(startM)+"qingqingb";
             JSONObject res_one = xd.checkListEdit((long) id,name_one,desc,items,shoplist);
             int code_edit = res_one.getInteger("code");
@@ -190,7 +195,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             String valid_start=dt.getHistoryDate(0); ;
             String valid_end=dt.getHistoryDate(startM); ;
             JSONArray  shoplist=new JSONArray();
-            shoplist.add(0,28760);
+            shoplist.add(0,13260);
             JSONObject res = xd.scheduleCheckAdd(names,cycle,jal,send_time,valid_start,valid_end,test,shoplist);
             int code_add=res.getInteger("code");
 
@@ -204,7 +209,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             int code_edit = res_one.getInteger("code");
 
 
-           //删除一个定检任务
+            //删除一个定检任务
             JSONObject res_delete = xd.scheduleCheckDelete(id);
             int code_delete = res_delete.getInteger("code");
 
@@ -240,7 +245,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             String start_time="09:00"; //今天日期;;
             String name = "青青测试用";
             JSONArray  shoplist=new JSONArray();
-            shoplist.add(0,4116);
+            shoplist.add(0,13260);
 
             //新建定检规则
             JSONObject res =xd.scheduleRuleAdd(name,start_time,end_time,interval_hour,shoplist);
@@ -264,7 +269,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             //将新建的定检规则设置为开或者关(0为关，1为开)
             int code_swi = 0;
             if(status == 0){
-                 code_swi = xd.scheduleRuleSwith(id,status).getInteger("code");
+                code_swi = xd.scheduleRuleSwith(id,status).getInteger("code");
             }else {
                 code_swi = xd.scheduleRuleSwith(id,status).getInteger("code");
             }
@@ -687,7 +692,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
     //获取门店的巡店次数
     public Integer patrol_num(JSONObject data)throws Exception{
         Integer patrol_num =0;
-        long shop_id=Long.parseLong(getXunDianShop());
+        long shop_id=Long.parseLong(String.valueOf(13260l));
         JSONArray list=data.getJSONArray("list");
         for(int i=0;i<list.size();i++){
             long id=list.getJSONObject(i).getInteger("id");
@@ -701,7 +706,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
     //获取门店的最新巡店时间
     public String patrol_time(JSONObject data)throws Exception{
         String patrol_time ="";
-        long shop_id=Long.parseLong(getXunDianShop());
+        long shop_id=Long.parseLong(String.valueOf(13260l));
         JSONArray list=data.getJSONArray("list");
         for(int i=0;i<list.size();i++){
             long id=list.getJSONObject(i).getInteger("id");
