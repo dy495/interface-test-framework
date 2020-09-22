@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.enumerator;
+package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config;
 
 import lombok.Getter;
 

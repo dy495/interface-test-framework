@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
@@ -117,7 +118,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(testDriverTotalNumber, testDriveTotal, maintainTotalNumber, maintainTotal);
             Preconditions.checkArgument(testDriverTotalNumber <= testDriveTotal, "全部预约试驾数>预约试驾任务列表数");
             Preconditions.checkArgument(maintainTotalNumber <= maintainTotal, "售后保养--全部预约车辆>售后预约列表数");
-            Preconditions.checkArgument(repairTotalNumber<=repairTotal,"售后维修--全部预约车辆>售后预约列表数");
+            Preconditions.checkArgument(repairTotalNumber <= repairTotal, "售后维修--全部预约车辆>售后预约列表数");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -1028,7 +1029,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             JSONArray list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())
-                        && list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.O.getName())) {
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.O.getName())
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.G.getName())
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.F.getName())) {
                     int remainDays = list.getJSONObject(i).getInteger("remain_days");
                     CommonUtil.valueView(remainDays);
                     Preconditions.checkArgument(remainDays < 90, "app，我的客户列表中存在剩余天数>90的记录，" + "天数为：" + remainDays);
