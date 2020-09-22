@@ -293,6 +293,17 @@ public class AlarmPush {
         DingChatbot.sendMarkdown(msg);
     }
 
+    public void baiguoyuanZeroAlarm(String content) {
+        DingChatbot.WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=d355a52dd2fb896b16234011bc4f49745c4074c3821bb6273e5d9bce14eb2a18";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String msg = "### " + "线上巡检发现异常，请及时查看" + "\n";
+        msg += "\n\n#### " + dt.getHistoryDate(0) + " " + dt.getCurrentHourMinutesSec() +"\n";
+        msg += "\n\n#### " + content + "\n";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
     public void onlineMonitorPvuvAlarm(String content) {
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         DateTimeUtil dt = new DateTimeUtil();
