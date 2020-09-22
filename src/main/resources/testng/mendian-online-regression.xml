@@ -12,6 +12,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.StoreDataConsistentcyV3"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.SurveillanceForZDF"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.StoreDataForXtc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.XundianCaseOnline"></class>
         </classes>
     </test>
 </suite>
