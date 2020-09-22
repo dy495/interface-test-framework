@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
@@ -384,9 +384,8 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.getFormat(new Date());
         String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            String list = crm.returnVisitTaskPage(1, 10, date1, date).getString("list");
-            boolean flag = StringUtils.isEmpty(list);
-            Preconditions.checkArgument(flag, "结束时间>开始时间,查询成功");
+            JSONArray list = crm.returnVisitTaskPage(1, 10, date1, date).getJSONArray("list");
+            Preconditions.checkArgument(list.size() == 0, "结束时间>开始时间,查询成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -499,7 +498,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            CommonUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
             for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
@@ -532,7 +531,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            CommonUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
             for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");

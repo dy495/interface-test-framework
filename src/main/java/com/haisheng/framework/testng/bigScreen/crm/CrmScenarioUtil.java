@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
-import com.haisheng.framework.model.experiment.enumerator.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

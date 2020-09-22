@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
@@ -402,8 +403,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(result1, result2);
-            Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
-            Preconditions.checkArgument(!result2, "小程序售后客户不能看见消息");
+            Preconditions.checkArgument(!result1, "小程序销售客户能看见消息");
+            Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
             CommonUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
@@ -569,6 +570,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     }
 
 //    ---------------------------------------------------4.0------------------------------------------------------------
+
+    @Test
+    public void test() throws Exception {
+        CommonUtil.uploadShopCarPlate("吉ZDH470",3);
+    }
 }
 
 
