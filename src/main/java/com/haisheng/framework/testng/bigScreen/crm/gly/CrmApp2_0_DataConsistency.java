@@ -9,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.PcData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
