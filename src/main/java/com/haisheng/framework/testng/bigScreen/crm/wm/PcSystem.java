@@ -276,9 +276,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             JSONObject result = crm.messageDetail(id);
             String title1 = result.getString("title");
-            assert title != null;
             CommonUtil.valueView(title, title1);
-            Preconditions.checkArgument(title.equals(title1), "排期中的站内消息可以查看操作");
+            Preconditions.checkArgument(title != null && title.equals(title1), "排期中的站内消息可以查看操作");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -573,7 +572,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void test() throws Exception {
-        CommonUtil.uploadShopCarPlate("吉ZDH470",3);
+        CommonUtil.uploadShopCarPlate("京A1DF90",0);
     }
 }
 

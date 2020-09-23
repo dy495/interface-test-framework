@@ -41,7 +41,9 @@ public enum EnumCustomerInfo {
 
     CUSTOMER_3("王先生", "MALE", "15321527989", "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔。"),
 
-    CUSTOMER_4("李先生", "MALE", "18888888888", "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔。");
+    CUSTOMER_4("李先生", "MALE", "18888888888", "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔。"),
+
+    CUSTOMER_5("郭女士", "FEMALE", "", "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔。");
 
     EnumCustomerInfo(String name, String gender, String phone, String remark) {
         this.name = name;

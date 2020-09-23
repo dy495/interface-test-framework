@@ -389,7 +389,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
      *
      * @return phone
      */
-    private String getDistinctPhone() {
+    public String getDistinctPhone() {
         CommonUtil.login(zjl);
         String phone = "153" + CommonUtil.getRandom(8);
         int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
