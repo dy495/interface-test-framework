@@ -572,7 +572,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void test() throws Exception {
-        CommonUtil.uploadShopCarPlate("京A1DF90",0);
+        CommonUtil.uploadShopCarPlate("京A00000",3);
     }
 }
 

@@ -176,7 +176,7 @@ public class CommonUtil {
      * 车辆进店车牌号上传
      *
      * @param carNum 车牌号
-     * @param status 车辆进店状态 0入店/1出店
+     * @param status 车辆进店状态 0入店/1出店/3线上
      */
     public static void uploadShopCarPlate(String carNum, Integer status) throws Exception {
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
@@ -189,8 +189,11 @@ public class CommonUtil {
             case 1:
                 deviceId = "7724082825888768";
                 break;
+            case 3:
+                deviceId = "7736789438301184";
+                break;
             default:
-                throw new RuntimeException("状态值只能为0或1");
+                throw new RuntimeException("状态值只能为0/1/3");
         }
         upload(picPath, carNum, router, deviceId);
     }
@@ -210,6 +213,10 @@ public class CommonUtil {
         object.put("plate_num", carNum);
         object.put("plate_pic", "@0");
         object.put("time", System.currentTimeMillis());
-        crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+        if (deviceId.equals("7736789438301184")) {
+            crm.carUploadToOnline(router, deviceId, resource, JSON.toJSONString(object));
+        } else {
+            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+        }
     }
 }
