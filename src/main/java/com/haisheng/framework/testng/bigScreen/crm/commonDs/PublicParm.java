@@ -15,7 +15,7 @@ public class PublicParm {
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
     public String xiaoshouZongjian = "xszj";      //销售账号
     //预约使用参数
-    public String customer_name = "@@@2";
+    public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
     public Integer car_type = 1;
     public Integer car_model = 36;

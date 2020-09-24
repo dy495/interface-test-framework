@@ -410,7 +410,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期）  //TODO:四个位置之和
      * @date :2020/8/2 15:49
      **/
-    @Test
+//    @Test
     public void bannerAndArticle(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -519,7 +519,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数+1 ok
      * @date :2020/7/14 11:35
      **/
-    @Test
+//    @Test
     public void goodsManage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -557,7 +557,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @description :商品管理。pc删除车型，车辆列表-1 ok
      * @date :2020/7/15 18:34
      **/
-    @Test
+//    @Test
     public void CardeleteConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1894,7 +1894,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
       * @description :导入，正常导入，随即删除导入成功的客户
       * @date :2020/8/17 21:04
       **/
-     @Test
+//     @Test
      public void importCustomer(){
          logger.logCaseStart(caseResult.getCaseName());
          try{

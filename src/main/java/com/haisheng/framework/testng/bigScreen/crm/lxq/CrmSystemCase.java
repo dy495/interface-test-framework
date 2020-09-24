@@ -152,8 +152,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
     @Test
     public void heiping(){
-        for(int i=0;i<10;i++){
-            String carNum = "京A1DF9"+i;    //试驾车已注销
+        for(int i=0;i<2;i++){
+            String carNum = "京B1DF9"+i;    //试驾车已注销
             uploadEnterShopCarPlatex(carNum);
         }
     }

@@ -50,7 +50,7 @@ public class PackFunction {
 
             String activity_start = dt.getHistoryDate(1);
             String activity_end = dt.getHistoryDate(4);
-            Integer role_id = 16;  //13 销售  15定损（原维修顾问）     16服务
+            Integer role_id = 13;  //13 销售  15定损（原维修顾问）     16服务
             Boolean is_create_poster = true;//是否生成海报
             int task_customer_num=5;
             //新建文章并返回文章/活动id
@@ -102,7 +102,6 @@ public class PackFunction {
         JSONArray ll=new JSONArray();
         list.put("customer_name",name);
         list.put("is_decision",isDes);
-        list.put("sale_id",sale_id);
         ll.add(0,list);
 
         //创建接待
@@ -122,6 +121,8 @@ public class PackFunction {
         jsonP.put("reception_id",receiptId);
         jsonP.put("customerId",customerID);
         jsonP.put("userLoginName",userLoginName);
+        jsonP.put("sale_id",sale_id);
+
         return jsonP;
     }
 
@@ -133,12 +134,13 @@ public class PackFunction {
         //搜索手机号
         JSONObject data=crm.phoneCheck(phone);
         Long customer_id=data.getLong("customer_id");
-        String belongs_sale_name=data.getString("belongs_sale_name");
+//        String belongs_sale_name=data.getString("belongs_sale_name");
+        String belongs_sale_id=data.getString("belongs_sale_id");
         String userLoginName = "";
         JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
         for (int i = 0; i < userlist.size(); i++) {
             JSONObject obj = userlist.getJSONObject(i);
-            if (obj.getString("user_name").equals(belongs_sale_name)) {
+            if (obj.getString("user_id").equals(belongs_sale_id)) {
                 userLoginName = obj.getString("user_login_name");
             }
         }
@@ -153,6 +155,7 @@ public class PackFunction {
         jsonCO.put("id",id);
         jsonCO.put("customerId",customerId);
         jsonCO.put("userLoginName",userLoginName);
+        jsonCO.put("sale_id",belongs_sale_id);
         return jsonCO;
     }
 

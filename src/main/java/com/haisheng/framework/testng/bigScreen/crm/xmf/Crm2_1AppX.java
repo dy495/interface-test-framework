@@ -153,56 +153,72 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :直接接待老客，为小程序接待评价提供消息
      * @date :2020/8/22 14:05
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void acceptEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc评价页总数
-            String type="MSG";
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int total=crm.messageList(20,type).getInteger("total");
+//            String type="MSG";
+//            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            int total=crm.messageList(20,type).getInteger("total");
 
             //预约接待完成
-            JSONObject json=pf.creatCustOld(pp.customer_phone_number);
-            Long reception_id=json.getLong("id");
-            Long customer_id=json.getLong("customerId");
-            crm.finishReception(customer_id, reception_id,pp.customer_name);  //完成接待
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            JSONArray messagePage=crm.messageList(10,type).getJSONArray("list");
-            Long id=messagePage.getJSONObject(0).getLong("id");
+//            JSONObject json=pf.creatCustOld(pp.customer_phone_number);
+//            Long reception_id=json.getLong("id");
+//            Long customer_id=json.getLong("customerId");
+//            String sale_id=json.getString("sale_id");
+            //完成接待
+            JSONArray PhoneList=new JSONArray();
+            JSONObject phone1=new JSONObject();
+            phone1.put("phone",pp.customer_phone_number);
+            phone1.put("phone_order",0);
+            JSONObject phone2=new JSONObject();
+            phone2.put("phone","");
+            phone2.put("phone_order",1);
 
-            int totalB=crm.messageList(100,type).getInteger("total");
-            //小程序评价
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-//            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
-            int score = 4;
-            JSONObject ll = new JSONObject();
-            ll.put("score", score);
-            ll.put("type_comment", "销售接待服务质量");
-            ll.put("type", "SERVICE_QUALITY");
-
-            JSONObject ll2 = new JSONObject();
-            ll2.put("score", score);
-            ll2.put("type_comment", "销售接待服务流程");
-            ll2.put("type", "PROCESS");
-
-            JSONObject ll3 = new JSONObject();
-            ll3.put("score", score);
-            ll3.put("type_comment", "销售接待专业评价");
-            ll3.put("type", "PROFESSIONAL");
-//            ll3.put("type", "EXPERIENCE");
-//            ll3.put("type_comment", "试乘试驾体验评价");
+            PhoneList.add(0,phone1);
+            PhoneList.add(1,phone2);
+//            crm.finishReception2(sale_id, reception_id,customer_id,pp.customer_name,PhoneList,"FU");   //TODO:完成接待参数
+            crm.finishReception2("uid_37ff7893", 3886L,14058L,pp.customer_name,PhoneList,"FU");   //TODO:完成接待参数
 
 
-
-            JSONArray array1 = new JSONArray();
-            array1.add(0, ll);
-            array1.add(1, ll2);
-            array1.add(2, ll3);
-
-            crm.messageEvaluate(id, "我的消息-保养满意", array1);  //评价
-
-            Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
+//            crm.finishReception(customer_id, reception_id,pp.customer_name);  //完成接待
+//            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            JSONArray messagePage=crm.messageList(10,type).getJSONArray("list");
+//            Long id=messagePage.getJSONObject(0).getLong("id");
+//
+//            int totalB=crm.messageList(100,type).getInteger("total");
+//            //小程序评价
+//            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+////            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
+//            int score = 4;
+//            JSONObject ll = new JSONObject();
+//            ll.put("score", score);
+//            ll.put("type_comment", "销售接待服务质量");
+//            ll.put("type", "SERVICE_QUALITY");
+//
+//            JSONObject ll2 = new JSONObject();
+//            ll2.put("score", score);
+//            ll2.put("type_comment", "销售接待服务流程");
+//            ll2.put("type", "PROCESS");
+//
+//            JSONObject ll3 = new JSONObject();
+//            ll3.put("score", score);
+//            ll3.put("type_comment", "销售接待专业评价");
+//            ll3.put("type", "PROFESSIONAL");
+////            ll3.put("type", "EXPERIENCE");
+////            ll3.put("type_comment", "试乘试驾体验评价");
+//
+//
+//
+//            JSONArray array1 = new JSONArray();
+//            array1.add(0, ll);
+//            array1.add(1, ll2);
+//            array1.add(2, ll3);
+//
+//            crm.messageEvaluate(id, "我的消息-保养满意", array1);  //评价
+//
+//            Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -265,7 +281,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :创建新客交车,今日交车次数+1,总计+1  ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testdeliver(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -542,14 +558,9 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void createLine(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-//            String customer_phone="15037286012";
-            String customer_phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                customer_phone = customer_phone + a;
-            }
+            String customer_phone = pf.genPhoneNum();
             String remark="自动化创建线索自动化创建线索自动化创建线索";
-            Long code=crm.createLine("诸葛自动",1,customer_phone,1,remark).getLong("code");
+            Long code=crm.createLine("诸葛自动线索",1,customer_phone,1,remark).getLong("code");
             Preconditions.checkArgument(code==1000,"使用不存在的手机号创建线索应该成功");
 
             Long code2=crm.createLine("诸葛自动",1,customer_phone,1,remark).getLong("code");
@@ -567,7 +578,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，是小程序最新车主风采 ok
      * @date :2020/8/3 16:46
      **/
-    @Test
+//    @Test
     public void carOwerNewst(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -579,12 +590,17 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String sale_id=object.getString("sale_id");
             pf.creatDeliver(reception_id,customer_id,"药不然",dt.getHistoryDate(0),true);
             //完成接待
-            JSONObject list=new JSONObject();
-            JSONArray ll=new JSONArray();
-            list.put("phone",phone);
-            list.put("phone_order",0);
-            ll.add(0,list);
-            crm.finishReception2(sale_id,customer_id, reception_id,customer_name,list,"FU");   //TODO:完成接待参数
+            JSONArray PhoneList=new JSONArray();
+            JSONObject phone1=new JSONObject();
+            phone1.put("phone","");
+            phone1.put("phone_order",0);
+            JSONObject phone2=new JSONObject();
+            phone2.put("phone",phone);
+            phone2.put("phone_order",1);
+
+            PhoneList.add(0,phone1);
+            PhoneList.add(1,phone2);
+            crm.finishReception2(sale_id, reception_id,customer_id,customer_name,PhoneList,"FU");   //TODO:完成接待参数
             //小程序登录，查看最新交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject data=crm.carOwnernew();
@@ -610,7 +626,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，applet车主风采列表+1 ok
      * @date :2020/8/3 18:25
      **/
-    @Test
+//    @Test
     public void carOwerListUp(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -654,7 +670,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :交车不授权  ok
      * @date :2020/8/10 16:45
      **/
-    @Test()
+//    @Test()
     public void testdeliverNotShow(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

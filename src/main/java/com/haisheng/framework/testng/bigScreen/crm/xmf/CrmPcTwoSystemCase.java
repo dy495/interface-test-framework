@@ -124,7 +124,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc新建文章，数据一致，pc文章列表+1，列表信息校验，新建文章时投放人数等于该文章发送短信页总人数；查看文章详情信息校验
      * @date :2020/7/14 10:23
      **/
-    @Test(priority = 1)
+//    @Test(priority = 1)
     public void articleManage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -408,7 +408,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期）  //TODO:四个位置之和
      * @date :2020/8/2 15:49
      **/
-    @Test(enabled = false)
+//    @Test(enabled = false)
     public void bannerAndArticle(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1202,8 +1202,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Long activity_id=aid[1];
             Long id=aid[0];
             crm.login(xiaoshou,adminpassword);
-            JSONObject response = crm.activityTaskPageX();
-            JSONObject json = response.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            JSONObject ff = crm.activityTaskPageX();
+            JSONObject json = ff.getJSONObject("data").getJSONArray("list").getJSONObject(0);
             int activityTaskId = json.getInteger("activity_task_id");
             StringBuilder phone = new StringBuilder("1");
             for (int i = 0; i < 10;i++){
