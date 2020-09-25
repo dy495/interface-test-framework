@@ -3318,8 +3318,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * dcc客户列表
      */
-    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page,
-                              int size) {
+    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page, int size) {
         String url = "/porsche/customer/dcc-list";
         JSONObject object = new JSONObject();
         if (!StringUtils.isEmpty(customerName)) {

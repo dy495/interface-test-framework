@@ -5,11 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumReceptionType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -77,7 +75,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //预约试驾
-            JSONObject response = crm.appointmentDriverNumber();
+            JSONObject response = crm.appointmentTestDriverNumber();
             Integer testDriverTotal = response.getInteger("appointment_total_number");
             Integer testDriverToday = response.getInteger("appointment_today_number");
             Preconditions.checkArgument(testDriverToday <= testDriverTotal, "试驾-全部预约人数<今日预约人数");
@@ -104,20 +102,23 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myAppointment_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            CommonUtil.login(zjl);
             //预约试驾
-            Integer testDriverTotalNumber = crm.appointmentDriverNumber().getInteger("appointment_total_number");
+            Integer testDriverTotalNumber = crm.appointmentTestDriverNumber().getInteger("appointment_total_number");
             //预约试驾列表
-            Integer testDriveTotal = Integer.parseInt(crm.appointmentlist().getString("total"));
+            Integer testDriveTotal = crm.appointmentTestDriverList("", "", "", 1, 10).getInteger("total");
             //预约保养
             Integer maintainTotalNumber = crm.mainAppointmentDriverNum().getInteger("appointment_total_number");
             //预约保养列表
-            Integer maintainTotal = Integer.parseInt(crm.mainAppointmentlist().getString("total"));
+            Integer maintainTotal = crm.mainAppointmentlist().getInteger("total");
             //预约维修
             Integer repairTotalNumber = crm.repairAppointmentDriverNum().getInteger("appointment_total_number");
             //预约维修列表
             Integer repairTotal = Integer.parseInt(crm.repairAppointmentlist().getString("total"));
-            Preconditions.checkArgument((testDriverTotalNumber + maintainTotalNumber + repairTotalNumber) <=
-                    (testDriveTotal + maintainTotal + repairTotal), "全部预约人数>列表数");
+            CommonUtil.valueView(testDriverTotalNumber, testDriveTotal, maintainTotalNumber, maintainTotal);
+            Preconditions.checkArgument(testDriverTotalNumber <= testDriveTotal, "全部预约试驾数>预约试驾任务列表数");
+            Preconditions.checkArgument(maintainTotalNumber <= maintainTotal, "售后保养--全部预约车辆>售后预约列表数");
+            Preconditions.checkArgument(repairTotalNumber <= repairTotal, "售后维修--全部预约车辆>售后预约列表数");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -128,14 +129,16 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "销售完成回访任务,电话预约=已完成+1、电话预约=未完成-1、列表总数不变", enabled = false)
     public void myAppointment_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
-        String data = DateTimeUtil.getFormat(new Date());
+        String date = DateTimeUtil.getFormat(new Date());
+        String preBuyCarTime = DateTimeUtil.dateToStamp(date);
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_3;
         try {
             //登录小程序
             CommonUtil.loginApplet(EnumAppletCode.WM);
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 1, 36);
+
             //电话预约已完成数量
             int phoneAppointmentNum = 0;
             CommonUtil.login(xs);
@@ -159,7 +162,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //回访
             String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
             String picture = new ImageUtil().getImageBinary(picPath);
-            crm.returnVisitTaskExecute(taskId, customerInfo.getRemark(), "", data, "ANSWER", false, picture);
+            crm.returnVisitTaskExecute(customerInfo.getRemark(), "", "", false, date, "", preBuyCarTime, EnumReturnVisitResult.ANSWER.getName(), String.valueOf(taskId), picture);
             //获取
             int x = 0;
             JSONArray s = crm.appointmentTestDriverList("", "", "", 1, 100).getJSONArray("list");
@@ -186,7 +189,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //更新小程序token
             CommonUtil.loginApplet(EnumAppletCode.WM);
             //预约试驾
-            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = response.getInteger("appointment_id");
             //已取消数量
             int cancelNum1 = getCancelNum("已取消");
@@ -212,7 +215,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         try {
             //更新小程序token
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = response.getInteger("appointment_id");
             //获取列表总数
             CommonUtil.login(xs);
@@ -248,7 +251,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             int appointmentNum = getCancelNum("预约中");
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            JSONObject result = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+            JSONObject result = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = result.getInteger("appointment_id");
             //列表条数
             CommonUtil.login(xs);
@@ -266,10 +269,11 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
                     customerPhoneNumber = list.getJSONObject(i).getString("customer_phone_number");
                 }
             }
+            assert appointmentDate != null;
             int appointmentNum1 = getCancelNum("预约中");
             Integer total2 = response2.getInteger("total");
             CommonUtil.valueView(total1, total2, appointmentNum, appointmentNum1, appointmentDate, carType, customerName, customerPhoneNumber);
-            Preconditions.checkArgument(appointmentDate != null && appointmentDate.equals(data), "app我的预约记录中预约日期与小程序不一致");
+            Preconditions.checkArgument(appointmentDate.equals(data), "app我的预约记录中预约日期与小程序不一致");
             Preconditions.checkArgument(customerName.equals(customerInfo.getName()), "app我的预约记录中客户名称与小程序不一致");
             Preconditions.checkArgument(carType == 4, "app我的预约记录中试驾车型与小程序不一致");
             Preconditions.checkArgument(customerPhoneNumber.equals(customerInfo.getPhone()), "app我的预约记录中联系电话与小程序不一致");
@@ -288,7 +292,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_3;
         EnumCustomerInfo customerInfo1 = EnumCustomerInfo.CUSTOMER_4;
         try {
-            JSONObject object = crm.appointmentDriverNumber();
+            JSONObject object = crm.appointmentTestDriverNumber();
             //全部预约
             int appointmentTotalNumber = object.getInteger("appointment_total_number");
             //今日预约
@@ -299,12 +303,14 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //预约试驾
             CommonUtil.loginApplet(EnumAppletCode.WM);
             String data = DateTimeUtil.getFormat(new Date());
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 4);
+
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             //连续访问接口会失败，延迟3s
             sleep(3);
-            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), data, 4);
+            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), data, 1, 36);
             CommonUtil.login(xs);
-            JSONObject object1 = crm.appointmentDriverNumber();
+
+            JSONObject object1 = crm.appointmentTestDriverNumber();
             //全部预约
             int appointmentTotalNumber1 = object1.getInteger("appointment_total_number");
             //今日预约
@@ -331,18 +337,18 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             String date = DateTimeUtil.getFormat(new Date());
             String date1 = DateTimeUtil.addDayFormat(new Date(), 1);
             CommonUtil.login(zjl);
-            JSONObject response = crm.appointmentDriverNumber();
+            JSONObject response = crm.appointmentTestDriverNumber();
             int todayNumber = response.getInteger("appointment_today_number");
             int totalNumber = response.getInteger("appointment_total_number");
             int listSize = crm.appointmentTestDriverList("", "", "", 1, 2 << 10).getJSONArray("list").size();
             //两个人预约试驾-今明两天
             CommonUtil.loginApplet(EnumAppletCode.WM);
-            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 4);
+            crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 1, 36);
             CommonUtil.loginApplet(EnumAppletCode.XMF);
-            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), date1, 4);
+            crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), date1, 1, 36);
             CommonUtil.valueView(todayNumber, totalNumber, listSize);
             CommonUtil.login(zjl);
-            JSONObject response1 = crm.appointmentDriverNumber();
+            JSONObject response1 = crm.appointmentTestDriverNumber();
             int todayNumber1 = response1.getInteger("appointment_today_number");
             int totalNumber1 = response1.getInteger("appointment_total_number");
             int listSize1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10).getJSONArray("list").size();
@@ -751,23 +757,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "【我的接待】共计接待 >= 【我的客户】全部客户")
-    public void myReception_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.customerReceptionTotalInfo();
-            int totalReception = response.getInteger("total_reception");
-            JSONObject response1 = crm.customerPage(10, 1, "", "", "");
-            int total = response1.getInteger("total");
-            CommonUtil.valueView(totalReception, total);
-            Preconditions.checkArgument(totalReception >= total, "【我的接待】共计接待 < 【我的客户】全部客户");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("【我的接待】共计接待 >= 【我的客户】全部客户");
-        }
-    }
-
     @Test(description = "今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数")
     public void myReception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -825,14 +814,17 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.deliverCarTotal();
             int todayDeliverCarTotal = response.getInteger("today_deliver_car_total");
             String startDay = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
-            JSONArray array = crm.deliverCarAppList("", 1, 2 << 10, startDay, startDay).getJSONArray("list");
+            int todayTotal = crm.deliverCarAppList("", 1, 10, startDay, startDay).getInteger("total");
             //电话号去重
             Set<String> set = new HashSet<>();
-            for (int i = 0; i < array.size(); i++) {
-                String customerPhoneNumber = array.getJSONObject(i).getString("customer_phone_number");
-                set.add(customerPhoneNumber);
+            for (int i = 1; i < CommonUtil.pageTurning(todayTotal, 100); i++) {
+                JSONArray list = crm.deliverCarAppList("", i, 10, startDay, startDay).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
+                    set.add(customerPhoneNumber);
+                }
             }
-            CommonUtil.valueView(todayDeliverCarTotal, array.size(), set.size());
+            CommonUtil.valueView(todayDeliverCarTotal, set.size());
             Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数!=今日交车列表手机号去重后列数和");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -919,11 +911,17 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.customerPage(100, 1, "", "", "");
-            int total = response.getInteger("total");
-            JSONArray list = response.getJSONArray("list");
-            CommonUtil.valueView(total, list.size());
-            Preconditions.checkArgument(total == list.size(), "全部客户!=列表数");
+            int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            int listSize = 0;
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.customerPage(100, i, "", "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    listSize++;
+                }
+            }
+            CommonUtil.valueView(total, listSize);
+            Preconditions.checkArgument(total == listSize, "全部客户数量:" + total + "列表数:" + listSize + "不相等");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -935,16 +933,15 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
+        EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
         try {
-            CommonUtil.login(zjl);
-            deleteCustomer(customerInfo.getPhone());
+            String phone = getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
-            crm.createLine(customerInfo.getName(), 6, customerInfo.getPhone(), 2, customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             int total1 = crm.customerPage(1, 10, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
-            deleteCustomer(customerInfo.getPhone());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -952,27 +949,22 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "前台分配新客，创建时手机号不存在,全部客户+1")
+    @Test(description = "前台分配新客，创建时手机号不存在,全部客户+1", enabled = false)
     public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
         try {
-            CommonUtil.login(zjl);
-            JSONObject response = crm.customerList("", customerInfo.getPhone(), "", "", "", 1, 10);
-            if (!response.getJSONArray("list").isEmpty()) {
-                deleteCustomer(customerInfo.getPhone());
-            }
+            String phone = getDistinctPhone();
             //客户总数
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
             //分配客户-获取客户id
             long customerId = getCustomerId();
             CommonUtil.login(zjl);
             //完成接待
-            crm.customerFinishReception(zjl.getUid(), customerId, 3, customerInfo.getName(), customerInfo.getPhone(), customerInfo.getRemark());
+            crm.customerFinishReception(zjl.getUid(), customerId, 3, customerInfo.getName(), phone, customerInfo.getRemark());
             int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在,全部客户没有+1");
-            deleteCustomer(customerInfo.getPhone());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -984,17 +976,20 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.customerPage(100, 1, "", "", "");
+            JSONObject response = crm.customerPage(10, 1, "", "", "");
+            int total = response.getInteger("total");
             int buyCarNum = response.getInteger("buy_car_num");
-            int s = 0;
-            JSONArray list = response.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("if_buy_car_name").equals("是")) {
-                    s++;
+            int listSize = 0;
+            for (int i = 1; i < CommonUtil.pageTurning(total, 100); i++) {
+                JSONArray list = crm.customerPage(100, i, "", "", "").getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("if_buy_car_name").equals("是")) {
+                        listSize++;
+                    }
                 }
             }
-            CommonUtil.valueView(buyCarNum, s);
-            Preconditions.checkArgument(buyCarNum == s, "已订车!=列表中是否订车为是的数量");
+            CommonUtil.valueView(buyCarNum, listSize);
+            Preconditions.checkArgument(buyCarNum == listSize, "已订车数量!=列表中是否订车为是的数量");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1028,11 +1023,14 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerPage(100, 1, "", "", "");
             JSONArray list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())) {
+                if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.O.getName())
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.G.getName())
+                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.F.getName())) {
                     int remainDays = list.getJSONObject(i).getInteger("remain_days");
                     CommonUtil.valueView(remainDays);
                     Preconditions.checkArgument(remainDays < 90, "app，我的客户列表中存在剩余天数>90的记录，" + "天数为：" + remainDays);
-                    Preconditions.checkArgument(remainDays >= 0, "app，我的客户列表中存在剩余天数<1的记录，" + "天数为：" + remainDays);
+                    Preconditions.checkArgument(remainDays >= 1, "app，我的客户列表中存在剩余天数<1的记录，" + "天数为：" + remainDays);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1062,21 +1060,22 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数")
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
-        String salePhone = "15321527989";
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
+        EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+        String salePhone = "15321527989";
         //查询公海数量
         try {
             //先删除15321527989顾问的账号
             deleteSaleUser(salePhone);
             //公海客户数量
-            int total =crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            int total = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //添加销售
-            crm.addUser(EnumAccount.XS_ONLINE.getAccount(), EnumAccount.XS_ONLINE.getAccount(), salePhone, EnumAccount.XS_ONLINE.getPassword(), 13);
-            CommonUtil.login(EnumAccount.XS_ONLINE);
-            //创建线索
-            deleteCustomer(customerInfo.getPhone());
-            CommonUtil.login(EnumAccount.XS_ONLINE);
-            crm.createLine(customerInfo.getName(), 6, customerInfo.getPhone(), 2, customerInfo.getRemark());
+            crm.addUser(EnumAccount.XS_DAILY.getAccount(), EnumAccount.XS_DAILY.getAccount(), salePhone, EnumAccount.XS_DAILY.getPassword(), 13, "", "");
+            CommonUtil.login(EnumAccount.XS_DAILY);
+            //创建
+            String customerPhone = getDistinctPhone();
+            CommonUtil.login(EnumAccount.XS_DAILY);
+            crm.customerCreate(customerInfo.getName(), "2", customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             CommonUtil.login(zjl);
             //删除此新增的顾问
             deleteSaleUser(salePhone);
@@ -1084,8 +1083,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             int total1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "删除所属销售，公海数量未增加");
-            //删除新增的客户
-            deleteCustomer(customerInfo.getPhone());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1135,28 +1132,19 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             }
         }
         //创建接待
-        crm.saleReception(EnumReceptionType.FIRST_VISIT.getType());
+        JSONArray customerList = new JSONArray();
+        JSONArray newCustomerList = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("customer_name", "哒哒");
+        object.put("is_decision", true);
+        newCustomerList.add(object);
+        crm.saleReception(EnumReceptionType.FIRST_VISIT.getType(), newCustomerList, customerList);
         //销售登陆，获取当前接待id
         crm.login(userLoginName, xs.getPassword());
         customerId = crm.userInfService().getLong("customer_id");
         return customerId;
     }
 
-    /**
-     * 删除客户
-     *
-     * @param phone 客户电话号
-     */
-    private void deleteCustomer(String phone) {
-        CommonUtil.login(zjl);
-        JSONObject response = crm.customerList("", phone, "", "", "", 1, 10);
-        if (!response.getJSONArray("list").isEmpty()) {
-            int customerId = CommonUtil.getIntField(response, 0, "customer_id");
-            crm.customerDelete(customerId);
-        } else {
-            CommonUtil.valueView(response.getString("message"));
-        }
-    }
 
     /**
      * 删除
@@ -1233,5 +1221,18 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         //回访
         crm.afterSale_addVisitRecord((long) id, picture, comment, date1);
         return id;
+    }
+
+    /**
+     * 获取非重复电话号
+     *
+     * @return phone
+     */
+    private String getDistinctPhone() {
+        CommonUtil.login(zjl);
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 }

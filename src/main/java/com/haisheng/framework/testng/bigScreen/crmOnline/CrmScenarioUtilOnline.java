@@ -1092,6 +1092,29 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     //--------------------APP----------------
 
+    /**
+     * DCC客户列表接口
+     */
+    public JSONObject dccList(String searchCondition, String customerLevel, String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/customer/dcc-list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(searchCondition)) {
+            object.put("search_condition", searchCondition);
+        }
+        if (!StringUtils.isEmpty(customerLevel)) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     //新建试驾 2.1修改
     public JSONObject driveradd(Long receptionId, Long customer_id, String customerName, String idCard, String gender, String phone,
                                 String activity, Long model, String country,
@@ -1551,6 +1574,27 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         object.put("customer_phone_number", customerPhoneNumber);
         object.put("appointment_date", appointmentDate);
         object.put("car_type", carType);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 预约试驾接口
+     *
+     * @param gender              性别
+     * @param customerName        姓名
+     * @param customerPhoneNumber 电话号
+     * @param appointmentDate     预约日期
+     * @param carType             预约车型 4：718/1-6：不知道
+     */
+    public JSONObject appointmentTestDrive(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType, Integer car_model) {
+        String url = "/WeChat-applet/porsche/a/appointment/test-drive";
+        JSONObject object = new JSONObject();
+        object.put("customer_gender", gender);
+        object.put("customer_name", customerName);
+        object.put("customer_phone_number", customerPhoneNumber);
+        object.put("appointment_date", appointmentDate);
+        object.put("car_style", carType);
+        object.put("car_model", car_model);
         return invokeApi(url, object);
     }
 
@@ -3158,6 +3202,13 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     //--------------------------app2.1------------------------
 
+    //app 预约试驾全部预约及今日预约人数
+    public JSONObject appointmentTestDriverNumber() {
+        String url = "/porsche/app/appointment/appointment_test_driver_number";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
     /**
      * 客户级别列表接口
      */
@@ -3324,6 +3375,76 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
             appendFailreason(e.toString());
         }
         return JSONObject.parseObject(result);
+    }
+
+    /**
+     * dcc客户列表
+     */
+    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page, int size) {
+        String url = "/porsche/customer/dcc-list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerName)) {
+            object.put("customer_name", customerName);
+        }
+        if (!StringUtils.isEmpty(customerPhone)) {
+            object.put("customer_phone", customerPhone);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * @param comment             回访记录
+     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailureCause}
+     * @param failureCauseRemark  战败备注
+     * @param ifSystemRecommend   是否系统推荐
+     * @param nextReturnVisitDate 下次回访日期
+     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel}
+     * @param preBuyCarTime       预计购车时间
+     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult}
+     * @param taskId              任务id
+     * @param returnVisitPic      回访图片
+     */
+    public JSONObject returnVisitTaskExecute(String comment, String failureCause, String failureCauseRemark, boolean ifSystemRecommend, String nextReturnVisitDate, String otherStoreCarType, String preBuyCarTime, String returnVisitResult, String taskId, String... returnVisitPic) {
+        String url = "/porsche/app/return-visit-task/execute";
+        JSONArray array = new JSONArray();
+        Arrays.stream(returnVisitPic).forEach(e -> {
+            JSONObject object = new JSONObject();
+            object.put("return_visit_pic", e);
+            array.add(object);
+        });
+        JSONObject object = new JSONObject();
+        object.put("comment", comment);
+        if (!StringUtils.isEmpty(failureCause)) {
+            object.put("failure_cause", failureCause);
+        }
+        if (!StringUtils.isEmpty(failureCauseRemark)) {
+            object.put("failure_cause_remark", failureCauseRemark);
+        }
+        if (!StringUtils.isEmpty(otherStoreCarType)) {
+            object.put("other_store_car_type", otherStoreCarType);
+        }
+        object.put("if_system_recommend", ifSystemRecommend);
+        object.put("next_return_visit_date", nextReturnVisitDate);
+        object.put("pre_buy_car_time", preBuyCarTime);
+        object.put("return_visit_pic_list", array);
+        object.put("return_visit_result", returnVisitResult);
+        object.put("task_id", taskId);
+        String request = JSON.toJSONString(object);
+        String result = null;
+        try {
+            result = httpPost(url, request, IpPort);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        return JSON.parseObject(result);
     }
 
     public JSONObject deliverSelect(int page, int size) {
@@ -3753,6 +3874,20 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**
+     * 销售前台客户分配接口
+     *
+     * @param receptionType 接待类型（FIRST_VISIT:首次到店 / INVITATION :邀约 /AGAIN_VISIT:再次到店）
+     */
+    public JSONObject saleReception(String receptionType, JSONArray customer, JSONArray newCustomer) {
+        String url = "/porsche/app/sale-reception/reception";
+        JSONObject object = new JSONObject();
+        object.put("reception_type", receptionType);
+        object.put("customer_list", customer);
+        object.put("new_customer_list", newCustomer);
+        return invokeApi(url, object);
+    }
+
+    /**
      * 我的试驾列表接口
      *
      * @param searchCondition 搜索条件，客户姓名
@@ -3776,7 +3911,77 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * 创建账号
+     */
+    public JSONObject addUser(String userName, String userLoginName, String phone, String passwd, int roleId, String platNumber1, String platNumber2) {
+        String url = "/porsche/user/add";
+        JSONObject object = new JSONObject();
+        object.put("user_name", userName);
+        object.put("user_login_name", userLoginName);
+        object.put("user_phone", phone);
+        object.put("password", passwd);
+        object.put("role_id", roleId);
+        List<String> list = new ArrayList<>();
+        if (!StringUtils.isEmpty(platNumber1)) {
+            list.add(platNumber1);
+        }
+        if (!StringUtils.isEmpty(platNumber2)) {
+            list.add(platNumber2);
+        }
+        object.put("plate_number", list);
+        String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 创建线索
+     *
+     * @param intentionCarModel 车型编号
+     * @param intentionCarStyle 车系编号
+     */
+    public JSONObject customerCreate(String customerName, String customerLevel, String customerPhone, String intentionCarModel, String intentionCarStyle, String remark) throws Exception {
+        String url = "/porsche/app/customer/create";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerName)) {
+            object.put("customer_name", customerName);
+        }
+        if (!StringUtils.isEmpty(customerPhone)) {
+            object.put("customer_phone", customerPhone);
+        }
+        if (!StringUtils.isEmpty(customerLevel)) {
+            object.put("customer_level", customerLevel);
+        }
+        if (!StringUtils.isEmpty(intentionCarModel)) {
+            object.put("intention_car_model", intentionCarModel);
+        }
+        if (!StringUtils.isEmpty(intentionCarStyle)) {
+            object.put("intention_car_style", intentionCarStyle);
+        }
+        if (!StringUtils.isEmpty(remark)) {
+            object.put("remark", remark);
+        }
+        String request = JSON.toJSONString(object);
+        String result = httpPost(url, request, IpPort);
+        return JSON.parseObject(result);
+    }
+
     //--------------------------applet3.0------------------------
+
+    /**
+     * 微信我的消息列表接口
+     *
+     * @param lastValue
+     * @param size
+     * @return
+     */
+    public JSONObject wechatMessageList(String lastValue, int size) {
+        String url = "/WeChat-applet/porsche/a/message/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
 
     /**
      * 小程序我的试驾列表
