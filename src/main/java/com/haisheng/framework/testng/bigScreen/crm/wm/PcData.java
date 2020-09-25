@@ -76,7 +76,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
             //客户总数
-            int total = CommonUtil.getIntField(object, "total");
+            int total = object.getInteger("total");
             int pageSize = CommonUtil.pageTurning(total, 100);
             int listSizeTotal = 0;
             for (int i = 1; i < pageSize; i++) {
@@ -97,7 +97,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
-            int total = CommonUtil.getIntField(response, "total");
+            int total = response.getInteger("total");
             int listSize = response.getJSONArray("list").size();
             CommonUtil.valueView(total, listSize);
             Preconditions.checkArgument(total == listSize, "pc销售客户管理公海共计人数为：" + total + "列表总数为：" + listSize + "两者不相等");
@@ -114,7 +114,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         try {
             String date = DateTimeUtil.getFormat(new Date());
             JSONObject object = crm.customerList("", "", "", date, date, 1, 10);
-            int total = CommonUtil.getIntField(object, "total");
+            int total = object.getInteger("total");
             int pageSize = CommonUtil.pageTurning(total, 100);
             int listSizeTotal = 0;
             for (int i = 1; i < pageSize; i++) {

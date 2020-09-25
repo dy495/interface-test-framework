@@ -19,7 +19,7 @@ public class CustomerInfoOnline {
     public final String bygw = "baoyang"; //保养顾问
     public final String wxgw = "66"; //维修顾问
     public final String zj = "zj"; //总监
-    public final String fwzj="fwzj";//服务总监
+    public final String fwzj = "fwzj";//服务总监
     public final String zjl = "zjl"; //总经理
     public final String qt = "qt"; //前台
 
@@ -27,7 +27,7 @@ public class CustomerInfoOnline {
     public final String phone11 = "13436941018";
     public final String saleid11 = "uid_c01f9419"; //11的id
     public final String saleid22 = "uid_da55f38d"; //22的id
-
+    public final String xszj = "xszj";//销售总监
 
 
     //交车照片
