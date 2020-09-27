@@ -1600,19 +1600,21 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-              JSONObject response = Md.memberTotalListV3(shop_id,page,10);
+              JSONObject response = Md.memberTotalListV3(shop_id,page,size);
               JSONArray list = response.getJSONArray("list");
               String last_time = "";
               String customer_id = "";
+              String time = "";
               for(int i=0;i<list.size();i++){
                   last_time = list.getJSONObject(i).getString("latest_arrival_time");
                   customer_id = list.getJSONObject(i).getString("customer_id");
+                  JSONObject res = Md.memberDetail(shop_id,customer_id,page,10);
+                  JSONArray detailList = res.getJSONArray("list");
+                  time = detailList.getJSONObject(0).getString("time");
               }
-               JSONObject res = Md.memberDetail(shop_id,customer_id,page,10);
-               JSONArray detailList = res.getJSONArray("list");
-               String time = detailList.getJSONObject(0).getString("time");
 
-            Preconditions.checkArgument((last_time.equals("time")), "客户ID："+customer_id+"。列表最新留痕时间为：" + last_time +"。该客户详情中的最新留痕时间为："+time +"。报错门店的shopId=" + shop_id );
+
+            Preconditions.checkArgument((last_time.equals(time)), "客户ID："+customer_id+"。列表最新留痕时间为：" + last_time +"。该客户详情中的最新留痕时间为："+time +"。报错门店的shopId=" + shop_id );
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
