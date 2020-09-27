@@ -36,7 +36,6 @@ public interface IScene {
     /**
      * 执行调用
      *
-     * @param path        路径
      * @param requestBody 请求体
      * @param data        取不取data
      * @return response

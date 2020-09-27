@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 人员账号
- * 账号、密码、uid、环境
+ * 账号、密码、uid、环境、名称
  *
  * @author wangmin
  * @date 2020/7/24 16:54
@@ -40,7 +40,7 @@ public enum EnumAccount {
     /**
      * 管理员
      */
-    BAOSHIJIE_DAILY("baoshijie", getPassword("123456"), "uid_827f10a3", "daily", ""),
+    BAOSHIJIE_DAILY("baoshijie", getPassword("123456"), "uid_827f10a3", "daily", "4s店测试账号"),
 
 
     /**

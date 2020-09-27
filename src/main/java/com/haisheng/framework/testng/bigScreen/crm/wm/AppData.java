@@ -182,7 +182,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序取消预约试驾，客户状态=已取消的数量+1",enabled = false)
+    @Test(description = "客户小程序取消预约试驾，客户状态=已取消的数量+1", enabled = false)
     public void myAppointment_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         String data = DateTimeUtil.getFormat(new Date());
@@ -209,7 +209,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序取消预约试驾，列表数不变",enabled = false)
+    @Test(description = "客户小程序取消预约试驾，列表数不变", enabled = false)
     public void myAppointment_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         String data = DateTimeUtil.getFormat(new Date());
@@ -239,7 +239,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户小程序预约试驾，列表条数+1、客户状态=预约中数量+1，列表信息与小程序新建预约时信息一致、预约日期、联系人、试驾车型、联系电话",enabled = false)
+    @Test(description = "客户小程序预约试驾，列表条数+1、客户状态=预约中数量+1，列表信息与小程序新建预约时信息一致、预约日期、联系人、试驾车型、联系电话", enabled = false)
     public void myAppointment_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String data = DateTimeUtil.getFormat(new Date());
@@ -1241,7 +1241,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 
-    @Test(enabled = false)
+    @Test()
     public void test() {
         EnumAccount account = EnumAccount.ZJL_DAILY;
         JSONObject object = Login.builder().type(0).password(account.getPassword()).username(account.getAccount()).build().invokeApi();

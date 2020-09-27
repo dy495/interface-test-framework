@@ -24,7 +24,7 @@ public abstract class BaseScene extends TestCaseCommon implements IScene {
 
     @Override
     public JSONObject execute(JSONObject requestBody, boolean data) {
-        if (StringUtils.isEmpty(getIpPort()) && StringUtils.isEmpty(getIpPort())) {
+        if (StringUtils.isEmpty(getIpPort()) || StringUtils.isEmpty(getIpPort())) {
             throw new RuntimeException("path+IpPort不能为空");
         }
         String request = JSON.toJSONString(requestBody);

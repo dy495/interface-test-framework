@@ -152,6 +152,7 @@ public class Data extends TestCaseCommon implements TestCaseStd {
                         JSONObject response1 = crm.shopPannel(e.getType(), "", userId);
                         int receptionNum1 = response1.getInteger(field);
                         everySaleNun += receptionNum1;
+                        CommonUtil.valueView(everySaleNun);
                         CommonUtil.log("分割线");
                     }
                 }

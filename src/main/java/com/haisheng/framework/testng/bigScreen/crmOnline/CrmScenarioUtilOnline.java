@@ -2381,6 +2381,14 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject mainAppointmentList(int page, int size) {
+        String url = "/porsche/app/after_sale/appointment_maintain_list";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     //预约维修列表展示
     public JSONObject repairAppointmentlist() {
         String url = "/porsche/app/after_sale/appointment_mend_list";
@@ -3291,6 +3299,47 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         object.put("endTime", endTime);
         return invokeApi(url, object);
 
+    }
+
+    public JSONObject receptionPage(String name, String phone, String saleType, int page, int size) {
+        String url = "/porsche/administration/reception/page";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(name)) {
+            object.put("name", name);
+        }
+        if (!StringUtils.isEmpty(page)) {
+            object.put("phone", phone);
+        }
+        object.put("sale_type", saleType);
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 接待列表接口
+     *
+     * @param page              页码
+     * @param size              页大小
+     * @param startTime         开始时间
+     * @param endTime           结束时间
+     * @param customerNamePhone 客户名称/联系方式
+     */
+    public JSONObject receptionPage(String customerNamePhone, String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/sale-reception/reception-page";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerNamePhone)) {
+            object.put("customer_name_phone", customerNamePhone);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
     }
 
     public JSONObject receptionPage(Integer page, Integer size) {
