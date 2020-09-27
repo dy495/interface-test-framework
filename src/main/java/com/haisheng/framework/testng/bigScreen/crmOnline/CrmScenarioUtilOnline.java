@@ -980,7 +980,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject finishReception(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) throws Exception {
+    public JSONObject finishReception(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) {
         String url = "/porsche/app/customer/finishReception";
 
         String json =
@@ -997,6 +997,68 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    public JSONObject finishReception(Long reception_id, Long customer_id, String name)  {
+        String url = "/porsche/app/customer/finishReception";
+        JSONObject json1 = new JSONObject();
+        json1.put("reception_id", reception_id);
+        json1.put("customer_id", customer_id);
+        json1.put("name", name);
+        json1.put("subject_type", "BB");
+        json1.put("call", "call");         //TODO:call
+        json1.put("district_code", "110101");
+        json1.put("address", "东城");
+        json1.put("remark", "auto-remark-12345678901234567890");
+
+        json1.put("intention_car_model", 37);
+        json1.put("expected_buy_day", dt.getHistoryDate(1));
+        json1.put("test_drive_car_model", 37);
+        json1.put("pay_type", 2);
+        json1.put("assess_car_model", 37);
+        json1.put("compare_car_model", 37);
+        json1.put("own_car_model", 37);
+        json1.put("visit_count_type", 1);
+        json1.put("is_offer", 1);
+        json1.put("buy_car_type", 1);
+        json1.put("is_assessed", 1);
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id, String name, JSONArray phone_list, String reception_type) throws Exception {
+        String url = "/porsche/app/customer/finishReception";
+        JSONObject json1 = new JSONObject();
+        json1.put("belongs_sale_id", belongs_sale_id);
+        json1.put("reception_id", reception_id.toString());
+        json1.put("call", "WOMEN");
+        json1.put("customer_id", customer_id.toString());
+        json1.put("expected_buy_day", dt.getHistoryDate(1));
+        json1.put("intention_car_model", "37");
+
+        json1.put("address", "东城");
+        json1.put("is_assessed", "1");
+        json1.put("is_offer", "1");
+        json1.put("name", name);
+        json1.put("pay_type", "2");
+        json1.put("phone_list", phone_list);
+        json1.put("reception_type", reception_type);
+        json1.put("remark", "auto-remark-12345678901234567890");
+        json1.put("subject_type", "PERSON");
+        json1.put("test_drive_car_model", "37");
+        json1.put("visit_count_type", "0");
+        json1.put("buy_car_type", "2");
+//        json1.put("district_code", 110119);
+
+//        json1.put("assess_car_model", 37);
+//        json1.put("compare_car_model", 37);
+//        json1.put("own_car_model", 37);
+//        json1.put("buy_car_type", 1);
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * 完成接待接口
@@ -4043,6 +4105,22 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
             json.put("car_type", car_type);
         }
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //购车
+    public JSONObject addOrderCar(String customer_id, String reception_id, String vehicle_chassis_code) throws Exception {
+        String url = "/porsche/app/customer/add-order-car";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_model_id", 36);
+        json1.put("car_style_id", 1);
+        json1.put("customer_id", customer_id);
+        json1.put("defray_type", 1);
+        json1.put("pay_type", 1);
+        json1.put("plate_type", 0);
+        json1.put("reception_id", reception_id);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
+        String json = json1.toJSONString();
+        String result = httpPost(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 

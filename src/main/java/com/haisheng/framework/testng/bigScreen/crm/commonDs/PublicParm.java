@@ -13,6 +13,7 @@ public class PublicParm {
     public Long mycarId = 419L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
+    public String dcc = "xdcc";      //销售账号
     public String xiaoshouZongjian = "xszj";      //销售账号
     //预约使用参数
     public String customer_name = "@@@a";

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
@@ -10,13 +10,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.util.StatusCode;
 import com.haisheng.framework.util.HttpExecutorUtil;
+import com.haisheng.framework.util.StatusCode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -32,23 +32,23 @@ import org.testng.annotations.DataProvider;
 import java.io.File;
 import java.util.*;
 
-public class CrmScenarioUtil extends TestCaseCommon {
+public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     /**
      * 单例，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
-    private static volatile CrmScenarioUtil instance = null;
-    CustomerInfo cstm = new CustomerInfo();
+    private static volatile CrmScenarioUtilOnlineX instance = null;
+    CustomerInfoOnline cstm = new CustomerInfoOnline();
 
-    private CrmScenarioUtil() {
+    private CrmScenarioUtilOnlineX() {
     }
 
-    public static CrmScenarioUtil getInstance() {
+    public static CrmScenarioUtilOnlineX getInstance() {
         if (null == instance) {
-            synchronized (CrmScenarioUtil.class) {
+            synchronized (CrmScenarioUtilOnlineX.class) {
                 if (null == instance) {
-                    instance = new CrmScenarioUtil();
+                    instance = new CrmScenarioUtilOnlineX();
                 }
             }
         }
@@ -58,7 +58,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumAddress.PORSCHE.getAddress();
+    public String IpPort = EnumAddress.PORSCHE_ONLINE.getAddress();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -78,35 +78,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
-
-    public JSONObject tryLogin(String userName, String passwd) throws Exception {
-        String url = "/porsche-login";
-        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
-        String res = httpPost(url, json, IpPort);
-        return JSON.parseObject(res);
-    }
-
-    public void appletLoginLxq(String code) {
-        initHttpConfig();
-        String path = "/WeChat-applet-login";
-        String loginUrl = IpPort + path;
-        String json = "{ \"code\":\"" + code + "\"}";
-        config.url(loginUrl)
-                .json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-//            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            authorization = "qa_need_not_delete1";
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        //saveData("登陆");
-    }
-
     /**
      * 小程序通用登录
      *
@@ -119,8 +90,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     /*
-    创建客户 V1.1作废了
-     */
+     创建客户 V1.1作废了
+      */
     public JSONObject customerAdd(JSONObject decision_customer) throws Exception {
         String url = "/porsche/app/customer/add";
         String json =
@@ -256,12 +227,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-     //完成接待 4.0 ok
-    public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id, String name, JSONArray phone_list, String reception_type) throws Exception {
+
+    public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id ,String name, JSONArray phone_list, String reception_type) throws Exception {
 
         JSONArray remark=new JSONArray();
         JSONObject re=new JSONObject();
-        re.put("remark","auto_remark_12345678901234567890");
+        re.put("remark","online-auto_remark_12345678901234567890");
         remark.add(re);
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
@@ -270,7 +241,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("call", "WOMEN");
         json1.put("customer_id", customer_id.toString());
         json1.put("expected_buy_day", dt.getHistoryDate(1));
-        json1.put("intention_car_model", "37");
+        json1.put("intention_car_model", "82");
         json1.put("address", "东城");
         json1.put("is_assessed", "1");
         json1.put("is_offer", "1");
@@ -280,7 +251,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("reception_type", reception_type);
         json1.put("remark", remark);
         json1.put("subject_type", "PERSON");
-        json1.put("test_drive_car_model", "37");
+        json1.put("test_drive_car_model", "82");
         json1.put("visit_count_type", "0");
         json1.put("buy_car_type", "2");
 //        json1.put("district_code", 110119);
@@ -2271,8 +2242,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
     //pc文章详情
-    public JSONObject artilceDetailpc(Long id) {
-        String url = "/porsche/article/view/";
+    public JSONObject artilceDetailpc(Long id) throws Exception {
+        String url = "/porsche/article/detail/" + id;
         JSONObject json=new JSONObject();
         json.put("id",id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
@@ -4470,8 +4441,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public static Object[] select_date() {
         return new String[]{
                 dt.getHistoryDate(0),
-//                dt.getHistoryDate(-1),
-//                dt.getHistoryDate(-2)
+                dt.getHistoryDate(-1),
+                dt.getHistoryDate(-2)
         };
     }
 
@@ -4528,99 +4499,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "吉Q6465Q"
 
         };
-    }
-
-    //方法封装
-//    //前台点击创建接待按钮创建顾客
-//    public JSONObject creatCust() throws Exception {
-//        JSONObject object = new JSONObject();
-//        //前台登陆
-//        login(cstm.qt, cstm.pwd);
-//        Long customerid = -1L;
-//        //获取当前空闲第一位销售id
-//
-//        String sale_id = freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-//        //
-//        String userLoginName = "";
-//        JSONArray userlist = userPage(1, 100).getJSONArray("list");
-//        for (int i = 0; i < userlist.size(); i++) {
-//            JSONObject obj = userlist.getJSONObject(i);
-//            if (obj.getString("user_id").equals(sale_id)) {
-//                userLoginName = obj.getString("user_login_name");
-//            }
-//        }
-//        object.put("loginname", userLoginName);
-//        //创建接待
-//        creatReception("FIRST_VISIT");
-//        //销售登陆，获取当前接待id
-//        login(userLoginName, cstm.pwd);
-//        customerid = userInfService().getLong("customer_id");
-//        object.put("customerid", customerid);
-//        //创建某级客户
-//        String name = "zdh";
-//        String phone = "zdh" + (int) ((Math.random() * 9 + 1) * 100000);
-//        object.put("name", name);
-//        object.put("phone", phone);
-//
-//        JSONObject customer = finishReception(customerid, 7, name, phone, "自动化---------创建----------H级客户");
-//        return customer;
-//    }
-
-//    public JSONObject creatCust(String cName, String cPhone) throws Exception {
-//        JSONObject object = new JSONObject();
-//
-//        //前台登陆
-//        login(cstm.qt, cstm.pwd);
-//        Long customerid = -1L;
-//        //获取当前空闲第一位销售id
-//        String sale_id = freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-//        String userLoginName = "";
-//        JSONArray userlist = userPage(1, 100).getJSONArray("list");
-//        for (int i = 0; i < userlist.size(); i++) {
-//            JSONObject obj = userlist.getJSONObject(i);
-//            if (obj.getString("user_id").equals(sale_id)) {
-//                userLoginName = obj.getString("user_login_name");
-//            }
-//        }
-//        object.put("loginname", userLoginName);
-//        //创建接待
-//        creatReception("FIRST_VISIT");
-//        //销售登陆，获取当前接待id
-//        login(userLoginName, cstm.pwd);
-//        customerid = userInfService().getLong("customer_id");
-//        object.put("customerid", customerid);
-//        //创建某级客户
-//        String name = cName;
-//        String phone = cPhone;
-//        object.put("name", name);
-//        object.put("phone", phone);
-//        JSONObject customer = finishReception(customerid, 3, name, phone, "自动化---------创建----------C级客户");
-//        return customer;
-//    }
-
-    //新建试驾+审核封装
-    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
-        Long receptionId = 1L;    //接待记录id
-        String idCard = "110226198210260078";
-        String gender = "男";
-        String signTime = dt.getHistoryDate(0);
-        Long model = 1L;
-        String country = "中国";
-        String city = "图们";
-        String email = dt.getHistoryDate(0) + "@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
-        String driverLicensePhoto1Url = cstm.picurl;
-        String driverLicensePhoto2Url = cstm.picurl;
-        String electronicContractUrl = cstm.picurl;
-
-        String call = "先生";
-        int driverid = driveradd(receptionId, driver.customerId, driver.name, idCard, gender, driver.phone, "试乘试驾", model, country, city, email, address, ward_name, driverLicensePhoto1Url, driverLicensePhoto2Url, electronicContractUrl, driver.signDate, driver.signTime, call).getInteger("id");
-        //销售总监登陆
-        login(cstm.xszj, cstm.pwd);
-        driverAudit(driverid, driver.auditStatus);
-        //最后销售要再登陆一次
-
     }
 
     /**
@@ -5049,7 +4927,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject addOrderCar(String customer_id, String reception_id, String vehicle_chassis_code) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
         JSONObject json1 = new JSONObject();
-        json1.put("car_model_id", 36);
+        json1.put("car_model_id", 82);
         json1.put("car_style_id", 1);
         json1.put("customer_id", customer_id);
         json1.put("defray_type", 1);
@@ -5139,12 +5017,4 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
-
 }
-
-
-
-
-
-
-

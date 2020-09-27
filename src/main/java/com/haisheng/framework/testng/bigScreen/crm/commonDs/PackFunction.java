@@ -79,13 +79,13 @@ public class PackFunction {
     public JSONObject creatCust() throws Exception {
         //前台登陆
         crm.login(pp.qiantai, pp.adminpassword);
+        JSONObject jsonP=new JSONObject();
         String name="auto"+dt.getHHmm(0);
         StringBuilder phone = new StringBuilder("1");
         for (int i = 0; i < 10; i++) {
             String a = Integer.toString((int) (Math.random() * 10));
             phone.append(a);
         }
-        JSONObject jsonP=new JSONObject();
         //获取当前空闲第一位销售id
         String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
         String userLoginName = "";
@@ -115,9 +115,20 @@ public class PackFunction {
         //创建某级客户
 //        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
 //        crm.customerEdit_onlyNec(receiptId,customerID, name);
+        JSONArray PhoneList=new JSONArray();
+
+        JSONObject phone1=new JSONObject();
+        phone1.put("phone",phone);
+        phone1.put("phone_order",0);
+        JSONObject phone2=new JSONObject();
+        phone2.put("phone","");
+        phone2.put("phone_order",1);
+        PhoneList.add(0,phone1);
+        PhoneList.add(1,phone2);
 
         jsonP.put("name",name);
-        jsonP.put("phone", phone.toString());
+        jsonP.put("phone", phone);
+        jsonP.put("phoneList", PhoneList);
         jsonP.put("reception_id",receiptId);
         jsonP.put("customerId",customerID);
         jsonP.put("userLoginName",userLoginName);
@@ -170,9 +181,10 @@ public class PackFunction {
         String apply_time = timelist.getString(0);
 
 //        Long apply_time = dt.getHistoryDateTimestamp(1);
-        int driverid = crm.driveradd5(receptionId,customer_id,name,phone,driverLicensePhoto1Url,sign_date,sign_time,apply_time.toString(),test_drive_car).getInteger("id");
+         crm.driveradd5(receptionId,customer_id,name,phone,driverLicensePhoto1Url,sign_date,sign_time,apply_time.toString(),test_drive_car);
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian,pp.adminpassword);
+        int driverid =crm.testDriverAppList("","","",10,1).getJSONArray("list").getJSONObject(0).getInteger("id");
         crm.driverAudit(driverid,audit_status);
         //最后销售要再登陆一次
     }
@@ -200,10 +212,13 @@ public class PackFunction {
         Long id=json.getLong("id");
         Long customerId=json.getLong("customerId");
         String userLoginName=json.getString("userLoginName");
+        String sale_id=json.getString("sale_id");
+        JSONArray PhoneList=json.getJSONArray("phoneList");
         //新建试驾,审核通过
         creatDriver(id,customerId,pp.customer_name,pp.customer_phone_number,1);
         crm.login(userLoginName,pp.adminpassword);            //销售登录完成接待
-        crm.finishReception(customerId,7,pp.customer_name,pp.customer_phone_number,pp.remark);
+        crm.finishReception2(sale_id, id,customerId,pp.customer_name,PhoneList,"BB");
+
         return appointment_id;
     }
     //获取(销售)顾问接待次数

@@ -124,49 +124,21 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :pc新建文章，数据一致，pc文章列表+1，列表信息校验，新建文章时投放人数等于该文章发送短信页总人数；查看文章详情信息校验
      * @date :2020/7/14 10:23
      **/
-//    @Test(priority = 1)
+    @Test(priority = 1)
     public void articleManage(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            //坑位列表
-            JSONArray positionList=crm.positionList().getJSONArray("list");
+            String valid_end = dt.getHistoryDate(4);
+            String article_title = "app任务报名品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
+            String article_content = "品牌上新，优惠多多，限时4天,活动内容";
             Long totalB=crm.articlePage(1,10,positionList1).getLong("total");
-            String []customer_types={"PRE_SALES","AFTER_SALES"};
-            int []customer_level={};                          //客户等级
-            String []customer_property={};
-            String positions="CAR_ACTIVITY"; //投放位置购买指南单选
-            // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
-            String valid_start=dt.getHistoryDate(0);
-            String valid_end=dt.getHistoryDate(4);
-            int []car_types={car_type};
-            String article_title="购买指南，品牌上新，优惠多多，限时4天---"+dt.getHistoryDate(0);
-            String article_bg_pic=file.texFile(filePath);  //base 64
-            String article_content="购买指南，品牌上新，优惠多多，限时4天,活动内容";
-            String article_remarks="购买指南，品牌上新，优惠多多，限时4天,备注";
-
-            boolean is_online_activity=true;  //是否线上报名活动
-//            String reception_name=manage(13)[0];  //接待人员名
-//            String reception_phone=manage(13)[1]; //接待人员电话
-            String reception_name="xia1";  //接待人员名
-            String reception_phone="15037286013"; //接待人员电话
-            String customer_max="20";                    //人数上限
-            String simulation_num="10";                   //假定基数
-            String activity_start=dt.getHistoryDate(0);
-            String activity_end=dt.getHistoryDate(4);
-            Integer role_id=15;
-            Boolean is_create_poster=true;//是否生成海报
-            Integer task_customer_numa=crm.groupTotal(customer_types,car_types,customer_level,customer_property).getInteger("total");
-            int task_customer_num=5;
-            //新建文章并返回文章id
-            Long article_id=crm.createArticle(positions,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,false,article_bg_pic,article_content,article_remarks,is_online_activity,reception_name,reception_phone,customer_max,simulation_num,activity_start,activity_end,role_id,Integer.toString(task_customer_num),is_create_poster).getLong("id");
-            //activity_id = article_id;
-
+            Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
+            Long activity_id=aid[1];
+            Long article_id=aid[0];
             JSONObject pcarctile=crm.artilceDetailpc(article_id);  //pc活动详情
             String detail_customer_max=pcarctile.getString("customer_max");
-//            String detail_registered_num=pcarctile.getString("registered_num");  //已经报名人数
             String detail_article_title=pcarctile.getString("article_title");
             String detail_article_content=pcarctile.getString("article_content");
-
 
             //新增活动，活动列表+1
             JSONObject data=crm.articlePage(1,10,positionList1);
@@ -177,19 +149,16 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String valid_endA=list.getJSONObject(0).getString("valid_end");
             String statusA=list.getJSONObject(0).getString("status");
 
-
             Preconditions.checkArgument((totalA-totalB)==1,"新建活动，活动详情列表总数没+1");
             Integer activityTotal=crm.activityPeople(article_id).getInteger("total");
-            Preconditions.checkArgument(activityTotal.equals(task_customer_numa),"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
             Preconditions.checkArgument(customer_typesA.equals("销售、售后"),"新建活动列表信息，投放人群展示错误");
-//            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
-            Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
+            Preconditions.checkArgument(valid_startA.equals(dt.getHistoryDate(0)),"新建活动列表信息，生效时间展示错误");
             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
 
             //查看详情信息校验
-            Preconditions.checkArgument(detail_customer_max.equals(customer_max),"查看文章详情，报名总额错误");
+            Preconditions.checkArgument(detail_customer_max.equals("50"),"查看文章详情，报名总额错误");
             Preconditions.checkArgument(detail_article_title.equals(article_title),"查看文章详情，文章内容错误");
             Preconditions.checkArgument(detail_article_content.equals(article_content),"查看文章详情，文章标题错误");
 
@@ -1029,7 +998,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             //crm中校色数统计
             int crmRoleTotal=0;
             //100以内
-            crm.login("baoshijie",adminpassword);
+            crm.login(baoshijie,adminpassword);
             JSONObject data=crm.userPage(1,100);
             int crmTotal=data.getInteger("total");
             JSONArray listC=data.getJSONArray("list");
@@ -1274,7 +1243,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     // @Test
     public void deleteuser(){
         try {
-            crm.login("baoshijie", adminpassword);
+            crm.login(baoshijie, adminpassword);
 //              for(int j=0;j<1;j++) {
             JSONArray list = crm.userPage(6, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
