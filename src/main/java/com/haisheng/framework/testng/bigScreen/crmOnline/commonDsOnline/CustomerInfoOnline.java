@@ -6,10 +6,7 @@ import com.haisheng.framework.util.FileUtil;
 public class CustomerInfoOnline {
     DateTimeUtil dt = new DateTimeUtil();
     //app登陆密码
-    public final String pwd123456 = "a806f5026dabadc5cff19211d9f4afa2";//ys123456
-    public final String pwdqt = "";//前台密码 //ys123456
-    public final String pwdzj = "a806f5026dabadc5cff19211d9f4afa2";//总监密码 //ys123456
-    public final String pwdzjl = "";//总经理密码 //ys123456
+
     public final String pwd11 = "a806f5026dabadc5cff19211d9f4afa2";//11密码 //ys123456
     public final String pwd = "a806f5026dabadc5cff19211d9f4afa2";//统一密码ys123456
     public final String demoPassword = "f2064e9d2477a6bc75c132615fe3294c";//密码全部一致
@@ -22,12 +19,14 @@ public class CustomerInfoOnline {
     public final String fwzj = "fwzj";//服务总监
     public final String zjl = "zjl"; //总经理
     public final String qt = "qt"; //前台
+    public final String dcc = "dcc"; //dcc销售
+
 
     public final String lxqsale = "11";
     public final String phone11 = "13436941018";
     public final String saleid11 = "uid_c01f9419"; //11的id
     public final String saleid22 = "uid_da55f38d"; //22的id
-    public final String xszj = "xszj";//销售总监
+    public final String xszj = "zj";//销售总监
 
 
     //交车照片

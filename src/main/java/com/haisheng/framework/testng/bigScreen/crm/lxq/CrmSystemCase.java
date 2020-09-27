@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -905,7 +904,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone2 = phone2 + a;
             }
-            String passwd=userLoginName;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
@@ -969,7 +968,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone2 = phone2 + a;
             }
-            String passwd=userLoginName;
+            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             //添加账号
             crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
@@ -1270,7 +1269,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
-            String userLoginName=userName;
+            String userLoginName=""+ System.currentTimeMillis();
             String phone = "1";
             for (int i = 0; i < 10;i++){
                 String a = Integer.toString((int)(Math.random()*10));
@@ -1331,7 +1330,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
-            String userLoginName=userName;
+            String userLoginName=""+ System.currentTimeMillis();
             String phone = "1";
             for (int i = 0; i < 10;i++){
                 String a = Integer.toString((int)(Math.random()*10));
@@ -1471,32 +1470,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
         return customerid;
     }
-
-    //新建试驾+审核封装
-    public void creatDriver(Driver driver) throws Exception {  //1-通过，2-拒绝
-        String idCard = "110226198210260078";
-        Long receptionId=1L;    //接待记录id
-        String gender = "男";
-        String signTime = dt.getHistoryDate(0);
-        Long model = 1L;
-        String country = "中国";
-        String city = "图们";
-        String email = dt.getHistoryDate(0)+"@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
-        String driverLicensePhoto1Url = cstm.picurl;
-        String driverLicensePhoto2Url =  cstm.picurl;
-        String electronicContractUrl =  cstm.picurl;
-
-        String call="先生";
-        int driverid = crm.driveradd(receptionId,driver.customerId,driver.name,idCard,driver.phone,signTime,"试乘试驾",model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl,driver.signDate,driver.signTime,call).getInteger("id");
-        //销售总监登陆
-        crm.login(cstm.xszj,cstm.pwd);
-        crm.driverAudit(driverid,driver.auditStatus);
-        //最后销售要再登陆一次
-
-    }
-
 
 
 

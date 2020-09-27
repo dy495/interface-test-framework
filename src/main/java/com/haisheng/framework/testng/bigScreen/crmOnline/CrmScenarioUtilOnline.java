@@ -4506,4 +4506,237 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     }
 
+
+    //添加试驾车
+    public JSONObject carManagementAdd(String car_name, Long car_style_id, Long car_model_id, String plate_number, String vehicle_chassis_code, Long service_time_start, Long service_time_end) {
+        String url = "/porsche/test-drive-car/management/add";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_name", car_name);
+        json1.put("car_style_id", car_style_id);
+        json1.put("car_model_id", car_model_id);
+        json1.put("plate_number", plate_number);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
+        json1.put("service_time_start", service_time_start);
+        json1.put("service_time_end", service_time_end);
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //添加试驾车不校验
+    public JSONObject carManagementAddNotChk(String car_name, Long car_style_id, Long car_model_id, String plate_number, String vehicle_chassis_code, Long service_time_start, Long service_time_end) throws Exception {
+        String url = "/porsche/test-drive-car/management/add";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_name", car_name);
+        json1.put("car_style_id", car_style_id);
+        json1.put("car_model_id", car_model_id);
+        json1.put("plate_number", plate_number);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
+        json1.put("service_time_start", service_time_start);
+        json1.put("service_time_end", service_time_end);
+        String json = json1.toJSONString();
+        String result = httpPost(url, json, IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //修改试驾车
+    public JSONObject carManagementEdit(int test_car_id, String car_name, Long car_style_id, Long car_model_id, String plate_number, String vehicle_chassis_code, Long service_time_start, Long service_time_end) {
+        String url = "/porsche/test-drive-car/management/edit";
+        JSONObject json1 = new JSONObject();
+        json1.put("test_car_id", test_car_id);
+        json1.put("car_name", car_name);
+        json1.put("car_style_id", car_style_id);
+        json1.put("car_model_id", car_model_id);
+        json1.put("plate_number", plate_number);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
+        json1.put("service_time_start", service_time_start);
+        json1.put("service_time_end", service_time_end);
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //试驾车注销
+    public JSONObject carLogout(Long id) {
+        String url = "/porsche/test-drive-car/management/logout";
+        JSONObject json = new JSONObject();
+        json.put("test_car_id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //试驾车列表
+    public JSONObject driverCarList() {
+        String url = "/porsche/test-drive-car/management/list";
+        String json = "{}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //DCC创建线索
+    public JSONObject dccCreate(String customer_name, String customer_phone, String plate_number) {
+        String url = "/porsche/app/customer/dcc-create";
+        JSONObject json = new JSONObject();
+        json.put("customer_name", customer_name);
+        json.put("customer_phone", customer_phone);
+        if (!plate_number.equals("")) {
+            json.put("plate_number", plate_number);
+        }
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //创建线索不校验
+    public JSONObject dccCreateNotChk(String customer_name, String customer_phone, String plate_number) throws Exception {
+        String url = "/porsche/app/customer/dcc-create";
+        JSONObject json = new JSONObject();
+        json.put("customer_name", customer_name);
+        json.put("customer_phone", customer_phone);
+        if (!plate_number.equals("")) {
+            json.put("plate_number", plate_number);
+        }
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
+
+    //DCC创建线索
+    public JSONObject dcclist(String customer_phone, String customer_name, String start_time, String end_time, int page, int size) {
+        String url = "/porsche/app/customer/dcc-list";
+        JSONObject json1 = new JSONObject();
+        json1.put("customer_phone", customer_phone);
+        json1.put("customer_name", customer_name);
+        json1.put("start_time", start_time);
+        json1.put("end_time", end_time);
+        json1.put("page", page);
+        json1.put("size", size);
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject dcclist(int page, int size) {
+        String url = "/porsche/app/customer/dcc-list";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+    public JSONObject driverTimelist(Long car_model) {
+        String url = "/porsche/daily-work/test-drive/app/test-drive-time-list";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_model", car_model);
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //配置收件箱校验返回值
+    public JSONObject mailConfig(String email) {
+        String url = "/porsche/daily-work/test-drive/app/mail-config";
+        JSONObject json1 = new JSONObject();
+        json1.put("email", email);
+
+        String json = json1.toJSONString();
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+    //配置收件箱不校验返回值
+    public JSONObject mailConfigNotChk(String email) throws Exception {
+        String url = "/porsche/daily-work/test-drive/app/mail-config";
+        JSONObject json1 = new JSONObject();
+        json1.put("email", email);
+        String json = json1.toJSONString();
+        String result = httpPost(url, json, IpPort);
+        return JSON.parseObject(result);
+    }
+
+    //配置收件箱不校验返回值
+    public JSONObject addOrderCar(String customer_id, String reception_id, String vehicle_chassis_code) throws Exception {
+        String url = "/porsche/app/customer/add-order-car";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_model_id", 36);
+        json1.put("car_style_id", 1);
+        json1.put("customer_id", customer_id);
+        json1.put("defray_type", 1);
+        json1.put("pay_type", 1);
+        json1.put("plate_type", 0);
+        json1.put("reception_id", reception_id);
+        json1.put("vehicle_chassis_code", vehicle_chassis_code);
+        String json = json1.toJSONString();
+        String result = httpPost(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //查看收件箱已配置邮箱
+    public JSONObject mailDetail() {
+        String url = "/porsche/daily-work/test-drive/app/mail-detail";
+        String json = "{}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    @DataProvider(name = "ADD_CAR")
+    public static Object[][] add_car() {
+
+        return new String[][]{
+                {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
+                {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
+
+        };
+    }
+
+    @DataProvider(name = "EMAIL")
+    public static Object[] email() {
+        return new String[]{
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789011@163.com",
+                "1@qq.com",
+                "12345Lxsd67890@gmail.com",
+                "1234567890@baiyahoo.com",
+                "wertyui@baimsn.com",
+                "WERTY@hotmail.com",
+                "_____@aol.com",
+                "KJHGFYTU@ask.com",
+                "12KKJ567890@live.com",
+                "123OOO000@0355.net",
+                "1234567890@163.net",
+                "1234567890@263.net",
+                "1234567890@3721.net",
+                "2842726905@qq.com",
+        };
+    }
+
+    @DataProvider(name = "EMAILERR")
+    public static Object[] emailerr() {
+        return new String[]{
+                "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890111@163.com", //101位
+                "汉字@qq.com", //汉字
+                "gmail.com", //没@
+                "1234567890", //纯数字
+                "wertyui", //纯英文
+                "WERTY@hotmail。com", //点为中文
+                "～！@#¥%……&*（@qq.com", //标点符号
+                "KJHGFYTU@ask—com",
+                "12KKJ567890@live_com",
+        };
+    }
+
+    @DataProvider(name = "DCCCREAT")
+    public static Object[][] dcc_creat() {
+        return new String[][]{
+                {"ZDH", "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字3位，手机号，不填车牌号
+                {"姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位" + (int) ((Math.random() * 9 + 1) * 10000), "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字50位，手机号，不填车牌号
+                {"!@#$%^&*()}{:?><~!", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100)}, //名字符号，手机号，车牌号7位
+                {"啊", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000)}, //名字1位，手机号，车牌号8位
+
+
+        };
+    }
+
 }
