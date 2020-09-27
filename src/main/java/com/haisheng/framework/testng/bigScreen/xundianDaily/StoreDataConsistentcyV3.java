@@ -1592,4 +1592,37 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
+    /**
+     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
+     */
+    @Test
+    public void arrival_time() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+              JSONObject response = Md.memberTotalListV3(shop_id,page,10);
+              JSONArray list = response.getJSONArray("list");
+              String last_time = "";
+              String customer_id = "";
+              for(int i=0;i<list.size();i++){
+                  last_time = list.getJSONObject(i).getString("latest_arrival_time");
+                  customer_id = list.getJSONObject(i).getString("customer_id");
+              }
+               JSONObject res = Md.memberDetail(shop_id,customer_id,page,10);
+               JSONArray detailList = res.getJSONArray("list");
+               String time = detailList.getJSONObject(0).getString("time");
+
+            Preconditions.checkArgument((last_time.equals("time")), "客户ID："+customer_id+"。列表最新留痕时间为：" + last_time +"。该客户详情中的最新留痕时间为："+time +"。报错门店的shopId=" + shop_id );
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("选择最近60天的数据是否正常");
+        }
+
+    }
+
 }
