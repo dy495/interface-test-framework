@@ -1658,8 +1658,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
      */
-    @Test
-    public void arrival_time() {
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void arrival_time(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
