@@ -104,7 +104,7 @@ class CustomerFinishReception extends BaseScene {
     }
 
     @Override
-    public String geIpPort() {
+    public String getIpPort() {
         return "/porsche/app/customer/finishReception";
     }
 }

@@ -36,7 +36,7 @@ public class Login extends BaseScene {
     }
 
     @Override
-    public String geIpPort() {
+    public String getIpPort() {
         return "/porsche-login";
     }
 }

@@ -20,15 +20,15 @@ public abstract class BaseScene extends TestCaseCommon implements IScene {
     public abstract String getPath();
 
     @Override
-    public abstract String geIpPort();
+    public abstract String getIpPort();
 
     @Override
     public JSONObject execute(JSONObject requestBody, boolean data) {
-        if (StringUtils.isEmpty(geIpPort()) && StringUtils.isEmpty(geIpPort())) {
+        if (StringUtils.isEmpty(getIpPort()) && StringUtils.isEmpty(getIpPort())) {
             throw new RuntimeException("path+IpPort不能为空");
         }
         String request = JSON.toJSONString(requestBody);
-        String result = httpPostWithCheckCode(geIpPort(), request, getPath());
+        String result = httpPostWithCheckCode(getIpPort(), request, getPath());
         if (data) {
             return JSON.parseObject(result).getJSONObject("data");
         } else {

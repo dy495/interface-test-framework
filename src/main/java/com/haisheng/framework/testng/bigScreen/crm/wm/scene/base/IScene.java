@@ -30,7 +30,7 @@ public interface IScene {
      *
      * @return url
      */
-    String geIpPort();
+    String getIpPort();
 
 
     /**
