@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerFinishReception;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -25,7 +24,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.DoubleStream;
 
 public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();

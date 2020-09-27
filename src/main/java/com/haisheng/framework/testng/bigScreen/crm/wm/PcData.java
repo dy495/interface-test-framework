@@ -212,7 +212,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
+            crm.customerCreate(name, String.valueOf(EnumCustomerLevel.G.getId()), phone, car.getModelId(), car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
@@ -300,17 +300,19 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         try {
             //战败列表数
             JSONObject failureCustomerList = crm.failureCustomerList("", "", 1, 10);
-            int customerId = CommonUtil.getIntField(failureCustomerList, 0, "customer_id");
             int failureTotal = failureCustomerList.getInteger("total");
-            //公海列表数
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            //战败转公海
-            crm.failureCustomerToPublic(customerId);
-            int failureTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1, failureTotal, failureTotal1, customerId);
-            Preconditions.checkArgument(failureTotal == failureTotal1 + 1, "战败转移公海前战败数量为" + failureTotal + "战败转公海后战败数量为" + failureTotal1);
-            Preconditions.checkArgument(publicTotal == publicTotal1 - 1, "战败转移公海前公海数量为" + failureTotal + "战败转公海后公海数量为" + failureTotal1);
+            if (failureTotal > 0) {
+                int customerId = CommonUtil.getIntField(failureCustomerList, 0, "customer_id");
+                //公海列表数
+                int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+                //战败转公海
+                crm.failureCustomerToPublic(customerId);
+                int failureTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
+                int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+                CommonUtil.valueView(publicTotal, publicTotal1, failureTotal, failureTotal1, customerId);
+                Preconditions.checkArgument(failureTotal == failureTotal1 + 1, "战败转移公海前战败数量为" + failureTotal + "战败转公海后战败数量为" + failureTotal1);
+                Preconditions.checkArgument(publicTotal == publicTotal1 - 1, "战败转移公海前公海数量为" + failureTotal + "战败转公海后公海数量为" + failureTotal1);
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

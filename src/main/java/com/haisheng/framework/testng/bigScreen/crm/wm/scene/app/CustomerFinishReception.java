@@ -14,8 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public
-class CustomerFinishReception extends BaseScene {
+public class CustomerFinishReception extends BaseScene {
     //是 客户id
     private long customerId;
     //是 客户名称
