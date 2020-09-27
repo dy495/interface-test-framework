@@ -4377,8 +4377,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String result = httpPost(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
-
     @DataProvider(name = "APPOINTMENT_TYPE")
     public static Object[] appointment_type() {
         return new String[]{
@@ -4784,22 +4782,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(result);
     }
 
-    //配置收件箱不校验返回值
-    public JSONObject addOrderCar(String customer_id, String reception_id, String vehicle_chassis_code) throws Exception {
-        String url = "/porsche/app/customer/add-order-car";
-        JSONObject json1 = new JSONObject();
-        json1.put("car_model_id", 36);
-        json1.put("car_style_id", 1);
-        json1.put("customer_id", customer_id);
-        json1.put("defray_type", 1);
-        json1.put("pay_type", 1);
-        json1.put("plate_type", 0);
-        json1.put("reception_id", reception_id);
-        json1.put("vehicle_chassis_code", vehicle_chassis_code);
-        String json = json1.toJSONString();
-        String result = httpPost(url, json, IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
-    }
 
     //查看收件箱已配置邮箱
     public JSONObject mailDetail() {
