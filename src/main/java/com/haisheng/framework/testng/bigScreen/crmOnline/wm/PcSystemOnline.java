@@ -97,8 +97,8 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = crm.failureCustomerList("", "", 1, 10).getJSONArray("list");
-            Preconditions.checkArgument(list.size() > 0, "开始时间>=结束时间，筛选不出战败客户");
+            int total = crm.failureCustomerList("", "", 1, 10).getInteger("total");
+            Preconditions.checkArgument(total >= 0, "开始时间>=结束时间，筛选不出战败客户");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -252,27 +252,20 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "状态：排期中、发送成功")
+    @Test(description = "状态：排期中、发送成功,都可以查看")
     public void stationMessage_3() {
         logger.logCaseStart(caseResult.getCaseName());
+        String title = "销售可见消息-待删";
+        String content = "自动化";
+        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
         try {
-            int id = 0;
-            String title = null;
-            int total = crm.messagePage(1, 10).getInteger("total");
-            for (int i = 1; i < CommonUtil.pageTurning(total, 100); i++) {
-                JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("status_name").equals("排期中")) {
-                        id = list.getJSONObject(i).getInteger("id");
-                        title = list.getJSONObject(i).getString("title");
-                        break;
-                    }
-                }
-            }
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, "", "", "PRE_SALES");
+            int id = response.getInteger("id");
             JSONObject result = crm.messageDetail(id);
             String title1 = result.getString("title");
             CommonUtil.valueView(title, title1);
-            Preconditions.checkArgument(title != null && title.equals(title1), "排期中的站内消息可以查看操作");
+            Preconditions.checkArgument(title.equals(title1), "排期中的站内消息可以查看操作");
+            crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

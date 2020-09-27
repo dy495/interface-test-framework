@@ -20,7 +20,7 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XS_DAILY("xs", getPassword("123456"), "", "daily", "xs"),
+    XS_DAILY("cs", getPassword("123456"), "", "daily", "cs"),
 
     /**
      * 总经理
@@ -51,7 +51,7 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XS_ONLINE("xs", getPassword("ys123456"), "", "online", "xs"),
+    XS_ONLINE("cs", getPassword("ys123456"), "", "online", "cs"),
     /**
      * 前台
      */

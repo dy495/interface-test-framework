@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -9,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.Login;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -29,6 +31,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
+    private static final EnumAccount newXs = EnumAccount.XS_DAILY;
 
     @BeforeClass
     @Override
@@ -1070,13 +1073,11 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //公海客户数量
             int total = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //添加销售
-            crm.addUser(EnumAccount.XS_DAILY.getAccount(), EnumAccount.XS_DAILY.getAccount(), salePhone, EnumAccount.XS_DAILY.getPassword(), 13, "", "");
-            CommonUtil.login(EnumAccount.XS_DAILY);
+            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 13, "", "");
             //创建
             String customerPhone = getDistinctPhone();
-            CommonUtil.login(EnumAccount.XS_DAILY);
+            CommonUtil.login(newXs);
             crm.customerCreate(customerInfo.getName(), "2", customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
-            CommonUtil.login(zjl);
             //删除此新增的顾问
             deleteSaleUser(salePhone);
             //公海数量+1
@@ -1153,12 +1154,16 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
      */
     private void deleteSaleUser(String phone) throws Exception {
         CommonUtil.login(zjl);
-        JSONArray userList = crm.userUserPage(1, 100).getJSONArray("list");
-        for (int i = 0; i < userList.size(); i++) {
-            if (userList.getJSONObject(i).getString("user_phone").equals(phone)) {
-                String userId = userList.getJSONObject(i).getString("user_id");
-                //删除销售
-                crm.userDel(userId);
+        int total = crm.userUserPage(1, 10).getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        for (int j = 1; j < s; j++) {
+            JSONArray userList = crm.userUserPage(j, 100).getJSONArray("list");
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.getJSONObject(i).getString("user_phone").equals(phone)) {
+                    String userId = userList.getJSONObject(i).getString("user_id");
+                    //删除销售
+                    crm.userDel(userId);
+                }
             }
         }
     }
@@ -1234,5 +1239,12 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
         return a == 0 && b == 0 ? phone : getDistinctPhone();
+    }
+
+    @Test(enabled = false)
+    public void test() {
+        EnumAccount account = EnumAccount.ZJL_DAILY;
+        JSONObject object = Login.builder().type(0).password(account.getPassword()).username(account.getAccount()).build().invokeApi();
+        System.err.println(object);
     }
 }

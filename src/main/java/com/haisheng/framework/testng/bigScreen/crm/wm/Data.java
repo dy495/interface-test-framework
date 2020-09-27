@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
-import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -275,7 +274,6 @@ public class Data extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareFunnelData("CLUE");
-            Preconditions.checkArgument(totalNum.equals(sumNum), "线索" + totalNum + "!=创建线索+接待线索" + sumNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -288,7 +286,6 @@ public class Data extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareFunnelData("RECEIVE");
-            Preconditions.checkArgument(totalNum.equals(sumNum), "接待数" + totalNum + "!=首次+邀约+再次" + sumNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -301,7 +298,6 @@ public class Data extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareFunnelData("TEST_DRIVE");
-            Preconditions.checkArgument(totalNum.equals(sumNum), "试驾" + totalNum + "!=首次+邀约+再次" + sumNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -314,7 +310,6 @@ public class Data extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareFunnelData("ORDER");
-            Preconditions.checkArgument(totalNum.equals(sumNum), "订单" + totalNum + "!=首次+邀约+再次" + sumNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -329,22 +324,33 @@ public class Data extends TestCaseCommon implements TestCaseStd {
      */
     private void compareFunnelData(final String type) throws Exception {
         for (EnumFindType e : EnumFindType.values()) {
-            int totalNum = 0;
-            int sumNum = 0;
-            JSONArray list = crm.saleFunnel(e.getType(), "", "").getJSONObject("business").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("type").equals(type)) {
-                    totalNum = list.getJSONObject(i).getInteger("value");
-                    JSONArray detail = list.getJSONObject(i).getJSONArray("detail");
-                    for (int j = 0; j < detail.size(); j++) {
-                        int value = detail.getJSONObject(j).getInteger("value");
-                        sumNum += value;
+            int total = crm.userUserPage(1, 10).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
+                        String userId = list.getJSONObject(j).getString("user_id");
+                        String userName = list.getJSONObject(j).getString("user_name");
+                        CommonUtil.valueView(userName);
+                        JSONArray list1 = crm.saleFunnel(e.getType(), "", userId).getJSONObject("business").getJSONArray("list");
+                        for (int k = 0; k < list1.size(); k++) {
+                            if (list1.getJSONObject(k).getString("type").equals(type)) {
+                                int totalNum = list1.getJSONObject(k).getInteger("value");
+                                int sumNum = 0;
+                                JSONArray detail = list1.getJSONObject(k).getJSONArray("detail");
+                                for (int u = 0; u < detail.size(); u++) {
+                                    int value = detail.getJSONObject(u).getInteger("value");
+                                    sumNum += value;
+                                }
+                                CommonUtil.valueView(totalNum, sumNum);
+                                Preconditions.checkArgument(totalNum == sumNum, "问题数据：" + userName + "的" + e.getName() + "查询有问题，查询结果总数：" + totalNum + "后几项之和：" + sumNum);
+                                CommonUtil.log("分割线");
+                            }
+                        }
                     }
                 }
             }
-            CommonUtil.valueView(totalNum, sumNum);
-            this.totalNum = totalNum;
-            this.sumNum = sumNum;
         }
     }
 
@@ -352,25 +358,7 @@ public class Data extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumFindType e : EnumFindType.values()) {
-                int clueNum = 0;
-                int receiveNum = 0;
-                JSONObject business = crm.saleFunnel(e.getType(), "", "").getJSONObject("business");
-                String enterPercentage = business.getString("enter_percentage");
-                JSONArray list = business.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("type").equals("CLUE")) {
-                        clueNum = list.getJSONObject(i).getInteger("value");
-                    }
-                    if (list.getJSONObject(i).getString("type").equals("RECEIVE")) {
-                        receiveNum = list.getJSONObject(i).getInteger("value");
-                    }
-                }
-                String result = CommonUtil.getPercent(receiveNum, clueNum);
-                CommonUtil.valueView(result, enterPercentage);
-                Preconditions.checkArgument(result.equals(enterPercentage));
-                CommonUtil.log("分割线");
-            }
+            compareFunnelPercentData("RECEIVE", "enter_percentage");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -382,25 +370,7 @@ public class Data extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumFindType e : EnumFindType.values()) {
-                int clueNum = 0;
-                int testDriveNum = 0;
-                JSONObject business = crm.saleFunnel(e.getType(), "", "").getJSONObject("business");
-                String testDrivePercentage = business.getString("test_drive_percentage");
-                JSONArray list = business.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("type").equals("CLUE")) {
-                        clueNum = list.getJSONObject(i).getInteger("value");
-                    }
-                    if (list.getJSONObject(i).getString("type").equals("TEST_DRIVE")) {
-                        testDriveNum = list.getJSONObject(i).getInteger("value");
-                    }
-                }
-                String result = CommonUtil.getPercent(testDriveNum, clueNum);
-                CommonUtil.valueView(result, testDrivePercentage);
-                Preconditions.checkArgument(result.equals(testDrivePercentage));
-                CommonUtil.log("分割线");
-            }
+            compareFunnelPercentData("TEST_DRIVE", "test_drive_percentage");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -412,29 +382,84 @@ public class Data extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumFindType e : EnumFindType.values()) {
-                int clueNum = 0;
-                int orderNum = 0;
-                JSONObject business = crm.saleFunnel(e.getType(), "", "").getJSONObject("business");
-                String dealPercentage = business.getString("deal_percentage");
-                JSONArray list = business.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("type").equals("CLUE")) {
-                        clueNum = list.getJSONObject(i).getInteger("value");
-                    }
-                    if (list.getJSONObject(i).getString("type").equals("ORDER")) {
-                        orderNum = list.getJSONObject(i).getInteger("value");
-                    }
-                }
-                String result = CommonUtil.getPercent(orderNum, clueNum);
-                CommonUtil.valueView(result, dealPercentage);
-                Preconditions.checkArgument(result.equals(dealPercentage));
-                CommonUtil.log("分割线");
-            }
+            compareFunnelPercentData("ORDER", "deal_percentage");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
             saveData("店面数据分析--销售顾问漏斗，成交率=订单/线索");
+        }
+    }
+
+    /**
+     * 销售顾问漏斗百分比
+     *
+     * @param type        业务类型
+     * @param percentType 业务百分比
+     */
+    private void compareFunnelPercentData(final String type, final String percentType) throws Exception {
+        for (EnumFindType e : EnumFindType.values()) {
+            int clueNum = 0;
+            int orderNum = 0;
+            int total = crm.userUserPage(1, 10).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
+                        String userId = list.getJSONObject(j).getString("user_id");
+                        String userName = list.getJSONObject(j).getString("user_name");
+                        CommonUtil.valueView(userName);
+                        JSONObject business = crm.saleFunnel(e.getType(), "", userId).getJSONObject("business");
+                        String dealPercentage = business.getString(percentType);
+                        JSONArray list1 = business.getJSONArray("list");
+                        for (int k = 0; k < list1.size(); k++) {
+                            if (list1.getJSONObject(k).getString("type").equals("CLUE")) {
+                                clueNum = list1.getJSONObject(k).getInteger("value");
+                            }
+                            if (list1.getJSONObject(k).getString("type").equals(type)) {
+                                orderNum = list1.getJSONObject(k).getInteger("value");
+                            }
+                        }
+                        String result = CommonUtil.getPercent(orderNum, clueNum);
+                        CommonUtil.valueView(result, dealPercentage);
+                        Preconditions.checkArgument(result.equals(dealPercentage), "问题数据：" + userName + "的" + e.getName() + "查询有问题");
+                        CommonUtil.log("分割线");
+                    }
+                }
+            }
+        }
+    }
+
+    @Test(description = "每个人的比例==100%")
+    public void test() {
+        logger.logCaseStart(caseResult.getCaseName());
+        for (EnumFindType e : EnumFindType.values()) {
+//            try {
+//                JSONObject response = crm.customerAge(e.getType(), "", "", "");
+//                int total = crm.userUserPage(1, 10).getInteger("total");
+//                int s = CommonUtil.pageTurning(total, 100);
+//                int everySaleNun = 0;
+//                for (int i = 1; i < s; i++) {
+//                    JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
+//                    for (int j = 0; j < list.size(); j++) {
+//                        if (list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
+//                            String userId = list.getJSONObject(j).getString("user_id");
+//                            CommonUtil.valueView(list.getJSONObject(j).getString("user_name"));
+//                            //每个销售每种搜索类型的数据和
+//                            JSONArray list1 = crm.receptTime(e.getType(), "", userId).getJSONArray("list");
+//                            for (int k = 0; k < list1.size(); k++) {
+//                                if (list1.getJSONObject(k).getString("time").equals(time)) {
+//                                    int value = list1.getJSONObject(k).getInteger("value");
+//                                    everySaleNun += value;
+//                                    CommonUtil.log("分割线");
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (Exception | AssertionError e) {
+//                appendFailreason(e.toString());
+//            }
         }
     }
 }

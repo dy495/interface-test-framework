@@ -11,8 +11,17 @@ public enum EnumCarModel {
 
     PANAMERA_TEN_YEARS_EDITION("1", "37"),
 
+    PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO("1", "53"),
 
-    PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO("1", "53");
+    MACAN("2", ""),
+
+    TANCAY("3", ""),
+
+    SEVEN_ONE_EIGHT("4", ""),
+
+    CAYENNE("5", ""),
+
+    NINE_ONE_ONE("6", "");
 
     EnumCarModel(String styleId, String modelId) {
         this.styleId = styleId;

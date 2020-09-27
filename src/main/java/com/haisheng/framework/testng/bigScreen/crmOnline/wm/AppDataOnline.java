@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerFinishReception;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -24,11 +25,13 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.DoubleStream;
 
 public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final EnumAccount xs = EnumAccount.XSGW_ONLINE;
+    private static final EnumAccount newXs = EnumAccount.XS_ONLINE;
 
     @BeforeClass
     @Override
@@ -454,11 +457,12 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "回访任务日期为今天的回访任务，是否完成=已完成")
     public void afterSaleMyReturnVisit_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
+        String endDate = DateTimeUtil.getFormat(new Date());
         try {
             String returnVisitStatusName = null;
             //创造一个当天的回访任务
-            int id = createReturnVisitTask(date, date);
+            int id = createReturnVisitTask(startDate, endDate);
             int total = crm.afterSale_VisitRecordList(1, 10, "", "", "").getInteger("total");
             int s = CommonUtil.pageTurning(total, 100);
             for (int i = 1; i < s; i++) {
@@ -1070,13 +1074,11 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //公海客户数量
             int total = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //添加销售
-            crm.addUser(EnumAccount.XS_DAILY.getAccount(), EnumAccount.XS_DAILY.getAccount(), salePhone, EnumAccount.XS_DAILY.getPassword(), 13, "", "");
-            CommonUtil.login(EnumAccount.XS_DAILY);
+            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 13, "", "");
             //创建
             String customerPhone = getDistinctPhone();
-            CommonUtil.login(EnumAccount.XS_DAILY);
-            crm.customerCreate(customerInfo.getName(), "2", customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
-            CommonUtil.login(zjl);
+            CommonUtil.login(newXs);
+            crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             //删除此新增的顾问
             deleteSaleUser(salePhone);
             //公海数量+1
@@ -1153,12 +1155,16 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
      */
     private void deleteSaleUser(String phone) throws Exception {
         CommonUtil.login(zjl);
-        JSONArray userList = crm.userUserPage(1, 100).getJSONArray("list");
-        for (int i = 0; i < userList.size(); i++) {
-            if (userList.getJSONObject(i).getString("user_phone").equals(phone)) {
-                String userId = userList.getJSONObject(i).getString("user_id");
-                //删除销售
-                crm.userDel(userId);
+        int total = crm.userUserPage(1, 10).getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        for (int j = 1; j < s; j++) {
+            JSONArray userList = crm.userUserPage(j, 100).getJSONArray("list");
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.getJSONObject(i).getString("user_phone").equals(phone)) {
+                    String userId = userList.getJSONObject(i).getString("user_id");
+                    //删除销售
+                    crm.userDel(userId);
+                }
             }
         }
     }
