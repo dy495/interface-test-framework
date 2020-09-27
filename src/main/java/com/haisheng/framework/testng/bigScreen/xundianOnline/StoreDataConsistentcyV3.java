@@ -1683,7 +1683,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("选择最近60天的数据是否正常");
+            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
         }
 
     }
