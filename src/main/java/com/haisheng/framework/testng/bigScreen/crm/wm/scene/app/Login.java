@@ -32,11 +32,11 @@ public class Login extends BaseScene {
 
     @Override
     public String getPath() {
-        return EnumAddress.PORSCHE.getAddress();
+        return "/porsche-login";
     }
 
     @Override
     public String getIpPort() {
-        return "/porsche-login";
+        return EnumAddress.PORSCHE.getAddress();
     }
 }

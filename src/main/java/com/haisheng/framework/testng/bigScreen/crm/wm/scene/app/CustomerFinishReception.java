@@ -99,11 +99,11 @@ public class CustomerFinishReception extends BaseScene {
 
     @Override
     public String getPath() {
-        return EnumAddress.PORSCHE.getAddress();
+        return "/porsche/app/customer/finishReception";
     }
 
     @Override
     public String getIpPort() {
-        return "/porsche/app/customer/finishReception";
+        return EnumAddress.PORSCHE.getAddress();
     }
 }

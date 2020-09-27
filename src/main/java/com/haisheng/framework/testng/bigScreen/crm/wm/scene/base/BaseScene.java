@@ -6,8 +6,6 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 
 /**
- * 接口执行抽象类
- * 统一执行方法executeInvoke进行调用
  *
  * @author wangmin
  */
@@ -28,7 +26,7 @@ public abstract class BaseScene extends TestCaseCommon implements IScene {
             throw new RuntimeException("path+IpPort不能为空");
         }
         String request = JSON.toJSONString(requestBody);
-        String result = httpPostWithCheckCode(getIpPort(), request, getPath());
+        String result = httpPostWithCheckCode(getPath(), request, getIpPort());
         if (data) {
             return JSON.parseObject(result).getJSONObject("data");
         } else {

@@ -1240,11 +1240,4 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
         return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
-
-    @Test()
-    public void test() {
-        EnumAccount account = EnumAccount.ZJL_DAILY;
-        JSONObject object = Login.builder().type(0).password(account.getPassword()).username(account.getAccount()).build().invokeApi();
-        System.err.println(object);
-    }
 }

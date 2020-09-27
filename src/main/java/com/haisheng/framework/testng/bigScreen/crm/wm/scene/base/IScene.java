@@ -4,10 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 
 /**
  * 场景接口
- * 接口类统一管理
- * 每个接口自己赋值url+address
- *
- * @author wangmin
  */
 public interface IScene {
 
