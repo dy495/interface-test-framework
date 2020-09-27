@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,18 +24,9 @@ public class CommonUtil {
     private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final CrmScenarioUtilOnline crmOnline = CrmScenarioUtilOnline.getInstance();
 
-    public static String getStrField(JSONObject response, String field) {
-        String value = response.getString(field);
-        return value == null ? "" : value;
-    }
-
     public static String getStrField(JSONObject response, int index, String field) {
         String value = response.getJSONArray("list").getJSONObject(index).getString(field);
         return value == null ? "" : value;
-    }
-
-    public static Integer getIntField(JSONObject response, String field) {
-        return response.getInteger(field);
     }
 
     public static Integer getIntField(JSONObject response, int index, String field) {
@@ -67,9 +59,37 @@ public class CommonUtil {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
     }
 
-
+    /**
+     * 日志打印
+     *
+     * @param s param
+     */
     public static void log(String s) {
         logger.info("---------------------------------------{}---------------------------------------", s);
+    }
+
+    /**
+     * 获取百分比
+     *
+     * @param a a
+     * @param b b
+     * @return result
+     */
+    public static String getPercent(double a, double b) {
+        if (a == 0 && b == 0) {
+            return "0.0%";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        double c = a / b;
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(2);
+        String str = nf.format(c);
+        if (String.valueOf(str.charAt(str.length() - 2)).equals("0")) {
+            stringBuilder.append(str);
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length() - 1, "");
+            return stringBuilder.toString();
+        }
+        return str;
     }
 
     /**

@@ -2516,6 +2516,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject mainAppointmentList(int page, int size) {
+        String url = "/porsche/app/after_sale/appointment_maintain_list";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     //预约维修列表展示
     public JSONObject repairAppointmentlist() {
         String url = "/porsche/app/after_sale/appointment_mend_list";
@@ -3322,8 +3330,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * dcc客户列表
      */
-    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page,
-                              int size) {
+    public JSONObject dccList(String customerName, String customerPhone, String startTime, String endTime, int page, int size) {
         String url = "/porsche/customer/dcc-list";
         JSONObject object = new JSONObject();
         if (!StringUtils.isEmpty(customerName)) {
@@ -3475,7 +3482,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("startTime", startTime);
         object.put("endTime", endTime);
         return invokeApi(url, object);
-
     }
 
     /**
@@ -3502,7 +3508,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("page", page);
         object.put("size", size);
         return invokeApi(url, object);
-
     }
 
     /**
@@ -5081,7 +5086,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ADD_CAR")
-
     public static Object[][] add_car() {
 
         return new String[][]{
