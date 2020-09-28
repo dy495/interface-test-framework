@@ -957,31 +957,31 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
      * @description :13 pc巡店提交说明字数限制和非法字符
      * @date :2020/6/25 13:09
      **/
-    @Test
-    public void wordLimit1(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //提交说明超过100 字包含特殊字符，result 接口未对字数作限制
-            String comment = ("@#￥%……&*+——90花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆100花");
-            xundianP(comment);
-            JSONObject list = xd.xundianDetilpage(1, 10);
-            long detailId = list.getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject data=xd.xundianCheckpage(detailId);
-            String submit_comment=data.getString("submit_comment");           //提交说明
-            //取参数comment前100字
-//            String submit_commit1=comment.substring(0,100);
-
-//            logger.info("comment100:",submit_commit1);
-            logger.info("submit_comment:{}",submit_comment);
-            Preconditions.checkArgument(submit_comment.equals(comment),"提交说明显示不同步");
-        }catch (AssertionError e){
-            appendFailreason(e.toString());
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("pc巡店提交说明字数限制和非法字符");
-        }
-    }
+//    @Test
+//    public void wordLimit1(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //提交说明超过100 字包含特殊字符，result 接口未对字数作限制
+//            String comment = ("@#￥%……&*+——90花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆100花");
+//            xundianP(comment);
+//            JSONObject list = xd.xundianDetilpage(1, 10);
+//            long detailId = list.getJSONArray("list").getJSONObject(0).getLong("id");
+//            JSONObject data=xd.xundianCheckpage(detailId);
+//            String submit_comment=data.getString("submit_comment");           //提交说明
+//            //取参数comment前100字
+////            String submit_commit1=comment.substring(0,100);
+//
+////            logger.info("comment100:",submit_commit1);
+//            logger.info("submit_comment:{}",submit_comment);
+//            Preconditions.checkArgument(submit_comment.equals(comment),"提交说明显示不同步");
+//        }catch (AssertionError e){
+//            appendFailreason(e.toString());
+//        }catch (Exception e){
+//            appendFailreason(e.toString());
+//        }finally {
+//            saveData("pc巡店提交说明字数限制和非法字符");
+//        }
+//    }
     /**
      * @description :14.pc特有截屏留痕
      * @date :2020/6/25 16:20

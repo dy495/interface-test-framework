@@ -1625,8 +1625,45 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 
 
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
 
-            Preconditions.checkArgument((last_time.equals(time)), "客户ID："+customer_id+"。列表最新留痕时间为：" + last_time +"。该客户详情中的最新留痕时间为："+time +"。报错门店的shopId=" + shop_id );
+            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
+        }
+
+    }
+    /**
+     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
+     */
+    @Test
+    public void deal_thing() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            JSONObject response = Md.memberTotalListV3(shop_id,page,50);
+            JSONArray list = response.getJSONArray("list");
+            String customer_id = "";
+            int total_deal_times = 0;
+            int total_visit_times = 0 ;
+            int allsum = 0;
+            for(int i=0;i<list.size();i++){
+                customer_id = list.getJSONObject(i).getString("customer_id");
+                JSONObject res = Md.memberDetail(shop_id,customer_id,page,10);
+                 total_deal_times= res.getInteger("total_deal_times");
+                 total_visit_times = res.getInteger("total_visit_times");
+                allsum = total_deal_times+total_visit_times;
+
+
+
+
+            }
+
+
+
+            Preconditions.checkArgument(allsum!=50, "客户ID："+customer_id+"。交易次数为：" + total_deal_times +"。该客户详情中的进店次数为："+total_visit_times +"。报错门店的shopId=" + shop_id );
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1638,5 +1675,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+
 
 }

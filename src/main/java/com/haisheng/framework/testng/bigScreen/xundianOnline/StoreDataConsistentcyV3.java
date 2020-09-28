@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -1700,4 +1702,62 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+
+
+
+//    /**
+//     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
+//     */
+//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void deal_thing(long shop_id) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack = false;
+//        try {
+//
+//
+//            JSONObject response = Md.memberTotalListV3(shop_id,page,50);
+//            JSONArray list = response.getJSONArray("list");
+//            String customer_id = "";
+//            int total_deal_times = 0;
+//            int total_visit_times = 0 ;
+//            int allsum = 0;
+//            int count = 0;
+//
+//            for(int i=0;i<list.size();i++){
+//                customer_id = list.getJSONObject(i).getString("customer_id");
+//                JSONObject res = Md.memberDetail(shop_id,customer_id,page,10);
+//                total_deal_times= res.getInteger("total_deal_times");
+//                total_visit_times = res.getInteger("total_visit_times");
+//                if( total_visit_times ==0 && total_deal_times !=0){
+//                    count +=1;
+//                }
+//
+//
+//
+//            }
+//
+//
+//            FileUtil fileUtil = new FileUtil();
+//
+//            String filePath = "src/main/resources/csv/mendian/漏拍率统计.csv";
+//            String content = shop_id + ","
+//                    + list.size() + ","
+//                    + count + ","
+//                    + Float.parseFloat(String.valueOf(count))/list.size();
+//            fileUtil.appendContentToFile(filePath, content);
+//
+////            Preconditions.checkArgument(allsum!=total_deal_times, "客户ID："+customer_id+"。交易次数为：" + total_deal_times +"。该客户详情中的进店次数为："+total_visit_times +"。报错门店的shopId=" + shop_id );
+//            Preconditions.checkArgument(count==50, count +"。报错门店的shopId=" + shop_id );
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
+//        }
+//
+//    }
+
 }
