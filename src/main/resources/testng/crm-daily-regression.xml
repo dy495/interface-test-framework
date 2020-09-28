@@ -16,7 +16,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
 

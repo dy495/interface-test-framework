@@ -6,7 +6,6 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 
 /**
- *
  * @author wangmin
  */
 public abstract class BaseScene extends TestCaseCommon implements IScene {

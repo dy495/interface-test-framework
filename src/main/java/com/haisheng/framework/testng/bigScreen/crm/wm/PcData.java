@@ -3,14 +3,14 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -353,7 +353,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数")
+    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

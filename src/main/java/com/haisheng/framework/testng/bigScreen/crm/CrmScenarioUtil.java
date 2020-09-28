@@ -256,12 +256,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-     //完成接待 4.0 ok
+
+    //完成接待 4.0 ok
     public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id, String name, JSONArray phone_list, String reception_type) throws Exception {
 
-        JSONArray remark=new JSONArray();
-        JSONObject re=new JSONObject();
-        re.put("remark","auto_remark_12345678901234567890");
+        JSONArray remark = new JSONArray();
+        JSONObject re = new JSONObject();
+        re.put("remark", "auto_remark_12345678901234567890");
         remark.add(re);
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
@@ -2270,11 +2271,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //pc文章详情
     public JSONObject artilceDetailpc(Long id) {
         String url = "/porsche/article/view/";
-        JSONObject json=new JSONObject();
-        json.put("id",id);
+        JSONObject json = new JSONObject();
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -4339,6 +4341,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
             json.put("sale_id", sale_id);
         }
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject shopSaleFunnel(String cycle_type, String month, String sale_id) {
+        String url = "/porsche/analysis2/shop/sale-funnel";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type", cycle_type);
+        if (!month.equals("")) {
+            json.put("month", month);
+        }
+        if (!sale_id.equals("")) {
+            json.put("sale_id", sale_id);
+        }
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
