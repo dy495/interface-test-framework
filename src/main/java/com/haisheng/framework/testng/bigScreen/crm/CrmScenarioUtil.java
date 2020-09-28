@@ -5116,6 +5116,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    //获取购车车id
+    public JSONObject testDriverList() {
+        String url = "/porsche/test-drive-car/management/drop-down-list";
+        String json = "{}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
     @DataProvider(name = "ADD_CAR")
     public static Object[][] add_car() {
 

@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline;
 
 public class PublicParmOnline {
     public String superManger = "demo";    //超级管理员
-    public String superPassword = "f2064e9d2477a6bc75c132615fe3294c";    //超级管理员
+    public String superpassword = "f2064e9d2477a6bc75c132615fe3294c";    //超级管理员
 
     public String qiantai = "qt";
     public String qtpassword = "a806f5026dabadc5cff19211d9f4afa2";

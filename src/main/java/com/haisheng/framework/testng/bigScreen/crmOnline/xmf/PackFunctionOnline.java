@@ -82,11 +82,7 @@ public class PackFunctionOnline {
         crm.login(pp.qiantai, pp.adminpassword);
         JSONObject jsonP=new JSONObject();
         String name="auto"+dt.getHHmm(0);
-        StringBuilder phone = new StringBuilder("1");
-        for (int i = 0; i < 10; i++) {
-            String a = Integer.toString((int) (Math.random() * 10));
-            phone.append(a);
-        }
+        String phone =genPhoneNum();
         //获取当前空闲第一位销售id
         String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
         String userLoginName = "";
@@ -328,7 +324,7 @@ public class PackFunctionOnline {
         String vehicle_chassis_code="ASD145656"+(random.nextInt(89999999) + 10000000);
         Long start=dt.getHistoryDateTimestamp(1);
         long end=dt.getHistoryDateTimestamp(3);
-        JSONObject data=crm.carManagementAdd(carName,1L,37L,plate_number,vehicle_chassis_code,start,end);
+        JSONObject data=crm.carManagementAdd(carName,1L,82L,plate_number,vehicle_chassis_code,start,end);
         return data.getLong("test_car_id");
     }
 }

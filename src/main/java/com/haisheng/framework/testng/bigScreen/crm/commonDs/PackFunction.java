@@ -81,11 +81,7 @@ public class PackFunction {
         crm.login(pp.qiantai, pp.adminpassword);
         JSONObject jsonP=new JSONObject();
         String name="auto"+dt.getHHmm(0);
-        StringBuilder phone = new StringBuilder("1");
-        for (int i = 0; i < 10; i++) {
-            String a = Integer.toString((int) (Math.random() * 10));
-            phone.append(a);
-        }
+        String phone =genPhoneNum();
         //获取当前空闲第一位销售id
         String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
         String userLoginName = "";

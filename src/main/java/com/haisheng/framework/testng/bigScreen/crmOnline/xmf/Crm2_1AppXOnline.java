@@ -350,9 +350,15 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
     public void jiaocheSelect(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject data=crm.deliverSelect(1,10);
-            String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone_number=data.getJSONArray("list").getJSONObject(0).getString("customer_phone_number");
+            JSONArray data=crm.deliverSelect(1,10).getJSONArray("list");
+            String customer_name=data.getJSONObject(0).getString("customer_name");
+            String customer_phone_number="";
+            for(int i=0;i<data.size();i++){
+                String phoneTemp=data.getJSONObject(0).getString("customer_phone_number");
+                if(phoneTemp!=null){
+                    customer_phone_number=phoneTemp;
+                }
+            }
             JSONArray list=crm.deliverSelect(1,10,customer_name).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
@@ -448,13 +454,15 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject data=crm.customerMyReceptionList("","","",10,1);
             String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone_number=data.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+//            String customer_phone_number=data.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+            String customer_phone_number=pp.customer_phone_number;
+
             JSONArray list=crm.customerMyReceptionList(customer_name,"","",1,10).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument(nameSelect.equals(customer_name),"我的接待按客户名称查询，结果错误");
             }
-            JSONArray listPhone=crm.customerMyReceptionList(customer_name,"","",1,10).getJSONArray("list");
+            JSONArray listPhone=crm.customerMyReceptionList(customer_phone_number,"","",1,10).getJSONArray("list");
             for(int i=0;i<listPhone.size();i++){
                 String PhoneSelect=listPhone.getJSONObject(i).getString("customer_phone");
                 Preconditions.checkArgument(PhoneSelect.equals(customer_phone_number),"我的接待按客户电话查询，结果错误");
@@ -540,9 +548,15 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
     public void driverSelect(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject data=crm.driverSelect(1,10);
-            String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone_number=data.getJSONArray("list").getJSONObject(0).getString("customer_phone_number");
+            JSONArray data=crm.driverSelect(1,10).getJSONArray("list");
+            String customer_name=data.getJSONObject(0).getString("customer_name");
+            String customer_phone_number="";
+            for(int i=0;i<data.size();i++){
+                String phoneTemp=data.getJSONObject(0).getString("customer_phone_number");
+                if(phoneTemp!=null){
+                    customer_phone_number=phoneTemp;
+                }
+            }
             JSONArray list=crm.driverSelect(1,10,customer_name).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");
@@ -616,9 +630,15 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
     public void customerSelect(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject data=crm.customerSelect(1,10);
-            String customer_name=data.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone=data.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+            JSONArray data=crm.customerSelect(1,10).getJSONArray("list");
+            String customer_name=data.getJSONObject(0).getString("customer_name");
+            String customer_phone="";
+            for(int i=0;i<data.size();i++){
+                String phoneTemp=data.getJSONObject(0).getString("customer_phone");
+                if(phoneTemp!=null){
+                    customer_phone=phoneTemp;
+                }
+            }
             JSONArray list=crm.customerSelect(1,10,customer_name).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSelect=list.getJSONObject(i).getString("customer_name");

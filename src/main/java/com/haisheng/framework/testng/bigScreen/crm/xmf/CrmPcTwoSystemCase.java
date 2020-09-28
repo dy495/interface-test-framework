@@ -839,7 +839,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
             int num=listN.size();
             //主账号登录
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,pp.superpassword);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=role_ids; //销售顾问
@@ -870,7 +870,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(numA-num==1,"增加顾问，下拉菜单没+1");
 //            //删除大池子
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,pp.superpassword);
             crm.userDel(userid);
 
         }catch (AssertionError | Exception e){
@@ -890,7 +890,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //主账号登录
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,pp.superpassword);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=13; //销售顾问
@@ -921,7 +921,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray listA=crm.ManageList(roleId).getJSONArray("list");
             int totalA=listA.size();   //删除前小池子数量
             //删除大池子
-            crm.login(baoshijie,adminpassword);
+            crm.login(baoshijie,pp.superpassword);
             crm.userDel(userid);
 
             crm.login(adminname,adminpassword);

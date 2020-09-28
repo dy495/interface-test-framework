@@ -2,6 +2,8 @@ package com.haisheng.framework.testng.bigScreen.crm.commonDs;
 
 public class PublicParm {
     public String superManger = "baoshijie";    //超级管理员
+    public String superpassword = "e10adc3949ba59abbe56e057f20f883e";    //超级管理员
+
     public String qiantai = "qt";
     public String zongjingli = "xx";    //总经理
     public String adminpassword = "e10adc3949ba59abbe56e057f20f883e";
