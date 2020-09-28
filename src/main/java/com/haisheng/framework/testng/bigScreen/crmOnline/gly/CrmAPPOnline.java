@@ -1112,16 +1112,28 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             crm.login(zjl_name, pwd);
             int customerNum = crm.receptionPage("", date, date, "1", "10").getInteger("all_customer_num");
             //创建线索
-            String phone = new PcData().getDistinctPhone();
+            String phone = getDistinctPhone();
             crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             int customerNum1 = crm.receptionPage("", date, date, "1", "10").getInteger("all_customer_num");
             Preconditions.checkArgument(customerNum1 == customerNum + 1, "没有创建线索之前数据为：" + customerNum + "  创建线索之后数据为：" + customerNum1);
-            crm.login(zjl_name, pwd);
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("今天销售创建线索->今日线索+1");
         }
+    }
+
+    /**
+     * 获取非重复电话号
+     *
+     * @return phone
+     */
+    public String getDistinctPhone() {
+        crm.login(zjl_name, pwd);
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 
     //销售接待--今天销售创建客户->今日线索+1
@@ -1685,14 +1697,13 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
 //    }
 
     //总监今日接待售后车辆=各个顾问今日接待售后车辆之和
-    @Test(enabled = true)
+    @Test()
     public void todayReceptionCarCompeare() {
         try {
-            crm.login(by_name, pwd);
+            crm.login(zjl_name, pwd);
             JSONObject response = crm.afterSaleCustList("", "", "", 1, 10);
             //接待数量
             int todayReceptionCar = response.getInteger("today_reception_car");
-            crm.login(bsj_name, pwd);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max = 0;
@@ -1711,11 +1722,12 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            Preconditions.checkArgument(max == todayReceptionCar, "总监本月接待售后车辆为   " + todayReceptionCar + "各个顾问本月接待售后车辆之和  " + max);
+            CommonUtil.valueView(todayReceptionCar, max);
+            Preconditions.checkArgument(todayReceptionCar >= max, "总监本月接待售后车辆为   " + todayReceptionCar + "各个顾问本月接待售后车辆之和  " + max);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("总监今日接待售后车辆=各个顾问今日接待售后车辆之和");
+            saveData("总监今日接待售后车辆>=各个顾问今日接待售后车辆之和");
         }
     }
 
@@ -1723,11 +1735,10 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void todayRepairedCarCompare() {
         try {
-            crm.login(by_name, pwd);
+            crm.login(zjl_name, pwd);
             JSONObject response = crm.afterSaleCustList("", "", "", 1, 10);
             //接待数量
             int todayRepairedCar = response.getInteger("today_repaired_car");
-            crm.login(bsj_name, pwd);
             JSONObject response1 = crm.userPage(1, 10);
             int pages = response1.getInteger("pages");
             int max = 0;
@@ -1744,11 +1755,12 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            Preconditions.checkArgument(max == todayRepairedCar, "总监今日接待维修车辆为   " + todayRepairedCar + "各个顾问今日接待维修车辆之和  " + max);
+            CommonUtil.valueView(todayRepairedCar, max);
+            Preconditions.checkArgument(todayRepairedCar >= max, "总监今日接待维修车辆为   " + todayRepairedCar + "各个顾问今日接待维修车辆之和  " + max);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("总监今日完成维修车辆=各个顾问今日完成维修车辆之和");
+            saveData("总监今日完成维修车辆>=各个顾问今日完成维修车辆之和");
         }
     }
 
@@ -1932,10 +1944,9 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
     public void compareToday() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(fwzj_name, pwd);
+            crm.login(zjl_name, pwd);
             JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
             int todayNewCar = response.getInteger("today_new_car");
-            crm.login(bsj_name, pwd);
             int pages = crm.userPage(1, 10).getInteger("pages");
             int max = 0;
             for (int page = 1; page <= pages; page++) {
