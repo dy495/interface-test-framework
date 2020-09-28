@@ -308,7 +308,9 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
             int messageId = 0;
             for (int i = 0; i < list.size(); i++) {
-                messageId = list.getJSONObject(i).getString("status_name").equals("发送成功") ? list.getJSONObject(i).getInteger("id") : 0;
+                if (list.getJSONObject(i).getString("status_name").equals("发送成功")) {
+                    messageId = list.getJSONObject(i).getInteger("id");
+                }
             }
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {

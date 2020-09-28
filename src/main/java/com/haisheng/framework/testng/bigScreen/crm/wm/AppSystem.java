@@ -36,6 +36,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount qt = EnumAccount.QT_DAILY;
+    private static final EnumAccount ss = EnumAccount.XSXIA_DAILY;
 
     @BeforeClass
     @Override
@@ -534,9 +535,11 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "回访类型:成交，创建接待时“订车”标记为是的客户")
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
+        String endDate = DateTimeUtil.getFormat(new Date());
         try {
-            CommonUtil.login(xs);
-            int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
+            CommonUtil.login(ss);
+            int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
             for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

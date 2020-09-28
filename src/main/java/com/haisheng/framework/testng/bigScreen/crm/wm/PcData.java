@@ -212,7 +212,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, String.valueOf(EnumCustomerLevel.G.getId()), phone, car.getModelId(), car.getStyleId(), remark);
+            crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");

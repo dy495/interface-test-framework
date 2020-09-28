@@ -461,8 +461,10 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         try {
             String returnVisitStatusName = null;
             //创造一个当天的回访任务
-            int id = createReturnVisitTask(startDate, endDate);
-            int total = crm.afterSale_VisitRecordList(1, 10, "", "", "").getInteger("total");
+            createReturnVisitTask(startDate, endDate);
+            //回访当天任务
+            int id = createReturnVisitTask(endDate, endDate);
+            int total = crm.afterSale_VisitRecordList(1, 10, "", endDate, endDate).getInteger("total");
             int s = CommonUtil.pageTurning(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
@@ -473,8 +475,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(returnVisitStatusName);
-            assert returnVisitStatusName != null;
-            Preconditions.checkArgument(returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
+            Preconditions.checkArgument(returnVisitStatusName != null && returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1204,7 +1205,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
      * @param endDay   结束时间
      */
     private int createReturnVisitTask(String startDay, String endDay) {
-        String date1 = DateTimeUtil.getFormat(new Date());
+        String date = DateTimeUtil.getFormat(new Date());
         CommonUtil.login(zjl);
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
@@ -1224,7 +1225,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             }
         }
         //回访
-        crm.afterSale_addVisitRecord((long) id, picture, comment, date1);
+        crm.afterSale_addVisitRecord((long) id, picture, comment, date);
         return id;
     }
 

@@ -22,6 +22,7 @@ public enum EnumAccount {
      */
     XS_DAILY("cs", getPassword("123456"), "", "daily", "cs"),
 
+    XSXIA_DAILY("销售顾问xia", getPassword("123456"), "", "daily", ""),
     /**
      * 总经理
      */
