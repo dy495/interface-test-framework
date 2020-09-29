@@ -38,7 +38,6 @@ public class PublicMethod {
         map.put("userId", "");
         map.put("userName", "总经理");
         array.add(map);
-        //总经理
         return array;
     }
 }

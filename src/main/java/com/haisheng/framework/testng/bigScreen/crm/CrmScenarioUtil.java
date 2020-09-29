@@ -4255,6 +4255,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * 展厅热区分析接口
+     */
+    public JSONObject skuRank(String cycleType, String month) {
+        String url = "/porsche/analysis2/sku/rank";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(cycleType)) {
+            object.put("cycle_type", cycleType);
+        }
+        if (!StringUtils.isEmpty(month)) {
+            object.put("month", month);
+        }
+        return invokeApi(url, object);
+    }
+
+    /**
      * 3.0数据分析 潜在客户分析-潜客年龄分布
      */
     public JSONObject customerAge(String cycle_type, String month, String sale_id, String car_type) throws Exception {
@@ -4428,6 +4443,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
             json.put("car_type", car_type);
         }
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject city(String cycle_type, String month, String car_type, int adcode) {
+        String url = "/porsche/analysis2/deal/city";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type", cycle_type);
+        json.put("adcode", adcode);
+        if (!StringUtils.isEmpty(month)) {
+            json.put("month", month);
+        }
+        if (!StringUtils.isEmpty(car_type)) {
+            json.put("car_type", car_type);
+        }
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 

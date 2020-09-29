@@ -997,7 +997,8 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-    public JSONObject finishReception(Long reception_id, Long customer_id, String name)  {
+
+    public JSONObject finishReception(Long reception_id, Long customer_id, String name) {
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
         json1.put("reception_id", reception_id);
@@ -1057,7 +1058,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2526,7 +2526,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     //------------------------售后------------------------
     //售后：客户管理->列表展示
-    public JSONObject afterSaleCustList(String search_condition, String search_date_start, String search_date_end, int page, int size){
+    public JSONObject afterSaleCustList(String search_condition, String search_date_start, String search_date_end, int page, int size) {
         String url = "/porsche/app/after_sale/reception_after_customer_list";
         JSONObject json1 = new JSONObject();
         if (!search_condition.equals("")) {
@@ -4129,6 +4129,19 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject shopSaleFunnel(String cycle_type, String month, String sale_id) {
+        String url = "/porsche/analysis2/shop/sale-funnel";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type", cycle_type);
+        if (!month.equals("")) {
+            json.put("month", month);
+        }
+        if (!sale_id.equals("")) {
+            json.put("sale_id", sale_id);
+        }
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
     /**
      * 3.0数据分析 查询周期列表
@@ -4343,6 +4356,20 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject city(String cycle_type, String month, String car_type, int adcode) {
+        String url = "/porsche/analysis2/deal/city";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type", cycle_type);
+        json.put("adcode", adcode);
+        if (!StringUtils.isEmpty(month)) {
+            json.put("month", month);
+        }
+        if (!StringUtils.isEmpty(car_type)) {
+            json.put("car_type", car_type);
+        }
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
     /**
      * 3.0数据分析 成交客户分析-市成交量
@@ -4361,6 +4388,22 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    /**
+     * 展厅热区分析接口
+     */
+    public JSONObject skuRank(String cycleType, String month) {
+        String url = "/porsche/analysis2/sku/rank";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(cycleType)) {
+            object.put("cycle_type", cycleType);
+        }
+        if (!StringUtils.isEmpty(month)) {
+            object.put("month", month);
+        }
+        return invokeApi(url, object);
+    }
+
     //购车
     public JSONObject addOrderCar(String customer_id, String reception_id, String vehicle_chassis_code) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
@@ -4377,6 +4420,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String result = httpPost(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     @DataProvider(name = "APPOINTMENT_TYPE")
     public static Object[] appointment_type() {
         return new String[]{

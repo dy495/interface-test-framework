@@ -6,18 +6,22 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -634,6 +638,41 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * 比较两个漏斗之间数据
+     *
+     * @param type 类型
+     */
+    private void compareTwoPanelData(String type) {
+        for (EnumFindType e : EnumFindType.values()) {
+            List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
+            array.forEach(arr -> {
+                CommonUtil.valueView(arr.get("userName"));
+                JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
+                JSONArray businessList = data.getJSONObject("business").getJSONArray("list");
+                JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
+                class A {
+                    int getValue(JSONArray array) {
+                        int value = 0;
+                        for (int i = 0; i < array.size(); i++) {
+                            if (array.getJSONObject(i).getString("type").equals(type)) {
+                                value = array.getJSONObject(i).getInteger("value");
+                                CommonUtil.valueView(value);
+                            }
+                        }
+                        return value;
+                    }
+                }
+                int businessValue = new A().getValue(businessList);
+                int carTypeValue = new A().getValue(carTypeList);
+                CommonUtil.valueView(businessValue, carTypeValue);
+                Preconditions.checkArgument(businessValue >= carTypeValue, arr.get("userName") +
+                        " " + e.getName() + " 【业务漏斗】" + type + "数据为：" + businessValue + ",【车型漏斗】" + type + "数据为：" + carTypeValue);
+                CommonUtil.log("分割线");
+            });
+        }
+    }
+
     @Test(description = "销售顾问漏斗--【业务漏斗】创建线索=【车型漏斗】创建线索,【业务漏斗】接待线索=【车型漏斗】接待线索")
     public void shopPanel_data_29() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -677,79 +716,357 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * 比较两个漏斗之间数据
-     */
-    private void compareTwoPanelData(String type) {
-        for (EnumFindType e : EnumFindType.values()) {
-            List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
-            array.forEach(arr -> {
-                CommonUtil.valueView(arr.get("userName"));
-                JSONObject data = null;
-                try {
-                    data = crm.saleFunnel(e.getType(), "", arr.get("userId"));
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+    @Test(description = "10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量")
+    public void shopPanel_data_30() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int num = getReceptionTime(0, 10);
+            int value = 0;
+            JSONArray list = crm.receptTime("DAY", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("time").equals("10分钟以内")) {
+                    value = list.getJSONObject(i).getInteger("value");
                 }
-                assert data != null;
-                JSONArray businessList = data.getJSONObject("business").getJSONArray("list");
-                JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
-                int businessValue = 0;
-                int carTypeValue = 0;
-                for (int i = 0; i < businessList.size(); i++) {
-                    if (businessList.getJSONObject(i).getString("type").equals(type)) {
-                        businessValue = businessList.getJSONObject(i).getInteger("value");
-                    }
-                }
-                for (int i = 0; i < carTypeList.size(); i++) {
-                    if (carTypeList.getJSONObject(i).getString("type").equals(type)) {
-                        carTypeValue = carTypeList.getJSONObject(i).getInteger("value");
-                    }
-                }
-                CommonUtil.valueView(businessValue, carTypeValue);
-                Preconditions.checkArgument(businessValue >= carTypeValue, arr.get("userName") + " " + e.getName() + " 【业务漏斗】" + type + "数据为：" + businessValue + ",【车型漏斗】" + type + "数据为：" + carTypeValue);
-                CommonUtil.log("分割线");
-            });
+            }
+            CommonUtil.valueView(num, value);
+            Preconditions.checkArgument(num == value, "昨日接待时长10分钟之内的数量为：" + num + "店面数据分析中接待时长10分钟的数量为" + value);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量");
         }
     }
 
-    @Test(description = "每个人的比例==100%")
-    public void test() {
+    @Test(description = "10～30分钟组数=【前一日】【销售总监-PC-接待列表】10分钟<离店时间-接待时间<30分钟的数量")
+    public void shopPanel_data_31() {
         logger.logCaseStart(caseResult.getCaseName());
-//        for (EnumFindType e : EnumFindType.values()) {
-//            try {
-//                JSONObject response = crm.customerAge(e.getType(), "", "", "");
-//                int total = crm.userUserPage(1, 10).getInteger("total");
-//                int s = CommonUtil.pageTurning(total, 100);
-//                int everySaleNun = 0;
-//                for (int i = 1; i < s; i++) {
-//                    JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
-//                    for (int j = 0; j < list.size(); j++) {
-//                        if (list.getJSONObject(j).getString("role_name").equals("销售顾问")) {
-//                            String userId = list.getJSONObject(j).getString("user_id");
-//                            CommonUtil.valueView(list.getJSONObject(j).getString("user_name"));
-//                            //每个销售每种搜索类型的数据和
-//                            JSONArray list1 = crm.receptTime(e.getType(), "", userId).getJSONArray("list");
-//                            for (int k = 0; k < list1.size(); k++) {
-//                                if (list1.getJSONObject(k).getString("time").equals(time)) {
-//                                    int value = list1.getJSONObject(k).getInteger("value");
-//                                    everySaleNun += value;
-//                                    CommonUtil.log("分割线");
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (Exception | AssertionError e) {
-//                appendFailreason(e.toString());
-//            }
-//        }
+        try {
+            int num = getReceptionTime(10, 30);
+            int value = 0;
+            JSONArray list = crm.receptTime("DAY", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("time").equals("10-30分钟")) {
+                    value = list.getJSONObject(i).getInteger("value");
+                }
+            }
+            CommonUtil.valueView(num, value);
+            Preconditions.checkArgument(num == value, "昨日接待时长10～30分钟之内的数量为：" + num + "店面数据分析中接待时长10～30分钟的数量为" + value);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("10～30分钟组数=【前一日】【销售总监-PC-接待列表】10分钟<离店时间-接待时间<30分钟的数量");
+        }
     }
 
-    @Test
-    public void testA() {
-        List<Map<String, String>> map = new PublicMethod().getSaleList("销售顾问");
-//        List<String> list = new PublicMethod().saleList("销售顾问");
-        System.err.println(map);
+    @Test(description = "30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<离店时间-接待时间<60分钟的数量")
+    public void shopPanel_data_32() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int num = getReceptionTime(30, 60);
+            int value = 0;
+            JSONArray list = crm.receptTime("DAY", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("time").equals("30-60分钟")) {
+                    value = list.getJSONObject(i).getInteger("value");
+                }
+            }
+            CommonUtil.valueView(num, value);
+            Preconditions.checkArgument(num == value, "昨日接待时长30～60分钟之内的数量为：" + num + "店面数据分析中接待时长30～60分钟的数量为" + value);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<离店时间-接待时间<60分钟的数量");
+        }
+    }
+
+    @Test(description = "60～120分钟内组数=【前一日】【销售总监-PC-接待列表】60分钟<离店时间-接待时间<120分钟的数量")
+    public void shopPanel_data_33() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int num = getReceptionTime(60, 120);
+            int value = 0;
+            JSONArray list = crm.receptTime("DAY", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("time").equals("60-120分钟")) {
+                    value = list.getJSONObject(i).getInteger("value");
+                }
+            }
+            CommonUtil.valueView(num, value);
+            Preconditions.checkArgument(num == value, "昨日接待时长60～120分钟之内的数量为：" + num + "店面数据分析中接待时长60～120分钟的数量为" + value);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("60～120分钟内组数=【前一日】【销售总监-PC-接待列表】60分钟<离店时间-接待时间<120分钟的数量");
+        }
+    }
+
+    @Test(description = "大于120分钟组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间>120分钟的数量")
+    public void shopPanel_data_34() {
+        logger.logCaseStart(caseResult.getCaseName());
+        double c = Double.POSITIVE_INFINITY;
+        try {
+            int num = getReceptionTime(120, (int) c);
+            int value = 0;
+            JSONArray list = crm.receptTime("DAY", "", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("time").equals("120分钟以上")) {
+                    value = list.getJSONObject(i).getInteger("value");
+                }
+            }
+            CommonUtil.valueView(num, value);
+            Preconditions.checkArgument(num == value, "昨日接待时长120分钟以上的数量为：" + num + "店面数据分析中接待时长120分钟以上的数量为" + value);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("大于120分钟组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间>120分钟的数量");
+        }
+    }
+
+    /**
+     * 区间接待时长总数
+     *
+     * @param leftTime  左区间时间
+     * @param rightTime 右区间时间
+     */
+    private int getReceptionTime(int leftTime, int rightTime) throws ParseException {
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        int num = 0;
+        int total = crm.receptionPage("", "", "PRE_SALES", 1, 10).getInteger("total");
+        int s = CommonUtil.pageTurning(total, 100);
+        for (int i = 1; i < s; i++) {
+            JSONArray list = crm.receptionPage("", "", "PRE_SALES", i, 100).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("reception_date").equals(date)) {
+                    String receptionTime = list.getJSONObject(j).getString("reception_time");
+                    String leaveTime = list.getJSONObject(j).getString("leave_time");
+                    CommonUtil.valueView(receptionTime, leaveTime);
+                    int x = new DateTimeUtil().calTimeHourDiff(receptionTime, leaveTime);
+                    if (x > leftTime && x < rightTime) {
+                        num++;
+                    }
+                    CommonUtil.log("分割线");
+                }
+            }
+        }
+        return num;
+    }
+
+    @Test(description = "存量客户分析页--个人车主百分比+公司车主百分比=100% 或 0%")
+    public void stockCustomer_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName());
+                    double percentSum = 0;
+                    JSONArray ratioList = crm.carOwner(a.getType(), "", b.getStyleId()).getJSONArray("ratio_list");
+                    for (int i = 0; i < ratioList.size(); i++) {
+                        double percent = ratioList.getJSONObject(i).getDouble("percent");
+                        String name = ratioList.getJSONObject(i).getString("name");
+                        CommonUtil.valueView(name + ":" + percent);
+                        percentSum += percent;
+                    }
+                    CommonUtil.valueView(percentSum);
+                    Preconditions.checkArgument(percentSum == 1.0 || percentSum == 0.0, b.getName() + a.getName() + "查询" + "个人车主百分比+公司车主百分比=" + percentSum);
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("存量客户分析页--个人车主百分比+公司车主百分比=100% 或 0%");
+        }
+    }
+
+    @Test(description = "存量客户分析页--车主年龄分析 各年龄段之和=100%或 0%")
+    public void stockCustomer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName());
+                    double percentageSum = 0;
+                    JSONArray list = crm.genderAge(a.getType(), "", b.getStyleId()).getJSONObject("age").getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        String age = list.getJSONObject(i).getString("age");
+                        CommonUtil.valueView(age + ":" + percentage);
+                        percentageSum += percentage;
+                    }
+                    CommonUtil.valueView(percentageSum);
+                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "查询" + "车主年龄分析 各年龄段之和=" + percentageSum);
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("存量客户分析页--个人车主百分比+公司车主百分比=100% 或 0%");
+        }
+    }
+
+    @Test(description = "车主性别分析 性别之和=100%或 0%")
+    public void stockCustomer_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName());
+                    double percentageSum = 0;
+                    JSONArray list = crm.genderAge(a.getType(), "", b.getStyleId()).getJSONObject("gender").getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        String gender = list.getJSONObject(i).getString("gender");
+                        CommonUtil.valueView(gender + ":" + percentage);
+                        percentageSum += percentage;
+                    }
+                    CommonUtil.valueView(percentageSum);
+                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "查询" + "车主性别分析 性别之和=" + percentageSum);
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("车主性别分析 性别之和=100%或 0%");
+        }
+    }
+
+    @Test(description = "某个省的百分比=该省成交量/各省成交量之和")
+    public void stockCustomer_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    int totalValue = 0;
+                    CommonUtil.valueView(b.getName());
+                    JSONArray list = crm.wholeCountry(a.getType(), "", b.getStyleId()).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        int value = list.getJSONObject(i).getInteger("value");
+                        totalValue += value;
+                    }
+                    for (int i = 0; i < list.size(); i++) {
+                        String district = list.getJSONObject(i).getString("district");
+                        int value = list.getJSONObject(i).getInteger("value");
+                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentage);
+                        double result = CommonUtil.getDecimal((double) value / totalValue, 2);
+                        CommonUtil.valueView(district + "计算占比：" + result);
+                        Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + "查询" + district + "接口返回占比：" + percentage + "，计算占比：" + result);
+                    }
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("车主性别分析 性别之和=100%或 0%");
+        }
+    }
+
+    @Test(description = "某个区的百分比=该区成交量/各区成交量之和")
+    public void stockCustomer_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    int totalValue = 0;
+                    CommonUtil.valueView(b.getName());
+                    JSONArray list = crm.city(a.getType(), "", b.getStyleId(), 320500).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        int value = list.getJSONObject(i).getInteger("value");
+                        totalValue += value;
+                    }
+                    for (int i = 0; i < list.size(); i++) {
+                        String district = list.getJSONObject(i).getString("district");
+                        int value = list.getJSONObject(i).getInteger("value");
+                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentage);
+                        double result = CommonUtil.getDecimal((double) value / totalValue, 2);
+                        CommonUtil.valueView(district + "计算占比：" + result);
+                        Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + "查询" + district + "接口返回占比：" + percentage + "，计算占比：" + result);
+                    }
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("某个区的百分比=该区成交量/各区成交量之和");
+        }
+    }
+
+    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量")
+    public void stockCustomer_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            int personage = 0;
+            int company = 0;
+            JSONArray ratioLis = crm.carOwner("DAY", "", "").getJSONArray("ratio_list");
+            for (int i = 0; i < ratioLis.size(); i++) {
+                if (ratioLis.getJSONObject(i).getString("name").equals("个人车主")) {
+                    personage = ratioLis.getJSONObject(i).getInteger("value");
+                }
+                if (ratioLis.getJSONObject(i).getString("name").equals("公司车主")) {
+                    company = ratioLis.getJSONObject(i).getInteger("value");
+                }
+            }
+            int receptionPerson = 0;
+            int receptionCompany = 0;
+            int total = crm.customerList("", "", "", date, date, 1, 10).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.customerList("", "", "", date, date, i, 10).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("buy_car_name").equals("是")) {
+                        if (list.getJSONObject(j).getString("customer_name").length() <= 5) {
+                            receptionPerson++;
+                        }
+                        if (list.getJSONObject(j).getString("customer_name").length() >= 6) {
+                            receptionCompany++;
+                        }
+                    }
+                }
+            }
+            CommonUtil.valueView(personage, receptionPerson, company, receptionCompany);
+            Preconditions.checkArgument(personage == receptionPerson, "昨日个人车主客户数为：" + personage + "," + "接待订车个人客户数量：" + receptionPerson);
+            Preconditions.checkArgument(company == receptionCompany, "昨日公司车主客户数为：" + personage + "," + "接待订车公司客户数量：" + receptionPerson);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量");
+        }
+    }
+
+    @Test(description = "试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致")
+    public void exhibitionHall_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            int driver = 0;
+            int appDriver = 0;
+            JSONArray list = crm.skuRank("DAY", "").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int value = list.getJSONObject(i).getInteger("drive");
+                driver += value;
+            }
+            int total = crm.testDriverAppList("", date, date, 10, 1).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray appList = crm.testDriverAppList("", date, date, 10, i).getJSONArray("list");
+                for (int j = 0; j < appList.size(); j++) {
+                    if (!appList.getJSONObject(j).getString("audit_status_name").equals("已取消")) {
+                        appDriver++;
+                    }
+                }
+            }
+            CommonUtil.valueView(driver, appDriver);
+            Preconditions.checkArgument(driver == appDriver, "昨日app记录试驾数：" + appDriver + "昨日展厅热区分析各车型试乘试驾数：" + driver);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致");
+        }
     }
 }
