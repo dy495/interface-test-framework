@@ -5,10 +5,13 @@ public class PublicParm {
     public String superpassword = "e10adc3949ba59abbe56e057f20f883e";    //超级管理员
 
     public String qiantai = "qt";
+    public String qtpassword = "e10adc3949ba59abbe56e057f20f883e";
+
     public String zongjingli = "xx";    //总经理
     public String adminpassword = "e10adc3949ba59abbe56e057f20f883e";
     //售后 预约保养 维修 服务总监fuwuZongjian
     public String fuwuZongjian = "baoyang";    //服务总监
+
     public String baoyangGuwen = "baoyangr"; //保养顾问
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 

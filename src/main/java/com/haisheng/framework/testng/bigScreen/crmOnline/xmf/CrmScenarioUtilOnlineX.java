@@ -4957,6 +4957,13 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    //预约·试驾车列表
+    public JSONObject testDriverList() {
+        String url = "/porsche/test-drive-car/management/drop-down-list";
+        String json = "{}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
     @DataProvider(name = "ADD_CAR")
 
