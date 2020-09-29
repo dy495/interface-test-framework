@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -46,6 +47,18 @@ public class CommonUtil {
             }
         });
         return list;
+    }
+
+    /**
+     * 取小数点后位数
+     *
+     * @param a     数值
+     * @param digit 位数
+     * @return double b
+     */
+    public static double getDecimal(double a, int digit) {
+        int cardinal = (int) Math.pow(10, digit);
+        return (double) Math.round(a * cardinal) / cardinal;
     }
 
     /**
