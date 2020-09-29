@@ -1889,10 +1889,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //添加车辆
-    public Long myCarAddCode(Integer car_type, String plate_number) throws Exception {
+    public Long myCarAddCode(Integer car_type, Integer car_model,String plate_number) throws Exception {
         String url = "/WeChat-applet/porsche/a/my-car/add";
         JSONObject json = new JSONObject();
         json.put("car_type", car_type);
+        json.put("car_model", car_model);
         json.put("plate_number", plate_number);
 
         String res = httpPost(url, json.toJSONString(), IpPort);
@@ -5222,10 +5223,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/app/sale-reception/visit-list";
         JSONObject object = new JSONObject();
         if (!StringUtils.isEmpty(startTime)) {
-            object.put("start_time", startTime);
+            object.put("start_day", startTime);
         }
         if (!StringUtils.isEmpty(endTime)) {
-            object.put("end_time", endTime);
+            object.put("end_day", endTime);
         }
         object.put("page", page);
         object.put("size", size);

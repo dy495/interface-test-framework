@@ -359,7 +359,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String plate_number = "豫GBBA96";
 
             crm.myCarAdd(car_type, plate_number,car_model);
-            Long code = crm.myCarAddCode(car_type, plate_number);
+            Long code = crm.myCarAddCode(car_type, car_model,plate_number);
             JSONArray listB = crm.myCarList().getJSONArray("list");
             Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
             crm.myCarDelete(Integer.toString(car_idBefore));
@@ -463,10 +463,10 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             int limit = 10 - count;
             for (int i = 0; i < limit; i++) {
                 String plate_number = "吉GBBA3" + i;
-                crm.myCarAddCode(car_type, plate_number);
+                crm.myCarAddCode(car_type, car_model,plate_number);
             }
             String plate_number = "豫GBBA11";
-            Long code = crm.myCarAddCode(car_type, plate_number);
+            Long code = crm.myCarAddCode(car_type, car_model,plate_number);
             checkArgument(code == 1001, "我的车辆上限10辆车");
             if (limit == 0) {
                 return;

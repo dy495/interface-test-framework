@@ -94,8 +94,6 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void qtztSelect() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            finishReceive dd = new finishReceive();
-//            dd.customerNamePhone=new String("马".getBytes(),"UTF-8");
             JSONArray data = crm.qtreceptionPage("", "", "", "1", "10").getJSONArray("list");
             String customer_name = data.getJSONObject(0).getString("customer_name");
             JSONArray list = crm.deliverSelect(1, 10, customer_name).getJSONArray("list");
@@ -121,7 +119,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void qtztSelectTime(String select_date) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = crm.qtreceptionPage("", "", "", "1", "10").getJSONArray("list");
+            JSONArray list = crm.qtreceptionPage("", select_date, select_date, "1", "10").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String reception_date = list.getJSONObject(i).getString("reception_date");
                 Preconditions.checkArgument(reception_date.equals(select_date), "展厅接待按接待时间{}查询，结果{}错误", select_date, reception_date);
@@ -305,7 +303,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
      * @description :变更接待
      * @date :2020/9/28 17:16
      **/
-//    @Test()
+    @Test()
     public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -323,7 +321,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             //完成接待
             JSONArray PhoneList = json.getJSONArray("phoneList");
             //前台登录，变更接待
-            crm.login(pp.qiantai,pp.qtpassword);
+            crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, sale_id);
 
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);          //变更接待后原销售接待列表数
@@ -332,28 +330,41 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.login(loginTemp, pp.adminpassword);   //变更接待后 接待销售接待列表数
             int receiveTotalA = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
             //完成接待
-            crm.login(pp.qiantai,pp.qtpassword);
+            crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, belong_sale_id);
 
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
-            JSONArray faceList=new JSONArray();
-            JSONObject ll=new JSONObject();
-            ll.put("analysis_customer_id","c2aecb35-9e69-4adb-bc7f-98310e34");
-            ll.put("id",0);
-            ll.put("is_decision",true);
+            JSONArray faceList = new JSONArray();
+            JSONObject ll = new JSONObject();
+            ll.put("analysis_customer_id", "c2aecb35-9e69-4adb-bc7f-98310e34");
+            ll.put("id", 0);
+            ll.put("is_decision", true);
 
-            finishReceive pm=new finishReceive();
-            pm.customer_id=customer_id;
-            pm.reception_id=receiptId;
-            pm.belongs_sale_id=belong_sale_id;
-            pm.name=pp.customer_name;
-            pm.phoneList=PhoneList;
-            pm.reception_type="BB";
-            pm.face_list=faceList;
-            pm.plate_number_one="京DF12334";
+            finishReceive pm = new finishReceive();
+            pm.customer_id = customer_id;
+            pm.reception_id = receiptId;
+            pm.belongs_sale_id = belong_sale_id;
+            pm.name = pp.customer_name;
+
+            pm.reception_type = "BB";
+            pm.face_list = faceList;
+            pm.plate_number_one = "京DF12334";
+
+//            pm.customer_id="14058";
+//            pm.reception_id="4086";
+//            pm.belongs_sale_id="uid_37ff7893";
+//            JSONArray PhoneList = new JSONArray();
+//            JSONObject phone1 = new JSONObject();
+//            phone1.put("phone", "15037286013");
+//            phone1.put("phone_order", 0);
+//            JSONObject phone2 = new JSONObject();
+//            phone2.put("phone", "");
+//            phone2.put("phone_order", 1);
+//            PhoneList.add(0, phone1);
+//            PhoneList.add(1, phone2);
+
+            pm.phoneList = PhoneList;
             crm.finishReception3(pm);
-
-
             Preconditions.checkArgument(total - total2 == 1, "变更接待，原接待销售接待列表-1");
             Preconditions.checkArgument(receiveTotalA - receiveTotal == 1, "变更接待，原接待销售接待列表+1");
 
@@ -363,25 +374,30 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(pp.qiantai,pp.qtpassword);
+            crm.login(pp.qiantai, pp.qtpassword);
             saveData("变更接待 ");
         }
     }
-//    @Test()
-//    public void T() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            selectTest ss=new selectTest();
-//            ss.page="1";
-//            crm.nonReceptionList(ss);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("为接待离店风控按时间查仅输入开始结束时间 ");
-//        }
-//    }
+
+    @Test()
+    public void T() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            selectTest ss = new selectTest();
+            ss.page = "1";
+            crm.nonReceptionList(ss);
+            String a = ss.page;
+            System.out.println(ss.page);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+//            saveData(" ");
+        }
+    }
 
 
 }
