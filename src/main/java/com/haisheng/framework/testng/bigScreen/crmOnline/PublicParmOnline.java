@@ -22,7 +22,7 @@ public class PublicParmOnline {
     public String dcc = "dcc";      //销售账号
     public String xsgwPassword="a806f5026dabadc5cff19211d9f4afa2";
 
-    public String xiaoshouZongjian = "xszj";      //销售总监账号 密码123456，同总经理
+    public String xiaoshouZongjian = "zjl";      //销售总监账号 密码123456，同总经理
 
     //预约使用参数
     public String customer_name = "@@@2";

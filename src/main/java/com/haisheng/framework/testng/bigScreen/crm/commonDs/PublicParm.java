@@ -15,7 +15,7 @@ public class PublicParm {
     public String baoyangGuwen = "baoyangr"; //保养顾问
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 
-    public Long mycarId = 419L;   //车id待定
+    public Long mycarId = 537L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
     public String dcc = "xdcc";      //销售账号
@@ -25,7 +25,7 @@ public class PublicParm {
     public String customer_phone_number = "15037286013";
     public Integer car_type = 1;
     public Integer car_model = 36;
-    //    public String car_type_name = "Panamera";
+    public String car_type_name = "Panamera";
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic";
     public String textPath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/deleteList";
     public String nomalFileModel = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/nomalFileModel";
@@ -35,6 +35,9 @@ public class PublicParm {
     public String positions = "CAR_ACTIVITY";
     public String remark = "自动化---------创建----------H级客户";
     public String article_content = "品牌上新，优惠多多，限时4天,文章内容";
+
+    public String reception_name = "xx";  //接待人员名
+    public String reception_phone = "15037286013"; //接待人员电话
 
 
 }

@@ -291,7 +291,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            crm.districtTree();
-            //销售总监今日试驾总数
+            //销售总监今日交车总数
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
 
             JSONObject dataTotal = crm.jiaocheTotal();
@@ -730,7 +730,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，applet车主风采列表+1 ok
      * @date :2020/8/3 18:25
      **/
-    @Test
+//    @Test
     public void carOwerListUp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1007,7 +1007,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/9/27 19:18
      **/
 
-    @Test
+//    @Test
     public void shijiacheNum2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

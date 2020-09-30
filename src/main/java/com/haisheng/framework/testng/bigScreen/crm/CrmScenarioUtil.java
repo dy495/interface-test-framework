@@ -1748,7 +1748,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
-        json1.put("gender", "MALE");
+        json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("appointment_time", appointment_time);
@@ -1764,7 +1764,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
-        json1.put("gender", "MALE");
+        json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("appointment_time", appointment_time);
@@ -1780,7 +1780,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
-        json1.put("gender", "MALE");
+        json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("appointment_time", appointment_time);
@@ -5354,6 +5354,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
 }
 
 

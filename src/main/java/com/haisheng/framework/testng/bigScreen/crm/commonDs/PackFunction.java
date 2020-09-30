@@ -58,8 +58,8 @@ public class PackFunction {
         is_online_activity = true;
 //            String reception_name = manage(13)[0];  //接待人员名
 //            String reception_phone = manage(13)[1]; //接待人员电话
-        String reception_name = "xx";  //接待人员名
-        String reception_phone = "15037286013"; //接待人员电话
+        String reception_name = pp.reception_name;  //接待人员名
+        String reception_phone = pp.reception_phone; //接待人员电话
         String customer_max = "50";                    //人数上限
 
         String activity_start = dt.getHistoryDate(1);
@@ -182,7 +182,7 @@ public class PackFunction {
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date = dt.getHistoryDate(0);
         String sign_time = dt.getHHmm(0);
-        Long test_drive_car = 37L;   //试驾车id
+        Long test_drive_car=crm.testDriverList().getJSONArray("list").getJSONObject(0).getLong("test_car_id");
         JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
         String apply_time = timelist.getString(0);
 
@@ -281,15 +281,24 @@ public class PackFunction {
         return crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(i).getLong("id");
     }
 
-    public JSONObject appointmentTimeListO(String type, int i, String appointment_date) throws Exception {
-        JSONObject data = crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(i);
-        Long id = data.getLong("id");
-        String time = data.getString("start_time");
-        JSONObject object = new JSONObject();
-        object.put("time_id", id);
-        object.put("start_time", time);
-        return object;
+    public JSONObject appointmentTimeListO(String type, String appointment_date) throws Exception {
+        JSONObject result = new JSONObject();
+        JSONArray object = crm.timeList(type, appointment_date).getJSONArray("list");
+        for (int i = 0; i < object.size(); i++) {
+            JSONObject data = object.getJSONObject(i);
+            int left_num = data.getInteger("left_num");
+            if (left_num != 0) {
+                Long id = data.getLong("id");
+                String time = data.getString("start_time");
+                result.put("time_id", id);
+                result.put("start_time", time);
+                break;
+            }
+        }
+        return result;
     }
+
+
 
     //删除文本中手机号用户
     public void deleteUser(String filePath) {
@@ -335,7 +344,7 @@ public class PackFunction {
     //添加试驾车
     public long newCarDriver() throws Exception {
         Random r = new Random();
-        String carName = "试驾车" + dt.getHHmm(0);
+        String carName = "试驾车"+r.nextInt(10) + dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
         String plate_number = "黑Z12Q1" + r.nextInt(100);
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);

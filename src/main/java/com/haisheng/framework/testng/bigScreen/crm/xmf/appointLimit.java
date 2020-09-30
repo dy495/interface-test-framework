@@ -143,56 +143,30 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void mainTain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONObject dd=pf.appointmentTimeListO("MAINTAIN",2,appointment_date);
+            String appointment_date=dt.getHistoryDate(2);
+            JSONObject dd=pf.appointmentTimeListO("MAINTAIN",appointment_date);
             long timelist = dd.getLong("time_id");
             String appointment_time = dd.getString("start_time");
 
             JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
             //预约成功
             Long appointment_idM = data.getLong("appointment_id");
-            String appointment_statusM = data.getString("appointment_status");
-            String appointment_status_nameM = data.getString("appointment_status_name");
-            String customer_nameM = data.getString("customer_name");
-            String customer_phone_numberM = data.getString("customer_phone_number");
-            String appointment_dateM = data.getString("appointment_date");
-            String appointment_timeM = data.getString("appointment_time");
-            String sale_nameM = data.getString("sale_name");
-            String sale_phoneM = data.getString("sale_phone");
-            String plate_numberM = data.getString("plate_number");
-            String car_type_nameM = data.getString("car_type_name");
-            //预约保养成功&预约保养
-//            Preconditions.checkArgument(appointment_status_nameM.equals(""),"预约成功状态显示异常");
-            checkArgument(customer_nameM.equals(customer_name), "预约保养成功页客户名错误");
-            checkArgument(customer_phone_numberM.equals(customer_phone_number), "预约保养成功页客户电话错误");
-            checkArgument(appointment_dateM.equals(appointment_date), "预约保养成功预约日期错误");
-            checkArgument(appointment_timeM.equals(appointment_time), "预约保养成功预约时间错误");
+//            Long appointment_idM = 16421L;
+
             //我的 预约消息
             JSONObject dataB = crm.appointmentInfo(appointment_idM);
 
-            String appointment_status_nameB = dataB.getString("appointment_status_name");
             String customer_nameB = dataB.getString("name");
-            String customer_phone_numberB = dataB.getString("customer_phone_number");
-            String appointment_dateB = dataB.getString("appointment_date");
-            String car_type_nameB = dataB.getString("car_type_name");
-            String sale_nameB = dataB.getString("sale_name");
-            String sale_phoneB = dataB.getString("sale_phone");
-//            String appointment_idB = dataB.getString("appointment_id");
-//            String appointment_statusB = dataB.getString("appointment_status");
-//            String star_ratingB = dataB.getString("star_rating");
-//            String service_descriptionB = dataB.getString("service_description");
-//            String is_need_evaluateB = dataB.getString("is_need_evaluate");
+            String customer_phone_numberB = dataB.getString("phone");
+            String appointment_dateB = dataB.getString("date");
+            String car_type_nameB = dataB.getString("car_style_name");
+            String sale_nameB = dataB.getString("receptionist");
+            String sale_phoneB = dataB.getString("receptionist_phone");
             //预约消息&填写预约信息页
-            checkArgument(customer_nameB.equals(customer_name+"先生"), "预约消息客户名显示错误");
+            checkArgument(customer_nameB.equals((customer_name+"先生")), "预约消息客户名显示错误");
             checkArgument(customer_phone_numberB.equals(customer_phone_number), "预约消息客户手机号显示错误");
             checkArgument(appointment_dateB.equals(appointment_date), "预约消息预约日期显示错误");
 
-            //预约消息&预约成功
-            checkArgument(sale_nameB.equals(sale_nameM), "预约保养接待销售名显示错误");
-            checkArgument(sale_phoneB.equals(sale_phoneM), "预约保养接待销售电话显示错误");
-            checkArgument(car_type_nameB.equals(car_type_nameM), "预约保养成功页客户试驾车型错误");
-            checkArgument(appointment_status_nameB.equals(appointment_status_nameM), "预约保养成功页预约状态错误");
-            crm.cancle(appointment_idM);
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -214,74 +188,63 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             crm.login(adminname, adminpassword);
             JSONObject pcdataA = crm.mainAppointmentpage(1, 10);
             String totalA = pcdataA.getString("total");
-            String today_numberA = pcdataA.getString("today_number");
-            String month_numberA = pcdataA.getString("month_number");
-            String total_numberA = pcdataA.getString("total_number");
+//            String today_numberA = pcdataA.getString("today_number");
+//            String month_numberA = pcdataA.getString("month_number");
+//            String total_numberA = pcdataA.getString("total_number");
             //app 今日保养人数和累计试驾总数
             crm.login(pp.fuwuZongjian, pp.adminpassword);
             JSONObject appdataA = crm.mainAppointmentDriverNum();
-            String appointment_total_numberA = appdataA.getString("appointment_total_number");
-            String appointment_today_numberA = appdataA.getString("appointment_today_number");
+//            String appointment_total_numberA = appdataA.getString("appointment_total_number");
+//            String appointment_today_numberA = appdataA.getString("appointment_today_number");
             //app 今日试驾列表总数
             JSONObject appListA = crm.mainAppointmentlist();
             String apptotalListA = appListA.getString("total");
 
             //2.预约试驾
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            String plate_number = "津GBBA29";
-            crm.myCarAdd(car_type, plate_number,pp.car_model);
-            JSONArray list = crm.myCarList().getJSONArray("list");
-            if (list == null) {
-                throw new Exception("暂无车辆");
-            }
-            String my_car_id = list.getJSONObject(0).getString("my_car_id");
-            String appointment_time = "09:00";
-            long timelist = pf.appointmentTimeList("MAINTAIN",1,appointment_date);
 
-            JSONObject data = crm.appointmentMaintain(Long.parseLong(my_car_id), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            String appointment_time = "09:00";
+            long timelist = pf.appointmentTimeListO("MAINTAIN",appointment_date).getLong("time_id");
+//            JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
 
             //预约试驾后：  pc销售总监总经理权限登录
             crm.login(adminname, adminpassword);
             //3.pc页面显示数据
             JSONObject pcdata = crm.mainAppointmentpage(1, 10);
             String total = pcdata.getString("total");
-            String today_number = pcdata.getString("today_number");
-            String month_number = pcdata.getString("month_number");
-            String total_number = pcdata.getString("total_number");
-
-            String customer_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone_numberpc = pcdata.getJSONArray("list").getJSONObject(0).getString("customer_phone_number");
-            String order_datepc = pcdata.getJSONArray("list").getJSONObject(0).getString("order_date");
-            String car_type_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("car_type_name");  //试驾车型
-            String order_numberpc = pcdata.getJSONArray("list").getJSONObject(0).getString("order_number"); //预约次数
-            String sale_idpc = pcdata.getJSONArray("list").getJSONObject(0).getString("sale_id");  //销售id
-            String sale_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("sale_name");
-            String service_status_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("service_status_name"); //接待状态
-            String risk_status_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("risk_status_name"); //风险预警
+//            String today_number = pcdata.getString("today_number");
+//            String month_number = pcdata.getString("month_number");
+//            String total_number = pcdata.getString("total_number");
+            JSONObject pcdata1=pcdata.getJSONArray("list").getJSONObject(0);
+            String customer_namepc = pcdata1.getString("customer_name");
+            String customer_phone_numberpc = pcdata1.getString("customer_phone_number");
+            String order_datepc = pcdata1.getString("order_date");
+            String car_type_namepc = pcdata1.getString("car_style_name");  //试驾车型
+//            String order_numberpc = pcdata1.getString("order_number"); //预约次数
+//            String sale_idpc = pcdata1.getString("sale_id");  //销售id
+//            String sale_namepc = pcdata1.getString("sale_name");
+//            String service_status_namepc = pcdata1.getString("service_status_name"); //接待状态
+//            String risk_status_namepc = pcdata1.getString("risk_status_name"); //风险预警
 
             //app显示数据  B
             crm.login(pp.fuwuZongjian, pp.adminpassword);
-            JSONObject appdataB = crm.mainAppointmentDriverNum();
-            String appointment_total_numberB = appdataB.getString("appointment_total_number");
-            String appointment_today_numberB = appdataB.getString("appointment_today_number");
+//            JSONObject appdataB = crm.mainAppointmentDriverNum();
+//            String appointment_total_numberB = appdataB.getString("appointment_total_number");
+//            String appointment_today_numberB = appdataB.getString("appointment_today_number");
 
             JSONObject appdataList1 = crm.mainAppointmentlist();
             String appListtotalB = appdataList1.getString("total");
             JSONObject appdataList = appdataList1.getJSONArray("list").getJSONObject(0);
-            String reception_sale_nameapp = appdataList.getString("reception_sale_name");
             String appointment_dateapp = appdataList.getString("appointment_date");
             String customer_nameapp = appdataList.getString("customer_name");
-            String car_typeapp = appdataList.getString("car_type");
-            String car_type_nameapp = appdataList.getString("car_type_name");
-            String service_statusapp = appdataList.getString("service_status");
-            String service_status_nameapp = appdataList.getString("service_status_name");
+            String car_type_nameapp = appdataList.getString("car_style_name");
             String customer_phone_numberapp = appdataList.getString("customer_phone_number");
-            String phone_appointmentapp = appdataList.getString("phone_appointment");
+//            String service_statusapp = appdataList.getString("service_status");
+//            String service_status_nameapp = appdataList.getString("service_status_name");
+//            String phone_appointmentapp = appdataList.getString("phone_appointment");
+//            String reception_sale_nameapp = appdataList.getString("reception_sale_name");
+//            String car_typeapp = appdataList.getString("car_type");
 
-            Long appoint_id = data.getLong("appointment_id");
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            crm.cancle(appoint_id);
-            crm.myCarDelete(my_car_id);
 
             checkArgument((Long.parseLong(total) - Long.parseLong(totalA)) == 1, "预约试驾成功后，pc预约试驾条数没有+1");
             checkArgument(customer_namepc.equals(customer_name), "pc预约试驾客户名异常");
@@ -315,6 +278,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             saveData("预约保养成功后，pc和app预约试驾信息校验");
         }
     }
@@ -329,57 +293,27 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
         try {
             String appointment_date=dt.getHistoryDate(1);
             String description = "故障说明";
-            JSONObject dd=pf.appointmentTimeListO("REPAIR",0,appointment_date);
+            JSONObject dd=pf.appointmentTimeListO("REPAIR",appointment_date);
             long timelist = dd.getLong("time_id");
             String appointment_time = dd.getString("start_time");
             JSONObject data = crm.appointmentRepair(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, description, timelist);
             //预约成功
             Long appointment_idM = data.getLong("appointment_id");
-            String appointment_statusM = data.getString("appointment_status");
-            String appointment_status_nameM = data.getString("appointment_status_name");
-            String customer_nameM = data.getString("customer_name");
-            String customer_phone_numberM = data.getString("customer_phone_number");
-            String appointment_dateM = data.getString("appointment_date");
-            String appointment_timeM = data.getString("appointment_time");
-            String sale_nameM = data.getString("sale_name");
-            String sale_phoneM = data.getString("sale_phone");
-            String plate_numberM = data.getString("plate_number");
-            String car_type_nameM = data.getString("car_type_name");
-            String descriptionM = data.getString("description");
-            //预约保养成功&预约保养
-            checkArgument(customer_nameM.equals(customer_name), "预约维修成功页客户名错误");
-            checkArgument(customer_phone_numberM.equals(customer_phone_number), "预约维修成功页客户电话错误");
-            checkArgument(appointment_dateM.equals(appointment_date), "预约维修成功预约日期错误");
-            checkArgument(appointment_timeM.equals(appointment_time), "预约维修成功预约时间错误");
-            checkArgument(descriptionM.equals(description), "预约维修故障说明显示错误错误");
             //我的 预约消息
             JSONObject dataB = crm.appointmentInfo(appointment_idM);
 
             String customer_nameB = dataB.getString("name");
             String customer_phone_numberB = dataB.getString("phone");
             String appointment_dateB = dataB.getString("date");
-            String car_type_nameB = dataB.getString("car_type_name");
-            String sale_nameB = dataB.getString("receptionist");
-            String sale_phoneB = dataB.getString("receptionist_phone");
-//            String appointment_idB = dataB.getString("id");
-//            String appointment_statusB = dataB.getString("status_commnet");
-//            String appointment_status_nameB = dataB.getString("appointment_status_name");
-//            String star_ratingB = dataB.getString("star_rating");
-//            String service_descriptionB = dataB.getString("service_description");
-//            String is_need_evaluateB = dataB.getString("is_need_evaluate");
             String descriptionB = data.getString("description");
+//            String car_type_nameB = dataB.getString("car_style_name");
+//            String sale_nameB = dataB.getString("receptionist");
+//            String sale_phoneB = dataB.getString("receptionist_phone");
             //预约消息&填写预约信息页
             checkArgument(customer_nameB.equals(customer_name+"先生"), "预约消息客户名显示错误");
             checkArgument(customer_phone_numberB.equals(customer_phone_number), "预约消息客户手机号显示错误");
             checkArgument(appointment_dateB.equals(appointment_date), "预约消息预约日期显示错误");
             checkArgument(descriptionB.equals(description), "预约消息故障说明显示错误");
-
-            //预约消息&预约成功
-            checkArgument(sale_nameB.equals(sale_nameM), "预约维修接待销售名显示错误");
-            checkArgument(sale_phoneB.equals(sale_phoneM), "预约维修接待销售电话显示错误");
-            checkArgument(car_type_nameB.equals(car_type_nameM), "预约维修成功页客户试驾车型错误");
-            checkArgument(descriptionB.equals(descriptionM), "预约维修成功页故障说明错误");
-            crm.cancle(appointment_idM);
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -397,6 +331,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void repair_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String appointment_date=dt.getHistoryDate(2);
             //预约维修前：  1.pc端登录，记录原始预约保养总数 A
             crm.login(adminname, adminpassword);
             JSONObject pcdataA = crm.repairAppointmentpage(1, 10);
@@ -406,17 +341,17 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            String total_numberA = pcdataA.getString("total_number");
             //app 今日试驾人数和累计试驾总数
             crm.login(pp.fuwuZongjian, pp.adminpassword);
-            JSONObject appdataA = crm.repairAppointmentDriverNum();
+//            JSONObject appdataA = crm.repairAppointmentDriverNum();
 //            String appointment_total_numberA = appdataA.getString("appointment_total_number");
 //            String appointment_today_numberA = appdataA.getString("appointment_today_number");
             //app 今日试驾列表总数
             JSONObject appListA = crm.repairAppointmentlist();
-//            String apptotalListA = appListA.getString("total");
+            String apptotalListA = appListA.getString("total");
             //2.预约试驾
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
 
             String description = "故障说明";
-            JSONObject dd=pf.appointmentTimeListO("MAINTAIN",2,appointment_date);
+            JSONObject dd=pf.appointmentTimeListO("MAINTAIN",appointment_date);
             long timelist = dd.getLong("time_id");
             String appointment_time = dd.getString("start_time");
             JSONObject data = crm.appointmentRepair(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, description, timelist);
@@ -428,12 +363,12 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            String today_number = pcdata.getString("today_number");
 //            String month_number = pcdata.getString("month_number");
 //            String total_number = pcdata.getString("total_number");
-
-            String customer_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("customer_name");
-            String customer_phone_numberpc = pcdata.getJSONArray("list").getJSONObject(0).getString("customer_phone_number");
-            String order_datepc = pcdata.getJSONArray("list").getJSONObject(0).getString("order_date");
-            String car_type_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("car_type_name");  //试驾车型
-            String sale_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("sale_name");
+            JSONObject pcdata1=pcdata.getJSONArray("list").getJSONObject(0);
+            String customer_namepc = pcdata1.getString("customer_name");
+            String customer_phone_numberpc = pcdata1.getString("customer_phone_number");
+            String order_datepc = pcdata1.getString("order_date");
+            String car_type_namepc = pcdata1.getString("car_style_name");  //试驾车型
+            String sale_namepc = pcdata1.getString("sale_name");
 //            String order_numberpc = pcdata.getJSONArray("list").getJSONObject(0).getString("order_number"); //预约次数
 //            String sale_idpc = pcdata.getJSONArray("list").getJSONObject(0).getString("sale_id");  //销售id
 //            String service_status_namepc = pcdata.getJSONArray("list").getJSONObject(0).getString("service_status_name"); //接待状态
@@ -441,7 +376,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 
             //app显示数据  B
             crm.login(pp.fuwuZongjian, pp.adminpassword);
-            JSONObject appdataB = crm.repairAppointmentDriverNum();
+//            JSONObject appdataB = crm.repairAppointmentDriverNum();
 //            String appointment_total_numberB = appdataB.getString("appointment_total_number");
 //            String appointment_today_numberB = appdataB.getString("appointment_today_number");
 
@@ -450,29 +385,30 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             String reception_sale_nameapp = appdataList.getString("reception_sale_name");
             String appointment_dateapp = appdataList.getString("appointment_date");
             String customer_nameapp = appdataList.getString("customer_name");
-            String car_type_nameapp = appdataList.getString("car_type_name");
+            String car_type_nameapp = appdataList.getString("car_Style_name");
             String customer_phone_numberapp = appdataList.getString("customer_phone_number");
-//            String appListtotalB = appdataList1.getString("total");
+            String appListtotalB = appdataList1.getString("total");
 //            String car_typeapp = appdataList.getString("car_type");
 //            String service_statusapp = appdataList.getString("service_status");
 //            String service_status_nameapp = appdataList.getString("service_status_name");
 //            String phone_appointmentapp = appdataList.getString("phone_appointment");
-            Long appoint_id=data.getLong("appointment_id");
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            crm.cancle(appoint_id);
+//            Long appoint_id=data.getLong("appointment_id");
+//            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            crm.cancle(appoint_id);
 
-            checkArgument((parseInt(total) - parseInt(totalA)) == 1, "预约试驾成功后，pc预约试驾条数没有+1");
             checkArgument(customer_namepc.equals(customer_name), "pc预约试驾客户名异常");
             checkArgument(customer_phone_numberpc.equals(customer_phone_number), "pc预约试驾客户手机号异常");
             checkArgument(order_datepc.equals(appointment_date), "pc预约试驾预约时间异常");
             checkArgument(car_type_namepc.equals(car_type_name), "pc预约试驾试驾车型显示异常");
 
 
-//            Preconditions.checkArgument((Long.parseLong(appListtotalB)-Long.parseLong(apptotalListA))==1,"预约试驾成功后，app预约试驾条数没有+1");
+            checkArgument((Long.parseLong(appListtotalB)-Long.parseLong(apptotalListA))==1,"预约试驾成功后，app预约试驾条数没有+1");
             checkArgument(customer_nameapp.equals(customer_name), "app预约试驾客户名异常");
             checkArgument(customer_phone_numberapp.equals(customer_phone_number), "app预约试驾客户手机号异常");
             checkArgument(appointment_dateapp.equals(appointment_date), "app预约试驾预约时间异常");
             checkArgument(car_type_nameapp.equals(car_type_name), "app预约试驾试驾车型显示异常");
+            checkArgument((parseInt(total) - parseInt(totalA)) == 1, "预约试驾成功后，pc预约试驾条数没有+1");
+
 
             //pc & app 接待人员
             checkArgument(reception_sale_nameapp.equals(sale_namepc));
@@ -494,31 +430,10 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :人员管理，app完成接待接待次数+1 见保养评价ok
-     * @date :2020/8/2 10:43
-     **/
-     @Test
-    public void finnalRecept() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //完成接待前，接待次数
-            //预约接待
-            //完成接待后，接待次数
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("完成接待，pc预约记录接待次数+1");
-        }
-    }
-
-    /**
      * @description :保养评价  ok,预约早上9点，完成接待，3.0时，此case,只运行一次; && 完成接待接待次数+1 ok  TODO:
      * @date :2020/8/2 10:29
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void appointEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -598,7 +513,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void timeListR() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String appointment_date=dt.getHistoryDate(0);
+            String appointment_date=dt.getHistoryDate(3);
             crm.appletLoginToken(EnumAppletCode.WM.getCode());
             String type = "MAINTAIN";
             String appointment_time = "11:00";
@@ -634,16 +549,15 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
         try {
 //            String type = "REPAIR";
             String type = "MAINTAIN";
-            String appointment_time = "11:00";
 //            JSONArray list = crm.timeList(type, appointment_date).getJSONArray("list");
 //            Integer leftNum = list.getJSONObject(i).getInteger("left_num");
             //预约
-            long timelist = pf.appointmentTimeList(type,2,appointment_date);
-            JSONObject data = crm.appointmentMaintain((pp.mycarId), customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            long timelist = pf.appointmentTimeListO(type,appointment_date).getLong("time_id");
+            JSONObject data = crm.appointmentMaintain((pp.mycarId), customer_name, customer_phone_number, appointment_date, "", timelist);
             Long appoint_id = data.getLong("appointment_id");
 
-            long timelist2 = crm.timeList(type, appointment_date).getJSONArray("list").getJSONObject(1).getLong("id");
-            JSONObject res = crm.appointmentMaintain((pp.mycarId), customer_name, customer_phone_number, appointment_date, appointment_time, timelist2);
+            long timelist2 = pf.appointmentTimeListO(type,appointment_date).getLong("time_id");
+            JSONObject res = crm.appointmentMaintain((pp.mycarId), customer_name, customer_phone_number, appointment_date,"", timelist2);
 //            Long appoint_id2 = res.getJSONObject("data").getLong("appointment_id");
             Long code = res.getLong("code");
             checkArgument(code == 1001, "预约同一天其他时段应该失败");

@@ -173,7 +173,7 @@ public class PackFunctionOnline {
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date=dt.getHistoryDate(0);
         String sign_time=dt.getHHmm(0);
-        Long test_drive_car=82L;   //试驾车id
+        Long test_drive_car=crm.testDriverList().getJSONArray("list").getJSONObject(0).getLong("test_car_id");   //试驾车id
         JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
         String apply_time = timelist.getString(0);
 

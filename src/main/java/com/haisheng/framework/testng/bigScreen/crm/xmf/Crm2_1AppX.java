@@ -102,7 +102,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             //接待前Guwen，接待次数 13 销售顾问，16保养 ，15维修
             int num = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
             //pc评价页总数
-            int total=crm.evaluateList(1, 10, "", "", "").getInteger("total");
+            int total = crm.evaluateList(1, 10, "", "", "").getInteger("total");
             //预约接待完成
             Long appointmentId = pf.driverEva();
 
@@ -155,16 +155,16 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String type = "MSG";
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             int total = crm.messageList(20, type).getInteger("total");
-            finishReceive fr=new finishReceive();
+            finishReceive fr = new finishReceive();
             //预约接待完成
             JSONObject json = pf.creatCustOld(pp.customer_phone_number);
-            fr.name=pp.customer_name;
+            fr.name = pp.customer_name;
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
             fr.belongs_sale_id = json.getString("sale_id");
 //            //完成接待
             fr.phoneList = json.getJSONArray("phoneList");
-            fr.reception_type="BB";
+            fr.reception_type = "BB";
             crm.finishReception3(fr);
 
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
@@ -226,28 +226,29 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             int today_number = dataTotal.getInteger("today_test_drive_total");
             int totalNum = dataTotal.getInteger("test_drive_total");
 
-            JSONObject jsonObject = pf.creatCust();  //创建新客
-            String customer_name = jsonObject.getString("name");
-            String phone = jsonObject.getString("phone");
-            Long reception_id = jsonObject.getLong("reception_id");
-            Long customer_id = jsonObject.getLong("customerId");
-            String userLoginName = jsonObject.getString("userLoginName");
-            String sale_id = jsonObject.getString("sale_id");
-            JSONArray PhoneList = jsonObject.getJSONArray("phoneList");
+            JSONObject object = pf.creatCust();  //创建新客
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = object.getString("name");
+            String phone = object.getString("phone");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            String userLoginName = object.getString("userLoginName");
 //            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
 //            String customer_name="@@@2";
 //            String phone=pp.customer_phone_number;
 //            Long reception_id=3968L;
 //            Long customer_id=14508L;
 //            String userLoginName="销售顾问xia";
-            pf.creatDriver(reception_id, customer_id, customer_name, phone, 1);  //新客试驾
-
+            pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
             JSONObject dataTotal2 = crm.driverTotal();
             int today_number2 = dataTotal2.getInteger("today_test_drive_total");
             int totalNum2 = dataTotal2.getInteger("test_drive_total");
             crm.login(userLoginName, pp.adminpassword);
 
-            crm.finishReception2(sale_id, reception_id, customer_id, customer_name, PhoneList, "FU");
+            crm.finishReception3(fr);
             Preconditions.checkArgument(today_number2 - today_number == 1, "新建试驾，今日试驾+1，试驾后:" + today_number2 + "试驾前：" + today_number);
             Preconditions.checkArgument(totalNum2 - totalNum == 1, "新建试驾，总计试驾+1，试驾后：" + totalNum2 + "，试驾前：{}" + totalNum);
 
@@ -268,7 +269,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void testdeliver() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-//            crm.districtTree();
             //销售总监今日试驾总数
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
 
@@ -276,15 +276,19 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             int today_number = dataTotal.getInteger("today_deliver_car_total");
             int totalNum = dataTotal.getInteger("deliver_car_total");
 
-            JSONObject object = pf.creatCust();
-            Long customer_id = object.getLong("customerId");
-            Long reception_id = object.getLong("reception_id");
-            String userLoginName = object.getString("userLoginName");
-            String customer_name = object.getString("name");
-            String phone = object.getString("phone");
-            String sale_id = object.getString("sale_id");
-            JSONArray phoneList = object.getJSONArray("phoneList");
-            pf.creatDeliver(reception_id, customer_id, customer_name, dt.getHistoryDate(0), true);
+            JSONObject json = pf.creatCust();
+            finishReceive fr = new finishReceive();
+            fr.name = pp.customer_name;
+            fr.reception_id = json.getString("id");
+            fr.customer_id = json.getString("customerId");
+            fr.belongs_sale_id = json.getString("sale_id");
+            fr.phoneList = json.getJSONArray("phoneList");
+            fr.reception_type = "BB";
+
+            String userLoginName = json.getString("userLoginName");
+            String phone = json.getString("phone");
+
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), true);
 
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
             JSONObject dataTotal2 = crm.jiaocheTotal();
@@ -292,7 +296,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             int totalNum2 = dataTotal2.getInteger("deliver_car_total");
 
             crm.login(userLoginName, pp.adminpassword);
-            crm.finishReception2(sale_id, reception_id, customer_id, customer_name, phoneList, "FU");
+            crm.finishReception3(fr);
             Preconditions.checkArgument(today_number2 - today_number == 1, "新建交车，今日交车+1，交车后：{}，交车前：{}", today_number2, today_number);
             Preconditions.checkArgument(totalNum2 - totalNum == 1, "新建交车，总计交车+1，交车后：{}，交车前：{}", totalNum2, totalNum);
 
@@ -634,17 +638,17 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :客户查询，列表展示无创建时间字段，可点击编辑查看客户详细信息中，创建时间
      * @date :2020/8/3 12:48
      **/
-    @Test(dataProvider = "SELECT_DATE",dataProviderClass = CrmScenarioUtil.class)
+    @Test(dataProvider = "SELECT_DATE", dataProviderClass = CrmScenarioUtil.class)
     public void customerSelectTime(String select_date) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.customerSelect(1, 10, select_date, select_date).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String timeSelect = list.getJSONObject(i).getString("create_date");
-                if(timeSelect!=null) {
-                    Preconditions.checkArgument(timeSelect.equals(select_date), "客户按创建时间{}查询，结果{}错误", select_date, timeSelect);
+                if (timeSelect != null) {
+                    Preconditions.checkArgument(timeSelect.equals(select_date), "客户按创建时间" + select_date + "查询到" + timeSelect + "日期数据");
                 }
-                }
+            }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -709,14 +713,14 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCust();
-            finishReceive fr=new finishReceive();
+            finishReceive fr = new finishReceive();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
-            fr.name= object.getString("name");
+            fr.name = object.getString("name");
             String phone = object.getString("phone");
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
-            fr.reception_type="FU";
+            fr.reception_type = "FU";
             pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), "新车授权", dt.getHistoryDate(0), true);
             crm.finishReception3(fr);
             //小程序登录，查看最新交车
@@ -759,16 +763,15 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 total = list.size();
             }
             JSONObject object = pf.creatCust();
-            Long customer_id = object.getLong("customerId");
-            String sale_id = object.getString("sale_id");
-            Long reception_id = object.getLong("reception_id");
-            String customer_name = object.getString("name");
-            String phone = object.getString("phone");
-            JSONArray phoneList = object.getJSONArray("phoneList");
-
-            pf.creatDeliver(reception_id, customer_id, customer_name, dt.getHistoryDate(0), true);
-            //完成接待  `
-            crm.finishReception2(sale_id, reception_id, customer_id, customer_name, phoneList, "FU");   //TODO:完成接待参数
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = object.getString("name");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), true);
+            crm.finishReception3(fr);
 
             //小程序登录，查看交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
@@ -780,7 +783,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 totalA = listA.size();
             }
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
-            Preconditions.checkArgument(totalA - total == 1, "建交车授权，applet车主风采列表！=交车前" + totalA + "+交车后" + total);
+            Preconditions.checkArgument(totalA - total == 1, "建交车授权，applet车主风采列表没加1；交车前" + totalA + "+交车后" + total);
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -806,16 +809,16 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 total = list.size();
             }
             JSONObject object = pf.creatCust();
-            Long customer_id = object.getLong("customerId");
-            Long reception_id = object.getLong("reception_id");
-            String customer_name = object.getString("name");
-            String phone = object.getString("phone");
-            String sale_id = object.getString("sale_id");
-            pf.creatDeliver(reception_id, customer_id, customer_name, dt.getHistoryDate(0), false);
-            //完成接待  `
-            JSONArray phoneList = object.getJSONArray("phoneList");
-            //完成接待  `
-            crm.finishReception2(sale_id, reception_id, customer_id, customer_name, phoneList, "FU");   //TODO:完成接待参数
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = object.getString("name");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), false);
+            crm.finishReception3(fr);
+
             //小程序登录，查看交车
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONArray listA = crm.carOwner().getJSONArray("list");
@@ -995,7 +998,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @date :2020/9/10 19:36
      **/
 
-    @Test
+//    @Test
     public void shijiacheNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1018,7 +1021,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "新增注销试驾车，新建试驾下拉列表+-1")   //TODO:待确认，有bug
+    @Test(description = "新增注销试驾车，新建试驾下拉列表+-1")
     public void shijiacheNum2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
