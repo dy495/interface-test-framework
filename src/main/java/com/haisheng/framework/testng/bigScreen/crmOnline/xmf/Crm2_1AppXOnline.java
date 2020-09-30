@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -659,6 +660,52 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("客户按名字/电话查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :客户查询按创建时间
+     * @date :2020/8/3 12:48
+     **/
+//    @Test(dataProvider = "SELECT_DATE", dataProviderClass = CrmScenarioUtil.class)
+    public void customerSelectTime(String select_date) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.customerSelect(1, 10, select_date, select_date).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String timeSelect = list.getJSONObject(i).getString("create_date");
+                if (timeSelect != null) {
+                    Preconditions.checkArgument(timeSelect.equals(select_date), "客户按创建时间" + select_date + "查询到" + timeSelect + "日期数据");
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("客户按创建日期查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :客户查询组合查询
+     * @date :2020/8/3 12:48
+     **/
+    @Test()
+    public void customerSelectTimeAndname() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = crm.customerSelect(1, 10);
+            String customer_name = data.getJSONArray("list").getJSONObject(0).getString("customer_name");
+            String select_date = dt.getHistoryDate(0);
+            JSONArray list = crm.customerSelect(1, 10, customer_name, select_date, select_date).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String timeSelect = list.getJSONObject(i).getString("create_date");
+                String nameSelect = list.getJSONObject(i).getString("customer_name");
+                Preconditions.checkArgument((timeSelect.equals(select_date)) && (customer_name.equals(nameSelect)), "客户按交车时间{}查询，结果{}错误", select_date, timeSelect);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("客户组合查询，结果校验");
         }
     }
 

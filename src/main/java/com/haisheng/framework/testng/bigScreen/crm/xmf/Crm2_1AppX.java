@@ -635,7 +635,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :客户查询，列表展示无创建时间字段，可点击编辑查看客户详细信息中，创建时间
+     * @description :客户查询按创建时间
      * @date :2020/8/3 12:48
      **/
     @Test(dataProvider = "SELECT_DATE", dataProviderClass = CrmScenarioUtil.class)
@@ -657,19 +657,19 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :客户查询，列表展示无创建时间字段，可点击编辑查看客户详细信息中，创建时间
+     * @description :客户查询组合查询
      * @date :2020/8/3 12:48
      **/
-    //@Test()
+    @Test()
     public void customerSelectTimeAndname() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = crm.driverSelect(1, 10);
+            JSONObject data = crm.customerSelect(1, 10);
             String customer_name = data.getJSONArray("list").getJSONObject(0).getString("customer_name");
             String select_date = dt.getHistoryDate(0);
-            JSONArray list = crm.driverSelect(1, 10, customer_name, select_date, select_date).getJSONArray("list");
+            JSONArray list = crm.customerSelect(1, 10, customer_name, select_date, select_date).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                String timeSelect = list.getJSONObject(i).getString("sign_time");
+                String timeSelect = list.getJSONObject(i).getString("create_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date)) && (customer_name.equals(nameSelect)), "客户按交车时间{}查询，结果{}错误", select_date, timeSelect);
             }

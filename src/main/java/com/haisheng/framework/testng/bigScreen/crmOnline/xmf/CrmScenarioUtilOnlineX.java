@@ -12,6 +12,8 @@ import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.selectTest;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -5023,5 +5025,127 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         };
     }
+    //前台展厅接待查询
+    public JSONObject qtreceptionPage(String customerNamePhone, String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/sale-reception/reception-page";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(customerNamePhone)) {
+            object.put("customer_name_phone", customerNamePhone);
+        }
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_time", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_time", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+    //app 到访记录查询
+    public JSONObject visitList(String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/sale-reception/visit-list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("start_day", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("end_day", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+    //app 非客查询
+    public JSONArray nonCustomerList(String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/customer/non_customer_list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("search_date_start", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("search_date_end", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
+        return JSON.parseObject(result).getJSONArray("data");
+    }
+    //app 未接待离店查询
+    public JSONArray nonReceptionList(String startTime, String endTime, String page, String size) {
+        String url = "/porsche/app/customer/non_reception_list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(startTime)) {
+            object.put("search_date_start", startTime);
+        }
+        if (!StringUtils.isEmpty(endTime)) {
+            object.put("search_date_end", endTime);
+        }
+        object.put("page", page);
+        object.put("size", size);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
+        return JSON.parseObject(result).getJSONArray("data");
+    }
 
+    //app 变更接待
+    public JSONArray changeReceptionSale(String reception_id, String sale_id) {
+        String url = "/porsche/app/sale-reception/change-reception-sale";
+        JSONObject object = new JSONObject();
+        object.put("reception_id", reception_id);
+        object.put("sale_id", sale_id);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
+        return JSON.parseObject(result).getJSONArray("data");
+    }
+    public JSONArray nonReceptionList(selectTest ss) {
+        String url = "/porsche/app/customer/non_reception_list";
+        JSONObject object = new JSONObject();
+        if (!StringUtils.isEmpty(ss.startTime)) {
+            object.put("search_date_start", ss.startTime);
+        }
+        if (!StringUtils.isEmpty(ss.endTime)) {
+            object.put("search_date_end", ss.endTime);
+        }
+        object.put("page", ss.page);
+        object.put("size", ss.size);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
+        return JSON.parseObject(result).getJSONArray("data");
+    }
+    public JSONObject finishReception3(finishReceive pm)  {
+        String url = "/porsche/app/customer/finishReception";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_id",pm.customer_id);
+        json1.put("reception_id",pm.reception_id);
+        json1.put("belongs_sale_id", pm.belongs_sale_id);
+        json1.put("reception_type", pm.reception_type);
+        json1.put("name",pm.name);
+        json1.put("subjectType",pm.subjectType);
+        json1.put("call",pm.call);
+        json1.put("districtCode",pm.districtCode);
+        json1.put("address",pm.address);
+        json1.put("birthday",pm.birthday);
+        json1.put("id_number",pm.id_number);
+        json1.put("plate_number_one_id",pm.plate_number_one_id);
+        json1.put("plate_number_one",pm.plate_number_one);
+        json1.put("plate_number_two",pm.plate_number_two);
+        json1.put("intention_car_model",pm.intention_car_model);
+        json1.put("expected_buy_day",pm.expected_buy_day);
+        json1.put("test_drive_car_model",pm.test_drive_car_model);
+        json1.put("pay_type",pm.pay_type);
+        json1.put("assess_car_model",pm.assess_car_model);
+        json1.put("source_channel",pm.source_channel);
+        json1.put("compare_car_model",pm.compare_car_model);
+        json1.put("own_car_model",pm.own_car_model);
+        json1.put("visit_count_type",pm.visit_count_type);
+        json1.put("is_offer",pm.is_offer);
+        json1.put("buy_car_type",pm.buy_car_type);
+        json1.put("power_type",pm.power_type);
+        json1.put("is_assessed",pm.is_assessed);
+        json1.put("phoneList",pm.phoneList);
+        json1.put("remark",pm.remark);
+        json1.put("face_list",pm.face_list);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 }

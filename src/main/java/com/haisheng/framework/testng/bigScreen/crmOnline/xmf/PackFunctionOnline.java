@@ -25,6 +25,18 @@ public class PackFunctionOnline {
 
         return num;
     }
+    public String username(String sale_id) throws Exception {
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        return userLoginName;
+    }
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num)throws Exception{
         Long article_id;
