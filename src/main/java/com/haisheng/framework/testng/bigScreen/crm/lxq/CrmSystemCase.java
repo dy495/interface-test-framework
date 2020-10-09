@@ -104,7 +104,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         //String carNum = "苏ZDH197";    //试驾车未注销
 
         //String carNum = "京A1ER19";    //试驾车已注销
-        String carNum = "京A1DF91";    //试驾车已注销
+        String carNum = "冀A1DF91";    //试驾车已注销
+//        String carNum = "苏SDCGUI";    //试驾车已注销
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7709867521115136";
@@ -116,8 +117,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 "\"time\":\""+System.currentTimeMillis()+"\"" +
                 "}";
         try {
-            for(int i=0;i<10;i++){
-            crm.carUploadToDaily(router, deviceId, resource, json);}
+            crm.carUploadToDaily(router, deviceId, resource, json);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {

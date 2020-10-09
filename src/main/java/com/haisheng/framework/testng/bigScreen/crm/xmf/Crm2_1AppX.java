@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
@@ -95,7 +94,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
      * @date :2020/8/2 10:29
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void driverEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -219,7 +218,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :试驾   ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testderver() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1033,7 +1032,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.carLogout(id);    //注销试驾车
             int totalAfterlogout = crm.testDriverList().getJSONArray("list").size();
 
-            Preconditions.checkArgument(totalAfterAdd - total == 1, "新增试驾车型，试驾车列表没+1");
+            Preconditions.checkArgument(totalAfterAdd - total == 1, "新增试驾车型，试驾车列表没+1"+totalAfterAdd+";"+total);
             Preconditions.checkArgument(totalAfterAdd - totalAfterlogout == 1, "注销试驾车型，试驾车列表没-1");
 
         } catch (AssertionError | Exception e) {
@@ -1044,7 +1043,78 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "编辑客户，填写信息异常验证")
+    public void editCustomerAbnomal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十12";
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "BB";
+            fr.checkCode=false;
+            String userLoginName = object.getString("userLoginName");
+            crm.login(userLoginName,pp.adminpassword);
+            int code=crm.editCustomer(fr).getInteger("code");
 
+            JSONArray remark = new JSONArray();
+            JSONObject re = new JSONObject();
+            re.put("remark", "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+                    "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+                    "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+                    "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十！@#￥%……&*（）12");
+            remark.add(re);
+            fr.remark=remark;
+            fr.name ="编辑客户名@#￥……&*！";
+            int code2=crm.editCustomer(fr).getInteger("code");
+            fr.remark=new JSONArray();
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(code==1001,"编辑客户姓名超过50个字，仍成功");
+            Preconditions.checkArgument(code2==1001,"编辑备注201个字，仍成功");
+
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
+            saveData("编辑客户姓名/备注51/201，异常验证");
+        }
+    }
+
+    //车牌号，异常验证
+//    @Test(description = "编辑客户，车牌号，异常验证")
+    public void editCarPlateAbnomal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = "编辑客户";
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "BB";
+            fr.checkCode=false;
+            String userLoginName = object.getString("userLoginName");
+            crm.login(userLoginName,pp.adminpassword);
+            String []plateabn={"苏BJ123","苏BJ123456","BJ12345","京1234567","京bj12345"}; //6位/9位/无汉字/无大写字母/小写字母
+            for(int z=0;z<plateabn.length;z++){
+                fr.plate_number_two=plateabn[z];
+                int code=crm.editCustomer(fr).getInteger("code");
+                Preconditions.checkArgument(code==1001,"编辑客户错误车牌号仍成功"+plateabn[z]);
+            }
+            fr.plate_number_two="苏BJBJBJ";
+            crm.finishReception3(fr);
+
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
+            saveData("编辑客户车牌号，异常验证");
+        }
+    }
     /**
      * @description :新建工作计划，列表+1
      * @date :2020/9/10 19:59

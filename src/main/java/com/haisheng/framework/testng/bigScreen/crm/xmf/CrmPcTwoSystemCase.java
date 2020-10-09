@@ -1207,6 +1207,51 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "售后--服务顾问app活动报名")
+    public void taskactivityDeletAfter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动，获取活动id
+            Long [] aid=pf.createAArcile_idRole(dt.getHistoryDate(0),"8",16);
+            Long activity_id=aid[1];
+            Long id=aid[0];
+            crm.login(pp.baoyangGuwen2,pp.baoyangPassword);
+            JSONObject ff = crm.activityTaskPageX();
+            JSONObject json = ff.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            int activityTaskId = json.getInteger("activity_task_id");
+            StringBuilder phone = new StringBuilder("1");
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone.append(a);
+            }
+            crm.registeredCustomer((long) activityTaskId, "夏", phone.toString());
+            JSONObject responseapp = crm.activityTaskPageX();
+            JSONObject jsonapp = responseapp.getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            Long customer_id = jsonapp.getJSONArray("customer_list").getJSONObject(0).getLong("customer_id");
+            //报名后，任务人数
+            crm.login(adminname,adminpassword);
+            JSONObject data=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
+            int total=data.getInteger("total");
+
+            //删除报名客户
+            crm.login(pp.baoyangGuwen2,pp.baoyangPassword);
+            crm.deleteCustomerX(Integer.toString(activityTaskId),Long.toString(customer_id) );
+            //删除后，任务人数
+            crm.login(adminname,adminpassword);
+            JSONObject dataA=crm.customerTaskPageX(10,1,activity_id).getJSONObject("data");
+            int totalA=dataA.getInteger("total");
+
+            Preconditions.checkArgument(total-totalA==1,"app报名活动，删除报名客户，pc任务客户没-1");
+
+//            crm.articleStatusChange(id);
+//            crm.articleDelete(id);
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app活动报名，删除报名客户，pc任务客户-1");
+        }
+    }
+
     /**
      * @description :小程序车主风采<=pc今日交车数 车主风采中需要是今日才成立，若今日无交车，则此case 不成立
      * @date :2020/8/2 15:41

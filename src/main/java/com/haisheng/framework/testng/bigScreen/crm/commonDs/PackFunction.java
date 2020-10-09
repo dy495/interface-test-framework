@@ -7,9 +7,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
-import org.jooq.True;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -67,6 +64,41 @@ public class PackFunction {
         String activity_start = dt.getHistoryDate(1);
         String activity_end = dt.getHistoryDate(4);
         Integer role_id = 13;  //13 销售  15定损（原维修顾问）     16服务
+        Boolean is_create_poster = true;//是否生成海报
+        int task_customer_num = 5;
+        //新建文章并返回文章/活动id
+        article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, false, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, Integer.toString(task_customer_num), is_create_poster).getLong("id");
+        Long activity_id = crm.appartilceDetail(article_id, positions).getLong("activity_id");
+        aid[0] = article_id;  //文章id
+        aid[1] = activity_id;  //活动id
+        return aid;
+    }
+    public Long[] createAArcile_idRole(String valid_start, String simulation_num,Integer role_id) throws Exception {
+        Long article_id;
+        Long[] aid = new Long[2];
+        crm.login(pp.zongjingli, pp.adminpassword);
+        String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
+        int[] customer_level = {};
+        String[] customer_property = {};
+        String positions = pp.positions; //投放位置车型推荐 单选
+        String valid_end = dt.getHistoryDate(4);
+        int[] car_types = {};
+        String article_title = "app任务报名(售后)" + dt.getHistoryDate(0);
+        String article_bg_pic = file.texFile(pp.filePath);  //base 64
+        String article_content = "品牌上新，优惠多多，限时4天,活动内容";
+        String article_remarks = "品牌上新，优惠多多，限时4天,备注";
+
+        boolean is_online_activity;  //是否线上报名活动
+        is_online_activity = true;
+//            String reception_name = manage(13)[0];  //接待人员名
+//            String reception_phone = manage(13)[1]; //接待人员电话
+        String reception_name = pp.reception_name;  //接待人员名
+        String reception_phone = pp.reception_phone; //接待人员电话
+        String customer_max = "50";                    //人数上限
+
+        String activity_start = dt.getHistoryDate(1);
+        String activity_end = dt.getHistoryDate(4);
+//        Integer role_id = 13;  //13 销售  15定损（原维修顾问）     16服务
         Boolean is_create_poster = true;//是否生成海报
         int task_customer_num = 5;
         //新建文章并返回文章/活动id
@@ -184,17 +216,23 @@ public class PackFunction {
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date = dt.getHistoryDate(0);
         String sign_time = dt.getHHmm(0);
-        Long test_drive_car=crm.testDriverList().getJSONArray("list").getJSONObject(0).getLong("test_car_id");
-        JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
-        String apply_time = timelist.getString(0);
+        JSONArray list=crm.testDriverList().getJSONArray("list");
+        String apply_time="";
+        Long test_drive_car= dt.getHistoryDateTimestamp(1);
+        for(int i=0;i<list.size();i++){
+            test_drive_car=list.getJSONObject(i).getLong("test_car_id");
+            JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
+            if(timelist.size()!=0){
+                apply_time= timelist.getString(0);
+            }
 
-//        Long apply_time = dt.getHistoryDateTimestamp(1);
         crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car);
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian, pp.adminpassword);
         int driverid = crm.testDriverAppList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getInteger("id");
         crm.driverAudit(driverid, audit_status);
         //最后销售要再登陆一次
+    }
     }
 
     //订车+交车封装  copy lxq debug ok

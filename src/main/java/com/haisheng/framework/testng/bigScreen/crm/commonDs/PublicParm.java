@@ -12,7 +12,11 @@ public class PublicParm {
     //售后 预约保养 维修 服务总监fuwuZongjian
     public String fuwuZongjian = "baoyang";    //服务总监
 
+    public String baoyangGuwen2 = "bsjby"; //保养顾问
+
     public String baoyangGuwen = "baoyangr"; //保养顾问
+    public String baoyangPassword = "e10adc3949ba59abbe56e057f20f883e"; //保养顾问
+
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 
     public Long mycarId = 537L;   //车id待定
@@ -23,6 +27,8 @@ public class PublicParm {
     //预约使用参数
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
+    public String customer_phone_numberO = "17770601557";
+
     public Integer car_type = 1;
     public Integer car_model = 36;
     public String car_type_name = "Panamera";

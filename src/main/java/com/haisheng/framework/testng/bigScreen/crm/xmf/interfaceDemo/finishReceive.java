@@ -12,7 +12,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 
 public class finishReceive {
     public static DateTimeUtil dt = new DateTimeUtil();
-
+    public boolean checkCode = true;
     public String customer_id;
     public String reception_id;
     public String belongs_sale_id;
@@ -47,7 +47,7 @@ public class finishReceive {
     private JSONArray getRemark() {
         JSONArray remark = new JSONArray();
         JSONObject re = new JSONObject();
-        re.put("remark", "auto_remark_12345678901234567890");
+        re.put("remark", "备注A!@#$%^&*()_+~?/.><;；auto_remark_12345678901234567890");
         remark.add(re);
         return remark;
     }
