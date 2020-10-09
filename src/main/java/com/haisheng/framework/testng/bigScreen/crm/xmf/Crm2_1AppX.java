@@ -162,9 +162,10 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
             fr.belongs_sale_id = json.getString("sale_id");
-//            //完成接待
+            //完成接待
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
+            fr.remark=new JSONArray();
             crm.finishReception3(fr);
 
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
@@ -190,21 +191,23 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             ll3.put("score", score);
             ll3.put("type_comment", "销售接待专业评价");
             ll3.put("type", "PROFESSIONAL");
-//            ll3.put("type", "EXPERIENCE");
-//            ll3.put("type_comment", "试乘试驾体验评价");
+
+            JSONObject ll4 = new JSONObject();
+            ll4.put("score", score);
+            ll4.put("type", "EXPERIENCE");
+            ll4.put("type_comment", "试乘试驾体验评价");
 
 
             JSONArray array1 = new JSONArray();
             array1.add(0, ll);
             array1.add(1, ll2);
             array1.add(2, ll3);
+            array1.add(3, ll4);
 
             crm.messageEvaluate(id, "我的消息-保养满意", array1);  //评价
 
             Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("接待小程序客户，发送评价消息，我的消息数量+1");
@@ -252,9 +255,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(today_number2 - today_number == 1, "新建试驾，今日试驾+1，试驾后:" + today_number2 + "试驾前：" + today_number);
             Preconditions.checkArgument(totalNum2 - totalNum == 1, "新建试驾，总计试驾+1，试驾后：" + totalNum2 + "，试驾前：{}" + totalNum);
 
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("创建新客试驾,今日试驾次数+1,总计+1");
@@ -324,9 +325,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String service_date = list.getJSONObject(i).getString("service_date");
                 Preconditions.checkArgument(service_date.equals(select_date), "我的接待按接待时间{}查询，结果{}错误", select_date, service_date);
             }
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("我的接待按接待日期查询，结果校验");
@@ -344,9 +343,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String select_date = dt.getHistoryDate(0);
             crm.customerMyReceptionList("", select_date, select_date, 10, 1);
             crm.customerMyReceptionList("", select_date, select_date, 10, 1);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("我的接待查询");

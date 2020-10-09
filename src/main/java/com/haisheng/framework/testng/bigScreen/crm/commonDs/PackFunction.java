@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import org.jooq.True;
@@ -37,6 +38,7 @@ public class PackFunction {
         }
         return userLoginName;
     }
+
 
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num) throws Exception {
@@ -216,16 +218,20 @@ public class PackFunction {
         //前台分配老客
         JSONObject json;
         json = creatCustOld(pp.customer_phone_number);
-        Long id = json.getLong("id");
-        Long customerId = json.getLong("customerId");
+        finishReceive fr = new finishReceive();
+        fr.name = pp.customer_name;
+        fr.reception_id = json.getString("id");
+        fr.customer_id = json.getString("customerId");
+        fr.belongs_sale_id = json.getString("sale_id");
+        fr.phoneList = json.getJSONArray("phoneList");
+        fr.reception_type = "BB";
+        fr.remark=new JSONArray();
         String userLoginName = json.getString("userLoginName");
-        String sale_id = json.getString("sale_id");
-        JSONArray PhoneList = json.getJSONArray("phoneList");
+        String phone = json.getString("phone");
         //新建试驾,审核通过
-        creatDriver(id, customerId, pp.customer_name, pp.customer_phone_number, 1);
+        creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), pp.customer_name, pp.customer_phone_number, 1);
         crm.login(userLoginName, pp.adminpassword);            //销售登录完成接待
-        crm.finishReception2(sale_id, id, customerId, pp.customer_name, PhoneList, "BB");
-
+        crm.finishReception3(fr);
         return appointment_id;
     }
 
