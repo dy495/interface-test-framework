@@ -7,34 +7,9 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface IScene {
 
-    /**
-     * 调用api
-     *
-     * @return response
-     */
-    JSONObject invokeApi();
+    JSONObject getJson();
 
-    /**
-     * 获取地址
-     *
-     * @return address
-     */
     String getPath();
 
-    /**
-     * 获取url
-     *
-     * @return url
-     */
     String getIpPort();
-
-
-    /**
-     * 执行调用
-     *
-     * @param requestBody 请求体
-     * @param data        取不取data
-     * @return response
-     */
-    JSONObject execute(JSONObject requestBody, boolean data);
 }

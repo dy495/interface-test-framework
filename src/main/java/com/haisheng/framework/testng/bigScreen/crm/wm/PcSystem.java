@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * CRM-PC 自动化用例
+ * pc系统测试用例
  *
  * @author wangmin
  */

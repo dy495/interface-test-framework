@@ -24,6 +24,9 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+/**
+ * pc数据测试用例
+ */
 public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
@@ -96,11 +99,16 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
-            int total = response.getInteger("total");
-            int listSize = response.getJSONArray("list").size();
-            CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "pc销售客户管理公海共计人数为：" + total + "列表总数为：" + listSize + "两者不相等");
+            int total = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            int s = CommonUtil.pageTurning(total, 100);
+            CommonUtil.valueView(s);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.publicCustomerList("", "", 100, i).getJSONArray("list");
+                listSizeTotal += list.size();
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(total == listSizeTotal, "pc销售客户管理公海共计人数为：" + total + "列表总数为：" + listSizeTotal + "两者不相等");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

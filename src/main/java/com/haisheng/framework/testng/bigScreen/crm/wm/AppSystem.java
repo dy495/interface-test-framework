@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
@@ -27,7 +28,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
- * CRM-App-System 自动化用例
+ * app系统测用例
  *
  * @author wangmin
  */
@@ -1006,6 +1007,18 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+//    -----------------------------------------------------售后---------------------------------------------------------
+
+//    @Test
+    public void appointmentMaintain_number() {
+        try {
+            CommonUtil.login(zjl);
+            Integer id = new PublicMethod().afterSaleReception();
+            Preconditions.checkArgument(id != null, "sssss");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 

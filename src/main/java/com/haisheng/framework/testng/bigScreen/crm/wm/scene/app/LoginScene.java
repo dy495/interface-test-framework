@@ -16,18 +16,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class Login extends BaseScene {
+public class LoginScene extends BaseScene {
     private int type;
     private String username;
     private String password;
 
     @Override
-    public JSONObject invokeApi() {
+    public JSONObject getJson() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("username", username);
         object.put("password", password);
-        return execute(object, false);
+        return object;
     }
 
     @Override

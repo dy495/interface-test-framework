@@ -34,9 +34,9 @@ public class CommonUtil {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
     }
 
-    public static List<String> getMoreParam(JSONObject object, String... param) {
+    public static List<String> getMoreParam(JSONObject object, String... paramName) {
         List<String> list = new ArrayList<>();
-        Arrays.stream(param).forEach(e -> {
+        Arrays.stream(paramName).forEach(e -> {
             if (StringUtils.isEmpty(e)) {
                 throw new RuntimeException("param类型应为String类型且不能为空");
             } else {

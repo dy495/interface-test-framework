@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 门店数据中心测试用例
+ */
 public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
@@ -71,20 +74,29 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                JSONObject response = crm.shopPannel(e.getType(), "", "");
-                int serviceNum = response.getInteger("service");
-                int testDriverNum = response.getInteger("test_drive");
-                int dealNum = response.getInteger("deal");
-                int deliveryNum = response.getInteger("delivery");
-                CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
-                Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--选择时间段，累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
-                Preconditions.checkArgument(serviceNum >= dealNum, "店面数据分析--选择时间段，累计接待:" + serviceNum + "<累计成交:" + dealNum);
-                Preconditions.checkArgument(serviceNum >= deliveryNum, "店面数据分析--选择时间段，累计交车:" + serviceNum + "<累计交车:" + deliveryNum);
+                List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
+                array.forEach(arr -> {
+                    JSONObject response = null;
+                    try {
+                        response = crm.shopPannel(e.getType(), "", arr.get("userId"));
+                    } catch (Exception exception) {
+                        appendFailreason(exception.toString());
+                    }
+                    assert response != null;
+                    int serviceNum = response.getInteger("service");
+                    int testDriverNum = response.getInteger("test_drive");
+                    int dealNum = response.getInteger("deal");
+                    int deliveryNum = response.getInteger("delivery");
+                    CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
+                    Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "查询，累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
+                    Preconditions.checkArgument(serviceNum >= dealNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "查询，累计接待: " + serviceNum + " < 累计成交:" + dealNum);
+                    Preconditions.checkArgument(dealNum >= deliveryNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "查询，累计交车:" + dealNum + "<累计交车:" + deliveryNum);
+                });
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析--选择时间段，累计接待>=累计试驾");
+            saveData("店面数据分析--选择时间段，累计接待>=累计试驾、累计接待>=累计成交、累计成交>=累计交车");
         }
     }
 
@@ -651,7 +663,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
                 JSONArray businessList = data.getJSONObject("business").getJSONArray("list");
                 JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
-                class A {
+                class Inner {
                     int getValue(JSONArray array) {
                         int value = 0;
                         for (int i = 0; i < array.size(); i++) {
@@ -663,8 +675,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         return value;
                     }
                 }
-                int businessValue = new A().getValue(businessList);
-                int carTypeValue = new A().getValue(carTypeList);
+                int businessValue = new Inner().getValue(businessList);
+                int carTypeValue = new Inner().getValue(carTypeList);
                 CommonUtil.valueView(businessValue, carTypeValue);
                 Preconditions.checkArgument(businessValue >= carTypeValue, arr.get("userName") +
                         " " + e.getName() + " 【业务漏斗】" + type + "数据为：" + businessValue + ",【车型漏斗】" + type + "数据为：" + carTypeValue);

@@ -65,7 +65,7 @@ public class CustomerFinishReception extends BaseScene {
     private Integer isAssessed;
 
     @Override
-    public JSONObject invokeApi() {
+    public JSONObject getJson() {
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
         object.put("name", name);
@@ -94,7 +94,7 @@ public class CustomerFinishReception extends BaseScene {
         object.put("is_offer", isOffer);
         object.put("buy_car_type", buyCarType);
         object.put("is_assessed", isAssessed);
-        return execute(object, true);
+        return object;
     }
 
     @Override
