@@ -2669,7 +2669,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject editAfterSaleCustomer(IScene sense) {
-        return invokeApi(sense.getPath(), sense.getJson());
+        return invokeApi(sense.getPath(), sense.getJSONObject());
     }
 
     //售后：客户管理->列表展示
@@ -3431,15 +3431,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
-    /**
-     * 获取二维码接口
-     */
-    public JSONObject porscheAppShopGrCode() {
-        String url = "/porsche/app/shop/qrcode";
-        JSONObject object = new JSONObject();
-        return invokeApi(url, object);
-    }
-
     //--------------------------app2.1------------------------
 
     /**
@@ -4192,6 +4183,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String request = JSON.toJSONString(requestBody);
         String result = httpPostWithCheckCode(url, request, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject invokeApi(IScene scene) {
+        return invokeApi(scene.getPath(), scene.getJSONObject());
     }
 
 

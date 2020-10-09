@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 public abstract class BaseScene implements IScene {
 
     @Override
-    public abstract JSONObject getJson();
+    public abstract JSONObject getJSONObject();
 
     @Override
     public abstract String getPath();

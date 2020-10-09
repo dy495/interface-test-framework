@@ -303,7 +303,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(by_name, pwd);
             int total = crm.mainAppointmentList(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.mainAppointmentList(i, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -325,7 +325,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
     private String getSaleName(String userLoginName) {
         crm.login(zjl_name, pwd);
         int total = crm.userUserPage(1, 10).getInteger("total");
-        int x = CommonUtil.pageTurning(total, 100);
+        int x = CommonUtil.getTurningPage(total, 100);
         String userName = null;
         for (int i = 1; i < x; i++) {
             JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -1189,7 +1189,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.receptionPage(1, 10, "", "");
             int todayTestDrive = response.getInteger("today_test_drive_num");
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int max = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -1224,7 +1224,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.receptionPage(1, 2, "", "");
             int todayBuyCarNum = response.getInteger("today_buy_car_num");
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int max = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -1258,7 +1258,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.receptionPage(1, 10, "", "");
             int todayDeliverCarNum = response.getInteger("today_deliver_car_num");
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int max = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -1304,7 +1304,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             int total = crm.receptionPage("", date, date, "1", "10").getInteger("total");
             int total1 = crm.receptionPage("", "", "PRE_SALES", 1, 10).getInteger("total");
             int pcList = 0;
-            int s = CommonUtil.pageTurning(total1, 100);
+            int s = CommonUtil.getTurningPage(total1, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.receptionPage("", "", "", String.valueOf(i), "10").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -1357,7 +1357,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(wx_name, pwd);
             int total = crm.activityTaskPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.activityTaskPage(i, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -1635,7 +1635,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.afterSaleCustList("", "", "", 1, 10);
             int monthReceptionCar = response.getInteger("month_reception_car");
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int max = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -1790,7 +1790,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.afterSaleCustomerList("", "", "", 1, 10);
             int totalReceptionCar = response.getInteger("total_reception_car");
             int total = response.getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int w = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.afterSaleCustomerList("", "", "", i, 100).getJSONArray("list");

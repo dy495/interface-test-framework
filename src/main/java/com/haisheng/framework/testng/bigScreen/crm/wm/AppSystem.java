@@ -12,6 +12,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ShopQrcodeScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.IScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -402,7 +405,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.login(xs);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
-            int page1 = CommonUtil.pageTurning(total, 100);
+            int page1 = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < page1; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -412,7 +415,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(s);
-            int page2 = CommonUtil.pageTurning(s, 100);
+            int page2 = CommonUtil.getTurningPage(s, 100);
             for (int i = 1; i < page2; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -440,7 +443,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -5);
         try {
             JSONObject response = crm.returnVisitTaskPage(1, 10, startDate, endDate);
-            int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
+            int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, startDate, endDate).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -462,7 +465,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(xs);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
-            int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
+            int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -506,7 +509,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
-            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+            for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, startDate, endDate).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.PROSPECTIVE_CUSTOMER.getName())) {
@@ -541,7 +544,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(ss);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
-            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+            for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
@@ -600,7 +603,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -627,7 +630,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -664,7 +667,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(taskId);
             String taskStatusName = null;
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int j = 1; j < s; j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -700,7 +703,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(taskId);
             String taskStatusName = null;
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int j = 1; j < s; j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1009,16 +1012,152 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
 
 //    -----------------------------------------------------售后---------------------------------------------------------
 
-//    @Test
-    public void appointmentMaintain_number() {
+    @Test(description = "售后-我的接待-车牌号模糊搜索")
+    public void receptionAfterCustomerList_function_1() {
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             CommonUtil.login(zjl);
-            Integer id = new PublicMethod().afterSaleReception();
-            Preconditions.checkArgument(id != null, "sssss");
-        } catch (Exception e) {
-            e.printStackTrace();
+            IScene scene = ReceptionAfterCustomerListScene.builder().build();
+            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+            String plateNumber = list.getJSONObject(0).getString("plate_number");
+            CommonUtil.valueView(plateNumber);
+            String findParam = plateNumber.substring(0, 3);
+            CommonUtil.valueView(findParam);
+            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
+            int total = crm.invokeApi(scene1).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
+                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    String resultPlateNumber = list1.getJSONObject(i).getString("plate_number");
+                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-车牌号模糊搜索");
         }
     }
+
+    @Test(description = "售后-我的接待-联系方式模糊搜索")
+    public void receptionAfterCustomerList_function_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.login(zjl);
+            IScene scene = ReceptionAfterCustomerListScene.builder().build();
+            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+            String customerPhoneNumber = list.getJSONObject(0).getString("customer_phone_number");
+            CommonUtil.valueView(customerPhoneNumber);
+            String findParam = customerPhoneNumber.substring(0, 3);
+            CommonUtil.valueView(findParam);
+            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
+            int total = crm.invokeApi(scene1).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
+                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    String resultPlateNumber = list1.getJSONObject(i).getString("customer_phone_number");
+                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-联系方式模糊搜索");
+        }
+    }
+
+    @Test(description = "售后-我的接待-按照接待日期查询")
+    public void receptionAfterCustomerList_function_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        try {
+            CommonUtil.login(zjl);
+            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
+            int total = crm.invokeApi(scene).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).page(i).size(100).build();
+                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String serviceDate = list.getJSONObject(j).getString("service_date");
+                    CommonUtil.valueView(startDate, serviceDate, endDate);
+                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
+                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-按照接待日期查询");
+        }
+    }
+
+    @Test(description = "售后-我的接待-按照接待日期查询")
+    public void receptionAfterCustomerList_function_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        try {
+            CommonUtil.login(zjl);
+            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
+            int total = crm.invokeApi(scene).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).page(i).size(100).build();
+                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String serviceDate = list.getJSONObject(j).getString("service_date");
+                    CommonUtil.valueView(startDate, serviceDate, endDate);
+                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
+                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-按照接待日期查询");
+        }
+    }
+
+    @Test(description = "售后-我的接待-按照接待日期查询，开始时间>结束时间")
+    public void receptionAfterCustomerList_function_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        try {
+            CommonUtil.login(zjl);
+            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(endDate).searchDateEnd(startDate).build();
+            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+            Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-按照接待日期查询");
+        }
+    }
+
+    @Test(description = "售后-物品的接待-获取接待二维码")
+    public void receptionAfterCustomerList_function_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.login(zjl);
+            IScene scene = ShopQrcodeScene.builder().build();
+            String qrcodeUrl = crm.invokeApi(scene).getString("qrcode_url");
+            Preconditions.checkArgument(qrcodeUrl != null, "接待二维码为空");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后-我的接待-按照接待日期查询");
+        }
+    }
+
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 

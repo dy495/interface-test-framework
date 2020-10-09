@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.xundianOnline;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -950,7 +949,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
                     total_sum=0;
                 }
 
-                int t = CommonUtil.pageTurning(total_sum, 50);
+                int t = CommonUtil.getTurningPage(total_sum, 50);
                 for (int l = 1; l < t; l++){
                     JSONObject res = Md.memberDetail(shop_id_t, customer_id, l, size);
                     enter_total = res.getInteger("total_visit_times");//累计到店次数

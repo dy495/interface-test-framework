@@ -9,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -126,14 +125,14 @@ public class CommonUtil {
     }
 
     /**
-     * 页面跳转
+     * 获取页面跳转页数
      * 当接口每页只能传入pageSize时，获取接口的访问次数来得到list.size()
      *
      * @param listSize list的尺寸
      * @param pageSize 接口要求的size
      * @return a
      */
-    public static int pageTurning(double listSize, double pageSize) {
+    public static int getTurningPage(double listSize, double pageSize) {
         if (listSize < 0 || pageSize < 0) {
             if (listSize < 0) {
                 throw new RuntimeException("listSize不可为负数");

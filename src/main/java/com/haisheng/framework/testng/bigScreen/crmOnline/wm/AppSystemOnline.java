@@ -395,7 +395,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.login(xs);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
-            int page1 = CommonUtil.pageTurning(total, 100);
+            int page1 = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < page1; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -405,7 +405,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(s);
-            int page2 = CommonUtil.pageTurning(s, 100);
+            int page2 = CommonUtil.getTurningPage(s, 100);
             for (int i = 1; i < page2; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -433,7 +433,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -5);
         try {
             JSONObject response = crm.returnVisitTaskPage(1, 10, startDate, endDate);
-            int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
+            int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, startDate, endDate).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -455,7 +455,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(xs);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
-            int s = CommonUtil.pageTurning(response.getInteger("total"), 100);
+            int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -499,7 +499,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
-            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+            for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, startDate, endDate).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.PROSPECTIVE_CUSTOMER.getName())) {
@@ -532,7 +532,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         try {
             CommonUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            for (int j = 1; j < CommonUtil.pageTurning(total, 100); j++) {
+            for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.CHANGE_HANDS.getName())) {
@@ -591,7 +591,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -618,7 +618,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, 100, "", "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -655,7 +655,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(taskId);
             String taskStatusName = null;
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int j = 1; j < s; j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -691,7 +691,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(taskId);
             String taskStatusName = null;
             int total = crm.returnVisitTaskPage(1, 10, "", "").getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int j = 1; j < s; j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

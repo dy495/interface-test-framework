@@ -8,31 +8,34 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 登录接口
- * 测试使用
- *
- * @author wangmin
+ * 售后我的接待列表接口
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class LoginScene extends BaseScene {
-    private int type;
-    private String username;
-    private String password;
+public class ReceptionAfterCustomerListScene extends BaseScene {
+    private String searchCondition;
+    private String searchDateEnd;
+    private String searchDateStart;
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("type", type);
-        object.put("username", username);
-        object.put("password", password);
+        object.put("search_condition", searchCondition);
+        object.put("search_date_start", searchDateStart);
+        object.put("search_date_end", searchDateEnd);
+        object.put("page", page);
+        object.put("size", size);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/porsche-login";
+        return "/porsche/app/after_sale/reception_after_customer_list";
     }
 
     @Override

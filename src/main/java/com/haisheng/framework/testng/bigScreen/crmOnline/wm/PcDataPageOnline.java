@@ -147,7 +147,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.shopPannel(e.getType(), "", "");
             int totalNum = response.getInteger(field);
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int everySaleNun = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -251,7 +251,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int everySaleNun = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
@@ -333,7 +333,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     private void compareBusinessFunnelData(final String type) throws Exception {
         for (EnumFindType e : EnumFindType.values()) {
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -409,7 +409,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             int clueNum = 0;
             int orderNum = 0;
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -444,7 +444,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         try {
             for (EnumFindType e : EnumFindType.values()) {
                 int total = crm.userUserPage(1, 10).getInteger("total");
-                int s = CommonUtil.pageTurning(total, 100);
+                int s = CommonUtil.getTurningPage(total, 100);
                 for (int i = 1; i < s; i++) {
                     JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
@@ -552,7 +552,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             int total = crm.userUserPage(1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             int sum = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray userList = crm.userUserPage(i, 100).getJSONArray("list");
@@ -832,7 +832,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         int num = 0;
         int total = crm.receptionPage("", "", "PRE_SALES", 1, 10).getInteger("total");
-        int s = CommonUtil.pageTurning(total, 100);
+        int s = CommonUtil.getTurningPage(total, 100);
         for (int i = 1; i < s; i++) {
             JSONArray list = crm.receptionPage("", "", "PRE_SALES", i, 100).getJSONArray("list");
             for (int j = 0; j < list.size(); j++) {
@@ -1015,7 +1015,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             int receptionPerson = 0;
             int receptionCompany = 0;
             int total = crm.customerList("", "", "", date, date, 1, 10).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.customerList("", "", "", date, date, i, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -1052,7 +1052,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 driver += value;
             }
             int total = crm.testDriverAppList("", date, date, 10, 1).getInteger("total");
-            int s = CommonUtil.pageTurning(total, 100);
+            int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
                 JSONArray appList = crm.testDriverAppList("", date, date, 10, i).getJSONArray("list");
                 for (int j = 0; j < appList.size(); j++) {

@@ -141,7 +141,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             int customerId = 0;
             boolean flag = false;
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            for (int k = 1; k < CommonUtil.pageTurning(total, 100); k++) {
+            for (int k = 1; k < CommonUtil.getTurningPage(total, 100); k++) {
                 JSONArray list = crm.customerPage(100, k, "", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     if (list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())) {
@@ -219,7 +219,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         try {
             boolean flag = false;
             int total = crm.messagePage(1, 10).getInteger("total");
-            for (int i = 1; i < CommonUtil.pageTurning(total, 100); i++) {
+            for (int i = 1; i < CommonUtil.getTurningPage(total, 100); i++) {
                 JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     flag = list.getJSONObject(j).getString("customer_types").contains("销售/售后")

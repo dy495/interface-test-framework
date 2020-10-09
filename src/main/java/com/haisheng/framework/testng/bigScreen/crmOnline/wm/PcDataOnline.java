@@ -74,7 +74,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
             //客户总数
             int total = object.getInteger("total");
-            int pageSize = CommonUtil.pageTurning(total, 100);
+            int pageSize = CommonUtil.getTurningPage(total, 100);
             int listSizeTotal = 0;
             for (int i = 1; i < pageSize; i++) {
                 int listSize = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list").size();
@@ -112,7 +112,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             String date = DateTimeUtil.getFormat(new Date());
             JSONObject object = crm.customerList("", "", "", date, date, 1, 10);
             int total = object.getInteger("total");
-            int pageSize = CommonUtil.pageTurning(total, 100);
+            int pageSize = CommonUtil.getTurningPage(total, 100);
             int listSizeTotal = 0;
             for (int i = 1; i < pageSize; i++) {
                 int listSize = crm.customerList("", "", "", date, date, i, 100).getJSONArray("list").size();

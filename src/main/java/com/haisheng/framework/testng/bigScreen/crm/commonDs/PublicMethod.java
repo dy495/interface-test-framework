@@ -23,7 +23,7 @@ public class PublicMethod {
     public List<Map<String, String>> getSaleList(String roleName) {
         List<Map<String, String>> array = new ArrayList<>();
         int total = crm.userUserPage(1, 10).getInteger("total");
-        int s = CommonUtil.pageTurning(total, 100);
+        int s = CommonUtil.getTurningPage(total, 100);
         for (int i = 1; i < s; i++) {
             JSONArray list = crm.userUserPage(i, 100).getJSONArray("list");
             for (int j = 0; j < list.size(); j++) {

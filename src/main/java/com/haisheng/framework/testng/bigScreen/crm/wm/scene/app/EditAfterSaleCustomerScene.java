@@ -35,7 +35,7 @@ public class EditAfterSaleCustomerScene extends BaseScene {
     private Integer travelMileage;
 
     @Override
-    public JSONObject getJson() {
+    public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("after_record_id", afterRecordId);
         JSONArray alongList = new JSONArray();

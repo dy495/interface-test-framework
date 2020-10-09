@@ -3,14 +3,12 @@ package com.haisheng.framework.testng.bigScreen.xundianOnline;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
@@ -23,7 +21,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -1192,7 +1189,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     total_sum=0;
                 }
 
-                int t = CommonUtil.pageTurning(total_sum, 50);
+                int t = CommonUtil.getTurningPage(total_sum, 50);
                 for (int l = 1; l < t; l++){
                     JSONObject res = Md.memberDetail(shop_id, customer_id, l, size);
                     enter_total = res.getInteger("total_visit_times");//累计到店次数
