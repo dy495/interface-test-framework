@@ -362,7 +362,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 //            phone2.put("phone_order", 1);
 //            PhoneList.add(0, phone1);
 //            PhoneList.add(1, phone2);
-
+            pm.remark=new JSONArray();
             pm.phoneList = PhoneList;
             crm.finishReception3(pm);
             Preconditions.checkArgument(total - total2 == 1, "变更接待，原接待销售接待列表-1");
@@ -376,6 +376,143 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("变更接待 ");
+        }
+    }
+
+    /**
+     * @description :标记非客列表+1，删除-1
+     * @date :2020/10/10 17:57
+     **/
+    @Test()
+    public void nonGuestList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //标记前非客列表数
+            JSONArray date=crm.nonCustomerList("","","1","10");
+            int total=date.size();
+
+            JSONArray list=crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id="";
+            for(int i=0;i<list.size();i++){
+                String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+                if(customer_identity_name.equals("新客")||customer_identity_name.equals("未接待离店")){
+                    analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
+                    break;
+                }
+            }
+            crm.markNocustomer(analysis_customer_id);
+            //标记后
+            int totalA=crm.nonCustomerList("","","1","10").size();
+            crm.deleteNocustomer(analysis_customer_id);
+            //删除非客
+            int totalB=crm.nonCustomerList("","","1","10").size();
+            Preconditions.checkArgument(totalA-total==1,"标记为非客后，非客列表+1");
+            Preconditions.checkArgument(totalA-total==1,"删除标记的非客后，非客列表-1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("标记非客列表+1，删除-1 ");
+        }
+    }
+
+    /**
+     * @description :标记未接待离店列表+1，删除-1
+     * @date :2020/10/10 17:57
+     **/
+    @Test()
+    public void nonReceiveGuestList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String time=dt.getHistoryDate(0);
+            //标记前未接待离店列表数
+            JSONArray date=crm.nonReceptionList(time,time,"1","100");
+            int total=date.size();
+
+            JSONArray list=crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id="";
+            for(int i=0;i<list.size();i++){
+                String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+                if(customer_identity_name.equals("新客")||customer_identity_name.equals("未接待离店")){
+                    analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
+                    break;
+                }
+            }
+            if(analysis_customer_id==null){
+                return;
+            }
+            JSONObject id=new JSONObject();
+            id.put("analysis_customer_id",analysis_customer_id);
+
+            JSONArray idlist=new JSONArray();
+            idlist.add(id);
+
+            crm.marknonReception(idlist);
+            //标记后
+            int totalA=crm.nonReceptionList(time,time,"1","100").size();
+            crm.deleteNoReception(analysis_customer_id);
+            //删除未接待离店
+            int totalB=crm.nonReceptionList(time,time,"1","100").size();
+            Preconditions.checkArgument(totalA-total==1,"标记为未接待离店后，未接待离店列表+1");
+            Preconditions.checkArgument(totalA-total==1,"删除标记的未接待离店后，未接待离店列表-1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("标记未接待离店列表+1，删除-1 ");
+        }
+    }
+
+    /**
+     * @description :标记三个未接待离店列表+3，删除-3
+     * @date :2020/10/10 17:57
+     **/
+//    @Test()
+    public void nonReceiveGuestListThere() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String time=dt.getHistoryDate(0);
+            //标记前未接待离店列表数
+            JSONArray date=crm.nonReceptionList(time,time,"1","100");
+            int total=date.size();
+
+            JSONArray list=crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id="";
+            for(int i=0;i<list.size();i++){
+                String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+                if(customer_identity_name.equals("新客")||customer_identity_name.equals("未接待离店")){
+                    analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
+                    break;
+                }
+            }
+            if(analysis_customer_id==null){
+                return;
+            }
+            JSONObject id=new JSONObject();
+            id.put("analysis_customer_id",analysis_customer_id);
+
+            JSONArray idlist=new JSONArray();
+            idlist.add(id);
+
+            crm.marknonReception(idlist);
+            //标记后
+            int totalA=crm.nonReceptionList(time,time,"1","100").size();
+            crm.deleteNoReception(analysis_customer_id);
+            //删除未接待离店
+            int totalB=crm.nonReceptionList(time,time,"1","100").size();
+            Preconditions.checkArgument(totalA-total==1,"标记为未接待离店后，未接待离店列表+1");
+            Preconditions.checkArgument(totalA-total==1,"删除标记的未接待离店后，未接待离店列表-1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("标记未接待离店列表+1，删除-1 ");
         }
     }
 

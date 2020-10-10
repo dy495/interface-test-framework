@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
@@ -292,7 +293,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "辽GBBA260";
+            String plate_number = "辽GBBA261";
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -301,12 +302,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 count = list.size();
             }
-            crm.myCarAdd(car_type, plate_number, car_model);
+            Integer car_idBefore = crm.myCarAdd(car_type, plate_number, car_model).getInteger("my_car_id");
             JSONArray listB = crm.myCarList().getJSONArray("list");
             int aftercount = listB.size();
-            String car_type_nameBefore = listB.getJSONObject(aftercount - 1).getString("car_style_name");
-            String plate_numberBefore = listB.getJSONObject(aftercount - 1).getString("plate_number");    //车牌号
-            Integer car_idBefore = listB.getJSONObject(aftercount - 1).getInteger("my_car_id");    //车牌号
+            String car_type_nameBefore = listB.getJSONObject(0).getString("car_style_name");
+            String plate_numberBefore = listB.getJSONObject(0).getString("plate_number");    //车牌号
 
             checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
             checkArgument(car_type_nameBefore.equals(car_type_name), "增加车辆，我的车辆列表车型显示错误");
@@ -331,7 +331,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String plate_number = "豫GBBA96";
 
             crm.myCarAdd(car_type, plate_number, car_model);
-            Long code = crm.myCarAddCode(car_type, car_model, plate_number);
+            Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
             JSONArray listB = crm.myCarList().getJSONArray("list");
             Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
             crm.myCarDelete(Integer.toString(car_idBefore));
@@ -440,7 +440,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 crm.myCarAddCode(car_type, car_model, plate_number);
             }
             String plate_number = "豫GBBA11";
-            Long code = crm.myCarAddCode(car_type, car_model, plate_number);
+            Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
             checkArgument(code == 1001, "我的车辆上限10辆车");
             if (limit == 0) {
                 return;
@@ -1046,6 +1046,59 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("车牌号验证");
+        }
+    }
+
+    /**
+     * @description :编辑车辆，异常车牌验证
+     * @date :2020/10/10 16:00
+     **/
+    @Test(dataProvider = "PLATE", dataProviderClass = CrmScenarioUtil.class)
+    public void editplateab(String plate) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long code = crm.appletEditCar(pp.mycarId2, car_type, plate, car_model).getLong("code");
+            $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("车辆，车牌号异常验证");
+        }
+    }
+    /**
+     * @description :编辑车辆
+     * @date :2020/10/10 16:00
+     **/
+    @Test()
+    public void editplate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String plate="豫GBBA96";
+            Long code = crm.appletEditCar(pp.mycarId, car_type, plate, car_model).getLong("code");
+            $Preconditions.checkArgument(code == 1000, "编辑车辆接口报错");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("编辑车辆");
+        }
+    }
+
+
+    /**
+     * @description :新增车辆，异常车牌验证
+     * @date :2020/10/10 16:00
+     **/
+    @Test(dataProvider = "PLATE", dataProviderClass = CrmScenarioUtil.class)
+    public void plateabnormal(String plate) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = crm.myCarAddCode(car_type, car_model, plate);
+            Long code = data.getLong("code");
+            $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建车辆，车牌号异常验证");
         }
     }
 

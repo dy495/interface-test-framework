@@ -1851,7 +1851,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //添加车辆
-    public Long myCarAddCode(Integer car_type, Integer car_model, String plate_number) throws Exception {
+    public JSONObject myCarAddCode(Integer car_type, Integer car_model, String plate_number) throws Exception {
         String url = "/WeChat-applet/porsche/a/my-car/add";
         JSONObject json = new JSONObject();
         json.put("car_type", car_type);
@@ -1859,7 +1859,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json.put("plate_number", plate_number);
 
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getLong("code");
+        return JSON.parseObject(res);
     }
 
     //车辆列表
@@ -1977,7 +1977,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
 
         checkCode(res, StatusCode.BAD_REQUEST, "预约试驾，" + emptyPara + "为空！");
-        //checkMessage("预约试驾，" + emptyPara + "为空！", res, message);
+//        checkMessage("预约试驾，" + emptyPara + "为空！", res, message);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -5192,6 +5192,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         };
     }
+    @DataProvider(name = "PLATE")
+    public static Object[] plate() {
+        return new String[]{
+                "苏BJ123",   //6位
+                "BJ12345",    //不含汉字
+                "京1234567",  //不含英文
+                "京bj12345", //含小写
+                "京B@12345", //含字母
+                "苏BJ123456",//9位
+        };
+    }
 
     //前台展厅接待查询
     public JSONObject qtreceptionPage(String customerNamePhone, String startTime, String endTime, String page, String size) {
@@ -5376,6 +5387,70 @@ public class CrmScenarioUtil extends TestCaseCommon {
             result=JSON.parseObject(res);
         }
         return result;
+    }
+
+    //applet 编辑车
+    public JSONObject appletEditCar(Long car_id,Integer car_type, String plate_number, Integer car_model) throws Exception {
+        String url = "/WeChat-applet/porsche/a/my-car/edit";
+        JSONObject json = new JSONObject();
+        json.put("my_car_id", car_id);
+        json.put("car_style", car_type);
+        json.put("car_model", car_model);
+        json.put("plate_number", plate_number);
+        json.put("province", "");
+
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+    //前台客户列表
+    public JSONObject markcustomerList() throws Exception {
+        String url = "/porsche/app/sale-reception/customerList";
+        JSONObject json = new JSONObject();
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //前台标记非客
+    public JSONObject markNocustomer(String analysis_customer_id) throws Exception {
+        String url = "/porsche/app/customer/nonGuest";
+        JSONObject id=new JSONObject();
+        id.put("analysis_customer_id",analysis_customer_id);
+
+        JSONArray list=new JSONArray();
+        list.add(id);
+
+        JSONObject json = new JSONObject();
+        json.put("list", list);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //删除前台标记非客
+    public JSONObject deleteNocustomer(String analysis_customer_id) throws Exception {
+        String url = "/porsche/app/customer/risk_delete";
+        JSONObject json=new JSONObject();
+        json.put("analysis_customer_id",analysis_customer_id);
+
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //前台标记为接待离店
+    public JSONObject marknonReception(JSONArray list) throws Exception {
+        String url = "/porsche/app/customer/nonReception";
+
+        JSONObject json = new JSONObject();
+        json.put("list", list);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //删除前台标记为接待离店
+    public JSONObject deleteNoReception(String analysis_customer_id) throws Exception {
+        String url = "/porsche/app/customer/risk_delete";
+        JSONObject json=new JSONObject();
+        json.put("analysis_customer_id",analysis_customer_id);
+
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
     }
 }
 

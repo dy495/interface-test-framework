@@ -279,7 +279,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             JSONObject json = pf.creatCust();
             finishReceive fr = new finishReceive();
             fr.name = pp.customer_name;
-            fr.reception_id = json.getString("id");
+            fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
             fr.belongs_sale_id = json.getString("sale_id");
             fr.phoneList = json.getJSONArray("phoneList");
@@ -990,11 +990,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :新建、注销试驾车，app预约试驾页试驾车列表+-1
+     * @description :新建、注销试驾车，试驾车列表+-1
      * @date :2020/9/10 19:36
      **/
 
-//    @Test
+    @Test
     public void shijiacheNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1017,7 +1017,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "新增注销试驾车，新建试驾下拉列表+-1")
+//    @Test(description = "新增注销试驾车，新建试驾下拉列表+-1")
     public void shijiacheNum2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1084,7 +1084,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     //车牌号，异常验证
-//    @Test(description = "编辑客户，车牌号，异常验证")
+    @Test(description = "编辑客户，车牌号2，异常验证")
     public void editCarPlateAbnomal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

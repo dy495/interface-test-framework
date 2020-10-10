@@ -20,6 +20,7 @@ public class PublicParm {
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 
     public Long mycarId = 537L;   //车id待定
+    public Long mycarId2 = 419L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
     public String dcc = "xdcc";      //销售账号
