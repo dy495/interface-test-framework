@@ -188,7 +188,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             crm.afterSaleCustList(after_record_id, customer_name, customer_phone_number, customer_phone_number, plate_number, travel_mileage,
                     car_type, maintain_type, maintain_type, service_complete, customer_source, remarks);
             //查看客户信息的备注
-            JSONArray remarkList = crm.afterSale_custDetail(after_record_id).getJSONArray("remarks");
+            JSONArray remarkList = crm.detailAfterSaleCustomer(String.valueOf(after_record_id)).getJSONArray("remarks");
             int size = remarkList.size();//备注条数
             Preconditions.checkArgument(size == 20, "备注有{}条" + size);
             for (int i = 0; i < remarkList.size(); i++) {
@@ -227,7 +227,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             }
 
             //查看顾客信息
-            JSONArray visit_list = crm.afterSale_custDetail(after_record_id).getJSONArray("visit");
+            JSONArray visit_list = crm.detailAfterSaleCustomer(String.valueOf(after_record_id)).getJSONArray("visit");
             int size = visit_list.size();
             Preconditions.checkArgument(size == 20, "回访记录条数=" + size);
             //查看回访内容

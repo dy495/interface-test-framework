@@ -1012,6 +1012,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
 
 //    -----------------------------------------------------售后---------------------------------------------------------
 
+    /**
+     * @description: 服务顾问-我的接待
+     */
     @Test(description = "售后-我的接待-车牌号模糊搜索")
     public void receptionAfterCustomerList_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1155,6 +1158,20 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("售后-我的接待-按照接待日期查询");
+        }
+    }
+
+    @Test(description = "")
+    public void receptionAfterCustomerList_function_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            CommonUtil.login(zjl);
+            //查询未完成接待的记录
+            int afterRecordId = new PublicMethod().getAfterRecordId();
+            new PublicMethod().completeReception(String.valueOf(afterRecordId));
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+//            appendFailreason(e.toString());
         }
     }
 

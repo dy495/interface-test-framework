@@ -11,6 +11,7 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.IScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -2612,8 +2613,16 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //售后：查询客户信息
+    public JSONObject detailAfterSaleCustomer(String afterRecordId) {
+        String url = "/porsche/app/after_sale/detail_after_sale_customer";
+        JSONObject object = new JSONObject();
+        object.put("after_record_id", afterRecordId);
+        return invokeApi(url, object);
+    }
+
     //售后：我的预约，点击接待按钮
-    public JSONObject reception_customer(Long appointment_id) throws Exception {
+    public JSONObject reception_customer(Long appointment_id) {
         String url = "/porsche/app/after_sale/reception_after_sale_customer";
         String json = "{\"appointment_id\":" + appointment_id + "}";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -4129,6 +4138,10 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject invokeApi(IScene scene) {
+        return invokeApi(scene.getPath(), scene.getJSONObject());
+    }
+
     public JSONObject shopSaleFunnel(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/sale-funnel";
         JSONObject json = new JSONObject();
@@ -4252,7 +4265,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /**
      * 3.0数据分析 店面数据分析-概览数据
      */
-    public JSONObject shopPannel(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject shopPannel(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/pannel";
         JSONObject json = new JSONObject();
 
@@ -4265,14 +4278,14 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     /**
      * 3.0数据分析 店面数据分析-顾客接待时长
      */
-    public JSONObject receptTime(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject receptTime(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/recept-time";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
@@ -4282,14 +4295,14 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     /**
      * 3.0数据分析 店面数据分析-销售顾问漏斗
      */
-    public JSONObject saleFunnel(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject saleFunnel(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/sale-funnel";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
@@ -4299,7 +4312,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 

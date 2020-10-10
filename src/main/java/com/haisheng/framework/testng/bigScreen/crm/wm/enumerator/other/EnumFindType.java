@@ -7,12 +7,12 @@ import lombok.Getter;
  */
 public enum EnumFindType {
 
-    DAY("DAY", "日"),
-    WEEK("WEEK", "周"),
-    MONTH("MONTH", "月"),
-    QUARTER("QUARTER", "季"),
-    YEAR("YEAR", "年"),
-    ALL("ALL", "全部");
+    DAY("DAY", "按日查询"),
+    WEEK("WEEK", "按周查询"),
+    MONTH("MONTH", "按月查询"),
+    QUARTER("QUARTER", "按季查询"),
+    YEAR("YEAR", "按年查询"),
+    ALL("ALL", "按全部查询");
 
     EnumFindType(String type, String name) {
         this.type = type;

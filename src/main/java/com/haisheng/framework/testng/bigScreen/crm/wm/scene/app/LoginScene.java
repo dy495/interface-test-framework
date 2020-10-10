@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.BaseScene;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 登录接口
@@ -13,13 +11,11 @@ import lombok.EqualsAndHashCode;
  *
  * @author wangmin
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Builder
 public class LoginScene extends BaseScene {
-    private int type;
-    private String username;
-    private String password;
+    private final int type;
+    private final String username;
+    private final String password;
 
     @Override
     public JSONObject getJSONObject() {

@@ -1,12 +1,12 @@
-package com.haisheng.framework.testng.bigScreen.crm.commonDs;
+package com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.IScene;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PublicMethod {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+public class PublicMethodOnline {
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
 
     /**
      * 获取人员列表
@@ -122,7 +122,7 @@ public class PublicMethod {
     /**
      * 完成接待
      *
-     * @param afterRecordId {@link PublicMethod#getAfterRecordId()}
+     * @param afterRecordId {@link PublicMethodOnline#getAfterRecordId()}
      */
     public void completeReception(String afterRecordId) {
         JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);

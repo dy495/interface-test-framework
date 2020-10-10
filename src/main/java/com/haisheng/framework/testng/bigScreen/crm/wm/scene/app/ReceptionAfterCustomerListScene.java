@@ -4,23 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.BaseScene;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 售后我的接待列表接口
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Builder
 public class ReceptionAfterCustomerListScene extends BaseScene {
-    private String searchCondition;
-    private String searchDateEnd;
-    private String searchDateStart;
+    private final String searchCondition;
+    private final String searchDateEnd;
+    private final String searchDateStart;
     @Builder.Default
-    private Integer page = 1;
+    private final Integer page = 1;
     @Builder.Default
-    private Integer size = 10;
+    private final Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {

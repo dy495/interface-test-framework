@@ -320,13 +320,11 @@ public class DateTimeUtil {
 
         java.util.Date rightVal = df.parse(right);
 
-        Long l = rightVal.getTime() - leftVal.getTime();
+        long l = rightVal.getTime() - leftVal.getTime();
 
 
         Long min = ((l / (60 * 1000)));
-
-
-        System.out.println(min + "分");
+        CommonUtil.valueView(min + "分");
         return min.intValue();
     }
 
@@ -370,7 +368,7 @@ public class DateTimeUtil {
         String latWeek = format.format(w);
         String lastWeekTimestamp = dateTimeUtil.dateToTimestamp(latWeek);
 
-        return Long.valueOf(lastWeekTimestamp);
+        return Long.parseLong(lastWeekTimestamp);
     }
 
     public Long initLastMonth() throws Exception {
@@ -671,8 +669,13 @@ public class DateTimeUtil {
      * @return String 单位ms
      */
     public static String dateToStamp(String str) {
+        String format = "yyyy-MM-dd HH:mm:ss";
+        return dateToStamp(str, format);
+    }
+
+    public static String dateToStamp(String str, String format) {
         String res = null;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         Date date;
         try {
             date = simpleDateFormat.parse(str);

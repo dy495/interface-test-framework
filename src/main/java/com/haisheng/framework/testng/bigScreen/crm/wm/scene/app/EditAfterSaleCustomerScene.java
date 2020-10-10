@@ -2,37 +2,34 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.scene.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.BaseScene;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 售后完成接待接口
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Builder
 public class EditAfterSaleCustomerScene extends BaseScene {
-    private Integer afterRecordId;
-    private String analysisCustomerId;
-    private boolean isDecision;
-    private String appointmentCustomerName;
-    private Integer appointmentId;
-    private String appointmentPhoneNumber;
-    private String appointmentSecondaryPhone;
-    private String customerName;
-    private String customerPhoneNumber;
-    private Integer customerSource;
-    private String firstRepairCarType;
-    private String maintainSaleId;
-    private Integer maintainType;
-    private String plateNumber;
-    private JSONArray remarks;
+    private final String afterRecordId;
+    private final String analysisCustomerId;
+    private final Boolean isDecision;
+    private final String appointmentCustomerName;
+    private final Integer appointmentId;
+    private final String appointmentPhoneNumber;
+    private final String appointmentSecondaryPhone;
+    private final String customerName;
+    private final String customerPhoneNumber;
+    private final Integer customerSource;
+    private final String firstRepairCarType;
+    private final String maintainSaleId;
+    private final Integer maintainType;
+    private final String plateNumber;
+    private final JSONArray remarks;
     @Builder.Default
-    private boolean serviceComplete = true;
-    private Integer travelMileage;
+    private final boolean serviceComplete = true;
+    private final Integer travelMileage;
 
     @Override
     public JSONObject getJSONObject() {
@@ -43,7 +40,9 @@ public class EditAfterSaleCustomerScene extends BaseScene {
         object1.put("analysis_customer_id", analysisCustomerId);
         object1.put("is_decision", isDecision);
         alongList.add(object1);
-        object.put("along_list", alongList);
+        if (!StringUtils.isEmpty(analysisCustomerId) || isDecision != null) {
+            object.put("along_list", alongList);
+        }
         object.put("appointment_customer_name", appointmentCustomerName);
         object.put("appointment_id", appointmentId);
         object.put("appointment_phone_number", appointmentCustomerName);

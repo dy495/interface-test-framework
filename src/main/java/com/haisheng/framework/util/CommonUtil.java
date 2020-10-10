@@ -91,6 +91,9 @@ public class CommonUtil {
         if (a == 0 && b == 0) {
             return "0.0%";
         }
+        if (b == 0 && a != 0) {
+            return "100.0%";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         double c = a / b;
         NumberFormat nf = NumberFormat.getPercentInstance();

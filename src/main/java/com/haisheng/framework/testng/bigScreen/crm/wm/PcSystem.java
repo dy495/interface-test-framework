@@ -83,31 +83,57 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     /**
      * 销售客户管理-所有顾客
      */
-    @Test(description = "公海-筛选")
+    @Test(description = "开始时间<=结束时间,筛选出公海日期在此区间内的客户")
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        String date1 = DateTimeUtil.addDayFormat(new Date(), -180);
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String unixStart = DateTimeUtil.dateToStamp(startDate, "yyyy-MM-dd");
+        String unixEnd = DateTimeUtil.dateToStamp(DateTimeUtil.addDayFormat(new Date(), 1), "yyyy-MM-dd");
         try {
-            int total = crm.publicCustomerList(date, date1, 1, 100).getInteger("total");
-            Preconditions.checkArgument(total == 0, "开始时间>=结束时间，筛选不出公海客户");
+            int total = crm.publicCustomerList(startDate, endDate, 10, 1).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.publicCustomerList(startDate, endDate, 100, i).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String distributeTime = list.getJSONObject(j).getString("distribute_time");
+                    CommonUtil.valueView(unixStart, distributeTime, unixEnd);
+                    Preconditions.checkArgument(distributeTime.compareTo(unixEnd) <= 0, "开始时间>=结束时间，结果包含不在此时间区间内的客户");
+                    Preconditions.checkArgument(distributeTime.compareTo(unixStart) >= 0, "开始时间>=结束时间，结果包含不在此时间区间内的客户");
+                    CommonUtil.log("分割线");
+                }
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出日期内划入公海得客户列表");
+            saveData("开始时间<=结束时间,筛选出公海日期在此区间内的客户");
         }
     }
 
-    @Test(description = "战败-筛选-正常")
+    @Test(description = "开始时间<=结束时间,筛选出战败日期在此区间内的客户")
     public void myCustomer_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -120);
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String unixStart = DateTimeUtil.dateToStamp(startDate, "yyyy-MM-dd");
+        String unixEnd = DateTimeUtil.dateToStamp(DateTimeUtil.addDayFormat(new Date(), 1), "yyyy-MM-dd");
         try {
-            int total = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            Preconditions.checkArgument(total >= 0, "开始时间>=结束时间，筛选不出战败客户");
+            int total = crm.failureCustomerList(startDate, endDate, 1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.failureCustomerList(startDate, endDate, i, 100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String distributeTime = list.getJSONObject(j).getString("distribute_time");
+                    CommonUtil.valueView(unixStart, distributeTime, unixEnd);
+                    Preconditions.checkArgument(distributeTime.compareTo(unixEnd) <= 0, "开始时间>=结束时间，结果包含不在此时间区间内的客户");
+                    Preconditions.checkArgument(distributeTime.compareTo(unixStart) >= 0, "开始时间>=结束时间，结果包含不在此时间区间内的客户");
+                    CommonUtil.log("分割线");
+                }
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端战败客户按照日期筛选-开始时间<=结束时间");
+            saveData("开始时间<=结束时间,筛选出战败日期在此区间内的客户");
         }
     }
 
@@ -125,7 +151,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "小程序-筛选-正常")
+    @Test(description = "开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户")
     public void myCustomer_function_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -134,7 +160,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端小程序客户按照日期筛选-开始时间<=结束时间");
+            saveData("开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
         }
     }
 

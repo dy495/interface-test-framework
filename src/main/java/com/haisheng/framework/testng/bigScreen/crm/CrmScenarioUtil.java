@@ -2629,10 +2629,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject editAfterSaleCustomer(IScene sense) {
-        return invokeApi(sense.getPath(), sense.getJSONObject());
-    }
-
     //售后：客户管理->列表展示
     public JSONObject afterSaleCustomerList(String search_condition, String search_date_start, String search_date_end, int page, int size) throws Exception {
         String url = "/porsche/app/after_sale/after-sale-customer-list";
@@ -2705,11 +2701,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //售后：查询客户信息
-    public JSONObject afterSale_custDetail(Long after_record_id) {
+    public JSONObject detailAfterSaleCustomer(String afterRecordId) {
         String url = "/porsche/app/after_sale/detail_after_sale_customer";
-        String json = "{\"after_record_id\":" + after_record_id + "}";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        JSONObject object = new JSONObject();
+        object.put("after_record_id", afterRecordId);
+        return invokeApi(url, object);
     }
 
     //售后：回访操作
@@ -4275,7 +4271,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 3.0数据分析 店面数据分析-概览数据
      */
-    public JSONObject shopPannel(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject shopPannel(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/pannel";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
@@ -4285,14 +4281,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     /**
      * 3.0数据分析 店面数据分析-顾客接待时长
      */
-    public JSONObject receptTime(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject receptTime(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/recept-time";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
@@ -4302,14 +4298,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     /**
      * 3.0数据分析 店面数据分析-销售顾问漏斗
      */
-    public JSONObject saleFunnel(String cycle_type, String month, String sale_id) throws Exception {
+    public JSONObject saleFunnel(String cycle_type, String month, String sale_id) {
         String url = "/porsche/analysis2/shop/sale-funnel";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
@@ -4319,7 +4315,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!sale_id.equals("")) {
             json.put("sale_id", sale_id);
         }
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
