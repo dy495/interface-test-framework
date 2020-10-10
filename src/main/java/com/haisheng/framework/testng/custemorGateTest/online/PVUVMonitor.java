@@ -35,13 +35,10 @@ public class PVUVMonitor {
     final String DAILY_LB          = "http://10.0.15.226";
     final String ONLINE_LB         = "http://10.0.16.17";
 
-    final float HOUR_DIFF_RANGE_MAX = 1f;
-    final float HOUR_DIFF_RANGE = 0.85f;
-    final float HOUR_DIFF_RANGE_100 = 2f;
-    final float HOUR_DIFF_RANGE_50 = 4f;
-    final float HOUR_DIFF_RANGE_20 = 8f;
-    final float HOUR_DIFF_RANGE_10 = 16f;
-    final float DAY_DIFF_RANGE = 0.3f;
+    final float HOUR_DIFF_RANGE_OVERLAP = 2f; //干扰波动阈值，高于改阈值不监控波动
+    final float HOUR_DIFF_RANGE_MAX = 1f; //小时级波动阈值
+    final float DIFF_FILTER_OUT = 0.5f; //波动阈值,低于该阈值不监控波动; 天级波动阈值与此保持一致
+    final float PV_FILTER_OUT = 400f; //pv 波动监控阈值, 低于该阈值不监控波动, 只监控数据为0
 
     final String RISK_MAX = "高危险报警";
     //18210113587 于
@@ -445,79 +442,49 @@ public class PVUVMonitor {
             hourRange = lastHour + ":00 ~ " + hour + ":00";
         }
 
-        //数据为0，直接报警
         if (0 == current) {
+            //数据为0，直接报警
             dingMsg = com + "-数据异常: " + type + "过去【" + hourRange + "】数据量为 0, "
                     + RISK_MAX
                     + ", " + AT_USERS;
             //数据缩水100%
             diffDataUnit.diffRange = -1;
         } else {
+            //数据不为0 查看波动情况
             if (0 == history) {
                 //历史数据为0时不报警
                 diffDataUnit.diffRange = 0;
             } else {
                 diffDataUnit.diffRange = (float) diff / (float) history;
             }
-            DecimalFormat df = new DecimalFormat("#.00");
-            if (diff > 0) {
-                float enlarge  = diffDataUnit.diffRange;
-                String percent = df.format(enlarge*100) + "%";
 
+            float diffRate  = Math.abs(diffDataUnit.diffRange);
+            if (diffRate >= HOUR_DIFF_RANGE_OVERLAP ||
+                    diffRate <= DIFF_FILTER_OUT ||
+                    diffDataUnit.historyValue <= PV_FILTER_OUT ||
+                    diffDataUnit.currentValue <= PV_FILTER_OUT
+            ) {
+                //排波动范围过大、过小
+                //PV阈值以下的波动不予报警
+                return "";
+            }
+
+            DecimalFormat df = new DecimalFormat("#.00");
+            String percent = df.format(diffRate*100) + "%";
+            if (diff > 0) {
                 if (hour.equals("all")) {
-                    if (enlarge > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】扩大 " + percent;
-                    }
+                    dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】扩大 " + percent;
                 } else {
-                    if (diffDataUnit.historyValue <= 10) {
-                        if (enlarge > HOUR_DIFF_RANGE_10) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                        }
-                    }else if (diffDataUnit.historyValue <= 20) {
-                        if (enlarge > HOUR_DIFF_RANGE_20) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                        }
-                    } else if (diffDataUnit.historyValue <= 50) {
-                        if (enlarge > HOUR_DIFF_RANGE_50) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                        }
-                    } else if (diffDataUnit.historyValue <= 100) {
-                        if (enlarge > HOUR_DIFF_RANGE_100) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                        }
-                    } else {
-                        if (enlarge >= HOUR_DIFF_RANGE_MAX && diffDataUnit.historyValue > 300) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent
-                                    + ", " + RISK_MAX
-                                    + ", " + AT_USERS;
-                        } else if (enlarge > HOUR_DIFF_RANGE) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
-                        }
+                    if (diffRate > HOUR_DIFF_RANGE_MAX) {
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
-                float shrink = diffDataUnit.diffRange * (-1);
-                String percent = df.format(shrink*100) + "%";
-
                 if (hour.equals("all")) {
-                    if (shrink > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】缩小 " + percent;
-                    }
+                    dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】缩小 " + percent;
                 } else {
-                    if (diffDataUnit.historyValue <= 10) {
-                        dingMsg = "";
-                    } else if (diffDataUnit.historyValue <= 50) {
-                        if (shrink > HOUR_DIFF_RANGE_50) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
-                        }
-                    } else if (diffDataUnit.historyValue <= 100) {
-                        if (shrink > HOUR_DIFF_RANGE_100) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
-                        }
-                    } else {
-                        if (shrink > HOUR_DIFF_RANGE) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
-                        }
+                    if (diffRate > HOUR_DIFF_RANGE_MAX) {
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
                     }
                 }
             }
