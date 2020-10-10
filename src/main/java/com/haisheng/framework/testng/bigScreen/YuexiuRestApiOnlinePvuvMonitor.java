@@ -46,8 +46,10 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
     private long SHOP_ID_ENV = 889;
 
-    private final float HOUR_DIFF_RANGE = 0.4f;
-    private final float DAY_DIFF_RANGE = 0.1f;
+    final float HOUR_DIFF_RANGE_OVERLAP = 2f; //干扰波动阈值，高于改阈值不监控波动
+    final float HOUR_DIFF_RANGE_MAX = 1f; //小时级波动阈值
+    final float DIFF_FILTER_OUT = 0.5f; //波动阈值,低于该阈值不监控波动; 天级波动阈值与此保持一致
+    final float PV_FILTER_OUT = 200f; //pv 波动监控阈值, 低于该阈值不监控波动, 只监控数据为0
 
     private String HOUR  = dt.getCurrentHour();
     private int SHOP_UV  = 0;
@@ -341,30 +343,32 @@ public class YuexiuRestApiOnlinePvuvMonitor {
             } else {
                 diffDataUnit.diffRange = (float) diff / (float) history;
             }
-            DecimalFormat df = new DecimalFormat("#.00");
-            if (diff > 0) {
-                float enlarge  = diffDataUnit.diffRange;
-                String percent = df.format(enlarge*100) + "%";
+            float diffRate  = Math.abs(diffDataUnit.diffRange);
+            if (diffRate >= HOUR_DIFF_RANGE_OVERLAP ||
+                    diffRate <= DIFF_FILTER_OUT ||
+                    diffDataUnit.historyValue <= PV_FILTER_OUT ||
+                    diffDataUnit.currentValue <= PV_FILTER_OUT
+            ) {
+                //排波动范围过大、过小
+                //PV阈值以下的波动不予报警
+                return "";
+            }
 
+            DecimalFormat df = new DecimalFormat("#.00");
+            String percent = df.format(diffRate*100) + "%";
+            if (diff > 0) {
                 if (hour.equals("23")) {
-                    if (enlarge > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】扩大 " + percent;
-                    }
+                    dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】扩大 " + percent;
                 } else {
-                    if (enlarge > HOUR_DIFF_RANGE) {
+                    if (diffRate > HOUR_DIFF_RANGE_MAX) {
                         dingMsg = com + "-数据异常: " + type + "较【上周今日】【" + hourRange + "时段】【累计】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
-                float shrink = diffDataUnit.diffRange * (-1);
-                String percent = df.format(shrink*100) + "%";
-
                 if (hour.equals("23")) {
-                    if (shrink > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】缩小 " + percent;
-                    }
+                    dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】缩小 " + percent;
                 } else {
-                    if (shrink > HOUR_DIFF_RANGE) {
+                    if (diffRate > HOUR_DIFF_RANGE_MAX) {
                         dingMsg = com + "-数据异常: " + type + "较【上周今日】【" + hourRange + "时段】【累计】数据量缩小 " + percent;
                     }
                 }
