@@ -25,7 +25,6 @@ public abstract class BaseContainer extends TestCaseCommon implements IContainer
     @Override
     public abstract List<Map<String, Object>> getTable();
 
-
     @Override
     public void setPath(String path) {
         if (!StringUtils.isEmpty(path)) {

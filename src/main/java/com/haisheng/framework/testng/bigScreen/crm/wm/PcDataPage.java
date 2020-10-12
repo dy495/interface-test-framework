@@ -798,7 +798,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析--总经理交车>=各个销售之和");
+            saveData("店面数据分析--【业务漏斗】线索=【车型漏斗】线索");
         }
     }
 
@@ -810,19 +810,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析--【业务漏斗】商机=【车型漏斗】商机");
-        }
-    }
-
-    @Test(description = "店面数据分析--【业务漏斗】试驾>=【车型漏斗】试驾")
-    public void shopPanel_data_26() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            compareTwoFunnelData("TEST_DRIVE");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析--【业务漏斗】试驾=【车型漏斗】试驾");
+            saveData("店面数据分析--【业务漏斗】商机>=【车型漏斗】商机");
         }
     }
 

@@ -64,11 +64,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public String IpPort = EnumAddress.PORSCHE.getAddress();
 
     //----------------------登陆--------------------
-    public void login(String userName, String password) {
+    public void login(String username, String password) {
         initHttpConfig();
         String path = "/porsche-login";
         String loginUrl = IpPort + path;
-        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + password + "\"}";
+        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
         config.url(loginUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();

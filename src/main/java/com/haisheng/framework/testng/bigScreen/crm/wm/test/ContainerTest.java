@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.test;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.DbContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
-import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class ContainerTest {
         String sql = "select * from activity where id=19";
         DbContainer db = new DbContainer.Builder().driverName(driverName).jdbcUrl(url).password(password).username(username).path(sql).build();
         db.init();
-        CommonUtil.valueView(db.toString());
         List<Map<String, Object>> list = db.getTable();
         System.err.println(list.get(0).get("id"));
 
@@ -27,7 +25,7 @@ public class ContainerTest {
 
     @Test
     public void testB() {
-        String sql = "select * from activity where id=55";
+        String sql = "alter table 表名 ADD 字段 类型 NOT NULL Default 0";
         List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.BUSINESS_PORSCHE.getContainer()).build().create(sql);
         System.err.println(list.get(0).get("id"));
     }

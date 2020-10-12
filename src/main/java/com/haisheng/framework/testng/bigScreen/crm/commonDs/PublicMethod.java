@@ -33,15 +33,18 @@ public class PublicMethod {
                     Map<String, String> map = new HashMap<>(16);
                     String userId = list.getJSONObject(j).getString("user_id");
                     String userName = list.getJSONObject(j).getString("user_name");
+                    String account = list.getJSONObject(j).getString("user_login_name");
                     map.put("userId", userId);
                     map.put("userName", userName);
+                    map.put("account", account);
                     array.add(map);
                 }
             }
         }
         Map<String, String> map = new HashMap<>(16);
         map.put("userId", "");
-        map.put("userName", "总经理");
+        map.put("userName", "总经理123456");
+        map.put("account", "zjl");
         array.add(map);
         return array;
     }
