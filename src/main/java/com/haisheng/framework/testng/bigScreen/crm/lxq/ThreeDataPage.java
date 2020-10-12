@@ -551,26 +551,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1,dataProvider = "BUS_RATE")
-    public void businessrate(String fz, String fm, String fzstr, String fmstr,String rate,String show) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int fz1 = Integer.parseInt(fz);
-            int fm1 = Integer.parseInt(fm);
-            double a = (double) fz1 / fm1;
-            BigDecimal bd   =   new   BigDecimal(a);
-            String jisuan   =   bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString();
 
-            Preconditions.checkArgument(jisuan.equals(show), "展示" + show + " != 计算结果" + jisuan);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("【店面数据分析】业务漏斗："+rate+" = "+fzstr+" / "+fmstr);
-        }
-    }
 
 
 
@@ -752,7 +733,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "BUS_RATE")
     public  Object[][] bus_rate() {
         return new String[][]{
-                {Integer.toString(car_receive),Integer.toString(car_clue),"接待","线索","到店率",enter_rate},
+                {Integer.toString(car_receive),Integer.toString(car_clue),"商机PU","接待线索","留资率",enter_rate},
                 {Integer.toString(car_testDriver),Integer.toString(car_clue),"试驾","线索","试驾率",driver_rate},
                 {Integer.toString(car_order),Integer.toString(car_clue),"订单","线索","成交率",deal_rate}
 
