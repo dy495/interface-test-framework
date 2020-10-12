@@ -189,7 +189,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约试驾成功，页面间一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
      **/
-    @Test(priority = 1)
+    @Test(priority = 12)
     public void driver_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -329,8 +329,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String plate_number = "豫GBBA96";
-
-            crm.myCarAdd(car_type, plate_number, car_model);
+//            crm.myCarAdd(car_type, plate_number, car_model);
             Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
             JSONArray listB = crm.myCarList().getJSONArray("list");
             Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
@@ -390,6 +389,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -426,6 +426,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void myCarEven() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;

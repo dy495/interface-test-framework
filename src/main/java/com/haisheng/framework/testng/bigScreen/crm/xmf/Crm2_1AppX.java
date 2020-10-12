@@ -704,7 +704,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，是小程序最新车主风采 ok
      * @date :2020/8/3 16:46
      **/
-    @Test
+    @Test(priority = 1)
     public void carOwerNewst() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -745,7 +745,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，applet车主风采列表+1 ok
      * @date :2020/8/3 18:25
      **/
-    @Test
+    @Test(priority = 12)
     public void carOwerListUp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
