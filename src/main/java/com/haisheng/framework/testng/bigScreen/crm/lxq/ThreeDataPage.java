@@ -799,7 +799,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
      */
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void serviceChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -815,7 +815,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void testDriverChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -831,7 +831,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void dealChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -847,7 +847,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void deliveryChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -863,7 +863,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void receiveChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -879,7 +879,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void recpChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -895,7 +895,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void receive_secondChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -911,7 +911,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void creatChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
