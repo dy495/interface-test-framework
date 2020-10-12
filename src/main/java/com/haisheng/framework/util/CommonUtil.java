@@ -2,7 +2,7 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -253,5 +255,84 @@ public class CommonUtil {
         } else {
             crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
         }
+    }
+
+    /**
+     * 判断字符串列表每一项均不为空，包括空字符串与null
+     *
+     * @param strList 字符串列表
+     * @return boolean 有一个为空则返回false，全不为空返回true
+     */
+    public static boolean strListNotNull(String[] strList) {
+        boolean notNull = true;
+        for (String str : strList) {
+            if (StringUtils.isEmpty(str)) {
+                notNull = false;
+                break;
+            }
+        }
+        return notNull;
+    }
+
+    /**
+     * 对比两个数组
+     *
+     * @param obj1 第一个数组
+     * @param obj2 第二个数组
+     * @return boolean 数量、内容和顺序都一致返回true，有任意一项不满足返回false
+     */
+    public static boolean arrayEquals(Object[] obj1, Object[] obj2) {
+        if (obj1 == null && obj2 == null) {
+            return true;
+        }
+
+        if (obj1 != null && obj1.length == 0 && obj2 != null && obj2.length == 0) {
+            return true;
+        }
+
+        if (obj1 != null && obj2 != null && obj1.length == obj2.length) {
+            for (int i = 0; i < obj1.length; i++) {
+                if (!obj1[i].equals(obj2[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取路径中的最后的部分，及最后的文件夹名或者文件名
+     *
+     * @param path 绝对路径或者相对路径
+     * @return String 文件夹名或者文件名，路径为空则返回null
+     */
+    public static String getLastName(String path) {
+        if (!StringUtils.isEmpty(path)) {
+            String[] strs = path.split(String.format("/|\\%s", System.getProperty("file.separator")));
+            int length = strs.length;
+            if (length > 0) {
+                return strs[length - 1];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取资源文件在当前项目下的绝对路径
+     *
+     * @param relativePath 资源的相对路径
+     * @return String 资源的绝对路径
+     */
+    public static String getResourcePath(String relativePath) {
+        String str = FileUtil.class.getClassLoader().getResource(relativePath).getPath();
+        String path = null;
+        try {
+            path = URLDecoder.decode(str, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return path;
     }
 }

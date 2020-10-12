@@ -193,7 +193,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/libs/scenario-gate-client-1.0.2-SNAPSHOT.jar</systemPath>
         </dependency>
-
+        <!--excel读取，xls-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.1.1</version>
+        </dependency>
         <dependency>
             <groupId>ai.winsense.retail.scenario</groupId>
             <artifactId>scenario-gate-domain</artifactId>
@@ -214,6 +219,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
         </dependency>
 
     </dependencies>

@@ -40,7 +40,6 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount qt = EnumAccount.QT_DAILY;
-    private static final EnumAccount ss = EnumAccount.XSXIA_DAILY;
 
     @BeforeClass
     @Override
@@ -55,7 +54,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
@@ -542,7 +541,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
         String endDate = DateTimeUtil.getFormat(new Date());
         try {
-            CommonUtil.login(ss);
+            CommonUtil.login(zjl);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
             for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
@@ -1161,7 +1160,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "")
+    @Test(description = "", enabled = false)
     public void receptionAfterCustomerList_function_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
