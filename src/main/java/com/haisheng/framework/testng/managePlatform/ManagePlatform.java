@@ -6037,6 +6037,73 @@ public class ManagePlatform {
         }
     }
 
+
+    @Test
+    public void addAiCamera() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        logger.info("======case: " + ciCaseName + "======");
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "添加AI摄像头";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String brandName = caseName;
+        String manager = "sophie";
+        String phone = "15165153865";
+
+        String brandId = "";
+        try {
+
+            aCase.setRequestData("1、增加AI摄像头-2、Ai摄像头列表-3、删除AI摄像头-4、AI摄像头列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、添加AI摄像头
+//            logger.info("\n\n");
+//            logger.info("------------------------------" + (++step) + "--------------------------------------");
+//            addBrand(APP_ID, brandName, manager, phone, aCase, step);
+//
+////            2、品牌列表
+//            logger.info("\n\n");
+//            logger.info("------------------------------" + (++step) + "--------------------------------------");
+//            String response = listBrand(APP_ID, aCase, step);
+//            brandId = getBrandIdBylist(response, brandName, true);
+//
+////            3、删除品牌
+//            logger.info("\n\n");
+//            logger.info("------------------------------" + (++step) + "--------------------------------------");
+//            deleteBrand(brandId, aCase, step);
+//
+////            4、品牌列表
+//            logger.info("\n\n");
+//            logger.info("------------------------------" + (++step) + "--------------------------------------");
+//            response = listBrand(APP_ID, aCase, step);
+//            brandId = getBrandIdBylist(response, brandName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
     @Test
     public void getBrandDSCheck() throws Exception {
 

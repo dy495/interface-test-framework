@@ -13,6 +13,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.SurveillanceForZDF"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.StoreDataForXtc"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.XundianCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.StoreDataForDZY"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.StoreDataForHS"></class>
         </classes>
     </test>
 </suite>
