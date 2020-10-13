@@ -16,6 +16,9 @@ public class ContainerTest {
         String username = "read_only";
         String password = "read_only";
         String sql = "select * from activity where id=19";
+
+
+
         DbContainer db = new DbContainer.Builder().driverName(driverName).jdbcUrl(url).password(password).username(username).path(sql).build();
         db.init();
         List<Map<String, Object>> list = db.getTable();

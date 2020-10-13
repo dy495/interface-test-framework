@@ -94,7 +94,7 @@ public class CommonUtil {
             return "0.0%";
         }
         if (b == 0 && a != 0) {
-            return "100.0%";
+            return "0.0%";
         }
         StringBuilder stringBuilder = new StringBuilder();
         double c = a / b;
