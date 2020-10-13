@@ -106,7 +106,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myAppointment_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            CommonUtil.login(xs);
             //预约试驾
             Integer testDriverTotalNumber = crm.appointmentTestDriverNumber().getInteger("appointment_total_number");
             //预约试驾列表
@@ -917,6 +917,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            CommonUtil.login(xs);
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
             int listSize = 0;

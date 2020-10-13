@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.experiment.enumerator.*;
+import com.haisheng.framework.model.experiment.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -67,7 +67,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 //    ---------------------------------------------------2.0------------------------------------------------------------
-
     /**
      * @description: 工作管理-我的预约
      */
@@ -103,7 +102,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myAppointment_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            CommonUtil.login(xs);
             //预约试驾
             Integer testDriverTotalNumber = crm.appointmentTestDriverNumber().getInteger("appointment_total_number");
             //预约试驾列表
@@ -914,6 +913,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            CommonUtil.login(xs);
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
             int listSize = 0;
@@ -1204,7 +1204,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
      * @param endDay   结束时间
      */
     private int createReturnVisitTask(String startDay, String endDay) {
-        String date1 = DateTimeUtil.getFormat(new Date());
+        String date = DateTimeUtil.getFormat(new Date());
         CommonUtil.login(zjl);
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
@@ -1224,7 +1224,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             }
         }
         //回访
-        crm.afterSale_addVisitRecord((long) id, picture, comment, date1);
+        crm.afterSale_addVisitRecord((long) id, picture, comment, date);
         return id;
     }
 

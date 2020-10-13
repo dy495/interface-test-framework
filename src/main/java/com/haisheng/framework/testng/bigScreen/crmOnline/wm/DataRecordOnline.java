@@ -1,13 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm;
+package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -24,9 +24,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class DataRecord extends TestCaseCommon implements TestCaseStd {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
+public class DataRecordOnline extends TestCaseCommon implements TestCaseStd {
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
 
     @BeforeClass
     @Override
@@ -35,15 +35,15 @@ public class DataRecord extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
@@ -171,7 +171,7 @@ public class DataRecord extends TestCaseCommon implements TestCaseStd {
                 if (list.getJSONObject(j).getString("reception_sale_name") == null) {
                     reception_date = setSqlParam(list.getJSONObject(j).getString("reception_date"));
                     customer_name = setSqlParam(list.getJSONObject(j).getString("customer_name"));
-                    shop_id = setSqlParam(EnumShopId.PORSCHE_SHOP.getShopId());
+                    shop_id = setSqlParam(EnumShopId.PORSCHE_SHOP_ONLINE.getShopId());
                     reception_sale = setSqlParam(list.getJSONObject(j).getString("reception_sale_name"));
                     reception_start_time = setSqlParam(list.getJSONObject(j).getString("reception_time"));
                     reception_end_time = setSqlParam(list.getJSONObject(j).getString("leave_time_str"));

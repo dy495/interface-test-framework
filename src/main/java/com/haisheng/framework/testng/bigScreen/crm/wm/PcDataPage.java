@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
@@ -20,7 +22,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Map;
 public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
+    private static final String shopId = EnumShopId.PORSCHE_SHOP.getShopId();
     private Integer totalNum;
     private Integer sumNum;
 
@@ -559,7 +561,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=试驾")
+    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=试驾",enabled = false)
     public void shopPanel_data_39() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -571,7 +573,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=订单")
+    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=订单",enabled = false)
     public void shopPanel_data_40() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -592,7 +594,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 int valueA = 0;
                 int valueB = 0;
                 CommonUtil.valueView(arr.get("userName"));
-                JSONObject response = crm.saleFunnel(EnumFindType.ALL.getType(), "", arr.get("userId"));
+                JSONObject response = crm.saleFunnel(EnumFindType.QUARTER.getType(), "", arr.get("userId"));
                 JSONArray funnelList = response.getJSONObject("car_type").getJSONArray("list");
                 for (int i = 0; i < funnelList.size(); i++) {
                     if (funnelList.getJSONObject(i).getString("type").equals("ORDER")) {
@@ -603,7 +605,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 CommonUtil.valueView(valueA, valueB);
-                Preconditions.checkArgument(valueA >= valueB, arr.get("userName") + EnumFindType.ALL.getName() + "ORDER数据为：" + valueA + "DEAL数据为：" + valueB);
+                Preconditions.checkArgument(valueA >= valueB, arr.get("userName") + EnumFindType.QUARTER.getName() + "ORDER数据为：" + valueA + "DEAL数据为：" + valueB);
                 CommonUtil.log("分割线");
             });
         } catch (Exception | AssertionError e) {
@@ -679,7 +681,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 CommonUtil.valueView(valueA, valueB);
-                Preconditions.checkArgument(valueA >= valueB, arr.get("userName") + e.getName() + "RECEIVE" + "数据为：" + valueA + type + "数据为：" + valueB);
+                Preconditions.checkArgument(valueA >= valueB, arr.get("userName") + e.getName() + "RECEIVE" + "数据为：" + "，" + valueA + type + "数据为：" + valueB);
                 CommonUtil.log("分割线");
             });
         }
@@ -918,21 +920,24 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
 
 //    -----------------------------------------------客户接待时长分析---------------------------------------------------
 
-    @Test(description = "10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量")
+    @Test(description = "10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间10分钟以内的数量")
     public void shopPanel_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                String userId = arr.get("userId");
-                int num = 0;
-                try {
-                    CommonUtil.valueView(userName);
-                    num = getReceptionTime(0, 10, userName);
-                } catch (ParseException e) {
-                    appendFailreason(e.toString());
+                CommonUtil.valueView(userName);
+                String sql;
+                if (userName.equals("总经理123456")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 10 + " and shop_id=" + shopId;
+                } else {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
+                String userId = arr.get("userId");
+                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                long count = (long) result.get(0).get("count(*)");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -940,31 +945,37 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = list.getJSONObject(i).getInteger("value");
                     }
                 }
-                CommonUtil.valueView(num, value);
-                Preconditions.checkArgument(num == value, userName + "昨日接待时长10分钟之内的数量为：" + num + "该销售店面数据分析中接待时长10分钟的数量为" + value);
+                CommonUtil.valueView(count, value);
+                Preconditions.checkArgument(count >= value, userName + "昨日接待时长10分钟以内的数量为：" + count + "该销售店面数据分析中接待时长10分钟以内的数量为" + value);
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量");
         }
+
     }
 
     @Test(description = "10～30分钟组数=【前一日】【销售总监-PC-接待列表】10分钟<离店时间-接待时间<30分钟的数量")
     public void shopPanel_data_31() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                String userId = arr.get("userId");
-                int num = 0;
-                try {
-                    num = getReceptionTime(10, 30, userName);
-                } catch (ParseException e) {
-                    appendFailreason(e.toString());
+                CommonUtil.valueView(userName);
+                String sql;
+                if (userName.equals("总经理123456")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 30 + " and reception_duration>" + 10 + " and shop_id=" + shopId;
+                } else {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 30 + " and reception_duration>" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
+                String userId = arr.get("userId");
+                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                long count = (long) result.get(0).get("count(*)");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -972,11 +983,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = list.getJSONObject(i).getInteger("value");
                     }
                 }
-                CommonUtil.valueView(num, value);
-                Preconditions.checkArgument(num == value, userName + "昨日接待时长10～30分钟之内的数量为：" + num + "该销售店面数据分析中接待时长10～30分钟的数量为" + value);
+                CommonUtil.valueView(count, value);
+                Preconditions.checkArgument(count >= value, userName + "昨日接待时长10～30分钟之内的数量为：" + count + "该销售店面数据分析中接待时长10～30分钟的数量为" + value);
                 CommonUtil.log(userName + "跑完");
             });
-
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -987,18 +997,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<离店时间-接待时间<60分钟的数量")
     public void shopPanel_data_32() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                String userId = arr.get("userId");
-                CommonUtil.valueView(arr.get("userName"));
-                int num = 0;
-                try {
-                    num = getReceptionTime(30, 60, userName);
-                } catch (ParseException e) {
-                    appendFailreason(e.toString());
+                CommonUtil.valueView(userName);
+                String sql;
+                if (userName.equals("总经理123456")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 60 + " and reception_duration>" + 30 + " and shop_id=" + shopId;
+                } else {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 60 + " and reception_duration>" + 30 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
+                String userId = arr.get("userId");
+                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                long count = (long) result.get(0).get("count(*)");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1006,8 +1019,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = list.getJSONObject(i).getInteger("value");
                     }
                 }
-                CommonUtil.valueView(num, value);
-                Preconditions.checkArgument(num == value, userName + "昨日接待时长30～60分钟之内的数量为：" + num + "该销售店面数据分析中接待时长30～60分钟的数量为" + value);
+                CommonUtil.valueView(count, value);
+                Preconditions.checkArgument(count >= value, userName + "昨日接待时长30～60分钟之内的数量为：" + count + "该销售店面数据分析中接待时长30～60分钟的数量为" + value);
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
@@ -1020,17 +1033,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "60～120分钟内组数=【前一日】【销售总监-PC-接待列表】60分钟<离店时间-接待时间<120分钟的数量")
     public void shopPanel_data_33() {
         logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                String userId = arr.get("userId");
-                int num = 0;
-                try {
-                    num = getReceptionTime(60, 120, userName);
-                } catch (ParseException e) {
-                    appendFailreason(e.toString());
+                CommonUtil.valueView(userName);
+                String sql;
+                if (userName.equals("总经理123456")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 120 + " and reception_duration>" + 60 + " and shop_id=" + shopId;
+                } else {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 120 + " and reception_duration>" + 60 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
+                String userId = arr.get("userId");
+                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                long count = (long) result.get(0).get("count(*)");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1038,8 +1055,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = list.getJSONObject(i).getInteger("value");
                     }
                 }
-                CommonUtil.valueView(num, value);
-                Preconditions.checkArgument(num == value, userName + "昨日接待时长60～120分钟之内的数量为：" + num + "该销售店面数据分析中接待时长60～120分钟的数量为" + value);
+                CommonUtil.valueView(count, value);
+                Preconditions.checkArgument(count >= value, userName + "昨日接待时长60～120分钟之内的数量为：" + count + "该销售店面数据分析中接待时长60～120分钟的数量为" + value);
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
@@ -1052,18 +1069,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "大于120分钟组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间>120分钟的数量")
     public void shopPanel_data_34() {
         logger.logCaseStart(caseResult.getCaseName());
-        double c = Double.POSITIVE_INFINITY;
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             List<Map<String, String>> array = new PublicMethod().getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                String userId = arr.get("userId");
-                int num = 0;
-                try {
-                    num = getReceptionTime(120, (int) c, userName);
-                } catch (ParseException e) {
-                    appendFailreason(e.toString());
+                CommonUtil.valueView(userName);
+                String sql;
+                if (userName.equals("总经理123456")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>" + 120 + " and reception_start_time is not null and shop_id=" + shopId;
+                } else {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>" + 120 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
+                String userId = arr.get("userId");
+                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                long count = (long) result.get(0).get("count(*)");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1071,8 +1091,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = list.getJSONObject(i).getInteger("value");
                     }
                 }
-                CommonUtil.valueView(num, value);
-                Preconditions.checkArgument(num == value, userName + "昨日接待时长120分钟以上的数量为：" + num + "该销售店面数据分析中接待时长120分钟以上的数量为" + value);
+                CommonUtil.valueView(count, value);
+                Preconditions.checkArgument(count >= value, userName + "昨日接待时长120分钟以上的数量为：" + count + "该销售店面数据分析中接待时长120分钟以上的数量为" + value);
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
@@ -1080,37 +1100,6 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("大于120分钟组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间>120分钟的数量");
         }
-    }
-
-    /**
-     * 区间接待时长总数
-     *
-     * @param leftTime      左区间时间
-     * @param rightTime     右区间时间
-     * @param receptionSale 接待销售
-     */
-    private int getReceptionTime(int leftTime, int rightTime, String receptionSale) throws ParseException {
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
-        int num = 0;
-        int total = crm.receptionPage("", "", "PRE_SALES", 1, 10).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.receptionPage("", "", "PRE_SALES", i, 100).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("reception_date").equals(date)
-                        && list.getJSONObject(j).getString("reception_sale").contains(receptionSale)) {
-                    String receptionTime = list.getJSONObject(j).getString("reception_time");
-                    String leaveTime = list.getJSONObject(j).getString("leave_time");
-                    CommonUtil.valueView(receptionTime, leaveTime);
-                    int x = new DateTimeUtil().calTimeHourDiff(receptionTime, leaveTime);
-                    if (x > leftTime && x < rightTime) {
-                        num++;
-                    }
-                    CommonUtil.log("分割线");
-                }
-            }
-        }
-        return num;
     }
 
     @Test(description = "存量客户分析页--【各时间段+各车型筛选】个人车主百分比+公司车主百分比=100% 或 0%")
@@ -1341,7 +1330,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量")
+    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量",enabled = false)
     public void stockCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);

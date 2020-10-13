@@ -439,12 +439,12 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String endDate = DateTimeUtil.getFormat(new Date());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -5);
         try {
-            JSONObject response = crm.returnVisitTaskPage(1, 10, startDate, endDate);
+            CommonUtil.login(zjl);
+            JSONObject response = crm.returnVisitTaskPage(1, 10, endDate, endDate);
             int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.returnVisitTaskPage(i, 100, startDate, endDate).getJSONArray("list");
+                JSONArray list = crm.returnVisitTaskPage(i, 100, endDate, endDate).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     String customerPhone = list.getJSONObject(j).getString("customer_phone");
                     Preconditions.checkArgument(!StringUtils.isEmpty(customerPhone), "我的回访存在空电话号码");

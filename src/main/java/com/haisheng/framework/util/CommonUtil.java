@@ -104,9 +104,18 @@ public class CommonUtil {
         if (String.valueOf(str.charAt(str.length() - 2)).equals("0")) {
             stringBuilder.append(str);
             stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length() - 1, "");
-            return stringBuilder.toString();
+            String s = stringBuilder.toString();
+            return getS(s, ",");
         }
-        return str;
+        return getS(str, ",");
+    }
+
+    private static String getS(final String y, final String s) {
+        String result = y;
+        if (y.contains(s)) {
+            result = y.replace(y.substring(y.indexOf(","), y.indexOf(",") + 1), "");
+        }
+        return result;
     }
 
     /**
