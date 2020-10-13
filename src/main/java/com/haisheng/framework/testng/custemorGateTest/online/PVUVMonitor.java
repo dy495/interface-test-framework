@@ -427,20 +427,35 @@ public class PVUVMonitor {
 
     }
 
-    private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
-        int diff       = current - history;
-        String dingMsg = "";
+    private String getHourRange(String hour) {
         String hourRange = "";
-        diffDataUnit.currentValue = current;
-        diffDataUnit.historyValue = history;
-        diffDataUnit.diffValue    = diff;
+        String lastHour = "";
 
         if (hour.equals("all")) {
             hourRange = "00:00 ~ 23:59";
         } else {
-            int lastHour = Integer.parseInt(hour) - 1;
+            int hourInt = Integer.parseInt(hour);
+            int lastHourInt = hourInt - 1;
+            if (hourInt > 10) {
+                lastHour = String.valueOf(lastHourInt);
+            } else if (hourInt == 10){
+                lastHour = "0" + lastHourInt;
+            } else {
+                hour = "0" + hour;
+                lastHour = "0" + lastHourInt;
+            }
             hourRange = lastHour + ":00 ~ " + hour + ":00";
         }
+
+        return hourRange;
+    }
+    private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
+        int diff       = current - history;
+        String dingMsg = "";
+        String hourRange = getHourRange(hour);
+        diffDataUnit.currentValue = current;
+        diffDataUnit.historyValue = history;
+        diffDataUnit.diffValue    = diff;
 
         if (0 == current) {
             //数据为0，直接报警
@@ -602,6 +617,8 @@ public class PVUVMonitor {
         int diffSize = 0;
         String diffComDetail = "";
         int indexBegin = (key+"-").length();
+        String hourRange = getHourRange(HOUR);
+
         for (int i=0; i<recordList.size(); i++) {
             String record = recordList.get(i);
             if (record.contains("数据量为 0")) {
@@ -614,7 +631,7 @@ public class PVUVMonitor {
         }
 
         if (zeroSize > 0) {
-            summary += "\n以下" + zeroSize + "个店铺数据量为0\n\n" + zeroComDetail;
+            summary += "\n以下" + zeroSize + "个店铺【" + hourRange + "】时段数据量为0\n\n" + zeroComDetail;
 
             if (key.contains("百果园")) {
                 //百果园数据为0且只在10点时段，单独发到【百果园盒子准备】群
@@ -625,7 +642,7 @@ public class PVUVMonitor {
             }
         }
         if (diffSize > 0) {
-            summary += "\n以下" + diffSize + "个店铺数据量波动过大\n\n" + diffComDetail;
+            summary += "\n以下" + diffSize + "个店铺【" + hourRange + "】时段数据量波动过大\n\n" + diffComDetail;
         }
 
         alarmPush.onlineMonitorPvuvAlarm(summary);
