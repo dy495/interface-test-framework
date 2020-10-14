@@ -969,9 +969,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.equals("总经理123456")) {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 30 + " and reception_duration>" + 10 + " and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 30 + " and reception_duration>=" + 10 + " and shop_id=" + shopId;
                 } else {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 30 + " and reception_duration>" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 30 + " and reception_duration>=" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
                 String userId = arr.get("userId");
                 List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);

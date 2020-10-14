@@ -43,7 +43,7 @@ public class PublicMethodOnline {
         }
         Map<String, String> map = new HashMap<>(16);
         map.put("userId", "");
-        map.put("userName", "总经理123456");
+        map.put("userName", "总经理");
         map.put("account", "zjl");
         array.add(map);
         return array;

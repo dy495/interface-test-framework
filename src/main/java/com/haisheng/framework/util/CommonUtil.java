@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -90,14 +91,11 @@ public class CommonUtil {
      * @return result
      */
     public static String getPercent(double a, double b) {
-        if (a == 0 && b == 0) {
+        if (b == 0) {
             return "0.0%";
         }
-        if (b == 0 && a != 0) {
-            return "0.0%";
-        }
+        double c = new BigDecimal(a / b).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
         StringBuilder stringBuilder = new StringBuilder();
-        double c = a / b;
         NumberFormat nf = NumberFormat.getPercentInstance();
         nf.setMinimumFractionDigits(2);
         String str = nf.format(c);

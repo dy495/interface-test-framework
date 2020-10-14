@@ -1094,8 +1094,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * 区间接待时长总数
      *
-     * @param leftTime  左区间时间
-     * @param rightTime 右区间时间
+     * @param leftTime      左区间时间
+     * @param rightTime     右区间时间
      * @param receptionSale 接待销售
      */
     private int getReceptionTime(int leftTime, int rightTime, String receptionSale) throws ParseException {
