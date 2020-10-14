@@ -14,7 +14,7 @@ public class ReceptionAfterCustomerListScene extends BaseScene {
     private final String searchDateEnd;
     private final String searchDateStart;
     @Builder.Default
-    private Integer page = 1;
+    private final Integer page = 1;
     @Builder.Default
     private final Integer size = 10;
 

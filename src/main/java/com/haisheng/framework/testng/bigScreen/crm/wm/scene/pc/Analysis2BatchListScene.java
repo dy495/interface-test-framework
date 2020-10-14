@@ -14,7 +14,7 @@ import lombok.Builder;
 public class Analysis2BatchListScene extends BaseScene {
 
     @Builder.Default
-    private int page = 1;
+    private final int page = 1;
     @Builder.Default
     private final int size = 10;
     private final String month;
