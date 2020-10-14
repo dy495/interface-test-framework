@@ -354,6 +354,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                 String phoneTemp = data.getJSONObject(0).getString("customer_phone_number");
                 if (phoneTemp != null) {
                     customer_phone_number = phoneTemp;
+                    break;
                 }
             }
             JSONArray list = crm.deliverSelect(1, 10, customer_name).getJSONArray("list");
@@ -459,7 +460,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.customerMyReceptionList(customer_name, "", "", 1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument(nameSelect.equals(customer_name), "我的接待按客户名称查询，结果错误");
+                Preconditions.checkArgument(nameSelect.contains(customer_name), "我的接待按客户名称查询，结果错误");
             }
             JSONArray listPhone = crm.customerMyReceptionList(customer_phone_number, "", "", 1, 10).getJSONArray("list");
             for (int i = 0; i < listPhone.size(); i++) {
@@ -556,12 +557,13 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                 String phoneTemp = data.getJSONObject(i).getString("customer_phone_number");
                 if (phoneTemp != null) {
                     customer_phone_number = phoneTemp;
+                    break;
                 }
             }
             JSONArray list = crm.driverSelect(1, 10, customer_name).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument(nameSelect.equals(customer_name), "交车按客户名称查询，结果错误");
+                Preconditions.checkArgument(nameSelect.contains(customer_name), "交车按客户名称查询，结果错误");
             }
             JSONArray listPhone = crm.driverSelect(1, 10, customer_phone_number).getJSONArray("list");
             for (int i = 0; i < listPhone.size(); i++) {
@@ -639,12 +641,13 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                 String phoneTemp = data.getJSONObject(i).getString("customer_phone");
                 if (phoneTemp != null) {
                     customer_phone = phoneTemp;
+                    break;
                 }
             }
             JSONArray list = crm.customerSelect(1, 10, customer_name).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument(nameSelect.equals(customer_name), "客户按客户名称查询，结果错误");
+                Preconditions.checkArgument(nameSelect.contains(customer_name), "客户按客户名称查询，结果错误");
             }
             JSONArray listPhone = crm.customerSelect(1, 10, customer_phone).getJSONArray("list");
             for (int i = 0; i < listPhone.size(); i++) {
@@ -735,7 +738,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，是小程序最新车主风采 ok
      * @date :2020/8/3 16:46
      **/
-    @Test
+    @Test(priority = 1)
     public void carOwerNewst() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -775,7 +778,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :新建交车授权，applet车主风采列表+1 ok
      * @date :2020/8/3 18:25
      **/
-//    @Test
+    @Test(priority = 2)
     public void carOwerListUp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -957,7 +960,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :试驾 今日数=列表电话去重数  TODO：
+     * @description :试驾 今日数=列表电话去重数
      * @date :2020/7/31 13:55
      **/
     @Test

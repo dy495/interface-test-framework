@@ -1207,7 +1207,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--服务顾问app活动报名")
+//    @Test(description = "售后--服务顾问app活动报名")
     public void taskactivityDeletAfter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

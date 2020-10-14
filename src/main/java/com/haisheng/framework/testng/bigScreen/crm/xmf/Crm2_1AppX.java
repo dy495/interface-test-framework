@@ -1101,6 +1101,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
             fr.checkCode=false;
+            fr.remark=new JSONArray();
             String userLoginName = object.getString("userLoginName");
             crm.login(userLoginName,pp.adminpassword);
             String []plateabn={"苏BJ123","苏BJ123456","BJ12345","京1234567","京bj12345"}; //6位/9位/无汉字/无大写字母/小写字母
@@ -1130,7 +1131,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
            JSONObject json;
            json = pf.creatCustOld(pp.customer_phone_numberO);
            finishReceive fr = new finishReceive();
-           fr.name = pp.customer_name;
+           fr.name = "试驾编辑";
            fr.reception_id = json.getString("id");
            fr.customer_id = json.getString("customerId");
            fr.belongs_sale_id = json.getString("sale_id");
@@ -1147,6 +1148,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
                if (timelist.size() != 0) {
                    dd.apply_time = timelist.getString(0);
+                   break;
                }
            }
            dd.receptionId=fr.reception_id;
@@ -1155,9 +1157,16 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
            dd.customerName=pp.abString;   //名字超过50
            dd.checkCode=false;
            int code =crm.driveradd6(dd).getInteger("code");
-
-
+           dd.phone="159039404921";
+           dd.customerName="编辑试驾";
+           int code2 =crm.driveradd6(dd).getInteger("code");
+           dd.phone=pp.customer_phone_numberO;
+           dd.address=pp.abString;
+           int code3 =crm.driveradd6(dd).getInteger("code");
            crm.finishReception3(fr);
+           Preconditions.checkArgument(code==1001,"试驾客户名超过50个字");
+           Preconditions.checkArgument(code2==1001,"试驾客户手机号超过50个字");
+           Preconditions.checkArgument(code3==1001,"试驾客户地址超过50个字");
        } catch (AssertionError | Exception e) {
            appendFailreason(e.toString());
        } finally {

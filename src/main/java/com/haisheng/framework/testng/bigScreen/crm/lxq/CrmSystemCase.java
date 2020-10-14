@@ -149,7 +149,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("日常入场车牌号上传");
         }
     }
-    @Test
+//    @Test
     public void heiping(){
         for(int i=0;i<2;i++){
             String carNum = "京B1DF9"+i;    //试驾车已注销

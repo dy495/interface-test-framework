@@ -224,6 +224,7 @@ public class PackFunction {
             JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
             if (timelist.size() != 0) {
                 apply_time = timelist.getString(0);
+                break;
             }
         }
 
