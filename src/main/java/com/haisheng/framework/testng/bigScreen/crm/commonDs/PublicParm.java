@@ -46,5 +46,7 @@ public class PublicParm {
     public String reception_name = "xx";  //接待人员名
     public String reception_phone = "15037286013"; //接待人员电话
 
+    public String abString ="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十12";
+
 
 }

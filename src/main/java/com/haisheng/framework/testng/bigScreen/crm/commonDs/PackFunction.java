@@ -219,12 +219,13 @@ public class PackFunction {
         JSONArray list=crm.testDriverList().getJSONArray("list");
         String apply_time="";
         Long test_drive_car= dt.getHistoryDateTimestamp(1);
-        for(int i=0;i<list.size();i++){
-            test_drive_car=list.getJSONObject(i).getLong("test_car_id");
+        for(int i=0;i<list.size();i++) {
+            test_drive_car = list.getJSONObject(i).getLong("test_car_id");
             JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
-            if(timelist.size()!=0){
-                apply_time= timelist.getString(0);
+            if (timelist.size() != 0) {
+                apply_time = timelist.getString(0);
             }
+        }
 
         crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car);
         //销售总监登陆
@@ -232,7 +233,6 @@ public class PackFunction {
         int driverid = crm.testDriverAppList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getInteger("id");
         crm.driverAudit(driverid, audit_status);
         //最后销售要再登陆一次
-    }
     }
 
     //订车+交车封装  copy lxq debug ok

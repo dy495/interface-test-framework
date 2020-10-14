@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShop
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.selectTest;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -1293,7 +1294,43 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    public JSONObject driveradd6(destDriver dd) throws Exception {
+        String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
+        JSONObject json1 = new JSONObject();
+        json1.put("reception_id", dd.receptionId);
+        json1.put("customer_id", dd.customer_id);
+        json1.put("customer_name", dd.customerName);
+        json1.put("customer_gender", dd.customer_gender);
+        json1.put("customer_phone_number", dd.phone);
+        json1.put("car_model", dd.test_drive_car);
+        json1.put("country", dd.country);//
+        json1.put("city", dd.city);//
+        json1.put("address", dd.address);//
+        json1.put("activity", 1);//
+        json1.put("ward_name_url", dd.driverLicensePhoto1Url);
+        json1.put("driver_license_photo_1_url", dd.driverLicensePhoto1Url);
+        json1.put("driver_license_photo_2_url", dd.driverLicensePhoto1Url);
+        json1.put("electronic_contract_url", dd.driverLicensePhoto1Url);
+        json1.put("sign_date", dd.sign_date);
+        json1.put("sign_time", dd.sign_time);
+        json1.put("call", "MEN");      //
+        json1.put("test_drive_time", dd.apply_time);
+        json1.put("is_fill", dd.is_fill);
+        json1.put("test_drive_car", dd.test_drive_car);
+        String json = json1.toJSONString();
+        String res = "";
+        JSONObject result;
+        if(dd.checkCode){
+            res= httpPostWithCheckCode(url, json, IpPort);
+            result=JSON.parseObject(res).getJSONObject("data");
+        }
+        else{
+            res= httpPost(url, json, IpPort);
+            result=JSON.parseObject(res);
+        }
+        return result;
+    }
     //删除试驾
     public JSONObject driverDel(long id) throws Exception {
         String url = "/porsche/daily-work/test-drive/delete";
@@ -5199,6 +5236,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "苏BJ123456",//9位
         };
     }
+    //文章投放位置
+    @DataProvider(name = "NUM")
+    public static Object[] num() {
+        return new Integer []{
+                1,
+                3,
+        };
+    }
 
     //前台展厅接待查询
     public JSONObject qtreceptionPage(String customerNamePhone, String startTime, String endTime, String page, String size) {
@@ -5407,13 +5452,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //前台标记非客
-    public JSONObject markNocustomer(String analysis_customer_id) throws Exception {
+    public JSONObject markNocustomer(JSONArray list) throws Exception {
         String url = "/porsche/app/customer/nonGuest";
-        JSONObject id=new JSONObject();
-        id.put("analysis_customer_id",analysis_customer_id);
-
-        JSONArray list=new JSONArray();
-        list.add(id);
 
         JSONObject json = new JSONObject();
         json.put("list", list);

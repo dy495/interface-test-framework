@@ -324,16 +324,16 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :添加重复车牌（车牌7位）失败
      * @date :2020/7/10 18:03
      **/
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "豫GBBA96";
+            String plate_number = "沪W336699";
 //            crm.myCarAdd(car_type, plate_number, car_model);
             Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
-            JSONArray listB = crm.myCarList().getJSONArray("list");
-            Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
-            crm.myCarDelete(Integer.toString(car_idBefore));
+//            JSONArray listB = crm.myCarList().getJSONArray("list");
+//            Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
+//            crm.myCarDelete(Integer.toString(car_idBefore));
             checkArgument(code == 1001, "添加相同车牌应该失败");
 
         } catch (AssertionError | Exception e) {
@@ -1070,7 +1070,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :编辑车辆
      * @date :2020/10/10 16:00
      **/
-    @Test()
+    @Test(priority = 1)
     public void editplate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

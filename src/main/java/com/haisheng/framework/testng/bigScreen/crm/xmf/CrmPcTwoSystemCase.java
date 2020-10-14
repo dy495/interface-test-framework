@@ -377,7 +377,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :banner 下拉菜单中数==内容运营文章数（除已下架、已过期）  //TODO:四个位置之和
      * @date :2020/8/2 15:49
      **/
-//    @Test(enabled = false)
+    @Test()
     public void bannerAndArticle(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -400,7 +400,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 count = count + total;
             }
             //车型推荐文章状态不是异常的文章数
-            JSONObject recomend=crm.carReCommendList(1,10);
+            JSONObject recomend=crm.carReCommendList(1,100);
             int tt=recomend.getInteger("total");
             JSONArray list=recomend.getJSONArray("list");
             for(int z=0;z<list.size();z++){
