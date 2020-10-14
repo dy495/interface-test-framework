@@ -561,7 +561,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=试驾",enabled = false)
+    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=试驾", enabled = false)
     public void shopPanel_data_39() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -573,7 +573,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=订单",enabled = false)
+    @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】接待>=订单", enabled = false)
     public void shopPanel_data_40() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -930,10 +930,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String userName = arr.get("userName");
                 CommonUtil.valueView(userName);
                 String sql;
-                if (userName.equals("总经理123456")) {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 10 + " and shop_id=" + shopId;
+                if (userName.contains("总经理")) {
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 10 + " and shop_id=" + shopId;
                 } else {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 10 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
                 String userId = arr.get("userId");
                 List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
@@ -1005,9 +1005,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.equals("总经理123456")) {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 60 + " and reception_duration>" + 30 + " and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 60 + " and reception_duration>=" + 30 + " and shop_id=" + shopId;
                 } else {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 60 + " and reception_duration>" + 30 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 60 + " and reception_duration>=" + 30 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
                 String userId = arr.get("userId");
                 List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
@@ -1041,9 +1041,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.equals("总经理123456")) {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 120 + " and reception_duration>" + 60 + " and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 120 + " and reception_duration>=" + 60 + " and shop_id=" + shopId;
                 } else {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<=" + 120 + " and reception_duration>" + 60 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration<" + 120 + " and reception_duration>=" + 60 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
                 String userId = arr.get("userId");
                 List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
@@ -1077,9 +1077,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.equals("总经理123456")) {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>" + 120 + " and reception_start_time is not null and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>=" + 120 + " and reception_start_time is not null and shop_id=" + shopId;
                 } else {
-                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>" + 120 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
+                    sql = "select count(*) from t_porsche_today_reception_data where reception_date='" + date + "' and reception_duration>=" + 120 + " and reception_sale='" + userName + "' and shop_id=" + shopId;
                 }
                 String userId = arr.get("userId");
                 List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
@@ -1330,7 +1330,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量",enabled = false)
+    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量", enabled = false)
     public void stockCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
