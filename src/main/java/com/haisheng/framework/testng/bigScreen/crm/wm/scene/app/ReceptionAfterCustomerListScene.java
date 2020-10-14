@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.scene.app;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.BaseScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
@@ -14,7 +14,7 @@ public class ReceptionAfterCustomerListScene extends BaseScene {
     private final String searchDateEnd;
     private final String searchDateStart;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
     private final Integer size = 10;
 

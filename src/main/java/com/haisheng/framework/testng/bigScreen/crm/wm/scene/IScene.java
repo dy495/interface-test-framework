@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.scene.base;
+package com.haisheng.framework.testng.bigScreen.crm.wm.scene;
 
 import com.alibaba.fastjson.JSONObject;
 

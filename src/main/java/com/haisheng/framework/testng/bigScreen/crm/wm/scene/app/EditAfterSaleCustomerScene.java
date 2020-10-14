@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.scene.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.model.experiment.enumerator.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.base.BaseScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
