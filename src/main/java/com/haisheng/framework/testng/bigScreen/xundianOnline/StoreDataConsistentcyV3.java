@@ -1318,40 +1318,40 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //    }
 
 
-    /**
-     *
-     * ====================uv与pv之间的比例要保持在1：4的范围间========================
-     * */
-    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void uvWithPvScrole(long shop_id) {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
-            Integer uv = iPvlist.getJSONObject(1).getInteger("value");
-            Integer pv = iPvlist.getJSONObject(0).getInteger("value");
-            int scrole = 0;
-            if(pv !=0 && uv!=0){
-                 scrole =pv/uv ;
-            }else{
-                uv = uv+1;
-                pv = pv+1;
-                scrole= pv/uv;
-            }
-            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv +"。报错门店的shopId="+shop_id);
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
-        }
-
-    }
+//    /**
+//     *
+//     * ====================uv与pv之间的比例要保持在1：4的范围间========================
+//     * */
+//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void uvWithPvScrole(long shop_id) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //获取今日实时得到访人数uv
+//            JSONArray iPvlist = Md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
+//            Integer uv = iPvlist.getJSONObject(1).getInteger("value");
+//            Integer pv = iPvlist.getJSONObject(0).getInteger("value");
+//            int scrole = 0;
+//            if(pv !=0 && uv!=0){
+//                 scrole =pv/uv ;
+//            }else{
+//                uv = uv+1;
+//                pv = pv+1;
+//                scrole= pv/uv;
+//            }
+//            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv +"。报错门店的shopId="+shop_id);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
+//        }
+//
+//    }
 
 
     /**
