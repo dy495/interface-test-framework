@@ -1806,7 +1806,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                         if (list1.getJSONObject(j).getString("car_style").equals(e.getStyleId())) {
                             int customerId = list1.getJSONObject(j).getInteger("customer_id");
                             IScene scene1 = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
-                            if (crm.invokeApi(scene1).getString("district_name").contains(province)) {
+                            if (crm.invokeApi(scene1).getString("district_name") != null
+                                    && crm.invokeApi(scene1).getString("district_name").contains(province)) {
                                 appCustomerNum++;
                             }
                         }
