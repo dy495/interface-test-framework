@@ -351,17 +351,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void deleteMycar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "豫GBBA25";
-            crm.myCarAdd(car_type, plate_number, car_model);
+            String plate_number = "豫GBBA24";
+            String my_car_id=crm.myCarAdd(car_type, plate_number, car_model).getString("my_car_id");
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            int count;
-            if (list == null || list.size() == 0) {
-                throw new Exception("暂无车辆可删除");
-            } else {
-                count = list.size();
-            }
-            String my_car_id = list.getJSONObject(0).getString("my_car_id");
+            int count=list.size();
             crm.myCarDelete(my_car_id);
             JSONArray listB = crm.myCarList().getJSONArray("list");
             int aftercount;
@@ -385,7 +379,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :【我的】添加车辆，10辆边界
      * @date :2020/7/27 19:43
      **/
-    @Test(priority = 3)
+    @Test(priority = 2)
     public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -399,18 +393,17 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 count = list.size();
             }
             int limit = 10 - count;
+            JSONArray carId=new JSONArray();
             for (int i = 0; i < limit; i++) {
                 String plate_number;
                 plate_number = "豫GBBA3" + i;
-                crm.myCarAdd(car_type, plate_number, car_model);
+                int car_id=crm.myCarAdd(car_type, plate_number, car_model).getInteger("my_car_id");
+                carId.add(car_id);
             }
-            //删除新增的车辆
-            JSONArray listB = crm.myCarList().getJSONArray("list");
-            for (int j = 0; j < limit; j++) {
-                Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
+            for (int j = 0; j < carId.size(); j++) {
+                Integer car_id = carId.getInteger(j);
                 crm.myCarDelete(Integer.toString(car_id));
             }
-//            JSONArray listq = crm.myCarList().getJSONArray("list");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -436,9 +429,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 count = list.size();
             }
             int limit = 10 - count;
+            JSONArray carId=new JSONArray();
             for (int i = 0; i < limit; i++) {
                 String plate_number = "吉GBBA3" + i;
-                crm.myCarAddCode(car_type, car_model, plate_number);
+                int car_id=crm.myCarAdd(car_type,  plate_number,car_model).getInteger("my_car_id");
+                carId.add(car_id);
             }
             String plate_number = "豫GBBA11";
             Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
@@ -447,9 +442,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 return;
             } else {
                 //删除新增的车辆
-                JSONArray listB = crm.myCarList().getJSONArray("list");
-                for (int j = 0; j < limit; j++) {
-                    Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
+                for (int j = 0; j < carId.size(); j++) {
+                    Integer car_id = carId.getInteger(j);
                     crm.myCarDelete(Integer.toString(car_id));
                 }
 //                JSONArray listq = crm.myCarList().getJSONArray("list");
@@ -775,7 +769,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :报名活动，小程序报名人数++
      * @date :2020/7/12 14:16
      **/
-    @Test(priority = 5)
+    @Test(priority = 6)
     public void checkActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1074,8 +1068,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void editplate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate="豫GBBA96";
-            Long code = crm.appletEditCar(pp.mycarId, car_type, plate, car_model).getLong("code");
+            String plate="沪W336699";
+            Long code = crm.appletEditCar(pp.mycarId2, car_type, plate, car_model).getLong("code");
             $Preconditions.checkArgument(code == 1000, "编辑车辆接口报错");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -1102,6 +1096,48 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             saveData("新建车辆，车牌号异常验证");
         }
     }
+    //预约试驾/维修/保养  长度/非数字---前端校验
+//    @Test()
+    public void yuyueAb() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long code1 = crm.appointmentTestDrivecode("MALE", pp.abString, customer_phone_number, appointment_date, car_type, car_model).getLong("code");
+            Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约试驾，名称长度异常校验");
+        }
+    }
+//    @Test()
+    public void yuyueAb2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long timelist = pf.appointmentTimeListO("MAINTAIN",dt.getHistoryDate(2)).getLong("time_id");
+            int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, appointment_date, "09:00", timelist).getInteger("code");
+            Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约维修，名称长度异常校验");
+        }
+    }
+    //预约试驾后：  pc销售总监总经理权限登录
+
+    @Test(dataProvider = "PHONE", dataProviderClass = CrmScenarioUtil.class)
+    public void yuyuephoneAb(String phone) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long code2= crm.appointmentTestDrivecode("MALE", pp.customer_name, phone, appointment_date, car_type, car_model).getLong("code");
+            sleep(5);
+            Preconditions.checkArgument(code2 == 1001, "预约试驾，电话异常仍成功");
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约试驾，电话验证异常");
+        }
+    }
+
 
     //@Test
     public void current() {
@@ -1158,36 +1194,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :我的车辆页==添加车辆后我的预约维修、保养  好像是一个接口。。。。。。
-     * @date :2020/7/10 22:29
-     **/
-
-    //    public JSONObject addCheckListEmpty(String customer_name,String customer_phone,String appointment_date,Integer car_type, String emptyPara, String message) throws Exception {
-//        String url = "/WeChat-applet/porsche/a/appointment/test-drive";
-//
-//        JSONObject json1=new JSONObject();
-//        json1.put("customer_name",customer_name);
-//        json1.put("customer_phone_number",customer_phone);
-//        json1.put("appointment_date",appointment_date);
-//        json1.put("car_type",car_type);
-//        json1.put(emptyPara, "");
-//
-//        String json=json1.toJSONString();
-//
-////        JSONObject temp = JSON.parseObject(json);
-////        temp.put(emptyPara,"");
-////
-////        json = temp.toJSONString();
-//
-////        String res = httpPost(url,stringUtil.trimStr(json),getProscheShop());
-//        String res = httpPost(url,json,crm.IpPort);
-//
-//        checkCode(res, StatusCode.BAD_REQUEST, "预约试驾，" + emptyPara + "为空！");
-//        checkMessage("预约试驾，" + emptyPara + "为空！", res, message);
-//
-//        return JSON.parseObject(res).getJSONObject("data");
-//    }
     @DataProvider(name = "EMPTY_PARA_CHECK_LIST")
     public Object[][] emptyParaCheckList() {
         return new Object[][]{

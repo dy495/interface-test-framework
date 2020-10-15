@@ -362,7 +362,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 //            phone2.put("phone_order", 1);
 //            PhoneList.add(0, phone1);
 //            PhoneList.add(1, phone2);
-            pm.remark=new JSONArray();
+            pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             crm.finishReception3(pm);
             Preconditions.checkArgument(total - total2 == 1, "变更接待，原接待销售接待列表-1");
@@ -387,41 +387,42 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void nonGuestListThere(int num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String time=dt.getHistoryDate(0);
+            String time = dt.getHistoryDate(0);
             //标记前未接待离店列表数
-            JSONArray date=crm.nonCustomerList(time,time,"1","10");
-            int total=date.size();
+            JSONArray date = crm.nonCustomerList(time, time, "1", "10");
+            int total = date.size();
 
-            JSONArray list=crm.markcustomerList().getJSONArray("list");
-            String analysis_customer_id="";
-            int count=0;
-            JSONArray idlist=new JSONArray();
-            for(int i=0;i<list.size();i++){
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id = "";
+            int count = 0;
+            JSONArray idlist = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
                 String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
-                if(customer_identity_name.equals("新客")||customer_identity_name.equals("未接待离店")){
-                    analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
-                    JSONObject id=new JSONObject();
-                    id.put("analysis_customer_id",analysis_customer_id);
+                if (customer_identity_name.equals("新客") || customer_identity_name.equals("未接待离店")) {
+                    analysis_customer_id = list.getJSONObject(i).getString("analysis_customer_id");
+                    JSONObject id = new JSONObject();
+                    id.put("analysis_customer_id", analysis_customer_id);
                     idlist.add(id);
                     count++;
-                    if(count>=num){
-                        break;}
+                    if (count >= num) {
+                        break;
+                    }
                 }
             }
-            if(idlist.size()!=num){
+            if (idlist.size() != num) {
                 return;
             }
             crm.markNocustomer(idlist);
             //标记后
-            int totalA=crm.nonCustomerList(time,time,"1","100").size();
-            for(int i=0;i<idlist.size();i++){
-                String analysis_customer_idL=idlist.getJSONObject(i).getString("analysis_customer_id");
+            int totalA = crm.nonCustomerList(time, time, "1", "100").size();
+            for (int i = 0; i < idlist.size(); i++) {
+                String analysis_customer_idL = idlist.getJSONObject(i).getString("analysis_customer_id");
                 crm.deleteNocustomer(analysis_customer_idL);
             }
             //删除未接待离店
-            int totalB=crm.nonCustomerList(time,time,"1","100").size();
-            Preconditions.checkArgument(totalA-total==num,"标记为非客后，非客列表+1");
-            Preconditions.checkArgument(totalA-total==num,"删除标记的非客后，非客列表-1");
+            int totalB = crm.nonCustomerList(time, time, "1", "100").size();
+            Preconditions.checkArgument(totalA - total == num, "标记为非客后，非客列表+1");
+            Preconditions.checkArgument(totalA - total == num, "删除标记的非客后，非客列表-1");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -441,41 +442,42 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void nonReceiveGuestListThere(int num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String time=dt.getHistoryDate(0);
+            String time = dt.getHistoryDate(0);
             //标记前未接待离店列表数
-            JSONArray date=crm.nonReceptionList(time,time,"1","100");
-            int total=date.size();
+            JSONArray date = crm.nonReceptionList(time, time, "1", "100");
+            int total = date.size();
 
-            JSONArray list=crm.markcustomerList().getJSONArray("list");
-            String analysis_customer_id="";
-            int count=0;
-            JSONArray idlist=new JSONArray();
-            for(int i=0;i<list.size();i++){
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id = "";
+            int count = 0;
+            JSONArray idlist = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
                 String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
-                if(customer_identity_name.equals("新客")||customer_identity_name.equals("未接待离店")){
-                    analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
-                    JSONObject id=new JSONObject();
-                    id.put("analysis_customer_id",analysis_customer_id);
+                if (customer_identity_name.equals("新客") || customer_identity_name.equals("未接待离店")) {
+                    analysis_customer_id = list.getJSONObject(i).getString("analysis_customer_id");
+                    JSONObject id = new JSONObject();
+                    id.put("analysis_customer_id", analysis_customer_id);
                     idlist.add(id);
                     count++;
-                    if(count>=num){
-                    break;}
+                    if (count >= num) {
+                        break;
+                    }
                 }
             }
-            if(idlist.size()!=num){
+            if (idlist.size() != num) {
                 return;
             }
             crm.marknonReception(idlist);
             //标记后
-            int totalA=crm.nonReceptionList(time,time,"1","100").size();
-            for(int i=0;i<idlist.size();i++){
-                String analysis_customer_idL=idlist.getJSONObject(i).getString("analysis_customer_id");
+            int totalA = crm.nonReceptionList(time, time, "1", "100").size();
+            for (int i = 0; i < idlist.size(); i++) {
+                String analysis_customer_idL = idlist.getJSONObject(i).getString("analysis_customer_id");
                 crm.deleteNoReception(analysis_customer_idL);
             }
             //删除未接待离店
-            int totalB=crm.nonReceptionList(time,time,"1","100").size();
-            Preconditions.checkArgument(totalA-total==num,"标记为未接待离店后，未接待离店列表+1");
-            Preconditions.checkArgument(totalA-total==num,"删除标记的未接待离店后，未接待离店列表-1");
+            int totalB = crm.nonReceptionList(time, time, "1", "100").size();
+            Preconditions.checkArgument(totalA - total == num, "标记为未接待离店后，未接待离店列表+1");
+            Preconditions.checkArgument(totalA - total == num, "删除标记的未接待离店后，未接待离店列表-1");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -490,12 +492,112 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
      * @description :创建新客，变更接待
      * @date :2020/10/12 20:58
      **/
+    @Test()
+    public void changeReceptionNew() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取空闲销售，sale_id和接待列表数   o所属销售   2接待销售
+            JSONArray data = crm.freeSaleList().getJSONArray("list");
+            String sale_id = data.getJSONObject(0).getString("sale_id");
+            String sale_id2 = data.getJSONObject(1).getString("sale_id");
+
+            String loginTemp2 = pf.username(sale_id2);
+            crm.login(loginTemp2, pp.adminpassword);
+            //变更接待前接待销售接待列表数
+            int totalB2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+
+            JSONObject json = pf.creatCust();
+            String receiptId = json.getString("reception_id");
+            String customer_id = json.getString("customerId");
+            String belong_sale_id = json.getString("sale_id");
+            JSONArray PhoneList = json.getJSONArray("phoneList");
+
+            String loginTemp = pf.username(sale_id);
+            crm.login(loginTemp, pp.adminpassword);
+            //变更接待前 所属销售接待列表数
+            int totalB = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+
+            //前台登录，变更接待
+            crm.login(pp.qiantai, pp.qtpassword);
+            crm.changeReceptionSale(receiptId, sale_id2);
+
+            crm.login(loginTemp, pp.adminpassword);          //变更接待后原销售接待列表数
+            int totalA = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+
+            crm.login(loginTemp2, pp.adminpassword);   //变更接待后 接待销售接待列表数
+            int totalA2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+            //完成接待
+            crm.login(pp.qiantai, pp.qtpassword);
+            crm.changeReceptionSale(receiptId, belong_sale_id);
+
+            crm.login(loginTemp, pp.adminpassword);
+
+            finishReceive pm = new finishReceive();
+            pm.customer_id = customer_id;
+            pm.reception_id = receiptId;
+            pm.belongs_sale_id = belong_sale_id;
+            pm.name = pp.customer_name;
+            pm.reception_type = "FU";
+            pm.phoneList = PhoneList;
+            crm.finishReception3(pm);
+            Preconditions.checkArgument(totalB - totalA == 1, "变更接待，所属销售接待列表-1");
+            Preconditions.checkArgument(totalA2 - totalB2 == 1, "变更接待，接待销售接待列表+1");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("变更接待 ");
+        }
+    }
 
     /**
      * @description :非所属，变更接待，无法修改除备注意外功能
      * @date :2020/10/12 20:58
      **/
+//    @Test()  TODO:
+    public void changeReceptionNoedit() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取空闲销售，sale_id和接待列表数
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String loginTemp = pf.username(sale_id);
+            crm.login(loginTemp, pp.adminpassword);    //变更接待前 接待销售接待列表数
+            //创建老客接待，获取接待记录id;
+            JSONObject json = pf.creatCustOld(pp.chengeReceiptPhone);   //变更接待前 原销售接待列表数
+            String receiptId = json.getString("reception_id");
+            String customer_id = json.getString("customerId");
+            String belong_sale_id = json.getString("sale_id");
+            //完成接待
+            JSONArray PhoneList = json.getJSONArray("phoneList");
+            //前台登录，变更接待
+            crm.login(pp.qiantai, pp.qtpassword);
+            crm.changeReceptionSale(receiptId, sale_id);
 
+            crm.login(loginTemp, pp.adminpassword);
+
+            finishReceive pm = new finishReceive();
+            pm.customer_id = customer_id;
+            pm.reception_id = receiptId;
+            pm.belongs_sale_id = belong_sale_id;
+            pm.name = pp.chengeReceiptName;
+            pm.reception_type="BB";
+            pm.remark = new JSONArray();
+            pm.phoneList = PhoneList;
+            crm.finishReception3(pm);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("变更接待 ");
+        }
+    }
 
 //    @Test()
     public void T() {

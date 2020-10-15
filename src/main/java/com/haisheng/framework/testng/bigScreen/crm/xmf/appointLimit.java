@@ -205,7 +205,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 
             String appointment_time = "09:00";
             long timelist = pf.appointmentTimeListO("MAINTAIN",appointment_date).getLong("time_id");
-//            JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
+            JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, appointment_date, appointment_time, timelist);
 
             //预约试驾后：  pc销售总监总经理权限登录
             crm.login(adminname, adminpassword);

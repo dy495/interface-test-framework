@@ -29,6 +29,8 @@ public class PublicParm {
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
     public String customer_phone_numberO = "17770601557";
+    public String chengeReceiptPhone = "17768996973";
+    public String chengeReceiptName = "自动变更接待勿动";
 
     public Integer car_type = 1;
     public Integer car_model = 36;
