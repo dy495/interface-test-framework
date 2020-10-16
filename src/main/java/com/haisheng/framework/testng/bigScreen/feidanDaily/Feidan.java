@@ -269,6 +269,26 @@ public class Feidan {
         return JSON.parseObject(res);
     }
 
+    public JSONObject createOrderNOCode(String phone, String orderId, String faceUrl, int channelId) throws
+            Exception {
+
+        String url = "/risk/order/createOrder";
+
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," ;
+        if (channelId != -1) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+        json = json+ "    \"order_id\":\"" + orderId + "\""+
+                "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res);
+    }
+
     public String createOrderNoCode(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
 
         String url = "/risk/order/createOrder";
