@@ -5,19 +5,19 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 售后我的接待列表接口
+ * 我的接待列表接口
  *
  * @author wangmin
  */
 @Builder
-public class ReceptionAfterCustomerListScene extends BaseScene {
+public class CustomerMyReceptionListScene extends BaseScene {
     private final String searchCondition;
-    private final String searchDateEnd;
     private final String searchDateStart;
+    private final String searchDateEnd;
     @Builder.Default
-    private final Integer page = 1;
+    private final int page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private final int size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -25,14 +25,14 @@ public class ReceptionAfterCustomerListScene extends BaseScene {
         object.put("search_condition", searchCondition);
         object.put("search_date_start", searchDateStart);
         object.put("search_date_end", searchDateEnd);
-        object.put("page", page);
         object.put("size", size);
+        object.put("page", page);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/porsche/app/after_sale/reception_after_customer_list";
+        return "/porsche/app/customer/my-reception-list";
     }
 
     @Override

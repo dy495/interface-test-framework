@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.container;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
+import com.haisheng.framework.testng.bigScreen.crm.wm.exception.SqlCreateException;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -16,7 +17,7 @@ public class Factory {
 
     public List<Map<String, Object>> create(String sql) {
         if (StringUtils.isEmpty(sql)) {
-            throw new RuntimeException("sql不可为空");
+            throw new SqlCreateException("sql不可为空");
         }
         container.setPath(sql);
         container.init();

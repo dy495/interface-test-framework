@@ -5,6 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -113,10 +114,11 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
                 today_test_drive_total = response3.getInteger("today_test_drive_total");
                 today_appointment_number = response4.getInteger("appointment_today_number");
             }
-            String sql = "insert into t_porsche_today_data (today_test_driver_num, today_order_num, today_deal_num, today_clue_num, today_reception_num, today_appointment_num, today_date, shop_id, sale, today_new_customer_reception_num, today_old_customer_reception_num) " +
-                    "value (" + today_test_drive_total + "," + today_order + "," + today_deliver_car_total + "," + all_customer_num + "," + today_reception_num + "," + today_appointment_number + "," + "'" + date + "'" + "," + "'" + shop_id + "'" + "," + "'" + arr.get("userName") + "'" + "," + today_new_customer + "," + total_old_customer + ")";
+            String sql = Sql.instance().insert()
+                    .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale", "today_new_customer_reception_num", "today_old_customer_reception_num")
+                    .value(today_test_drive_total, today_order, today_deliver_car_total, all_customer_num, today_reception_num, today_appointment_number, date, shop_id, arr.get("userName"), today_new_customer, total_old_customer)
+                    .end().getSql();
             new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            CommonUtil.log("分割线");
         });
     }
 }

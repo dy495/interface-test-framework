@@ -5,29 +5,25 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 登录接口
+ * 展厅客户信息接口
+ * 测试使用
  *
  * @author wangmin
  */
 @Builder
-public class LoginScene extends BaseScene {
-    @Builder.Default
-    private final int type = 0;
-    private final String username;
-    private final String password;
+public class CustomerFaceLabelScene extends BaseScene {
+    private final String customerId;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("type", type);
-        object.put("username", username);
-        object.put("password", password);
+        object.put("customer_id", customerId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/porsche-login";
+        return "/porsche/app/customer/face-label";
     }
 
     @Override

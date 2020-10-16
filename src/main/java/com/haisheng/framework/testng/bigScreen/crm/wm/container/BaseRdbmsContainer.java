@@ -21,7 +21,7 @@ public abstract class BaseRdbmsContainer extends BaseContainer {
         if (statement == null) {
             return false;
         }
-        log.info("sql:{}", getPath());
+        log.info("sql is:{}", getPath());
         table = new DbTable.Builder().path(getPath()).statement(statement).build().getTable();
         return true;
     }

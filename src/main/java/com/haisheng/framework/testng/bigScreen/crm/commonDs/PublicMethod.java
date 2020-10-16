@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.commonDs;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
@@ -8,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCus
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,5 +150,53 @@ public class PublicMethod {
                 .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
                 .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).travelMileage(1000).build();
         crm.invokeApi(scene);
+    }
+
+    /**
+     * 车辆进店车牌号上传
+     *
+     * @param carNum 车牌号
+     * @param status 车辆进店状态 0入店/1出店/3线上
+     */
+    public void uploadShopCarPlate(String carNum, Integer status) throws Exception {
+        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String deviceId;
+        switch (status) {
+            case 0:
+                deviceId = "7709867521115136";
+                break;
+            case 1:
+                deviceId = "7724082825888768";
+                break;
+            case 3:
+                deviceId = "7736789438301184";
+                break;
+            default:
+                throw new RuntimeException("状态值只能为0/1/3");
+        }
+        upload(picPath, carNum, router, deviceId);
+    }
+
+    /**
+     * 上传
+     *
+     * @param picPath  图片地址
+     * @param carNum   车牌号
+     * @param router   地址
+     * @param deviceId deviceId
+     */
+    private void upload(String picPath, String carNum, String router, String deviceId) throws Exception {
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        JSONObject object = new JSONObject();
+        object.put("plate_num", carNum);
+        object.put("plate_pic", "@0");
+        object.put("time", System.currentTimeMillis());
+        if (deviceId.equals("7736789438301184")) {
+            crm.carUploadToOnline(router, deviceId, resource, JSON.toJSONString(object));
+        } else {
+            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
+        }
     }
 }

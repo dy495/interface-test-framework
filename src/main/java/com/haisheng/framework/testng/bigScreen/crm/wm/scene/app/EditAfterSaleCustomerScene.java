@@ -3,12 +3,13 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.scene.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
  * 售后完成接待接口
+ *
+ * @author wangmin
  */
 @Builder
 public class EditAfterSaleCustomerScene extends BaseScene {
@@ -67,6 +68,6 @@ public class EditAfterSaleCustomerScene extends BaseScene {
 
     @Override
     public String getIpPort() {
-        return EnumAddress.PORSCHE.getAddress();
+        return null;
     }
 }

@@ -1929,4 +1929,58 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             saveData("试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致");
         }
     }
+
+//    @Test(description = "订单客户分析，个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&购车日期在该时间段内&交车日期为空的购车档案数量")
+//    public void orderCustomer_data_15() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+//            for (EnumCarStyle e : EnumCarStyle.values()) {
+//                if (e.getName().contains("总经理")) {
+//                    continue;
+//                }
+//                CommonUtil.valueView(e.getName());
+//                int pcValue = 0;
+//                int appValue = 0;
+//                IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(EnumFindType.DAY.getType()).build();
+//                JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
+//                for (int i = 0; i < ratioList.size(); i++) {
+//                    if (ratioList.getJSONObject(i).getString("name").equals("公司车主")) {
+//                        pcValue = ratioList.getJSONObject(i).getInteger("value");
+//                    }
+//                }
+//                IScene scene1 = CustomerMyReceptionListScene.builder().searchDateStart(date).searchDateEnd(date).build();
+//                int total = crm.invokeApi(scene1).getInteger("total");
+//                int s = CommonUtil.getTurningPage(total, 100);
+//                for (int i = 1; i < s; i++) {
+//                    IScene scene2 = CustomerMyReceptionListScene.builder().page(i).size(100).searchDateStart(date).searchDateEnd(date).build();
+//                    JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
+//                    for (int j = 0; j < list1.size(); j++) {
+//                        if (list1.getJSONObject(j).getString("book_car_name").equals("是")) {
+//                            int customerId = list1.getJSONObject(j).getInteger("customer_id");
+//                            IScene scene3 = CustomerBuyCarListScene.builder().customerId(String.valueOf(customerId)).build();
+//                            IScene scene4 = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
+//                            JSONArray list = crm.invokeApi(scene3).getJSONArray("list");
+//                            JSONObject response2 = crm.invokeApi(scene4);
+//                            for (int x = 0; x < list.size(); x++) {
+//                                if (list.getJSONObject(x).getString("buy_time").equals(date)
+//                                        && list.getJSONObject(x).getString("car_style_id").equals(e.getStyleId())
+//                                        && response2.getString("subject_type").equals("CORPORATION")) {
+//                                    appValue++;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                CommonUtil.valueView(pcValue, appValue);
+//                Preconditions.checkArgument(pcValue == appValue, "");
+//                CommonUtil.log(e.getName() + "跑完");
+//            }
+//        } catch (Exception | AssertionError e) {
+//            e.printStackTrace();
+////            appendFailreason(e.toString());
+//        }
+//
+//    }
 }

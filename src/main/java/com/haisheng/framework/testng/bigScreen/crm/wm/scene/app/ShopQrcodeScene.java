@@ -6,6 +6,8 @@ import lombok.Builder;
 
 /**
  * 获取接待二维码接口
+ *
+ * @author wangmin
  */
 @Builder
 public class ShopQrcodeScene extends BaseScene {

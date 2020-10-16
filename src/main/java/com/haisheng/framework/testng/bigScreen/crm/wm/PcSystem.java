@@ -587,11 +587,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
     }
-
-    @Test
-    public void test() throws Exception {
-        CommonUtil.uploadShopCarPlate("云A12345", 0);
-    }
 }
 
 

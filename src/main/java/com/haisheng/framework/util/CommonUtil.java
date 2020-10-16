@@ -1,10 +1,10 @@
 package com.haisheng.framework.util;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,10 @@ public class CommonUtil {
         List<String> list = new ArrayList<>();
         Arrays.stream(paramName).forEach(e -> {
             if (StringUtils.isEmpty(e)) {
-                throw new RuntimeException("param类型应为String类型且不能为空");
+                throw new DataException("param类型应为String类型且不能为空");
             } else {
                 if (!object.containsKey(e)) {
-                    throw new RuntimeException("object中不包含此key");
+                    throw new DataException("object中不包含此key");
                 }
                 list.add(object.getString(e));
             }
@@ -137,6 +137,32 @@ public class CommonUtil {
     }
 
     /**
+     * @param birthday 生日
+     * @return 几零后
+     */
+    public static String getAge(String birthday) {
+        if (StringUtils.isEmpty(birthday)) {
+            return null;
+        }
+        String s = birthday.substring(2, 3);
+        StringBuilder str = new StringBuilder();
+        str.append(s).append("0后");
+        if (s.equals("5")) {
+            str.append("+");
+        }
+        return str.toString();
+    }
+
+    public static String getGender(String ID_number) {
+        if (StringUtils.isEmpty(ID_number)) {
+            return null;
+        }
+        String str = ID_number.substring(16, 17);
+        return Integer.parseInt(str) % 2 == 0 ? "女性" : "男性";
+    }
+
+
+    /**
      * 获取页面跳转页数
      * 当接口每页只能传入pageSize时，获取接口的访问次数来得到list.size()
      *
@@ -145,16 +171,14 @@ public class CommonUtil {
      * @return a
      */
     public static int getTurningPage(double listSize, double pageSize) {
-        if (listSize < 0 || pageSize < 0) {
-            if (listSize < 0) {
-                throw new RuntimeException("listSize不可为负数");
-            }
-            if (pageSize < 0) {
-                throw new RuntimeException("pageSize不可为负数");
-            }
+        if (listSize < 0) {
+            throw new DataException("listSize不可为负数");
+        }
+        if (pageSize < 0) {
+            throw new DataException("pageSize不可为负数");
         }
         double a;
-        a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 1 + 1;
+        a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 2;
         return (int) a;
     }
 
@@ -165,7 +189,7 @@ public class CommonUtil {
      */
     public static void login(EnumAccount enumAccount) {
         if (enumAccount == null) {
-            throw new RuntimeException("enumAccount is null");
+            throw new DataException("enumAccount is null");
         }
         if (enumAccount.getEnvironment().equals("daily")) {
             crm.login(enumAccount.getAccount(), enumAccount.getPassword());
@@ -181,7 +205,7 @@ public class CommonUtil {
      */
     public static void loginApplet(EnumAppletCode appletCode) {
         if (appletCode == null) {
-            throw new RuntimeException("appletCode is null");
+            throw new DataException("appletCode is null");
         }
         crm.appletLoginToken(appletCode.getCode());
     }
@@ -216,53 +240,6 @@ public class CommonUtil {
         return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
     }
 
-    /**
-     * 车辆进店车牌号上传
-     *
-     * @param carNum 车牌号
-     * @param status 车辆进店状态 0入店/1出店/3线上
-     */
-    public static void uploadShopCarPlate(String carNum, Integer status) throws Exception {
-        String router = "/business/porsche/PLATE_UPLOAD/v1.0";
-        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
-        String deviceId;
-        switch (status) {
-            case 0:
-                deviceId = "7709867521115136";
-                break;
-            case 1:
-                deviceId = "7724082825888768";
-                break;
-            case 3:
-                deviceId = "7736789438301184";
-                break;
-            default:
-                throw new RuntimeException("状态值只能为0/1/3");
-        }
-        upload(picPath, carNum, router, deviceId);
-    }
-
-    /**
-     * 上传
-     *
-     * @param picPath  图片地址
-     * @param carNum   车牌号
-     * @param router   地址
-     * @param deviceId deviceId
-     */
-    private static void upload(String picPath, String carNum, String router, String deviceId) throws Exception {
-        ImageUtil imageUtil = new ImageUtil();
-        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
-        JSONObject object = new JSONObject();
-        object.put("plate_num", carNum);
-        object.put("plate_pic", "@0");
-        object.put("time", System.currentTimeMillis());
-        if (deviceId.equals("7736789438301184")) {
-            crm.carUploadToOnline(router, deviceId, resource, JSON.toJSONString(object));
-        } else {
-            crm.carUploadToDaily(router, deviceId, resource, JSON.toJSONString(object));
-        }
-    }
 
     /**
      * 判断字符串列表每一项均不为空，包括空字符串与null
@@ -292,11 +269,9 @@ public class CommonUtil {
         if (obj1 == null && obj2 == null) {
             return true;
         }
-
         if (obj1 != null && obj1.length == 0 && obj2 != null && obj2.length == 0) {
             return true;
         }
-
         if (obj1 != null && obj2 != null && obj1.length == obj2.length) {
             for (int i = 0; i < obj1.length; i++) {
                 if (!obj1[i].equals(obj2[i])) {
@@ -305,7 +280,6 @@ public class CommonUtil {
             }
             return true;
         }
-
         return false;
     }
 

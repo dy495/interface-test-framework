@@ -688,6 +688,26 @@ public class DateTimeUtil {
     }
 
     /**
+     * 将unix时间戳转为时间
+     *
+     * @param stamp 时间戳
+     * @return String
+     */
+    public static String stampToDate(String stamp) {
+        String format = "yyyy-MM-dd HH:mm:ss";
+        return stampToDate(stamp, format);
+    }
+
+    public static String stampToDate(String stamp, String format) {
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        long lt = new Long(stamp);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+
+    /**
      * 当前时间的前后多少秒
      *
      * @description :

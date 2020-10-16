@@ -33,16 +33,13 @@ public class DbTable implements ITable {
             String sql = !StringUtils.isEmpty(path) ? getPath() : String.format(ContainerConstants.DB_TABLE_DEFAULT_SQL, tableName);
             try {
                 if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {
-                    logger.info("do:{}", "executeUpdate");
                     statement.executeUpdate(sql);
                     return data(sql);
                 }
                 if (sql.contains(ContainerConstants.INSERT)) {
-                    logger.info("do:{}", "execute");
                     statement.execute(sql);
                     return data(sql);
                 }
-                logger.info("do:{}", "executeQuery");
                 ResultSet rs = statement.executeQuery(sql);
                 ResultSetMetaData md = rs.getMetaData();
                 int count = md.getColumnCount();

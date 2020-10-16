@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.container;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -10,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseContainer extends TestCaseCommon implements IContainer {
+public abstract class BaseContainer implements IContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseContainer.class);
     @Getter
     private String path;
