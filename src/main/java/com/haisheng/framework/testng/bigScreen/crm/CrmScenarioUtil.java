@@ -5560,6 +5560,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    //我的接待编辑客户-车牌号一列表
+    public JSONObject platepic() throws Exception {
+        String url = "/porsche/app/customer/plate-number-list-pic";
+        JSONObject json = new JSONObject();
+
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 }
 
 

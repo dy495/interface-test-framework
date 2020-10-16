@@ -555,10 +555,10 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :非所属，变更接待，无法修改除备注意外功能
+     * @description :非所属，变更接待，无法修改除备注以外功能---前端控制；此case验证，销售顾问无法变更所属销售
      * @date :2020/10/12 20:58
      **/
-//    @Test()  TODO:
+//    @Test()
     public void changeReceptionNoedit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -582,11 +582,17 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             finishReceive pm = new finishReceive();
             pm.customer_id = customer_id;
             pm.reception_id = receiptId;
-            pm.belongs_sale_id = belong_sale_id;
+
             pm.name = pp.chengeReceiptName;
-            pm.reception_type="BB";
+            pm.reception_type = "BB";
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
+            pm.checkCode = false;
+            pm.belongs_sale_id="id_1dc0f148";
+            int code = crm.finishReception3(pm).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "销售顾问变更了所属销售");
+            pm.checkCode = true;
+            pm.belongs_sale_id = belong_sale_id;
             crm.finishReception3(pm);
 
         } catch (AssertionError e) {
@@ -595,11 +601,11 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
-            saveData("变更接待 ");
+            saveData("销售顾问无法变更所属销售 ");
         }
     }
 
-//    @Test()
+    //    @Test()
     public void T() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

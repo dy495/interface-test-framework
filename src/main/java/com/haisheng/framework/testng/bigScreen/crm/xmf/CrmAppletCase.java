@@ -384,6 +384,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            crm.myCarDelete("62022");
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -938,6 +939,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序预约
+            sleep(3);
             Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
             //pc查看预约次数
             crm.login(pp.zongjingli, pp.adminpassword);

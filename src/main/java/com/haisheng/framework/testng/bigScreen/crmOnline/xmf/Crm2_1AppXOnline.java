@@ -360,7 +360,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.deliverSelect(1, 10, customer_name).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument(nameSelect.equals(customer_name), "交车按客户名称查询，结果错误");
+                Preconditions.checkArgument(nameSelect.contains(customer_name), "交车按客户名称查询，结果错误");
             }
             JSONArray listPhone = crm.deliverSelect(1, 10, customer_phone_number).getJSONArray("list");
             for (int i = 0; i < listPhone.size(); i++) {
@@ -714,7 +714,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :创建线索 ok
      * @date :2020/8/3 14:58
      **/
-    @Test
+//    @Test   TODO:车型
     public void createLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

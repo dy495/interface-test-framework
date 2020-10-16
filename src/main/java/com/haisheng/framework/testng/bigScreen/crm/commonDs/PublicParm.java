@@ -23,6 +23,7 @@ public class PublicParm {
     public Long mycarId2 = 419L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
+    public String xspassword = "e10adc3949ba59abbe56e057f20f883e";
     public String dcc = "xdcc";      //销售账号
     public String xiaoshouZongjian = "xszj";      //销售账号
     //预约使用参数
@@ -31,6 +32,11 @@ public class PublicParm {
     public String customer_phone_numberO = "17770601557";
     public String chengeReceiptPhone = "17768996973";
     public String chengeReceiptName = "自动变更接待勿动";
+
+    public String samephone= "13936966369";  //展厅客户手机号2
+    public String linephone= "17783875772";  //线索客户手机号
+    public String linephone2= "18967887890";  //线索客户手机号
+    public String samePlate= "吉E000000";  //系统已存在的车牌号
 
     public Integer car_type = 1;
     public Integer car_model = 36;

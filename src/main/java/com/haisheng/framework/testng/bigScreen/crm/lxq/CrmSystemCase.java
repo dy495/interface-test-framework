@@ -149,7 +149,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("日常入场车牌号上传");
         }
     }
-//    @Test
+    @Test
     public void heiping(){
         for(int i=0;i<2;i++){
             String carNum = "京B1DF9"+i;    //试驾车已注销
@@ -1162,8 +1162,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
-            String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
+            String car = "吉ZDH"+(int)((Math.random()*9+1)*100);
+            String carid = "ZDHZDHZDD"+(long)((Math.random()*9+1)*10000000);
            //新增
             Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
             //注销
