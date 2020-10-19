@@ -85,6 +85,8 @@ public class A extends TestCaseCommon implements TestCaseStd {
             int today_reception_num = 0;
             //今日线索
             int all_customer_num = 0;
+            //sale_id
+            String sale_id = arr.get("userId");
             if (arr.get("userName").equals("总经理123456")) {
                 CommonUtil.login(zjl);
                 JSONObject responseA = crm.customerReceptionTotalInfo();
@@ -115,8 +117,8 @@ public class A extends TestCaseCommon implements TestCaseStd {
             }
             String sql = Sql.instance().insert()
                     .from("t_porsche_today_data")
-                    .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale", "today_new_customer_reception_num", "today_old_customer_reception_num")
-                    .value(today_test_drive_total, today_order, today_deliver_car_total, all_customer_num, today_reception_num, today_appointment_number, date, shop_id, arr.get("userName"), today_new_customer, total_old_customer)
+                    .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name", "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
+                    .value(today_test_drive_total, today_order, today_deliver_car_total, all_customer_num, today_reception_num, today_appointment_number, date, shop_id, arr.get("userName"), today_new_customer, total_old_customer, sale_id)
                     .end().getSql();
             new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
             CommonUtil.log("分割线");

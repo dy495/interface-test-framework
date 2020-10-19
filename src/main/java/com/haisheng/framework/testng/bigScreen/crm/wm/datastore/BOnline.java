@@ -189,7 +189,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                             }
                         }
                         customerRegion = getAddress(id);
-                        String sql =  Sql.instance().insert().from("t_porsche_deliver_car")
+                        String sql = Sql.instance().insert().from("t_porsche_deliver_car")
                                 .field("car_style", "car_model", "deliver_time", "customer_id", "customer_name", "customer_region", "customer_phone", "shop_id", "customer_type")
                                 .value(carStyle, carModel, deliverTime, customerId, customerName, customerRegion, customerPhone, shopId, customerType)
                                 .end().getSql();
