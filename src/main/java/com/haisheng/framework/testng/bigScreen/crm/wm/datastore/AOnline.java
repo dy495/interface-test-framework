@@ -86,7 +86,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
             int today_reception_num = 0;
             //今日线索
             int all_customer_num = 0;
-            String sale_id = arr.get("userName");
+            String sale_id = arr.get("userId");
             if (arr.get("userName").equals("总经理")) {
                 CommonUtil.login(zjl);
                 JSONObject responseA = crm.customerReceptionTotalInfo();
