@@ -398,4 +398,36 @@ public class PackFunction {
         JSONObject data = crm.carManagementAdd(carName, 1L, 37L, plate_number, vehicle_chassis_code, start, end);
         return data.getLong("test_car_id");
     }
+    //查询试驾数统计
+    public int [] driverSum(){
+        int a[]=new int[3];
+        JSONObject dataTotal = crm.driverTotal();
+        a[0] = dataTotal.getInteger("today_test_drive_total");   //今日
+        a[1] = dataTotal.getInteger("test_drive_total");         //全部
+        JSONObject dataList1 = crm.driverSelect(1, 10);
+        a[2] = dataList1.getInteger("total");         //列表数
+//        JSONObject dataTotal = crm.driverTotal();
+//        int today_number = dataTotal.getInteger("today_test_drive_total");
+//        int totalNum = dataTotal.getInteger("test_drive_total");
+//        JSONObject dataList1 = crm.driverSelect(1, 10);
+//        int total1 = dataList1.getInteger("total");
+        return a;
+    }
+
+    //查询试驾数统计
+    public int [] deliverSum(){
+        int a[]=new int[4];
+        JSONObject dataTotal = crm.jiaocheTotal();
+       a[0] = dataTotal.getInteger("today_deliver_car_total");   //今日
+        a[1] = dataTotal.getInteger("deliver_car_total");    //实际交车
+        a[2] = dataTotal.getInteger("total_order");         //全部交车
+        a[3]=crm.deliverSelect(1,10).getInteger("total");   //列表数
+//        JSONObject dataTotal = crm.jiaocheTotal();
+//        int today_number = dataTotal.getInteger("today_deliver_car_total");  0
+//        int totalNum = dataTotal.getInteger("deliver_car_total");     1
+//        int total_order = dataTotal.getInteger("total_order");        2
+//        int listtotal=crm.deliverSelect(1,10).getInteger("total");    3
+
+        return a;
+    }
 }

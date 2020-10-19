@@ -3713,7 +3713,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject driverSelect(int page, int size) {
-        String url = "/porsche/daily-work/deliver-car/app/list";
+        String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
         json.put("page", page);
@@ -4877,7 +4877,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约试驾取消
-    public JSONObject appCanle(Long id) {
+    public JSONObject appdriverCanle(Long id) {
         String url = "/porsche/daily-work/test-drive/app/cancel";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -5170,9 +5170,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("car_model_id", 36);
         json1.put("car_style_id", 1);
         json1.put("customer_id", customer_id);
-        json1.put("defray_type", 1);
+        json1.put("defray_type", 0);
         json1.put("pay_type", 1);
-        json1.put("plate_type", 0);
+        json1.put("plate_type", 1);
         json1.put("reception_id", reception_id);
         json1.put("vehicle_chassis_code", vehicle_chassis_code);
         String json = json1.toJSONString();
@@ -5565,6 +5565,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/app/customer/plate-number-list-pic";
         JSONObject json = new JSONObject();
 
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //我的接待-购车档案列表
+    public JSONObject buyCarList(String customer_id) throws Exception {
+        String url = "/porsche/app/customer/buy-car-list";
+        JSONObject json = new JSONObject();
+        json.put("customer_id",customer_id);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
