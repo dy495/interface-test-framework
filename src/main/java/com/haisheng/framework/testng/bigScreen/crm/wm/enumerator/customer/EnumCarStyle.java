@@ -19,7 +19,7 @@ public enum EnumCarStyle {
 
     NINE_ONE_ONE("6", "911"),
 
-    ALL("", "全部车系");
+    ALL(null, "全部车系");
 
     EnumCarStyle(String styleId, String name) {
         this.styleId = styleId;

@@ -2,12 +2,16 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.pojo;
 
 import lombok.Data;
 
+/**
+ * 每日接待记录表
+ */
 @Data
 public class TPorscheReceptionDataDO {
 
     private long id;
     private String shopId;
     private String receptionSale;
+    private String receptionSaleId;
     private String receptionStartTime;
     private String receptionEndTime;
     private long receptionDuration;

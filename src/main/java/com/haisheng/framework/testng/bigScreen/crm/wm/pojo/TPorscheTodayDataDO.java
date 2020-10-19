@@ -2,6 +2,9 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.pojo;
 
 import lombok.Data;
 
+/**
+ * 每日数据记录表
+ */
 @Data
 public class TPorscheTodayDataDO {
 
@@ -19,5 +22,4 @@ public class TPorscheTodayDataDO {
     private String saleName;
     private String todayDate;
     private java.sql.Timestamp gmtCreate;
-    private long newColumn;
 }

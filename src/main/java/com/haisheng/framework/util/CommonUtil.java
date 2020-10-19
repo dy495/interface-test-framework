@@ -86,15 +86,16 @@ public class CommonUtil {
     /**
      * 获取百分比
      *
-     * @param a a
-     * @param b b
+     * @param a     a
+     * @param b     b
+     * @param scale 保留小数点后位数
      * @return result
      */
-    public static String getPercent(double a, double b) {
+    public static String getPercent(double a, double b, int scale) {
         if (b == 0) {
             return "0.0%";
         }
-        double c = new BigDecimal(a / b).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        double c = new BigDecimal(a / b).divide(new BigDecimal(1), scale, BigDecimal.ROUND_HALF_UP).doubleValue();
         StringBuilder stringBuilder = new StringBuilder();
         NumberFormat nf = NumberFormat.getPercentInstance();
         nf.setMinimumFractionDigits(2);
@@ -183,6 +184,17 @@ public class CommonUtil {
     }
 
     /**
+     * 获取随机数
+     *
+     * @param digitNumber 位数
+     * @return String
+     */
+    public static String getRandom(int digitNumber) {
+        return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
+    }
+
+
+    /**
      * 登录账号
      *
      * @param enumAccount 人员
@@ -228,16 +240,6 @@ public class CommonUtil {
             }
         }
         return list;
-    }
-
-    /**
-     * 获取随机数
-     *
-     * @param digitNumber 位数
-     * @return String
-     */
-    public static String getRandom(int digitNumber) {
-        return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
     }
 
 

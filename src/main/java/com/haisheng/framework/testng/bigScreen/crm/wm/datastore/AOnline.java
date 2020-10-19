@@ -55,7 +55,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void testA() {
+    public void everydayData() {
         TPorscheTodayDataDO po = new TPorscheTodayDataDO();
         List<Map<String, String>> list = new PublicMethodOnline().getSaleList("销售顾问");
         list.forEach(arr -> {

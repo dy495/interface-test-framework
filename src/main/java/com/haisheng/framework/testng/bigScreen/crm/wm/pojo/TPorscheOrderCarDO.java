@@ -3,10 +3,10 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.pojo;
 import lombok.Data;
 
 /**
- * 每日接待交车表
+ * 每日接待订车表
  */
 @Data
-public class TPorscheDeliverCarDO {
+public class TPorscheOrderCarDO {
 
     private long id;
     private String shopId;
@@ -21,6 +21,6 @@ public class TPorscheDeliverCarDO {
     private String saleId;
     private String carStyle;
     private String carModel;
-    private String deliverTime;
+    private String orderTime;
     private java.sql.Timestamp gmtCreate;
 }

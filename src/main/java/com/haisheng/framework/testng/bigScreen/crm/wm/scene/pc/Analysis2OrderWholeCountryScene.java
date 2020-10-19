@@ -5,13 +5,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 订单客户分析车主占比接口
+ * 订单客户分析车主年龄接口
  * 测试使用
  *
  * @author wangmin
  */
 @Builder
-public class Analysis2OrderCarOwnerScene extends BaseScene {
+public class Analysis2OrderWholeCountryScene extends BaseScene {
 
     private final String month;
     private final String cycleType;
@@ -28,7 +28,7 @@ public class Analysis2OrderCarOwnerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/porsche/analysis2/order/car-owner";
+        return "/porsche/analysis2/order/whole-country";
     }
 
     @Override

@@ -5,17 +5,18 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 订单客户分析车主占比接口
+ * 订单客户分析车主年龄接口
  * 测试使用
  *
  * @author wangmin
  */
 @Builder
-public class Analysis2OrderCarOwnerScene extends BaseScene {
+public class Analysis2OrderCityScene extends BaseScene {
 
     private final String month;
     private final String cycleType;
     private final String carType;
+    private final long adCode;
 
     @Override
     public JSONObject getJSONObject() {
@@ -23,12 +24,13 @@ public class Analysis2OrderCarOwnerScene extends BaseScene {
         object.put("month", month);
         object.put("cycle_type", cycleType);
         object.put("car_type", carType);
+        object.put("adcode", adCode);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/porsche/analysis2/order/car-owner";
+        return "/porsche/analysis2/order/city";
     }
 
     @Override
