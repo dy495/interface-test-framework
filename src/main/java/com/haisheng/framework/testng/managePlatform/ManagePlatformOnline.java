@@ -34,14 +34,14 @@ public class ManagePlatformOnline {
     private String SHOP_Id = "1082";
     private String CLUSTER_NODE_Id = "219";
     private String ALIAS = "QA测试-线上";
-    private static String BATCH_START_DEVICE_ID_1 = "6902537678554112";//batchStartDeviceCheck,listDeviceDiffConditionCheck
-    private static String BATCH_START_DEVICE_ID_2 = "6902539217896448";//batchStartDeviceCheck,listDeviceDiffConditionCheck
-    private static String DEVICE_ID_MAPPING = "6902543323071488";//layoutMapping
+    private static String BATCH_START_DEVICE_ID_1 = "7908770594128896";//batchStartDeviceCheck,listDeviceDiffConditionCheck
+    private static String BATCH_START_DEVICE_ID_2 = "7908771802121216";//batchStartDeviceCheck,listDeviceDiffConditionCheck
+    private static String DEVICE_ID_MAPPING = "7908776948401152";//layoutMapping
 
-    private static String DEVICE_NO_BIND = "6902529954972672";
-    private static String REGION_DEVICE_1 = "6902533266572288";
-    private static String REGION_DEVICE_2 = "6902535553451008";
-    private static String ENTRANCE_DEVICE_ID_1 = "6902540683904000";
+    private static String DEVICE_NO_BIND = "7908779833099264";
+    private static String REGION_DEVICE_1 = "7908782403978240";
+    private static String REGION_DEVICE_2 = "7908784511091712";
+    private static String ENTRANCE_DEVICE_ID_1 = "7908786984256512";
     private static String DEVICE_NAME_1 = "批量启动-管理后台-回归-1【勿动】";//验证设备列表不同搜索条件时用
 
     private String regionTypeGeneral = "GENERAL";
@@ -996,14 +996,14 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String deviceType = getOneDeviceType();
-            String deviceName_1 = ciCaseName + "-3";
+            String deviceName_1 = ciCaseName + "-1";
             String response = addDevice(deviceName_1, deviceType, SHOP_Id, aCase, step);
             deviceId_1 = getDeviceId(response);
 
 //            2、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            String deviceName_2 = ciCaseName + "-4";
+            String deviceName_2 = ciCaseName + "-2";
             response = addDevice(deviceName_2, deviceType, SHOP_Id, aCase, step);
             deviceId_2 = getDeviceId(response);
 
