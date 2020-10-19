@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.sql;
+package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
 public class Address {
     public static String getNativePlace(int nativePlaceCode) {

@@ -3,12 +3,12 @@ package com.haisheng.framework.testng.bigScreen.feidanDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.util.*;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-public class FeidanMiniApiUpdateRepTimeDaily {
+public class FeidanWithoutCodeDaily {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";
@@ -129,7 +129,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
 
 //            创单
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -208,7 +208,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
 //            校验
             String channelName = "链家";
@@ -299,7 +299,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
             //成单后是否在顾客列表中消失
             list = feidan.customerList(customerName, "", "", 1, 10).getJSONArray("list");
@@ -383,7 +383,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String adviserName = zhangName;
@@ -457,7 +457,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -535,7 +535,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -618,7 +618,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
 
 //            创单
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -697,7 +697,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String adviserName = "安生";
@@ -792,7 +792,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "704542";
-            feidan.createOrder(customerPhone, orderId, faceUrl, wudongChannelInt, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, wudongChannelInt);
 
 //            校验
             String adviserName = "-";
@@ -891,7 +891,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "127230";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
 //            校验
             String channelName = "链家";
@@ -974,7 +974,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String adviserName = "安生";
@@ -1069,7 +1069,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
 //            校验
             String channelName = "链家";
@@ -1160,7 +1160,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String channelName = "-";
@@ -1254,7 +1254,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String channelName = "-";
@@ -1343,7 +1343,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -1437,7 +1437,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             adviserName = "-";
@@ -1527,7 +1527,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             adviserName = "-";
@@ -1604,7 +1604,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, -1);
 
 //            校验
             String adviserName = "-";
@@ -1800,7 +1800,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
 //            校验
             String channelName = "链家";
@@ -1896,7 +1896,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, channelId);
 
 //            校验
             String channelName = "-";
@@ -1985,7 +1985,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
 
 //            创单
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -2071,7 +2071,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
 
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
 //            校验
             String adviserName = "-";
@@ -2175,7 +2175,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
 
 //            创单
-            feidan.createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            feidan.createOrderNOCode(customerPhone, orderId, faceUrl, 5);
 
             //引用后删除规则
             String s = feidan.deleteRiskRuleNoCheckCode(id);
@@ -2226,167 +2226,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         }
     }
 
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void InProtectOthersCompleteBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护渠道报备-保护期内其他渠道补全手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhone = "14422110014";
-            String customerPhoneHide = "144****0014";
-
-            String customerName = caseName + "-" + feidan.getNamePro();
-
-//            保护渠道报备（麦田）
-            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备隐藏手机号(勿动)
-            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
-
-            feidan.updateReportTimeChannel(customerPhoneHide, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            补全手机号
-            JSONArray list = feidan.customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            String res = feidan.customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
-
-            feidan.checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            feidan.checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void InProtectOthersChangeBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护渠道报备-保护期内其他渠道修改手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhoneB = "13322110014";
-            String customerPhone = "14422110014";
-
-            String customerName = caseName + "-" + feidan.getNamePro();
-
-//            保护渠道报备（麦田）
-            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备原手机号(勿动)
-            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
-            feidan.updateReportTimeChannel(customerPhoneB, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            更改手机号
-            JSONArray list = feidan.customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            String res = feidan.customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
-
-            feidan.checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            feidan.checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test(dataProvider = "PROTECT_RULE")
-    public void protectRule(String ruleId, String ruleName, long protectTime, String namePro, long time, int expect) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "报备保护期为" + ruleName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String customerName = ciCaseName + "-" + namePro;
-            String customerPhone = feidan.genPhoneNum();
-
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
-
-//            勿动报备
-            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            long currentTimeMillis = System.currentTimeMillis();
-
-            long reportTime = currentTimeMillis - time;
-
-//            更改报备时间
-            feidan.updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime);
-            feidan.updateProtectTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime + protectTime);
-
-//            链家报备
-            if (expect == 1000) {
-                feidan.customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-            } else {
-                String reportH5 = feidan.customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-                feidan.checkCode(reportH5, expect, "规则为保护" + ruleName + "，第" + namePro + "报备");
-            }
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-            CURRENT_CASE = caseName;
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-            CURRENT_CASE = caseName;
-        } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            if ( (null != failReason && failReason.trim().length() > 1) ) {
-                //case failed, update db
-                feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-            } else if (!caseName.equals(CURRENT_CASE)) {
-                //never failed, update db
-                feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-            }
-
-        }
-    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -2635,66 +2474,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     }
 
 
-    @Test
-    public void witnessUploadChk() {
 
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        String function = "人证对比机数据上传>>>";
-
-        try {
-
-            String cardId = feidan.genCardId();
-            String personName = "1";
-
-            String s = feidan.witnessUpload(cardId, personName);
-
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, function);
-        }
-    }
-
-    @Test
-    public void channelReport() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        String function = "渠道报备>>>";
-
-        try {
-
-
-            String personName = "1";
-            String customerPhone = "134****0009";
-            feidan.customerReportH5(wudongStaffIdStr, personName, customerPhone, "MALE", wudongToken);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, function);
-        }
-    }
 
 
 }

@@ -862,6 +862,30 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    @Test
+    public void shopPanel_data_64() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+//            List<Map<String, Object>> list = new PublicMethod().getSaleList("销售顾问") {
+//                list.forEach(arr -> {
+//                    CommonUtil.valueView(arr.get("userName"));
+//
+//                });
+//            }
+            String sql = Sql.instance().select()
+                    .from("t_porsche_today_data")
+                    .where("today_date", "=", date)
+                    .and("shop_id", "=", "22728")
+                    .end().getSql();
+            List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+            System.err.println(result);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        }
+    }
+
 //    ----------------------------------------------------车系漏斗--------------------------------------------------------
 
     @Test(description = "店面数据分析--车系漏斗，【各时间段+各销售】线索=创建线索+接待线索")

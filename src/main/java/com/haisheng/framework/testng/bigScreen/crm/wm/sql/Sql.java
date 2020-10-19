@@ -16,9 +16,9 @@ public class Sql {
     private static volatile Sql.Builder instance = null;
 
     public static Sql.Builder instance() {
-        if (null == instance) {
+        if (instance == null) {
             synchronized (Sql.class) {
-                if (null == instance) {
+                if (instance == null) {
                     instance = new Sql.Builder();
                 }
             }
@@ -157,10 +157,10 @@ public class Sql {
     /**
      * 条件语句清空
      *
-     * @param e e
+     * @param condition 条件语句
      */
-    private static void clear(StringBuilder e) {
-        e.setLength(0);
+    private static void clear(StringBuilder condition) {
+        condition.setLength(0);
     }
 
     /**
