@@ -7,13 +7,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheDeliverCarDO;
+import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionDataDO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerBuyCarListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerFaceLabelScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Address;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.Address;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -38,15 +40,6 @@ public class B extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        //替换checklist的相关信息
-//        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-//        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
-//        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        //替换jenkins-job的相关信息
-//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-//        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
-        //替换钉钉推送
-//        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
@@ -68,73 +61,38 @@ public class B extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+
     @Test(description = "每日接待记录")
-    public void testB() {
-        String reception_sale;
-        String reception_start_time;
-        String reception_end_time;
-        String reception_date;
-        String customer_name;
-        String customer_active_type;
-        String shop_id;
-        String customer_phone1;
-        String customer_phone2;
-        int reception_duration = 0;
+    public void testB() throws ParseException {
+        TPorscheReceptionDataDO po = new TPorscheReceptionDataDO();
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
-        int total = crm.receptionPage("", "", "PRE_SALES", 1, 10).getInteger("total");
+        IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
+        int total = crm.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, 100);
         for (int i = 1; i < s; i++) {
-            JSONArray list = crm.receptionPage("", "", "PRE_SALES", i, 100).getJSONArray("list");
+            IScene scene1 = CustomerMyReceptionListScene.builder().page(i).size(100).searchDateStart(date).searchDateEnd(date).build();
+            JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
             for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("reception_date").equals(date)) {
-                    String saleName = list.getJSONObject(j).getString("reception_sale");
-                    reception_sale = saleName.substring(0, saleName.indexOf("（"));
-                    reception_start_time = list.getJSONObject(j).getString("reception_time");
-                    reception_end_time = list.getJSONObject(j).getString("leave_time");
-                    reception_date = list.getJSONObject(j).getString("reception_date");
-                    customer_name = list.getJSONObject(j).getString("customer_name");
-                    customer_active_type = list.getJSONObject(j).getString("customer_active_type");
-                    shop_id = list.getJSONObject(j).getString("shopId");
-                    customer_phone1 = list.getJSONObject(j).getString("phone1");
-                    customer_phone2 = list.getJSONObject(j).getString("phone2");
-                    try {
-                        reception_duration = new DateTimeUtil().calTimeHourDiff(list.getJSONObject(j).getString("reception_time"), list.getJSONObject(j).getString("leave_time"));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    String sql = Sql.instance().insert().from("t_porsche_reception_data")
-                            .field("shop_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_date", "customer_name", "customer_active_type", "customer_phone_1", "customer_phone_2", "reception_duration")
-                            .value(shop_id, reception_sale, reception_start_time, reception_end_time, reception_date, customer_name, customer_active_type, customer_phone1, customer_phone2, reception_duration)
-                            .end().getSql();
-                    new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                }
-            }
-        }
-        int appTotal = crm.receptionPage(1, 10, date, date).getInteger("total");
-        int y = CommonUtil.getTurningPage(appTotal, 100);
-        for (int i = 1; i < y; i++) {
-            JSONArray list = crm.receptionPage(i, 100, date, date).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("reception_sale_name") == null) {
-                    reception_date = list.getJSONObject(j).getString("reception_date");
-                    customer_name = list.getJSONObject(j).getString("customer_name");
-                    shop_id = EnumShopId.PORSCHE_SHOP.getShopId();
-                    reception_sale = list.getJSONObject(j).getString("reception_sale_name");
-                    reception_start_time = list.getJSONObject(j).getString("reception_time");
-                    reception_end_time = list.getJSONObject(j).getString("leave_time_str");
-                    try {
-                        String q = list.getJSONObject(j).getString("reception_time") == null ? "00:00" : list.getJSONObject(j).getString("reception_time");
-                        String p = list.getJSONObject(j).getString("leave_time_str") == null ? "00:00" : list.getJSONObject(j).getString("leave_time_str");
-                        reception_duration = new DateTimeUtil().calTimeHourDiff(q, p);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    String sql = Sql.instance().insert().from("t_porsche_reception_data")
-                            .field("shop_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_date", "customer_name", "reception_duration")
-                            .value(shop_id, reception_sale, reception_start_time, reception_end_time, reception_date, customer_name, reception_duration)
-                            .end().getSql();
-                    new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                }
+                po.setShopId(EnumShopId.PORSCHE_SHOP.getShopId());
+                po.setReceptionSale(list.getJSONObject(j).getString("sale_name"));
+                po.setReceptionStartTime(list.getJSONObject(j).getString("reception_time_str"));
+                po.setReceptionEndTime(list.getJSONObject(j).getString("leave_time_str"));
+                String start = po.getReceptionStartTime() == null ? "00:00" : po.getReceptionStartTime();
+                String end = po.getReceptionEndTime() == null ? "00:00" : po.getReceptionEndTime();
+                po.setReceptionDuration(new DateTimeUtil().calTimeHourDiff(start, end));
+                po.setCustomerId(list.getJSONObject(j).getInteger("customer_id"));
+                po.setCustomerName(list.getJSONObject(j).getString("customer_name"));
+                po.setCustomerTypeName(list.getJSONObject(j).getString("customer_type_name"));
+                po.setCustomerPhone(list.getJSONObject(j).getString("customer_phone"));
+                po.setReceptionDate(list.getJSONObject(j).getString("day_date"));
+                String sql = Sql.instance().insert()
+                        .from("t_porsche_reception_data")
+                        .field("shop_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
+                        .value(po.getShopId(), po.getReceptionSale(), po.getReceptionStartTime(), po.getReceptionEndTime(),
+                                po.getReceptionDuration(), po.getCustomerId(), po.getCustomerName(),
+                                po.getCustomerTypeName(), po.getCustomerPhone(), po.getReceptionDate())
+                        .end().getSql();
+                new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
             }
         }
     }
@@ -142,14 +100,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日交车记录")
     public void testC() {
         StringBuilder stringBuilder = new StringBuilder();
-        String carStyle;
-        String carModel;
-        String deliverTime;
-        int customerId;
-        String customerName;
-        String customerPhone = null;
-        String customerRegion;
-        String customerType;
+        TPorscheDeliverCarDO po = new TPorscheDeliverCarDO();
         String shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         int total = crm.invokeApi(CustomerMyReceptionListScene.builder().searchDateStart(date).searchDateEnd(date).build()).getInteger("total");
@@ -168,29 +119,29 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 for (int x = 0; x < buyCarList.size(); x++) {
                     if (buyCarList.getJSONObject(x).getString("deliver_time") != null
                             && buyCarList.getJSONObject(x).getString("deliver_time").equals(date)) {
-                        carStyle = buyCarList.getJSONObject(x).getString("car_style_id");
-                        carModel = buyCarList.getJSONObject(x).getString("car_model_name");
-                        deliverTime = buyCarList.getJSONObject(x).getString("deliver_time");
-                        customerId = Integer.parseInt(id);
-                        IScene customerInfoScene = CustomerInfoScene.builder().customerId(id).build();
-                        JSONObject response = crm.invokeApi(customerInfoScene);
-                        customerName = response.getString("name");
-
-                        customerType = response.getString("subject_type");
+                        po.setCarStyle(buyCarList.getJSONObject(x).getString("car_style_id"));
+                        po.setCarModel(buyCarList.getJSONObject(x).getString("car_model_name"));
+                        po.setDeliverTime(buyCarList.getJSONObject(x).getString("deliver_time"));
+                        po.setCustomerId(Integer.parseInt(id));
+                        po.setShopId(shopId);
+                        JSONObject response = crm.invokeApi(CustomerInfoScene.builder().customerId(id).build());
+                        po.setCustomerName(response.getString("name"));
+                        po.setCustomerType(response.getString("subject_type"));
                         JSONArray phoneList = response.getJSONArray("phone_list");
                         if (phoneList == null) {
-                            customerPhone = null;
+                            po.setCustomerPhone(null);
                         } else {
                             for (int u = 0; u < phoneList.size(); u++) {
                                 if (phoneList.getJSONObject(u).getInteger("phone_order") == 0) {
-                                    customerPhone = phoneList.getJSONObject(u).getString("phone");
+                                    po.setCustomerPhone(phoneList.getJSONObject(u).getString("phone"));
                                 }
                             }
                         }
-                        customerRegion = getAddress(id);
+                        po.setCustomerRegion(getAddress(id));
                         String sql = Sql.instance().insert().from("t_porsche_deliver_car")
                                 .field("car_style", "car_model", "deliver_time", "customer_id", "customer_name", "customer_region", "customer_phone", "shop_id", "customer_type")
-                                .value(carStyle, carModel, deliverTime, customerId, customerName, customerRegion, customerPhone, shopId, customerType)
+                                .value(po.getCarStyle(), po.getCarModel(), po.getDeliverTime(), po.getCustomerId(),
+                                        po.getCustomerName(), po.getCustomerRegion(), po.getCustomerPhone(), po.getShopId(), po.getCustomerType())
                                 .end().getSql();
                         new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
                     }
