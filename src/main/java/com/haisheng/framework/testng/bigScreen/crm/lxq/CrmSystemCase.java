@@ -1339,7 +1339,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * ====================   4.0  创建DCC线索  ======================
      * */
 
-    @Test(dataProvider = "DCCCREAT",dataProviderClass = CrmScenarioUtil.class)
+    //@Test(dataProvider = "DCCCREAT",dataProviderClass = CrmScenarioUtil.class)
     public void  addDccCust(String name, String phone,String car){
         logger.logCaseStart(caseResult.getCaseName());
         try {
