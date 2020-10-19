@@ -1464,9 +1464,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //新建交车 2.1修改
     public JSONObject deliverAddcode(Long car_id, Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
-                                 Boolean accept_show, String sign_name_url, String vehicle_chassis_code) throws Exception{
+                                     Boolean accept_show, String sign_name_url, String vehicle_chassis_code) throws Exception {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", customer_id);
@@ -1739,7 +1740,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("car_model", car_model);
         return invokeApi(url, object);
     }
-    public JSONObject appointmentTestDrivecode(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType, Integer car_model)throws Exception {
+
+    public JSONObject appointmentTestDrivecode(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType, Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/test-drive";
         JSONObject object = new JSONObject();
         object.put("customer_gender", gender);
@@ -1778,6 +1780,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //预约保养
     public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
@@ -1828,6 +1831,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
+
     //活动报名
     public JSONObject joinActivity(String activity_id, String customer_name, String customer_phone_number, String appointment_date, Integer car_type, String other_brand, String customer_number, Integer car_model) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/activity";
@@ -5179,6 +5183,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //购车
     public JSONObject addOrderCar1(orderCar oc) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
@@ -5308,10 +5313,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 3,
         };
     }
+
     @DataProvider(name = "PHONE")
     public static Object[] phone() {
         return new String[]{
-                "150372860133", "1503728601a","150372860哈","150372860$@","11111111111"
+                "150372860133", "1503728601a", "150372860哈", "150372860$@", "11111111111"
         };
     }
 
@@ -5560,6 +5566,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //我的接待编辑客户-车牌号一列表
     public JSONObject platepic() throws Exception {
         String url = "/porsche/app/customer/plate-number-list-pic";
