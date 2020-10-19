@@ -1369,68 +1369,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
-    public void customerListChkcontent() {
-        logger.logCaseStart(caseResult.getCaseName());
-
-
-        try {
-
-            String today = dt.getHistoryDate(0); //今天日期
-            String phone = ""+System.currentTimeMillis();
-            String phone1 = phone.substring(3);
-
-            int like_car = 3;
-            String compare_car = "宾利";
-            int buy_car_attribute = 3;
-            int buy_car = 1;
-            String pre_buy_time = today;
-
-            Long customerid = creatCust(name,phone);
-            //完成接待
-            String search_name ="";
-            String search_phone ="";
-            long search_level =-1L;
-            int search_like =-1;
-            String search_compare ="";
-            int search_attribute =-1;
-            int search_buy = -1;
-            String search_pre ="";
-
-            //查询顾客信息
-            JSONArray search = crm.customerListPC("",-1,name,phone1,0,0,1,200).getJSONArray("list");
-            for (int i = 0; i<search.size();i++){
-                JSONObject single = search.getJSONObject(i);
-                if (single.getLong("customer_id").equals(customerid)){
-                    search_name = single.getString("customer_name");
-                    search_phone = single.getString("customer_phone");
-//                    search_like = single.getInteger("like_car");
-//                    search_compare = single.getString("compare_car");
-//                    search_attribute = single.getInteger("buy_car_attribute");
-//                    search_buy = single.getInteger("buy_car");
-//                    search_pre = single.getString("pre_buy_time");
-                    break;
-                }
-            }
-
-            Preconditions.checkArgument(search_name.equals(name),"姓名不一致");
-            Preconditions.checkArgument(search_phone.equals(phone1),"手机号不一致");
-//            Preconditions.checkArgument(search_like==like_car,"意向车型不一致");
-//            Preconditions.checkArgument(search_compare.equals(compare_car),"对比车型不一致");
-//            Preconditions.checkArgument(search_attribute==buy_car_attribute,"购车属性不一致");
-//            Preconditions.checkArgument(search_buy==buy_car,"是否订车不一致");
-//            Preconditions.checkArgument(search_pre.equals(pre_buy_time),"预计购车时间不一致");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("app创建客户，PC我的客户页面列表与新建时信息一致");
-        }
-
-    }
 
     //@Test V2.1取消手机号合并
     public void customerListRePhoneChkcontent() {

@@ -1292,8 +1292,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String carnew = "吉ZDH"+(int)((Math.random()*9+1)*100);
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             String caridnew = "ZDHZDHGGG"+(long)((Math.random()*9+1)*10000000);
-            String name = "ZDH"+(int)((Math.random()*9+1)*100);
-            String namenew = "GGG"+(int)((Math.random()*9+1)*100);
+            String name = "ZDh"+(int)((Math.random()*9+1)*100);
+            String namenew = "GGg"+(int)((Math.random()*9+1)*100);
             //新增
             int test_car_id = crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime).getInteger("test_car_id");
 
@@ -1355,6 +1355,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"新建dcc线索后，列表数增加了"+change);
             Preconditions.checkArgument(phoneresult.equals(phone),"列表中手机号为"+ phoneresult+", 新建时手机号为" + phone);
             Preconditions.checkArgument(nameresult.equals(name),"列表中客户名称为"+ nameresult+", 新建时客户名称为" + name);
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
