@@ -4437,10 +4437,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/analysis2/deal/gender-age";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
-        if (!month.equals("")) {
+        if (!StringUtils.isEmpty(cycle_type)) {
             json.put("month", month);
         }
-        if (!car_type.equals("")) {
+        if (!StringUtils.isEmpty(cycle_type)) {
             json.put("car_type", car_type);
         }
         String result = httpPost(url, JSON.toJSONString(json), IpPort);
@@ -5575,11 +5575,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //我的接待-购车档案列表
     public JSONObject buyCarList(String customer_id) throws Exception {
         String url = "/porsche/app/customer/buy-car-list";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
+        json.put("customer_id", customer_id);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
