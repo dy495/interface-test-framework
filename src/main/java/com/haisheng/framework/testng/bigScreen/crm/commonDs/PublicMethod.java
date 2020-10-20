@@ -4,17 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 public class PublicMethod {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
@@ -106,9 +104,12 @@ public class PublicMethod {
 
     /**
      * 获取未接待完成的售后记录id
+     *
+     * @param serviceComplete 是否完成接待
+     * @param n               n天之内的数据，eg:n=2,据今天两天内的数据
      */
-    public Integer getAfterRecordId() {
-        CommonUtil.login(EnumAccount.ZJL_DAILY);
+    public Integer getAfterRecordId(boolean serviceComplete, int n) throws ParseException {
+        String date = DateTimeUtil.getFormat(new Date());
         IScene scene = ReceptionAfterCustomerListScene.builder().build();
         int s = crm.invokeApi(scene).getInteger("total");
         int afterRecordId = 0;
@@ -116,7 +117,9 @@ public class PublicMethod {
             IScene scene1 = ReceptionAfterCustomerListScene.builder().page(i).size(100).build();
             JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
             for (int j = 0; j < list.size(); j++) {
-                if (!list.getJSONObject(j).getBoolean("service_complete")) {
+                String serviceDate = list.getJSONObject(j).getString("service_date");
+                if (list.getJSONObject(j).getBoolean("service_complete") == serviceComplete
+                        && new DateTimeUtil().calTimeDayDiff(serviceDate, date) <= n) {
                     afterRecordId = list.getJSONObject(j).getInteger("after_record_id");
                 }
             }
@@ -127,7 +130,7 @@ public class PublicMethod {
     /**
      * 完成接待
      *
-     * @param afterRecordId {@link PublicMethod#getAfterRecordId()}
+     * @param afterRecordId {@link PublicMethod#getAfterRecordId(boolean serviceComplete, int dayNum)}
      */
     public void completeReception(String afterRecordId) {
         JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
@@ -150,6 +153,23 @@ public class PublicMethod {
                 .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
                 .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).travelMileage(1000).build();
         crm.invokeApi(scene);
+    }
+
+    public int getStatusNum(String type) {
+        IScene scene = ReceptionAfterCustomerListScene.builder().build();
+        int total = crm.invokeApi(scene).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, 100);
+        int count = 0;
+        for (int i = 1; i < s; i++) {
+            IScene scene1 = ReceptionAfterCustomerListScene.builder().size(100).page(i).build();
+            JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("reception_status_name").equals(type)) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     /**

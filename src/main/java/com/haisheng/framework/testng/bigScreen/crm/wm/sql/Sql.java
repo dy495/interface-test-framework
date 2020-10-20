@@ -30,6 +30,7 @@ public class Sql {
      * 语法头
      */
     private final String grammar;
+
     /**
      * 表名
      */

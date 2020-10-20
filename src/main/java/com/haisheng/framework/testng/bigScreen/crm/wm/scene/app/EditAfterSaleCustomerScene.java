@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
+ * 客户管理->编辑售后记录内的客户及预约记录信息
+ * 我的接待 -> 客户编辑
  * 售后完成接待接口
  *
  * @author wangmin

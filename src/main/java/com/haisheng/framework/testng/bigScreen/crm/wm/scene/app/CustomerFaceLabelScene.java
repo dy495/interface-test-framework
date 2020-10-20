@@ -5,8 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 展厅客户信息接口
- * 测试使用
+ * 客户人脸以及标签信息查询接口
  *
  * @author wangmin
  */

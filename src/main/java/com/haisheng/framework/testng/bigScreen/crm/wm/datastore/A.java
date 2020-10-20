@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShop
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheTodayDataDO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -49,7 +50,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(zjl);
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -62,7 +63,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
         list.forEach(arr -> {
             CommonUtil.valueView(arr.get("userName"));
             if (arr.get("userName").contains("总经理")) {
-                CommonUtil.login(zjl);
+                UserUtil.login(zjl);
                 JSONObject response = crm.receptionPage(1, 10, "", "");
                 po.setTodayReceptionNum(response.getInteger("today_reception_num"));
                 po.setTodayClueNum(response.getInteger("all_customer_num"));

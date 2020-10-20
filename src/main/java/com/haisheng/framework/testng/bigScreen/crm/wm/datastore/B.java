@@ -17,7 +17,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerFaceLabe
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.crm.wm.util.Address;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -61,7 +62,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(zjl);
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -298,7 +299,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
             if (StringUtils.isEmpty(idNumber)) {
                 return null;
             }
-            return Address.getNativePlace(Integer.parseInt(customerId));
+            return AddressUtil.getNativePlace(Integer.parseInt(customerId));
         }
         return address;
     }

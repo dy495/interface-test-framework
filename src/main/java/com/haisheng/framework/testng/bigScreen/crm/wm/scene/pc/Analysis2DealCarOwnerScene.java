@@ -5,8 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 车主类型占比接口
- * 测试使用
+ * 交车车主类型占比接口
  *
  * @author wangmin
  */

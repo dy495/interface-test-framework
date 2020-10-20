@@ -4,20 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.Date;
 
 
 /**
@@ -2473,54 +2469,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         }
 
         return customerid;
-    }
-
-
-    @Test(description = "页面内容与pc我的回访一致", enabled = false)
-    public void returnVisit() {
-        logger.logCaseStart(caseResult.getCaseName());
-        //app端内容
-        String time = DateTimeUtil.getFormat(new Date());
-        JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
-        String customerPhone = CommonUtil.getStrField(response, 0, "customer_phone");
-        String belongsSaleName = CommonUtil.getStrField(response, 0, "belongs_sale_name");
-        String customerLevelName = CommonUtil.getStrField(response, 0, "customer_level_name");
-        String customerName = CommonUtil.getStrField(response, 0, "customer_name");
-        String likeCarName = CommonUtil.getStrField(response, 0, "like_car_name");
-        //pc端内容
-        CommonUtil.login(EnumAccount.ZJL_DAILY);
-        JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", customerPhone, "");
-        String saleName = CommonUtil.getStrField(response1, 0, "sale_name");
-        String customerLevel = CommonUtil.getStrField(response1, 0, "customer_level");
-        String pcCustomerName = CommonUtil.getStrField(response1, 0, "customer_name");
-        String customerPhoneNumber = CommonUtil.getStrField(response1, 0, "customer_phone_number");
-        String interestedCarModel = CommonUtil.getStrField(response1, 0, "interested_car_model");
-        CommonUtil.valueView(customerPhone, belongsSaleName, customerLevelName, customerName, likeCarName, saleName, customerLevel, pcCustomerName, customerPhoneNumber, interestedCarModel);
-    }
-
-    @Test(description = "pc我的回访条数=app回访任务", enabled = false)
-    public void returnVisitNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String time = DateTimeUtil.getFormat(new Date());
-            JSONObject response = crm.returnVisitTaskPage(1, 100, time, time);
-            int appReturnVisitNum = response.getJSONArray("list").size();
-            int pcReturnVisitNum = 0;
-            CommonUtil.login(EnumAccount.ZJL_DAILY);
-            JSONObject response1 = crm.withFilterAndCustomerDetail("", 0, 1, 100, "", "", "");
-            JSONArray list = response1.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("sale_name").equals("销售顾问temp")) {
-                    pcReturnVisitNum++;
-                }
-            }
-            CommonUtil.valueView(appReturnVisitNum, pcReturnVisitNum);
-            Preconditions.checkArgument(appReturnVisitNum == pcReturnVisitNum, "app端我的回访!=pc端我的回访数量");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("【pc我的回访】条数=回访任务");
-        }
     }
 
     @Test(description = "小程序“我的”预约试驾数=列表数", enabled = false)

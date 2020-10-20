@@ -289,43 +289,38 @@ public class DateTimeUtil {
         return today;
     }
 
-
     public long calTimeDiff(String left, String right) throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-
-        java.util.Date leftVal = df.parse(left);
-
-        java.util.Date rightVal = df.parse(right);
-
-        long l = rightVal.getTime() - leftVal.getTime();
-
+        String format = "HH:mm:ss";
+        long l = timeDiff(left, right, format);
         long day = l / (24 * 60 * 60 * 1000);
-
         long hour = (l / (60 * 60 * 1000) - day * 24);
-
         long min = ((l / (60 * 1000)) - day * 24 * 60 - hour * 60);
-
         long s = (l / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
-
         long secondDiff = min * 60 + s;
-
         System.out.println("" + day + "天" + hour + "小时" + min + "分" + s + "秒");
         return secondDiff;
     }
 
     public int calTimeHourDiff(String left, String right) throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String format = "HH:mm";
+        long l = timeDiff(left, right, format);
+        long min = (l / (60 * 1000));
+        System.out.println(min + "分");
+        return (int) min;
+    }
 
-        java.util.Date leftVal = df.parse(left);
+    public int calTimeDayDiff(String left, String right) throws ParseException {
+        String format = "yyyy-MM-dd";
+        long l = timeDiff(left, right, format);
+        long day = l / (24 * 60 * 60 * 1000);
+        return (int) day;
+    }
 
-        java.util.Date rightVal = df.parse(right);
-
-        long l = rightVal.getTime() - leftVal.getTime();
-
-
-        Long min = ((l / (60 * 1000)));
-        CommonUtil.valueView(min + "分");
-        return min.intValue();
+    public long timeDiff(String left, String right, String format) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        Date leftDate = df.parse(left);
+        Date rightDate = df.parse(right);
+        return rightDate.getTime() - leftDate.getTime();
     }
 
     public Timestamp currentDateToTimestamp() throws ParseException {

@@ -1,33 +1,28 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc;
+package com.haisheng.framework.testng.bigScreen.crm.wm.scene.app;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 订单存量接口
+ * 售后客户信息接口
  *
  * @author wangmin
  */
 @Builder
-public class Analysis2OrderSaleListScene extends BaseScene {
-
-    private final String month;
-    private final String cycleType;
-    private final String carType;
+public class DetailAfterSaleCustomerScene extends BaseScene {
+    private final String afterRecordId;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("month", month);
-        object.put("cycle_type", cycleType);
-        object.put("car_type", carType);
+        object.put("after_record_id", afterRecordId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/porsche/analysis2/order/sale-list";
+        return "/porsche/app/after_sale/detail_after_sale_customer";
     }
 
     @Override

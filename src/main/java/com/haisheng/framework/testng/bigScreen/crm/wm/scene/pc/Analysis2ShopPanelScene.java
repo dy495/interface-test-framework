@@ -6,7 +6,6 @@ import lombok.Builder;
 
 /**
  * 概览数据接口
- * 测试使用
  *
  * @author wangmin
  */

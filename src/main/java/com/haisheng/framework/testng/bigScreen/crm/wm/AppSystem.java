@@ -3,18 +3,18 @@ package com.haisheng.framework.testng.bigScreen.crm.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ShopQrcodeScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -70,7 +70,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(xs);
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -84,7 +84,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         int activityTaskId = 0;
         int activityId = 0;
         try {
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             JSONArray list = crm.activityTaskPage(1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getBoolean("is_edit")) {
@@ -93,19 +93,19 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     break;
                 }
             }
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             int activityCustomer = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             //添加报名信息
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             int activityCustomer1 = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
             Preconditions.checkArgument(activityCustomer1 == activityCustomer + 1, "添加报名人信息后，pc端任务活动未+1");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             int customerId = 0;
             JSONArray list = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -125,12 +125,12 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         //分配销售
         try {
             //登录前台账号
-            CommonUtil.login(qt);
+            UserUtil.login(qt);
             //创建接待
             JSONObject response = crm.saleReceptionCreatReception();
             if (response.getString("message").equals("当前没有空闲销售~")) {
                 //登录销售账号
-                CommonUtil.login(xs);
+                UserUtil.login(xs);
                 long customerId = crm.userInfService().getLong("customer_id");
                 //完成接待
                 crm.finishReception(customerId, 7, "测试顾客1", "", "H级客户-taskListChkNum-修改时间为昨天");
@@ -401,7 +401,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             int s = 0;
             int total = crm.returnVisitTaskPage(1, 1, "", "").getInteger("total");
             int page1 = CommonUtil.getTurningPage(total, 100);
@@ -440,7 +440,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String endDate = DateTimeUtil.getFormat(new Date());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, endDate, endDate);
             int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
@@ -462,7 +462,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int s = CommonUtil.getTurningPage(response.getInteger("total"), 100);
             for (int i = 1; i < s; i++) {
@@ -506,7 +506,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
         try {
-            CommonUtil.login(xs);
+            UserUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
             for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, startDate, endDate).getJSONArray("list");
@@ -541,7 +541,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
         String endDate = DateTimeUtil.getFormat(new Date());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
             for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, "", "").getJSONArray("list");
@@ -657,7 +657,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             //获取回访列表
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 1, "task_id");
@@ -693,7 +693,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             //获取回访列表
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 1, "task_id");
@@ -729,7 +729,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
@@ -761,7 +761,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
@@ -792,7 +792,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
@@ -831,7 +831,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访
@@ -855,7 +855,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String picture2 = new ImageUtil().getImageBinary(picPath + "外观照片.jpg");
         String picture3 = new ImageUtil().getImageBinary(picPath + "大图照片.jpg");
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONObject response = crm.returnVisitTaskPage(1, 10, "", "");
             int taskId = CommonUtil.getIntField(response, 0, "task_id");
             //回访2张图片
@@ -954,7 +954,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             JSONArray list = crm.dccList("", "", "", "", 1, 100).getJSONArray("list");
             String customerName = list.getJSONObject(0).getString("customer_name");
             String customerPhone = list.getJSONObject(0).getString("customer_phone");
@@ -1018,7 +1018,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void receptionAfterCustomerList_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().build();
             JSONArray list = crm.invokeApi(scene).getJSONArray("list");
             String plateNumber = list.getJSONObject(0).getString("plate_number");
@@ -1047,7 +1047,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void receptionAfterCustomerList_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().build();
             JSONArray list = crm.invokeApi(scene).getJSONArray("list");
             String customerPhoneNumber = list.getJSONObject(0).getString("customer_phone_number");
@@ -1078,7 +1078,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
@@ -1106,7 +1106,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
@@ -1134,7 +1134,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(endDate).searchDateEnd(startDate).build();
             JSONArray list = crm.invokeApi(scene).getJSONArray("list");
             Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
@@ -1149,7 +1149,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void receptionAfterCustomerList_function_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             IScene scene = ShopQrcodeScene.builder().build();
             String qrcodeUrl = crm.invokeApi(scene).getString("qrcode_url");
             Preconditions.checkArgument(qrcodeUrl != null, "接待二维码为空");
@@ -1160,20 +1160,43 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "", enabled = false)
+    @Test(description = "售后接待-我的接待列表，维度1: 维修中在上，已完成在下,维度2: 接待日期倒序")
     public void receptionAfterCustomerList_function_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             //查询未完成接待的记录
-            int afterRecordId = new PublicMethod().getAfterRecordId();
-            new PublicMethod().completeReception(String.valueOf(afterRecordId));
+            IScene scene = ReceptionAfterCustomerListScene.builder().page(1).size(10).build();
+            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+            int count = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("reception_status_name").equals("维修中")) {
+                    count++;
+                }
+            }
+            CommonUtil.valueView(count);
+            for (int i = 1; i <= count; i++) {
+                IScene scene1 = ReceptionAfterCustomerListScene.builder().page(1).size(i).build();
+                JSONArray list1 = crm.invokeApi(scene1).getJSONArray("list");
+                for (int j = 0; j < list1.size(); j++) {
+                    String receptionStatusName = list1.getJSONObject(j).getString("reception_status_name");
+                    CommonUtil.valueView(receptionStatusName);
+                    Preconditions.checkArgument(receptionStatusName.equals("维修中"), "没有按照维修中在上排序");
+                    String serviceDate = list1.getJSONObject(j).getString("service_date");
+                    if (j != list1.size() - 1) {
+                        String serviceDate1 = list1.getJSONObject(j + 1).getString("service_date");
+                        CommonUtil.valueView(serviceDate, serviceDate1);
+                        Preconditions.checkArgument(serviceDate.compareTo(serviceDate1) >= 0, "没有按照日期倒序");
+                    }
+                    CommonUtil.log("分割线");
+                }
+            }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-//            appendFailreason(e.toString());
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后接待-我的接待列表，维度1: 维修中在上，已完成在下,维度2: 接待日期倒序");
         }
     }
-
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
@@ -1183,7 +1206,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
      * @return phone
      */
     private String getDistinctPhone() {
-        CommonUtil.login(zjl);
+        UserUtil.login(zjl);
         String phone = "153" + CommonUtil.getRandom(8);
         int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");

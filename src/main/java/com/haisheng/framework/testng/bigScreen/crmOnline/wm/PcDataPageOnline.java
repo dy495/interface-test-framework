@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -58,7 +59,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        CommonUtil.login(zjl);
+        UserUtil.login(zjl);
     }
 
     @AfterClass
@@ -76,32 +77,31 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 //    --------------------------------------------------四项数据比较------------------------------------------------------
-
-    @Test(description = "店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车", enabled = false)
-    public void shopPanel_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> array = method.getSaleList("销售顾问");
-                array.forEach(arr -> {
-                    CommonUtil.valueView(arr.get("userName"));
-                    JSONObject response = crm.shopPannel(e.getType(), "", arr.get("userId"));
-                    int serviceNum = response.getInteger("service");
-                    int testDriverNum = response.getInteger("test_drive");
-                    int dealNum = response.getInteger("deal");
-                    int deliveryNum = response.getInteger("delivery");
-                    CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
-                    Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
-                    Preconditions.checkArgument(dealNum >= deliveryNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计交车:" + dealNum + "<累计交车:" + deliveryNum);
-                    CommonUtil.log("分割线");
-                });
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车");
+@Test(description = "店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车", enabled = false)
+public void shopPanel_data_1() {
+    logger.logCaseStart(caseResult.getCaseName());
+    try {
+        for (EnumFindType e : EnumFindType.values()) {
+            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            array.forEach(arr -> {
+                CommonUtil.valueView(arr.get("userName"));
+                JSONObject response = crm.shopPannel(e.getType(), "", arr.get("userId"));
+                int serviceNum = response.getInteger("service");
+                int testDriverNum = response.getInteger("test_drive");
+                int dealNum = response.getInteger("deal");
+                int deliveryNum = response.getInteger("delivery");
+                CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
+                Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
+                Preconditions.checkArgument(dealNum >= deliveryNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计交车:" + dealNum + "<累计交车:" + deliveryNum);
+                CommonUtil.log("分割线");
+            });
         }
+    } catch (Exception | AssertionError e) {
+        appendFailreason(e.toString());
+    } finally {
+        saveData("店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车");
     }
+}
 
     @Test(description = "店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和")
     public void shopPanel_data_2() {

@@ -6,7 +6,6 @@ import lombok.Builder;
 
 /**
  * 智能批次列表接口
- * 测试使用
  *
  * @author wangmin
  */

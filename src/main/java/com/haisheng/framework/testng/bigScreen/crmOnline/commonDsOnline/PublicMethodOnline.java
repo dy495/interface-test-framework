@@ -6,6 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
 
@@ -106,7 +107,7 @@ public class PublicMethodOnline {
      * 获取未接待完成的售后记录id
      */
     public Integer getAfterRecordId() {
-        CommonUtil.login(EnumAccount.ZJL_DAILY);
+        UserUtil.login(EnumAccount.ZJL_DAILY);
         IScene scene = ReceptionAfterCustomerListScene.builder().build();
         int s = crm.invokeApi(scene).getInteger("total");
         int afterRecordId = 0;

@@ -6,7 +6,6 @@ import lombok.Builder;
 
 /**
  * 全国成交量接口
- * 测试使用
  *
  * @author wangmin
  */

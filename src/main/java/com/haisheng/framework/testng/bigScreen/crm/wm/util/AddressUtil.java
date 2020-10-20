@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
-public class Address {
+public class AddressUtil {
     public static String getNativePlace(int nativePlaceCode) {
         int provinceCode = nativePlaceCode / 10000;
         int citCode = nativePlaceCode / 100;

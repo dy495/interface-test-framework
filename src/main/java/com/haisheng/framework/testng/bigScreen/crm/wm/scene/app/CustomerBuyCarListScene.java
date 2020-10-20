@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 客户呃购车信息接口
+ * 购车档案查询接口
  *
  * @author wangmin
  */

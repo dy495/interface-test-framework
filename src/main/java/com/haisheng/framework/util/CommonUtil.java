@@ -1,11 +1,7 @@
 package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -24,8 +20,6 @@ import java.util.*;
  */
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
-    private static final CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    private static final CrmScenarioUtilOnline crmOnline = CrmScenarioUtilOnline.getInstance();
 
     public static String getStrField(JSONObject response, int index, String field) {
         String value = response.getJSONArray("list").getJSONObject(index).getString(field);
@@ -191,35 +185,6 @@ public class CommonUtil {
      */
     public static String getRandom(int digitNumber) {
         return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
-    }
-
-
-    /**
-     * 登录账号
-     *
-     * @param enumAccount 人员
-     */
-    public static void login(EnumAccount enumAccount) {
-        if (enumAccount == null) {
-            throw new DataException("enumAccount is null");
-        }
-        if (enumAccount.getEnvironment().equals("daily")) {
-            crm.login(enumAccount.getAccount(), enumAccount.getPassword());
-        } else {
-            crmOnline.login(enumAccount.getAccount(), enumAccount.getPassword());
-        }
-    }
-
-    /**
-     * 更新小程序
-     *
-     * @param appletCode 自己的token
-     */
-    public static void loginApplet(EnumAppletCode appletCode) {
-        if (appletCode == null) {
-            throw new DataException("appletCode is null");
-        }
-        crm.appletLoginToken(appletCode.getCode());
     }
 
     /**

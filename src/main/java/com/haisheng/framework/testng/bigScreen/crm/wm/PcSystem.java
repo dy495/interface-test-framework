@@ -5,9 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -61,7 +62,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        CommonUtil.login(zjl);
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -358,7 +359,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前可见消息
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -368,7 +369,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后不可见消息
-            CommonUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletCode.XMF);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -380,7 +381,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户看不见消息");
             Preconditions.checkArgument(!result2, "小程序售后客户能看见消息");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -402,7 +403,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前不可见消息
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -412,7 +413,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后可见消息
-            CommonUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletCode.XMF);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -424,7 +425,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(!result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -446,7 +447,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前可见消息
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -456,7 +457,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后可见消息
-            CommonUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletCode.XMF);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -468,7 +469,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(result1, result2);
             Preconditions.checkArgument(result1, "小程序销售客户能看见消息");
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -506,7 +507,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -517,7 +518,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -537,7 +538,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -548,7 +549,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约维修按钮");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -568,7 +569,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            CommonUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -579,7 +580,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
             CommonUtil.valueView(appletAppointmentType);
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
-            CommonUtil.login(zjl);
+            UserUtil.login(zjl);
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
