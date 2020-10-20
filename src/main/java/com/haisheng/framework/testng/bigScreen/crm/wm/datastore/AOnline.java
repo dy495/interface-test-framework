@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
@@ -8,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheTodayDataDO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -25,16 +25,17 @@ import java.util.List;
 import java.util.Map;
 
 public class AOnline extends TestCaseCommon implements TestCaseStd {
-
+    PublicMethod method = new PublicMethod();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
+    private static final String shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+        commonConfig.shopId = shopId;
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
@@ -57,12 +58,9 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
     @Test
     public void everydayData() {
         TPorscheTodayDataDO po = new TPorscheTodayDataDO();
-        List<Map<String, String>> list = new PublicMethodOnline().getSaleList("销售顾问");
+        List<Map<String, String>> list = method.getSaleList("销售顾问");
         list.forEach(arr -> {
             CommonUtil.valueView(arr.get("userName"));
-            String shop_id = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
-            String sale_id = arr.get("userId");
-            String date = DateTimeUtil.getFormat(new Date());
             if (arr.get("userName").contains("总经理")) {
                 CommonUtil.login(zjl);
                 JSONObject response = crm.receptionPage(1, 10, "", "");
@@ -81,10 +79,10 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
             po.setTodayOrderNum(responseA.getInteger("today_order"));
             po.setTodayOrderNum(responseB.getInteger("today_deliver_car_total"));
             po.setTodayTestDriverNum(responseC.getInteger("today_test_drive_total"));
-            po.setTodayDate(date);
-            po.setShopId(shop_id);
+            po.setTodayDate(DateTimeUtil.getFormat(new Date()));
+            po.setShopId(shopId);
             po.setSaleName(arr.get("userName"));
-            po.setSaleId(sale_id);
+            po.setSaleId(arr.get("userId"));
             String sql = Sql.instance().insert()
                     .from("t_porsche_today_data")
                     .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name", "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
