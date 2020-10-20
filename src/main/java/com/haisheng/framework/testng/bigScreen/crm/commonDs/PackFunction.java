@@ -36,6 +36,19 @@ public class PackFunction {
         return userLoginName;
     }
 
+    public JSONArray phoneList(String phonenum,String phonenum2){
+        JSONArray PhoneList = new JSONArray();
+        JSONObject phone1 = new JSONObject();
+        phone1.put("phone", phonenum);
+        phone1.put("phone_order", 0);
+        JSONObject phone2 = new JSONObject();
+        phone2.put("phone",phonenum2);
+        phone2.put("phone_order", 1);
+        PhoneList.add(0, phone1);
+        PhoneList.add(1, phone2);
+        return PhoneList;
+    }
+
 
     //pc新建活动方法，返回文章id和文章id
     public Long[] createAArcile_id(String valid_start, String simulation_num) throws Exception {
@@ -148,18 +161,9 @@ public class PackFunction {
 
         Long receiptId = data.getJSONArray("list").getJSONObject(0).getLong("id");
         Long customerID = data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
-        //创建某级客户
-//        crm.customerEdit_onlyNec(customerID, 7, name, phone.toString(), "自动化---------创建----------H级客户");
-//        crm.customerEdit_onlyNec(receiptId,customerID, name);
+
         JSONArray PhoneList = new JSONArray();
-        JSONObject phone1 = new JSONObject();
-        phone1.put("phone", phone);
-        phone1.put("phone_order", 0);
-        JSONObject phone2 = new JSONObject();
-        phone2.put("phone", "");
-        phone2.put("phone_order", 1);
-        PhoneList.add(0, phone1);
-        PhoneList.add(1, phone2);
+        PhoneList =phoneList(phone,"");
 
         jsonP.put("name", name);
         jsonP.put("phone", phone);
@@ -180,7 +184,6 @@ public class PackFunction {
         //搜索手机号
         JSONObject data = crm.phoneCheck(phone);
         Long customer_id = data.getLong("customer_id");
-//        String belongs_sale_name=data.getString("belongs_sale_name");
         String belongs_sale_id = data.getString("belongs_sale_id");
         String userLoginName = username(belongs_sale_id);
         crm.receptionOld(customer_id, "AGAIN_VISIT");
@@ -192,14 +195,7 @@ public class PackFunction {
         Long customerId = dataC.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         Long receiptId = dataC.getJSONArray("list").getJSONObject(0).getLong("id");
         JSONArray PhoneList = new JSONArray();
-        JSONObject phone1 = new JSONObject();
-        phone1.put("phone", phone);
-        phone1.put("phone_order", 0);
-        JSONObject phone2 = new JSONObject();
-        phone2.put("phone", "");
-        phone2.put("phone_order", 1);
-        PhoneList.add(0, phone1);
-        PhoneList.add(1, phone2);
+        PhoneList =phoneList(phone,"");
         jsonCO.put("id", id);
         jsonCO.put("customerId", customerId);
         jsonCO.put("userLoginName", userLoginName);
@@ -232,7 +228,9 @@ public class PackFunction {
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian, pp.adminpassword);
         int driverid = crm.testDriverAppList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getInteger("id");
-        crm.driverAudit(driverid, audit_status);
+        if(audit_status==1||audit_status==2) {
+            crm.driverAudit(driverid, audit_status);
+        }
         //最后销售要再登陆一次
     }
 
@@ -406,27 +404,29 @@ public class PackFunction {
         a[1] = dataTotal.getInteger("test_drive_total");         //全部
         JSONObject dataList1 = crm.driverSelect(1, 10);
         a[2] = dataList1.getInteger("total");         //列表数
-//        JSONObject dataTotal = crm.driverTotal();
-//        int today_number = dataTotal.getInteger("today_test_drive_total");
-//        int totalNum = dataTotal.getInteger("test_drive_total");
-//        JSONObject dataList1 = crm.driverSelect(1, 10);
-//        int total1 = dataList1.getInteger("total");
         return a;
     }
 
-    //查询试驾数统计
+    //查询交车数统计
     public int [] deliverSum(){
         int a[]=new int[4];
         JSONObject dataTotal = crm.jiaocheTotal();
        a[0] = dataTotal.getInteger("today_deliver_car_total");   //今日
         a[1] = dataTotal.getInteger("deliver_car_total");    //实际交车
         a[2] = dataTotal.getInteger("total_order");         //全部交车
-        a[3]=crm.deliverSelect(1,10).getInteger("total");   //列表数
-//        JSONObject dataTotal = crm.jiaocheTotal();
-//        int today_number = dataTotal.getInteger("today_deliver_car_total");  0
-//        int totalNum = dataTotal.getInteger("deliver_car_total");     1
-//        int total_order = dataTotal.getInteger("total_order");        2
-//        int listtotal=crm.deliverSelect(1,10).getInteger("total");    3
+        JSONObject data=crm.deliverSelect(1,10);
+        a[3]=data.getInteger("total");   //列表数
+        return a;
+    }
+    //接待列表数从查询
+    public int [] receiptSum(){
+        int a[]=new int[5];
+        JSONObject dataTotal = crm.customerReceptionTotalInfo();
+        a[0] = dataTotal.getInteger("total_reception");   //共计接待
+        a[1] = dataTotal.getInteger("today_new_customer");    //今日新客接待
+        a[2] = dataTotal.getInteger("today_order");         //今日订单
+        a[3] = dataTotal.getInteger("total_old_customer");         //今日老客接待
+        a[4] = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
 
         return a;
     }

@@ -20,6 +20,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
 public class CrmQt extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
@@ -504,44 +505,48 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             String loginTemp2 = pf.username(sale_id2);
             crm.login(loginTemp2, pp.adminpassword);
             //变更接待前接待销售接待列表数
-            int totalB2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
-
+            int beforeReceipt[]=pf.receiptSum();
             JSONObject json = pf.creatCust();
-            String receiptId = json.getString("reception_id");
-            String customer_id = json.getString("customerId");
-            String belong_sale_id = json.getString("sale_id");
-            JSONArray PhoneList = json.getJSONArray("phoneList");
+
+            finishReceive pm = new finishReceive();
+            pm.customer_id = json.getString("customerId");
+            pm.reception_id = json.getString("reception_id");
+            pm.belongs_sale_id = json.getString("sale_id");
+            pm.name =json.getString("name");
+            pm.reception_type = "FU";
+            pm.phoneList = json.getJSONArray("phoneList");
 
             String loginTemp = pf.username(sale_id);
             crm.login(loginTemp, pp.adminpassword);
             //变更接待前 所属销售接待列表数
-            int totalB = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
-
+            int beforeRcceiptBelongSale[]=pf.receiptSum();
             //前台登录，变更接待
             crm.login(pp.qiantai, pp.qtpassword);
-            crm.changeReceptionSale(receiptId, sale_id2);
+            int beforeqt=crm.qtreceptionPage("","","","1","10").getInteger("today_reception_num");
+            crm.changeReceptionSale(pm.reception_id, sale_id2);
 
-            crm.login(loginTemp, pp.adminpassword);          //变更接待后原销售接待列表数
-            int totalA = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+            crm.login(loginTemp, pp.adminpassword);          //变更接待后所属销售接待列表数
+            int afterRcceiptBelongSale[]=pf.receiptSum();
 
             crm.login(loginTemp2, pp.adminpassword);   //变更接待后 接待销售接待列表数
-            int totalA2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+            int afterRcceipt[]=pf.receiptSum();
+
             //完成接待
             crm.login(pp.qiantai, pp.qtpassword);
-            crm.changeReceptionSale(receiptId, belong_sale_id);
+            int afterqt=crm.qtreceptionPage("","","","1","10").getInteger("today_reception_num");
+            crm.changeReceptionSale(pm.reception_id, pm.belongs_sale_id);
 
             crm.login(loginTemp, pp.adminpassword);
 
-            finishReceive pm = new finishReceive();
-            pm.customer_id = customer_id;
-            pm.reception_id = receiptId;
-            pm.belongs_sale_id = belong_sale_id;
-            pm.name = pp.customer_name;
-            pm.reception_type = "FU";
-            pm.phoneList = PhoneList;
+
             crm.finishReception3(pm);
-            Preconditions.checkArgument(totalB - totalA == 1, "变更接待，所属销售接待列表-1");
-            Preconditions.checkArgument(totalA2 - totalB2 == 1, "变更接待，接待销售接待列表+1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[4] - afterRcceiptBelongSale[4]  == 1, "变更接待，所属销售接待列表-1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[1] - afterRcceiptBelongSale[1]  == 1, "变更接待，所属销售今日接待数-1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[0] - afterRcceiptBelongSale[0]  == 1, "变更接待，所属销售共计接待数-1");
+            Preconditions.checkArgument(afterRcceipt[4] - beforeReceipt[4] == 1, "变更接待，接待销售接待列表+1");
+            Preconditions.checkArgument(afterRcceipt[1] - beforeReceipt[1] == 1, "变更接待，接待销售今日接待数+1");
+            Preconditions.checkArgument(afterRcceipt[0] - beforeReceipt[0] == 1, "变更接待，接待销售共计接待数+1");
+            Preconditions.checkArgument(afterqt - beforeqt == 0, "变更接待，前台今日接待数不变");
 
 
         } catch (AssertionError e) {
@@ -550,7 +555,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
-            saveData("变更接待 ");
+            saveData("变更接待，数据统计 ");
         }
     }
 
@@ -558,7 +563,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
      * @description :非所属，变更接待，无法修改除备注以外功能---前端控制；此case验证，销售顾问无法变更所属销售
      * @date :2020/10/12 20:58
      **/
-//    @Test()
+    @Test()
     public void changeReceptionNoedit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -601,7 +606,127 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
-            saveData("销售顾问无法变更所属销售 ");
+            saveData("销售顾问变更所属销售失败 ");
+        }
+    }
+
+    /**
+     * @description :销售总监修改客户联系方式1，成功验证
+     * @date :2020/10/12 20:58
+     **/
+    @Test()
+    public void changeReceptionNoedit2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(pp.xiaoshouZongjian,pp.adminpassword);
+            JSONObject data=crm.customerSelect(1,10,"auto").getJSONArray("list").getJSONObject(0);
+            String customer_id=data.getString("customer_id");
+            String customer_phone=pf.genPhoneNum();
+
+            finishReceive pm = new finishReceive();
+            pm.customer_id = customer_id;
+
+            pm.name = data.getString("customer_name");
+            pm.reception_type = "FU";
+            pm.phoneList = pf.phoneList(customer_phone,"");
+            pm.belongs_sale_id="uid_37ff7893";
+            crm.editCustomer(pm);
+
+            crm.finishReception3(pm);
+            JSONObject after=crm.customerInfo(customer_id);
+            String belongsSaleId=after.getString("belongs_sale_id");
+            String phoneA=after.getJSONArray("phone_list").getJSONObject(0).getString("phone");
+            Preconditions.checkArgument(belongsSaleId.equals(pm.belongs_sale_id),"销售总监修改所属顾问失败");
+            Preconditions.checkArgument(phoneA.equals(customer_phone),"销售总监修改联系方式失败");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("销售总监修改客户联系方式1，成功验证 ");
+        }
+    }
+    /**
+     * @description :前台分配新客含人脸接待列表+1
+     * @date :2020/10/20 18:54
+     **/
+//    @Test()
+    public void qtFenpei() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            finishReceive fr=new finishReceive();
+            crm.login(pp.qiantai, pp.adminpassword);
+            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
+
+            fr.name = "auto" + dt.getHHmm(0);
+            String phone = pf.genPhoneNum();
+            //获取当前空闲第一位销售id
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String userLoginName = pf.username(sale_id);
+            boolean isDes = true;
+            JSONObject list = new JSONObject();
+            JSONArray ll = new JSONArray();
+            list.put("customer_name", fr.name);
+            list.put("is_decision", isDes);
+            ll.add(0, list);
+
+            //创建接待
+            crm.creatReception2("FIRST_VISIT", ll);
+            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            crm.login(userLoginName, pp.adminpassword);
+
+            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
+            fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
+            fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
+            fr.phoneList =pf.phoneList(phone,"");
+            fr.belongs_sale_id=sale_id;
+            fr.reception_type="FU";
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("销售总监修改客户联系方式1，成功验证 ");
+        }
+    }
+   //不含人脸
+    @Test()
+    public void qtFenpei2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(pp.qiantai, pp.adminpassword);
+            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
+
+            JSONObject json = pf.creatCust();
+
+            finishReceive pm = new finishReceive();
+            pm.customer_id = json.getString("customerId");
+            pm.reception_id = json.getString("reception_id");
+            pm.belongs_sale_id = json.getString("sale_id");
+            pm.name =json.getString("name");
+            pm.reception_type = "FU";
+            pm.phoneList = json.getJSONArray("phoneList");
+
+            String loginTemp = json.getString("userLoginName");
+            crm.login(loginTemp, pp.adminpassword);
+            crm.finishReception3(pm);
+            crm.login(pp.qiantai,pp.qtpassword);
+            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+
+            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("前台分配新客接待列表+1");
         }
     }
 
