@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
@@ -9,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheTodayDataDO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AOnline extends TestCaseCommon implements TestCaseStd {
-    PublicMethod method = new PublicMethod();
+    PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final String shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
