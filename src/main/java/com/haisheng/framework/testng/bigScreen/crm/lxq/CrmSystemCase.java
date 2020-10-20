@@ -1339,7 +1339,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
      * ====================   4.0  创建DCC线索  ======================
      * */
 
-    //@Test(dataProvider = "DCCCREAT",dataProviderClass = CrmScenarioUtil.class)
+    @Test(dataProvider = "DCCCREAT",dataProviderClass = CrmScenarioUtil.class)
     public void  addDccCust(String name, String phone,String car){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1355,7 +1355,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"新建dcc线索后，列表数增加了"+change);
             Preconditions.checkArgument(phoneresult.equals(phone),"列表中手机号为"+ phoneresult+", 新建时手机号为" + phone);
             Preconditions.checkArgument(nameresult.equals(name),"列表中客户名称为"+ nameresult+", 新建时客户名称为" + name);
-
+            Thread.sleep(1000);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

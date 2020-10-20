@@ -5090,7 +5090,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("customer_name", customer_name);
         json.put("customer_phone", customer_phone);
-        if (!plate_number.equals("")) {
+        if (!StringUtils.isEmpty(plate_number)) {
             json.put("plate_number", plate_number);
         }
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
