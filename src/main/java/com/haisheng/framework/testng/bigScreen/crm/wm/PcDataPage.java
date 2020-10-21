@@ -2310,7 +2310,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(value, count);
-                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + "app接待数量为：" + count);
+                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + "app订车数量为：" + count);
                 CommonUtil.log("分割线");
             }
         } catch (Exception | AssertionError e) {

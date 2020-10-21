@@ -76,32 +76,32 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-//    --------------------------------------------------四项数据比较------------------------------------------------------
-@Test(description = "店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车", enabled = false)
-public void shopPanel_data_1() {
-    logger.logCaseStart(caseResult.getCaseName());
-    try {
-        for (EnumFindType e : EnumFindType.values()) {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
-            array.forEach(arr -> {
-                CommonUtil.valueView(arr.get("userName"));
-                JSONObject response = crm.shopPannel(e.getType(), "", arr.get("userId"));
-                int serviceNum = response.getInteger("service");
-                int testDriverNum = response.getInteger("test_drive");
-                int dealNum = response.getInteger("deal");
-                int deliveryNum = response.getInteger("delivery");
-                CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
-                Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
-                Preconditions.checkArgument(dealNum >= deliveryNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计交车:" + dealNum + "<累计交车:" + deliveryNum);
-                CommonUtil.log("分割线");
-            });
+    //    --------------------------------------------------四项数据比较------------------------------------------------------
+    @Test(description = "店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车", enabled = false)
+    public void shopPanel_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (EnumFindType e : EnumFindType.values()) {
+                List<Map<String, String>> array = method.getSaleList("销售顾问");
+                array.forEach(arr -> {
+                    CommonUtil.valueView(arr.get("userName"));
+                    JSONObject response = crm.shopPannel(e.getType(), "", arr.get("userId"));
+                    int serviceNum = response.getInteger("service");
+                    int testDriverNum = response.getInteger("test_drive");
+                    int dealNum = response.getInteger("deal");
+                    int deliveryNum = response.getInteger("delivery");
+                    CommonUtil.valueView(serviceNum, testDriverNum, dealNum, deliveryNum);
+                    Preconditions.checkArgument(serviceNum >= testDriverNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计接待:" + serviceNum + "<累计试驾:" + testDriverNum);
+                    Preconditions.checkArgument(dealNum >= deliveryNum, "店面数据分析--顾问：" + arr.get("userName") + e.getName() + "累计交车:" + dealNum + "<累计交车:" + deliveryNum);
+                    CommonUtil.log("分割线");
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车");
         }
-    } catch (Exception | AssertionError e) {
-        appendFailreason(e.toString());
-    } finally {
-        saveData("店面数据分析--【各时间段+各销售】累计接待>=累计试驾、累计成交>=累计交车");
     }
-}
 
     @Test(description = "店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和")
     public void shopPanel_data_2() {
@@ -2306,7 +2306,7 @@ public void shopPanel_data_1() {
                 }
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(value, count);
-                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + "app接待数量为：" + count);
+                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + "app订车数量为：" + count);
                 CommonUtil.log("分割线");
             }
         } catch (Exception | AssertionError e) {

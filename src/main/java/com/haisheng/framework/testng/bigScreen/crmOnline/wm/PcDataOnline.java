@@ -96,9 +96,15 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.publicCustomerList("", "", 2 << 10, 1);
-            int total = response.getInteger("total");
-            int listSize = response.getJSONArray("list").size();
+            int listSize = 0;
+            int total = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 50);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.publicCustomerList("", "", 50, i).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    listSize++;
+                }
+            }
             CommonUtil.valueView(total, listSize);
             Preconditions.checkArgument(total == listSize, "pc销售客户管理公海共计人数为：" + total + "列表总数为：" + listSize + "两者不相等");
         } catch (Exception | AssertionError e) {
@@ -212,7 +218,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, String.valueOf(EnumCustomerLevel.G.getId()), phone, car.getModelId(), car.getStyleId(), remark);
+            crm.customerCreate(name, String.valueOf(EnumCustomerLevel.G.getId()), phone, "82", car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");

@@ -940,12 +940,12 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+        EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
         try {
             String phone = getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
-            crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), "2", phone, "82", car.getStyleId(), customerInfo.getRemark());
             int total1 = crm.customerPage(1, 10, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");

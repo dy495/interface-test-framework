@@ -67,6 +67,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 //    ---------------------------------------------------2.0------------------------------------------------------------
+
     /**
      * @description: 工作管理-我的预约
      */
@@ -941,7 +942,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
-            crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), "2", phone, "82", car.getStyleId(), customerInfo.getRemark());
             int total1 = crm.customerPage(1, 10, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
@@ -1077,7 +1078,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //创建
             String customerPhone = getDistinctPhone();
             UserUtil.login(newXs);
-            crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, "82", car.getStyleId(), customerInfo.getRemark());
             //删除此新增的顾问
             deleteSaleUser(salePhone);
             //公海数量+1

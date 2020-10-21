@@ -205,23 +205,23 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        EnumCarModel carModel = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+        EnumCarModel carModel = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
         String name = customerInfo.getName();
         String remark = customerInfo.getRemark();
         String customerLevel = String.valueOf(EnumCustomerLevel.B.getId());
         String str = "!@#$%^&*()12345678历史记录计算机asdfghj";
         try {
             //汉字，10字之内
-            JSONObject response = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response = crm.customerCreate(name, customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("成功"), "客户姓名为汉字，长度1-10个字内创建线索失败");
             //汉字，1字
-            JSONObject response1 = crm.customerCreate("王", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response1 = crm.customerCreate("王", customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response1.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
             //汉字，10个字
-            JSONObject response2 = crm.customerCreate("我的名字十个字不信你数", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response2 = crm.customerCreate("我的名字十个字不信你数", customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
             //备注包含中英文、汉字、符号、数字
-            JSONObject response3 = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), str);
+            JSONObject response3 = crm.customerCreate(name, customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
