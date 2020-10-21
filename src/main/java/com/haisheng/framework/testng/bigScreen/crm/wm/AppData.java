@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -114,7 +115,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //预约保养
             Integer maintainTotalNumber = crm.mainAppointmentDriverNum().getInteger("appointment_total_number");
             //预约保养列表
-            Integer maintainTotal = crm.mainAppointmentlist().getInteger("total");
+            Integer maintainTotal = crm.mainAppointmentList().getInteger("total");
             //预约维修
             Integer repairTotalNumber = crm.repairAppointmentDriverNum().getInteger("appointment_total_number");
             //预约维修列表
@@ -1178,7 +1179,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
      * @param date 预约日期
      * @return 时间id
      */
-    private Integer getTimeId(String date) throws Exception {
+    private Integer getTimeId(String date) {
         UserUtil.loginApplet(EnumAppletCode.XMF);
         JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
@@ -1192,13 +1193,13 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     /**
      * 获取车辆id
      */
-    private Integer getCarId() throws Exception {
+    private Integer getCarId() {
         UserUtil.loginApplet(EnumAppletCode.XMF);
         JSONArray list = crm.myCarList().getJSONArray("list");
         if (!list.isEmpty()) {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
-        throw new RuntimeException("该用户小程序没有绑定车");
+        throw new DataException("该用户小程序没有绑定车");
     }
 
     /**

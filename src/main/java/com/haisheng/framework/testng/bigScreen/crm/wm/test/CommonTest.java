@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.DbContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
@@ -23,18 +22,6 @@ public class CommonTest {
         db.init();
         List<Map<String, Object>> list = db.getTable();
         System.err.println(list.get(0).get("id"));
-    }
-
-    @Test
-    public void testB() {
-        String sql = "alter table 表名 ADD 字段 类型 NOT NULL Default 0";
-        List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.BUSINESS_PORSCHE.getContainer()).build().create(sql);
-        System.err.println(list.get(0).get("id"));
-    }
-
-    @Test
-    public void testC() throws Exception {
-        new PublicMethod().uploadShopCarPlate("京AMD238", 3);
     }
 
     @Test()

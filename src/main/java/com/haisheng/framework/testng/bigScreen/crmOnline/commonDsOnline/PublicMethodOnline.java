@@ -2,18 +2,23 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentMaintainScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentRepairScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 public class PublicMethodOnline {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
@@ -44,7 +49,7 @@ public class PublicMethodOnline {
         }
         Map<String, String> map = new HashMap<>(16);
         map.put("userId", "");
-        map.put("userName", "总经理");
+        map.put("userName", "总经理123456");
         map.put("account", "zjl");
         array.add(map);
         return array;
@@ -105,9 +110,13 @@ public class PublicMethodOnline {
 
     /**
      * 获取未接待完成的售后记录id
+     *
+     * @param serviceComplete 是否完成接待
+     * @param n               n天之内的数据，eg:n=2,据今天两天内的数据
+     * @param status          status 接待状态
      */
-    public Integer getAfterRecordId() {
-        UserUtil.login(EnumAccount.ZJL_DAILY);
+    public Integer getAfterRecordId(boolean serviceComplete, String status, int n) throws ParseException {
+        String date = DateTimeUtil.getFormat(new Date());
         IScene scene = ReceptionAfterCustomerListScene.builder().build();
         int s = crm.invokeApi(scene).getInteger("total");
         int afterRecordId = 0;
@@ -115,7 +124,10 @@ public class PublicMethodOnline {
             IScene scene1 = ReceptionAfterCustomerListScene.builder().page(i).size(100).build();
             JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
             for (int j = 0; j < list.size(); j++) {
-                if (!list.getJSONObject(j).getBoolean("service_complete")) {
+                String serviceDate = list.getJSONObject(j).getString("service_date");
+                if (list.getJSONObject(j).getBoolean("service_complete") == serviceComplete
+                        && list.getJSONObject(j).getString("reception_status_name").equals(status)
+                        && new DateTimeUtil().calTimeDayDiff(serviceDate, date) <= n) {
                     afterRecordId = list.getJSONObject(j).getInteger("after_record_id");
                 }
             }
@@ -123,10 +135,14 @@ public class PublicMethodOnline {
         return afterRecordId;
     }
 
+    public Integer getAfterRecordId(boolean serviceComplete, int n) throws ParseException {
+        return getAfterRecordId(serviceComplete, "维修中", n);
+    }
+
     /**
      * 完成接待
      *
-     * @param afterRecordId {@link PublicMethodOnline#getAfterRecordId()}
+     * @param afterRecordId {@link PublicMethodOnline#getAfterRecordId(boolean serviceComplete, String status, int dayNum)}
      */
     public void completeReception(String afterRecordId) {
         JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
@@ -149,5 +165,114 @@ public class PublicMethodOnline {
                 .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
                 .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).travelMileage(1000).build();
         crm.invokeApi(scene);
+    }
+
+    /**
+     * 保存
+     *
+     * @param remarks 备注
+     */
+    public void saveReception(String afterRecordId, JSONArray remarks) {
+        JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+        String appointmentCustomerName = response.getString("appointment_customer_name");
+        Integer appointmentId = response.getInteger("appointment_id");
+        if (appointmentId == null) {
+            appointmentId = 0;
+        }
+        String appointmentPhoneNumber = response.getString("appointment_phone_number");
+        String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+        String customerName = response.getString("customer_name");
+        String customerPhoneNumber = response.getString("customer_phone_number");
+        int customerSource = response.getInteger("customer_source");
+        String firstRepairCarType = response.getString("first_repair_car_type");
+        String maintainSaleId = response.getString("maintain_sale_id");
+        int maintainType = response.getInteger("maintain_type");
+        String plateNumber = response.getString("plate_number");
+        IScene scene = EditAfterSaleCustomerScene.builder().afterRecordId(afterRecordId).appointmentCustomerName(appointmentCustomerName)
+                .appointmentId(appointmentId).appointmentPhoneNumber(appointmentPhoneNumber).appointmentSecondaryPhone(appointmentSecondaryPhone)
+                .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
+                .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).serviceComplete(false).remarks(remarks).travelMileage(1000).build();
+        crm.invokeApi(scene);
+    }
+
+    /**
+     * 获取已完成/维修中数量
+     *
+     * @param type 接待状态
+     * @return 数量
+     */
+    public int getStatusNum(String type) {
+        ReceptionAfterCustomerListScene.ReceptionAfterCustomerListSceneBuilder b = ReceptionAfterCustomerListScene.builder();
+        int total = crm.invokeApi(b.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, 100);
+        int count = 0;
+        for (int i = 1; i < s; i++) {
+            JSONArray list = crm.invokeApi(b.page(i).size(100).build()).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("reception_status_name").equals(type)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 预约
+     *
+     * @param type 类型
+     * @param date 日期
+     */
+    public void appointment(EnumAppointmentType type, String date) {
+        EnumCarModel carModel = EnumCarModel.PANAMERA;
+        UserUtil.loginApplet(EnumAppletCode.XMF);
+        int id = getTimeId(type.getType(), date);
+        IScene scene;
+        switch (type) {
+            case MAINTAIN:
+                scene = AppointmentMaintainScene.builder().myCarId(String.valueOf(getCarId())).customerName("大马猴")
+                        .customerGender("MALE").customerPhoneNumber("15321527989").timeRangeId(id).build();
+                break;
+            case REPAIR:
+                scene = AppointmentRepairScene.builder().myCarId(String.valueOf(getCarId())).customerName("大马猴")
+                        .customerGender("MALE").customerPhoneNumber("15321527989").timeRangeId(id).build();
+                break;
+            default:
+                scene = AppointmentTestDriverScene.builder().appointmentDate(date).customerGender("MALE").customerName("大马猴")
+                        .carModel(Integer.parseInt(carModel.getModelId())).carStyle(Integer.parseInt(carModel.getStyleId()))
+                        .customerPhoneNumber("15321527989").build();
+                break;
+        }
+        crm.invokeApi(scene);
+    }
+
+    /**
+     * 获取预约时间id
+     *
+     * @param date 预约日期
+     * @return 时间id
+     */
+    private Integer getTimeId(String type, String date) {
+        if (type.equals(EnumAppointmentType.TEST_DRIVE.getType())) {
+            return 0;
+        }
+        JSONArray list = crm.timeList(type, date).getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {
+                return list.getJSONObject(i).getInteger("id");
+            }
+        }
+        throw new DataException("当前时间段可预约次数为0");
+    }
+
+    /**
+     * 获取车辆id
+     */
+    private Integer getCarId() {
+        JSONArray list = crm.myCarList().getJSONArray("list");
+        if (!list.isEmpty()) {
+            return list.getJSONObject(0).getInteger("my_car_id");
+        }
+        throw new DataException("该用户小程序没有绑定车");
     }
 }

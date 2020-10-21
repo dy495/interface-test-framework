@@ -1513,7 +1513,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                         percentSum += percent;
                     }
                     CommonUtil.valueView(percentSum);
-                    Preconditions.checkArgument(percentSum == 1.0 || percentSum == 0.0, b.getName() + a.getName() + "个人车主百分比+公司车主百分比=" + percentSum);
+                    Preconditions.checkArgument(percentSum == 1 || percentSum == 0, b.getName() + a.getName() + "个人车主百分比+公司车主百分比=" + percentSum * 100 + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -1541,7 +1541,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                         percentageSum += percentage;
                     }
                     CommonUtil.valueView(percentageSum);
-                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum);
+                    Preconditions.checkArgument(percentageSum == 1 || percentageSum == 0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum * 100 + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -1569,7 +1569,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                         percentageSum += percentage;
                     }
                     CommonUtil.valueView(percentageSum);
-                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "车主性别分析 性别之和=" + percentageSum);
+                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "车主性别分析 性别之和=" + percentageSum * 100 + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -1646,23 +1646,24 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "存量客户分析--【各时间段】全国各省成交量，各省百分比之和=100%", enabled = false)
+    @Test(description = "存量客户分析--【各时间段】全国各省成交量，各省百分比之和=100%")
     public void stockCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumFindType a : EnumFindType.values()) {
-                for (EnumCarStyle b : EnumCarStyle.values()) {
-                    CommonUtil.valueView(a.getName(), b.getName());
-                    double percentageStr = 0;
-                    JSONArray list = crm.wholeCountry(a.getType(), "", b.getStyleId()).getJSONArray("list");
+            for (EnumCarStyle b : EnumCarStyle.values()) {
+                for (EnumFindType a : EnumFindType.values()) {
+                    CommonUtil.valueView(b.getName(), a.getName());
+                    double percentageNum = 0;
+                    IScene scene = Analysis2DealWholeCountryScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
+                    JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        String percentage = list.getJSONObject(i).getString("percentage_str");
-                        String y = percentage.substring(0, percentage.length() - 1);
-                        CommonUtil.valueView(Double.parseDouble(y));
-                        percentageStr += Double.parseDouble(y);
+                        String percentage_str = list.getJSONObject(i).getString("percentage_str");
+                        String result = percentage_str.substring(0, percentage_str.length() - 1);
+                        CommonUtil.valueView(result);
+                        percentageNum += Double.parseDouble(result);
                     }
-                    CommonUtil.valueView(percentageStr);
-                    Preconditions.checkArgument(percentageStr == 1 || percentageStr == 0, "全国各省占比百分比之和为：" + percentageStr);
+                    CommonUtil.valueView(percentageNum);
+                    Preconditions.checkArgument((percentageNum >= 99 && percentageNum <= 101) || percentageNum == 0, b.getName() + a.getName() + "全国各省占比百分比之和为：" + percentageNum + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -1705,23 +1706,23 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "存量客户分析--【各时间段筛选】苏州各区成交量，各区百分比之和=100%", enabled = false)
+    @Test(description = "存量客户分析--【各时间段筛选】苏州各区成交量，各区百分比之和=100%")
     public void stockCustomer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType a : EnumFindType.values()) {
                 for (EnumCarStyle b : EnumCarStyle.values()) {
                     CommonUtil.valueView(a.getName(), b.getName());
-                    double percentage = 0;
+                    double percentageNum = 0;
                     JSONArray list = crm.city(a.getType(), "", b.getStyleId(), 320500).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String percentageStr = list.getJSONObject(i).getString("percentage_str");
                         String percent = percentageStr.substring(0, percentageStr.length() - 1);
                         CommonUtil.valueView(percent);
-                        percentage += Double.parseDouble(percent);
+                        percentageNum += Double.parseDouble(percent);
                     }
-                    CommonUtil.valueView(percentage);
-                    Preconditions.checkArgument(percentage == 1 || percentage == 0, "苏州各区百分比之和为：" + percentage);
+                    CommonUtil.valueView(percentageNum);
+                    Preconditions.checkArgument((percentageNum >= 99 && percentageNum <= 101) || percentageNum == 0, "苏州各区百分比之和为：" + percentageNum + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -1899,7 +1900,6 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                                 .end().getSql();
                     } else {
                         sql = Sql.instance().select()
-                                .from("t_porsche_deliver_car")
                                 .where("deliver_time", "=", date)
                                 .and("customer_region", "like", "%" + province + "%")
                                 .and("car_style", "=", e.getStyleId())
@@ -1941,7 +1941,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                         }
                     }
                     CommonUtil.valueView(num1, num2);
-                    Preconditions.checkArgument(num1 + num2 == 1 || num1 + num2 == 0, e.getName() + a.getName() + "个人车主百分比为：" + num1 + "公司车主百分比为：" + num2);
+                    Preconditions.checkArgument((num1 + num2) * 100 == 100 || (num1 + num2) * 100 == 0, e.getName() + a.getName() + "个人车主百分比为：" + num1 + "公司车主百分比为：" + num2);
                     CommonUtil.log("分割线");
                 }
             }
@@ -2107,7 +2107,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "订单客户分析--【各时间段】全国各省成交量，各省百分比之和=100%", enabled = false)
+    @Test(description = "订单客户分析--【各时间段】全国各省成交量，各省百分比之和=100%")
     public void orderCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2116,14 +2116,15 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                     CommonUtil.valueView(e.getName(), a.getName());
                     IScene scene = Analysis2OrderWholeCountryScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-                    double num = 0;
+                    double percentageNum = 0;
                     for (int i = 0; i < list.size(); i++) {
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(percentage);
-                        num += percentage;
+                        String percentage = list.getJSONObject(i).getString("percentage_str");
+                        String result = percentage.substring(0, percentage.length() - 1);
+                        CommonUtil.valueView(result);
+                        percentageNum += Double.parseDouble(result);
                     }
-                    CommonUtil.valueView(num);
-                    Preconditions.checkArgument(num == 1 || num == 0, e.getName() + a.getName() + "各省成交量占比之和为：" + num);
+                    CommonUtil.valueView(percentageNum);
+                    Preconditions.checkArgument((percentageNum <= 101 && percentageNum >= 99) || percentageNum == 0, e.getName() + a.getName() + "各省成交量占比之和为：" + percentageNum + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -2167,24 +2168,24 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "订单客户分析--【各时间段筛选】苏州各区成交量,各区百分比之和=100%", enabled = false)
+    @Test(description = "订单客户分析--【各时间段筛选】苏州各区成交量,各区百分比之和=100%")
     public void orderCustomer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumCarStyle b : EnumCarStyle.values()) {
                 for (EnumFindType a : EnumFindType.values()) {
                     CommonUtil.valueView(a.getName(), b.getName());
-                    double percentage = 0;
+                    double percentageNum = 0;
                     IScene scene = Analysis2OrderCityScene.builder().adCode(320500).carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String percentageStr = list.getJSONObject(i).getString("percentage_str");
-                        String percent = percentageStr.substring(0, percentageStr.length() - 1);
-                        CommonUtil.valueView(percent);
-                        percentage += Double.parseDouble(percent);
+                        String result = percentageStr.substring(0, percentageStr.length() - 1);
+                        CommonUtil.valueView(result);
+                        percentageNum += Double.parseDouble(result);
                     }
-                    CommonUtil.valueView(percentage);
-                    Preconditions.checkArgument(percentage == (100d) || percentage == (double) 0, b.getName() + a.getName() + "苏州各区百分比之和为：" + percentage);
+                    CommonUtil.valueView(percentageNum);
+                    Preconditions.checkArgument((percentageNum <= 101 && percentageNum >= 99) || percentageNum == 0, b.getName() + a.getName() + "苏州各区百分比之和为：" + percentageNum + "%");
                     CommonUtil.log("分割线");
                 }
             }

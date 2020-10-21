@@ -1827,7 +1827,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
     //车辆列表
-    public JSONObject myCarList() throws Exception {
+    public JSONObject myCarList() {
         String url = "/WeChat-applet/porsche/a/my-car/list";
         String json = "{}";
 
@@ -1914,7 +1914,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     //预约时间段v3.0---xia
 
-    public JSONObject timeList(String type, String date) throws Exception {
+    public JSONObject timeList(String type, String date) {
         String url = "/WeChat-applet/porsche/a/appointment/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("type", type);
@@ -2437,7 +2437,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
     //预约保养列表展示
-    public JSONObject mainAppointmentlist() throws Exception {
+    public JSONObject mainAppointmentList() throws Exception {
         String url = "/porsche/app/after_sale/appointment_maintain_list";
         String json = "{}";
         String res = httpPostWithCheckCode(url, json, IpPort);

@@ -8,14 +8,12 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.PcData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ConfirmCarScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.DetailAfterSaleCustomerScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.SendPickUpNewsScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderMaintainPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderRepairPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -45,6 +43,9 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     EnumAccount zjl = EnumAccount.ZJL_DAILY;
+    private static final int size = 50;
+    int zjl_num = 0;
+    int gw_num = 0;
     String xs_name = "0805xsgw";//销售顾问
     String by_name = "lxqby";//保养顾问姓名
     String by_name2 = "baoyang";
@@ -55,14 +56,13 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     String qt_name = "qt";//前台账号
     String bsj_name = "baoshijie";
     //我的车辆信息
-    Long my_car_id = 61L;
+    long my_car_id = 61L;
     String plate_number = "吉A66ZDH";
     int car_type = 4;
     //预约信息
     String customer_name = "自动化哈";
     String customer_phone_number = "13400000000";
-    int zjl_num = 0;
-    int gw_num = 0;
+
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -109,6 +109,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -279,27 +280,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //APP-全部预约保养<=列表数--存在脏数据，所以会报错
-//    @Test
-//    public void afterSaleMaintainAllLEList() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            crm.login(by_name, pwd);
-//            JSONObject obj = crm.mainAppointmentDriverNum();
-//            int total = obj.getInteger("appointment_total_number");
-//
-//            int list = crm.mainAppointmentlist().getInteger("total");
-//            Preconditions.checkArgument(total <= list, "全部预约保养" + total + ">列表数" + list);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("APP-全部预约保养<=列表数");
-//        }
-//    }
-
     //  APP-新客的所属顾问=当前登陆账号销售名字---有问题
     @Test(enabled = false)
     public void afterSaleNewChkRecpname() {
@@ -353,7 +333,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj = crm.mainAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
             int today_bef = obj.getInteger("appointment_today_number");
-            int total = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total = crm.mainAppointmentList().getInteger("total");//列表数
             //小程序预约
             Long id = Long.parseLong(maintain(dt.getHistoryDate(1), my_car_id, "no")[1]);
             //销售登陆查看统计数据
@@ -361,7 +341,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj1 = crm.mainAppointmentDriverNum();
             int total_after = obj1.getInteger("appointment_total_number");
             int today_after = obj1.getInteger("appointment_today_number");
-            int total1 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total1 = crm.mainAppointmentList().getInteger("total");//列表数
             //预约不取消，今日/全部+1
             int changetotal1 = total_after - total_bef;
             int changetoday1 = today_after - today_bef;
@@ -373,7 +353,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj2 = crm.mainAppointmentDriverNum();
             int total_after1 = obj2.getInteger("appointment_total_number");
             int today_after1 = obj2.getInteger("appointment_today_number");
-            int total2 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total2 = crm.mainAppointmentList().getInteger("total");//列表数
             int changetotal2 = total_after - total_after1;
             int changetoday2 = today_after - today_after1;
 
@@ -405,7 +385,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj = crm.mainAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
             int today_bef = obj.getInteger("appointment_today_number");
-            int total = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total = crm.mainAppointmentList().getInteger("total");//列表数
             //小程序预约
 
             Long id1 = Long.parseLong(maintain(dt.getHistoryDate(1), my_car_id, "no")[1]);
@@ -414,7 +394,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj1 = crm.mainAppointmentDriverNum();
             int total_after = obj1.getInteger("appointment_total_number");
             int today_after = obj1.getInteger("appointment_today_number");
-            int total1 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total1 = crm.mainAppointmentList().getInteger("total");//列表数
             //预约不取消，今日/全部+1
             int changetotal1 = total_after - total_bef;
             int changetoday1 = today_after - today_bef;
@@ -424,7 +404,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj2 = crm.mainAppointmentDriverNum();
             int total_after1 = obj2.getInteger("appointment_total_number");
             int today_after1 = obj2.getInteger("appointment_today_number");
-            int total2 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total2 = crm.mainAppointmentList().getInteger("total");//列表数
             int changetotal2 = total_after - total_after1;
             int changetoday2 = today_after - today_after1;
 
@@ -433,7 +413,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj3 = crm.mainAppointmentDriverNum();
             int total_after2 = obj3.getInteger("appointment_total_number");
             int today_after2 = obj3.getInteger("appointment_today_number");
-            int total3 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total3 = crm.mainAppointmentList().getInteger("total");//列表数
             int changetotal3 = total_after - total_after2;
             int changetoday3 = today_after - today_after2;
 
@@ -468,7 +448,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj = crm.mainAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
             int today_bef = obj.getInteger("appointment_today_number");
-            int total = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total = crm.mainAppointmentList().getInteger("total");//列表数
             //小程序预约
             Long id = Long.parseLong(maintain(dt.getHistoryDate(1), my_car_id, "no")[1]);
             //再加
@@ -476,7 +456,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj1 = crm.mainAppointmentDriverNum();
             int total_after = obj1.getInteger("appointment_total_number");
             int today_after = obj1.getInteger("appointment_today_number");
-            int total1 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total1 = crm.mainAppointmentList().getInteger("total");//列表数
             //预约不取消，今日/全部+2
             int changetotal1 = total_after - total_bef;
             int changetoday1 = today_after - today_bef;
@@ -487,7 +467,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             JSONObject obj2 = crm.mainAppointmentDriverNum();
             int total_after1 = obj2.getInteger("appointment_total_number");
             int today_after1 = obj2.getInteger("appointment_today_number");
-            int total2 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int total2 = crm.mainAppointmentList().getInteger("total");//列表数
             int changetotal2 = total_after - total_after1;
             int changetoday2 = today_after - today_after1;
 
@@ -1540,7 +1520,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-
     //修改密码-填写全部必填项：新密码输入长度21位--1234!@#$我们111111111111111qq----现在逻辑不通，需要完善逻辑，需要重新修改--郭丽雅
     @Test(enabled = false)
     public void modifyPassword1() {
@@ -1571,8 +1550,10 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
+    //-----------------------------------------------------售后----------------------------------------------------------
+
     @Test(description = "售后--我的接待--本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆")
-    public void receptionAfterCustomer() {
+    public void afterSale_reception_data_1() {
         try {
             crm.login(by_name, pwd);
             JSONObject response = crm.afterSaleCustList("", "", "", 1, 10);
@@ -1590,7 +1571,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     @Test(description = "售后--我的接待--今日接待售后车辆=今天筛选，列表数车牌去重")
-    public void todayReception() {
+    public void afterSale_reception_data_2() {
         try {
             crm.login(by_name, pwd);
             String date = DateTimeUtil.getFormat(new Date());
@@ -1618,17 +1599,11 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test(description = "接待日期为今天的记录，确认交车，今日完成维修车辆+1，本月完成维修车辆+1。列表总条数不变，接待状态=已完成+1，接待状态=维修中-1", enabled = false)
-    public void afterSaleReception_data_1() {
+    @Test(description = "接待日期为今天的记录，确认交车，今日完成维修车辆+1&&本月完成维修车辆+1", enabled = false)
+    public void afterSale_reception_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(zjl);
-            StringBuilder str1 = new StringBuilder();
-            StringBuilder str2 = new StringBuilder();
-            int id = method.getAfterRecordId(true, 0);
-            IScene detailScene = DetailAfterSaleCustomerScene.builder().afterRecordId(String.valueOf(id)).build();
-            String platNumber = crm.invokeApi(detailScene).getString("plate_number");
-            str1.append(platNumber).append(",");
             IScene scene = ReceptionAfterCustomerListScene.builder().build();
             JSONObject response = crm.invokeApi(scene);
             int monthRepairedCar = response.getInteger("month_repaired_car");
@@ -1659,14 +1634,48 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test(description = "")
-    public void afterSaleReception_data_2() {
+    @Test(description = "接待日期为今天的记录，确认交车，列表总条数不变，接待状态=已完成+1&&接待状态=维修中-1")
+    public void afterSale_reception_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            UserUtil.login(zjl);
+            int maintainNum = method.getStatusNum("维修中");
+            int completeNum = method.getStatusNum("已完成");
+            int listSize = maintainNum + completeNum;
+            CommonUtil.valueView(maintainNum, completeNum);
+            int afterRecordId = method.getAfterRecordId(false, "维修中", 30);
+            //提车
+            crm.invokeApi(SendPickUpNewsScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
+            //交车
+            crm.invokeApi(ConfirmCarScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
+            int maintainNum1 = method.getStatusNum("维修中");
+            int completeNum1 = method.getStatusNum("已完成");
+            int listSize1 = maintainNum1 + completeNum1;
+            CommonUtil.valueView(maintainNum1, completeNum1);
+            Preconditions.checkArgument(maintainNum1 == maintainNum - 1, "交车前维修中数量为：" + maintainNum + "交车后维修中数量为：" + maintainNum1);
+            Preconditions.checkArgument(completeNum1 == completeNum + 1, "交车前已完成数量为：" + completeNum + "交车后已完成数量为：" + completeNum1);
+            Preconditions.checkArgument(listSize == listSize1, "交车前列表数量为：" + listSize + "交车后列表数数量为：" + listSize1);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("接待日期为今天的记录，确认交车，列表总条数不变，接待状态=已完成+1&&接待状态=维修中-1");
+        }
+    }
+
+    @Test(description = "接待日期为昨天的记录，确认交车，今日完成维修车辆+1&&本月完成维修车辆+1", enabled = false)
+    public void afterSale_reception_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+    }
+
+    @Test(description = "app展示信息与小程序预约时信息保持一致", enabled = false)
+    public void afterSale_reception_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
 
     }
 
     @Test(description = "app预约保养列表数与pc预约保养列表数一致，app预约维修列表数与pc预约维修列表数一致")
-    public void afterSaleReception_data_3() {
+    public void afterSale_reception_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(zjl_name, pwd);
@@ -1686,8 +1695,35 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test(description = "总监本月接待售后车辆>=各个顾问本月接待售后车辆之和")
-    public void afterSaleReception_data_4() {
+    @Test(description = "预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1")
+    public void afterSale_reception_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            UserUtil.login(zjl);
+            IScene scene = ReceptionAfterCustomerListScene.builder().build();
+            int total = crm.invokeApi(scene).getInteger("total");
+            String date = DateTimeUtil.addDayFormat(new Date(), +1);
+            method.appointment(EnumAppointmentType.MAINTAIN, date);
+            JSONArray list = crm.mainAppointmentList().getJSONArray("list");
+            int appointmentId = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("service_status_name").equals("预约中")) {
+                    appointmentId = list.getJSONObject(i).getInteger("appointment_id");
+                }
+            }
+            crm.reception_customer((long) appointmentId);
+            int total1 = crm.invokeApi(scene).getInteger("total");
+            CommonUtil.valueView(total, total1);
+            Preconditions.checkArgument(total1 == total + 1, "");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1");
+        }
+    }
+
+    @Test(description = "总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和")
+    public void afterSale_reception_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareAfterSaleMyReception("month_reception_car");
@@ -1696,12 +1732,12 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("总监本月接待售后车辆>=各个顾问本月接待售后车辆之和");
+            saveData("总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
         }
     }
 
     @Test(description = "总经理本月完成维修车辆>=各个顾问本月完成维修车辆之和")
-    public void afterSaleReception_data_5() {
+    public void afterSale_reception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareAfterSaleMyReception("month_repaired_car");
@@ -1715,7 +1751,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     @Test(description = "总经理今日接待售后车辆>=各个顾问今日接待售后车辆之和")
-    public void afterSaleReception_data_6() {
+    public void afterSale_reception_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareAfterSaleMyReception("today_reception_car");
@@ -1729,7 +1765,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     @Test(description = "总经理今日完成维修车辆>=各个顾问今日完成维修车辆之和")
-    public void afterSaleReception_data_7() {
+    public void afterSale_reception_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             compareAfterSaleMyReception("today_repaired_car");
@@ -1763,60 +1799,69 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆
-    @Test
-    public void afterSaleCustomerCar() {
-        crm.login(by_name, pwd);
+    @Test(description = "售后--我的接待--增加20条备注，展示20条")
+    public void afterSale_reception_data_13() {
+        logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.afterSaleCustomerList("", "", "", 1, 10);
-            int totalReceptionCar = response.getInteger("total_reception_car");
-            int monthReceptionCar = response.getInteger("month_reception_car");
-            int todayNewCar = response.getInteger("today_new_car");
-            Preconditions.checkArgument(totalReceptionCar >= monthReceptionCar && monthReceptionCar >= todayNewCar, "\n" + " 我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆异常");
-        } catch (Exception e) {
-            appendFailreason(e.toString());
+            UserUtil.login(zjl);
+            JSONArray remarks = new JSONArray();
+            String str = EnumCustomerInfo.CUSTOMER_1.getRemark();
+            for (int i = 0; i < 20; i++) {
+                remarks.add(str);
+            }
+            int afterRecordId = method.getAfterRecordId(false, 30);
+            method.saveReception(String.valueOf(afterRecordId), remarks);
+            IScene scene = DetailAfterSaleCustomerScene.builder().afterRecordId(String.valueOf(afterRecordId)).build();
+            JSONObject response = crm.invokeApi(scene);
+            JSONArray array = response.getJSONArray("remarks");
+            String platNumber = response.getString("plate_number");
+            Preconditions.checkArgument(array.size() == 20, "车牌号为：" + platNumber + "的客户，备注列表展示条数为：" + array.size());
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
         } finally {
-            saveData("我的客户--本月新增车辆<=【我的接待】本月接待售后车辆&&本月新增车辆>=今日新增车辆");
+            saveData("售后--我的接待--增加20条备注，展示20条");
         }
     }
 
-    //我的客户--全部车辆=列表数车牌号去重-数据对不上
-    @Test()
-    public void todayNewCarCarCompare() {
+    @Test(description = "售后--客户管理--全部车辆>=本月新增车辆")
+    public void afterSale_customerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(zjl_name, pwd);
-            Set<String> set = new HashSet<>();
-            JSONObject response = crm.afterSaleCustomerList("", "", "", 1, 10);
+            IScene scene = AfterSaleCustomerListScene.builder().build();
+            JSONObject response = crm.invokeApi(scene);
+            int monthReceptionCar = response.getInteger("month_reception_car");
             int totalReceptionCar = response.getInteger("total_reception_car");
-            int total = response.getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            int w = 0;
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSaleCustomerList("", "", "", i, 100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    String customerPhone = list.getJSONObject(j).getString("customer_phone_number");
-                    set.add(customerPhone);
-                    CommonUtil.valueView(customerPhone);
-
-                }
-            }
-            CommonUtil.valueView(totalReceptionCar, set.size());
-            Preconditions.checkArgument(totalReceptionCar == set.size(), "我的客户--全部车辆为 " + totalReceptionCar + "列表数车牌号去重 " + set.size());
+            CommonUtil.valueView(monthReceptionCar, totalReceptionCar);
+            Preconditions.checkArgument(totalReceptionCar >= monthReceptionCar, "全部车辆为：" + totalReceptionCar + "本月新增车辆为：" + monthReceptionCar);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-我的客户--全部车辆=列表数车牌号去重");
+            saveData("售后--客户管理--全部车辆>=本月新增车辆");
         }
     }
 
-    //今日新增车辆=今日筛选，车牌号去重
-    @Test()
-    public void todayNewCarCompare() {
+    @Test(description = "售后--客户管理--本月新增车辆>=今日新增车辆")
+    public void afterSale_customerManager_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = AfterSaleCustomerListScene.builder().build();
+            JSONObject response = crm.invokeApi(scene);
+            int monthReceptionCar = response.getInteger("month_reception_car");
+            int todayNewCar = response.getInteger("today_new_car");
+            CommonUtil.valueView(monthReceptionCar, todayNewCar);
+            Preconditions.checkArgument(todayNewCar <= monthReceptionCar, "今日新增车辆为：" + todayNewCar + "本月新增车辆为：" + monthReceptionCar);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--本月新增车辆>=今日新增车辆");
+        }
+    }
+
+    @Test(description = "售后--客户管理--今日新增车辆=今日筛选，车牌号去重")
+    public void afterSale_customerManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            crm.login(zjl_name, pwd);
             JSONObject response = crm.afterSaleCustomerList("", date, date, 1, 10);
             int todayNewCar = response.getInteger("today_new_car");
             Set<String> set = new HashSet<>();
@@ -1827,7 +1872,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 set.add(plateNumber);
             }
             CommonUtil.valueView(todayNewCar, set.size());
-            Preconditions.checkArgument(todayNewCar == set.size(), " 我的客户--今日新增车辆为 " + todayNewCar + "列表数车牌号去重 " + set.size());
+            Preconditions.checkArgument(todayNewCar == set.size(), "今日新增车辆为 " + todayNewCar + "列表数车牌号去重 " + set.size());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1835,138 +1880,145 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    //APP-我的客户-本月新增车辆<=【我的接待】本月接待售后车辆
-    @Test
-    public void monthReceptionCompare() {
+    @Test(description = "售后-客户管理-本月新增车辆<=【我的接待】本月接待售后车辆")
+    public void afterSale_customerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(by_name, pwd);
-            //我的客户-本月新增车辆
-            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
-            int monthReceptionCar = response.getInteger("month_reception_car");
-            //【我的接待】本月接待售后车辆
-            JSONObject response1 = crm.afterSaleCustList("", "", "", 1, 10);
-            int monthReceptionCar1 = response1.getInteger("month_reception_car");
-            Preconditions.checkArgument(monthReceptionCar <= monthReceptionCar1, "\n" + "【我的接待】本月接待售后车辆" + monthReceptionCar1 + "我的客户-本月新增车辆 " + monthReceptionCar);
-        } catch (Exception | AssertionError e) {
+            IScene scene = ReceptionAfterCustomerListScene.builder().build();
+            int monthReceptionCar = crm.invokeApi(scene).getInteger("month_reception_car");
+            IScene scene1 = AfterSaleCustomerListScene.builder().build();
+            int monthReceptionCar1 = crm.invokeApi(scene1).getInteger("month_reception_car");
+            CommonUtil.valueView(monthReceptionCar, monthReceptionCar1);
+            Preconditions.checkArgument(monthReceptionCar >= monthReceptionCar1, "本月新增车辆：" + monthReceptionCar1 + "本月接待售后车辆：" + monthReceptionCar);
+        } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-我的客户-本月新增车辆<=【我的接待】本月接待售后车辆");
+            saveData("售后-客户管理-本月新增车辆<=【我的接待】本月接待售后车辆");
         }
     }
 
-    //APP-我的客户-今日新增车辆<=【我的接待】今日接待售后车辆
-    @Test
-    public void todayReceptionCompare() {
+    @Test(description = "售后-客户管理-今日新增车辆<=【我的接待】今日接待售后车辆")
+    public void afterSale_customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(by_name, pwd);
-            //我的客户-本月新增车辆
-            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
-            int todayNewCar = response.getInteger("today_new_car");
-            //【我的接待】本月接待售后车辆
-            JSONObject response1 = crm.afterSaleCustList("", "", "", 1, 10);
-            int todayCarReceptionCar1 = response1.getInteger("today_reception_car");
-            Preconditions.checkArgument(todayNewCar <= todayCarReceptionCar1, "【我的接待】今日接待售后车辆" + todayCarReceptionCar1 + "我的客户-今日新增车辆 " + todayNewCar);
-        } catch (Exception | AssertionError e) {
+            IScene scene = ReceptionAfterCustomerListScene.builder().build();
+            int todayReceptionCar = crm.invokeApi(scene).getInteger("today_reception_car");
+            IScene scene1 = AfterSaleCustomerListScene.builder().build();
+            int todayNewCar = crm.invokeApi(scene1).getInteger("today_new_car");
+            CommonUtil.valueView(todayNewCar, todayReceptionCar);
+            Preconditions.checkArgument(todayReceptionCar >= todayNewCar, "今日新增车辆：" + todayNewCar + "今日接待售后车辆：" + todayReceptionCar);
+        } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-我的客户-今日新增车辆<=【我的接待】今日接待售后车辆");
+            saveData("售后-客户管理-今日新增车辆<=【我的接待】今日接待售后车辆");
         }
     }
 
-    //APP-我的客户-总监的全部车辆=各个顾问的全部车辆之和-----现在计算结果有问题，已提bug--郭丽雅
-//    @Test(enabled = true)
-//    public void comparezXTotal() {
-//        crm.login(fwzj_name, pwd);
-//        JSONObject response = null;
-//        try {
-//            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
-//            int totalReceptionCar = response.getInteger("total_reception_car");
-//            crm.login(bsj_name, pwd);
-//            int pages = crm.userPage(1, 10).getInteger("pages");
-//            int max = 0;
-//            for (int page = 1; page <= pages; page++) {
-//                JSONObject responseBsj = crm.userPage(page, 10);
-//                JSONArray list = responseBsj.getJSONArray("list");
-//                for (int i = 0; i < list.size(); i++) {
-//                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
-//                        String userLoginName = list.getJSONObject(i).getString("user_login_name");
-//                        crm.login(userLoginName, pwd);
-//                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("total_reception_car");
-//                        max += totalReceptionCarGw;
-//                    }
-//                }
-//            }
-//            System.out.println("总监的全部车辆" + totalReceptionCar + "各个顾问的全部车辆之和" + max);
-//            Preconditions.checkArgument(totalReceptionCar == max, "总监的全部车辆" + totalReceptionCar + "各个顾问的全部车辆之和" + max);
-//        } catch (Exception | AssertionError e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("APP-我的客户-总监的全部车辆=各个顾问的全部车辆之和");
-//        }
-//    }
-
-    //APP-我的客户-总监的本月新增=各个顾问的本月新增之和-----现在计算结果有问题，不过结果都是0，现在case稳定运行--郭丽雅
-//    @Test(enabled = true)
-//    public void comparezXMouth() {
-//        crm.login(fwzj_name, pwd);
-//        JSONObject response = null;
-//        try {
-//            response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
-//            int monthReceptionCar = response.getInteger("month_reception_car");
-//            crm.login(bsj_name, pwd);
-//            int pages = crm.userPage(1, 10).getInteger("pages");
-//            int max = 0;
-//            for (int page = 1; page <= pages; page++) {
-//                JSONObject responseBsj = crm.userPage(page, 10);
-//                JSONArray list = responseBsj.getJSONArray("list");
-//                for (int i = 0; i < list.size(); i++) {
-//                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
-//                        String userLoginName = list.getJSONObject(i).getString("user_login_name");
-//                        crm.login(userLoginName, pwd);
-//                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("month_reception_car");
-//                        max += totalReceptionCarGw;
-//                    }
-//                }
-//            }
-//            Preconditions.checkArgument(monthReceptionCar == max, "总监的本月新增车辆" + monthReceptionCar + "各个顾问的全部本月新增车辆之和" + max);
-//        } catch (Exception | AssertionError e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//            saveData("APP-我的客户-总监的本月新增=各个顾问的本月新增之和");
-//        }
-//    }
-
-    //APP-我的客户-总监的今日新增车辆=各个顾问的今日新增之和------现在计算结果有问题，不过结果都是0，现在case稳定运行--郭丽雅
-    @Test()
-    public void compareToday() {
+    @Test(description = "售后--客户管理--总经理的全部车辆>=各个顾问的全部车辆之和")
+    public void afterSale_customerManager_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(fwzj_name, pwd);
-            JSONObject response = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10);
-            int todayNewCar = response.getInteger("today_new_car");
-            crm.login(bsj_name, pwd);
-            int pages = crm.userPage(1, 10).getInteger("pages");
-            int max = 0;
-            for (int page = 1; page <= pages; page++) {
-                JSONObject responseBsj = crm.userPage(page, 10);
-                JSONArray list = responseBsj.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("role_name").equals("维修顾问") || list.getJSONObject(i).getString("role_name").equals("保养顾问")) {
-                        String userLoginName = list.getJSONObject(i).getString("user_login_name");
-                        crm.login(userLoginName, pwd);
-                        int totalReceptionCarGw = crm.afterSaleCustomerList("", DateTimeUtil.getFormat(new Date()), DateTimeUtil.getFormat(new Date()), 1, 10).getInteger("today_new_car");
-                        max += totalReceptionCarGw;
-                    }
-                }
+            compareAfterSaleMyCustomer("total_reception_car");
+            CommonUtil.valueView(zjl_num, gw_num);
+            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的全部车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和");
+        }
+    }
+
+    @Test(description = "售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和")
+    public void afterSale_customerManager_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            compareAfterSaleMyCustomer("total_reception_car");
+            CommonUtil.valueView(zjl_num, gw_num);
+            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的全部车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和");
+        }
+    }
+
+    @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和")
+    public void afterSale_customerManager_data_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            compareAfterSaleMyCustomer("month_reception_car");
+            CommonUtil.valueView(zjl_num, gw_num);
+            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的本月新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和");
+        }
+    }
+
+    @Test(description = "售后--客户管理--总经理的今日新增车辆>=各个顾问的今日新增之和")
+    public void afterSale_customerManager_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            compareAfterSaleMyCustomer("today_new_car");
+            CommonUtil.valueView(zjl_num, gw_num);
+            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的今日新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--总经理的今日新增车辆>=各个顾问的今日新增之和");
+        }
+    }
+
+    private void compareAfterSaleMyCustomer(String type) {
+        List<Map<String, String>> list = method.getSaleList("服务顾问");
+        for (Map<String, String> map : list) {
+            CommonUtil.valueView(map.get("userName"));
+            if (map.get("userName").contains("总经理")) {
+                crm.login(map.get("account"), pwd);
+                IScene scene = AfterSaleCustomerListScene.builder().build();
+                zjl_num = crm.invokeApi(scene).getInteger(type);
             }
-            System.out.println("总监的本日新增车辆" + todayNewCar + "各个顾问的本日新增车辆之和" + max);
-            Preconditions.checkArgument(todayNewCar == max, "总监的本日新增车辆" + todayNewCar + "各个顾问的本日新增车辆之和" + max);
-        } catch (Exception | AssertionError e) {
+            if (!map.get("userName").contains("总经理")) {
+                crm.login(map.get("account"), pwd);
+                IScene scene = AfterSaleCustomerListScene.builder().build();
+                int x = crm.invokeApi(scene).getInteger(type);
+                CommonUtil.valueView(x);
+                gw_num += x;
+            }
+            CommonUtil.log("分割线");
+        }
+    }
+
+    @Test(description = "售后--任务管理-全部预约保养>=今日预约保养")
+    public void afterSale_taskManager_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(by_name, pwd);
+            JSONObject obj = crm.mainAppointmentDriverNum();
+            int total = obj.getInteger("appointment_total_number");
+            int today = obj.getInteger("appointment_today_number");
+            CommonUtil.valueView(total, today);
+            Preconditions.checkArgument(total >= today, "全部预约保养：" + total + "今日预约保养：" + today);
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-我的客户-总监的今日新增车辆=各个顾问的今日新增之和");
+            saveData("售后--任务管理-全部预约保养>=今日预约保养");
+        }
+    }
+
+    @Test(description = "售后--任务管理-全部预约保养<=列表数")
+    public void afterSale_taskManager_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject obj = crm.mainAppointmentDriverNum();
+            int total = obj.getInteger("appointment_total_number");
+            int list = crm.mainAppointmentList().getInteger("total");
+            Preconditions.checkArgument(total <= list, "全部预约保养" + total + ">列表数" + list);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--任务管理-全部预约保养<=列表数");
         }
     }
 }

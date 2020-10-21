@@ -197,7 +197,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            String appointment_total_numberA = appdataA.getString("appointment_total_number");
 //            String appointment_today_numberA = appdataA.getString("appointment_today_number");
             //app 今日试驾列表总数
-            JSONObject appListA = crm.mainAppointmentlist();
+            JSONObject appListA = crm.mainAppointmentList();
             String apptotalListA = appListA.getString("total");
 
             //2.预约试驾
@@ -232,7 +232,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            String appointment_total_numberB = appdataB.getString("appointment_total_number");
 //            String appointment_today_numberB = appdataB.getString("appointment_today_number");
 
-            JSONObject appdataList1 = crm.mainAppointmentlist();
+            JSONObject appdataList1 = crm.mainAppointmentList();
             String appListtotalB = appdataList1.getString("total");
             JSONObject appdataList = appdataList1.getJSONArray("list").getJSONObject(0);
             String appointment_dateapp = appdataList.getString("appointment_date");

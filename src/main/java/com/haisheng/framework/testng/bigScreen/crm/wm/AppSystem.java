@@ -535,7 +535,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     /**
      * @description: 有垃圾数据-回访电话号非电话格式
      */
-    @Test(description = "回访类型:成交，创建接待时“订车”标记为是的客户")
+    @Test(description = "回访类型为成交的用户，创建接待时“订车”标记为是的客户")
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
@@ -552,10 +552,19 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                             continue;
                         }
                         CommonUtil.valueView("电话号是" + customerPhone);
-                        JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
-                        String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                        CommonUtil.valueView(ifByCarName);
-                        Preconditions.checkArgument(ifByCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户");
+                        int num = crm.customerList("", customerPhone, "", "", "", 1, 10).getInteger("total");
+                        int s = CommonUtil.getTurningPage(num, 50);
+                        String buyCarName = null;
+                        for (int x = 1; x < s; x++) {
+                            JSONArray array = crm.customerList("", customerPhone, "", "", "", x, 50).getJSONArray("list");
+                            for (int o = 0; o < array.size(); o++) {
+                                if (array.getJSONObject(o).getString("customer_phone").equals(customerPhone)) {
+                                    buyCarName = array.getJSONObject(o).getString("buy_car_name");
+                                }
+                            }
+                        }
+                        CommonUtil.valueView(buyCarName);
+                        Preconditions.checkArgument(buyCarName != null && buyCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户，电话号为：" + customerPhone);
                         CommonUtil.log("分割线");
                     }
                 }
@@ -563,7 +572,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("回访类型:成交，创建接待时“订车”标记为是的客户");
+            saveData("回访类型为成交的用户，创建接待时“订车”标记为是的客户");
         }
     }
 
@@ -986,8 +995,8 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            int total = crm.dccList("$", "", "", "", "1", "10").getInteger("total");
-            int total1 = crm.dccList("111", "", "", "", "1", "10").getInteger("total");
+            int total = crm.dccList("$qqwqsss", "", "", "", "1", "10").getInteger("total");
+            int total1 = crm.dccList("11158585858", "", "", "", "1", "10").getInteger("total");
             int total2 = crm.dccList("", String.valueOf(EnumCustomerLevel.O.getId()), "", "", "1", "10").getInteger("total");
             int total3 = crm.dccList("", "", endDate, startDate, "1", "10").getInteger("total");
             int total4 = crm.dccList("139", "", date, "", "1", "10").getInteger("total");

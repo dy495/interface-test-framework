@@ -22,7 +22,6 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
 
 /**
  * pc系统测试用例
@@ -69,16 +68,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     }
 
 //    ---------------------------------------------------2.0------------------------------------------------------------
-
-    @Test(enabled = false)
-    public void salesCustomerManagement_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        JSONObject response = crm.customerList("", "", "", "", "", 1, 10);
-        JSONObject list = response.getJSONArray("list").getJSONObject(0);
-        CommonUtil.valueView(list);
-        List<String> array = CommonUtil.getMoreParam(list, "customer_id", "customer_name", "customer_phone", "belongs_sale_id");
-        System.out.println(array);
-    }
 
     /**
      * 销售客户管理-所有顾客

@@ -111,7 +111,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //预约保养
             Integer maintainTotalNumber = crm.mainAppointmentDriverNum().getInteger("appointment_total_number");
             //预约保养列表
-            Integer maintainTotal = crm.mainAppointmentlist().getInteger("total");
+            Integer maintainTotal = crm.mainAppointmentList().getInteger("total");
             //预约维修
             Integer repairTotalNumber = crm.repairAppointmentDriverNum().getInteger("appointment_total_number");
             //预约维修列表

@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -172,45 +171,6 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "公海-将一个已存在客户的客户等级设置为G,公海列表中数量+1,客户信息一致,该销售全部客户数量-1", enabled = false)
-    public void myCustomer_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //变换所属销售前公海数量
-            UserUtil.login(xs);
-            int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            UserUtil.login(zjl);
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            //获取一名客户信息
-            int customerId = 0;
-            String customerName = null;
-            String customerPhone = null;
-            JSONArray list = crm.customerList("", "", "", "", "", 1, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.G.getLevel())
-                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getLevel())
-                        && list.getJSONObject(i).getString("belongs_sale_id").equals(xs.getUid())) {
-                    customerId = list.getJSONObject(i).getInteger("customer_id");
-                    customerName = list.getJSONObject(i).getString("customer_name");
-                    customerPhone = list.getJSONObject(i).getString("customer_phone");
-                }
-            }
-            //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.G.getId(), xs.getUid());
-            //变换所属销售后公海列表数
-            int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            UserUtil.login(xs);
-            int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1, total, total1);
-            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原公海数量为" + publicTotal + "把一个客户等级改为公海后，公海数量为" + publicTotal1);
-            Preconditions.checkArgument(total1 == total - 1, "该销售全部客户数量未-1");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc端将一个已存在客户的客户等级设置为G,公海列表数+1");
-        }
-    }
-
     @Test(description = "公海-新建一个G级客户，公海列表数+1")
     public void myCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -260,45 +220,6 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("pc战败客户，今日人数=按今日搜索展示列表条数");
-        }
-    }
-
-    @Test(description = "战败-将一个客户的等级修改为F,战败客户列表数量+1,该销售名下客户数量-1", enabled = false)
-    public void myCustomer_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //变换所属销售前公海数量
-            UserUtil.login(xs);
-            int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            UserUtil.login(zjl);
-            int publicTotal = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            //获取一名客户信息
-            int customerId = 0;
-            String customerName = null;
-            String customerPhone = null;
-            JSONArray list = crm.customerList("", "", "", "", "", 1, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.F.getLevel())
-                        && !list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getLevel())
-                        && list.getJSONObject(i).getString("belongs_sale_id").equals(xs.getUid())) {
-                    customerId = list.getJSONObject(i).getInteger("customer_id");
-                    customerName = list.getJSONObject(i).getString("customer_name");
-                    customerPhone = list.getJSONObject(i).getString("customer_phone");
-                }
-            }
-            //变换所属销售
-            crm.customerEdit((long) customerId, customerName, customerPhone, EnumCustomerLevel.F.getId(), xs.getUid());
-            //变换所属销售后战败列表数
-            int publicTotal1 = crm.failureCustomerList("", "", 1, 10).getInteger("total");
-            UserUtil.login(xs);
-            int total1 = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            CommonUtil.valueView(publicTotal, publicTotal1, total, total1);
-            Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "原战败数量为" + publicTotal + "把一个客户等级改为战败后，战败数量为" + publicTotal1);
-            Preconditions.checkArgument(total1 == total - 1, "该销售全部客户数量未-1");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc端将一个已存在客户的客户等级设置为F,战败列表数+1");
         }
     }
 
