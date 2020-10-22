@@ -10,6 +10,13 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
+
+    public static void checkNull(String obj, String msgTips) throws Exception{
+        if (null == obj || obj.trim().length() < 2) {
+            throw new Exception(msgTips + " return null");
+        }
+    }
+
     public String genPhoneNum() {
         Random random = new Random();
         String num = "177" + (random.nextInt(89999999) + 10000000);

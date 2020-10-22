@@ -85,20 +85,6 @@ public class FeidanMiniApiOnline {
         return "http://store.winsenseos.com";
     }
 
-    public void checkResult(String result, String... checkColumnNames) {
-        logger.info("result = {}", result);
-        JSONObject res = JSONObject.parseObject(result);
-        if (!res.getInteger("code").equals(1000)) {
-            throw new RuntimeException("result code is " + res.getInteger("code") + " not success code");
-        }
-        for (String checkColumn : checkColumnNames) {
-            Object column = res.getJSONObject("data").get(checkColumn);
-            logger.info("{} : {}", checkColumn, column);
-            if (column == null) {
-                throw new RuntimeException("result does not contains column " + checkColumn);
-            }
-        }
-    }
 
     public void initHttpConfig() {
         HttpClient client;
@@ -132,7 +118,7 @@ public class FeidanMiniApiOnline {
         response = HttpClientUtil.post(config);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        checkResult(response, checkColumnNames);
+        CommonUtil.checkResult(response, checkColumnNames);
         return response;
     }
 

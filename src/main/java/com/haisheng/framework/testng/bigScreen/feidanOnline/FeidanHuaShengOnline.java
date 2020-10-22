@@ -344,7 +344,7 @@ public class FeidanHuaShengOnline {
             Object column = res.getJSONObject("data").get(checkColumn);
             logger.info("{} : {}", checkColumn, column);
             if (column == null) {
-                throw new Exception("result does not contains column " + checkColumn);
+                throw new Exception("result does not contains column " + checkColumn + ", request id: " + res.getString("request_id"));
             }
         }
     }
