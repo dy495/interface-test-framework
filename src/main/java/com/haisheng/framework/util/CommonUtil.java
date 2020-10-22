@@ -1,6 +1,7 @@
 package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -297,6 +298,8 @@ public class CommonUtil {
         if (!res.getInteger("code").equals(1000)) {
             throw new Exception("result code is " + res.getInteger("code") + ", request id: " + res.getString("request_id"));
         }
+
+        Preconditions.checkArgument(res.containsKey("data"), "response中未包含data字段, request id: " + res.getString("request_id"));
         for (String checkColumn : checkColumnNames) {
             Object column = res.getJSONObject("data").get(checkColumn);
             logger.info("{} : {}", checkColumn, column);
