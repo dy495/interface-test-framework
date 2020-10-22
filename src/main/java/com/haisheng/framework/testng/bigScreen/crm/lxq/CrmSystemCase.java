@@ -273,11 +273,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             crm.login(cstm.xszj,cstm.pwd);
             //获取手机号
-            JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
-            String search_phone = obj.getString("customer_phone");
+            JSONObject obj = crm.customerListPC("",-1,"","","2020-06-01","2020-06-30",1,1).getJSONArray("list").getJSONObject(0);
+            String search_phone = obj.getJSONArray("phones").getString(0);
             //查询
             JSONObject obj1 = crm.customerListPC("",-1,"",search_phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
-            String search_phone1 = obj1.getString("customer_phone");
+            String search_phone1 = obj1.getJSONArray("phones").getString(0);
             Preconditions.checkArgument(search_phone.equals(search_phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1144,6 +1144,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(plate_number.equals(car),"新建试驾车，新建时车牌号为"+ car+", 列表展示为"+ plate_number);
             Preconditions.checkArgument(vehicle_chassis_code.equals(carid),"新建试驾车，新建时车架号为"+ carid+", 列表展示为"+ vehicle_chassis_code);
 
+            Thread.sleep(2000);
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1164,13 +1166,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Long endtime = dt.getHistoryDateTimestamp(2);
             String car = "吉ZDH"+(int)((Math.random()*9+1)*100);
             String carid = "ZDHZDHZDD"+(long)((Math.random()*9+1)*10000000);
+            String carname = ""+System.currentTimeMillis();
            //新增
-            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+            Long test_car_id = crm.carManagementAdd("1"+carname,1L,37L,getPlateNum(),carid,starttime,endtime).getLong("test_car_id");
             //注销
             crm.carLogout(test_car_id);
 
-            int code1 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000),starttime,endtime).getInteger("code"); //车牌重复
-            int code2 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,"苏ZDH"+(int)((Math.random()*9+1)*100),carid,starttime,endtime).getInteger("code"); //车架重复
+            int code1 = crm.carManagementAddNotChk("2"+carname,1L,37L,car,"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000),starttime,endtime).getInteger("code"); //车牌重复
+            int code2 = crm.carManagementAddNotChk("3"+carname,1L,37L,getPlateNum(),carid,starttime,endtime).getInteger("code"); //车架重复
             Preconditions.checkArgument(code1==1000,"车牌重复时失败");
             Preconditions.checkArgument(code2!=1000,"车架号重复时成功");
 
@@ -1194,7 +1197,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Long endtime = dt.getHistoryDateTimestamp(2);
             String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
-            String name = "ZDH"+(int)((Math.random()*9+1)*10);
+
             //新增
             String name21 = "123456789012345678901";
             String car6 = "苏ZDH"+(int)((Math.random()*9+1)*10);
@@ -1206,16 +1209,16 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String carideng = "ZDHZDHZDHZDHZDHZD";
 
             int code1 = crm.carManagementAddNotChk(name21,1L,37L,car,carid,starttime,endtime).getInteger("code"); //名字21位
-            int code2 = crm.carManagementAddNotChk(name,1L,37L,car6,carid,starttime,endtime).getInteger("code"); //车牌号6位
-            int code3 = crm.carManagementAddNotChk(name,1L,37L,car9,carid,starttime,endtime).getInteger("code"); //车牌号9位
-            int code4 = crm.carManagementAddNotChk(name,1L,37L,car,carid16,starttime,endtime).getInteger("code"); //车架号16位
-            int code5 = crm.carManagementAddNotChk(name,1L,37L,car,carid18,starttime,endtime).getInteger("code"); //车架号18位
-            int code8 = crm.carManagementAddNotChk(name,1L,37L,carno,carid,starttime,endtime).getInteger("code"); //车牌号8位纯数字
-            int code9 = crm.carManagementAddNotChk(name,1L,37L,car,carid,endtime,starttime).getInteger("code"); //服役结束时间<服役开始时间 前端限制
-            //int code10 = crm.carManagementAddNotChk(name,1L,37L,car,carid,yesterday,starttime).getInteger("code"); //服役开始时间<当前时间
+            int code2 = crm.carManagementAddNotChk(getCarName(),1L,37L,car6,carid,starttime,endtime).getInteger("code"); //车牌号6位
+            int code3 = crm.carManagementAddNotChk(getCarName(),1L,37L,car9,carid,starttime,endtime).getInteger("code"); //车牌号9位
+            int code4 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,carid16,starttime,endtime).getInteger("code"); //车架号16位
+            int code5 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,carid18,starttime,endtime).getInteger("code"); //车架号18位
+            int code8 = crm.carManagementAddNotChk(getCarName(),1L,37L,carno,carid,starttime,endtime).getInteger("code"); //车牌号8位纯数字
+            int code9 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,carid,endtime,starttime).getInteger("code"); //服役结束时间<服役开始时间 前端限制
+            //int code10 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,carid,yesterday,starttime).getInteger("code"); //服役开始时间<当前时间
             //有bug 先注掉
-            int code6 = crm.carManagementAddNotChk(name,1L,37L,car,caridnum,starttime,endtime).getInteger("code"); //车架号纯数字
-            int code7 = crm.carManagementAddNotChk(name,1L,37L,car,carideng,starttime,endtime).getInteger("code"); //车架号纯字母
+            int code6 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,caridnum,starttime,endtime).getInteger("code"); //车架号纯数字
+            int code7 = crm.carManagementAddNotChk(getCarName(),1L,37L,car,carideng,starttime,endtime).getInteger("code"); //车架号纯字母
 
 
 
@@ -1247,10 +1250,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
-            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
+            Long test_car_id = crm.carManagementAdd(getCarName(),1L,37L,getPlateNum(),carid,starttime,endtime).getLong("test_car_id");
             //注销
             crm.carLogout(test_car_id);
             boolean exit = false;
@@ -1288,12 +1291,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             Long endtimenew = dt.getHistoryDateTimestamp(3);
             String enddate = dt.getHistoryDate(3);
 
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
-            String carnew = "吉ZDH"+(int)((Math.random()*9+1)*100);
+            String car =getPlateNum();
+            String carnew = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             String caridnew = "ZDHZDHGGG"+(long)((Math.random()*9+1)*10000000);
-            String name = "ZDh"+(int)((Math.random()*9+1)*100);
-            String namenew = "GGg"+(int)((Math.random()*9+1)*100);
+            String name = getCarName();
+            String namenew = name+"a";
             //新增
             int test_car_id = crm.carManagementAdd(name,1L,37L,car,carid,starttime,endtime).getInteger("test_car_id");
 
@@ -1497,6 +1500,29 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("配置收件箱，邮箱格式/长度不正确");
         }
     }
+
+
+    public String getPlateNum(){
+        String shengfen = "京苏津黑吉辽青宁台琼桂闽";
+        String qu = "ABCDEFGHMJKL";
+        int a = (int)(Math.random()*10);
+        String plateNum = shengfen.substring(a,a+1);
+        plateNum = plateNum + qu.substring(a,a+1);
+        for (int i = 0; i < 5;i++){
+            String b = Integer.toString((int)(Math.random()*10));
+            plateNum = plateNum + b;
+        }
+        System.out.println(plateNum);
+        return plateNum;
+    }
+
+    public String getCarName(){
+
+        String name = "Name"+ Integer.toString((int)(Math.random()*100000000));
+        return name;
+    }
+
+
 
 
 }
