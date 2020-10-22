@@ -155,6 +155,38 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //售后：客户管理->编辑客户信息
+    public JSONObject receptionAfterCustomerList(Long after_record_id, String customer_name, String customer_phone_number, String customer_secondary_phone,
+                                                 String plate_number, int travel_mileage, int car_type, int maintain_type, int maintain_secondary_type,
+                                                 boolean service_complete, int customer_source, List<String> remarks) throws Exception {
+        String url = "/porsche/app/after_sale/edit_after_sale_customer";
+        JSONObject json1 = new JSONObject();
+        json1.put("after_record_id", after_record_id);
+        json1.put("customer_name", customer_name);
+        json1.put("customer_phone_number", customer_phone_number);
+        json1.put("plate_number", plate_number);
+        json1.put("travel_mileage", travel_mileage);
+        json1.put("car_type", car_type);
+        json1.put("maintain_type", maintain_type);
+        json1.put("service_complete", service_complete);
+        json1.put("customer_source", customer_source);
+
+
+        if (!customer_secondary_phone.equals("")) {
+            json1.put("customer_secondary_phone", customer_secondary_phone);
+        }
+        if (maintain_secondary_type != -1) {
+            json1.put("maintain_secondary_type", maintain_secondary_type);
+        }
+        if (remarks.size() != 0) {
+            json1.put("remarks", remarks);
+        }
+        String json = json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     //修改顾客必填项 V1.1
     public JSONObject customerEdit_onlyNec(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) throws Exception {
         String url = "/porsche/app/customer/edit";

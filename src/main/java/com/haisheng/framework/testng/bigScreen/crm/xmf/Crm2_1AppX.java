@@ -3,11 +3,10 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.orderCar;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -17,7 +16,10 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -303,11 +305,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
             String userLoginName = json.getString("userLoginName");
             //-------第一次交车
-            pf.creatDeliver(Long.parseLong(fr.reception_id),Long.parseLong(fr.customer_id),fr.name,dt.getHistoryDate(0),false);
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), false);
             int afternum2[] = pf.deliverSum();
 
             //--------第二次交车
-            pf.creatDeliver(Long.parseLong(fr.reception_id),Long.parseLong(fr.customer_id),fr.name,dt.getHistoryDate(0),false);
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), false);
 
             int afternum3[] = pf.deliverSum();
 
@@ -956,7 +958,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             int totalA = jsonA.getJSONArray("customer_list").size();
 
             int customerId = crm.activityTaskInfo(Integer.toString(activityTaskId)).getJSONArray("customer_list").getJSONObject(0).getInteger("customer_id");
-            crm.deleteCustomer(String.valueOf(activityTaskId), customerId);
+            crm.deleteCustomer(String.valueOf(activityTaskId), String.valueOf(customerId));
 
             int totalAfterDelet = crm.activityTaskPageX().getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("customer_list").size();
             //获取报名字段，校验
@@ -1108,7 +1110,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             saveData("新建车名、底盘号重复验证");
         }
     }
-
 
 
     //手机号、现有车型、评估车型、对比车型，身份证长度均由前端控制
@@ -1295,17 +1296,17 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.login(userLoginName, pp.adminpassword);
             fr.name = object.getString("name");
             crm.editCustomer(fr);
-            JSONObject data = crm.customerMyReceptionList("","","",10,1).getJSONArray("list").getJSONObject(0);
-            String service_status_name=data.getString("service_status_name");
-            String reception_date=data.getString("reception_date");
-            String intention_car_style_name=data.getString("intention_car_style_name");
-            String customer_name=data.getString("customer_name");
+            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0);
+            String service_status_name = data.getString("service_status_name");
+            String reception_date = data.getString("reception_date");
+            String intention_car_style_name = data.getString("intention_car_style_name");
+            String customer_name = data.getString("customer_name");
 
             crm.finishReception3(fr);
-            Preconditions.checkArgument(customer_name.equals(fr.name),"我的接待-编辑客户列表接待状态显示错误");
-            Preconditions.checkArgument(service_status_name.equals("接待中"),"我的接待-编辑客户列表接待状态显示错误");
-            Preconditions.checkArgument(reception_date.equals(dt.getHistoryDate(0)),"我的接待-编辑客户列表接待日期显示错误");
-            Preconditions.checkArgument(intention_car_style_name.equals(pp.car_type_name),"我的接待-编辑客户列表意向车型显示错误");
+            Preconditions.checkArgument(customer_name.equals(fr.name), "我的接待-编辑客户列表接待状态显示错误");
+            Preconditions.checkArgument(service_status_name.equals("接待中"), "我的接待-编辑客户列表接待状态显示错误");
+            Preconditions.checkArgument(reception_date.equals(dt.getHistoryDate(0)), "我的接待-编辑客户列表接待日期显示错误");
+            Preconditions.checkArgument(intention_car_style_name.equals(pp.car_type_name), "我的接待-编辑客户列表意向车型显示错误");
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -1337,23 +1338,23 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             oc.vehicle_chassis_code = "ASD123456" + (random.nextInt(89999999) + 10000000);
             Long model = crm.customerOrderCar(fr.customer_id).getJSONArray("list").getJSONObject(0).getLong("car_model_id");
             String path = file.texFile(pp.filePath);
-            crm.deliverAddcode(car_id, Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), model, path, false, path,oc.vehicle_chassis_code);
+            crm.deliverAddcode(car_id, Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), model, path, false, path, oc.vehicle_chassis_code);
 
             //接待列表-是否订车变为 是
-            JSONObject tempList=crm.customerMyReceptionList("","","",10,1).getJSONArray("list").getJSONObject(0);
-            String isorderCar=tempList.getString("book_car_name");
-            String customer_level_name=tempList.getString("customer_level_name");
+            JSONObject tempList = crm.customerMyReceptionList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0);
+            String isorderCar = tempList.getString("book_car_name");
+            String customer_level_name = tempList.getString("customer_level_name");
 
-            JSONArray buyCarL =crm.buyCarList(fr.customer_id).getJSONArray("list");
+            JSONArray buyCarL = crm.buyCarList(fr.customer_id).getJSONArray("list");
             int buyCatTotal2 = buyCarL.size();
 
-            String buy_time=buyCarL.getJSONObject(0).getString("buy_time");
-            String deliver_time=buyCarL.getJSONObject(0).getString("deliver_time");
-            String vehicle_chassis_code=buyCarL.getJSONObject(0).getString("vehicle_chassis_code");
-            String car_style_name=buyCarL.getJSONObject(0).getString("car_style_name");
-            String plate_type_name=buyCarL.getJSONObject(0).getString("plate_type_name");
-            String pay_type_name=buyCarL.getJSONObject(0).getString("pay_type_name");
-            String defray_type_name=buyCarL.getJSONObject(0).getString("defray_type_name");
+            String buy_time = buyCarL.getJSONObject(0).getString("buy_time");
+            String deliver_time = buyCarL.getJSONObject(0).getString("deliver_time");
+            String vehicle_chassis_code = buyCarL.getJSONObject(0).getString("vehicle_chassis_code");
+            String car_style_name = buyCarL.getJSONObject(0).getString("car_style_name");
+            String plate_type_name = buyCarL.getJSONObject(0).getString("plate_type_name");
+            String pay_type_name = buyCarL.getJSONObject(0).getString("pay_type_name");
+            String defray_type_name = buyCarL.getJSONObject(0).getString("defray_type_name");
             crm.finishReception3(fr);
             Preconditions.checkArgument(buyCatTotal2 - buyCatTotal == 1, "新增购车-购车档按+1");
             Preconditions.checkArgument(buy_time.equals(dt.getHistoryDate(0)), "新增购车-购车档购车时间显示错误");

@@ -36,6 +36,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
+    private static final EnumAccount fw = EnumAccount.FWGW_DAILY;
     private static final int size = 50;
     int zjl_num = 0;
     int gw_num = 0;
@@ -78,7 +79,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--我的接待--本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆")
     public void afterSale_reception_data_1() {
         try {
-            JSONObject response = crm.afterSaleCustList("", "", "", 1, 10);
+            JSONObject response = crm.receptionAfterCustomerList("", "", "", 1, 10);
             int monthReceptionCar = response.getInteger("month_reception_car");
             int monthRepairedCar = response.getInteger("month_repaired_car");
             int todayReceptionCar = response.getInteger("today_reception_car");
@@ -106,9 +107,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = ReceptionAfterCustomerListScene.builder().page(i).size(size).searchDateStart(date).searchDateEnd(date).build();
                 JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("reception_status_name").equals("已完成")) {
-                        set.add(crm.invokeApi(scene1).getString("plate_number"));
-                    }
+                    set.add(list.getJSONObject(j).getString("plate_number"));
                 }
             }
             CommonUtil.valueView(todayReceptionCar, set.size());
@@ -325,7 +324,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         try {
             JSONArray remarks = new JSONArray();
             String str = EnumCustomerInfo.CUSTOMER_1.getRemark();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 22; i++) {
                 remarks.add(str);
             }
             int afterRecordId = method.getAfterRecordId(false, 30);
@@ -447,6 +446,25 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "售后--客户管理--今日接待售后车辆>=今日新增售后车辆")
+    public void afterSale_customer_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            UserUtil.login(fw);
+            JSONObject list = crm.afterSale_custTotal();
+            //统计数据-今日接待售后数量
+            int todayTotal = list.getInteger("today_reception_total");
+            //统计数据-今日新增售后数量
+            int todayNew = list.getInteger("today_new_after_sale_customer");
+            CommonUtil.valueView(todayTotal, todayNew);
+            Preconditions.checkArgument(todayTotal >= todayNew, "今日接待售后数量" + todayTotal + "<今日新增售后数量" + todayNew);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--今日接待售后车辆>=今日新增售后车辆");
+        }
+    }
+
     @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和")
     public void afterSale_customer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -494,6 +512,26 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             gw_num = x;
             CommonUtil.log("分割线");
+        }
+    }
+
+    @Test(description = "售后--客户管理--全部车辆>=今日接待售后车辆")
+    public void afterSale_customer_data_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            UserUtil.login(fw);
+            JSONObject list = crm.receptionAfterCustomerList("", "", "", 1, 10);
+            //统计数据-今日接待售后数量
+            int todayTotal = list.getInteger("today_reception_car");
+            //统计数据-全部车辆
+            JSONObject list1 = crm.afterSaleCustomerList("", "", "", 1, 10);
+            int all = list1.getInteger("total_reception_car");
+            Preconditions.checkArgument(all >= todayTotal, "全部车辆" + all + "<今日接待售后数量" + todayTotal);
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--客户管理--全部车辆>=今日接待售后车辆");
+
         }
     }
 
@@ -612,8 +650,8 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     public void afterSale_returnVisit_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
-        String customerName = "@@@";
-        String customerPhoneNumber = "15037286014";
+        String customerName = "门徒";
+        String customerPhoneNumber = "15321527989";
         try {
             JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
             int total = response.getInteger("total");
@@ -671,7 +709,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //取消试驾
-            UserUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);
@@ -973,6 +1011,253 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "售后--活动任务--添加1个报名,报名条数+1&&删除1个报名，报名条数-1")
+    public void afterSale_activity_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        int activityId;
+        String phone = "13717737462";
+        try {
+            activityId = getActivityId();
+            int a = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
+            crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
+            int b = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
+            deleteActivityCustomer(activityId, phone);
+            int c = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
+            CommonUtil.valueView(a, b, c);
+            Preconditions.checkArgument(b == a + 1, "报名活动成功，客户列表未+1");
+            Preconditions.checkArgument(c == b - 1, "删除活动报名客户，客户列表未-1");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动任务--添加1个报名,报名条数+1");
+        }
+    }
+
+    @Test(description = "售后--活动任务--可填写报名的活动当前时间<活动结束时间")
+    public void afterSale_activity_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int activityId = getActivityId();
+            String activityEnd = crm.activityTaskInfo(String.valueOf(activityId)).getString("activity_end");
+            String date = DateTimeUtil.getFormat(new Date());
+            int i = new DateTimeUtil().calTimeDayDiff(date, activityEnd);
+            CommonUtil.valueView(i);
+            Preconditions.checkArgument(i > 0, "可填写报名的活动当前时间>活动结束时间");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动任务--可填写报名的活动当前时间<活动结束时间");
+        }
+
+    }
+
+    @Test(description = "售后--活动任务--活动信息与运营中心发布文章时信息一致")
+    public void afterSale_activity_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int activityId = getActivityId();
+            JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
+            String articleTitle = response.getString("article_title");
+            String activityStart = response.getString("activity_start");
+            String activityEnd = response.getString("activity_end");
+            String articleContent = response.getString("article_content");
+            int id = 0;
+            String validEnd = null;
+            String validStart = null;
+            JSONArray list = crm.articlePage(1, 100, "ACTIVITY_1").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("article_title").equals(articleTitle)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                    validEnd = list.getJSONObject(i).getString("valid_end");
+                    validStart = list.getJSONObject(i).getString("valid_start");
+                }
+            }
+            JSONObject object = crm.artilceView(id);
+            Preconditions.checkArgument(articleContent.equals(object.getString("article_content")), articleTitle + " 活动内容不一致");
+            Preconditions.checkArgument(activityStart.equals(validStart), articleTitle + " 活动开始时间不一致");
+            Preconditions.checkArgument(activityEnd.equals(validEnd), articleTitle + " 活动结束时间不一致");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动任务--活动信息与运营中心发布文章时信息一致");
+        }
+    }
+
+    @Test(description = "添加1个报名,后台任务客户+1")
+    public void afterSale_activity_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String phone = "13717737462";
+            int activityId = getActivityId();
+            JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
+            String activityTitle = response.getString("article_title");
+            int id = 0;
+            JSONArray list = crm.activityShowList().getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("name").equals(activityTitle)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                }
+            }
+            JSONArray a = crm.customerTaskPage(10, 1, id).getJSONArray("list");
+            crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
+            JSONArray b = crm.customerTaskPage(10, 1, id).getJSONArray("list");
+            deleteActivityCustomer(activityId, phone);
+            JSONArray c = crm.customerTaskPage(10, 1, id).getJSONArray("list");
+            CommonUtil.valueView(a.size(), b.size(), c.size());
+            Preconditions.checkArgument(b.size() == a.size() + 1, "添加1个报名,后台任务客户未+1");
+            Preconditions.checkArgument(c.size() == b.size() - 1, "删除1个报名,后台任务客户未-1");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动任务--活动信息与运营中心发布文章时信息一致");
+        }
+
+    }
+
+    @Test(description = "售后--活动任务-当前日期>=开始日期，填写报名置灰。当前日期<开始日期，填写报名高亮可点击")
+    public void afterSale_activity_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        try {
+            UserUtil.login(fw);
+            int total = crm.activityTaskPage(1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.activityTaskPage(i, 10).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getString("activity_start").compareTo(date) <= 0) {
+                        boolean isEdit = list.getJSONObject(j).getBoolean("is_edit");
+                        CommonUtil.valueView(String.valueOf(isEdit));
+                        Preconditions.checkArgument(!isEdit, "活动开始日期<=当前日期，活动可以报名");
+                    }
+                    if (list.getJSONObject(j).getString("activity_start").compareTo(date) > 0) {
+                        boolean isEdit = list.getJSONObject(j).getBoolean("is_edit");
+                        CommonUtil.valueView(String.valueOf(isEdit));
+                        Preconditions.checkArgument(isEdit, "活动开始日期>当前日期，活动不可以报名");
+                    }
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动报名-当前日期>=开始日期，填写报名置灰。当前日期<开始日期，填写报名高亮可点击");
+        }
+    }
+
+    @Test(description = "售后--活动任务--异常情况")
+    public void afterSale_activity_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String phone = "17777777777";
+            int activityId = getActivityId();
+            String message = crm.registeredCustomer1(activityId, "哈哈哈", phone + "1").getString("message");
+            String message1 = crm.registeredCustomer1(activityId, "1", phone).getString("message");
+            String message2 = crm.registeredCustomer1(activityId, "Q", phone).getString("message");
+            String message3 = crm.registeredCustomer1(activityId, "/", phone).getString("message");
+            String message4 = crm.registeredCustomer1(activityId, "哈哈哈啊哈哈哈哈哈哈哈", phone).getString("message");
+            String message5 = crm.registeredCustomer1(activityId, "哈哈哈", "哈哈哈哈").getString("message");
+            String message6 = crm.registeredCustomer1(activityId, "哈哈哈", "yyyyy").getString("message");
+            String message7 = crm.registeredCustomer1(activityId, "哈哈哈", ",,,,,").getString("message");
+            String message8 = crm.registeredCustomer1(activityId, "哈哈哈", "王12").getString("message");
+            String message9 = crm.registeredCustomer1(activityId, "哈哈哈", "y12").getString("message");
+            String message10 = crm.registeredCustomer1(activityId, "哈哈哈", "123/").getString("message");
+            String message11 = crm.registeredCustomer1(activityId, "哈哈哈", phone.substring(0, phone.length() - 1)).getString("message");
+            Preconditions.checkArgument(message.equals("请输入有效手机号码"), phone + "1".length() + "位手机号码报名成功");
+            Preconditions.checkArgument(message1.equals("您只能输入长度不超过10的汉字") && message2.equals("您只能输入长度不超过10的汉字") && message3.equals("您只能输入长度不超过10的汉字"), "客户名称包含1、Q、/报名成功");
+            Preconditions.checkArgument(message4.equals("客户名称长度不能超过十个字"), "客户名称超过10个字报名成功");
+            Preconditions.checkArgument(message5.equals("请输入有效手机号码"), "中文号码报名成功");
+            Preconditions.checkArgument(message6.equals("请输入有效手机号码"), "英文号码报名成功");
+            Preconditions.checkArgument(message7.equals("请输入有效手机号码"), "标点号码报名成功");
+            Preconditions.checkArgument(message8.equals("请输入有效手机号码"), "数字+中文号码报名成功");
+            Preconditions.checkArgument(message9.equals("请输入有效手机号码"), "数字+英文号码报名成功");
+            Preconditions.checkArgument(message10.equals("请输入有效手机号码"), "数字+标点号码报名成功");
+            Preconditions.checkArgument(message11.equals("请输入有效手机号码"), phone.substring(0, phone.length() - 1).length() + "位手机号码报名成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--活动任务--异常情况");
+        }
+    }
+
+    @Test(description = "售后--活动任务--全部任务50，报名51人")
+    public void afterSale_activity_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Set<String> set = new HashSet<>();
+        int activityId = 0;
+        try {
+            activityId = getActivityId();
+            for (int i = 0; i < 50; i++) {
+                String phone = "159" + CommonUtil.getRandom(8);
+                CommonUtil.valueView(phone);
+                if (set.contains(phone)) {
+                    continue;
+                }
+                set.add(phone);
+                crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
+                CommonUtil.log("分割线");
+            }
+            String message = crm.registeredCustomer1(activityId, "哈哈哈", "13473166806").getString("message");
+            Preconditions.checkArgument(message.equals("最多50条哦~"), "活动报名人数51人成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            for (String s : set) {
+                deleteActivityCustomer(activityId, s);
+            }
+            saveData("售后--活动任务--全部任务50，报名51人");
+        }
+    }
+
+    @Test(description = "售后--活动任务--添加销售添加过的联系方式,失败")
+    public void afterSale_activity_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        int activityId = 0;
+        String phone = null;
+        try {
+            activityId = getActivityId();
+            JSONArray list = crm.blacklist("", "", 1, 10).getJSONArray("list");
+            if (list.size() != 0) {
+                phone = list.getJSONObject(0).getString("customer_phone_number");
+            }
+            crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
+            String message = crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
+            Preconditions.checkArgument(message.equals("当前手机号已经报过了哦~"), "添加销售添加过的联系方式，成功");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            deleteActivityCustomer(activityId, phone);
+            saveData("售后--活动任务--添加销售添加过的联系方式,失败");
+        }
+    }
+
+    private void deleteActivityCustomer(int activityId, String phone) {
+        JSONArray list = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list");
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("customer_phone_number").equals(phone)) {
+                String customerId = list.getJSONObject(i).getString("customer_id");
+                crm.deleteCustomer(String.valueOf(activityId), customerId);
+            }
+        }
+    }
+
+    /**
+     * 获取活动id
+     *
+     * @return activityId
+     */
+    private int getActivityId() {
+        UserUtil.login(fw);
+        JSONArray list = crm.activityTaskPage(1, 100).getJSONArray("list");
+        int activityTaskId = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getBoolean("is_edit")
+                    && list.getJSONObject(i).getString("activity_task_status_name").equals("未完成")) {
+                activityTaskId = list.getJSONObject(i).getInteger("activity_task_id");
+            }
+        }
+        return activityTaskId;
+    }
+
     /**
      * 获取预约时间id
      *
@@ -980,7 +1265,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
      * @return 时间id
      */
     private Integer getTimeId(String date) {
-        UserUtil.loginApplet(EnumAppletCode.XMF);
+        UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
         JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {

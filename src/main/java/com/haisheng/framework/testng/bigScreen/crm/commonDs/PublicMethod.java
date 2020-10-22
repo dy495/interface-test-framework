@@ -72,7 +72,7 @@ public class PublicMethod {
         //接待
         crm.reception_customer((long) appointmentId);
         //我的接待-编辑
-        JSONArray list1 = crm.afterSaleCustList("", "", "", 1, 10).getJSONArray("list");
+        JSONArray list1 = crm.receptionAfterCustomerList("", "", "", 1, 10).getJSONArray("list");
         int afterRecordId = 0;
         for (int i = 0; i < list1.size(); i++) {
             if (list1.getJSONObject(i).getInteger("appointment_id") == appointmentId) {

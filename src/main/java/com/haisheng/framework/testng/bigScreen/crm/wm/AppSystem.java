@@ -114,7 +114,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //删除报名人
-            crm.deleteCustomer(String.valueOf(activityTaskId), customerId);
+            crm.deleteCustomer(String.valueOf(activityTaskId), String.valueOf(customerId));
             saveData("添加报名人信息");
         }
     }

@@ -20,9 +20,13 @@ public enum EnumAccount {
     /**
      * 销售顾问
      */
-    XS_DAILY("cs", getPassword("123456"), "", "daily", "cs"),
+    XS_DAILY("wm", getPassword("123456"), "", "daily", "wm"),
 
-    XSXIA_DAILY("销售顾问xia", getPassword("123456"), "", "daily", ""),
+    /**
+     * 保养顾问
+     */
+    FWGW_DAILY("baoyangr", getPassword("123456"), "", "daily", "baoyangr"),
+
     /**
      * 总经理
      */
@@ -32,17 +36,6 @@ public enum EnumAccount {
      * 前台
      */
     QT_DAILY("qt", getPassword("123456"), "uid_05e8599f", "daily", ""),
-
-    /**
-     * 服务总监
-     */
-    FWZJ_DAILY("fwzj", getPassword("123456"), "uid_d3fcde5c", "daily", ""),
-
-    /**
-     * 管理员
-     */
-    BAOSHIJIE_DAILY("baoshijie", getPassword("123456"), "uid_827f10a3", "daily", "4s店测试账号"),
-
 
     /**
      * 保时捷线上销售顾问
@@ -61,7 +54,7 @@ public enum EnumAccount {
     /**
      * 保养顾问
      */
-    BYGW_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
+    FWGW_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
 
     /**
      * 保时捷线上总经
