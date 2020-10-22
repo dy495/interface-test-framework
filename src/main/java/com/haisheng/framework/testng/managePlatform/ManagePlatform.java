@@ -1956,11 +1956,11 @@ public class ManagePlatform {
             aCase.setRequestData("1、添加新平面-2、查询平面列表-3、查询平面详情" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            String name = ciCaseName;
+            String name = ciCaseName+"q";
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -2024,7 +2024,7 @@ public class ManagePlatform {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[2];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -2083,7 +2083,7 @@ public class ManagePlatform {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[3];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -2166,7 +2166,7 @@ public class ManagePlatform {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[2];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -2238,7 +2238,7 @@ public class ManagePlatform {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[0];
+            int floorId = allFloorType[1];
 
 //            1、添加新平面
             logger.info("\n\n");

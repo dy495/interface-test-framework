@@ -47,7 +47,7 @@ public class ManagePlatformOnline {
     private String regionTypeGeneral = "GENERAL";
 
     private static String deviceType = "WEB_CAMERA";
-    private static String sceneType = "GENERAL_ENTRANCE_LOW_CPU";
+    private static String sceneType = "ADMIN_TEST_CASE";
     String computerId = "57";
     String deploymentId = "40";
 
@@ -590,7 +590,7 @@ public class ManagePlatformOnline {
 
         String name = ciCaseName;
 
-        String deviceType = null;
+        String deviceType ="WEB_CAMERA";
         String deviceId = null;
         try {
             aCase.setRequestData("1、增加设备-2、启动设备-3、删除设备-4、停止设备-5、删除设备" + "\n\n");
@@ -599,7 +599,7 @@ public class ManagePlatformOnline {
 //            1、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deviceType = getOneDeviceType();
+//            deviceType = getOneDeviceType();
             String response = addDevice(name, deviceType, SHOP_Id, aCase, step);
 
             deviceId = getDeviceId(response);
@@ -608,7 +608,7 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
-            Thread.sleep(2000);
+            Thread.sleep(10000);
 
 //            3、删除设备
             logger.info("\n\n");
@@ -995,7 +995,8 @@ public class ManagePlatformOnline {
 //            1、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            String deviceType = getOneDeviceType();
+//            String deviceType = getOneDeviceType();
+            String deviceType ="WEB_CAMERA";
             String deviceName_1 = ciCaseName + "-1";
             String response = addDevice(deviceName_1, deviceType, SHOP_Id, aCase, step);
             deviceId_1 = getDeviceId(response);
