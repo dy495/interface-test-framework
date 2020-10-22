@@ -111,6 +111,12 @@ public class FeidanHuaShengOnline {
 
 
 
+    public void checkNull(String obj, String msgTips) throws Exception{
+        if (null == obj || obj.trim().length() < 2) {
+            throw new Exception(msgTips + " return null");
+        }
+    }
+
 //-----------------人脸搜索-----------
 
     /**
@@ -122,25 +128,32 @@ public class FeidanHuaShengOnline {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+        String requestId = "";
 
         try {
 
             String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png";
-            System.out.println(imageUpload(path).getJSONObject("data"));
-            JSONObject response = imageUpload(path).getJSONObject("data");
+            JSONObject response = imageUpload(path);
+            requestId = response.getString("request_id");
+
+            Preconditions.checkArgument(response.containsKey("data"),"上传图片接口response不含data字段");
+
+            response = response.getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
             JSONObject trace = JSON.parseObject(face);
-            int code = trace.getInteger("code");
-            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
+            requestId = trace.getString("request_id");
 
-            Preconditions.checkArgument(code==1000,"状态码不正确，期待1000，实际" + code + "\n");
+            Preconditions.checkArgument(trace.containsKey("data"),"response无data字段");
+            trace = trace.getJSONObject("data");
+            Preconditions.checkArgument(trace.containsKey("list"),"response中data无list字段");
+            JSONArray list = trace.getJSONArray("list");
             Preconditions.checkArgument(list.size() > 0 , "无搜索结果" + "\n");
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason += e.toString() + "\nrequest id: " + requestId;
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason += e.toString() + "\nrequest id: " + requestId;
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG格式员工图片\n");
@@ -210,7 +223,7 @@ public class FeidanHuaShengOnline {
         HttpResponse response = httpClient.execute(httppost);
         HttpEntity resEntity = response.getEntity();
         this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
+        logger.info("response: " + response.toString());
         checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
         return JSON.parseObject(this.response);
     }
@@ -228,7 +241,8 @@ public class FeidanHuaShengOnline {
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
 
-        String res = httpPostUrl(url, json);
+        //String res = httpPostUrl(url, json);
+        String res = httpPostWithCheckCode(url, json);
 
         return res;
     }
@@ -280,6 +294,7 @@ public class FeidanHuaShengOnline {
 
         response = HttpClientUtil.post(config);
 
+        logger.info("response: " + response);
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }
@@ -318,17 +333,18 @@ public class FeidanHuaShengOnline {
         return "http://store.winsenseos.com";
     }
 
-    public void checkResult(String result, String... checkColumnNames) {
+    public void checkResult(String result, String... checkColumnNames) throws Exception {
         logger.info("result = {}", result);
+        checkNull(result, "response");
         JSONObject res = JSONObject.parseObject(result);
         if (!res.getInteger("code").equals(1000)) {
-            throw new RuntimeException("result code is " + res.getInteger("code") + " not success code");
+            throw new Exception("result code is " + res.getInteger("code") + ", request id: " + res.getString("request_id"));
         }
         for (String checkColumn : checkColumnNames) {
             Object column = res.getJSONObject("data").get(checkColumn);
             logger.info("{} : {}", checkColumn, column);
             if (column == null) {
-                throw new RuntimeException("result does not contains column " + checkColumn);
+                throw new Exception("result does not contains column " + checkColumn);
             }
         }
     }
