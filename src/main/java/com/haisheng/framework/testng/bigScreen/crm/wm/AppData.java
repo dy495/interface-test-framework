@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -31,9 +32,13 @@ import java.util.Set;
  */
 public class AppData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount newXs = EnumAccount.XS_DAILY;
+    private static final int size = 50;
+    int zjl_num = 0;
+    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -396,213 +401,9 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 售后-工作管理-我的回访
-     */
-    @Test(description = "全部回访=列表条数")
-    public void afterSaleMyReturnVisit_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            int total = crm.afterSale_VisitRecordList(1, 100, "", "", "").getInteger("total");
-            int listSize = 0;
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    listSize++;
-                }
-            }
-            CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "售后--我的回访-全部回访=列表条数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("服务--全部回访=列表条数");
-        }
-    }
+// -------------------------------------------------------售后-----------------------------------------------------------
 
-    @Test(description = "今日回访=任务日期为今天的条数")
-    public void afterSaleMyReturnVisit_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        try {
-            UserUtil.login(zjl);
-            JSONObject response = crm.afterSale_VisitRecordList(1, 100, "", date, date);
-            int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
-            int listSize = response.getJSONArray("list").size();
-            CommonUtil.valueView(todayReturnVisitNumber, listSize);
-            Preconditions.checkArgument(todayReturnVisitNumber == listSize, "服务--今日回访!=任务日期为今天的条数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("服务--今日回访=任务日期为今天的条数");
-        }
-    }
 
-    @Test(description = "全部回访>=今日回访")
-    public void afterSaleMyReturnVisit_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
-            int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
-            int total = response.getInteger("total");
-            Preconditions.checkArgument(total >= todayReturnVisitNumber, "服务--全部回访<今日回访");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("服务--全部回访>=今日回访");
-        }
-    }
-
-    @Test(description = "回访任务日期为今天的回访任务，是否完成=已完成")
-    public void afterSaleMyReturnVisit_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
-        String endDate = DateTimeUtil.getFormat(new Date());
-        try {
-            String returnVisitStatusName = null;
-            //创造一个当天的回访任务
-            createReturnVisitTask(startDate, endDate);
-            //回访当天任务
-            int id = createReturnVisitTask(endDate, endDate);
-            int total = crm.afterSale_VisitRecordList(1, 10, "", endDate, endDate).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getInteger("id") == id) {
-                        returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
-                    }
-                }
-            }
-            CommonUtil.valueView(returnVisitStatusName);
-            Preconditions.checkArgument(returnVisitStatusName != null && returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("服务--回访任务日期为今天的回访任务，是否完成=已完成");
-        }
-    }
-
-    @Test(description = "回访任务日期为今天之前的回访任务")
-    public void afterSaleMyReturnVisit_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
-        try {
-            String returnVisitStatusName = null;
-            UserUtil.login(zjl);
-            int id = createReturnVisitTask("", date);
-            int total = crm.afterSale_VisitRecordList(1, 10, "", "", "").getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getInteger("id") == id) {
-                        returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
-                    }
-                }
-            }
-            CommonUtil.valueView(returnVisitStatusName);
-            assert returnVisitStatusName != null;
-            Preconditions.checkArgument(returnVisitStatusName.equals("未完成"), "回访任务日期为今天的回访任务，是否完成!=未完成");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("服务--回访任务日期为今天之前的回访任务，是否完成=未完成");
-        }
-    }
-
-    @Test(description = "小程序预约今日的保养/维修（不取消）", priority = 1, enabled = false)
-    public void afterSaleMyReturnVisit_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.addDayFormat(new Date(), 1);
-        String customerName = "@@@";
-        String customerPhoneNumber = "15037286014";
-        try {
-            UserUtil.login(zjl);
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
-            int total = response.getInteger("total");
-            int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
-            int s = CommonUtil.getTurningPage(total, 100);
-            int listSize = 0;
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    listSize++;
-                }
-            }
-            CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
-            //预约保养
-            int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, date, "", (long) id);
-            UserUtil.login(zjl);
-            JSONObject response1 = crm.afterSale_VisitRecordList(1, 10, "", "", "");
-            int total1 = response1.getInteger("total");
-            int todayReturnVisitNumber1 = response1.getInteger("today_return_visit_number");
-            int s1 = CommonUtil.getTurningPage(total, 100);
-            int listSize1 = 0;
-            for (int i = 1; i < s1; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    listSize1++;
-                }
-            }
-            CommonUtil.valueView(total1, todayReturnVisitNumber1, listSize1);
-            Preconditions.checkArgument(total + 1 == total1, "售后回访页 全部回访未+1");
-            Preconditions.checkArgument(todayReturnVisitNumber + 1 == todayReturnVisitNumber1, "今日回访未+1");
-            Preconditions.checkArgument(listSize + 1 == listSize1, "售后回访页条数未+1");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("小程序预约今日的保养/维修（不取消）,售后回访页条数+1,售后回访页 全部回访+1,今日回访+1");
-        }
-    }
-
-    @Test(description = "小程序预约今日的保养/维修（取消）", priority = 2, enabled = false)
-    public void afterSaleMyReturnVisit_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
-            int total = response.getInteger("total");
-            int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
-            int s = CommonUtil.getTurningPage(total, 100);
-            int listSize = 0;
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    listSize++;
-                }
-            }
-            CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
-            //取消试驾
-            UserUtil.loginApplet(EnumAppletCode.XMF);
-            int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
-            crm.appointmentCancel(id);
-            UserUtil.login(zjl);
-            JSONObject response1 = crm.afterSale_VisitRecordList(1, 10, "", "", "");
-            int total1 = response1.getInteger("total");
-            int todayReturnVisitNumber1 = response1.getInteger("today_return_visit_number");
-            int s1 = CommonUtil.getTurningPage(total, 100);
-            int listSize1 = 0;
-            for (int i = 1; i < s1; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", "", "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    listSize1++;
-                }
-            }
-            CommonUtil.valueView(total1, todayReturnVisitNumber1, listSize1);
-            Preconditions.checkArgument(total == total1 + 1, "售后回访页 全部回访未-1");
-            Preconditions.checkArgument(todayReturnVisitNumber == todayReturnVisitNumber1 + 1, "今日回访未-1");
-            Preconditions.checkArgument(listSize == listSize1 + 1, "售后回访页条数未-1");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("小程序预约今日的保养/维修（取消）,售后回访页条数-1,售后回访页 全部回访-1,今日回访-1");
-        }
-    }
 
 //    ---------------------------------------------------2.1------------------------------------------------------------
 
@@ -1150,7 +951,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         customerId = crm.userInfService().getLong("customer_id");
         return customerId;
     }
-
 
     /**
      * 删除

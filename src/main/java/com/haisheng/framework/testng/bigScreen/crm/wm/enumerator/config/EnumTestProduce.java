@@ -10,9 +10,11 @@ import lombok.Getter;
  */
 public enum EnumTestProduce {
 
-    CRM_DAILY("CRM 日常 wm"),
+    CRM_DAILY("汽车 日常 wm"),
 
-    CRM_ONLINE("CRM 线上 wm");
+    CRM_ONLINE("汽车 线上-赢识 wm"),
+
+    CRM_ONLINE_PORSCHE("汽车 线上-保时捷 wm");
 
     EnumTestProduce(String name) {
         this.name = name;

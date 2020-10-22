@@ -2819,18 +2819,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //售后：首保提醒列表
-    public JSONObject afterSale_firstmMintainRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+    public JSONObject afterSale_firstmMaintainRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
         String url = "/porsche/app/return-visit-record/first-maintain-record/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);
-        if (!search_name_phone.equals("")) {
+        if (!StringUtils.isEmpty(search_name_phone)) {
             json1.put("search_name_phone", search_name_phone);
         }
-        if (!search_start_day.equals("")) {
+        if (!StringUtils.isEmpty(search_start_day)) {
             json1.put("search_start_day", search_start_day);
         }
-        if (!search_end_day.equals("")) {
+        if (!StringUtils.isEmpty(search_end_day)) {
             json1.put("search_end_day", search_end_day);
         }
         String json = json1.toJSONString();
@@ -2839,18 +2839,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //售后：流失预警列表
-    public JSONObject afterSale_customerChurnWarningList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) throws Exception {
+    public JSONObject afterSale_customerChurnWarningList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
         String url = "/porsche/app/return-visit-record/customer-churn-warning/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);
-        if (!search_name_phone.equals("")) {
+        if (!StringUtils.isEmpty(search_name_phone)) {
             json1.put("search_name_phone", search_name_phone);
         }
-        if (!search_start_day.equals("")) {
+        if (!StringUtils.isEmpty(search_start_day)) {
             json1.put("search_start_day", search_start_day);
         }
-        if (!search_end_day.equals("")) {
+        if (!StringUtils.isEmpty(search_end_day)) {
             json1.put("search_end_day", search_end_day);
         }
         String json = json1.toJSONString();
@@ -4614,7 +4614,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return new String[]{
                 EnumAppletCode.XMF.getCode(),
 //                EnumAppletCode.BB.getCode(),
-//                EnumAppletCode.WM.getCode(),
+                EnumAppletCode.WM.getCode(),
+                EnumAppletCode.WM_SMALL.getCode()
 //                EnumAppletCode.LXQ.getCode(),
 //                EnumAppletCode.GLY.getCode()
         };

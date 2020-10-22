@@ -86,7 +86,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
                 listSizeTotal += listSize;
             }
             CommonUtil.valueView(total, listSizeTotal);
-            Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal + "两者不相等");
+            Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

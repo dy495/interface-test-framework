@@ -286,11 +286,10 @@ public class CommonUtil {
     }
 
 
-/**
- * 检查接口是否返回1000，且指定data下的字段是否存在
- * yu， 2020.10.22
- *
- * */
+    /**
+     * 检查接口是否返回1000，且指定data下的字段是否存在
+     * yu， 2020.10.22
+     */
     public static void checkResult(String result, String... checkColumnNames) throws Exception {
         logger.info("result = {}", result);
         StringUtil.checkNull(result, "response");

@@ -227,16 +227,17 @@ public class PublicMethod {
      */
     public void appointment(EnumAppointmentType type, String date) {
         EnumCarModel carModel = EnumCarModel.PANAMERA;
-        UserUtil.loginApplet(EnumAppletCode.XMF);
+        UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
+        String carId = String.valueOf(getCarId());
         int id = getTimeId(type.getType(), date);
         IScene scene;
         switch (type) {
             case MAINTAIN:
-                scene = AppointmentMaintainScene.builder().myCarId(String.valueOf(getCarId())).customerName("大马猴")
+                scene = AppointmentMaintainScene.builder().myCarId(carId).customerName("大马猴")
                         .customerGender("MALE").customerPhoneNumber("15321527989").timeRangeId(id).build();
                 break;
             case REPAIR:
-                scene = AppointmentRepairScene.builder().myCarId(String.valueOf(getCarId())).customerName("大马猴")
+                scene = AppointmentRepairScene.builder().myCarId(carId).customerName("大马猴")
                         .customerGender("MALE").customerPhoneNumber("15321527989").timeRangeId(id).build();
                 break;
             default:

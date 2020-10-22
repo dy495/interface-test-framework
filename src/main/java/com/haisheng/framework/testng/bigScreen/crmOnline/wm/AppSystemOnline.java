@@ -284,8 +284,8 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.customerCreate("", customerLevel, phone, car.getModelId(), car.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("顾客姓名不能为空"), "顾客姓名为空也可创建成功");
             //不填意向车型
-//            JSONObject response1 = crm.customerCreate("望京", customerLevel, phone, "", "", remark);
-//            Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
+            JSONObject response1 = crm.customerCreate("望京", customerLevel, phone, "", "", remark);
+            Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
             //不填电话
             JSONObject response2 = crm.customerCreate("望京", customerLevel, "", car.getModelId(), car.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("顾客手机号不能为空"), "顾客手机号为空也可创建成功");
