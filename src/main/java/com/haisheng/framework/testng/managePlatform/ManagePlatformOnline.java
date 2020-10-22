@@ -35,12 +35,12 @@ public class ManagePlatformOnline {
     private String CLUSTER_NODE_Id = "219";
     private String ALIAS = "QA测试-线上";
     private static String BATCH_START_DEVICE_ID_1 = "7908770594128896";//batchStartDeviceCheck,listDeviceDiffConditionCheck
-    private static String BATCH_START_DEVICE_ID_2 = "7908771802121216";//batchStartDeviceCheck,listDeviceDiffConditionCheck
+    private static String BATCH_START_DEVICE_ID_2 = "7914134471771136";//batchStartDeviceCheck,listDeviceDiffConditionCheck
     private static String DEVICE_ID_MAPPING = "7908776948401152";//layoutMapping
 
-    private static String DEVICE_NO_BIND = "7908779833099264";
-    private static String REGION_DEVICE_1 = "7908782403978240";
-    private static String REGION_DEVICE_2 = "7908784511091712";
+    private static String DEVICE_NO_BIND = "7908784511091712";
+    private static String REGION_DEVICE_1 = "7908779833099264";
+    private static String REGION_DEVICE_2 = "7908782403978240";
     private static String ENTRANCE_DEVICE_ID_1 = "7908786984256512";
     private static String DEVICE_NAME_1 = "批量启动-管理后台-回归-1【勿动】";//验证设备列表不同搜索条件时用
 

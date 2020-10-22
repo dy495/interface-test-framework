@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -74,8 +75,9 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "青青";
 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-
+        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
 
 
         //set shop id
@@ -160,7 +162,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
 
-            saveData("PC端巡检配置新建定检任务");
+            saveData("PC端巡检配置新建执行清单");
         }
 
     }
@@ -294,7 +296,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
 
-            saveData("PC端巡检配置新建定检任务");
+            saveData("PC端巡检配置新建定检规则");
         }
 
     }

@@ -63,7 +63,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 
 
         commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","15037286013",};
+        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
         //13436941018 吕雪晴
         //17610248107 廖祥茹
         //15084928847 黄青青
