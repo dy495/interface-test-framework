@@ -234,14 +234,11 @@ public class FeidanHuaShengOnline {
      */
     public String faceTraces(String showUrl) throws Exception {
         String url = "/risk/evidence/face/traces";
-        url = getIpPort() + url;
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
-
-        //String res = httpPostUrl(url, json);
         String res = httpPostWithCheckCode(url, json);
 
         return res;
@@ -284,20 +281,6 @@ public class FeidanHuaShengOnline {
     }
 
 //-------------------------------------------------------------用例用到的方法--------------------------------------------------------------------
-
-
-    public String httpPostUrl(String path, String json) throws Exception {
-        initHttpConfig();
-        config.url(path).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: " + response);
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";
