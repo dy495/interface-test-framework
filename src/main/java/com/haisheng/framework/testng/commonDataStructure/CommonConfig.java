@@ -6,6 +6,7 @@ public class CommonConfig {
     public final String TEST_PRODUCT = "YOUR-TEST-PRODUCT";
     public final String CASE_DESC = "CASE_DESCRIPTION";
     public final String CASE_FAIL = "CASE_FAIL";
+    public final String CASE_NAME = "CASE_NAME";
 
     //网关信息
     public String gateway = "http://dev.api.winsenseos.cn/retail/api/data/biz";
@@ -30,6 +31,7 @@ public class CommonConfig {
             "15011479599", //谢志东
             "15898182672"}; //华成裕
     public String message = TEST_PRODUCT + " \n" +
+            "case：" + CASE_NAME + "\n" +
             "验证：" + CASE_DESC +
             " \n\n" + CASE_FAIL;
     //门店id

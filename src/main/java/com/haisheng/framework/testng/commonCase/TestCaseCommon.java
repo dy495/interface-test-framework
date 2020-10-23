@@ -456,10 +456,13 @@ public class TestCaseCommon {
         if (!StringUtils.isEmpty(caseResult.getFailReason())) {
             logger.error(caseResult.getFailReason());
             String message = commonConfig.message;
+            String macroCaseName = commonConfig.CASE_NAME;
             String macroCaseDesc = commonConfig.CASE_DESC;
             String macroCaseFail = commonConfig.CASE_FAIL;
+            message = message.replace(macroCaseName, caseResult.getCaseName();
             message = message.replace(macroCaseDesc, caseResult.getCaseDescription());
             message = message.replace(macroCaseFail, caseResult.getFailReason());
+
             dingPushDaily(message);
         }
     }
