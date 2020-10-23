@@ -19,19 +19,13 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 public class testDriverCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     PackFunction pf = new PackFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
