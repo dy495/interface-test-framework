@@ -14,4 +14,5 @@ public class orderCar {
     public Integer plate_type = 1;
     public String vehicle_chassis_code;
     public boolean checkCode = true;
+    public String Empty;
 }

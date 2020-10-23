@@ -223,8 +223,9 @@ public class PackFunction {
                 break;
             }
         }
+        String oss=crm.addressDiscernment(driverLicensePhoto1Url).getString("license_face_path");
 
-        crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car);
+        crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car,oss);
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian, pp.adminpassword);
         int driverid = crm.testDriverAppList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getInteger("id");
@@ -389,9 +390,9 @@ public class PackFunction {
         Random r = new Random();
         String carName = "试驾车"+r.nextInt(10) + dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
-        String plate_number = "黑Z12Q1" + r.nextInt(100);
+        String plate_number = "黑Z12I1" + r.nextInt(100);
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);
-        Long start = dt.getHistoryDateTimestamp(1);
+        Long start = dt.getHistoryDateTimestamp(-1);
         long end = dt.getHistoryDateTimestamp(3);
         JSONObject data = crm.carManagementAdd(carName, 1L, 37L, plate_number, vehicle_chassis_code, start, end);
         return data.getLong("test_car_id");
@@ -429,5 +430,22 @@ public class PackFunction {
         a[4] = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
 
         return a;
+    }
+
+    //可用试驾车
+    public JSONObject cartime(){
+        JSONArray list = crm.testDriverList().getJSONArray("list");
+        JSONObject carMess=new JSONObject();
+        for (int i = 0; i < list.size(); i++) {
+            Long test_drive_car = list.getJSONObject(i).getLong("test_car_id");
+            JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
+            if (timelist.size() != 0) {
+                String apply_time = timelist.getString(0);
+                carMess.put("test_car_id",test_drive_car);
+                carMess.put("apply_time",apply_time);
+                break;
+            }
+        }
+        return carMess;
     }
 }
