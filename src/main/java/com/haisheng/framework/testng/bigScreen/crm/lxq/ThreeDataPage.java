@@ -358,7 +358,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void allEQAlone_rectime() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -929,7 +929,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
+    //@Test
     public void recpTimeChk() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

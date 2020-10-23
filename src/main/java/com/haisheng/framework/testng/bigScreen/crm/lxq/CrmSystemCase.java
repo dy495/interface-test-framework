@@ -1503,10 +1503,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     public String getPlateNum(){
-        String shengfen = "京苏津黑吉辽青宁台琼桂闽";
-        String qu = "ABCDEFGHMJKL";
+        String qu = "CEFGHJKLMNPQY";
         int a = (int)(Math.random()*10);
-        String plateNum = shengfen.substring(a,a+1);
+        String plateNum = "京";
         plateNum = plateNum + qu.substring(a,a+1);
         for (int i = 0; i < 5;i++){
             String b = Integer.toString((int)(Math.random()*10));
