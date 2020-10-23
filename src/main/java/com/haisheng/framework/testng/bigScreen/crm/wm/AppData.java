@@ -404,7 +404,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
 // -------------------------------------------------------售后-----------------------------------------------------------
 
 
-
 //    ---------------------------------------------------2.1------------------------------------------------------------
 
     /**
@@ -747,7 +746,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
-            crm.customerCreate(customerInfo.getName(), "2", phone, "82", car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             int total1 = crm.customerPage(1, 10, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
@@ -855,10 +854,16 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject response = crm.customerPage(100, 1, "", "", "");
             int total = response.getInteger("total");
-            JSONObject response1 = crm.customerList("", "", "", "", "", 1, 2 << 20);
-            JSONArray list = response1.getJSONArray("list");
-            CommonUtil.valueView(total, list.size());
-            Preconditions.checkArgument(total == list.size(), "app我的客户页列表数!=PC我的客户页列表数");
+            int listSize = 0;
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    listSize++;
+                }
+            }
+            CommonUtil.valueView(total, listSize);
+            Preconditions.checkArgument(total == listSize, "app我的客户页列表数!=PC我的客户页列表数");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

@@ -504,9 +504,9 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     public void myReturnVisit_function_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String endDate = DateTimeUtil.getFormat(new Date());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            UserUtil.login(xs);
+            UserUtil.login(zjl);
             int total = crm.returnVisitTaskPage(1, 10, startDate, endDate).getInteger("total");
             for (int j = 1; j < CommonUtil.getTurningPage(total, 100); j++) {
                 JSONArray list = crm.returnVisitTaskPage(j, 100, startDate, endDate).getJSONArray("list");
@@ -516,11 +516,11 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                         if (StringUtils.isEmpty(customerPhone)) {
                             continue;
                         }
-                        CommonUtil.valueView("电话号是:" + customerPhone);
+                        CommonUtil.valueView("电话号是：" + customerPhone);
                         JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
-                        String ifByCarName = result.getJSONArray("list").getJSONObject(0).getString("buy_car_name");
-                        CommonUtil.valueView(ifByCarName);
-                        Preconditions.checkArgument(ifByCarName.equals("否"), "回访类型:潜客，创建接待时不是“订车”标记为否的客户");
+                        boolean isOrder = result.getJSONArray("list").getJSONObject(0).getBoolean("is_order");
+                        CommonUtil.valueView(isOrder);
+                        Preconditions.checkArgument(!isOrder, "回访类型:潜客，创建接待时不是“订车”标记为否的客户");
                         CommonUtil.log("分割线");
                     }
                 }
@@ -538,7 +538,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     @Test(description = "回访类型为成交的用户，创建接待时“订车”标记为是的客户")
     public void myReturnVisit_function_11() {
         logger.logCaseStart(caseResult.getCaseName());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
         String endDate = DateTimeUtil.getFormat(new Date());
         try {
             UserUtil.login(zjl);
@@ -551,20 +551,11 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                         if (StringUtils.isEmpty(customerPhone)) {
                             continue;
                         }
-                        CommonUtil.valueView("电话号是" + customerPhone);
-                        int num = crm.customerList("", customerPhone, "", "", "", 1, 10).getInteger("total");
-                        int s = CommonUtil.getTurningPage(num, 50);
-                        String buyCarName = null;
-                        for (int x = 1; x < s; x++) {
-                            JSONArray array = crm.customerList("", customerPhone, "", "", "", x, 50).getJSONArray("list");
-                            for (int o = 0; o < array.size(); o++) {
-                                if (array.getJSONObject(o).getString("customer_phone").equals(customerPhone)) {
-                                    buyCarName = array.getJSONObject(o).getString("buy_car_name");
-                                }
-                            }
-                        }
-                        CommonUtil.valueView(buyCarName);
-                        Preconditions.checkArgument(buyCarName != null && buyCarName.equals("是"), "回访类型:成交，创建接待时不是“订车”标记为是的客户，电话号为：" + customerPhone);
+                        CommonUtil.valueView("电话号是：" + customerPhone);
+                        JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
+                        boolean isOrder = result.getJSONArray("list").getJSONObject(0).getBoolean("is_order");
+                        CommonUtil.valueView(isOrder);
+                        Preconditions.checkArgument(isOrder, "回访类型:成交，创建接待时不是“订车”标记为是的客户，电话号为：" + customerPhone);
                         CommonUtil.log("分割线");
                     }
                 }

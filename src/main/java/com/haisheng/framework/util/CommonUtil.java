@@ -78,6 +78,10 @@ public class CommonUtil {
         logger.info("---------------------------------------{}---------------------------------------", s);
     }
 
+    public static void logger(String s) {
+        log("[" + s + "]" + "跑完");
+    }
+
     /**
      * 获取百分比
      *

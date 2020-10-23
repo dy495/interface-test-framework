@@ -1262,14 +1262,14 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.contains("总经理")) {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 10)
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 10)
@@ -1277,8 +1277,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 }
-                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                long count = (long) result.get(0).get("count(*)");
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 String userId = arr.get("userId");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
@@ -1292,7 +1291,6 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量");
@@ -1311,7 +1309,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.contains("总经理")) {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 30)
@@ -1319,7 +1317,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 30)
@@ -1328,8 +1326,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 }
-                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                long count = (long) result.get(0).get("count(*)");
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 String userId = arr.get("userId");
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
@@ -1360,7 +1357,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.contains("总经理")) {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 60)
@@ -1368,7 +1365,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 60)
@@ -1378,8 +1375,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .end().getSql();
                 }
                 String userId = arr.get("userId");
-                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                long count = (long) result.get(0).get("count(*)");
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1409,7 +1405,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.contains("总经理")) {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 120)
@@ -1417,7 +1413,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", "<", 120)
@@ -1427,8 +1423,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .end().getSql();
                 }
                 String userId = arr.get("userId");
-                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                long count = (long) result.get(0).get("count(*)");
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1458,14 +1453,14 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(userName);
                 String sql;
                 if (userName.contains("总经理")) {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", ">=", 120)
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("count(*)")
+                    sql = Sql.instance().select()
                             .from("t_porsche_reception_data")
                             .where("reception_date", "=", date)
                             .and("reception_duration", ">=", 120)
@@ -1474,8 +1469,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             .end().getSql();
                 }
                 String userId = arr.get("userId");
-                List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                long count = (long) result.get(0).get("count(*)");
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

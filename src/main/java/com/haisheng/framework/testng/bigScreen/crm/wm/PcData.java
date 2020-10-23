@@ -195,7 +195,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject failureCustomerList = crm.failureCustomerList("", "", 1, 2 << 10);
+            JSONObject failureCustomerList = crm.failureCustomerList("", "", 1, 100);
             int listSize = failureCustomerList.getJSONArray("list").size();
             int total = failureCustomerList.getInteger("total");
             CommonUtil.valueView(listSize, total);
@@ -212,7 +212,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
-            JSONObject failureCustomerList = crm.failureCustomerList(date, date, 1, 2 << 10);
+            JSONObject failureCustomerList = crm.failureCustomerList(date, date, 1, 100);
             int listSize = failureCustomerList.getJSONArray("list").size();
             int today = failureCustomerList.getInteger("today");
             Preconditions.checkArgument(listSize == today, "pc销售客户管理战败今日人数为" + today + "按今日搜索列表总条数为" + listSize);
@@ -253,7 +253,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject weChatCustomerList = crm.wechatCustomerList("", "", 1, 2 << 10);
+            JSONObject weChatCustomerList = crm.wechatCustomerList("", "", 1, 100);
             int listSize = weChatCustomerList.getJSONArray("list").size();
             int total = weChatCustomerList.getInteger("total");
             CommonUtil.valueView(listSize, total);
@@ -270,7 +270,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
-            JSONObject weChatCustomerList = crm.wechatCustomerList(date, date, 1, 2 << 10);
+            JSONObject weChatCustomerList = crm.wechatCustomerList(date, date, 1, 100);
             int listSize = weChatCustomerList.getJSONArray("list").size();
             int today = weChatCustomerList.getInteger("today");
             CommonUtil.valueView(listSize, today);
