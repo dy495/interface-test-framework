@@ -803,15 +803,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
-            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),4L,64L,car,carid,starttime,endtime).getLong("test_car_id");
+            Long test_car_id = crm.carManagementAdd(getCarName(),4L,64L,car,carid,starttime,endtime).getLong("test_car_id");
             //注销
             crm.carLogout(test_car_id);
 
-            int code1 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),4L,64L,car,"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000),starttime,endtime).getInteger("code"); //车牌重复
-            int code2 = crm.carManagementAddNotChk("ZDH"+(int)((Math.random()*9+1)*100),4L,64L,"苏ZDH"+(int)((Math.random()*9+1)*100),carid,starttime,endtime).getInteger("code"); //车架重复
+            int code1 = crm.carManagementAddNotChk(getCarName(),4L,64L,car,"ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000),starttime,endtime).getInteger("code"); //车牌重复
+            int code2 = crm.carManagementAddNotChk(getCarName(),4L,64L,getPlateNum(),carid,starttime,endtime).getInteger("code"); //车架重复
             Preconditions.checkArgument(code1==1000,"车牌重复时失败");
             Preconditions.checkArgument(code2!=1000,"车架号重复时成功");
 
@@ -833,9 +833,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long yesterday = dt.getHistoryDateTimestamp(-1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
-            String name = "ZDH"+(int)((Math.random()*9+1)*10);
+            String name = getCarName();
             //新增
             String name21 = "123456789012345678901";
             String car6 = "苏ZDH"+(int)((Math.random()*9+1)*10);
@@ -888,10 +888,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
-            Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),4L,64L,car,carid,starttime,endtime).getLong("test_car_id");
+            Long test_car_id = crm.carManagementAdd(getCarName(),4L,64L,car,carid,starttime,endtime).getLong("test_car_id");
             //注销
             crm.carLogout(test_car_id);
             boolean exit = false;
@@ -929,12 +929,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Long endtimenew = dt.getHistoryDateTimestamp(3);
             String enddate = dt.getHistoryDate(3);
 
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
-            String carnew = "吉ZDH"+(int)((Math.random()*9+1)*100);
+            String car = getPlateNum();
+            String carnew = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             String caridnew = "ZDHZDHGGG"+(long)((Math.random()*9+1)*10000000);
-            String name = "ZDH"+(int)((Math.random()*9+1)*100);
-            String namenew = "GGG"+(int)((Math.random()*9+1)*100);
+            String name = getCarName();
+            String namenew = getCarName();
             //新增
             int test_car_id = crm.carManagementAdd(name,4L,64L,car,carid,starttime,endtime).getInteger("test_car_id");
 
@@ -996,6 +996,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"新建dcc线索后，列表数增加了"+change);
             Preconditions.checkArgument(phoneresult.equals(phone),"列表中手机号为"+ phoneresult+", 新建时手机号为" + phone);
             Preconditions.checkArgument(nameresult.equals(name),"列表中客户名称为"+ nameresult+", 新建时客户名称为" + name);
+            Thread.sleep(1000);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1018,8 +1019,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String phone = "139000"+(int)((Math.random()*9+1)*10000);
             String phone12 = "1390001"+(int)((Math.random()*9+1)*10000); //手机号12位
             String phone10 = "13900"+(int)((Math.random()*9+1)*10000); //手机号10位
-            String car7 = "苏ZDH"+(int)((Math.random()*9+1)*100);
-            String car8 = "苏ZDH"+(int)((Math.random()*9+1)*1000);
+            String car7 =getPlateNum();
+            String car8 = getPlateNum()+"1";
             String car6 = "苏ZDH"+(int)((Math.random()*9+1)*10);
             String car9 = "苏ZDH"+(int)((Math.random()*9+1)*10000);
             String carno = "AZDH"+(int)((Math.random()*9+1)*1000);
@@ -1056,11 +1057,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(cstm.dcc,cstm.pwd);
 
-            String name = "自动化";
+            String name = getCarName();
             String phone = "139000"+(int)((Math.random()*9+1)*10000);
             String phone1 = "139001"+(int)((Math.random()*9+1)*10000);
-            String car7 = "苏ZDH"+(int)((Math.random()*9+1)*100);
-            String car8 = "苏ZDH"+(int)((Math.random()*9+1)*1000);
+            String car7 = getPlateNum();
+            String car8 = getPlateNum()+"1";
 
 
             crm.dccCreate(name,phone,car7);
@@ -1071,7 +1072,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
+            String car = getPlateNum();
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
             Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),4L,64L,car,carid,starttime,endtime).getLong("test_car_id");
@@ -1138,6 +1139,25 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    public String getPlateNum(){
+        String qu = "CEFGHJKLMNPQY";
+        int a = (int)(Math.random()*10);
+        String plateNum = "京";
+        plateNum = plateNum + qu.substring(a,a+1);
+        for (int i = 0; i < 5;i++){
+            String b = Integer.toString((int)(Math.random()*10));
+            plateNum = plateNum + b;
+        }
+        System.out.println(plateNum);
+        return plateNum;
+    }
+
+    public String getCarName(){
+
+        String name = "Name"+ Integer.toString((int)(Math.random()*100000000));
+        return name;
+    }
 
 
 }

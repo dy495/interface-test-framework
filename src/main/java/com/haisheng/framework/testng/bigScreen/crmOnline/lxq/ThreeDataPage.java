@@ -323,7 +323,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void allEQAlone_4tab() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -484,7 +484,8 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+
+    //@Test(priority = 1)
     public void businessReceiveGTClue() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -500,7 +501,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void businessReceiveGTOrder() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -516,7 +517,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void businessOrderGTDeal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -577,7 +578,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    //@Test(priority = 1)
     public void businessService() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -695,7 +696,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(priority = 1,dataProvider = "CAR_FUNNEL")
+    //@Test(priority = 1,dataProvider = "CAR_FUNNEL")
     public void carFunnelChk(String bus, String car, String bus1, String car1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -731,15 +732,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @DataProvider(name = "BUS_RATE")
-    public  Object[][] bus_rate() {
-        return new String[][]{
-                {Integer.toString(car_receive),Integer.toString(car_clue),"接待","线索","到店率",enter_rate},
-                {Integer.toString(car_testDriver),Integer.toString(car_clue),"试驾","线索","试驾率",driver_rate},
-                {Integer.toString(car_order),Integer.toString(car_clue),"订单","线索","成交率",deal_rate}
 
-        };
-    }
 
 
 
@@ -967,7 +960,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void carOwnerPersonalPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -994,7 +987,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-   @Test
+   //@Test
     public void carOwnerBusinessPercent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

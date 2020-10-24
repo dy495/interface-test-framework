@@ -4884,8 +4884,8 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     public static Object[][] add_car() {
 
         return new String[][]{
-                {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
-                {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
+                {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), getPlateNum(), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
+                {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), getPlateNum()+"1", "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
 
         };
     }
@@ -4930,11 +4930,29 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return new String[][]{
                 {"ZDH", "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字3位，手机号，不填车牌号
                 {"姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位姓名50位" + (int) ((Math.random() * 9 + 1) * 10000), "139000" + (int) ((Math.random() * 9 + 1) * 10000), ""}, //名字50位，手机号，不填车牌号
-                {"!@#$%^&*()}{:?><~!", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100)}, //名字符号，手机号，车牌号7位
-                {"啊", "139000" + (int) ((Math.random() * 9 + 1) * 10000), "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000)}, //名字1位，手机号，车牌号8位
+                {"!@#$%^&*()}{:?><~!", "139000" + (int) ((Math.random() * 9 + 1) * 10000), getPlateNum()}, //名字符号，手机号，车牌号7位
+                {"啊", "139000" + (int) ((Math.random() * 9 + 1) * 10000), getPlateNum()+"1"}, //名字1位，手机号，车牌号8位
 
 
         };
+    }
+    public static String getPlateNum(){
+        String qu = "CEFGHJKLMNPQY";
+        int a = (int)(Math.random()*10);
+        String plateNum = "京";
+        plateNum = plateNum + qu.substring(a,a+1);
+        for (int i = 0; i < 5;i++){
+            String b = Integer.toString((int)(Math.random()*10));
+            plateNum = plateNum + b;
+        }
+        System.out.println(plateNum);
+        return plateNum;
+    }
+
+    public String getCarName(){
+
+        String name = "Name"+ Integer.toString((int)(Math.random()*100000000));
+        return name;
     }
 
 }

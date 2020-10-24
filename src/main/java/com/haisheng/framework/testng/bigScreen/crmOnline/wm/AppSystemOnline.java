@@ -652,7 +652,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访客户,接听,是否完成=已完成")
+    //@Test(description = "回访客户,接听,是否完成=已完成")
     public void myReturnVisit_function_15() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
