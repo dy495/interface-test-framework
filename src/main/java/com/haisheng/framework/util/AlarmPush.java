@@ -37,9 +37,9 @@ public class AlarmPush {
         msg += "\n\n#### " + today + " 记录信息\n";
         msg +=  "\n\n>##### **模块：消费者接口，RD：高凯**"
                 + "\n>##### 通过率：" + customerApiPassRate[0] + "，FAIL：" + customerApiPassRate[1] + "，TOTAL：" + customerApiPassRate[2]
-                + "\n\n>##### **模块：人体算法，RD：蔡思明**"
+                + "\n\n>##### **模块：人体算法，RD：高凯**"
                 + "\n>##### 通过率：" + bodyPassRate[0] + "，FAIL：" + bodyPassRate[1] + "，TOTAL：" + bodyPassRate[2]
-                + "\n\n>##### **模块：人脸算法，RD：蔡思明**"
+                + "\n\n>##### **模块：人脸算法，RD：高凯**"
                 + "\n>##### 通过率：" + facePassRate[0] + "，FAIL：" + facePassRate[1] + "，TOTAL：" + facePassRate[2]
                 + "\n\n>##### **模块：门禁算法，RD：高凯**"
                 + "\n>##### 通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
