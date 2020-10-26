@@ -31,7 +31,7 @@ public class CommonConfig {
             "15011479599", //谢志东
             "15898182672"}; //华成裕
     public String message = TEST_PRODUCT + " \n" +
-            "case：" + CASE_NAME + "\n" +
+            "case：" + CASE_NAME + "\n\n" +
             "验证：" + CASE_DESC +
             " \n\n" + CASE_FAIL;
     //门店id
