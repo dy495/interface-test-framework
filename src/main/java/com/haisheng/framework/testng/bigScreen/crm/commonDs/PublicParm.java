@@ -30,6 +30,7 @@ public class PublicParm {
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
     public String customer_phone_numberO = "17770601557";
+//    public String customer_phone_numberO = "17715942601";
     public String customer_phone_numberE = "17767880967";
 
     public String chengeReceiptPhone = "17768996973";

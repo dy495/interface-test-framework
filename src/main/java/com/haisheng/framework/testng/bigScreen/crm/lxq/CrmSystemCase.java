@@ -1373,7 +1373,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addDccCustErr(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.lxqgw,cstm.pwd);
+            crm.login(cstm.dccxs,cstm.pwd);
 
             String name = "自动化";
             String nameno = "      ";
@@ -1417,7 +1417,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addDccCustRe(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.lxqgw,cstm.pwd);
+            crm.login(cstm.dccxs,cstm.pwd);
 
             String name = "自动化";
             String phone = "139000"+(int)((Math.random()*9+1)*10000);
@@ -1437,14 +1437,17 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
+            crm.login(cstm.xszj,cstm.pwd);
             Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
 
-
+            crm.login(cstm.dccxs,cstm.pwd);
             int code2 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表未注销的车牌号
             Preconditions.checkArgument(code2==1001,"使用试驾车列表未注销的车牌号"+car+"期待1001，实际"+ code2);
 
             //注销
+            crm.login(cstm.xszj,cstm.pwd);
             crm.carLogout(test_car_id);
+            crm.login(cstm.dccxs,cstm.pwd);
             int code3 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表已注销的车牌号
             Preconditions.checkArgument(code3==1000,"使用试驾车列表已注销的车牌号"+car+"期待1000，实际"+ code3);
 

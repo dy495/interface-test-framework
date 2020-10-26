@@ -671,5 +671,31 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             saveData("试驾必填项校验");
         }
     }
+    //申请试驾后，试驾时间段-3，取消+3
+//    @Test
+    public void shijiaTime99() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name ="编辑";
+            String phone = pp.customer_phone_numberO;
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "BB";
+            String userLoginName = object.getString("userLoginName");
+            //申请试驾
+            for(int i=0;i<70;i++) {
+                pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
+            }
+            crm.finishReception3(fr);
 
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("试驾取消，试驾时间段验证");
+        }
+    }
 }

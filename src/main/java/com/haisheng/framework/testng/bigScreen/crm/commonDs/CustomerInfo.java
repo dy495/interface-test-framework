@@ -8,11 +8,13 @@ public class CustomerInfo {
     //app登陆密码
     public final String pwd = "e10adc3949ba59abbe56e057f20f883e";//123456
     public final String lxqgw = "0805xsgw";//销售顾问
+    public final String dccxs = "xdcc";//销售顾问
     public final String lxqby = "lxqby";//保养顾问姓名
     public final String lxqwx = "lxqwx";//维修顾问姓名
     public final String xszj = "xszj";//销售总监
     public final String qt = "qt";//前台
     public final String baoshijie = "baoshijie";//超级管理员
+
 
 
     //交车照片

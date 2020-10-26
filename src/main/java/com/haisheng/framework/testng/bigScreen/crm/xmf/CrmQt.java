@@ -157,7 +157,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
      * @description :展厅接待查询
      * @date :2020/8/3 12:48
      **/
-    @Test()
+//    @Test()
     public void qtztSelectTimeAndname() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -648,6 +648,37 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             saveData("销售总监修改客户联系方式1，成功验证 ");
         }
     }
+
+    /**
+     * @description :前台老客标记非客失败
+     * @date :2020/10/26 15:16
+     **/
+    @Test
+    public void markab(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id = "";
+            JSONArray idlist = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+                if (customer_identity_name.equals("老客")) {
+                    analysis_customer_id = list.getJSONObject(i).getString("analysis_customer_id");
+                    JSONObject id = new JSONObject();
+                    id.put("analysis_customer_id", analysis_customer_id);
+                    idlist.add(id);
+                    break;
+                }
+            }
+            int code1=crm.markNocustomercode(idlist).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"老客不能被标记成非客");
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("前台老客标记非客失败");
+        }
+    }
+
     /**
      * @description :前台分配新客含人脸接待列表+1
      * @date :2020/10/20 18:54

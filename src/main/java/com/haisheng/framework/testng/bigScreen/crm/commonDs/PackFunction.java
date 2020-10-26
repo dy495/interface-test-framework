@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+
 import java.util.List;
 import java.util.Random;
 
@@ -36,13 +37,13 @@ public class PackFunction {
         return userLoginName;
     }
 
-    public JSONArray phoneList(String phonenum,String phonenum2){
+    public JSONArray phoneList(String phonenum, String phonenum2) {
         JSONArray PhoneList = new JSONArray();
         JSONObject phone1 = new JSONObject();
         phone1.put("phone", phonenum);
         phone1.put("phone_order", 0);
         JSONObject phone2 = new JSONObject();
-        phone2.put("phone",phonenum2);
+        phone2.put("phone", phonenum2);
         phone2.put("phone_order", 1);
         PhoneList.add(0, phone1);
         PhoneList.add(1, phone2);
@@ -86,7 +87,8 @@ public class PackFunction {
         aid[1] = activity_id;  //活动id
         return aid;
     }
-    public Long[] createAArcile_idRole(String valid_start, String simulation_num,Integer role_id) throws Exception {
+
+    public Long[] createAArcile_idRole(String valid_start, String simulation_num, Integer role_id) throws Exception {
         Long article_id;
         Long[] aid = new Long[2];
         crm.login(pp.zongjingli, pp.adminpassword);
@@ -163,7 +165,7 @@ public class PackFunction {
         Long customerID = data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
 
         JSONArray PhoneList = new JSONArray();
-        PhoneList =phoneList(phone,"");
+        PhoneList = phoneList(phone, "");
 
         jsonP.put("name", name);
         jsonP.put("phone", phone);
@@ -194,8 +196,8 @@ public class PackFunction {
         Long id = dataC.getJSONArray("list").getJSONObject(0).getLong("id");
         Long customerId = dataC.getJSONArray("list").getJSONObject(0).getLong("customer_id");
         Long receiptId = dataC.getJSONArray("list").getJSONObject(0).getLong("id");
-        JSONArray PhoneList = new JSONArray();
-        PhoneList =phoneList(phone,"");
+        JSONArray PhoneList;
+        PhoneList = phoneList(phone, "");
         jsonCO.put("id", id);
         jsonCO.put("customerId", customerId);
         jsonCO.put("userLoginName", userLoginName);
@@ -212,10 +214,10 @@ public class PackFunction {
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date = dt.getHistoryDate(0);
         String sign_time = dt.getHHmm(0);
-        JSONArray list=crm.testDriverList().getJSONArray("list");
-        String apply_time="";
-        Long test_drive_car= dt.getHistoryDateTimestamp(1);
-        for(int i=0;i<list.size();i++) {
+        JSONArray list = crm.testDriverList().getJSONArray("list");
+        String apply_time = "";
+        Long test_drive_car = dt.getHistoryDateTimestamp(1);
+        for (int i = 0; i < list.size(); i++) {
             test_drive_car = list.getJSONObject(i).getLong("test_car_id");
             JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
             if (timelist.size() != 0) {
@@ -223,13 +225,13 @@ public class PackFunction {
                 break;
             }
         }
-        String oss=crm.addressDiscernment(driverLicensePhoto1Url).getString("license_face_path");
+        String oss = crm.addressDiscernment(driverLicensePhoto1Url).getString("license_face_path");
 
-        crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car,oss);
+        crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car, oss);
         //销售总监登陆
         crm.login(pp.xiaoshouZongjian, pp.adminpassword);
         int driverid = crm.testDriverAppList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getInteger("id");
-        if(audit_status==1||audit_status==2) {
+        if (audit_status == 1 || audit_status == 2) {
             crm.driverAudit(driverid, audit_status);
         }
         //最后销售要再登陆一次
@@ -263,7 +265,7 @@ public class PackFunction {
         fr.belongs_sale_id = json.getString("sale_id");
         fr.phoneList = json.getJSONArray("phoneList");
         fr.reception_type = "BB";
-        fr.remark=new JSONArray();
+        fr.remark = new JSONArray();
         String userLoginName = json.getString("userLoginName");
         String phone = json.getString("phone");
         //新建试驾,审核通过
@@ -343,7 +345,6 @@ public class PackFunction {
     }
 
 
-
     //删除文本中手机号用户
     public void deleteUser(String filePath) {
         List<String> list = file.getFileContent(filePath);
@@ -388,7 +389,7 @@ public class PackFunction {
     //添加试驾车
     public long newCarDriver() throws Exception {
         Random r = new Random();
-        String carName = "试驾车"+r.nextInt(10) + dt.getHHmm(0);
+        String carName = "试驾车" + r.nextInt(10) + dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
         String plate_number = "黑Z12I1" + r.nextInt(100);
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);
@@ -397,9 +398,10 @@ public class PackFunction {
         JSONObject data = crm.carManagementAdd(carName, 1L, 37L, plate_number, vehicle_chassis_code, start, end);
         return data.getLong("test_car_id");
     }
+
     //查询试驾数统计
-    public int [] driverSum(){
-        int a[]=new int[3];
+    public int[] driverSum() {
+        int a[] = new int[3];
         JSONObject dataTotal = crm.driverTotal();
         a[0] = dataTotal.getInteger("today_test_drive_total");   //今日
         a[1] = dataTotal.getInteger("test_drive_total");         //全部
@@ -409,19 +411,20 @@ public class PackFunction {
     }
 
     //查询交车数统计
-    public int [] deliverSum(){
-        int a[]=new int[4];
+    public int[] deliverSum() {
+        int a[] = new int[4];
         JSONObject dataTotal = crm.jiaocheTotal();
-       a[0] = dataTotal.getInteger("today_deliver_car_total");   //今日
+        a[0] = dataTotal.getInteger("today_deliver_car_total");   //今日
         a[1] = dataTotal.getInteger("deliver_car_total");    //实际交车
         a[2] = dataTotal.getInteger("total_order");         //全部交车
-        JSONObject data=crm.deliverSelect(1,10);
-        a[3]=data.getInteger("total");   //列表数
+        JSONObject data = crm.deliverSelect(1, 10);
+        a[3] = data.getInteger("total");   //列表数
         return a;
     }
+
     //接待列表数从查询
-    public int [] receiptSum(){
-        int a[]=new int[5];
+    public int[] receiptSum() {
+        int a[] = new int[5];
         JSONObject dataTotal = crm.customerReceptionTotalInfo();
         a[0] = dataTotal.getInteger("total_reception");   //共计接待
         a[1] = dataTotal.getInteger("today_new_customer");    //今日新客接待
@@ -433,16 +436,16 @@ public class PackFunction {
     }
 
     //可用试驾车
-    public JSONObject cartime(){
+    public JSONObject cartime() {
         JSONArray list = crm.testDriverList().getJSONArray("list");
-        JSONObject carMess=new JSONObject();
+        JSONObject carMess = new JSONObject();
         for (int i = 0; i < list.size(); i++) {
             Long test_drive_car = list.getJSONObject(i).getLong("test_car_id");
             JSONArray timelist = crm.driverTimelist(test_drive_car).getJSONArray("list");
             if (timelist.size() != 0) {
                 String apply_time = timelist.getString(0);
-                carMess.put("test_car_id",test_drive_car);
-                carMess.put("apply_time",apply_time);
+                carMess.put("test_car_id", test_drive_car);
+                carMess.put("apply_time", apply_time);
                 break;
             }
         }

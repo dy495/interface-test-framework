@@ -5615,6 +5615,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    //前台标记非客
+    public JSONObject markNocustomercode(JSONArray list) throws Exception {
+        String url = "/porsche/app/customer/nonGuest";
+
+        JSONObject json = new JSONObject();
+        json.put("list", list);
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
 
     //删除前台标记非客
     public JSONObject deleteNocustomer(String analysis_customer_id) throws Exception {

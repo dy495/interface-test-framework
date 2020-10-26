@@ -1239,7 +1239,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //车牌号，异常验证
+    //手机号，异常验证
     @Test(description = "编辑客户，重复手机号、异常验证")
     public void editCustomerSamephone() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1664,7 +1664,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
-            saveData("交车车必填项校验");
+            saveData("新客交车购车后，等级变化");
         }
     }
 
