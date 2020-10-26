@@ -59,7 +59,12 @@ public enum EnumAccount {
     /**
      * 保时捷线上总经
      */
-    ZJL_ONLINE("zjl", getPassword("ys123456"), "uid_a6452755", "online", "总经理");
+    ZJL_ONLINE("zjl", getPassword("ys123456"), "uid_a6452755", "online", "总经理"),
+
+    /**
+     * 客户使用保时捷线上，不要轻易使用
+     */
+    XSZJ_ONLINE_PORSCHE("xszj", getPassword("123456"), "", "online", "");
 
     EnumAccount(String account, String password, String uid, String environment, String username) {
         this.account = account;

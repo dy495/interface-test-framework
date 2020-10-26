@@ -1516,7 +1516,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         percentageSum += percentage;
                     }
                     CommonUtil.valueView(percentageSum);
-                    Preconditions.checkArgument(percentageSum == 1 || percentageSum == 0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum * 100 + "%");
+                    Preconditions.checkArgument((percentageSum >= 0.99 && percentageSum <= 1.01) || percentageSum == 0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum * 100 + "%");
                     CommonUtil.log("分割线");
                 }
             }
@@ -2006,12 +2006,12 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     IScene scene = Analysis2OrderGenderAgeScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONObject("age").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        double x = list.getJSONObject(i).getDouble("percentage") * 100;
+                        double x = list.getJSONObject(i).getDouble("percentage");
                         CommonUtil.valueView((int) x);
                         num += x;
                     }
                     CommonUtil.valueView(num);
-                    Preconditions.checkArgument((num <= 101 && num >= 99) || num == 0, a.getName() + e.getName() + "各年龄段百分比之和为：" + num);
+                    Preconditions.checkArgument((num <= 1.01 && num >= 0.99) || num == 0, a.getName() + e.getName() + "各年龄段百分比之和为：" + num * 100 + "%");
                     CommonUtil.log("分割线");
                 }
             }

@@ -60,7 +60,7 @@ public class PublicMethod {
     /**
      * 售后完成接待
      */
-    public void afterSaleReception() {
+    public int afterSaleReception() {
         //预约中状态查询
         JSONArray list = crm.mainAppointmentList(1, 10).getJSONArray("list");
         int appointmentId = 0;
@@ -108,6 +108,7 @@ public class PublicMethod {
                 .build();
         //完成接待
         crm.invokeApi(scene);
+        return afterRecordId;
     }
 
     /**

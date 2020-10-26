@@ -11,9 +11,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ShopQrcodeScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -680,7 +677,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("回访客户");
+            saveData("回访客户,接听,是否完成=已完成");
         }
     }
 
@@ -716,11 +713,11 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("回访客户");
+            saveData("回访客户,其他,是否完成=已完成");
         }
     }
 
-    @Test(description = "回访客户,无人接听,是否完成=未完成")
+    @Test(description = "回访选择第一次无人接听时,是否完成=未完成")
     public void myReturnVisit_function_17() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
@@ -752,7 +749,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访客户,挂断,是否完成=未完成")
+    @Test(description = "回访选择第一次挂断时,是否完成=未完成")
     public void myReturnVisit_function_18() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
@@ -783,7 +780,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访客户,稍后联系,是否完成=未完成")
+    @Test(description = "回访选择第一次稍后联系时,是否完成=未完成")
     public void myReturnVisit_function_19() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
@@ -871,7 +868,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访记录,200字以上")
+    @Test(description = "回访记录,内容,汉字英文数字符号,200字以上")
     public void myReturnVisit_function_23() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
@@ -892,7 +889,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "下次回访日期,昨天及之前")
+    @Test(description = "昨天及之前不可做为下次回访日期")
     public void myReturnVisit_function_24() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -1009,194 +1006,6 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    -----------------------------------------------------售后---------------------------------------------------------
-
-    /**
-     * @description: 服务顾问-我的接待
-     */
-    @Test(description = "售后-我的接待-车牌号模糊搜索")
-    public void receptionAfterCustomerList_function_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-            String plateNumber = list.getJSONObject(0).getString("plate_number");
-            CommonUtil.valueView(plateNumber);
-            String findParam = plateNumber.substring(0, 3);
-            CommonUtil.valueView(findParam);
-            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
-            int total = crm.invokeApi(scene1).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
-                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("plate_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-车牌号模糊搜索");
-        }
-    }
-
-    @Test(description = "售后-我的接待-联系方式模糊搜索")
-    public void receptionAfterCustomerList_function_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-            String customerPhoneNumber = list.getJSONObject(0).getString("customer_phone_number");
-            CommonUtil.valueView(customerPhoneNumber);
-            String findParam = customerPhoneNumber.substring(0, 3);
-            CommonUtil.valueView(findParam);
-            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
-            int total = crm.invokeApi(scene1).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
-                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("customer_phone_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-联系方式模糊搜索");
-        }
-    }
-
-    @Test(description = "售后-我的接待-按照接待日期查询")
-    public void receptionAfterCustomerList_function_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String endDate = DateTimeUtil.getFormat(new Date());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
-            int total = crm.invokeApi(scene).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).page(i).size(100).build();
-                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    String serviceDate = list.getJSONObject(j).getString("service_date");
-                    CommonUtil.valueView(startDate, serviceDate, endDate);
-                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
-                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
-                    CommonUtil.log("分割线");
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-按照接待日期查询");
-        }
-    }
-
-    @Test(description = "售后-我的接待-按照接待日期查询")
-    public void receptionAfterCustomerList_function_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String endDate = DateTimeUtil.getFormat(new Date());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
-            int total = crm.invokeApi(scene).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
-            for (int i = 1; i < s; i++) {
-                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).page(i).size(100).build();
-                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    String serviceDate = list.getJSONObject(j).getString("service_date");
-                    CommonUtil.valueView(startDate, serviceDate, endDate);
-                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
-                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
-                    CommonUtil.log("分割线");
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-按照接待日期查询");
-        }
-    }
-
-    @Test(description = "售后-我的接待-按照接待日期查询，开始时间>结束时间")
-    public void receptionAfterCustomerList_function_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String endDate = DateTimeUtil.getFormat(new Date());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().searchDateStart(endDate).searchDateEnd(startDate).build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-            Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-按照接待日期查询");
-        }
-    }
-
-    @Test(description = "售后-物品的接待-获取接待二维码")
-    public void receptionAfterCustomerList_function_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            IScene scene = ShopQrcodeScene.builder().build();
-            String qrcodeUrl = crm.invokeApi(scene).getString("qrcode_url");
-            Preconditions.checkArgument(qrcodeUrl != null, "接待二维码为空");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后-我的接待-按照接待日期查询");
-        }
-    }
-
-    @Test(description = "售后接待-我的接待列表，维度1: 维修中在上，已完成在下,维度2: 接待日期倒序")
-    public void receptionAfterCustomerList_function_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.login(zjl);
-            //查询未完成接待的记录
-            IScene scene = ReceptionAfterCustomerListScene.builder().page(1).size(10).build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-            int count = 0;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("reception_status_name").equals("维修中")) {
-                    count++;
-                }
-            }
-            CommonUtil.valueView(count);
-            for (int i = 1; i <= count; i++) {
-                IScene scene1 = ReceptionAfterCustomerListScene.builder().page(1).size(i).build();
-                JSONArray list1 = crm.invokeApi(scene1).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String receptionStatusName = list1.getJSONObject(j).getString("reception_status_name");
-                    CommonUtil.valueView(receptionStatusName);
-                    Preconditions.checkArgument(receptionStatusName.equals("维修中"), "没有按照维修中在上排序");
-                    String serviceDate = list1.getJSONObject(j).getString("service_date");
-                    if (j != list1.size() - 1) {
-                        String serviceDate1 = list1.getJSONObject(j + 1).getString("service_date");
-                        CommonUtil.valueView(serviceDate, serviceDate1);
-                        Preconditions.checkArgument(serviceDate.compareTo(serviceDate1) >= 0, "没有按照日期倒序");
-                    }
-                    CommonUtil.log("分割线");
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后接待-我的接待列表，维度1: 维修中在上，已完成在下,维度2: 接待日期倒序");
-        }
-    }
 
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 

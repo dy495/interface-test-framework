@@ -91,7 +91,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+        commonConfig.shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

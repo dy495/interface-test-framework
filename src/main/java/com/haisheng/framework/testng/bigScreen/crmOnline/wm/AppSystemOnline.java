@@ -51,7 +51,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+        commonConfig.shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
@@ -684,7 +684,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("回访客户");
+            saveData("回访客户,接听,是否完成=已完成");
         }
     }
 
@@ -720,11 +720,11 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("回访客户");
+            saveData("回访客户,其他,是否完成=已完成");
         }
     }
 
-    @Test(description = "回访客户,无人接听,是否完成=未完成")
+    @Test(description = "回访选择第一次无人接听时,是否完成=未完成")
     public void myReturnVisit_function_17() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
@@ -787,7 +787,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "回访客户,稍后联系,是否完成=未完成")
+    @Test(description = "回访选择第一次稍后联系时,是否完成=未完成")
     public void myReturnVisit_function_19() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), 1);

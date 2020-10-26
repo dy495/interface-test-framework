@@ -35,7 +35,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final String shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+    private static final String shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
     private Integer totalNum;
     private Integer sumNum;
     private int s;
@@ -56,7 +56,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+        commonConfig.shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
         UserUtil.login(zjl);
