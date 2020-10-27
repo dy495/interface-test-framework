@@ -41,7 +41,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     PublicMethodOnline method = new PublicMethodOnline();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    String shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+    String shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
 
     @BeforeClass
     @Override

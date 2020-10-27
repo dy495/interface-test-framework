@@ -72,7 +72,8 @@ public class B extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日接待记录")
     public void receptionData() throws ParseException {
         TPorscheReceptionDataDO po = new TPorscheReceptionDataDO();
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        String date = "2020-10-24";
+//                DateTimeUtil.addDayFormat(new Date(), -1);
         IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
         int total = crm.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, 100);
@@ -89,6 +90,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 String end = po.getReceptionEndTime() == null ? "00:00" : po.getReceptionEndTime();
                 po.setReceptionDuration(new DateTimeUtil().calTimeHourDiff(start, end));
                 po.setCustomerId(list.getJSONObject(j).getInteger("customer_id"));
+                po.setBatchId((int) getBatchId(po.getCustomerId()));
                 po.setCustomerName(list.getJSONObject(j).getString("customer_name"));
                 po.setCustomerTypeName(list.getJSONObject(j).getString("customer_type_name"));
                 po.setCustomerPhone(list.getJSONObject(j).getString("customer_phone"));
@@ -96,7 +98,8 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 String sql = Sql.instance().insert()
                         .from("t_porsche_reception_data")
                         .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
-                        .value(po.getShopId(), po.getReceptionSaleId(), po.getReceptionSale(), po.getReceptionStartTime(), po.getReceptionEndTime(),
+                        .value(po.getShopId(), po.getReceptionSaleId(), po.getReceptionSale(),
+                                po.getReceptionStartTime(), po.getReceptionEndTime(),
                                 po.getReceptionDuration(), po.getCustomerId(), po.getCustomerName(),
                                 po.getCustomerTypeName(), po.getCustomerPhone(), po.getReceptionDate())
                         .end().getSql();
@@ -302,5 +305,15 @@ public class B extends TestCaseCommon implements TestCaseStd {
             return AddressUtil.getNativePlace(Integer.parseInt(customerId));
         }
         return address;
+    }
+
+
+    private long getBatchId(long customerId) {
+        String sql = Sql.instance().select()
+                .from("pre_sales_reception")
+                .where("customer_id", "=", customerId)
+                .end().getSql();
+        List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.BUSINESS_PORSCHE.getContainer()).build().create(sql);
+        return (long) list.get(0).get("batch_id");
     }
 }

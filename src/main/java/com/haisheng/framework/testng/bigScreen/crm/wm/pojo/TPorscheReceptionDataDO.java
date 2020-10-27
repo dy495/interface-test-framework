@@ -10,6 +10,7 @@ public class TPorscheReceptionDataDO {
 
     private long id;
     private String shopId;
+    private int batchId;
     private String receptionSale;
     private String receptionSaleId;
     private String receptionStartTime;
