@@ -2859,6 +2859,22 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject returnVisitRecordExecute(Long id, String return_visit_pic, String comment, String next_return_visit_time) {
+        String url = "/porsche/app/return-visit-record/execute";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        if (!StringUtils.isEmpty(id)) {
+            object.put("return_visit_pic", return_visit_pic);
+        }
+        if (!StringUtils.isEmpty(comment)) {
+            object.put("comment", comment);
+        }
+        if (!StringUtils.isEmpty(next_return_visit_time)) {
+            object.put("next_return_visit_time", next_return_visit_time);
+        }
+        return invokeApi(url, object, false);
+    }
+
     //售后：查看回访列表
     public JSONObject afterSale_VisitRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
         String url = "/porsche/app/return-visit-record/after-sale/page";
@@ -5641,6 +5657,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //前台标记非客
     public JSONObject markNocustomercode(JSONArray list) throws Exception {
         String url = "/porsche/app/customer/nonGuest";

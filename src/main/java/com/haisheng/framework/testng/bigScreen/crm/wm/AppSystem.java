@@ -517,7 +517,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                         JSONObject result = crm.customerList("", customerPhone, "", "", "", 1, 10);
                         boolean isOrder = result.getJSONArray("list").getJSONObject(0).getBoolean("is_order");
                         CommonUtil.valueView(isOrder);
-                        Preconditions.checkArgument(!isOrder, "回访类型:潜客，创建接待时不是“订车”标记为否的客户");
+                        Preconditions.checkArgument(!isOrder, "回访类型:潜客，创建接待时不是“订车”标记为否的客户，电话号为：" + customerPhone);
                         CommonUtil.log("分割线");
                     }
                 }

@@ -2,6 +2,8 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.table;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.ContainerConstants;
+import com.haisheng.framework.testng.bigScreen.crm.wm.property.BasicProperty;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,14 +16,14 @@ import java.sql.Statement;
 import java.util.*;
 
 @Getter
-public class DbTable implements ITable {
+public class DbTable extends BasicProperty implements ITable {
     private static final Logger logger = LoggerFactory.getLogger(DbTable.class);
     private final Statement statement;
     private final String path;
     private final String tableName;
-    private List<Map<String, Object>> table;
 
     public DbTable(Builder builder) {
+        super(builder);
         this.statement = builder.statement;
         this.path = builder.path;
         this.tableName = builder.tableName;
@@ -52,11 +54,15 @@ public class DbTable implements ITable {
                         map.put(columnName, rsValue);
                     }
                     list.add(map);
-                    table = list;
                 }
                 return list;
             } catch (Exception e) {
                 e.printStackTrace();
+                errorMsg.append(e.getMessage());
+            } finally {
+                if (errorMsg.length() > 0) {
+                    DingPushUtil.sendTxt(errorMsg.toString(), sql);
+                }
             }
         }
         return null;
@@ -64,7 +70,7 @@ public class DbTable implements ITable {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder {
+    public static class Builder extends BasicProperty.Builder {
         private String path;
         private String tableName;
         private Statement statement;

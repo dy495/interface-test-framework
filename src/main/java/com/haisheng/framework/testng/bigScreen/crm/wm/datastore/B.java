@@ -68,12 +68,10 @@ public class B extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
     @Test(description = "每日接待记录")
     public void receptionData() throws ParseException {
         TPorscheReceptionDataDO po = new TPorscheReceptionDataDO();
-        String date = "2020-10-24";
-//                DateTimeUtil.addDayFormat(new Date(), -1);
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
         int total = crm.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, 100);
@@ -90,7 +88,6 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 String end = po.getReceptionEndTime() == null ? "00:00" : po.getReceptionEndTime();
                 po.setReceptionDuration(new DateTimeUtil().calTimeHourDiff(start, end));
                 po.setCustomerId(list.getJSONObject(j).getInteger("customer_id"));
-                po.setBatchId((int) getBatchId(po.getCustomerId()));
                 po.setCustomerName(list.getJSONObject(j).getString("customer_name"));
                 po.setCustomerTypeName(list.getJSONObject(j).getString("customer_type_name"));
                 po.setCustomerPhone(list.getJSONObject(j).getString("customer_phone"));

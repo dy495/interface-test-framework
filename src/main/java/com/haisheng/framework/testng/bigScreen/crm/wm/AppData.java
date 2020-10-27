@@ -37,8 +37,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount newXs = EnumAccount.XS_DAILY;
     private static final int size = 50;
-    int zjl_num = 0;
-    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -568,45 +566,23 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myReception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            UserUtil.login(xs);
             JSONObject response = crm.customerReceptionTotalInfo();
             int todayOldCustomer = response.getInteger("total_old_customer");
             int todayNewCustomer = response.getInteger("today_new_customer");
             int todayCustomerNum = 0;
             JSONArray list = crm.receptionOrder().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("sale_name").equals(EnumAccount.XSGW_ONLINE.getUsername())) {
+                if (list.getJSONObject(i).getString("sale_name").equals(xs.getUsername())) {
                     todayCustomerNum = list.getJSONObject(i).getInteger("today_customer_num");
                 }
             }
             CommonUtil.valueView(todayCustomerNum, todayNewCustomer, todayOldCustomer);
-            Preconditions.checkArgument(todayCustomerNum >= todayNewCustomer + todayOldCustomer, "今日新客接待+今日老客接待!=【PC端销售排班】该销售今日接待次数");
+            Preconditions.checkArgument(todayCustomerNum >= todayNewCustomer + todayOldCustomer, "今日新客接待+今日老客接待：" + todayNewCustomer + todayOldCustomer + "【PC端销售排班】该销售今日接待次数：" + todayCustomerNum);
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数");
-        }
-    }
-
-    @Test(description = "今日新客接待+今日老客接待=【PC端展厅接待】分配销售为该销售条数")
-    public void myReception_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.customerReceptionTotalInfo();
-            int todayOldCustomer = response.getInteger("total_old_customer");
-            int todayNewCustomer = response.getInteger("today_new_customer");
-            int customerTodayList = 0;
-            JSONArray list = crm.customerTodayList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("sale_name") != null && list.getJSONObject(i).getString("sale_name").equals(EnumAccount.XSGW_ONLINE.getUsername())) {
-                    customerTodayList++;
-                }
-            }
-            CommonUtil.valueView(todayNewCustomer, todayOldCustomer, customerTodayList);
-            Preconditions.checkArgument(customerTodayList == (todayNewCustomer + todayOldCustomer), "今日新客接待+今日老客接待!=【PC端展厅接待】分配销售为该销售条数");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("今日新客接待+今日老客接待=【PC端展厅接待】分配销售为该销售条数");
         }
     }
 
@@ -680,11 +656,15 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject response = crm.driverTotal();
             int todayTestDriveTotal = response.getInteger("today_test_drive_total");
-            JSONArray list = crm.testDriverAppList("", "", "", 1, 2 << 20).getJSONArray("list");
+            int total = crm.testDriverAppList("", "", "", 1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
             Set<String> set = new HashSet<>();
-            for (int i = 0; i < list.size(); i++) {
-                String phoneNumber = list.getJSONObject(i).getString("customer_phone_number");
-                set.add(phoneNumber);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.testDriverAppList("", "", "", i, size).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String phoneNumber = list.getJSONObject(j).getString("customer_phone_number");
+                    set.add(phoneNumber);
+                }
             }
             CommonUtil.valueView(todayTestDriveTotal, set.size());
             Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");

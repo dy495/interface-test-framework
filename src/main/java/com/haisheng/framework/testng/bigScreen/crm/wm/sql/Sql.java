@@ -178,7 +178,7 @@ public class Sql {
         if (value instanceof Integer) {
             return value;
         } else {
-            return "'" + value + "'";
+            return "'" + value.toString().replaceAll("'", "\\\\'") + "'";
         }
     }
 }

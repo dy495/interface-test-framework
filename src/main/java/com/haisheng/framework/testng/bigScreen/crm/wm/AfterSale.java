@@ -239,7 +239,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和")
+    @Test(description = "售后--我的接待--总经理本月接待售后车辆>=各个顾问本月x接待售后车辆之和")
     public void afterSale_reception_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1015,7 +1015,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     public void afterSale_activity_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         int activityId;
-        String phone = "13717737462";
+        String phone = getDistinctPhone();
         try {
             activityId = getActivityId();
             int a = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
@@ -1087,7 +1087,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     public void afterSale_activity_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String phone = "13717737462";
+            String phone = getDistinctPhone();
             int activityId = getActivityId();
             JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
             String activityTitle = response.getString("article_title");
@@ -1415,6 +1415,108 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "售后--我的接待--按照接待日期查询")
+    public void afterSale_customer_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        try {
+            UserUtil.login(zjl);
+            int total = crm.afterSaleCustomerList("", startDate, endDate, 1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.afterSaleCustomerList("", startDate, endDate, i, size).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    String serviceDate = list.getJSONObject(j).getString("service_date");
+                    CommonUtil.valueView(startDate, serviceDate, endDate);
+                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
+                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
+                    CommonUtil.log("分割线");
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--我的接待--按照接待日期查询");
+        }
+    }
+
+    @Test(description = "售后--我的接待--按照接待日期查询，开始时间>结束时间")
+    public void afterSale_customer_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String endDate = DateTimeUtil.getFormat(new Date());
+        String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
+        try {
+            UserUtil.login(zjl);
+            JSONArray list = crm.afterSaleCustomerList("", endDate, startDate, 1, 10).getJSONArray("list");
+            Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--我的接待--按照接待日期查询，开始时间>结束时间");
+        }
+    }
+
+    @Test(description = "售后--售后回访--不填必填参数")
+    public void afterSale_returnVisit_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            String message = returnVisit("售后回访", "", comment, date);
+            Preconditions.checkArgument(message.equals("回访截图不可为空"), "售后回访截图为空也可回访成功");
+            String message1 = returnVisit("售后回访", picture, "", date);
+            Preconditions.checkArgument(message1.equals("回访描述不能为空"), "售后回访描述为空也可回访成功");
+//            String message2 = returnVisit("售后回访", picture, comment, "");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--售后回访--不填必填参数");
+        }
+    }
+
+    @Test(description = "售后--首保提醒回访--不填必填参数")
+    public void afterSale_returnVisit_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            String message = returnVisit("首保提醒", "", comment, date);
+            Preconditions.checkArgument(message.equals("回访截图不可为空"), "首保提醒回访截图为空也可回访成功");
+            String message1 = returnVisit("首保提醒", picture, "", date);
+            Preconditions.checkArgument(message1.equals("回访描述不能为空"), "首保提醒回访描述为空也可回访成功");
+//            String message2 = returnVisit("首保提醒", picture, comment, "");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--首保提醒回访--不填必填参数");
+        }
+    }
+
+    @Test(description = "售后--流失预警回访--不填必填参数")
+    public void afterSale_returnVisit_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.getFormat(new Date());
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
+        String picture = new ImageUtil().getImageBinary(picPath);
+        try {
+            String message = returnVisit("流失预警", "", comment, date);
+            Preconditions.checkArgument(message.equals("回访截图不可为空"), "流失预警回访截图为空也可回访成功");
+            String message1 = returnVisit("流失预警", picture, "", date);
+            Preconditions.checkArgument(message1.equals("回访描述不能为空"), "流失预警回访描述为空也可回访成功");
+//            String message2 = returnVisit("流失预警", picture, comment, "");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("售后--流失预警回访--不填必填参数");
+        }
+    }
+
     @Test(description = "售后--活动任务--当前日期>=开始日期，填写报名置灰。当前日期<开始日期，填写报名高亮可点击")
     public void afterSale_activity_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1632,6 +1734,45 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         return id;
     }
 
+    private String returnVisit(String type, String picture, String comment, String date) {
+        String endDay = DateTimeUtil.getFormat(new Date());
+        String startDay = DateTimeUtil.addDayFormat(new Date(), -200);
+        JSONObject response;
+        switch (type) {
+            case "首保提醒":
+                response = crm.afterSale_firstmMaintainRecordList(1, 10, "", startDay, endDay);
+                break;
+            case "流失预警":
+                response = crm.afterSale_customerChurnWarningList(1, 10, "", startDay, endDay);
+                break;
+            default:
+                response = crm.afterSale_VisitRecordList(1, 10, "", startDay, endDay);
+        }
+        int total = response.getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        int id = 0;
+        JSONArray list;
+        for (int i = 1; i < s; i++) {
+            switch (type) {
+                case "首保提醒":
+                    list = crm.afterSale_firstmMaintainRecordList(i, size, "", startDay, endDay).getJSONArray("list");
+                    break;
+                case "流失预警":
+                    list = crm.afterSale_customerChurnWarningList(i, size, "", startDay, endDay).getJSONArray("list");
+                    break;
+                default:
+                    list = crm.afterSale_VisitRecordList(i, size, "", startDay, endDay).getJSONArray("list");
+            }
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {
+                    id = list.getJSONObject(j).getInteger("id");
+                    break;
+                }
+            }
+        }
+        return crm.returnVisitRecordExecute((long) id, picture, comment, date).getString("message");
+    }
+
     /**
      * 获取操作标签
      */
@@ -1657,5 +1798,18 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         }
         return f;
+    }
+
+    /**
+     * 获取非重复电话号
+     *
+     * @return phone
+     */
+    private String getDistinctPhone() {
+        UserUtil.login(zjl);
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 }
