@@ -13,7 +13,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>
