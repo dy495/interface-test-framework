@@ -6,6 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BasicProperty implements IProperty {
+    protected final StringBuilder errorMsg;
+
     @Override
     public String getKey() {
         return null;
@@ -33,12 +35,9 @@ public class BasicProperty implements IProperty {
 
     @Override
     public void clearErrorMsg() {
-
     }
 
     public static class Builder {
-        protected StringBuilder errorMsg;
-
         public BasicProperty build() {
             return new BasicProperty(this);
         }
@@ -47,6 +46,4 @@ public class BasicProperty implements IProperty {
     public BasicProperty(Builder builder) {
         this.errorMsg = new StringBuilder();
     }
-
-    protected final StringBuilder errorMsg;
 }

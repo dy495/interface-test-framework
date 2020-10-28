@@ -74,8 +74,13 @@ public class CommonUtil {
      *
      * @param s param
      */
-    public static void log(String s) {
-        logger.info("---------------------------------------{}---------------------------------------", s);
+    public static void log(String v) {
+        String type = "---------------------------------------{}---------------------------------------";
+        log(type, v);
+    }
+
+    private static void log(String type, String value) {
+        logger.info(type, value);
     }
 
     public static void logger(String s) {
