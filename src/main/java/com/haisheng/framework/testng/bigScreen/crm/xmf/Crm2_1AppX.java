@@ -1018,7 +1018,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :试驾 今日数=列表电话去重数  TODO：
      * @date :2020/7/31 13:55
      **/
-    @Test
+//    @Test
     public void shijiaRecodeApp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1077,7 +1077,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
+     //新建试驾车 车名、底盘号重复验证
     @Test
     public void shijiacheSame() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1625,6 +1625,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //交车购车后，等级变化
     @Test
     public void deliverCar() {
         logger.logCaseStart(caseResult.getCaseName());

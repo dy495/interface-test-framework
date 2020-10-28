@@ -168,7 +168,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size(); i++) {
                 String reception_date = list.getJSONObject(i).getString("reception_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument((reception_date.equals(select_date)) && (customer_name.equals(nameSelect)), "展厅接待按交车时间" + select_date + "查询，结果错误" + reception_date);
+                Preconditions.checkArgument((reception_date.equals(select_date)) && (customer_name.contains(nameSelect)), "展厅接待按接待时间" + select_date + "查询，结果错误" + reception_date);
             }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -186,6 +186,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("到访记录为空");
+            }
             for (int i = 0; i < list.size(); i++) {
                 String reception_date = list.getJSONObject(i).getString("visit_day");
                 Preconditions.checkArgument(reception_date.equals(select_date), "到访记录按到访时间{}查询，结果{}错误", select_date, reception_date);

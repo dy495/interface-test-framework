@@ -258,7 +258,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :创建新客试驾两次审核通过,今日试驾次数+1,总计+1   ok
+     * @description :创建新客试驾两次审核通过,今日试驾次数+2,总计+2   ok
      * @date :2020/8/10 16:45
      **/
     @Test()
@@ -288,8 +288,8 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             crm.login(userLoginName, pp.adminpassword);
 
             crm.finishReception3(fr);
-            Preconditions.checkArgument(driverNum2[0] - driverNum[0] == 1, "新建试驾两次，今日试驾+1，试驾后:" + driverNum2[0] + "试驾前：" + driverNum[0]);
-            Preconditions.checkArgument(driverNum2[1] - driverNum[1] == 1, "新建试驾，总计试驾+1，试驾后：" + driverNum2[1] + "，试驾前：{}" + driverNum[1]);
+            Preconditions.checkArgument(driverNum2[0] - driverNum[0] == 2, "新建试驾两次，今日试驾+1，试驾后:" + driverNum2[0] + "试驾前：" + driverNum[0]);
+            Preconditions.checkArgument(driverNum2[1] - driverNum[1] == 2, "新建试驾，总计试驾+1，试驾后：" + driverNum2[1] + "，试驾前：{}" + driverNum[1]);
             Preconditions.checkArgument(driverNum2[2] - driverNum[2] == 2, "新建试驾，试驾列表+2，试驾后：" + driverNum2[2] + "，试驾前：{}" + driverNum[2]);
 
         } catch (AssertionError | Exception e) {
