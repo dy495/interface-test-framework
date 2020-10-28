@@ -1151,7 +1151,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                             JSONArray detail = businessList.getJSONObject(i).getJSONArray("detail");
                             for (int j = 0; j < detail.size(); j++) {
                                 int value = detail.getJSONObject(j).getInteger("value");
-                                funnelService += v;
+                                funnelService += value;
                             }
                         }
                     }
@@ -1439,7 +1439,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     for (int i = 0; i < ratioList.size(); i++) {
                         double percent = ratioList.getJSONObject(i).getDouble("percent");
                         String name = ratioList.getJSONObject(i).getString("name");
-                        CommonUtil.valueView(name + ":" + percent);
+                        CommonUtil.valueView(name + "：" + percent);
                         percentSum += percent;
                     }
                     CommonUtil.valueView(percentSum);
@@ -1663,7 +1663,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "存量客户分析--个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内的购车档案数量", enabled = false)
+    @Test(description = "存量客户分析--个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内的购车档案数量")
     public void stockCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1676,16 +1676,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                 }
             }
-            String sql = Sql.instance().select("distinct(customer_id)")
-                    .from("t_porsche_deliver_car")
-                    .where("customer_type", "=", "PERSON")
-                    .and("deliver_time", "=", date)
+            String sql = Sql.instance().select()
+                    .from("t_porsche_deliver_info")
+                    .where("subject_type_name", "=", "个人")
+                    .and("deliver_date", "=", date)
                     .and("shop_id", "=", shopId)
                     .end().getSql();
             List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
             int appCustomerNum = list.size();
             CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-            Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日个人车主数为：" + pcCustomerNum + "昨日app个人客户交车数量为：" + appCustomerNum);
+            Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日个人车主数为：" + pcCustomerNum + "昨日app个人客户交车数量为：" + appCustomerNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1707,15 +1707,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             String sql = Sql.instance().select()
-                    .from("t_porsche_deliver_car")
-                    .where("customer_type", "=", "CORPORATION")
-                    .and("deliver_time", "=", date)
+                    .from("t_porsche_deliver_info")
+                    .where("subject_type_name", "=", "公司")
+                    .and("deliver_date", "=", date)
                     .and("shop_id", "=", shopId)
                     .end().getSql();
             List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
             int appCustomerNum = list.size();
             CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-            Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日公司车主数为：" + pcCustomerNum + "昨日app公司客户交车数量为：" + appCustomerNum);
+            Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日公司车主数为：" + pcCustomerNum + "昨日app公司客户交车数量为：" + appCustomerNum);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1723,7 +1723,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "存量客户分析--【各时间段+车系筛选】个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内&购买车系为筛选车系的购车档案数量", enabled = false)
+    @Test(description = "存量客户分析--【各时间段+车系筛选】个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内&购买车系为筛选车系的购车档案数量")
     public void stockCustomer_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1740,24 +1740,24 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
                 String sql;
                 if (e.getStyleId() == null) {
-                    sql = Sql.instance().select("distinct(customer_id)")
-                            .from("t_porsche_deliver_car")
-                            .where("customer_type", "=", "PERSON")
-                            .and("deliver_time", "=", date)
+                    sql = Sql.instance().select()
+                            .from("t_porsche_deliver_info")
+                            .where("subject_type_name", "=", "个人")
+                            .and("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("distinct(customer_id)")
-                            .from("t_porsche_deliver_car")
-                            .where("customer_type", "=", "PERSON")
+                    sql = Sql.instance().select()
+                            .from("t_porsche_deliver_info")
+                            .where("subject_type_name", "=", "个人")
                             .and("car_style", "=", e.getStyleId())
-                            .and("deliver_time", "=", date)
+                            .and("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 }
                 int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-                Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
+                Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
                 CommonUtil.log("分割线");
             }
         } catch (Exception | AssertionError e) {
@@ -1807,7 +1807,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "存量客户分析--【各时间段+车系筛选】全国各省成交量=【app-销售总监-展厅客户-购车档案】交车日期在该时间段内&购买车系为筛选车系的购车档案数量", enabled = false)
+    @Test(description = "存量客户分析--【各时间段+车系筛选】全国各省成交量=【app-销售总监-展厅客户-购车档案】交车日期在该时间段内&购买车系为筛选车系的购车档案数量")
     public void stockCustomer_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1823,15 +1823,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     String sql;
                     if (e.getStyleId() == null) {
                         sql = Sql.instance().select()
-                                .from("t_porsche_deliver_car")
-                                .where("deliver_time", "=", date)
-                                .and("customer_region", "like", "%" + province + "%")
+                                .from("t_porsche_deliver_info")
+                                .where("deliver_date", "=", date)
+                                .and("address", "like", "%" + province + "%")
                                 .and("shop_id", "=", shopId)
                                 .end().getSql();
                     } else {
                         sql = Sql.instance().select()
-                                .where("deliver_time", "=", date)
-                                .and("customer_region", "like", "%" + province + "%")
+                                .where("deliver_date", "=", date)
+                                .and("address", "like", "%" + province + "%")
                                 .and("car_style", "=", e.getStyleId())
                                 .and("shop_id", "=", shopId)
                                 .end().getSql();
@@ -1859,7 +1859,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 for (EnumFindType a : EnumFindType.values()) {
                     double num1 = 0;
                     double num2 = 0;
-                    CommonUtil.valueView(e.getName(), a.getName());
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
                     for (int i = 0; i < ratioList.size(); i++) {
@@ -1871,8 +1871,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         }
                     }
                     CommonUtil.valueView(num1, num2);
-                    Preconditions.checkArgument((num1 + num2) * 100 == 100 || (num1 + num2) * 100 == 0, e.getName() + a.getName() + "个人车主百分比为：" + num1 + "公司车主百分比为：" + num2);
-                    CommonUtil.log("分割线");
+                    Preconditions.checkArgument((num1 + num2) == 1 || (num1 + num2) == 0, e.getName() + a.getName() + "个人车主百分比为：" + num1 + "公司车主百分比为：" + num2);
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1891,7 +1891,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 for (EnumFindType a : EnumFindType.values()) {
                     double num1 = 0;
                     double num2 = 0;
-                    CommonUtil.valueView(e.getName(), a.getName());
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
                     for (int i = 0; i < ratioList.size(); i++) {
@@ -1904,9 +1904,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         }
                     }
                     String result = CommonUtil.getPercent(num1, num2 + num1, 3);
-                    CommonUtil.valueView(num1, num2, percentStr, result);
+                    CommonUtil.valueView(percentStr, result);
                     Preconditions.checkArgument(result.equals(percentStr), e.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1925,7 +1925,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 for (EnumFindType a : EnumFindType.values()) {
                     double num1 = 0;
                     double num2 = 0;
-                    CommonUtil.valueView(e.getName(), a.getName());
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
                     for (int i = 0; i < ratioList.size(); i++) {
@@ -1938,9 +1938,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         }
                     }
                     String result = CommonUtil.getPercent(num1, num2 + num1, 3);
-                    CommonUtil.valueView(num1, num2, percentStr, result);
+                    CommonUtil.valueView(percentStr, result);
                     Preconditions.checkArgument(result.equals(percentStr), e.getName() + a.getName() + "公司车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1967,7 +1967,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                     CommonUtil.valueView(num);
                     Preconditions.checkArgument((num <= 1.01 && num >= 0.99) || num == 0, a.getName() + e.getName() + "各年龄段百分比之和为：" + num * 100 + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1994,7 +1994,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                     CommonUtil.valueView(num);
                     Preconditions.checkArgument(num == 1 || num == 0, e.getName() + a.getName() + "性别百分比之和为：" + num);
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -2027,7 +2027,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         CommonUtil.valueView(district + "计算占比：" + result);
                         Preconditions.checkArgument(result.equals(percentageStr), e.getName() + a.getName() + district + "数量除以全国数量结果为：" + result + "界面展示结果为：" + percentageStr);
                     }
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -2055,7 +2055,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                     CommonUtil.valueView(percentageNum);
                     Preconditions.checkArgument((percentageNum <= 101 && percentageNum >= 99) || percentageNum == 0, e.getName() + a.getName() + "各省成交量占比之和为：" + percentageNum + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(e.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -2088,7 +2088,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         CommonUtil.valueView(district + "计算占比：" + result);
                         Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + district + "接口返回占比：" + percentage + "，计算占比：" + result);
                     }
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -2116,7 +2116,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                     CommonUtil.valueView(percentageNum);
                     Preconditions.checkArgument((percentageNum <= 101 && percentageNum >= 99) || percentageNum == 0, b.getName() + a.getName() + "苏州各区百分比之和为：" + percentageNum + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -2132,7 +2132,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             for (EnumCarStyle b : EnumCarStyle.values()) {
                 for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(a.getName(), b.getName());
+                    CommonUtil.valueView(a.getName() + b.getName());
                     int cityValueNum = 0;
                     int provinceValue = 0;
                     IScene scene = Analysis2OrderCityScene.builder().adCode(320500).carType(b.getStyleId()).cycleType(a.getType()).build();
@@ -2220,25 +2220,25 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
                 String sql;
                 if (e.getStyleId() == null) {
-                    sql = Sql.instance().select("distinct(customer_id)")
-                            .from("t_porsche_order_car")
-                            .where("order_time", "=", date)
-                            .and("customer_type", "=", "PERSON")
+                    sql = Sql.instance().select()
+                            .from("t_porsche_order_info")
+                            .where("order_date", "=", date)
+                            .and("subject_type_name", "=", "个人")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
-                    sql = Sql.instance().select("distinct(customer_id)")
-                            .from("t_porsche_order_car")
-                            .where("order_time", "=", date)
-                            .and("customer_type", "=", "PERSON")
+                    sql = Sql.instance().select()
+                            .from("t_porsche_order_info")
+                            .where("order_date", "=", date)
+                            .and("subject_type_name", "=", "个人")
                             .and("car_style", "=", e.getStyleId())
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 }
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(value, count);
-                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + "app订车数量为：" + count);
-                CommonUtil.log("分割线");
+                Preconditions.checkArgument(count >= value, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + " app订车数量为：" + count);
+                CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -2263,23 +2263,23 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String sql;
                 if (e.getStyleId() == null) {
                     sql = Sql.instance().select()
-                            .from("t_porsche_order_car")
-                            .where("order_time", "=", "2020-10-18")
-                            .and("customer_type", "=", "CORPORATION")
+                            .from("t_porsche_order_info")
+                            .where("order_date", "=", "2020-10-18")
+                            .and("subject_type_name", "=", "公司")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
                     sql = Sql.instance().select()
-                            .from("t_porsche_order_car")
-                            .where("order_time", "=", "2020-10-18")
-                            .and("customer_type", "=", "CORPORATION")
+                            .from("t_porsche_order_info")
+                            .where("order_date", "=", "2020-10-18")
+                            .and("subject_type_name", "=", "公司")
                             .and("car_style", "=", e.getStyleId())
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 }
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(value, count);
-                Preconditions.checkArgument(value == count, e.getName() + EnumFindType.DAY.getName() + "pc端个公司主数量为：" + value + "app接待数量为：" + count);
+                Preconditions.checkArgument(count >= value, e.getName() + EnumFindType.DAY.getName() + "pc端个公司主数量为：" + value + " app接待数量为：" + count);
                 CommonUtil.log("分割线");
             }
         } catch (Exception | AssertionError e) {
@@ -2305,16 +2305,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     String sql;
                     if (e.getStyleId() == null) {
                         sql = Sql.instance().select()
-                                .from("t_porsche_order_car")
-                                .where("order_time", "=", date)
-                                .and("customer_region", "like", "%" + province + "%")
+                                .from("t_porsche_order_info")
+                                .where("order_date", "=", date)
+                                .and("subject_type_name", "like", "%" + province + "%")
                                 .and("shop_id", "=", shopId)
                                 .end().getSql();
                     } else {
                         sql = Sql.instance().select()
-                                .from("t_porsche_order_car")
-                                .where("order_time", "=", date)
-                                .and("customer_region", "like", "%" + province + "%")
+                                .from("t_porsche_order_info")
+                                .where("order_date", "=", date)
+                                .and("subject_type_name", "like", "%" + province + "%")
                                 .and("car_style", "=", e.getStyleId())
                                 .and("shop_id", "=", shopId)
                                 .end().getSql();

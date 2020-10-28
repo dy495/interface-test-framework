@@ -26,12 +26,14 @@ public class DingPushUtil {
             HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
             httppost.addHeader("Content-Type", "application/json; charset=utf-8");
             JSONObject object = new JSONObject();
-            JSONObject jsonObject = new JSONObject();
-            object.put("msgtype", "text");
-            object.put("text", jsonObject);
-            jsonObject.put("content", date + "\n"
-                    + "SQL错误：" + msg + "\n"
-                    + "SQL语句：" + sql);
+            JSONObject markdown = new JSONObject();
+            object.put("msgtype", "markdown");
+            object.put("markdown", markdown);
+            markdown.put("title", "balabala");
+            markdown.put("text", "### " + "**" + "拉垮了，有空看一下" + "**" + "\n"
+                    + "\n" + date + "\n"
+                    + "\n" + "SQL错误：" + msg + "\n"
+                    + "\n" + "SQL语句：" + sql + "\n");
             StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
             httppost.setEntity(se);
             HttpResponse response = httpclient.execute(httppost);
