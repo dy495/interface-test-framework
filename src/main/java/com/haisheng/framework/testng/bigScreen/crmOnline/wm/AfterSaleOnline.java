@@ -155,7 +155,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--我的接待--接待日期为今天的记录，确认交车，列表总条数不变，接待状态=已完成+1&&接待状态=维修中-1")
+    @Test(description = "售后--我的接待--接待日期为今天的记录，确认交车，列表总条数不变，接待状态=已完成+1&&接待状态=维修中-1", enabled = false)
     public void afterSale_reception_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -212,7 +212,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--我的接待--预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1")
+    @Test(description = "售后--我的接待--预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1", enabled = false)
     public void afterSale_reception_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
