@@ -6,6 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -51,5 +52,11 @@ public class CommonTest {
     @Test
     public void testAddress() {
         System.err.println(AddressUtil.getNativePlace(132624));
+    }
+
+    @Test
+    public void test() {
+        boolean re = CommonUtil.isContainChinese("sssssssssss");
+        System.err.println(re);
     }
 }

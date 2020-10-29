@@ -1,10 +1,8 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm;
+package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
@@ -15,6 +13,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderMaintainPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderRepairPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -32,11 +32,11 @@ import java.util.*;
 /**
  * app售后
  */
-public class AfterSale extends TestCaseCommon implements TestCaseStd {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    PublicMethod method = new PublicMethod();
-    private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount fw = EnumAccount.FWGW_DAILY;
+public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
+    CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    PublicMethodOnline method = new PublicMethodOnline();
+    private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
+    private static final EnumAccount fw = EnumAccount.FWGW_ONLINE;
     private static final int size = 50;
     int zjl_num = 0;
     int gw_num = 0;
@@ -48,15 +48,15 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
