@@ -1100,7 +1100,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--人工接待>=【业务漏斗】商机")
+    @Test(description = "店面数据分析--人工接待>=【业务漏斗】商机", enabled = false)
     public void shopPanel_data_26() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1130,7 +1130,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--人工接待=商机的FU+PU+BB")
+    @Test(description = "店面数据分析--人工接待=商机的FU+PU+BB", enabled = false)
     public void shopPanel_data_27() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1160,7 +1160,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析--人工接待>=【业务漏斗】商机");
+            saveData("店面数据分析--人工接待=商机的FU+PU+BB");
         }
     }
 
