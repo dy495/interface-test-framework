@@ -157,7 +157,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
      * @description :展厅接待查询
      * @date :2020/8/3 12:48
      **/
-//    @Test()
+    @Test()
     public void qtztSelectTimeAndname() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -186,7 +186,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
-            if(list.size()==0){
+            if(select_date.equals("")&&list.size()==0){
                 throw new Exception("到访记录为空");
             }
             for (int i = 0; i < list.size(); i++) {
@@ -199,6 +199,23 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("到访记录按到访日期查询，结果校验");
+        }
+    }
+    @Test()
+    public void visitRecodeNontull() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String select_date=dt.getHistoryDate(0);
+            JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("到访记录为空");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("到访记录不为空");
         }
     }
 

@@ -1935,9 +1935,17 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             if(evaluateList==null||evaluateList.size()==0){
                 return;
             }
-            String customer_name=evaluateList.getJSONObject(0).getString("customer_name");
-            String phone=evaluateList.getJSONObject(0).getString("phone1");
-
+            String customer_name="";
+            String phone="";
+            for(int i=0;i<evaluateList.size();i++){
+                String nameT=evaluateList.getJSONObject(i).getString("customer_name");
+                String phoneT=evaluateList.getJSONObject(i).getString("phone1");
+                if(nameT!=null&&phoneT!=null){
+                    customer_name=nameT;
+                    phone=phoneT;
+                    break;
+                }
+            }
             JSONArray list=crm.pcreceiptPage("1","10",customer_name,"","PRE_SALES").getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String nameSlect=list.getJSONObject(i).getString("customer_name");

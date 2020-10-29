@@ -100,58 +100,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
-     * @date :2020/8/2 10:29
-     **/
-//    @Test(priority = 12)
-    public void driverEvaluate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前Guwen，接待次数 13 销售顾问，16保养 ，15维修
-            int num = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
-            //pc评价页总数
-            int total = crm.evaluateList(1, 10, "", "", "").getInteger("total");
-            //预约接待完成
-            Long appointmentId = pf.driverEva();
 
-            int num2 = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
-            //小程序评价
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-//            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
-            int score = 4;
-            JSONObject ll = new JSONObject();
-            ll.put("score", score);
-            ll.put("type_comment", "销售接待服务质量");
-            ll.put("type", "SERVICE_QUALITY");
-
-            JSONObject ll2 = new JSONObject();
-            ll2.put("score", score);
-            ll2.put("type_comment", "销售接待服务流程");
-            ll2.put("type", "PROCESS");
-
-            JSONObject ll3 = new JSONObject();
-            ll3.put("score", score);
-            ll3.put("type_comment", "试乘试驾体验评价");
-            ll3.put("type", "EXPERIENCE");
-
-            JSONArray array1 = new JSONArray();
-            array1.add(0, ll);
-            array1.add(1, ll2);
-            array1.add(2, ll3);
-
-            crm.appointmentEvaluate(appointmentId, "保养满意", array1);  //评价
-            crm.login(pp.zongjingli, pp.adminpassword);
-            int totalB = crm.evaluateList(1, 10, "", "", "").getInteger("total");
-            Preconditions.checkArgument((totalB - total) == 1, "评价后，pc评价列表没+1");
-            Preconditions.checkArgument((num2 - num) == 1, "接待完成，接待次数没+1");
-
-        } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1");
-        }
-    }
 
     /**
      * @description :直接接待老客，为小程序接待评价提供消息
@@ -213,10 +162,10 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             array1.add(1, ll2);
             array1.add(2, ll3);
             array1.add(3, ll4);
-
+//           int code= crm.messageEvaluatecode(id,pp.abString100,array1).getInteger("code");
             crm.messageEvaluate(id, "我的消息-保养满意", array1);  //评价
-
             Preconditions.checkArgument((totalB - total) == 1, "接待小程序客户，发送评价消息，我的消息数量没+1");
+//            Preconditions.checkArgument(code==1001,"我的消息评价超过200个字仍成功");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -287,7 +236,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :创建新客交车,数据统计 ;重复手机号创建交车-全部交车+1，实际交车+0，今日交车+0
      * @date :2020/8/10 16:45
      **/
-    @Test()
+//    @Test()
     public void testdeliverstatis() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -325,8 +274,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(afternum2[0] - num[0] == 1, "购车今日交车+0");
 
             Preconditions.checkArgument(afternum3[2] - num[2] == 2, "交车全部交车+2");
-            Preconditions.checkArgument(afternum3[1] - num[1] == 1, "购车实际交车+1");
-            Preconditions.checkArgument(afternum3[0] - num[0] == 1, "购车今日交车+1");
+            Preconditions.checkArgument(afternum3[1] - num[1] == 1, "交车实际交车+1");
+            Preconditions.checkArgument(afternum3[0] - num[0] == 2, "交车今日交车+1");
 
             Preconditions.checkArgument(afternum3[3] - num[3] == 2, "新建交车，列表数+2", afternum3[3], num[3]);
 
@@ -1516,8 +1465,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             saveData("购车必填项校验");
         }
     }
-    //交车校验必填项
-//    @Test
+//    交车校验必填项
+    @Test
     public void testdeliverE() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1535,8 +1484,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
 
-//            Long car_id = crm.addOrderCar1(oc).getLong("car_id");
-            Long car_id = crm.customerOrderCar(fr.customer_id).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long car_id = crm.addOrderCar1(oc).getLong("car_id");
+//            Long car_id = crm.customerOrderCar(fr.customer_id).getJSONArray("list").getJSONObject(0).getLong("id");
 
             deliverCar dc=new deliverCar();
             dc.customer_name="交车编辑";
@@ -1549,18 +1498,18 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 //                    "car_id",
 //                    "customer_id",
 //                    "customer_name",
-//                    "deliver_car_time",
+                    "deliver_car_time",
 //                    "img_file",   //1001
-//                    "accept_show",
-                    "Sign_name_url",
+                    "accept_show",
+//                    "Sign_name_url",
 //                    "vehicle_chassis_code",
-                    "likes",
-                    "works",
+//                    "likes",
+//                    "works",
                     "greeting",
-                    "reception_id",
+//                    "reception_id",
             };
-            FileWriter fileWriter = new FileWriter(pp.textPath,true);
-            BufferedWriter bw = new BufferedWriter(fileWriter);
+//            FileWriter fileWriter = new FileWriter(pp.textPath,true);
+//            BufferedWriter bw = new BufferedWriter(fileWriter);
             for(int i=0;i<must.length;i++){
                 String temp=must[i];
                 dc.Empty=temp;
@@ -1568,10 +1517,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 int code=data.getInteger("code");
                 String  message=data.getString("message");
                 String content="参数：{}"+must[i]+"!!!!!!code:{}"+code+"返回"+message+"\n";
-                bw.append(content);
+                logger.info(content);
+//                bw.append(content);
 //            Preconditions.checkArgument(code==1001,"交车必填项校验"+must[i]+code);
             }
-            bw.close();
+//            bw.close();
             fr.remark = new JSONArray();
             crm.finishReception3(fr);
 
@@ -1652,6 +1602,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             dc.customer_name= fr.name;
             dc.reception_id=fr.reception_id;
             dc.customer_id=fr.customer_id;
+            dc.accept_show=false;
             dc.car_id=car_id.toString();
 
             crm.deliverAddDX(dc);    //交车
@@ -1666,6 +1617,30 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("新客交车购车后，等级变化");
+        }
+    }
+
+    //创建顾客接待，填写全部信息，于客户管理信息校验
+    @Test
+    public void createCustomerInfo(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject object = pf.creatCust();
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = object.getString("name");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            String loginname=object.getString("userLoginName");
+
+            crm.finishReception3(fr);
+
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("创建顾客接待，填写全部信息，于客户管理信息校验");
         }
     }
 

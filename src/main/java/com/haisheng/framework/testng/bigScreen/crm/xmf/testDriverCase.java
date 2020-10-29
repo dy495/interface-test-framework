@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -83,6 +84,61 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+    }
+
+    /**
+     * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
+     * @date :2020/8/2 10:29
+     **/
+    @Test(priority = 12)
+    public void driverEvaluate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(pp.xiaoshouZongjian,pp.adminpassword);
+            //接待前Guwen，接待次数 13 销售顾问，16保养 ，15维修
+            int num = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
+            //pc评价页总数
+            int total = crm.evaluateList(1, 10, "", "", "").getInteger("total");
+            //预约接待完成
+            Long appointmentId = pf.driverEva();
+
+
+            //小程序评价
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
+            int score = 4;
+            JSONObject ll = new JSONObject();
+            ll.put("score", score);
+            ll.put("type_comment", "销售接待服务质量");
+            ll.put("type", "SERVICE_QUALITY");
+
+            JSONObject ll2 = new JSONObject();
+            ll2.put("score", score);
+            ll2.put("type_comment", "销售接待服务流程");
+            ll2.put("type", "PROCESS");
+
+            JSONObject ll3 = new JSONObject();
+            ll3.put("score", score);
+            ll3.put("type_comment", "试乘试驾体验评价");
+            ll3.put("type", "EXPERIENCE");
+
+            JSONArray array1 = new JSONArray();
+            array1.add(0, ll);
+            array1.add(1, ll2);
+            array1.add(2, ll3);
+
+            crm.appointmentEvaluate(appointmentId, "保养满意", array1);  //评价
+            crm.login(pp.zongjingli, pp.adminpassword);
+            int totalB = crm.evaluateList(1, 10, "", "", "").getInteger("total");
+            int num2 = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
+            Preconditions.checkArgument((totalB - total) == 1, "评价后，pc评价列表没+1");
+//            Preconditions.checkArgument((num2 - num) == 1, "接待完成，接待次数没+1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1");
+        }
     }
 
     @Test(description = "新增注销试驾车，新建试驾下拉列表+-1")
@@ -641,13 +697,11 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
                     "call",
                     "test_drive_time",
                     "is_fill",
-
 //                    "activity",    //1005
-//                    "city",       //1000
-//                    "test_drive_car",   //1000
-//                    "driver_license_photo_2_url",   //1000
-//                    "electronic_contract_url",    //1000
-//                    "driver_license_photo_1_url",   //1000
+                    "city",
+                    "driver_license_photo_2_url",
+                    "electronic_contract_url",
+                    "driver_license_photo_1_url",
             };
 //            FileWriter fileWriter = new FileWriter(pp.textPath,true);
 //            BufferedWriter bw = new BufferedWriter(fileWriter);
@@ -658,6 +712,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
                 int code = data.getInteger("code");
                 String message = data.getString("message");
                 String content="参数：{}"+must[i]+"!!!!!!code:{}"+code+"返回"+message+"\n";
+                logger.info(content);
 //                bw.append(content);
                 Preconditions.checkArgument(code==1001,"试驾必填项"+must[i]+"不填"+code);
 

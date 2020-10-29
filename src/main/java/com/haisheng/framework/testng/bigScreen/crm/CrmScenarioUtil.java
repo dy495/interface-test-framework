@@ -1923,6 +1923,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //评价
+    public JSONObject messageEvaluatecode(Long appointment_id, String suggestion, JSONArray evaluate_list) throws Exception {
+        String url = "/WeChat-applet/porsche/a/message/evaluate/" + appointment_id;
+        JSONObject json = new JSONObject();
+        json.put("suggestion", suggestion);
+        json.put("evaluate_list", evaluate_list);
+
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
 
 
     //预约详情
