@@ -1,11 +1,38 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
+import ai.winsense.ApiClient;
+import ai.winsense.common.Credential;
+import ai.winsense.constant.SdkConstant;
+import ai.winsense.model.ApiRequest;
+import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import static org.apache.poi.poifs.crypt.HashAlgorithm.none;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -65,6 +92,128 @@ public class StoreScenarioUtil extends TestCaseCommon {
         //saveData("登陆");
 
     }
+
+    @Test
+    public void getA() throws Exception {
+        HttpClient client = null;
+        try {
+            client = HCB.custom()
+                    .pool(50, 10)
+                    .retry(3).build();
+        } catch (HttpProcessException e) {
+            e.printStackTrace();
+        }
+        String timestamp = "" + System.currentTimeMillis();
+        String uid = "uid_ef6d2de5";
+        String appId = "49998b971ea0";
+        String ak = "3fdce1db0e843ee0";
+        String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+        String nonce = "64a1597074884673";
+        String sk = "5036807b1c25b9312116fd4b22c351ac";
+        String signStr = uid + "." + appId + "." + ak + "." + router + "." + timestamp + "." + nonce;
+        // java代码示例
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes("utf-8"), "HmacSHA256");
+        sha256_HMAC.init(encodeSecretKey);
+
+        byte[] hash = sha256_HMAC.doFinal(signStr.getBytes("utf-8"));
+        Header[] headers = HttpHeader.custom()
+                .other("Accept", "application/json")
+                .other("Content-Type", "application/json;charset=utf-8")
+                .other("timestamp", timestamp)
+                .other("nonce", nonce)
+                .other("ExpiredTime", "50 * 1000")
+                .other("Authorization", authorization)
+                .build();
+        // java代码示例
+        String authorization = Base64.getEncoder().encodeToString(hash);
+        System.err.println(authorization);
+
+        //saveData("登陆");
+
+        String path = "/retail/api/data/biz";
+        String IpPort = "http://dev.api.winsenseos.com";
+
+         String requestUrl = "http://dev.api.winsenseos.cn/retail/api/data/biz";
+
+        String str = "{\n" +
+                "        \"shop_id\": \"43072\",\n" +
+                "        \"trans_id\": \"QAtest20201028001\",\n" +
+                "        \"trans_time\": \"1603354249588\",\n" +
+                "        \"trans_type\": [\n" +
+                "            \"W\"\n" +
+                "        ],\n" +
+                "        \"user_id\": \"4532ec9c-de23-4e18-9e1a-ab0feec0\",\n" +
+                "        \"total_price\": 998.888,\n" +
+                "        \"real_price\": 666.6666,\n" +
+                "        \"shopType\": \"SHOP_TYPE\",\n" +
+                "        \"orderNumber\": \"8888888888888\",\n" +
+                "        \"memberName\":\"志东\",\n" +
+                "        \"receipt_type\":\"小票类型\",\n" +
+                "        \"posId\": \"pos-1234586789\",\n" +
+                "        \"commodityList\": [\n" +
+                "            {\n" +
+                "                \"commodityId\": \"iPhone12\",\n" +
+                "                \"unit_price\": 123.123,\n" +
+                "                \"num\": 5\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"commodityId\": \"banana\",\n" +
+                "                \"unit_price\": 456.456,\n" +
+                "                \"num\": 6\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"commodityId\": \"Apple\",\n" +
+                "                \"unit_price\": 789.789,\n" +
+                "                \"num\": 8\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    }";
+        Credential credential = new Credential(sk, sk);
+        // 封装request对象
+        String requestId = UUID.randomUUID().toString();
+        logger.debug("try to invoke apirequest");
+        ApiRequest apiRequest = new ApiRequest.Builder()
+                .uid(uid)
+                .appId(appId)
+                .version(SdkConstant.API_VERSION)
+                .requestId(requestId)
+                .router(router)
+                .dataResource(new String[]{})
+                .dataBizData(JSON.parseObject(str))
+                .build();
+        // client 请求
+        ApiClient apiClient = new ApiClient(requestUrl, credential);
+        ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+        logger.info(JSON.toJSONString(apiResponse));
+    }
+
+    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
+        final String NUMBER = ".";
+
+        String uid = "uid_ef6d2de5";
+        String appId = "49998b971ea0";
+        String ak = "3fdce1db0e843ee0";
+        String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+        String sk = "5036807b1c25b9312116fd4b22c351ac";
+        final String ALGORITHM = "HmacSHA256";
+
+        Long timestamp = System.currentTimeMillis();
+        String non = "2e4b56c4-ac4c-4778-aa12-81657f5feb44";
+
+
+        // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+        String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + non;
+        // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+        Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+        sha256Hmac.init(encodeSecretKey);
+        byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+        // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+        System.out.println(Base64.getEncoder().encodeToString(hash));
+        System.out.println(timestamp);
+    }
+
 
     @DataProvider(name = "CYCLE_TYPE")
     public static Object[] cycle_type() {
@@ -132,6 +281,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 ""
         };
     }
+
     @DataProvider(name = "AREA_CODE")
     public static Object[] area_code() {
 
@@ -156,6 +306,27 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 "INTEREST",
                 "ENTER",
                 "DEAL"
+        };
+    }
+
+    @DataProvider(name = "STATUS")
+    public static Object[] status() {
+
+        return new String[]{
+                "RUNNING",
+                "STREAM_ERROR",
+                "OFFLINE"
+        };
+    }
+
+    @DataProvider(name = "SEARCH")
+    public static Object[] search() {
+
+        return new String[]{
+                "[\"name\"]",
+                "[\"type\"]",
+                "[\"accept_role\"]",
+                "[\"statu\"]"
         };
     }
 //    String district_code = "110105";
@@ -196,19 +367,20 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.1.3 实时客流门店列表V3.0
      * @author: guoliya
      * @time:
      */
 
-    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type,String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
+    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type, String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/real-time";
         JSONObject object = new JSONObject();
         object.put("district_code", district_code);
         object.put("shop_type", shop_type);
-        object.put("shop_name",shop_name);
-        object.put("shop_manager",shop_manager);
+        object.put("shop_name", shop_name);
+        object.put("shop_manager", shop_manager);
         object.put("page", page);
         object.put("size", size);
         String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
@@ -573,17 +745,18 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.5.7 门店列表-云中客的
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberTotalListV3(long shop_id,Integer page,Integer size) throws Exception {
+    public JSONObject memberTotalListV3(long shop_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/total/list";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"page\" :" + page+",\n" +
+                        "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
 
@@ -591,18 +764,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.5.8 门店列表-云中客门店客户详情
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberDetail(long shop_id,String customer_id,Integer page,Integer size) throws Exception {
+    public JSONObject memberDetail(long shop_id, String customer_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/privacy/agree/detail";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
-                        "\"page\" :" + page+",\n" +
+                        "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
 
@@ -694,30 +868,822 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //---------------------十一、组织架构接口-----------------
 
-//    /**--------------------------------------------------------9.App端接口------------------------------------------------------------**/
-//    /**
-//     * @description:8.6.1 客群漏斗列表
-//     * @author: qingqing
-//     * @time:
-//     */
-//    public JSONObject shopPageConversionV3(String district_code,String shop_type,String shop_name,String shop_manager,String percentage_type,Integer percentage_type_order,Integer page,Integer size) throws Exception {
-//        String url = "/patrol/shop/page/conversion";
-//        String json =
-//                "{" +
-//                        "\"district_code\" :\"" + district_code + "\",\n" +
-//                        "\"shop_type\" :\"" + shop_type + "\",\n" +
-//                        "\"shop_name\" :\"" + shop_name + "\",\n" +
-//                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
-//                        "\"shop_name\" :\"" + shop_name + "\",\n" +
-//                        "\"percentage_type\" :\"" + percentage_type + "\",\n" +
-//                        "\"percentage_type_order\" :\"" + percentage_type_order + "\",\n" +
-//                        "\"page\" :" + page + ",\n" +
-//                        "\"size\" :" + size + ",\n" +
-//                        "} ";
-//
-//        String res = httpPostWithCheckCode(url, json, IpPort);
-//
-//        return JSON.parseObject(res).getJSONObject("data");
-//    }
+
+    /**
+     * @description:11.1.1 账号管理列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size) throws Exception {
+        String url = "/patrol/organization/account/page";
+        String json =
+                "{" ;
+                  if(name !=""){
+                    json= json+ "\"name\" :\"" + name + "\",\n";
+                };
+                  if(account !=""){
+                    json= json+  "\"account\" :\"" + account + "\",\n";
+                   };
+                  if(email !=""){
+                   json= json+ "\"email\" :\"" + email + "\",\n";
+                };
+                  if(phone !=""){
+                  json= json+ "\"phone\" :\"" + phone + "\",\n";
+                };
+                  if(role_name !=""){
+                  json= json+  "\"role_name\" :\"" + role_name + "\",\n";
+                  };
+                 if(shop_list !=""){
+                 json= json+ "\"shop_list\" :\"" + shop_list + "\",\n";
+                  };
+                   json = json+
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.2 新增账号
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountAdd(String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) throws Exception {
+        String url = "/patrol/organization/account/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" ;
+                      if(email !=""){
+                        json= json+ "\"email\" :\"" + email + "\",\n";
+                      };
+                      if(phone !=""){
+                          json= json+ "\"phone\" :\"" + phone + "\",\n";
+                      };
+                      json = json+
+                        "\"role_id_list\" :" + role_id_list + ",\n" +
+                        "\"status\" :" + status + ",\n" +
+                        "\"shop_list\" :" + shop_list + ",\n" +
+                        "\"type\" :\"" + type + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
+    /**
+     * @description:11.1.3 账号详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountDetail(String account) throws Exception {
+        String url = "/patrol/organization/account/detail";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.4 账号编辑
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) throws Exception {
+        String url = "/patrol/organization/account/edit";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\",\n" +
+                          "\"name\" :\"" + name + "\",\n" ;
+                         if(email !=""){
+                         json= json+ "\"email\" :\"" + email + "\",\n";
+                         };
+                         if(phone !=""){
+                        json= json+ "\"phone\" :\"" + phone + "\",\n";
+                         };
+                        json = json+
+
+                        "\"role_id_list\" :" + role_id_list + ",\n" +
+                        "\"shop_list\" :" + shop_list + ",\n" +
+                        "\"type\" :\"" + type + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.1.5 账号删除
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountDelete(String account) throws Exception {
+        String url = "/patrol/organization/account/delete";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.1.6 账号状态更改（不是启用就是禁用，点击就更改对应的状态，前端传入当前账号状态就可以，后台判断更改）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountButtom(String account, Integer status) throws Exception {
+        String url = "/patrol/organization/account/change-status";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\",\n" +
+                        "\"status\" :\"" + status + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.7 角色列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleList() throws Exception {
+        String url = "/patrol/organization/role/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:11.1.8 门店列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopList(String district_code) throws Exception {
+        String url = "/patrol/shop/list";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.9 修改密码
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopList(String new_password, String old_password) throws Exception {
+        String url = "/patrol/organization/account/change-password";
+        String json =
+                "{" +
+                        "\"new_password\" :\"" + new_password + "\",\n" +
+                        "\"old_password\" :\"" + old_password + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:11.2.1 向SSO服务查询当前门店可用的配置模块和对应的权限列表（参数依赖sso服务，这个是新增接口，后续可能变化）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject query_permission_map() throws Exception {
+        String url = "/patrol/organization/role-management/query-permission-map";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.2 角色管理列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRolePage(String role_name, Integer page, Integer size) throws Exception {
+        String url = "/patrol/organization/role/page";
+        String json =
+                "{" +
+                        "\"role_name\" :\"" + role_name + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.3 新增角色（参数依赖sso服务，这个是新增接口，后续可能变化）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray permission_list) throws Exception {
+        String url = "/patrol/organization/role/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"description\" :\"" + description + "\",\n" +
+                        "\"permission_list\" :\"" + permission_list + "\"\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
+    /**
+     * @description:11.2.4 角色详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleDetail(long role_id) throws Exception {
+        String url = "/patrol/organization/role/detail";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.5 角色编辑
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray permission_list) throws Exception {
+        String url = "/patrol/organization/role/edit";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + ",\n" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"description\" :\"" + description + "\",\n" +
+                        "\"permission_list\" :\"" + permission_list + "\"\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.2.6 角色删除
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleDelete(long role_id) throws Exception {
+        String url = "/patrol/organization/role/delete";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.7 角色对应的账号列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject AccountRolePage(long role_id, Integer page, Integer size) throws Exception {
+        String url = "/patrol/organization/account/role/page";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //--------------设备列表--------------
+
+    /**
+     * @description:12.1.1 设备列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject device_page(String device_name, String shop_name, String device_id, String status, String type, Integer page, Integer size) throws Exception {
+        String url = "/patrol/equipment-management/device/page";
+        String json ="{";
+                  if(device_name!=""){
+                 json = json +   "\"device_name\" :\"" + device_name + "\",\n" ;
+                  }
+                 if(shop_name!=""){
+                json = json +    "\"shop_name\" :\"" + shop_name + "\",\n"  ;
+                 }
+                if(device_id!=""){
+                 json = json +     "\"device_id\" :\"" + device_id + "\",\n"  ;
+                 }
+        if(status!=""){
+            json = json +      "\"status\" :\"" + status + "\",\n"   ;
+        }
+                  json = json +
+                        "\"type\" :\"" + type + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //--------------------------------收银风控-------------
+
+    /**
+     * @description:13.1.1 收银风控列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_page(String shop_name, String manager_name, String manager_phone, String sort_event_type, Integer sort_event_type_order, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/cashier/page";
+        String json =
+                "{" ;
+                       if(shop_name !=""){
+                           json = json+"\"shop_name\" :\"" + shop_name + "\",\n";
+                       }
+                      if(manager_name !=""){
+                           json = json+"\"manager_name\" :\"" + manager_name + "\",\n";
+                       }
+                      if(sort_event_type !=""){
+                          json = json+"\"sort_event_type\" :\"" + sort_event_type + "\",\n";
+                       }
+                      if(sort_event_type_order !=null){
+                          json = json+"\"sort_event_type_order\" :" + sort_event_type_order + ",\n";
+                       }
+                      json = json+
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.2 收银追溯
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_traceBack(long shop_id, String date, String order_id, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/cashier/trace-back";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"date\" :\"" + date + "\",\n" ;
+
+                        if(order_id!=""){
+                            json = json +   "\"order_id\" :\"" + order_id + "\",\n";
+                        }
+                      json = json +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.3 收银追溯查看小票详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_orderDetail(String order_id) throws Exception {
+        String url = "/patrol/risk-control/cashier/order-detail";
+        String json =
+                "{" +
+                        "\"order_id\" :\"" + order_id + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.4 收银风控事件列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_riskPage(long shop_id, String event_name, String order_id, String order_date, String member_name, String handle_result, String current_state, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/cashier/risk-event/page";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"event_name\" :\"" + event_name + "\",\n" +
+                        "\"order_id\" :\"" + order_id + "\",\n" +
+                        "\"order_date\" :\"" + order_date + "\",\n" +
+                        "\"member_name\" :\"" + member_name + "\",\n" +
+                        "\"handle_result\" :\"" + handle_result + "\",\n" +
+                        "\"current_state\" :\"" + current_state + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.5 风控事件概览
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_riskPage(long id) throws Exception {
+        String url = "/patrol/risk-control/cashier/risk-event/overview";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.6 风控事件涉及订单列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_ordersInvolvedList(long id) throws Exception {
+        String url = "/patrol/risk-control/cashier/risk-event/orders-involved/list";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.1.7 风控事件处理
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_riskEventHandle(long id, Integer result, String remarks) throws Exception {
+        String url = "/patrol/risk-control/cashier/risk-event/handle";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"result\" :" + result + ",\n" +
+                        "\"remarks\" :\"" + remarks + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
+    /**
+     * @description:13.1.8 风控事件处理查看
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject cashier_riskEventView(long id) throws Exception {
+        String url = "/patrol/risk-control/cashier/risk-event/handle-result";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:13.2.1 风控规则列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject risk_controlPage(String name, String type, String shop_type, Integer status, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/rule/page";
+        String json =
+                "{";
+                     if(name!=""){
+                         json = json +      "\"name\" :\"" + name + "\",\n";
+                     }
+                    if(type!=""){
+                        json = json +       "\"type\" :\"" + type + "\",\n";
+                     }
+                    if(shop_type!=""){
+                        json = json +         "\"shop_type\" :\"" + shop_type + "\",\n";
+                    }
+                    if(status!=null){
+                        json = json +          "\"status\" :" + status + ",\n";
+                    }
+                    json = json +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 20.2 获取新增风控规则树结构
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject riskRuleTree() throws Exception {
+        String url = "/patrol/risk-control/rule/tree";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:13.2.3 新增风控规则
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject riskRuleAdd(String name, String shop_type, JSONObject rule) throws Exception {
+        String url = "/patrol/risk-control/rule/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"rule\" :" + rule + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:13.2.4 风控规则删除
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject risk_controlDelete(long id) throws Exception {
+        String url = "/patrol/risk-control/rule/delete";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:13.2.5 风控规则开关（前端传当前字段值即可，后端自动判断更改）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject risk_controlPageSwitch(long id, Integer status) throws Exception {
+        String url = "/patrol/risk-control/rule/switch";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"status\" :" + status + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.3.1 风控告警规则列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_rulePage(String name, String type, String accept_role, Integer status, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/page";
+        String json =
+                "{" ;
+                   if(name !=""){
+                      json = json +        "\"name\" :\"" + name + "\",\n";
+                   }
+                  if(type !=""){
+                      json = json +       "\"type\" :\"" + type + "\",\n";
+                  }
+                 if(accept_role !=""){
+                     json = json +        "\"accept_role\" :\"" + accept_role + "\",\n";
+                  }
+                  if(status !=null){
+                     json = json +       "\"status\" :" + status + ",\n" ;
+                  }
+                   json = json +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.3.2 新建风控告警规则
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_ruleAdd(String name, String type, List rule_id_list, List accept_role_id_list, String start_time, String end_time, String silent_time) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"type\" :\"" + type + "\",\n" +
+                        "\"rule_id_list\" :" + rule_id_list + ",\n" +
+                        "\"accept_role_id_list\" :" + accept_role_id_list + ",\n" +
+                        "\"start_time\" :\"" + start_time + "\",\n" +
+                        "\"end_time\" :\"" + end_time + "\",\n" +
+                        "\"silent_time\" :\"" + silent_time + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:13.3.3 风控告警规则详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_ruleDetail(long id) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/detail";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.3.4 编辑风控告警规则
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_ruleEdit(long id, String name, String type, List rule_id_list, List accept_role_id_list, String start_time, String end_time, String silent_time) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/edit";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"type\" :\"" + type + "\",\n" +
+                        "\"rule_id_list\" :\"" + rule_id_list + "\",\n" +
+                        "\"accept_role_id_list\" :\"" + accept_role_id_list + "\",\n" +
+                        "\"start_time\" :\"" + start_time + "\",\n" +
+                        "\"end_time\" :\"" + end_time + "\",\n" +
+                        "\"silent_time\" :\"" + silent_time + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.3.5 删除风控告警规则
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_ruleDelete(long id) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/delete";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:13.3.6 风控告警规则开关（前端传当前字段值即可，后端自动判断更改）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_ruleSwitch(long id, Integer status) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/switch";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"status\" :" + status + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.3.8 获取可用于风控告警配置的风控规则列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_rulesList(long id, Integer status) throws Exception {
+        String url = "/patrol/risk-control/alarm-rule/list";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"status\" :" + status + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:13.4.1 风控告警事件列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject alarm_page(String name, String type, String shop_name, Integer page, Integer size) throws Exception {
+        String url = "/patrol/risk-control/alarm/page";
+        String json =
+                "{";
+                   if(name !=""){
+                       json = json +        "\"name\" :\"" + name + "\",\n";
+                   }
+                  if(type !=""){
+                       json = json +       "\"type\" :\"" + type + "\",\n";
+                  }
+                  if(shop_name !=""){
+                       json = json +        "\"shop_name\" :\"" + shop_name + "\",\n";
+                  }
+                   json = json +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 }
+
+

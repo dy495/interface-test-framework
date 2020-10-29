@@ -13,6 +13,7 @@ import java.util.Map;
 
 public abstract class BaseContainer extends BasicProperty implements IContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseContainer.class);
+    protected static List<Map<String, Object>> table;
     @Getter
     private String path;
 
@@ -25,14 +26,16 @@ public abstract class BaseContainer extends BasicProperty implements IContainer 
     public abstract boolean init();
 
     @Override
-    public abstract List<Map<String, Object>> getTable();
+    public List<Map<String, Object>> getTable() {
+        return table;
+    }
 
     @Override
     public void setPath(String path) {
         if (!StringUtils.isEmpty(path)) {
             this.path = path;
         } else {
-            throw new SqlCreateException("sql is null");
+            throw new SqlCreateException("path is null");
         }
     }
 

@@ -146,7 +146,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             //公海人数总量
             UserUtil.login(zjl);
             JSONObject publicCustomerList = crm.publicCustomerList("", "", 10, 1);
-            String phone = CommonUtil.getStrField(publicCustomerList, 0, "customer_phone");
+            String name = CommonUtil.getStrField(publicCustomerList, 0, "customer_name");
             int customerId = CommonUtil.getIntField(publicCustomerList, 0, "customer_id");
             int publicTotal = publicCustomerList.getInteger("total");
             //把公海分配销售
@@ -155,15 +155,24 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             JSONObject publicCustomerList1 = crm.publicCustomerList("", "", 10, 1);
             int publicTotal1 = publicCustomerList1.getInteger("total");
             //等级变为c
-            JSONObject result = crm.customerList("", phone, "", "", "", 1, 10);
-            String customerLevelName = CommonUtil.getStrField(result, 0, "customer_level_name");
+            String customerLevelName = null;
+            int total = crm.customerList(name, "", "", "", "", 1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.customerList(name, "", "", "", "", i, 100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (list.getJSONObject(j).getInteger("customer_id") == customerId) {
+                        customerLevelName = list.getJSONObject(j).getString("customer_level_name");
+                    }
+                }
+            }
             //分配之后后销售名下客户数量
             UserUtil.login(xs);
             int customerTotal1 = crm.customerPage(100, 1, "", "", "").getInteger("total");
-            CommonUtil.valueView(customerTotal, customerTotal1, publicTotal, publicTotal1);
+            CommonUtil.valueView(customerTotal, customerTotal1, publicTotal, publicTotal1, customerLevelName);
             Preconditions.checkArgument(customerTotal1 == customerTotal + 1, "公海客户分配给销售顾问后，该销售名下客户数量未+1");
             Preconditions.checkArgument(publicTotal1 == publicTotal - 1, "公海客户分配给销售顾问后，公海客户数量未-1");
-            Preconditions.checkArgument(customerLevelName.equals("C"), "客户从公海分配销售后，等级未变为C");
+            Preconditions.checkArgument(customerLevelName != null && customerLevelName.equals("C"), "客户从公海分配销售后，等级未变为C");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

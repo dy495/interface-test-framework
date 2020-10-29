@@ -1923,6 +1923,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //评价
     public JSONObject messageEvaluatecode(Long appointment_id, String suggestion, JSONArray evaluate_list) throws Exception {
         String url = "/WeChat-applet/porsche/a/message/evaluate/" + appointment_id;
@@ -3667,17 +3668,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * @param startTime 起始时间
      * @param endTime   结束时间
      */
-    public JSONObject returnVisitTaskPage(int page, int size, String startTime, String endTime) {
+    public JSONObject returnVisitTaskPage(int page, int size) {
         String url = "/porsche/app/return-visit-task/page";
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        if (!StringUtils.isEmpty(startTime)) {
-            object.put("start_time", startTime);
-        }
-        if (!StringUtils.isEmpty(endTime)) {
-            object.put("end_time", endTime);
-        }
         return invokeApi(url, object);
     }
 

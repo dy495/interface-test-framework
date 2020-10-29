@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Map;
 
 public class DingPushUtil {
     private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.BA.getWebHook();
@@ -34,6 +35,31 @@ public class DingPushUtil {
                     + "\n" + date + "\n"
                     + "\n" + "SQL错误：" + msg + "\n"
                     + "\n" + "SQL语句：" + sql + "\n");
+            StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
+            httppost.setEntity(se);
+            HttpResponse response = httpclient.execute(httppost);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                String result = EntityUtils.toString(response.getEntity(), "utf-8");
+                logger.info(result);
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+    }
+
+    public static void sendTxt(Map<String, String> map) {
+        try {
+            String text = map.get("text");
+            String title = map.get("title");
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
+            httppost.addHeader("Content-Type", "application/json; charset=utf-8");
+            JSONObject object = new JSONObject();
+            JSONObject markdown = new JSONObject();
+            object.put("msgtype", "markdown");
+            object.put("markdown", markdown);
+            markdown.put("title", title);
+            markdown.put("text", text);
             StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
             httppost.setEntity(se);
             HttpResponse response = httpclient.execute(httppost);
