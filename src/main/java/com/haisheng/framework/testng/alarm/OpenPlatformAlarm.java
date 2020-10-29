@@ -27,7 +27,7 @@ public class OpenPlatformAlarm {
         String[] bugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
-        alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+        alarmPush.setDingWebhook(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
         alarmPush.openPlatformAlarm(adPassRate, consolePassRate, dmpPassRate, bugInfo);
 
     }

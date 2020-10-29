@@ -2507,7 +2507,7 @@ public class TestCrowdDashboardControllerFengke {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+        alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
         String exp = "java.lang.IllegalArgumentException: ";
         msg = msg.replace(exp, "");
         alarmPush.onlineMonitorPvuvAlarm(msg);
@@ -2521,7 +2521,7 @@ public class TestCrowdDashboardControllerFengke {
         if (this.FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航

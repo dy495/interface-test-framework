@@ -1247,7 +1247,7 @@ public class FeidanApiDaily {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             alarmPush.dailyRgn(msg);
             this.FAIL = true;
@@ -1259,7 +1259,7 @@ public class FeidanApiDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
