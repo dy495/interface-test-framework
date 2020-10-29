@@ -237,7 +237,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :试驾   ok
      * @date :2020/8/10 16:45
      **/
-    @Test(priority = 12)
+//    @Test(priority = 12)
     public void testderver() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -615,7 +615,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String select_date = dt.getHistoryDate(0);
             JSONArray list = crm.driverSelect(1, 10, customer_name, select_date, select_date).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                String timeSelect = list.getJSONObject(i).getString("sign_time");
+                String timeSelect = list.getJSONObject(i).getString("sign_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date)) && (customer_name.equals(nameSelect)), "交车按交车时间{}查询，结果{}错误", select_date, timeSelect);
             }

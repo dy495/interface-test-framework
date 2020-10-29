@@ -1657,9 +1657,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(subject_type.equals(dt.getHistoryDate(0)),"创建时间");
             Preconditions.checkArgument(expected_buy_day.equals(dt.getHistoryDate(1)),"预计购车时间异常");
 
-
-
-
         }catch (AssertionError |Exception e){
             appendFailreason(e.toString());
         }finally {
