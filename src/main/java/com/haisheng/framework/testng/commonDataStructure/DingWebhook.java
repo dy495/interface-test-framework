@@ -7,10 +7,11 @@ public class DingWebhook {
     public static String QA_TEST_GRP = "https://oapi.dingtalk.com/robot/send?access_token=0732a60532e16e85c37dcbbd350d461d51e5b877b6e4cd7aba498acffdf1c175"; //QA测试群
 
     //日常回归-开放平台&独立项目
-    public static String OPEN_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=8a9eb2c50f9b3a62bca0d9963f6a7938d7f06df6ba62889673432448ea6abb4a";
+    public static String CAR_OPEN_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=8a9eb2c50f9b3a62bca0d9963f6a7938d7f06df6ba62889673432448ea6abb4a";
 
     //线上巡检-开放平台&独立项目
-    public static String ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=3d327456dd1da2b32ce7f30c67e2242e02305a1321cfa1744afee3ed9634dbbe";
+    //汽车
+    public static String ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=3d327456dd1da2b32ce7f30c67e2242e02305a1321cfa1744afee3ed9634dbbe";
 
     //日常回归-货架
     public static String COMMODITY_SHELF_GRP = "https://oapi.dingtalk.com/robot/send?access_token=225c6810c977c616c9c4c112e9205b7f3f7204392c4388a05ff708cbe9e4a6ee";
@@ -30,7 +31,8 @@ public class DingWebhook {
     public static String DAILY_EDGE = "https://oapi.dingtalk.com/robot/send?access_token=4e774f32136b1404328315a84688535a55c8e7440850339c8fccde156a23bd3b";
 
     //日常回归-管理后台
-    public static String DAILY_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=5fe27703e52c3ee3e8a97bf9f6a13c6e23b63ef2abff5f5c4d91f5e915f64c10";
+    public static String DAILY_STORE_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=5fe27703e52c3ee3e8a97bf9f6a13c6e23b63ef2abff5f5c4d91f5e915f64c10";
     //线上巡检-管理后台&门店中心
-    public static String ONLINE_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=4beef5484b39755950f469c5c0b09f9cf262c9e7988627da07909862fce54c42";
+    //门店
+    public static String ONLINE_STORE_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=4beef5484b39755950f469c5c0b09f9cf262c9e7988627da07909862fce54c42";
 }
