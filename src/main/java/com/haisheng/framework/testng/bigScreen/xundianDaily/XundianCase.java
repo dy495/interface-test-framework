@@ -75,7 +75,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "青青";
 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
         commonConfig.pushRd = new String[]{"13581630214","15084928847"};
 

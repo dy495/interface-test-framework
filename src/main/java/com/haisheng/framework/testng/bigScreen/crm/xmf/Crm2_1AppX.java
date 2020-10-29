@@ -68,7 +68,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -1328,7 +1328,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //购车-交车底盘号验证
     @Test
     public void jiaocheAb() {
@@ -1621,7 +1620,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     }
 
     //创建顾客接待，填写全部信息，于客户管理信息校验
-    @Test
+//    @Test
     public void createCustomerInfo(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1634,13 +1633,113 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "FU";
             String loginname=object.getString("userLoginName");
+//            fr.id_number="411502199602197727";
+            fr.districtCode="320506";
 
             crm.finishReception3(fr);
+
+            JSONObject data=crm.customerInfo(fr.customer_id);
+            String belongs_sale_id=data.getString("belongs_sale_id");
+//            String birthday=data.getString("birthday");
+            String create_date=data.getString("create_date");
+//            String district_code=data.getString("district_code");
+            String district_name=data.getString("district_name");
+            String name=data.getString("name");
+            String reception_type=data.getString("reception_type");
+//            String subject_type=data.getString("subject_type");
+            String expected_buy_day=data.getString("expected_buy_day");
+
+            Preconditions.checkArgument(belongs_sale_id.equals(fr.belongs_sale_id),"所属顾问id异常");
+            Preconditions.checkArgument(district_name.equals("江苏省-苏州市-吴中区"),"客户信息所属区域异常");
+//            Preconditions.checkArgument(birthday.equals("1996-02-19"),"生日");
+            Preconditions.checkArgument(name.equals(fr.name),"客户名");
+            Preconditions.checkArgument(reception_type.equals(dt.getHistoryDate(0)),"创建时间");
+//            Preconditions.checkArgument(subject_type.equals(dt.getHistoryDate(0)),"创建时间");
+            Preconditions.checkArgument(expected_buy_day.equals(dt.getHistoryDate(1)),"预计购车时间异常");
+
+
+
 
         }catch (AssertionError |Exception e){
             appendFailreason(e.toString());
         }finally {
             saveData("创建顾客接待，填写全部信息，于客户管理信息校验");
+        }
+    }
+
+    //app-修改密码
+//    @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+    @Test
+    public void appchangepassword(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            int role_ids=13;
+            String userName = dt.getHHmm(0);
+            String userid = pf.createUserId(userName,role_ids);
+            //创建的销售登录
+            int codeA=crm.tryLogin(userName,pp.adminpassword).getInteger("code");
+            if(codeA!=1000){
+                throw new Exception("新建用户登录失败，case运行终止");
+            }
+            crm.login(userName,pp.adminpassword);
+            String newPassword = "a806f5026dabadc5cff19211d9f4afa2";     //ys123456
+            int code0=crm.modifyPasswordJk(pp.adminpassword, newPassword).getInteger("code");
+            Preconditions.checkArgument(code0==1000,"修改密码失败");
+
+            int code=crm.tryLogin(userName,newPassword).getInteger("code");
+            int code2=crm.tryLogin(userName,pp.adminpassword).getInteger("code");
+            //   删除创建的销售
+            crm.login(pp.zongjingli,pp.superpassword);
+            crm.userDel(userid);
+            Preconditions.checkArgument(code==1000,"修改密码使用新密码登录失败");
+            Preconditions.checkArgument(code2==1001,"修改密码使用就密码登录成功");
+
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            saveData("app修改密码正常");
+        }
+    }
+    //修改密码异常 后天未作校验，均是前端校验
+//    @Test
+    public void appchangepassword2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            int role_ids=13;
+            //主账号登录
+            crm.login(pp.zongjingli,pp.superpassword);
+            //创建销售/顾问
+            String userName = dt.getHHmm(0);
+            String userid=pf.createUserId(userName,role_ids);
+            //创建的销售登录
+            int code=crm.tryLogin(userName,pp.adminpassword).getInteger("code");
+            if(code!=1000){
+                throw new Exception("新建用户登录失败，case运行终止");
+            }
+            crm.login(userName,pp.adminpassword);
+
+            String ad[]={
+                    //新旧密码相同，后台未作校验
+                    "52ab38660b0af0b1d0b8633466280f67",//长度超过20 ys12345678ys12345678ys
+                    "fcea920f7412b5da7be0cf42b8c93759",//纯数字1234567
+                    "b608a839b35320905908508e1d267678",//纯字母ASDFGHJK
+                    "8ec48d6be46f7fd34ed9ca2e8b960b5d",//汉字和其他字符 哈@#￥%123455
+            };
+            for(int i=0;i<ad.length;i++){
+                int code0= crm.modifyPasswordJk(pp.adminpassword, ad[i]).getInteger("code");  //新旧密码相同，失败
+                logger.info("code:"+code0);
+                Preconditions.checkArgument(code==1001,"异常密码格式仍修改成功");
+          }
+            //   删除创建的销售
+            crm.login(pp.zongjingli,pp.superpassword);
+            crm.userDel(userid);
+
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+//            crm.login(pp.xiaoshouGuwen,pp.adminpassword);
+            saveData("app修改密码易常");
         }
     }
 

@@ -81,7 +81,7 @@
 //        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
 //
 //
-//        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
 //        commonConfig.pushRd = new String[]{"13581630214","15084928847"};
 //        //replace ding push conf
 //        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

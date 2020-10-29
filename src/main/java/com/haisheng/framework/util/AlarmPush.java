@@ -460,4 +460,88 @@ public class AlarmPush {
         DingChatbot.sendMarkdown(msg, atArray, false);
 
     }
+
+
+    /**
+     * @param isOnline true是线上
+     * @param passRate 3维数组
+     */
+    public void storeAlarm(boolean isOnline, String[] passRate) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-11.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "门店每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+        String env = isOnline ? "线上" : "日常";
+
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：门店，RD：杨航、华成裕**"
+                + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
+                + "\n>请 *@15084928847、@18513118484、@15898182672* 关注"
+                + "\n\n>失败用例信息点击链接->独立产品->门店-" + env + "->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
+
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13436941018 吕雪晴
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //15084928847 黄青青
+        String[] atArray = {"15084928847", "18513118484", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
+
+    }
+
+
+    /**
+     * @param isOnline true是线上
+     * @param passRate 3维数组
+     */
+    public void carAlarm(boolean isOnline, String[] passRate) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-10.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "汽车每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+        String env = isOnline ? "线上" : "日常";
+
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：门店，RD：谢志东、华成裕**"
+                + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
+                + "\n>请 *@13436941018、@15011479599、@15898182672* 关注"
+                + "\n\n>失败用例信息点击链接->独立产品->汽车-" + env + "->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
+
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13436941018 吕雪晴
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //15084928847 黄青青
+        String[] atArray = {"13436941018", "18513118484", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
+
+    }
 }

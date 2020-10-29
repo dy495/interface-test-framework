@@ -451,4 +451,27 @@ public class PackFunction {
         }
         return carMess;
     }
+
+    //创建用户返回用户id
+    public String createUserId(String userName,int roleId)throws Exception{
+        crm.login(pp.zongjingli,pp.superpassword);
+        //创建销售/顾问
+        String phone=genPhoneNum();
+
+        crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
+        JSONObject data=crm.userPage(1,100);
+        int total=data.getInteger("total");
+        JSONArray list;
+        if(total==200){
+           throw new Exception("用户数量已达上线，case运行终止");
+        }
+        else if(total<100){
+            list = data.getJSONArray("list");
+        }else{
+            list=crm.userPage(2,100).getJSONArray("list");
+        }
+        String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+        return userid;
+    }
+
 }

@@ -6404,7 +6404,7 @@ public class ManagePlatform {
 
         CommonConfig commonConfig = new CommonConfig();
 
-        commonConfig.dingHook = DingWebhook.DAILY_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214","15084928847"};
     }
 
