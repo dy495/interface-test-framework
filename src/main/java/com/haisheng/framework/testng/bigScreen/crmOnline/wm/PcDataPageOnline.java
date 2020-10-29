@@ -990,7 +990,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(y, sum);
-            Preconditions.checkArgument(y >= sum, "总经理" + type + "数量为：" + y + ",所有销售" + type + "数量为：" + sum);
+            Preconditions.checkArgument(y >= sum, e.getName() + "总经理" + type + "数量为：" + y + ",所有销售" + type + "数量为：" + sum);
         }
     }
 
@@ -1258,7 +1258,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<=离店时间-接待时间<60分钟的数量")
+    @Test(description = "30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<=离店时间-接待时间<60分钟的数量", enabled = false)
     public void shopPanel_data_32() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);

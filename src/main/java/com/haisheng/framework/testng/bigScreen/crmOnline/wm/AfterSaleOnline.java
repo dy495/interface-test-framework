@@ -432,20 +432,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--客户管理--总经理的全部车辆>=各个顾问的全部车辆之和")
-    public void afterSale_customer_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            compareAfterSaleMyCustomer("total_reception_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的全部车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和");
-        }
-    }
-
     @Test(description = "售后--客户管理--今日接待售后车辆>=今日新增售后车辆")
     public void afterSale_customer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -465,7 +451,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和")
+    @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和",enabled = false)
     public void afterSale_customer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

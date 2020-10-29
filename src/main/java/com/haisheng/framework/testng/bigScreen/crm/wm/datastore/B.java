@@ -103,6 +103,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             map.put("title", "balabala");
             map.put("text", "### " + "**" + "拉垮了，有空看一下" + "**" + "\n"
                     + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
@@ -165,6 +166,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             map.put("title", "balabala");
             map.put("text", "### " + "**" + "拉垮了，有空看一下" + "**" + "\n"
                     + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
@@ -213,7 +215,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
                         orderDO.setPlateNumber(list.getJSONObject(j).getString("plate_number"));
                         orderDO.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
                         String sql = Sql.instance().insert()
-                                .from("t_porsche_deliver_info")
+                                .from("t_porsche_order_info")
                                 .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phones",
                                         "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "order_date", "plate_type_name",
                                         "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
@@ -228,6 +230,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             map.put("title", "balabala");
             map.put("text", "### " + "**" + "拉垮了，有空看一下" + "**" + "\n"
                     + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
