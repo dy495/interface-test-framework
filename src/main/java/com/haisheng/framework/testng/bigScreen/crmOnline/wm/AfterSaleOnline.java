@@ -604,32 +604,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--回访任务--回访任务日期为昨天的回访任务，是否完成=已完成")
-    public void afterSale_returnVisit_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String returnVisitStatusName = null;
-            int id = createReturnVisitTask("售后回访");
-            int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getInteger("id") == id) {
-                        returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
-                    }
-                }
-            }
-            CommonUtil.valueView(returnVisitStatusName);
-            assert returnVisitStatusName != null;
-            Preconditions.checkArgument(returnVisitStatusName.equals("未完成"), "回访任务日期为今天的回访任务，是否完成!=未完成");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后--回访任务--回访任务日期为今天之前的回访任务，是否完成=未完成");
-        }
-    }
-
     @Test(description = "售后--回访任务--小程序预约今日的保养/维修（不取消）,售后回访页条数+1,售后回访页 全部回访+1,今日回访+1", priority = 1, enabled = false)
     public void afterSale_returnVisit_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
