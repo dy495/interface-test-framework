@@ -310,7 +310,7 @@ public class TestCaseCommon {
     public String httpPostWithCheckCode(String path, String json, String IpPort) {
         initHttpConfig();
         String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json);
+        config.url(queryUrl).json(json).headers();
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
         try {
@@ -344,6 +344,23 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
+    public String httpPost(String path, String json, String IpPort ,Header[] headers) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
+        config.url(queryUrl).json(json).headers(headers);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
+
     public String httpPostFile(String path, String[] filepath,String type, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;

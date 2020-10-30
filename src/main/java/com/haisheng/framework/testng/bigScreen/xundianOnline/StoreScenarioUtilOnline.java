@@ -65,13 +65,14 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         //saveData("登陆");
 
     }
+
     @DataProvider(name = "LOGINFO")
     public static Object[][] loginInfo() {
 
         return new String[][]{
-                { "zhoudafu@winsense.ai","d5f396edf97676490dd9e58a7cc60d51"},
-                { "baiguoyuan@winsense.ai","fb95eb1a95a5f061ae1b9d275bd36e02"},
-                { "salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8"}
+                {"zhoudafu@winsense.ai", "d5f396edf97676490dd9e58a7cc60d51"},
+                {"baiguoyuan@winsense.ai", "fb95eb1a95a5f061ae1b9d275bd36e02"},
+                {"salesdemo@winsense.ai", "c216d5045fbeb18bcca830c235e7f3c8"}
         };
     }
 
@@ -85,6 +86,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 "RECENT_SIXTY"
         };
     }
+
     @DataProvider(name = "SHOP_ID")
     public static Object[] shop_id() {
 
@@ -114,11 +116,12 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         };
     }
+
     @DataProvider(name = "SHOP_ID_T")
     public static Object[] shop_id_t() {
 
         return new Long[]{
-               15615l,//小天才西溪天街店
+                15615l,//小天才西溪天街店
                 15617l //小天才滨江宝龙店
 
         };
@@ -179,6 +182,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 ""
         };
     }
+
     @DataProvider(name = "AREA_CODE")
     public static Object[] area_code() {
 
@@ -243,19 +247,20 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.1.3 实时客流门店列表V3.0
      * @author: guoliya
      * @time:
      */
 
-    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type,String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
+    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type, String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/real-time";
         JSONObject object = new JSONObject();
         object.put("district_code", district_code);
         object.put("shop_type", shop_type);
-        object.put("shop_name",shop_name);
-        object.put("shop_manager",shop_manager);
+        object.put("shop_name", shop_name);
+        object.put("shop_manager", shop_manager);
         object.put("page", page);
         object.put("size", size);
         String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
@@ -576,7 +581,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         String url = "/patrol/history/shop/member/new/count";
         String json =
                 "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\"\n"+
+                        "\"cycle_type\" :\"" + cycle_type + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -619,17 +624,18 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.5.7 门店列表-云中客的
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberTotalListV3(long shop_id,Integer page,Integer size) throws Exception {
+    public JSONObject memberTotalListV3(long shop_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/total/list";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"page\" :" + page+",\n" +
+                        "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
 
@@ -637,18 +643,19 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:8.5.8 门店列表-云中客门店客户详情
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberDetail(long shop_id,String customer_id,Integer page,Integer size) throws Exception {
+    public JSONObject memberDetail(long shop_id, String customer_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/privacy/agree/detail";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
-                        "\"page\" :" + page+",\n" +
+                        "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
 
