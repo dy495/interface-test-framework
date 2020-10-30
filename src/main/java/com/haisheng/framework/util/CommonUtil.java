@@ -25,7 +25,7 @@ public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
     /**
-     * 判断是狗包含中文
+     * 判断是否包含中文
      *
      * @param str str
      * @return result
@@ -65,6 +65,15 @@ public class CommonUtil {
     @SafeVarargs
     public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+    /**
+     * 错误提示
+     *
+     * @param warning 警告
+     */
+    public static void warning(String warning) {
+        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + warning + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     /**

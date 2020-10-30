@@ -310,18 +310,15 @@ public class TestCaseCommon {
     public String httpPostWithCheckCode(String path, String json, String IpPort) {
         initHttpConfig();
         String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json).headers();
+        config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
-        } catch (HttpProcessException e) {
-            e.printStackTrace();
-        }
-        logger.info("response: {}", response);
-        try {
+            logger.info("response: {}", response);
             checkCode(response, StatusCode.SUCCESS, path);
         } catch (Exception e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
@@ -344,23 +341,6 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
-
-    public String httpPost(String path, String json, String IpPort ,Header[] headers) throws Exception {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json).headers(headers);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
-    }
-
     public String httpPostFile(String path, String[] filepath,String type, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;

@@ -202,7 +202,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
+            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
         }
     }
 
@@ -870,11 +870,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    /**
-     * @description: 客户管理-我的接待
-     */
-
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
     /**
@@ -978,37 +973,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
         throw new DataException("该用户小程序没有绑定车");
-    }
-
-    /**
-     * 创建一个当天回访任务
-     *
-     * @param startDay 开始时间
-     * @param endDay   结束时间
-     */
-    private int createReturnVisitTask(String startDay, String endDay) {
-        String date = DateTimeUtil.getFormat(new Date());
-        UserUtil.login(zjl);
-        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
-        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
-        String picture = new ImageUtil().getImageBinary(picPath);
-        int total = crm.afterSale_VisitRecordList(1, 10, "", startDay, endDay).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        int id = 0;
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", startDay, endDay).getJSONArray("list");
-            //查询今日之前且回访未完成的任务
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {
-                    //获取回访id
-                    id = list.getJSONObject(j).getInteger("id");
-                    break;
-                }
-            }
-        }
-        //回访
-        crm.afterSale_addVisitRecord((long) id, picture, comment, date);
-        return id;
     }
 
     /**

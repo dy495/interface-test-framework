@@ -152,7 +152,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
             //销售查看回访记录获取id
-            Long recordid = crm.afterSale_VisitRecordList(1, 1, "", "", "").getJSONArray("list").getJSONObject(0).getLong("id");
+            Long recordid = crm.returnVisitRecordAfterSalePage(1, 1, "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             //添加回访
             String return_visit_pic = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png");

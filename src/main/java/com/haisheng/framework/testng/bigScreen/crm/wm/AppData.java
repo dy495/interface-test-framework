@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -32,7 +31,6 @@ import java.util.Set;
  */
 public class AppData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount newXs = EnumAccount.XS_DAILY;
@@ -997,11 +995,11 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
-        int total = crm.afterSale_VisitRecordList(1, 10, "", startDay, endDay).getInteger("total");
+        int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
         int s = CommonUtil.getTurningPage(total, 100);
         int id = 0;
         for (int i = 1; i < s; i++) {
-            JSONArray list = crm.afterSale_VisitRecordList(i, 100, "", startDay, endDay).getJSONArray("list");
+            JSONArray list = crm.returnVisitRecordAfterSalePage(i, 100, "").getJSONArray("list");
             //查询今日之前且回访未完成的任务
             for (int j = 0; j < list.size(); j++) {
                 if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {

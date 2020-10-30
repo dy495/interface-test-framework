@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailur
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerDccListScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReturnVisitTaskExecuteScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,11 +31,12 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
+public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount xs = EnumAccount.XSGW_ONLINE;
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final EnumAccount qt = EnumAccount.QT_ONLINE;
+    private static final String carModule = "82";
 
     @BeforeClass
     @Override
@@ -280,23 +282,24 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+
         String customerLevel = String.valueOf(EnumCustomerLevel.B.getId());
         try {
             String phone = getDistinctPhone();
             //不填客户名称
-            JSONObject response = crm.customerCreate("", customerLevel, phone, car.getModelId(), car.getStyleId(), remark);
+            JSONObject response = crm.customerCreate("", customerLevel, phone, carModule, car.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("顾客姓名不能为空"), "顾客姓名为空也可创建成功");
             //不填意向车型
             JSONObject response1 = crm.customerCreate("望京", customerLevel, phone, "", "", remark);
             Preconditions.checkArgument(response1.getString("message").equals("意向车型不能为空"), "意向车型不存在也可创建成功");
             //不填电话
-            JSONObject response2 = crm.customerCreate("望京", customerLevel, "", car.getModelId(), car.getStyleId(), remark);
+            JSONObject response2 = crm.customerCreate("望京", customerLevel, "", carModule, car.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("顾客手机号不能为空"), "顾客手机号为空也可创建成功");
             //不填客户级别
-            JSONObject response3 = crm.customerCreate("望京", "", phone, car.getModelId(), car.getStyleId(), remark);
+            JSONObject response3 = crm.customerCreate("望京", "", phone, carModule, car.getStyleId(), remark);
             Preconditions.checkArgument(response3.getString("message").equals("顾客等级不能为空"), "顾客等级为空也可创建成功");
             //不填备注
-            JSONObject response4 = crm.customerCreate("望京", customerLevel, phone, car.getModelId(), car.getStyleId(), "");
+            JSONObject response4 = crm.customerCreate("望京", customerLevel, phone, carModule, car.getStyleId(), "");
             Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -326,11 +329,11 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                 break;
             }
             //创建存在的电话号
-            JSONObject response = crm.customerCreate(name, customerLevel, customerPhone, car.getModelId(), car.getStyleId(), remark);
+            JSONObject response = crm.customerCreate(name, customerLevel, customerPhone, carModule, car.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("当前手机号已被使用！请重新输入"), "手机号码重复也可创建成功");
             //备注长度201
             String phone = getDistinctPhone();
-            JSONObject response1 = crm.customerCreate(name, customerLevel, phone, car.getModelId(), car.getStyleId(), remarks);
+            JSONObject response1 = crm.customerCreate(name, customerLevel, phone, carModule, car.getStyleId(), remarks);
             Preconditions.checkArgument(response1.getString("message").equals("备注信息20-200字之间"), "备注信息超过200字也可创建成功");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -426,7 +429,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.ANSWER, "已完成");
+            returnVisitTask(EnumReturnVisitResult.ANSWER.getType(), "已完成");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -438,7 +441,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.OTHER, "已完成");
+            returnVisitTask(EnumReturnVisitResult.OTHER.getType(), "已完成");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -450,7 +453,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.NO_ONE_ANSWER, "未完成");
+            returnVisitTask(EnumReturnVisitResult.NO_ONE_ANSWER.getType(), "未完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -462,7 +465,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.HANG_UP, "未完成");
+            returnVisitTask(EnumReturnVisitResult.HANG_UP.getType(), "未完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -470,15 +473,15 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为售后联系,是否完成=未完成")
+    @Test(description = "销售--回访任务--回访结果为稍后联系,是否完成=未完成")
     public void returnVisit_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.CONTACT_LATER, "未完成");
+            returnVisitTask(EnumReturnVisitResult.CONTACT_LATER.getType(), "未完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售--回访任务--回访结果为售后联系,是否完成=未完成");
+            saveData("销售--回访任务--回访结果为稍后联系,是否完成=未完成");
         }
     }
 
@@ -486,7 +489,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumReturnVisitResult.WRONG_NUMBER, "已完成");
+            returnVisitTask(EnumReturnVisitResult.WRONG_NUMBER.getType(), "已完成");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -500,31 +503,39 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
      * @param result     回访结果
      * @param isComplete 是否完成
      */
-    private void returnVisitTask(EnumReturnVisitResult result, String isComplete) {
+    private void returnVisitTask(String result, String isComplete) {
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String preBuyCarTime = DateTimeUtil.dateToStamp(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
-        JSONObject response = crm.returnVisitTaskPage(1, 10);
-        int taskId = CommonUtil.getIntField(response, 0, "task_id");
-        //回访
-        crm.returnVisitTaskExecute(common, "", "", false, date, "", preBuyCarTime, result.getType(), String.valueOf(taskId), picture);
-        CommonUtil.valueView(taskId);
-        //验证是否完成
-        String taskStatusName = null;
-        int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.returnVisitTaskPage(i, 100).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getInteger("task_id") == taskId) {
-                    taskStatusName = list.getJSONObject(j).getString("task_status_name");
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("return_visit_pic", picture);
+        array.add(object);
+        JSONArray list = crm.returnVisitTaskPage(1, 10).getJSONArray("list");
+        if (list.getJSONObject(0).getString("task_status_name").equals("未完成")) {
+            int taskId = list.getJSONObject(0).getInteger("task_id");
+            IScene scene = ReturnVisitTaskExecuteScene.builder().returnVisitPic(array).comment(comment)
+                    .nextReturnVisitDate(date).preBuyCarTime(preBuyCarTime).returnVisitResult(result)
+                    .taskId(String.valueOf(taskId)).build();
+            crm.invokeApi(scene, true);
+            String taskStatusName = null;
+            int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int j = 1; j < s; j++) {
+                JSONArray list1 = crm.returnVisitTaskPage(j, 100).getJSONArray("list");
+                for (int x = 0; x < list1.size(); x++) {
+                    if (list1.getJSONObject(x).getInteger("task_id") == taskId) {
+                        taskStatusName = list1.getJSONObject(x).getString("task_status_name");
+                    }
                 }
             }
+            CommonUtil.valueView(taskStatusName);
+            Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals(isComplete), "完成回访后,是否完成状态为" + taskStatusName);
+        } else {
+            CommonUtil.warning("没有回访任务");
         }
-        CommonUtil.valueView(taskStatusName);
-        Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals(isComplete), "完成回访后,是否完成状态为" + taskStatusName);
     }
 
     @Test(description = "销售--回访任务--回访结果为战败，战败原因为他店购车，是否完成=已完成")
@@ -573,28 +584,37 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     private void returnVisitTask(EnumFailureCause failureCause, String failureCauseRemark, String otherStoreCarType) {
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String preBuyCarTime = DateTimeUtil.dateToStamp(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
-        JSONObject response = crm.returnVisitTaskPage(1, 10);
-        int taskId = CommonUtil.getIntField(response, 0, "task_id");
-        //回访
-        crm.returnVisitTaskExecute(common, failureCause.getCause(), failureCauseRemark, false, date,
-                otherStoreCarType, preBuyCarTime, EnumReturnVisitResult.FAILURE.getType(), String.valueOf(taskId), picture);
-        CommonUtil.valueView(taskId);
-        String taskStatusName = null;
-        int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.returnVisitTaskPage(i, 100).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getInteger("task_id") == taskId) {
-                    taskStatusName = list.getJSONObject(j).getString("task_status_name");
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("return_visit_pic", picture);
+        array.add(object);
+        JSONArray list = crm.returnVisitTaskPage(1, 10).getJSONArray("list");
+        if (list.getJSONObject(0).getString("task_status_name").equals("未完成")) {
+            int taskId = list.getJSONObject(0).getInteger("task_id");
+            IScene scene = ReturnVisitTaskExecuteScene.builder().returnVisitPic(array).comment(comment)
+                    .nextReturnVisitDate(date).preBuyCarTime(preBuyCarTime).returnVisitResult(EnumReturnVisitResult.FAILURE.getType())
+                    .taskId(String.valueOf(taskId)).failureCause(failureCause.getCause())
+                    .failureCauseRemark(failureCauseRemark).otherStoreCarType(otherStoreCarType).build();
+            crm.invokeApi(scene, true);
+            String taskStatusName = null;
+            int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int j = 1; j < s; j++) {
+                JSONArray list1 = crm.returnVisitTaskPage(j, 100).getJSONArray("list");
+                for (int x = 0; x < list1.size(); x++) {
+                    if (list1.getJSONObject(x).getInteger("task_id") == taskId) {
+                        taskStatusName = list1.getJSONObject(x).getString("task_status_name");
+                    }
                 }
             }
+            CommonUtil.valueView(taskStatusName);
+            Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
+        } else {
+            CommonUtil.warning("没有回访任务");
         }
-        CommonUtil.valueView(taskStatusName);
-        Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
     }
 
     @Test(description = "销售--回访任务--回访记录内容包含汉字、英文、数字、符号、10-200字，回访成功")
@@ -695,11 +715,6 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("销售--回访任务排序，一级：未完成在上，已完成在下");
         }
-    }
-
-    @Test(description = "销售--回访任务排序，二级：相同状态时间倒序排列", enabled = false)
-    public void returnVisit_system_17() {
-
     }
 
     @Test(description = "销售--回访任务，联系电话为11位数字、非空")

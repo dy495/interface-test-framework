@@ -437,7 +437,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(fw);
-            JSONObject list = crm.afterSale_custTotal();
+            JSONObject list = crm.receptionAfterCustomerTotal();
             //统计数据-今日接待售后数量
             int todayTotal = list.getInteger("today_reception_total");
             //统计数据-今日新增售后数量
@@ -451,7 +451,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和",enabled = false)
+    @Test(description = "售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和", enabled = false)
     public void afterSale_customer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -525,11 +525,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_returnVisit_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = crm.afterSale_VisitRecordList(1, 10, "", "", "").getInteger("total");
+            int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
             int listSize = 0;
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     listSize++;
                 }
@@ -546,9 +546,8 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--回访任务--今日回访=任务日期为今天的条数")
     public void afterSale_returnVisit_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
         try {
-            JSONObject response = crm.afterSale_VisitRecordList(1, 100, "", date, date);
+            JSONObject response = crm.returnVisitRecordAfterSalePage(1, 100, "");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int listSize = response.getJSONArray("list").size();
             CommonUtil.valueView(todayReturnVisitNumber, listSize);
@@ -564,7 +563,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_returnVisit_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONObject response = crm.returnVisitRecordAfterSalePage(1, 10, "");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int total = response.getInteger("total");
             Preconditions.checkArgument(total >= todayReturnVisitNumber, "服务--全部回访<今日回访");
@@ -578,19 +577,17 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--回访任务--回访任务日期为今天的回访任务，是否完成=已完成")
     public void afterSale_returnVisit_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -10);
-        String endDate = DateTimeUtil.getFormat(new Date());
         try {
             String returnVisitStatusName = null;
             //创造一个当天的回访任务
-            createReturnVisitTask(startDate, endDate, "售后回访");
+            createReturnVisitTask("售后回访");
             //回访当天任务
-            int id = createReturnVisitTask(endDate, endDate, "售后回访");
+            int id = createReturnVisitTask("售后回访");
             if (id != 0) {
-                int total = crm.afterSale_VisitRecordList(1, 10, "", endDate, endDate).getInteger("total");
+                int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
                 int s = CommonUtil.getTurningPage(total, size);
                 for (int i = 1; i < s; i++) {
-                    JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                    JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         if (list.getJSONObject(j).getInteger("id") == id) {
                             returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
@@ -610,14 +607,13 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--回访任务--回访任务日期为昨天的回访任务，是否完成=已完成")
     public void afterSale_returnVisit_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
             String returnVisitStatusName = null;
-            int id = createReturnVisitTask("", date, "售后回访");
-            int total = crm.afterSale_VisitRecordList(1, 10, "", "", "").getInteger("total");
+            int id = createReturnVisitTask("售后回访");
+            int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     if (list.getJSONObject(j).getInteger("id") == id) {
                         returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
@@ -641,13 +637,13 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         String customerName = "门徒";
         String customerPhoneNumber = "15321527989";
         try {
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONObject response = crm.returnVisitRecordAfterSalePage(1, 10, "");
             int total = response.getInteger("total");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int s = CommonUtil.getTurningPage(total, size);
             int listSize = 0;
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     listSize++;
                 }
@@ -657,13 +653,13 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             int id = getTimeId(date);
             crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, date, "", (long) id);
             UserUtil.login(zjl);
-            JSONObject response1 = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONObject response1 = crm.returnVisitRecordAfterSalePage(1, 10, "");
             int total1 = response1.getInteger("total");
             int todayReturnVisitNumber1 = response1.getInteger("today_return_visit_number");
             int s1 = CommonUtil.getTurningPage(total, size);
             int listSize1 = 0;
             for (int i = 1; i < s1; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     listSize1++;
                 }
@@ -684,13 +680,13 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(zjl);
-            JSONObject response = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONObject response = crm.returnVisitRecordAfterSalePage(1, 10, "");
             int total = response.getInteger("total");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             int s = CommonUtil.getTurningPage(total, size);
             int listSize = 0;
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     listSize++;
                 }
@@ -701,13 +697,13 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);
-            JSONObject response1 = crm.afterSale_VisitRecordList(1, 10, "", "", "");
+            JSONObject response1 = crm.returnVisitRecordAfterSalePage(1, 10, "");
             int total1 = response1.getInteger("total");
             int todayReturnVisitNumber1 = response1.getInteger("today_return_visit_number");
             int s1 = CommonUtil.getTurningPage(total, size);
             int listSize1 = 0;
             for (int i = 1; i < s1; i++) {
-                JSONArray list = crm.afterSale_VisitRecordList(i, size, "", "", "").getJSONArray("list");
+                JSONArray list = crm.returnVisitRecordAfterSalePage(i, size, "").getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     listSize1++;
                 }
@@ -760,12 +756,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         try {
             UserUtil.login(zjl);
             //1.全部回访=列表条数
-            JSONObject obj = crm.afterSale_firstmMaintainRecordList(1, 50, "", "", "");
+            JSONObject obj = crm.firstMaintainRecordPage(1, 50, "");
             Integer total = obj.getInteger("total");//全部回访条数
             int pages = obj.getInteger("pages");
             int listTotal = 0;//列表的条数
             for (int page = 1; page <= pages; page++) {
-                JSONArray list1 = crm.afterSale_firstmMaintainRecordList(page, 50, "", "", "").getJSONArray("list");
+                JSONArray list1 = crm.firstMaintainRecordPage(page, 50, "").getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
                     Integer id = list1.getJSONObject(j).getInteger("id");
                     if (id != null) {
@@ -774,12 +770,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //2.今日回访=任务日期为今天的条数
-            JSONObject obj1 = crm.afterSale_firstmMaintainRecordList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
+            JSONObject obj1 = crm.firstMaintainRecordPage(1, 50, "");
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
             int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
             for (int i = 1; i <= pages1; i++) {
-                JSONArray todayList = crm.afterSale_firstmMaintainRecordList(i, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+                JSONArray todayList = crm.firstMaintainRecordPage(i, 50, "").getJSONArray("list");
                 for (int k = 0; k < todayList.size(); k++) {
                     Integer id = todayList.getJSONObject(k).getInteger("id");
                     if (id != null) {
@@ -808,7 +804,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            JSONObject response = crm.afterSale_firstmMaintainRecordList(1, 10, "", date, date);
+            JSONObject response = crm.firstMaintainRecordPage(1, 10, "");
             int total = response.getInteger("total");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             CommonUtil.valueView(total, todayReturnVisitNumber);
@@ -823,19 +819,15 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--任务管理--首保提醒--回访任务日期为今天的回访任务，是否完成=已完成")
     public void afterSale_appointment_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -200);
-        String endDate = DateTimeUtil.getFormat(new Date());
         try {
             String returnVisitStatusName = null;
-            //创造一个当天的回访任务
-            createReturnVisitTask(startDate, endDate, "首保提醒");
             //回访当天任务
-            int id = createReturnVisitTask(endDate, endDate, "首保提醒");
+            int id = createReturnVisitTask("首保提醒");
             if (id != 0) {
-                int total = crm.afterSale_firstmMaintainRecordList(1, 10, "", endDate, endDate).getInteger("total");
+                int total = crm.firstMaintainRecordPage(1, 10, "").getInteger("total");
                 int s = CommonUtil.getTurningPage(total, size);
                 for (int i = 1; i < s; i++) {
-                    JSONArray list = crm.afterSale_firstmMaintainRecordList(i, size, "", "", "").getJSONArray("list");
+                    JSONArray list = crm.firstMaintainRecordPage(i, size, "").getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         if (list.getJSONObject(j).getInteger("id") == id) {
                             returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
@@ -852,46 +844,17 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--回访任务--首保提醒--回访任务日期为今天之前的回访任务，是否完成=未完成")
-    public void afterSale_appointment_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
-        try {
-            String returnVisitStatusName = null;
-            int id = createReturnVisitTask("", date, "首保提醒");
-            if (id != 0) {
-                int total = crm.afterSale_firstmMaintainRecordList(1, 10, "", "", "").getInteger("total");
-                int s = CommonUtil.getTurningPage(total, size);
-                for (int i = 1; i < s; i++) {
-                    JSONArray list = crm.afterSale_firstmMaintainRecordList(i, size, "", "", "").getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        if (list.getJSONObject(j).getInteger("id") == id) {
-                            returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
-                        }
-                    }
-                }
-                CommonUtil.valueView(returnVisitStatusName);
-                assert returnVisitStatusName != null;
-                Preconditions.checkArgument(returnVisitStatusName.equals("未完成"), "回访任务日期为今天的回访任务，是否完成!=未完成");
-            }
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("售后--回访任务--首保提醒--回访任务日期为今天之前的回访任务，是否完成=未完成");
-        }
-    }
-
     @Test(description = "售后--任务管理--流失预警--全部回访=列表条数&&今日回访=任务日期为今天的条数&&全部回访>=今日回访")
     public void afterSale_appointment_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //1.全部回访=列表条数
-            JSONObject obj = crm.afterSale_customerChurnWarningList(1, 50, "", "", "");
+            JSONObject obj = crm.customerChurnWarningPage(1, 50, "");
             Integer total = obj.getInteger("total");//全部回访条数
             int pages = obj.getInteger("pages");
             int listTotal = 0;//列表的条数
             for (int page = 1; page <= pages; page++) {
-                JSONArray list1 = crm.afterSale_customerChurnWarningList(1, 50, "", "", "").getJSONArray("list");
+                JSONArray list1 = crm.customerChurnWarningPage(1, 50, "").getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
                     Integer id = list1.getJSONObject(j).getInteger("id");
                     if (id != null) {
@@ -900,12 +863,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //2.今日回访=任务日期为今天的条数
-            JSONObject obj1 = crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0));
+            JSONObject obj1 = crm.customerChurnWarningPage(1, 50, "");
             Integer todayViNum = obj1.getInteger("today_return_visit_number");//获取今日回访条数
             int pages1 = obj.getInteger("pages");
             int todayListTotal = 0;
             for (int i = 1; i <= pages1; i++) {
-                JSONArray todayList = crm.afterSale_customerChurnWarningList(1, 50, "", dt.getHistoryDate(0), dt.getHistoryDate(0)).getJSONArray("list");
+                JSONArray todayList = crm.customerChurnWarningPage(1, 50, "").getJSONArray("list");
                 for (int k = 0; k < todayList.size(); k++) {
                     Integer id = todayList.getJSONObject(k).getInteger("id");
                     if (id != null) {
@@ -934,7 +897,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            JSONObject response = crm.afterSale_customerChurnWarningList(1, 10, "", date, date);
+            JSONObject response = crm.customerChurnWarningPage(1, 10, "");
             int total = response.getInteger("total");
             int todayReturnVisitNumber = response.getInteger("today_return_visit_number");
             CommonUtil.valueView(total, todayReturnVisitNumber);
@@ -949,19 +912,15 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--任务管理--流失预警--回访任务日期为今天的回访任务，是否完成=已完成")
     public void afterSale_appointment_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
-        String startDate = DateTimeUtil.addDayFormat(new Date(), -200);
-        String endDate = DateTimeUtil.getFormat(new Date());
         try {
             String returnVisitStatusName = null;
-            //创造一个当天的回访任务
-            createReturnVisitTask(startDate, endDate, "流失预警");
             //回访当天任务
-            int id = createReturnVisitTask(endDate, endDate, "流失预警");
+            int id = createReturnVisitTask("流失预警");
             if (id != 0) {
-                int total = crm.afterSale_customerChurnWarningList(1, 10, "", endDate, endDate).getInteger("total");
+                int total = crm.customerChurnWarningPage(1, 10, "").getInteger("total");
                 int s = CommonUtil.getTurningPage(total, size);
                 for (int i = 1; i < s; i++) {
-                    JSONArray list = crm.afterSale_customerChurnWarningList(i, size, "", "", "").getJSONArray("list");
+                    JSONArray list = crm.customerChurnWarningPage(i, size, "").getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         if (list.getJSONObject(j).getInteger("id") == id) {
                             returnVisitStatusName = list.getJSONObject(j).getString("return_visit_status_name");
@@ -1447,7 +1406,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--首保提醒回访--不填必填参数")
     public void afterSale_returnVisit_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
@@ -1456,7 +1415,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message.equals("回访截图不可为空"), "首保提醒回访截图为空也可回访成功");
             String message1 = returnVisit("首保提醒", picture, "", date);
             Preconditions.checkArgument(message1.equals("回访描述不能为空"), "首保提醒回访描述为空也可回访成功");
-//            String message2 = returnVisit("首保提醒", picture, comment, "");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1467,7 +1425,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--流失预警回访--不填必填参数")
     public void afterSale_returnVisit_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
@@ -1476,7 +1434,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message.equals("回访截图不可为空"), "流失预警回访截图为空也可回访成功");
             String message1 = returnVisit("流失预警", picture, "", date);
             Preconditions.checkArgument(message1.equals("回访描述不能为空"), "流失预警回访描述为空也可回访成功");
-//            String message2 = returnVisit("流失预警", picture, comment, "");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1654,42 +1611,27 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建一个当天回访任务
-     *
-     * @param startDay 开始时间
-     * @param endDay   结束时间
+     * 回访
      */
-    private int createReturnVisitTask(String startDay, String endDay, String type) {
-        String date = DateTimeUtil.getFormat(new Date());
+    private int createReturnVisitTask(String type) {
+        String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
         JSONObject response;
         switch (type) {
             case "首保提醒":
-                response = crm.afterSale_firstmMaintainRecordList(1, 10, "", startDay, endDay);
+                response = crm.firstMaintainRecordPage(1, 10, "");
                 break;
             case "流失预警":
-                response = crm.afterSale_customerChurnWarningList(1, 10, "", startDay, endDay);
+                response = crm.customerChurnWarningPage(1, 10, "");
                 break;
             default:
-                response = crm.afterSale_VisitRecordList(1, 10, "", startDay, endDay);
+                response = crm.returnVisitRecordAfterSalePage(1, 10, "");
         }
-        int total = response.getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
+        JSONArray list = response.getJSONArray("list");
         int id = 0;
-        JSONArray list;
-        for (int i = 1; i < s; i++) {
-            switch (type) {
-                case "首保提醒":
-                    list = crm.afterSale_firstmMaintainRecordList(i, size, "", startDay, endDay).getJSONArray("list");
-                    break;
-                case "流失预警":
-                    list = crm.afterSale_customerChurnWarningList(i, size, "", startDay, endDay).getJSONArray("list");
-                    break;
-                default:
-                    list = crm.afterSale_VisitRecordList(i, size, "", startDay, endDay).getJSONArray("list");
-            }
+        if (list.size() > 0) {
             for (int j = 0; j < list.size(); j++) {
                 if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {
                     id = list.getJSONObject(j).getInteger("id");
@@ -1704,34 +1646,20 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     private String returnVisit(String type, String picture, String comment, String date) {
-        String endDay = DateTimeUtil.getFormat(new Date());
-        String startDay = DateTimeUtil.addDayFormat(new Date(), -200);
         JSONObject response;
         switch (type) {
             case "首保提醒":
-                response = crm.afterSale_firstmMaintainRecordList(1, 10, "", startDay, endDay);
+                response = crm.firstMaintainRecordPage(1, 10, "");
                 break;
             case "流失预警":
-                response = crm.afterSale_customerChurnWarningList(1, 10, "", startDay, endDay);
+                response = crm.customerChurnWarningPage(1, 10, "");
                 break;
             default:
-                response = crm.afterSale_VisitRecordList(1, 10, "", startDay, endDay);
+                response = crm.returnVisitRecordAfterSalePage(1, 10, "");
         }
-        int total = response.getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
+        JSONArray list = response.getJSONArray("list");
         int id = 0;
-        JSONArray list;
-        for (int i = 1; i < s; i++) {
-            switch (type) {
-                case "首保提醒":
-                    list = crm.afterSale_firstmMaintainRecordList(i, size, "", startDay, endDay).getJSONArray("list");
-                    break;
-                case "流失预警":
-                    list = crm.afterSale_customerChurnWarningList(i, size, "", startDay, endDay).getJSONArray("list");
-                    break;
-                default:
-                    list = crm.afterSale_VisitRecordList(i, size, "", startDay, endDay).getJSONArray("list");
-            }
+        if (list.size() > 0) {
             for (int j = 0; j < list.size(); j++) {
                 if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {
                     id = list.getJSONObject(j).getInteger("id");

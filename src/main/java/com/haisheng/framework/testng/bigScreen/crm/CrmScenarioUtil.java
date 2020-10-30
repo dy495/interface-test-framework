@@ -2886,62 +2886,40 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object, false);
     }
 
-    //售后：查看回访列表
-    public JSONObject afterSale_VisitRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
+    //售后：首保提醒列表
+    public JSONObject firstMaintainRecordPage(int page, int size, String searchNamePhone) {
+        String url = "/porsche/app/return-visit-record/first-maintain-record/page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        if (!StringUtils.isEmpty(searchNamePhone)) {
+            object.put("search_name_phone", searchNamePhone);
+        }
+        return invokeApi(url, object, true);
+    }
+
+    //售后：流失预警列表
+    public JSONObject customerChurnWarningPage(int page, int size, String searchNamePhone) {
+        String url = "/porsche/app/return-visit-record/customer-churn-warning/page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        if (!StringUtils.isEmpty(searchNamePhone)) {
+            object.put("search_name_phone", searchNamePhone);
+        }
+        return invokeApi(url, object, true);
+    }
+
+    //回访列表
+    public JSONObject returnVisitRecordAfterSalePage(int page, int size, String searchNamePhone) {
         String url = "/porsche/app/return-visit-record/after-sale/page";
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        if (!StringUtils.isEmpty(search_name_phone)) {
-            object.put("search_name_phone", search_name_phone);
+        if (!StringUtils.isEmpty(searchNamePhone)) {
+            object.put("search_name_phone", searchNamePhone);
         }
-        if (!StringUtils.isEmpty(search_start_day)) {
-            object.put("search_start_day", search_start_day);
-        }
-        if (!StringUtils.isEmpty(search_end_day)) {
-            object.put("search_end_day", search_end_day);
-        }
-        return invokeApi(url, object);
-    }
-
-    //售后：首保提醒列表
-    public JSONObject afterSale_firstmMaintainRecordList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
-        String url = "/porsche/app/return-visit-record/first-maintain-record/page";
-        JSONObject json1 = new JSONObject();
-        json1.put("page", page);
-        json1.put("size", size);
-        if (!StringUtils.isEmpty(search_name_phone)) {
-            json1.put("search_name_phone", search_name_phone);
-        }
-        if (!StringUtils.isEmpty(search_start_day)) {
-            json1.put("search_start_day", search_start_day);
-        }
-        if (!StringUtils.isEmpty(search_end_day)) {
-            json1.put("search_end_day", search_end_day);
-        }
-        String json = json1.toJSONString();
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    //售后：流失预警列表
-    public JSONObject afterSale_customerChurnWarningList(int page, int size, String search_name_phone, String search_start_day, String search_end_day) {
-        String url = "/porsche/app/return-visit-record/customer-churn-warning/page";
-        JSONObject json1 = new JSONObject();
-        json1.put("page", page);
-        json1.put("size", size);
-        if (!StringUtils.isEmpty(search_name_phone)) {
-            json1.put("search_name_phone", search_name_phone);
-        }
-        if (!StringUtils.isEmpty(search_start_day)) {
-            json1.put("search_start_day", search_start_day);
-        }
-        if (!StringUtils.isEmpty(search_end_day)) {
-            json1.put("search_end_day", search_end_day);
-        }
-        String json = json1.toJSONString();
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return invokeApi(url, object, true);
     }
 
     //活动：添加报名人信息
@@ -2975,16 +2953,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String json = json1.toJSONString();
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res).getLong("code");
-    }
-
-    //活动：活动报名人数
-    public JSONObject TaskInfo(Long activity_task_id, String customer_phone_number) throws Exception {
-        String url = "/porsche/app/activity-task/info";
-        JSONObject json1 = new JSONObject();
-        json1.put("activity_task_id", activity_task_id);
-        json1.put("customer_phone_number", customer_phone_number);
-        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
     }
 
     //人员管理-销售顾问列表
