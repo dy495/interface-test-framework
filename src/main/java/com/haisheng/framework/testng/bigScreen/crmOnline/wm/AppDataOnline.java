@@ -175,7 +175,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "今日老客接待=接待日期为今天 客户类型为老客的手机号去重数量")
+    @Test(description = "今日老客接待=接待日期为今天 客户类型为老客的手机号去重数量", enabled = false)
     public void myReception_data_7() {
         logger.info(caseResult.getCaseName());
         try {
@@ -202,7 +202,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
+//            saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
         }
     }
 
@@ -387,7 +387,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             String phone = getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
-            crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), "2", phone, "82", car.getStyleId(), customerInfo.getRemark());
             int total1 = crm.customerPage(1, 10, "", "", "").getInteger("total");
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
@@ -529,7 +529,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //创建
             String customerPhone = getDistinctPhone();
             UserUtil.login(newXs);
-            crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
+            crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, "82", car.getStyleId(), customerInfo.getRemark());
             //删除此新增的顾问
             deleteSaleUser(salePhone);
             //公海数量+1

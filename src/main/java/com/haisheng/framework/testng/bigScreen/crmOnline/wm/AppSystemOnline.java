@@ -11,6 +11,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailureCause;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerDccListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -63,7 +65,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        UserUtil.login(xs);
+        UserUtil.login(zjl);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -144,16 +146,19 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         String endDate = DateTimeUtil.getFormat(new Date());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
         try {
-            JSONArray list = crm.dccList("", "", "", "", 1, 100).getJSONArray("list");
+            UserUtil.login(zjl);
+            IScene scene = CustomerDccListScene.builder().build();
+            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
             String customerName = list.getJSONObject(0).getString("customer_name");
             String customerPhone = list.getJSONObject(0).getString("customer_phone");
-            int total = crm.dccList(customerName.substring(0, 1), "", "", "", "1", "10").getInteger("total");
-            int total1 = crm.dccList(customerPhone.substring(0, 3), "", "", "", "1", "10").getInteger("total");
-            int total2 = crm.dccList("", "", startDate, endDate, "1", "10").getInteger("total");
-            int total3 = crm.dccList(customerName.substring(0, 1), "", startDate, endDate, "1", "10").getInteger("total");
-            int total4 = crm.dccList(customerPhone.substring(0, 3), "", startDate, endDate, "1", "10").getInteger("total");
-            int total5 = crm.dccList("", "", "", "", "1", "10").getInteger("total");
-            int total6 = crm.dccList("", String.valueOf(EnumCustomerLevel.C.getId()), "", "", "1", "10").getInteger("total");
+            CommonUtil.valueView(customerName, customerPhone);
+            int total = crm.invokeApi(CustomerDccListScene.builder().searchCondition(customerName.substring(0, 1)).build()).getInteger("total");
+            int total1 = crm.invokeApi(CustomerDccListScene.builder().searchCondition(customerPhone.substring(0, 3)).build()).getInteger("total");
+            int total2 = crm.invokeApi(CustomerDccListScene.builder().startTime(startDate).endTime(endDate).build()).getInteger("total");
+            int total3 = crm.invokeApi(CustomerDccListScene.builder().searchCondition(customerName.substring(0, 3)).startTime(startDate).endTime(endDate).build()).getInteger("total");
+            int total4 = crm.invokeApi(CustomerDccListScene.builder().searchCondition(customerPhone.substring(0, 3)).startTime(startDate).endTime(endDate).build()).getInteger("total");
+            int total5 = crm.invokeApi(CustomerDccListScene.builder().build()).getInteger("total");
+            int total6 = crm.invokeApi(CustomerDccListScene.builder().customerLevel(String.valueOf(EnumCustomerLevel.C.getId())).build()).getInteger("total");
             Preconditions.checkArgument(total > 0, "dcc客户按照客户名称模糊搜索失败");
             Preconditions.checkArgument(total1 > 0, "dcc客户按照电话模糊搜索失败");
             Preconditions.checkArgument(total2 > 0, "按照日期筛选，开始时间<=结束时间失败");
@@ -175,14 +180,15 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -180);
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
         try {
-            int total = crm.dccList("$qqwqsss", "", "", "", "1", "10").getInteger("total");
-            int total1 = crm.dccList("11158585858", "", "", "", "1", "10").getInteger("total");
-            int total2 = crm.dccList("", String.valueOf(EnumCustomerLevel.O.getId()), "", "", "1", "10").getInteger("total");
-            int total3 = crm.dccList("", "", endDate, startDate, "1", "10").getInteger("total");
-            int total4 = crm.dccList("139", "", date, "", "1", "10").getInteger("total");
-            int total5 = crm.dccList("111", "", date, "", "1", "10").getInteger("total");
-            int total6 = crm.dccList("啦", "", date, "", "1", "10").getInteger("total");
-            int total7 = crm.dccList("$", "", date, "", "1", "10").getInteger("total");
+            UserUtil.login(zjl);
+            int total = crm.invokeApi(CustomerDccListScene.builder().searchCondition("$qqwqsss").build()).getInteger("total");
+            int total1 = crm.invokeApi(CustomerDccListScene.builder().searchCondition("11158585858").build()).getInteger("total");
+            int total2 = crm.invokeApi(CustomerDccListScene.builder().customerLevel(String.valueOf(EnumCustomerLevel.O.getId())).build()).getInteger("total");
+            int total3 = crm.invokeApi(CustomerDccListScene.builder().startTime(endDate).endTime(startDate).build()).getInteger("total");
+            int total4 = crm.invokeApi(CustomerDccListScene.builder().searchCondition("139").startTime(date).build()).getInteger("total");
+            int total5 = crm.invokeApi(CustomerDccListScene.builder().searchCondition("111").startTime(date).build()).getInteger("total");
+            int total6 = crm.invokeApi(CustomerDccListScene.builder().searchCondition("啦").startTime(date).build()).getInteger("total");
+            int total7 = crm.invokeApi(CustomerDccListScene.builder().searchCondition("$").startTime(date).build()).getInteger("total");
             Preconditions.checkArgument(total == 0, "查询不存在的用户查出了结果");
             Preconditions.checkArgument(total1 == 0, "查询不存在的联系电话查出了结果");
             Preconditions.checkArgument(total2 == 0, "查询不存在的等级查出了结果");
@@ -209,16 +215,16 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         String str = "!@#$%^&*()12345678历史记录计算机asdfghj";
         try {
             //汉字，10字之内
-            JSONObject response = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response = crm.customerCreate(name, customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response.getString("message").equals("成功"), "客户姓名为汉字，长度1-10个字内创建线索失败");
             //汉字，1字
-            JSONObject response1 = crm.customerCreate("王", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response1 = crm.customerCreate("王", customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response1.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
             //汉字，10个字
-            JSONObject response2 = crm.customerCreate("我的名字十个字不信你数", customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), remark);
+            JSONObject response2 = crm.customerCreate("我的名字十个字不信你数", customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), remark);
             Preconditions.checkArgument(response2.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
             //备注包含中英文、汉字、符号、数字
-            JSONObject response3 = crm.customerCreate(name, customerLevel, getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), str);
+            JSONObject response3 = crm.customerCreate(name, customerLevel, getDistinctPhone(), "82", carModel.getStyleId(), str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -525,7 +531,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            returnVisitTask(EnumFailureCause.OTHER_STORE_PURCHASE_CAR, "", EnumCarModel.PANAMERA.getModelId());
+            returnVisitTask(EnumFailureCause.OTHER_STORE_PURCHASE_CAR, "", "82");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -663,7 +669,6 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     public void returnVisit_system_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            UserUtil.login(xs);
             int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
             int x = 0;

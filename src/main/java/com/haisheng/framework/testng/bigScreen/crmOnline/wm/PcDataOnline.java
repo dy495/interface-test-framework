@@ -183,10 +183,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         try {
+            UserUtil.login(xs);
             String phone = getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
+            crm.customerCreate(name, "14", phone, "82", car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
