@@ -951,7 +951,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "售后--活动任务--活动信息与运营中心发布文章时信息一致")
+    @Test(description = "售后--活动任务--活动信息与运营中心发布文章时信息一致", enabled = false)
     public void afterSale_activity_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

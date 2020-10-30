@@ -167,7 +167,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             }
             int s = ss - set.size();
             CommonUtil.valueView(todayNewCustomer, ss, s);
-            Preconditions.checkArgument(todayNewCustomer == ss - s, "今日新客接待!=接待日期为今天 客户类型为新客的手机号去重数量");
+            Preconditions.checkArgument(todayNewCustomer == ss - s, "今日新客接待" + todayNewCustomer + "接待日期为今天 客户类型为新客的手机号去重数量" + (ss - s));
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
@@ -269,7 +269,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(todayDeliverCarTotal, set.size());
-            Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数!=今日交车列表手机号去重后列数和");
+            Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数" + todayDeliverCarTotal + "今日交车列表手机号去重后列数和" + set.size());
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
