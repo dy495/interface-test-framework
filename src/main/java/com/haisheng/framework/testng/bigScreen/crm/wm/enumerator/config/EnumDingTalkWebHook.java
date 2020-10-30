@@ -10,7 +10,7 @@ import lombok.Getter;
  * @date 2020/7/24 15:17
  */
 public enum EnumDingTalkWebHook {
-    BA("https://oapi.dingtalk.com/robot/send?access_token=cd982c04607c4f502d984b5bea63534ecfc3bf73b94e6dd2402b108f9736a13a"),
+    BA("https://oapi.dingtalk.com/robot/send?access_token=6fd0c40f21aa0f06cce8bbd94daf20875659b19f17fa84446deef5b9810d870a"),
     QA_TEST_GRP(DingWebhook.QA_TEST_GRP),
     CAR_OPEN_MANAGEMENT_PLATFORM_GRP(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP),
     ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP),

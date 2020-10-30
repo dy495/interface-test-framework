@@ -1,10 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.container;
 
 public class ContainerConstants {
+
     /**
      * INSERT标识，增加一个空格，防止以关键词命名的开头字段
      */
     public static final String INSERT = "insert ";
+
     /**
      * DELETE标识，增加一个空格，防止以关键词命名的开头字段
      */

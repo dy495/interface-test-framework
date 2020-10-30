@@ -225,7 +225,7 @@ public class PublicMethodOnline {
      */
     public void appointment(EnumAppointmentType type, String date) {
         EnumCarModel carModel = EnumCarModel.PANAMERA;
-        UserUtil.loginApplet(EnumAppletCode.XMF);
+        UserUtil.loginApplet(EnumAppletCode.WM_ONLINE);
         int id = getTimeId(type.getType(), date);
         IScene scene;
         switch (type) {
