@@ -686,50 +686,6 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "前台分配新客含人脸接待列表+1",enabled = false)
-    public void qtFenpei() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            finishReceive fr=new finishReceive();
-            crm.login(pp.qiantai, pp.adminpassword);
-            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
-
-            fr.name = "auto" + dt.getHHmm(0);
-            String phone = pf.genPhoneNum();
-            //获取当前空闲第一位销售id
-            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-            String userLoginName = pf.username(sale_id);
-            boolean isDes = true;
-            JSONObject list = new JSONObject();
-            JSONArray ll = new JSONArray();
-            list.put("customer_name", fr.name);
-            list.put("is_decision", isDes);
-            ll.add(0, list);
-
-            //创建接待
-            crm.creatReception2("FIRST_VISIT", ll);
-            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
-            crm.login(userLoginName, pp.adminpassword);
-
-            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
-            fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
-            fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
-            fr.phoneList =pf.phoneList(phone,"");
-            fr.belongs_sale_id=sale_id;
-            fr.reception_type="FU";
-            crm.finishReception3(fr);
-            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            crm.login(pp.qiantai, pp.qtpassword);
-            saveData("销售总监修改客户联系方式1，成功验证 ");
-        }
-    }
-
     @Test(description = "前台分配新客不含人脸接待列表+1")
     public void qtFenpei2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -764,5 +720,99 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "前台分配新客含人脸接待列表+1",enabled = false)  //失败
+    public void qtFenpei(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            finishReceive fr=new finishReceive();
+            crm.login(pp.qiantai, pp.adminpassword);
+            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
 
+            fr.name = "auto" + dt.getHHmm(0);
+            String phone = pf.genPhoneNum();
+            //获取当前空闲第一位销售id
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String userLoginName = pf.username(sale_id);
+
+            JSONArray customerlist=crm.markcustomerList().getJSONArray("list");
+
+            JSONObject dd=pf.customermess(customerlist,"新客");
+            String analysis_customer_id=dd.getString("analysis_customer_id");
+
+            boolean isDes = true;
+            JSONObject list = new JSONObject();
+            JSONArray ll = new JSONArray();
+            list.put("customer_name", fr.name);
+            list.put("is_decision", isDes);
+            list.put("analysis_customer_id", analysis_customer_id);
+            ll.add(0, list);
+
+            //创建接待
+            crm.creatReception2("FIRST_VISIT", ll);
+
+            //app接待分配的新客
+            JSONArray analysis_customer_id_list=new JSONArray();
+            JSONObject temp=new JSONObject();
+            temp.put("analysis_customer_id",analysis_customer_id);
+            analysis_customer_id_list.add(temp);
+
+            crm.receptionapp(analysis_customer_id_list);
+            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            crm.login(userLoginName, pp.adminpassword);
+
+            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
+            fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
+            fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
+            fr.phoneList =pf.phoneList(phone,"");
+            fr.belongs_sale_id=sale_id;
+            fr.reception_type="FU";
+            //face List
+            JSONObject faceList = new JSONObject();
+            JSONArray faceArray = new JSONArray();
+            list.put("is_decision", isDes);
+            list.put("id", 0);
+            list.put("analysis_customer_id", analysis_customer_id);
+            faceArray.add(0, faceList);
+
+            fr.face_list=faceArray;
+            crm.editCustomer(fr);
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+
+        } catch (AssertionError |Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("前台分配新客含人脸接待列表+1 ");
+        }
+    }
+
+    @Test(description = "前台老客解绑")
+    public void jiebang() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list=crm.markcustomerList().getJSONArray("list");
+
+            JSONObject dd=pf.customermess(list,"老客");
+            String analysis_customer_id=dd.getString("analysis_customer_id");
+            String customer_id=dd.getString("customer_id");
+
+            int num[]=pf.qtcustomer(list);   //0 新客数     //老客数
+
+            crm.jiebang(analysis_customer_id,customer_id,"NEW");
+
+            JSONArray listA=crm.markcustomerList().getJSONArray("list");
+            int numA[]=pf.qtcustomer(listA);
+
+            Preconditions.checkArgument(numA[0]-num[0]==1,"前台人脸解绑后，新客人脸数+1");
+            Preconditions.checkArgument(num[1]-numA[1]==1,"前台人脸解绑后，老客人脸数-1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("解绑人脸数变化 ");
+        }
+    }
 }

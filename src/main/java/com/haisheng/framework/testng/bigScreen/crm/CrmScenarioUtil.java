@@ -3633,8 +3633,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /**
      * 我的回访列表接口
      *
-     * @param startTime 起始时间
-     * @param endTime   结束时间
+     * @param  起始时间
+     * @param  结束时间
      */
     public JSONObject returnVisitTaskPage(int page, int size) {
         String url = "/porsche/app/return-visit-task/page";
@@ -5614,10 +5614,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //前台客户列表
-    public JSONObject markcustomerList() throws Exception {
+    public JSONObject markcustomerList()  {
         String url = "/porsche/app/sale-reception/customerList";
         JSONObject json = new JSONObject();
-        String result = httpPost(url, json.toJSONString(), IpPort);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
@@ -5734,7 +5734,25 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+    //app 变更接待
+    public JSONObject jiebang(String analysis_customer_id, String customer_id,String type) {
+        String url = "/porsche/app/sale-reception/change";
+        JSONObject object = new JSONObject();
+        object.put("analysis_customer_id", analysis_customer_id);
+        object.put("customer_id", customer_id);
+        object.put("type", type);
+        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
+    //app 变更接待
+    public JSONObject receptionapp(JSONArray analysis_customer_id) {
+        String url = "/porsche/app/customer/reception";
+        JSONObject object = new JSONObject();
+        object.put("list", analysis_customer_id);
+        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
 }
 

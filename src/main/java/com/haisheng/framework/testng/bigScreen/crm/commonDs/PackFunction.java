@@ -474,4 +474,35 @@ public class PackFunction {
         return userid;
     }
 
+    //返回前台人脸数
+    public int [] qtcustomer(JSONArray list){
+        int num[]=new int [2];
+        for(int i=0;i<list.size();i++){
+            String customer_identity_name=list.getJSONObject(i).getString("customer_identity_name");
+            if(customer_identity_name.equals("新客")){
+                num[0]++;
+            }else {
+                num[1]++;}
+        }
+        return num;
+    }
+
+    //返回人脸列表客户信息
+    public JSONObject customermess(JSONArray list,String type){
+        JSONObject date=new JSONObject();
+        String analysis_customer_id="";
+        String customer_id="";
+        for(int i=0;i<list.size();i++) {
+            String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+            if (customer_identity_name.equals(type)) {
+                analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
+                customer_id=list.getJSONObject(i).getString("customer_id");
+                date.put("analysis_customer_id",analysis_customer_id);
+                date.put("customer_id",customer_id);
+                break;
+            }
+        }
+        return date;
+    }
+
 }

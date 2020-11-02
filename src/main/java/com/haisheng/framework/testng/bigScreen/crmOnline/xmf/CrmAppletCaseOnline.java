@@ -296,7 +296,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "辽GBBA261";
+            String plate_number = "蒙GBBA261";
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -324,20 +324,18 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加重复车牌（车牌7位）失败
+     * @description :添加重复车牌（车牌7位）失败，接口不异常提示，但不重复显示车牌
      * @date :2020/7/10 18:03
      **/
     @Test(priority = 2)
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate_number = "沪W336699";
-//            crm.myCarAdd(car_type, plate_number, car_model);
-            Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
-//            JSONArray listB = crm.myCarList().getJSONArray("list");
-//            Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
-//            crm.myCarDelete(Integer.toString(car_idBefore));
-            checkArgument(code == 1001, "添加相同车牌应该失败");
+            int num=crm.myCarList().getJSONArray("list").size();
+            String plate_number = "京AWE1234";
+            crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
+            int numA=crm.myCarList().getJSONArray("list").size();
+            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
