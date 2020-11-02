@@ -38,4 +38,7 @@ public class CommonConfig {
     public String shopId;
     //default case name
     public String caseName = "login";
+
+    //
+    public String referer = "https://servicewechat.com/wx5102264595be8c23/";
 }

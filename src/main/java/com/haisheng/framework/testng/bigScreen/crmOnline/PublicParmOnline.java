@@ -16,6 +16,7 @@ public class PublicParmOnline {
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 
     public Long mycarId = 11L;   //车id待定
+    public Long mycarId2 = 3851L;   //车id待定
     public Integer car_model = 81;
 
     public String xiaoshouGuwen = "11";      //销售账号

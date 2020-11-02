@@ -390,7 +390,7 @@ public class TestCaseCommon {
         headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .other("shop_id", commonConfig.shopId)
                 .userAgent(userAgent)
-                .referer("https://servicewechat.com/wx5102264595be8c23/")
+                .referer(commonConfig.referer)
                 .authorization(authorization)
                 .build();
         config = HttpConfig.custom()

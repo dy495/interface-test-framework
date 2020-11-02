@@ -1801,6 +1801,18 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    public JSONObject appointmentTestDrivecode(String gender, String customerName, String customerPhoneNumber, String appointmentDate, Integer carType, Integer car_model) throws Exception {
+        String url = "/WeChat-applet/porsche/a/appointment/test-drive";
+        JSONObject object = new JSONObject();
+        object.put("customer_gender", gender);
+        object.put("customer_name", customerName);
+        object.put("customer_phone_number", customerPhoneNumber);
+        object.put("appointment_date", appointmentDate);
+        object.put("car_style", carType);
+        object.put("car_model", car_model);
+        String res = httpPost(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
     /**
      * 取消预约
      *
@@ -1829,21 +1841,36 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     //预约保养
-    public JSONObject appointmentMaintainRes(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
+    public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
-        json1.put("gender", "MALE");
+        json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
         json1.put("appointment_date", appointment_date);
         json1.put("appointment_time", appointment_time);
         json1.put("time_range_id", time_range_id);
         String json = json1.toJSONString();
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
-
+    //预约维修
+    public JSONObject appointmentRepaircode(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, String description, Long time_range_id) throws Exception {
+        String url = "/WeChat-applet/porsche/a/appointment/repair";
+        JSONObject json1 = new JSONObject();
+        json1.put("my_car_id", my_car_id);
+        json1.put("customer_name", customer_name);
+        json1.put("customer_gender", "MALE");
+        json1.put("customer_phone_number", customer_phone_number);
+        json1.put("appointment_date", appointment_date);
+        json1.put("appointment_time", appointment_time);
+        json1.put("description", description);
+        json1.put("time_range_id", time_range_id);
+        String json = json1.toJSONString();
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
     //预约维修
     public JSONObject appointmentRepair(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, String description, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/repair";
@@ -1959,14 +1986,15 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     //添加车辆
-    public Long myCarAddCode(Integer car_type, String plate_number) throws Exception {
+    public JSONObject myCarAddCode(Integer car_type, Integer car_model, String plate_number) throws Exception {
         String url = "/WeChat-applet/porsche/a/my-car/add";
         JSONObject json = new JSONObject();
         json.put("car_type", car_type);
+        json.put("car_model", car_model);
         json.put("plate_number", plate_number);
 
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getLong("code");
+        return JSON.parseObject(res);
     }
 
     //车辆列表
@@ -4563,9 +4591,9 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                EnumAppletCode.XMF.getCode(),
+                EnumAppletCode.XMFONLINE.getCode(),
 //                EnumAppletCode.BB.getCode(),
-                EnumAppletCode.WM.getCode(),
+//                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
 //                EnumAppletCode.GLY.getCode()
         };
@@ -4739,7 +4767,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     //预约试驾取消
-    public JSONObject appCanle(Long id) {
+    public JSONObject appdriverCanle(Long id) {
         String url = "/porsche/daily-work/test-drive/app/cancel";
         JSONObject json = new JSONObject();
         json.put("id", id);

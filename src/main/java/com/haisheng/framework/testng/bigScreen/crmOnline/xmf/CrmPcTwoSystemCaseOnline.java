@@ -80,6 +80,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
+        commonConfig.referer="https://servicewechat.com/wxbd41de85739a00c7/";
 
 
         //replace backend gateway url
@@ -385,7 +386,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //小程序登录 记录小程序首页文章列表中总数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONArray list=crm.articleList().getJSONArray("list");
             int total;
             if (list != null && list.size() != 0) {
@@ -414,7 +415,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             //新建文章，获取id
             Long actriclereal_id=pf.createArcile(positions,article_title);
             //小程序查看文章内容
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONObject detail=crm.appartilceDetail(actriclereal_id,positions);
             String article_titlA=detail.getString("article_title");
             String article_contentA=detail.getString("article_content");
@@ -554,7 +555,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
     public void watchCarConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONArray list=crm.appletwatchCarList().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -567,7 +568,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             String car_type_name="Cayman"+dt.getHHmm(0);
             pf.createCar(car_type_name);
             //applet 看车列&详情
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
             int totalA;
             if(listA==null||listA.size()==0){
@@ -652,7 +653,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验 ok
      * @date :2020/7/15 11:13
      **/
-//    @Test(priority = 2)   //TODO:
+    @Test(priority = 2)
     public void pcblackList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -660,7 +661,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long activity_id=aid[1];
             Long id=aid[0];
             //活动报名
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             String other_brand="奥迪pc-黑名单报名";
             String customer_num="2";
             //预约使用参数
@@ -1176,7 +1177,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             if(totalDeliverCar==0){
                 return;
             }
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONArray list=crm.carOwner().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -1446,7 +1447,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
     public void messageInter(String appointment_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             Long total1=crm.messageList(10,"MSG").getLong("total");
             //pc创建站内消息
             crm.login(adminname,adminpassword);
@@ -1473,7 +1474,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
             }
             Thread.sleep(1000*70); //60秒后，查看小程序是否收到消息
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             //我的消息页
             JSONObject data=crm.messageList(10,"MSG");
             Long total2=data.getLong("total");
@@ -1776,7 +1777,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];       //文章id
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             JSONObject data = crm.appartilceDetail(id, pp.positions);
             Integer registered_num = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数
@@ -1808,69 +1809,43 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-
-    /**
-     * @description :导入，正常导入，随即删除导入成功的客户
-     * @date :2020/8/17 21:04
-     **/
-//     @Test
-    public void importCustomer(){
+    //前台接待列表查询
+    @Test()
+    public void qtReceiptListSelectTimephone(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String type="DCC";
-            List <File> ff=file.getFiles(pp.nomalFileModel);  //导入文件目录
-            for(File f:ff){
-                String filename=f.getAbsolutePath();
-                logger.info("导入文件:{}",filename);
-                long code=crm.importCustom(filename,type).getLong("code");
-                logger.info("返回值：{}",code);
-                pf.deleteUser(pp.textPath);   //删除导入的客户
-                Preconditions.checkArgument(code==1000,"导入正常模板文件失败");
+            JSONArray evaluateList=crm.pcreceiptPage("1","10","","","PRE_SALES").getJSONArray("list");
+            if(evaluateList==null||evaluateList.size()==0){
+                return;
+            }
+            String customer_name="";
+            String phone="";
+            for(int i=0;i<evaluateList.size();i++){
+                String nameT=evaluateList.getJSONObject(i).getString("customer_name");
+                String phoneT=evaluateList.getJSONObject(i).getString("phone1");
+                if(nameT!=null&&phoneT!=null){
+                    customer_name=nameT;
+                    phone=phoneT;
+                    break;
+                }
+            }
+            JSONArray list=crm.pcreceiptPage("1","10",customer_name,"","PRE_SALES").getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String nameSlect=list.getJSONObject(i).getString("customer_name");
+                Preconditions.checkArgument(nameSlect.contains(customer_name),"pc-前台接待列表按客户名查询错误");
+            }
+
+            JSONArray list2=crm.pcreceiptPage("1","10","",phone,"PRE_SALES").getJSONArray("list");
+            for(int i=0;i<list2.size();i++){
+                String nameSlect=list2.getJSONObject(i).getString("phone1");
+                String phone2Slect=list2.getJSONObject(0).getString("phone2");
+                Preconditions.checkArgument(nameSlect.contains(phone)||phone2Slect.contains(phone),"pc-前台接待列表按客户电话查询错误");
             }
         }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
         } finally {
-            saveData("客户导入，正常导入");
+            saveData("pc-前台展厅接待查询");
         }
     }
-    /**
-     * @description :导入,异常模板导入
-     * @date :2020/8/17 21:04
-     **/
-//    @Test
-    public void importCustomerE(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            String type="DCC";
-            List <File> ff=file.getFiles(pp.abnomalFileModel);  //异常模板文件目录
-            for(File f:ff){
-                String filename=f.getAbsolutePath();
-                logger.info("导入文件:{}",filename);
-                long code=crm.importCustom(filename,type).getLong("code");
-                logger.info("返回值：{}",code);
-                Preconditions.checkArgument(code!=1000,"导入异常模板文件成功");
-            }
-
-        }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
-        } finally {
-            saveData("导入,异常模板导入");
-        }
-    }
-
-    //    @Test
-    public void text(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            String textPath=pp.textPath;  //需要删除的用户名单
-            pf.deleteUser(textPath);
-        }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
-        } finally {
-            saveData("测试删除指定用户");
-        }
-    }
-
-
 
 }
