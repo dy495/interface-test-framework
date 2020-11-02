@@ -194,7 +194,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.customer_id = json.getString("customerId");
             fr.belongs_sale_id = json.getString("sale_id");
             fr.phoneList = json.getJSONArray("phoneList");
-            fr.reception_type = "BB";
+            fr.reception_type = "FU";
 
             String phone = json.getString("phone");
 
