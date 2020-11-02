@@ -1263,7 +1263,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--售后客户--车牌号筛选")
+    @Test(description = "售后--售后客户--车牌号筛选", enabled = false)
     public void afterSale_customer_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

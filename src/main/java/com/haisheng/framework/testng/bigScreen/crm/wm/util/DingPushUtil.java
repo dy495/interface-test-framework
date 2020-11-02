@@ -31,7 +31,7 @@ public class DingPushUtil {
             object.put("msgtype", "markdown");
             object.put("markdown", markdown);
             markdown.put("title", "balabala");
-            markdown.put("text", "### " + "**" + "拉垮了，有空看一下" + "**" + "\n"
+            markdown.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
                     + "\n" + date + "\n"
                     + "\n" + "SQL错误：" + msg + "\n"
                     + "\n" + "SQL语句：" + sql + "\n");

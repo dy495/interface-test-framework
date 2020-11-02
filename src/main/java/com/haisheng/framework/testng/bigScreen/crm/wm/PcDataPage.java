@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCa
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerInfoScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -39,6 +39,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final String shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+    private static final int size = 100;
     private int s;
     private int v;
 
@@ -1421,6 +1422,182 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "店面数据分析--【各时间段】创建线索=【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待")
+    public void shopPanel_data_63() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            int createClueNum = 0;
+            IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("type").equals("CLUE")) {
+                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+                    for (int j = 0; j < detailList.size(); j++) {
+                        if (detailList.getJSONObject(j).getString("label").equals("创建线索")) {
+                            createClueNum = detailList.getJSONObject(j).getInteger("value");
+                        }
+                    }
+                }
+            }
+            //今日线索
+            String sql = Sql.instance().select("today_clue_num")
+                    .from("t_porsche_today_data")
+                    .where("today_date", "=", date)
+                    .and("sale_name", "like", "%总经理%")
+                    .and("shop_id", "=", shopId)
+                    .end().getSql();
+            List<Map<String, Object>> array = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+            int todayClueNum = (int) array.get(0).get("today_clue_num");
+            //今日新客接待
+            String sql1 = Sql.instance().select("today_new_customer_reception_num")
+                    .from("t_porsche_today_data")
+                    .where("today_date", "=", date)
+                    .and("sale_name", "like", "%总经理%")
+                    .and("shop_id", "=", shopId)
+                    .end().getSql();
+            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1);
+            int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
+            CommonUtil.valueView(createClueNum, todayClueNum - todayNewCustomerReceptionNum);
+            Preconditions.checkArgument(createClueNum == todayClueNum - todayNewCustomerReceptionNum, "创建线索：" + createClueNum + " 今日线索-今日新客接待：" + (todayClueNum - todayNewCustomerReceptionNum));
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析--【各时间段】创建线索=【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+        }
+    }
+
+    @Test(description = "店面数据分析--【各时间段】接待线索=【销售总监-app-销售接待】今日新客接待")
+    public void shopPanel_data_64() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            int receptionClueNum = 0;
+            IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("type").equals("CLUE")) {
+                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+                    for (int j = 0; j < detailList.size(); j++) {
+                        if (detailList.getJSONObject(j).getString("label").equals("接待线索")) {
+                            receptionClueNum = detailList.getJSONObject(j).getInteger("value");
+                        }
+                    }
+                }
+            }
+            //今日新客接待
+            String sql1 = Sql.instance().select("today_new_customer_reception_num")
+                    .from("t_porsche_today_data")
+                    .where("today_date", "=", date)
+                    .and("sale_name", "like", "%总经理%")
+                    .and("shop_id", "=", shopId)
+                    .end().getSql();
+            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1);
+            int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
+            CommonUtil.valueView(receptionClueNum, todayNewCustomerReceptionNum);
+            Preconditions.checkArgument(receptionClueNum == todayNewCustomerReceptionNum, "接待线索：" + receptionClueNum + " 今日新客接待" + todayNewCustomerReceptionNum);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析--【各时间段】创建线索=【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
+        }
+    }
+
+    @Test(description = "店面数据分析--【各时间段】接待的PU+BB >=【销售总监-app-我的接待】今日老客接待")
+    public void shopPanel_data_65() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            int receive = 0;
+            IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("type").equals("RECEIVE")) {
+                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+                    for (int j = 0; j < detailList.size(); j++) {
+                        if (detailList.getJSONObject(j).getString("label").equals("PU")
+                                || detailList.getJSONObject(j).getString("label").equals("BB")) {
+                            receive = detailList.getJSONObject(j).getInteger("value");
+                        }
+                    }
+                }
+            }
+            String sql = Sql.instance().select("today_old_customer_reception_num")
+                    .from("t_porsche_today_data")
+                    .where("today_date", "=", date)
+                    .and("sale_name", "like", "%总经理%")
+                    .and("shop_id", "=", shopId)
+                    .end().getSql();
+            List<Map<String, Object>> entity = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+            int todayNewCustomerReceptionNum = (int) entity.get(0).get("today_old_customer_reception_num");
+            CommonUtil.valueView(receive, todayNewCustomerReceptionNum);
+            Preconditions.checkArgument(receive >= todayNewCustomerReceptionNum, "接待的PU+BB：" + receive + "今日老客接待：" + todayNewCustomerReceptionNum);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+        } finally {
+            saveData("店面数据分析--【各时间段】接待的PU+BB >=【销售总监-app-我的接待】今日老客接待");
+        }
+    }
+
+    @Test(description = "店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量")
+    public void shopPanel_data_66() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            //创建线索数
+            int createClueNum = 0;
+            IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("type").equals("CLUE")) {
+                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+                    for (int j = 0; j < detailList.size(); j++) {
+                        if (detailList.getJSONObject(j).getString("label").equals("创建线索")) {
+                            createClueNum = detailList.getJSONObject(j).getInteger("value");
+                        }
+                    }
+                }
+            }
+            //创建日期为当天且没有接待记录的客户数量
+            int num = 0;
+            IScene scene1 = CustomerPageScene.builder().build();
+            int total = crm.invokeApi(scene1).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int i = 1; i < s; i++) {
+                IScene scene2 = CustomerPageScene.builder().page(String.valueOf(i)).size(String.valueOf(size)).build();
+                JSONArray array = crm.invokeApi(scene2).getJSONArray("list");
+                for (int j = 0; j < array.size(); j++) {
+                    if (array.getJSONObject(j).getString("create_date").equals(date)) {
+                        int customerId = array.getJSONObject(j).getInteger("customer_id");
+                        JSONArray carList = crm.receptionList(String.valueOf(customerId)).getJSONArray("list");
+                        if (carList.size() == 0) {
+                            num++;
+                        }
+                    }
+                }
+            }
+            CommonUtil.valueView(createClueNum, num);
+            Preconditions.checkArgument(createClueNum >= num, "昨日创建线索：" + createClueNum + " 创建日期为当天且没有接待记录的客户数量：" + num);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量");
+        }
+    }
+
+    @Test(description = "店面数据分析--【各时间段+不选销售】创建线索=【销售总监-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量 + 【销售总监-app-DCC客户】创建日期在该时间范围内&&该客户接待记录为空的数量")
+    public void shopPanel_data_67() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        }
+    }
+
 //    -----------------------------------------------存量客户分析---------------------------------------------------
 
     @Test(description = "存量客户分析页--【各时间段+各车型筛选】个人车主百分比+公司车主百分比=100% 或 0%")
@@ -1429,20 +1606,22 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             for (EnumFindType a : EnumFindType.values()) {
                 for (EnumCarStyle b : EnumCarStyle.values()) {
-                    CommonUtil.valueView(a.getName(), b.getName());
-                    double percentSum = 0;
+                    CommonUtil.valueView(b.getName() + a.getName());
+                    double percentageSum = 0;
                     IScene scene = Analysis2DealCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
                     for (int i = 0; i < ratioList.size(); i++) {
-                        double percent = ratioList.getJSONObject(i).getDouble("percent");
+                        String percentageStr = ratioList.getJSONObject(i).getString("percent_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
                         String name = ratioList.getJSONObject(i).getString("name");
-                        CommonUtil.valueView(name + "：" + percent);
-                        percentSum += percent;
+                        CommonUtil.valueView(name + "：" + percentage);
+                        percentageSum += percentage;
                     }
-                    CommonUtil.valueView(percentSum);
-                    Preconditions.checkArgument(percentSum == 1 || percentSum == 0, b.getName() + a.getName() + "个人车主百分比+公司车主百分比=" + percentSum * 100 + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.valueView(percentageSum);
+                    Preconditions.checkArgument(percentageSum == 100 || percentageSum == 0, b.getName() + a.getName() + "个人车主百分比+公司车主百分比=" + percentageSum + "%");
+                    CommonUtil.logger(b.getName());
                 }
+                CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1455,22 +1634,24 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void stockCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(b.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     double percentageSum = 0;
                     IScene scene = Analysis2DealGenderAgeScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONObject("age").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
                         String age = list.getJSONObject(i).getString("age");
                         CommonUtil.valueView(age + ":" + percentage);
                         percentageSum += percentage;
                     }
                     CommonUtil.valueView(percentageSum);
-                    Preconditions.checkArgument((percentageSum >= 0.99 && percentageSum <= 1.01) || percentageSum == 0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum * 100 + "%");
-                    CommonUtil.log("分割线");
+                    Preconditions.checkArgument((percentageSum >= 99 && percentageSum <= 101) || percentageSum == 0, b.getName() + a.getName() + "车主年龄分析 各年龄段之和=" + percentageSum + "%");
+                    CommonUtil.logger(b.getName());
                 }
+                CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1483,22 +1664,24 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void stockCustomer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(b.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     double percentageSum = 0;
                     IScene scene = Analysis2DealGenderAgeScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONObject("gender").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
                         String gender = list.getJSONObject(i).getString("gender");
                         CommonUtil.valueView(gender + ":" + percentage);
                         percentageSum += percentage;
                     }
                     CommonUtil.valueView(percentageSum);
-                    Preconditions.checkArgument(percentageSum == 1.0 || percentageSum == 0.0, b.getName() + a.getName() + "车主性别分析 性别之和=" + percentageSum * 100 + "%");
-                    CommonUtil.log("分割线");
+                    Preconditions.checkArgument(percentageSum == 100 || percentageSum == 0, b.getName() + a.getName() + "车主性别分析 性别之和=" + percentageSum + "%");
+                    CommonUtil.logger(b.getName());
                 }
+                CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1530,8 +1713,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                     CommonUtil.valueView(cityValueNum, provinceValue);
                     Preconditions.checkArgument(cityValueNum <= provinceValue, "苏州各区成交量为：" + cityValueNum + "江苏省成交量为：" + provinceValue);
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
+                CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1544,9 +1728,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void stockCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(b.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     int totalValue = 0;
                     IScene scene = Analysis2DealWholeCountryScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
@@ -1557,14 +1741,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     for (int i = 0; i < list.size(); i++) {
                         String district = list.getJSONObject(i).getString("district");
                         int value = list.getJSONObject(i).getInteger("value");
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentage);
-                        double result = CommonUtil.getDecimal((double) value / totalValue, 2);
-                        CommonUtil.valueView(district + "计算占比：" + result);
-                        Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + district + "接口返回占比：" + percentage + "，计算占比：" + result);
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentageStr);
+                        String percentage = CommonUtil.getPercent(value, totalValue, 4);
+                        CommonUtil.valueView(district + "计算占比：" + percentage);
+                        Preconditions.checkArgument(percentageStr.equals(percentage), b.getName() + a.getName() + district + "界面显示占比：" + percentageStr + "，计算占比：" + percentage);
                     }
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
+                CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1577,21 +1762,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void stockCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(b.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     double percentageNum = 0;
                     IScene scene = Analysis2DealWholeCountryScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        String percentage_str = list.getJSONObject(i).getString("percentage_str");
-                        String result = percentage_str.substring(0, percentage_str.length() - 1);
-                        CommonUtil.valueView(result);
-                        percentageNum += Double.parseDouble(result);
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
+                        CommonUtil.valueView(percentage);
+                        percentageNum += percentage;
                     }
                     CommonUtil.valueView(percentageNum);
                     Preconditions.checkArgument((percentageNum >= 99 && percentageNum <= 101) || percentageNum == 0, b.getName() + a.getName() + "全国各省占比百分比之和为：" + percentageNum + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1608,7 +1793,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             for (EnumFindType a : EnumFindType.values()) {
                 for (EnumCarStyle b : EnumCarStyle.values()) {
                     int totalValue = 0;
-                    CommonUtil.valueView(b.getName());
+                    CommonUtil.valueView(b.getName() + a.getName());
                     JSONArray list = crm.city(a.getType(), "", b.getStyleId(), 320500).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         int value = list.getJSONObject(i).getInteger("value");
@@ -1617,13 +1802,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     for (int i = 0; i < list.size(); i++) {
                         String district = list.getJSONObject(i).getString("district");
                         int value = list.getJSONObject(i).getInteger("value");
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentage);
-                        double result = CommonUtil.getDecimal((double) value / totalValue, 2);
-                        CommonUtil.valueView(district + "计算占比：" + result);
-                        Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + district + "接口返回占比：" + percentage + "，计算占比：" + result);
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentageStr);
+                        String percentage = CommonUtil.getPercent(value, totalValue, 4);
+                        CommonUtil.valueView(district + "计算占比：" + percentage);
+                        Preconditions.checkArgument(percentage.equals(percentageStr), b.getName() + a.getName() + district + "接口返回占比：" + percentageStr + "，计算占比：" + percentage);
                     }
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1644,78 +1829,19 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     JSONArray list = crm.city(a.getType(), "", b.getStyleId(), 320500).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String percentageStr = list.getJSONObject(i).getString("percentage_str");
-                        String percent = percentageStr.substring(0, percentageStr.length() - 1);
-                        CommonUtil.valueView(percent);
-                        percentageNum += Double.parseDouble(percent);
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
+                        CommonUtil.valueView(percentage);
+                        percentageNum += percentage;
                     }
                     CommonUtil.valueView(percentageNum);
                     Preconditions.checkArgument((percentageNum >= 99 && percentageNum <= 101) || percentageNum == 0, "苏州各区百分比之和为：" + percentageNum + "%");
-                    CommonUtil.log("分割线");
+                    CommonUtil.logger(b.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段筛选】苏州各区成交量，各区百分比之和=100%");
-        }
-    }
-
-    @Test(description = "存量客户分析--个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内的购车档案数量")
-    public void stockCustomer_data_10() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            int pcCustomerNum = 0;
-            IScene scene = Analysis2DealCarOwnerScene.builder().cycleType(EnumFindType.DAY.getType()).build();
-            JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-            for (int i = 0; i < ratioList.size(); i++) {
-                if (ratioList.getJSONObject(i).getString("name").equals("个人车主")) {
-                    pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
-                }
-            }
-            String sql = Sql.instance().select()
-                    .from("t_porsche_deliver_info")
-                    .where("subject_type_name", "=", "个人")
-                    .and("deliver_date", "=", date)
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
-            CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-            Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日个人车主数为：" + pcCustomerNum + "昨日app个人客户交车数量为：" + appCustomerNum);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("存量客户分析--个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内的购车档案数量");
-        }
-    }
-
-    @Test(description = "存量客户分析--公司车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为公司&交车日期在该时间段内的购车档案数量")
-    public void stockCustomer_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            int pcCustomerNum = 0;
-            IScene scene = Analysis2DealCarOwnerScene.builder().cycleType(EnumFindType.DAY.getType()).build();
-            JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-            for (int i = 0; i < ratioList.size(); i++) {
-                if (ratioList.getJSONObject(i).getString("name").equals("公司车主")) {
-                    pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
-                }
-            }
-            String sql = Sql.instance().select()
-                    .from("t_porsche_deliver_info")
-                    .where("subject_type_name", "=", "公司")
-                    .and("deliver_date", "=", date)
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            int appCustomerNum = list.size();
-            CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-            Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日公司车主数为：" + pcCustomerNum + "昨日app公司客户交车数量为：" + appCustomerNum);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("存量客户分析--公司车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为公司&交车日期在该时间段内的购车档案数量");
         }
     }
 
@@ -1767,12 +1893,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void stockCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
             for (EnumCarStyle e : EnumCarStyle.values()) {
                 int pcCustomerNum = 0;
-                int appCustomerNum = 0;
-                if (e.getStyleId() == null) {
-                    continue;
-                }
                 CommonUtil.valueView(e.getName());
                 IScene scene = Analysis2DealCarOwnerScene.builder().cycleType(EnumFindType.DAY.getType()).carType(e.getStyleId()).build();
                 JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
@@ -1781,20 +1904,27 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String date = DateTimeUtil.addDayFormat(new Date(), -1);
-                JSONArray list = crm.deliverCarAppList("", 1, 100, date, date).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("car_style").equals(e.getStyleId())) {
-                        int customerId = list.getJSONObject(i).getInteger("customer_id");
-                        IScene scene1 = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
-                        if (crm.invokeApi(scene1).getString("subject_type").equals("CORPORATION")) {
-                            appCustomerNum++;
-                        }
-                    }
+                String sql;
+                if (e.getStyleId() == null) {
+                    sql = Sql.instance().select()
+                            .from("t_porsche_deliver_info")
+                            .where("subject_type_name", "=", "公司")
+                            .and("deliver_date", "=", date)
+                            .and("shop_id", "=", shopId)
+                            .end().getSql();
+                } else {
+                    sql = Sql.instance().select()
+                            .from("t_porsche_deliver_info")
+                            .where("subject_type_name", "=", "公司")
+                            .and("car_style", "=", e.getStyleId())
+                            .and("deliver_date", "=", date)
+                            .and("shop_id", "=", shopId)
+                            .end().getSql();
                 }
+                int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
                 Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
-                CommonUtil.log("分割线");
+                CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -1852,8 +1982,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
                     double num1 = 0;
                     double num2 = 0;
                     CommonUtil.valueView(e.getName() + a.getName());
@@ -1884,8 +2014,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String percentStr = null;
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
                     double num1 = 0;
                     double num2 = 0;
                     CommonUtil.valueView(e.getName() + a.getName());
@@ -1918,8 +2048,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String percentStr = null;
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
                     double num1 = 0;
                     double num2 = 0;
                     CommonUtil.valueView(e.getName() + a.getName());
@@ -1951,19 +2081,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    int num = 0;
-                    CommonUtil.valueView(e.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
+                    double percentageSum = 0;
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderGenderAgeScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONObject("age").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        double x = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView((int) x);
-                        num += x;
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
+                        String age = list.getJSONObject(i).getString("age");
+                        CommonUtil.valueView(age + ":" + percentage);
+                        percentageSum += percentage;
                     }
-                    CommonUtil.valueView(num);
-                    Preconditions.checkArgument((num <= 1.01 && num >= 0.99) || num == 0, a.getName() + e.getName() + "各年龄段百分比之和为：" + num * 100 + "%");
+                    CommonUtil.valueView("总百分比" + percentageSum);
+                    Preconditions.checkArgument((percentageSum <= 101 && percentageSum >= 99) || percentageSum == 0, a.getName() + e.getName() + "各年龄段百分比之和为：" + percentageSum + "%");
                     CommonUtil.logger(e.getName());
                 }
             }
@@ -1978,19 +2110,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    double num = 0;
-                    CommonUtil.valueView(e.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
+                    double percentageSum = 0;
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderGenderAgeScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONObject("gender").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
-                        double x = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(x);
-                        num += x;
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        double percentage = Double.parseDouble(percentageStr.substring(0, percentageStr.length() - 1));
+                        String gender = list.getJSONObject(i).getString("gender");
+                        CommonUtil.valueView(gender + ":" + percentage);
+                        percentageSum += percentage;
                     }
-                    CommonUtil.valueView(num);
-                    Preconditions.checkArgument(num == 1 || num == 0, e.getName() + a.getName() + "性别百分比之和为：" + num);
+                    CommonUtil.valueView("总百分比" + percentageSum);
+                    Preconditions.checkArgument(percentageSum == 100 || percentageSum == 0, e.getName() + a.getName() + "性别百分比之和为：" + percentageSum);
                     CommonUtil.logger(e.getName());
                 }
             }
@@ -2005,24 +2139,23 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(e.getName(), a.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
+                    CommonUtil.valueView(e.getName() + a.getName());
                     IScene scene = Analysis2OrderWholeCountryScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-                    int totalNum = 0;
+                    int totalValue = 0;
                     for (int i = 0; i < list.size(); i++) {
-                        totalNum += list.getJSONObject(i).getInteger("value");
+                        totalValue += list.getJSONObject(i).getInteger("value");
                     }
                     for (int i = 0; i < list.size(); i++) {
-                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
                         String district = list.getJSONObject(i).getString("district");
-                        int num = list.getJSONObject(i).getInteger("value");
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(district + "数量：" + num + "，占比：" + percentage);
-                        String result = CommonUtil.getPercent(num, totalNum, 4);
-                        CommonUtil.valueView(district + "计算占比：" + result);
-                        Preconditions.checkArgument(result.equals(percentageStr), e.getName() + a.getName() + district + "数量除以全国数量结果为：" + result + "界面展示结果为：" + percentageStr);
+                        int value = list.getJSONObject(i).getInteger("value");
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentageStr);
+                        String percentage = CommonUtil.getPercent(value, totalValue, 4);
+                        CommonUtil.valueView(district + "计算占比：" + percentage);
+                        Preconditions.checkArgument(percentageStr.equals(percentage), e.getName() + a.getName() + district + "界面显示占比：" + percentageStr + "，计算占比：" + percentage);
                     }
                     CommonUtil.logger(e.getName());
                 }
@@ -2038,8 +2171,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle e : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle e : EnumCarStyle.values()) {
                     CommonUtil.valueView(e.getName(), a.getName());
                     IScene scene = Analysis2OrderWholeCountryScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
@@ -2066,10 +2199,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
                     int totalValue = 0;
-                    CommonUtil.valueView(a.getName() + b.getName());
+                    CommonUtil.valueView(b.getName() + a.getName());
                     IScene scene = Analysis2OrderCityScene.builder().adCode(320500).carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
@@ -2079,11 +2212,11 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     for (int i = 0; i < list.size(); i++) {
                         String district = list.getJSONObject(i).getString("district");
                         int value = list.getJSONObject(i).getInteger("value");
-                        double percentage = list.getJSONObject(i).getDouble("percentage");
-                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentage);
-                        double result = CommonUtil.getDecimal((double) value / totalValue, 2);
-                        CommonUtil.valueView(district + "计算占比：" + result);
-                        Preconditions.checkArgument(result == percentage, b.getName() + a.getName() + district + "接口返回占比：" + percentage + "，计算占比：" + result);
+                        String percentageStr = list.getJSONObject(i).getString("percentage_str");
+                        CommonUtil.valueView(district + "数量：" + value + "，占比：" + percentageStr);
+                        String percentage = CommonUtil.getPercent(value, totalValue, 4);
+                        CommonUtil.valueView(district + "计算占比：" + percentage);
+                        Preconditions.checkArgument(percentage.equals(percentageStr), b.getName() + a.getName() + district + "接口返回占比：" + percentageStr + "，计算占比：" + percentage);
                     }
                     CommonUtil.logger(b.getName());
                 }
@@ -2099,9 +2232,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(a.getName(), b.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     double percentageNum = 0;
                     IScene scene = Analysis2OrderCityScene.builder().adCode(320500).carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
@@ -2127,9 +2260,9 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle b : EnumCarStyle.values()) {
-                for (EnumFindType a : EnumFindType.values()) {
-                    CommonUtil.valueView(a.getName() + b.getName());
+            for (EnumFindType a : EnumFindType.values()) {
+                for (EnumCarStyle b : EnumCarStyle.values()) {
+                    CommonUtil.valueView(b.getName() + a.getName());
                     int cityValueNum = 0;
                     int provinceValue = 0;
                     IScene scene = Analysis2OrderCityScene.builder().adCode(320500).carType(b.getStyleId()).cycleType(a.getType()).build();
@@ -2180,18 +2313,18 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (EnumCarStyle a : EnumCarStyle.values()) {
-                for (EnumFindType b : EnumFindType.values()) {
+            for (EnumFindType b : EnumFindType.values()) {
+                for (EnumCarStyle a : EnumCarStyle.values()) {
                     CommonUtil.valueView(a.getName() + b.getName());
                     IScene scene = Analysis2OrderSaleListScene.builder().carType(a.getStyleId()).cycleType(b.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size() - 1; i++) {
                         int value1 = list.getJSONObject(i).getInteger("value");
                         int value2 = list.getJSONObject(i + 1).getInteger("value");
-                        CommonUtil.valueView(value1, value2);
+                        CommonUtil.valueView("[" + i + "]：" + value1 + "    [" + (i + 1) + "]：" + value2);
                         Preconditions.checkArgument(value1 >= value2, a.getName() + b.getName() + "第" + i + "名销售的订单存量为：" + value1 + "，第" + (i + 1) + "名销售的订单存量为：" + value2);
-                        CommonUtil.logger(a.getName());
                     }
+                    CommonUtil.logger(a.getName());
                 }
             }
         } catch (Exception | AssertionError e) {

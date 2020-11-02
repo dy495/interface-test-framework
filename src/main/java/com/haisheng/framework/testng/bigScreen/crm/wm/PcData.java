@@ -9,12 +9,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -30,7 +33,8 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
-    private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+    private static final EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
+    private static final int size = 100;
 
     @BeforeClass
     @Override
@@ -69,20 +73,16 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
 
 //    ---------------------------------------------------2.0------------------------------------------------------------
 
-    /**
-     * @description: 销售客户管理-我的客户
-     */
-    @Test(description = "全部-pc端我的客户总数=列表的总数")
-    public void myCustomer_data_1() {
+    @Test(description = "pc--我的客户--我的客户总数=列表的总数")
+    public void customer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
             //客户总数
-            int total = object.getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
+            int total = crm.customerList("", "", "", "", "", 1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
             int listSizeTotal = 0;
             for (int i = 1; i < s; i++) {
-                int listSize = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list").size();
+                int listSize = crm.customerList("", "", "", "", "", i, size).getJSONArray("list").size();
                 listSizeTotal += listSize;
             }
             CommonUtil.valueView(total, listSizeTotal);
@@ -90,7 +90,123 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端我的客户总数=列表的总数");
+            saveData("pc--我的客户--我的客户总数=列表的总数");
+        }
+    }
+
+    @Test(description = "pc--我的客户--DCC客户总数=列表的总数")
+    public void customer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.dccList("", "", "", "", 1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.dccList("", "", "", "", i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端DCC客户总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc--我的客户--DCC客户总数=列表的总数");
+        }
+    }
+
+    @Test(description = "pc--我的客户--成交记录总数=列表的总数")
+    public void customer_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.orderInfoPage(i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc--我的客户--成交记录总数=列表的总数");
+        }
+    }
+
+    @Test(description = "pc--我的客户--成交记录总数=列表的总数")
+    public void customer_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.orderInfoPage(i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc--我的客户--成交记录总数=列表的总数");
+        }
+    }
+
+    @Test(description = "pc--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致")
+    public void customer_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.orderInfoPage(i, size).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    //如果电话号为空，跳过||车牌号为空跳过||不是昨天交车跳过
+                    JSONArray phones = list.getJSONObject(j).getJSONArray("phones");
+                    String orderDate = CommonUtil.getStrField(list, j, "order_date");
+                    String vehicleChassisCode = list.getJSONObject(j).getString("vehicle_chassis_code");
+                    if (phones.size() == 0 || !orderDate.equals(date) || StringUtils.isEmpty(vehicleChassisCode)) {
+                        continue;
+                    }
+                    //pc购车信息
+                    String deliverDate = CommonUtil.getStrField(list, j, "deliver_date");
+                    String carStyleName = CommonUtil.getStrField(list, j, "car_style_name");
+                    String carModelName = CommonUtil.getStrField(list, j, "car_model_name");
+                    String phone = phones.getString(0);
+                    IScene scene = CustomerPageScene.builder().customerPhone(phone).build();
+                    int customerId = crm.invokeApi(scene).getJSONArray("list").getJSONObject(0).getInteger("customer_id");
+                    JSONArray carList = crm.buyCarList(String.valueOf(customerId)).getJSONArray("list");
+                    for (int u = 0; u < carList.size(); u++) {
+                        String code = carList.getJSONObject(u).getString("vehicle_chassis_code");
+                        if (code != null && code.equals(vehicleChassisCode)) {
+                            CommonUtil.valueView(phone, code);
+                            //app购车信息
+                            String buyTime = CommonUtil.getStrField(carList, u, "buy_time");
+                            String deliverTime = CommonUtil.getStrField(carList, u, "deliver_time");
+                            String styleName = CommonUtil.getStrField(carList, u, "car_style_name");
+                            String modelName = CommonUtil.getStrField(carList, u, "car_model_name");
+                            //比较
+                            Preconditions.checkArgument(orderDate.equals(buyTime), phone + " 购车时间不一致，pc端购车时间：" + orderDate + " app购车时间：" + buyTime);
+                            Preconditions.checkArgument(deliverDate.equals(deliverTime), phone + " 交车时间不一致，pc端交车时间：" + deliverDate + " app交车时间：" + deliverTime);
+                            Preconditions.checkArgument(carStyleName.equals(styleName), phone + " 购买车系不一致，pc端购买车系：" + carStyleName + " app购买车系：" + styleName);
+                            Preconditions.checkArgument(carModelName.equals(modelName), phone + " 购买车型不一致，pc端购买车系：" + carModelName + " app购买车型：" + modelName);
+                            CommonUtil.logger(code);
+                        }
+                    }
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致");
         }
     }
 

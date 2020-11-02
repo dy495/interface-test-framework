@@ -1,5 +1,6 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
@@ -70,10 +71,10 @@ public class CommonUtil {
     /**
      * 错误提示
      *
-     * @param warning 警告
+     * @param w 警告
      */
-    public static void warning(String warning) {
-        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + warning + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    public static void warning(String w) {
+        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + w + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     /**
@@ -83,17 +84,7 @@ public class CommonUtil {
      */
     public static void log(String v) {
         String type = "---------------------------------------{}---------------------------------------";
-        log(type, v);
-    }
-
-    /**
-     * 日志打印
-     *
-     * @param type  type
-     * @param value value
-     */
-    private static void log(String type, String value) {
-        logger.info(type, value);
+        logger.info(type, v);
     }
 
     /**
@@ -112,6 +103,11 @@ public class CommonUtil {
 
     public static Integer getIntField(JSONObject response, int index, String field) {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
+    }
+
+    public static String getStrField(JSONArray jsonArray, int index, String field) {
+        String value = jsonArray.getJSONObject(index).getString(field);
+        return value == null ? "" : value;
     }
 
     public static List<String> getMoreParam(JSONObject object, String... paramName) {

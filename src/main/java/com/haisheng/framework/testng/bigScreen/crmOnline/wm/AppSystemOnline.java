@@ -538,7 +538,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为战败，战败原因为他店购车，是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为战败，战败原因为他店购车，是否完成=已完成", priority = 1)
     public void returnVisit_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -550,7 +550,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为战败，战败原因为购买竞品，是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为战败，战败原因为购买竞品，是否完成=已完成", priority = 2)
     public void returnVisit_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -562,7 +562,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为战败，战败原因为放弃购车，是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为战败，战败原因为放弃购车，是否完成=已完成", priority = 3)
     public void returnVisit_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

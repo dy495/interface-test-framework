@@ -85,7 +85,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
             po.setSaleName(arr.get("userName"));
             po.setSaleId(arr.get("userId"));
             String sql = Sql.instance().insert()
-                    .from("t_porsche_today_data")
+                    .from("t_porsche_today_date")
                     .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name", "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
                     .value(po.getTodayTestDriverNum(), po.getTodayOrderNum(), po.getTodayDealNum(), po.getTodayClueNum(),
                             po.getTodayReceptionNum(), po.getTodayAppointmentNum(), po.getTodayDate(), po.getShopId(),

@@ -98,23 +98,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         logger.info("applet authorization is:{}", authorization);
     }
 
-
-    /*
-    创建客户 V1.1作废了
-     */
-    public JSONObject customerAdd(JSONObject decision_customer) throws Exception {
-        String url = "/porsche/app/customer/add";
-        String json =
-                "{" +
-                        "\"decision_customer\" :" + decision_customer + ",\n" +
-                        "\"along_list\" :[]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     //手动创建临时客户 V1.1
-    public Long getCustomerId() throws Exception {
+    public Long getCustomerId() {
         String url = "/porsche/app/customer/createTempCustomer";
         String json = "{} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -122,43 +107,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data").getLong("customer_id");
     }
 
-    //修改顾客全部信息 V1.1
-    public JSONObject customerEditALL(Long customer_id, int customer_level, String customer_name, String customer_phone,
-                                      String pre_buy_time, String compare_car, String already_car, String car_assess,
-                                      int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car,
-                                      int show_price, int sehand_assess, int pay_type, int buy_car_type, int buy_car_attribute, List<Object> remarks, List<Object> along_list
-    ) throws Exception {
-        String url = "/porsche/app/customer/edit";
-        String json =
-                "{" +
-                        "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
-                        "\"along_list\" :" + along_list + ",\n" +
-                        "\"customer_level\" :" + customer_level + ",\n" +
-                        "\"customer_name\" :\"" + customer_name + "\",\n" +
-                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
-                        "\"compare_car\" :\"" + compare_car + "\",\n" +
-                        "\"already_car\" :\"" + already_car + "\",\n" +
-                        "\"car_assess\" :\"" + car_assess + "\",\n" +
-                        "\"like_car\" :" + like_car + ",\n" +
-                        "\"buy_car\" :" + buy_car + ",\n" +
-                        "\"visit_count\" :" + visit_count + ",\n" +
-                        "\"belongs_area\" :" + belongs_area + ",\n" +
-                        "\"test_drive_car\" :" + test_drive_car + ",\n" +
-                        "\"show_price\" :" + show_price + ",\n" +
-                        "\"sehand_assess\" :" + sehand_assess + ",\n" +
-                        "\"pay_type\" :" + pay_type + ",\n" +
-                        "\"buy_car_type\" :" + buy_car_type + ",\n" +
-                        "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
-                        "\"remarks\" :[\"" + remarks + "\"]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     //修改顾客必填项 V1.1
-    public JSONObject customerEdit_onlyNec(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) throws Exception {
+    public JSONObject customerEdit_onlyNec(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) {
         String url = "/porsche/app/customer/edit";
 
         String json =
@@ -175,7 +125,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //修改顾客必填项 V4.0
-    public JSONObject customerEdit_onlyNec(Long reception_id, Long customer_id, String name) throws Exception {
+    public JSONObject customerEdit_onlyNec(Long reception_id, Long customer_id, String name) {
         String url = "/porsche/app/customer/edit";
 
         JSONObject json1 = new JSONObject();
@@ -210,7 +160,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject finishReception(Long reception_id, Long customer_id, String name) throws Exception {
+    public JSONObject finishReception(Long reception_id, Long customer_id, String name) {
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
         json1.put("reception_id", reception_id);
@@ -242,7 +192,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject customerEdit_car(Long customer_id, int customer_level, String customer_name, String customer_phone,
                                        String pre_buy_time, String compare_car, int like_car, int buy_car, int visit_count,
                                        int test_drive_car, int buy_car_attribute, String remarks
-    ) throws Exception {
+    ) {
         String url = "/porsche/app/customer/edit";
 
         String json =
@@ -268,7 +218,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //修改顾客部分信息 V1.1
     public JSONObject customerEdit_several(Long customer_id, int customer_level, String customer_name, String customer_phone,
                                            String pre_buy_time, String compare_car, int pay_type, String remarks
-    ) throws Exception {
+    ) {
         String url = "/porsche/app/customer/edit";
 
         String json =
@@ -401,76 +351,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return object;
     }
 
-    /*
-    app修改客户
-     */
-    public JSONObject customerEditApp(Long customer_id, String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
-                                      int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car, String compare_car, int customer_select_type,
-                                      String already_car, int show_price, String car_assess, int sehand_assess, int pay_type, int buy_car_type, int buy_car_attribute,
-                                      List along_list, List reamrks, List return_visits) throws Exception {
-        String url = "/porsche/app/customer/edit";
-
-        String json =
-                "{\n" + "   \"customer_id\" :" + customer_id + ",\n";
-        if (return_visits != null) {
-            json = json + "   \"return_visits\" :" + return_visits + ",\n";
-
-        }
-        if (along_list != null) {
-            json = json + "   \"along_list\" :" + along_list + ",\n";
-
-        }
-        if (reamrks != null) {
-            json = json + "   \"reamrks\" :" + reamrks + ",\n";
-
-        }
-
-        json = json +
-                "   \"shop_id\" :" + getProscheShop() + ",\n" +
-                "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
-                "   \"customer_level\" :" + customer_level + ",\n" +
-                "   \"customer_name\" :\"" + customer_name + "\",\n" +
-                "   \"customer_phone\" :\"" + customer_phone + "\",\n" +
-                "   \"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
-                "   \"like_car\" :" + like_car + ",\n" +
-                "   \"buy_car\" :" + buy_car + ",\n" +
-                "   \"visit_count\" :" + visit_count + ",\n" +
-                "   \"belongs_area\" :" + belongs_area + ",\n" +
-                "   \"test_drive_car\" :" + test_drive_car + ",\n" +
-                "   \"compare_car\" :\"" + compare_car + "\",\n" +
-                "   \"customer_select_type\" :" + customer_select_type + ",\n" +
-                "   \"already_car\" :\"" + already_car + "\",\n" +
-                "   \"show_price\" :" + show_price + ",\n" +
-                "   \"car_assess\" :\"" + car_assess + "\",\n" +
-                "   \"sehand_assess\" :" + sehand_assess + ",\n" +
-                "   \"pay_type\" :" + pay_type + ",\n" +
-                "   \"buy_car_type\" :" + buy_car_type + ",\n" +
-                "   \"buy_car_attribute\" :" + buy_car_attribute + "\n";
-        json = json + "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    //app仅修改客户是否订车/是否试驾
-    public JSONObject customerEditNec(Long customer_id, String analysis_customer_id, long customer_level, int buy_car) throws Exception {
-        String url = "/porsche/app/customer/edit";
-
-        String json =
-                "{\n" + "   \"customer_id\" :" + customer_id + ",\n" +
-                        "   \"shop_id\" :" + getProscheShop() + ",\n" +
-                        "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
-                        "   \"buy_car\" :" + buy_car + "\n,\"customer_phone\":\"这是一个假电话\",\n\"customer_level\":\"" + customer_level + "\"";
-        json = json + "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     //PC修改顾客订车信息
-    public JSONObject customerEditPC(Long customer_id, int buy_car, String phone) throws Exception {
+    public JSONObject customerEditPC(Long customer_id, int buy_car, String phone) {
         String url = "/porsche/customer/edit";
 
         String json =
@@ -487,7 +369,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject customerEditPC(Long customer_id, String name, String phone, long level) throws Exception {
+    public JSONObject customerEditPC(Long customer_id, String name, String phone, long level) {
         String url = "/porsche/customer/edit";
 
         String json =
@@ -505,7 +387,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject customerEditPC(Long customer_id, String name, String phone, long level, int like_car, int pay_type, String pre_buy_time, int show_price, int test_drive_car, int visit_count) throws Exception {
+    public JSONObject customerEditPC(Long customer_id, String name, String phone, long level, int like_car, int pay_type, String pre_buy_time, int show_price, int test_drive_car, int visit_count) {
         String url = "/porsche/customer/edit";
 
         String json =
@@ -549,7 +431,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     //PC详情页添加顾客回访记录
-    public JSONObject customerEditVisitPC(Long customer_id, String name, String phone, Long level, JSONObject return_visits) throws Exception {
+    public JSONObject customerEditVisitPC(Long customer_id, String name, String phone, Long level, JSONObject return_visits) {
         String url = "/porsche/customer/edit";
 
         String json =
@@ -3065,6 +2947,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    public JSONObject receptionList(String customerId) {
+        String url = "/porsche/app/customer/reception-list";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        return invokeApi(url, object);
+    }
+
     /**
      * 战败客户列表
      *
@@ -3453,6 +3342,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("vehicle_chassis_code", vehicleChassisCode);
         object.put("service_time_start", serviceTimeStart);
         object.put("service_time_end", serviceTimeEnd);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 成交记录
+     */
+    public JSONObject orderInfoPage(int page, int size) {
+        String url = "/porsche/order-info/page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 
@@ -5681,7 +5581,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //我的接待-购车档案列表
-    public JSONObject buyCarList(String customer_id) throws Exception {
+    public JSONObject buyCarList(String customer_id) {
         String url = "/porsche/app/customer/buy-car-list";
         JSONObject json = new JSONObject();
         json.put("customer_id", customer_id);
