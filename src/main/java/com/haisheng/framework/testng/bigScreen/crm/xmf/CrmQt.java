@@ -339,13 +339,14 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             String receiptId = json.getString("reception_id");
             String customer_id = json.getString("customerId");
             String belong_sale_id = json.getString("sale_id");
+            String userLoginName = json.getString("userLoginName");
             //完成接待
             JSONArray PhoneList = json.getJSONArray("phoneList");
             //前台登录，变更接待
             crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, sale_id);
 
-            crm.login(pp.xiaoshouGuwen, pp.adminpassword);          //变更接待后原销售接待列表数
+            crm.login(userLoginName, pp.adminpassword);          //变更接待后原销售接待列表数
             int total2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
 
             crm.login(loginTemp, pp.adminpassword);   //变更接待后 接待销售接待列表数
@@ -354,12 +355,12 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, belong_sale_id);
 
-            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
-            JSONArray faceList = new JSONArray();
-            JSONObject ll = new JSONObject();
-            ll.put("analysis_customer_id", "c2aecb35-9e69-4adb-bc7f-98310e34");
-            ll.put("id", 0);
-            ll.put("is_decision", true);
+            crm.login(userLoginName, pp.adminpassword);
+//            JSONArray faceList = new JSONArray();
+//            JSONObject ll = new JSONObject();
+//            ll.put("analysis_customer_id", "c2aecb35-9e69-4adb-bc7f-98310e34");
+//            ll.put("id", 0);
+//            ll.put("is_decision", true);
 
             finishReceive pm = new finishReceive();
             pm.customer_id = customer_id;
@@ -368,21 +369,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.name = pp.customer_name;
 
             pm.reception_type = "BB";
-            pm.face_list = faceList;
-            pm.plate_number_one = "京DF12334";
+//            pm.face_list = faceList;
+//            pm.plate_number_one = "京DF12334";
 
-//            pm.customer_id="14058";
-//            pm.reception_id="4086";
-//            pm.belongs_sale_id="uid_37ff7893";
-//            JSONArray PhoneList = new JSONArray();
-//            JSONObject phone1 = new JSONObject();
-//            phone1.put("phone", "15037286013");
-//            phone1.put("phone_order", 0);
-//            JSONObject phone2 = new JSONObject();
-//            phone2.put("phone", "");
-//            phone2.put("phone_order", 1);
-//            PhoneList.add(0, phone1);
-//            PhoneList.add(1, phone2);
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             crm.finishReception3(pm);
@@ -669,11 +658,8 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :前台老客标记非客失败
-     * @date :2020/10/26 15:16
-     **/
-    @Test
+
+    @Test(description = "前台老客标记非客失败")
     public void markab(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -699,11 +685,8 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :前台分配新客含人脸接待列表+1
-     * @date :2020/10/20 18:54
-     **/
-//    @Test()
+
+    @Test(description = "前台分配新客含人脸接待列表+1",enabled = false)
     public void qtFenpei() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -746,8 +729,8 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             saveData("销售总监修改客户联系方式1，成功验证 ");
         }
     }
-   //不含人脸
-    @Test()
+
+    @Test(description = "前台分配新客不含人脸接待列表+1")
     public void qtFenpei2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -778,26 +761,6 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("前台分配新客接待列表+1");
-        }
-    }
-
-    //    @Test()
-    public void T() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            selectTest ss = new selectTest();
-            ss.page = "1";
-            crm.nonReceptionList(ss);
-            String a = ss.page;
-            System.out.println(ss.page);
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-//            saveData(" ");
         }
     }
 

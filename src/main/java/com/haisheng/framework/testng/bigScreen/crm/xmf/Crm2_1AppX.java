@@ -1059,7 +1059,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(pp.xiaoshouGuwen, pp.xspassword);
+            crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
             saveData("新建车名、底盘号重复验证");
         }
     }
@@ -1281,6 +1281,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.belongs_sale_id = json.getString("sale_id");
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
+            fr.remark=new JSONArray();
             int buyCatTotal = crm.buyCarList(fr.customer_id).getJSONArray("list").size();
 
             orderCar oc = new orderCar();
@@ -1619,8 +1620,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //创建顾客接待，填写全部信息，于客户管理信息校验
-//    @Test
+
+    @Test(description = "创建顾客接待，填写全部信息，于客户管理信息校验")
     public void createCustomerInfo(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1646,27 +1647,27 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             String district_name=data.getString("district_name");
             String name=data.getString("name");
             String reception_type=data.getString("reception_type");
-//            String subject_type=data.getString("subject_type");
+            String subject_type=data.getString("subject_type");
             String expected_buy_day=data.getString("expected_buy_day");
 
             Preconditions.checkArgument(belongs_sale_id.equals(fr.belongs_sale_id),"所属顾问id异常");
             Preconditions.checkArgument(district_name.equals("江苏省-苏州市-吴中区"),"客户信息所属区域异常");
 //            Preconditions.checkArgument(birthday.equals("1996-02-19"),"生日");
             Preconditions.checkArgument(name.equals(fr.name),"客户名");
-            Preconditions.checkArgument(reception_type.equals(dt.getHistoryDate(0)),"创建时间");
-//            Preconditions.checkArgument(subject_type.equals(dt.getHistoryDate(0)),"创建时间");
+            Preconditions.checkArgument(reception_type.equals("FU"),"客户来源异常");
+            Preconditions.checkArgument(subject_type.equals(fr.subjectType),"客户类型异常");
             Preconditions.checkArgument(expected_buy_day.equals(dt.getHistoryDate(1)),"预计购车时间异常");
+            Preconditions.checkArgument(create_date.equals(dt.getHistoryDate(0)),"预计购车时间异常");
 
         }catch (AssertionError |Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("创建顾客接待，填写全部信息，于客户管理信息校验");
+            saveData("创建顾客接待，填写全部信息，与客户管理信息校验");
         }
     }
 
-    //app-修改密码
 //    @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
-    @Test
+    @Test(description = "app修改密码")
     public void appchangepassword(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1698,8 +1699,8 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             saveData("app修改密码正常");
         }
     }
-    //修改密码异常 后天未作校验，均是前端校验
-//    @Test
+
+    @Test(description = "修改密码异常 后台未作校验，均是前端校验",enabled = false)
     public void appchangepassword2(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1740,12 +1741,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    /**
-     * @description :新建工作计划，列表+1
-     * @date :2020/9/10 19:59
-     **/
-//    @Test
+    @Test(description = "新建工作计划，列表+1",enabled = false)
     public void createPlan() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -23,7 +23,7 @@ public class PublicParm {
     public Long mycarId2 = 419L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
-    public String xspassword = "e10adc3949ba59abbe56e057f20f883e";
+    public String xsgwPassword = "e10adc3949ba59abbe56e057f20f883e";
     public String dcc = "xdcc";      //销售账号
     public String xiaoshouZongjian = "xszj";      //销售账号
     //预约使用参数

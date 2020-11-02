@@ -416,6 +416,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
+            fr.remark=new JSONArray();
             String userLoginName = object.getString("userLoginName");
             //申请试驾
             pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 3);  //新客试驾
@@ -453,6 +454,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
+            fr.remark=new JSONArray();
             String userLoginName = object.getString("userLoginName");
             //申请试驾
             pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 3);  //新客试驾
