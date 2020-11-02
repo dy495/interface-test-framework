@@ -8,7 +8,7 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmPCConsistentcyDaily"></class>
+
             <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>

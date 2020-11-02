@@ -356,16 +356,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void customerListSearchPhone() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
+            crm.login(cstm.xszj,cstm.pwd);
             //获取手机号
-            JSONObject obj = crm.customerListPC("",7,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
-            String search_phone = obj.getString("customer_phone");
-            System.out.println(search_phone);
+            JSONObject obj = crm.customerListPC("",-1,"","","2020-06-01","2020-06-30",1,1).getJSONArray("list").getJSONObject(0);
+            String search_phone = obj.getJSONArray("phones").getString(0);
             //查询
             JSONObject obj1 = crm.customerListPC("",-1,"",search_phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
-            String search_phone1 = obj1.getString("customer_phone");
-            System.out.println(search_phone1);
+            String search_phone1 = obj1.getJSONArray("phones").getString(0);
             Preconditions.checkArgument(search_phone.equals(search_phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
