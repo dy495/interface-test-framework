@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
-;
+;import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
@@ -30,10 +30,11 @@ import java.util.*;
  */
 
 public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
     long shop_id = 4116;
+    long shop_id_01 = 43072l;
     String district_code = "";
     //    String shop_type = "[\"NORMAL\"]";
     String shop_type = "[]";
@@ -86,9 +87,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
-        logger.debug("store " + Md);
+        logger.debug("store " + md);
 
-        Md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
 
 
     }
@@ -119,11 +120,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) 4116l).getJSONArray("list");
+            JSONArray iPvlist = md.realTimeShopTotalV3((long) 4116l).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long) 4116l).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) 4116l).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
@@ -154,7 +155,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int pv2 = pass_by.get("pv2");
@@ -219,7 +220,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int pv1 = enter.get("pv1");
             int pv2 = enter.get("pv2");
@@ -247,7 +248,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
             int pv1 = interest.get("pv1");
             int pv2 = interest.get("pv2");
@@ -275,7 +276,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
             int pv1 = deal.get("pv1");
             int pv2 = deal.get("pv2");
@@ -303,7 +304,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
@@ -341,7 +342,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            String district_code = area_code;
 //            int idNum=0;
 //            String  link_re = "";
-//            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
+//            JSONArray sameList = md.realTimeShopTotalV3(shop_id).getJSONArray("list");
 //            for(int j=0;j<sameList.size();j++){
 //                String type = sameList.getJSONObject(j).getString("type");
 //                //获取pv的高于多少的值
@@ -358,8 +359,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //
 //            }
 //
-//            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市的门店数量
-//            JSONArray list = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一城市的门店列表
+//            Integer total = md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市的门店数量
+//            JSONArray list = md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一城市的门店列表
 //            for(int i=0;i<list.size();i++){
 //                Integer shop_id= list.getJSONObject(i).getInteger("id");
 //                if(shop_id == 4116){
@@ -404,7 +405,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            String shop_type = area_type;
 //            int idNum=0;
 //            String  link_re = "";
-//            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
+//            JSONArray sameList = md.realTimeShopTotalV3(shop_id).getJSONArray("list");
 //            for(int j=0;j<sameList.size();j++){
 //                String type = sameList.getJSONObject(j).getString("type");
 //                //获取pv的高于多少的值
@@ -421,8 +422,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //
 //            }
 //
-//            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一类型的门店数量
-//            JSONArray list = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一类型的门店列表
+//            Integer total = md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一类型的门店数量
+//            JSONArray list = md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");//某一类型的门店列表
 //            for(int i=0;i<list.size();i++){
 //                Integer shop_id= list.getJSONObject(i).getInteger("id");
 //                if(shop_id == 4116){
@@ -465,7 +466,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //        boolean needLoginBack=false;
 //        try {
 //            int value1 = 0;
-//            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
+//            JSONArray sameList = md.realTimeShopTotalV3(shop_id).getJSONArray("list");
 //
 //            for(int i=0;i<sameList.size();i++){
 //                JSONObject jsonObject=sameList.getJSONObject(i);
@@ -477,8 +478,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            }
 //            int count=0;
 //            String shop_type = "[\"NORMAL\"]";
-//            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一类型的门店数量
-//            JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
+//            Integer total = md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一类型的门店数量
+//            JSONArray storeList = md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
 //            for(int j=0;j<storeList.size();j++){
 //                Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
 //                Integer id = storeList.getJSONObject(j).getInteger("id");
@@ -514,7 +515,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //        boolean needLoginBack=false;
 //        try {
 //            int value1 = 0;
-//            JSONArray sameList = Md.realTimeShopTotalV3(shop_id).getJSONArray("list");
+//            JSONArray sameList = md.realTimeShopTotalV3(shop_id).getJSONArray("list");
 //
 //            for(int i=0;i<sameList.size();i++){
 //                JSONObject jsonObject=sameList.getJSONObject(i);
@@ -526,8 +527,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            }
 //            int count=0;
 //            String district_code = "110000";
-//            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市的门店数量
-//            JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
+//            Integer total = md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市的门店数量
+//            JSONArray storeList = md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
 //            for(int j=0;j<storeList.size();j++){
 //                Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
 //                Integer id = storeList.getJSONObject(j).getInteger("id");
@@ -562,7 +563,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
             int pvValues = 0;
             //获取到店趋势数据
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             for (int i = 0; i < trend_list.size(); i++) {
                 JSONObject jsonObject = trend_list.getJSONObject(i);
                 if (jsonObject != null) {
@@ -575,7 +576,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 
             //获取进店客群总人次
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("pv1");
 
@@ -605,7 +606,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
 //            int count = 0;
 //            //获取到店趋势数据
-//            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
 //            for (int i = 0; i < trend_list.size(); i++) {
 //                JSONObject jsonObject = trend_list.getJSONObject(i);
 //                if (jsonObject != null) {
@@ -618,7 +619,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //            }
 
             //获取交易客群总人次
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
             int value1 = deal.get("pv1");
 
@@ -643,7 +644,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int times4 = 0;
             //获取各个客群时段分布的总和
             int count = 30;
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             for (int i = 0; i < showList.size(); i++) {
                 Integer deal_pv = showList.getJSONObject(i).getInteger("deal_pv");
                 Integer enter_pv = showList.getJSONObject(i).getInteger("enter_pv");
@@ -698,7 +699,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             //获取过店客群总人次
-            JSONObject res = Md.historyShopConversionV3(shop_id, cycle_type, month);
+            JSONObject res = md.historyShopConversionV3(shop_id, cycle_type, month);
             String interestRate = res.getString("interest_percentage");
             String enterRate = res.getString("enter_percentage");
             JSONArray ldlist = res.getJSONArray("list");
@@ -754,7 +755,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
             int values = 0;
             int values1 = 0;//值不为Null的个数，求平均值时用
-            JSONObject res = Md.historyShopTrendsV3(cycle_type, month, shop_id);
+            JSONObject res = md.historyShopTrendsV3(cycle_type, month, shop_id);
             int averageFlow = res.getInteger("average_daily_passenger_flow");//获取每天得日均客流
             JSONArray trendList = res.getJSONArray("trend_list");
             for (int i = 0; i < trendList.size(); i++) {
@@ -794,8 +795,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             //过店客群的各个年龄段的男性比例累计和
             double count = 0;
             double count1 = 0;
-            JSONObject enter = Md.historyShopAgeV3(shop_id, cycle_type, month).getJSONObject("enter");
-            JSONArray ageList = Md.historyShopAgeV3(shop_id, cycle_type, month).getJSONObject("enter").getJSONArray("list");
+            JSONObject enter = md.historyShopAgeV3(shop_id, cycle_type, month).getJSONObject("enter");
+            JSONArray ageList = md.historyShopAgeV3(shop_id, cycle_type, month).getJSONObject("enter").getJSONArray("list");
 
             String male_ratio_str = enter.getString("male_ratio_str");
             Double result1 = Double.valueOf(male_ratio_str.replace("%", ""));
@@ -863,9 +864,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer size = 50;
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
-            JSONArray storeList = Md.patrolShopPageV3(district_code, page, size).getJSONArray("list");
+            JSONArray storeList = md.patrolShopPageV3(district_code, page, size).getJSONArray("list");
             long shop_id = 4116;
-            JSONObject res = Md.shopDetailV3(shop_id);
+            JSONObject res = md.shopDetailV3(shop_id);
 
             if (storeList.contains(res)) {
                 check = true;
@@ -902,7 +903,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv = 0;
             Integer paid_uv = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
             for (int i = 0; i < trend_list.size(); i++) {
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
@@ -921,7 +922,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String shop_manager = "";
             String member_type = "";
             Integer member_type_order = null;
-            JSONArray member_list = Md.shopPageMemberV3(district_code, shop_type, shop_name, shop_manager, member_type, member_type_order, page, size).getJSONArray("list");
+            JSONArray member_list = md.shopPageMemberV3(district_code, shop_type, shop_name, shop_manager, member_type, member_type_order, page, size).getJSONArray("list");
             int cust_uv = 0;
             int channel_uv = 0;
             int pay_uv = 0;
@@ -980,7 +981,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv_total = 0;
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = Md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberCountV3(cycle_type, month).getJSONArray("trend_list");
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
@@ -1035,7 +1036,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv_total = 0;
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = Md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
@@ -1092,7 +1093,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
 
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
@@ -1101,7 +1102,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
 
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int pv = 0;
             int count1 = trend_list.size();
             for (int i = 0; i < count1; i++) {
@@ -1131,7 +1132,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = Md.realTimeShopPvV3(shop_id).getJSONArray("list");
+            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
             int today_pv = 0;
             for (int i = 0; i < list.size(); i++) {
                 Integer count = list.getJSONObject(i).getInteger("today_pv");
@@ -1162,7 +1163,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = Md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
+            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
             int scrole = 0;
@@ -1196,7 +1197,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray trend_list = Md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
             int count1 = trend_list.size();
             int customer_uv_total = 0;
             int customer_uv_new_today = 0;
@@ -1205,7 +1206,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     customer_uv_total = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                 }
             }
-            Integer total = Md.memberTotalListV3(shop_id, page, size).getInteger("total");
+            Integer total = md.memberTotalListV3(shop_id, page, size).getInteger("total");
 
 
             Preconditions.checkArgument((customer_uv_total != 0 && total != 0), "累计顾客为：" + customer_uv_total + "事件为" + total + "。报错门店的shopId=" + shop_id);
@@ -1232,7 +1233,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
 //            customer_id
             //根据门店id获取customer_id
-            JSONObject response = Md.memberTotalListV3(shop_id, page, size);
+            JSONObject response = md.memberTotalListV3(shop_id, page, size);
             int total = response.getInteger("total");
 
             JSONArray list = response.getJSONArray("list");
@@ -1246,7 +1247,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String face_url = "";
             String member_type = "";
             String member_id = "";
-            JSONArray list1 = Md.memberTotalListV3(shop_id, page, 50).getJSONArray("list");
+            JSONArray list1 = md.memberTotalListV3(shop_id, page, 50).getJSONArray("list");
             for (int j = 0; j < list1.size(); j++) {
 
                 customer_id = list1.getJSONObject(j).getString("customer_id");
@@ -1266,14 +1267,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     }
                 }
 
-                total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
+                total_sum = md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
                 if (total_sum == null) {
                     total_sum = 0;
                 }
 
                 int t = CommonUtil.getTurningPage(total_sum, 50);
                 for (int l = 1; l < t; l++) {
-                    JSONObject res = Md.memberDetail(shop_id, customer_id, l, size);
+                    JSONObject res = md.memberDetail(shop_id, customer_id, l, size);
                     enter_total = res.getInteger("total_visit_times");//累计到店次数
                     if (enter_total == null) {
                         enter_total = 0;
@@ -1315,7 +1316,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 //            int s = CommonUtil.pageTurning(total, 50);
 //            for (int i = 1; i < s; i++) {
-//              JSONArray list1=  Md.memberTotalListV3(shop_id, i, 50).getJSONArray("list");
+//              JSONArray list1=  md.memberTotalListV3(shop_id, i, 50).getJSONArray("list");
 //
 //                for (int j = 0; j < list1.size(); j++) {
 //                     member_type =list1.getJSONObject(j).getString("member_type");
@@ -1323,14 +1324,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //                         member_id = list1.getJSONObject(j).getString("member_id");
 //                     }
 //                     customer_id = list1.getJSONObject(j).getString("customer_id");
-//                    enter_total = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
-//                    total_sum = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//获取所有留痕事件的和
-//                    deal = Md.memberDetail(shop_id, customer_id, page, size).getInteger("total_deal_times");//获取累计交易的次数
+//                    enter_total = md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
+//                    total_sum = md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//获取所有留痕事件的和
+//                    deal = md.memberDetail(shop_id, customer_id, page, size).getInteger("total_deal_times");//获取累计交易的次数
 //
 //                    int t = CommonUtil.pageTurning(enter_total, 50);
 //                    for (int l = 1; l < t; l++){
-//                        JSONArray thingsList = Md.memberDetail(shop_id, customer_id, l, 50).getJSONArray("list");//获取事件中门店下单的次数
-//                        face_url = Md.memberDetail(shop_id, customer_id, l, 50).getString("face_url");//或者每个人物的脸部图片地址
+//                        JSONArray thingsList = md.memberDetail(shop_id, customer_id, l, 50).getJSONArray("list");//获取事件中门店下单的次数
+//                        face_url = md.memberDetail(shop_id, customer_id, l, 50).getString("face_url");//或者每个人物的脸部图片地址
 //                        for (int k = 0; k < thingsList.size(); k++) {
 //                            String mark = thingsList.getJSONObject(k).getString("mark");
 //                            if (mark.equals("门店下单")) {
@@ -1365,7 +1366,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
             String cycle_type = "";
             String month = "2020-08";
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv = 0;
             for (int i = 0; i < trend_list.size(); i++) {
@@ -1375,13 +1376,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             boolean result = false;
             if (showList != null) {
                 result = true;
@@ -1410,7 +1411,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_SEVEN";
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv = 0;
             for (int i = 0; i < trend_list.size(); i++) {
@@ -1420,13 +1421,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             boolean result = false;
             if (showList != null) {
                 result = true;
@@ -1455,7 +1456,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_FOURTEEN";
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv = 0;
             for (int i = 0; i < trend_list.size(); i++) {
@@ -1466,13 +1467,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             boolean result = false;
             if (showList != null) {
                 result = true;
@@ -1500,7 +1501,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_THIRTY";
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv = 0;
             for (int i = 0; i < trend_list.size(); i++) {
@@ -1511,13 +1512,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             boolean result = false;
             if (showList != null) {
                 result = true;
@@ -1547,7 +1548,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_SIXTY";
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv = 0;
             for (int i = 0; i < trend_list.size(); i++) {
@@ -1558,13 +1559,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id, cycle_type, month).getJSONArray("list");
             boolean result = false;
             if (showList != null) {
                 result = true;
@@ -1594,7 +1595,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONObject response = Md.memberTotalListV3(shop_id, page, 50);
+            JSONObject response = md.memberTotalListV3(shop_id, page, 50);
             JSONArray list = response.getJSONArray("list");
             String last_time = "";
             String customer_id = "";
@@ -1602,7 +1603,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             for (int i = 0; i < list.size(); i++) {
                 last_time = list.getJSONObject(i).getString("latest_arrival_time");
                 customer_id = list.getJSONObject(i).getString("customer_id");
-                JSONObject res = Md.memberDetail(shop_id, customer_id, page, 10);
+                JSONObject res = md.memberDetail(shop_id, customer_id, page, 10);
                 JSONArray detailList = res.getJSONArray("list");
                 int total = res.getInteger("total");
 
@@ -1637,7 +1638,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONObject response = Md.memberTotalListV3(shop_id, page, 50);
+            JSONObject response = md.memberTotalListV3(shop_id, page, 50);
             JSONArray list = response.getJSONArray("list");
             String customer_id = "";
             int total_deal_times = 0;
@@ -1645,7 +1646,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int allsum = 0;
             for (int i = 0; i < list.size(); i++) {
                 customer_id = list.getJSONObject(i).getString("customer_id");
-                JSONObject res = Md.memberDetail(shop_id, customer_id, page, 10);
+                JSONObject res = md.memberDetail(shop_id, customer_id, page, 10);
                 total_deal_times = res.getInteger("total_deal_times");
                 total_visit_times = res.getInteger("total_visit_times");
                 allsum = total_deal_times + total_visit_times;
@@ -1674,43 +1675,46 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            Integer total = Md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("1");
-            r_dList.add("2");
+            r_dList.add("3");
+            r_dList.add("4");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
 
             Integer status = 1;
-            String type = "PHONE";
+            String type = "EMAIL";
             //用EMAIL新增一个账号
-            JSONObject res = Md.organizationAccountAdd(name, "", phone, r_dList, status, shop_list, type);
+            JSONObject res = md.organizationAccountAdd(name, email, "", r_dList, status, shop_list, type);
             Integer code = res.getInteger("code");
 
 
            //从列表获取刚刚新增的账户的account
-            JSONArray accountList = Md.organizationAccountPage(name, "", email, "", "", "", page, size).getJSONArray("list");
+            JSONArray accountList = md.organizationAccountPage(name, "", email, "", "", "", page, size).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("account");
 
             //新增账号以后，再查询列表
-            Integer total1 = Md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
             int result = total1 - total;
             Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
 
-            Integer code1 = Md.organizationAccountDelete(account).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
+
 
             //编辑账号的名称，是否与列表该账号的一致
             String reName = "qingqing测编辑";
-            Md.organizationAccountEdit(account, reName, "", phone, r_dList, status, shop_list, type);
-            JSONArray accountsList = Md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
-            String name_1 = accountsList.getJSONObject(0).getString("name");
+            md.organizationAccountEdit(account, reName, email, "", r_dList, status, shop_list, type);
+            JSONArray accountsList = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
+            String name_1 = accountsList.getJSONObject(accountsList.size()-1).getString("name");
             Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
 
+
+
             //删除账号以后，再查询列表
-            Integer total2 = Md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
+            Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
+            Integer total2 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
             int result1 = total1 - total2;
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
 
@@ -1733,35 +1737,35 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            Integer total = Md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("1");
-            r_dList.add("2");
+            r_dList.add("3");
+            r_dList.add("4");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
 
 
-            JSONArray list = Md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
+            JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
             String today = dt.getHHmm(0);
             String account = "";
             String old_phone = "";
             String create_time = "";
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 1; i < list.size(); i++) {
                 create_time = list.getJSONObject(i).getString("create_time");
                 if (!create_time.equals(today)) {
-                    account = list.getJSONObject(i).getString("account");
-                    old_phone = list.getJSONObject(i).getString("phone");
+                    account = list.getJSONObject(list.size()-1).getString("account");
+                    old_phone = list.getJSONObject(list.size()-1).getString("phone");
                     break;
                 }
             }
 
             //编辑账号的名称，权限
             String reName = "qingqing测编辑";
-            Md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
+            md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
             //获取列表该账号
-            JSONArray accountList = Md.organizationAccountPage("", "", "", old_phone, "", "", page, size).getJSONArray("list");
+            JSONArray accountList = md.organizationAccountPage("", "", "", old_phone, "", "", page, size).getJSONArray("list");
             String create_time_1 = "";
             String phone_1 = accountList.getJSONObject(0).getString("phone");//获取通过手机号搜索到的账号的手机号
             if (phone_1.equals(old_phone)) {
@@ -1770,7 +1774,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
             Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
             //编辑完以后获取列表的数量，是否有增多或者减少
-            Integer total1 = Md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
             Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
 
         } catch (AssertionError e) {
@@ -1792,14 +1796,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = Md.organizationRolePage("", page, size).getJSONArray("list");
+            JSONArray list = md.organizationRolePage("", page, size).getJSONArray("list");
             boolean result = false;
             for (int i = 1; i < list.size(); i++) {
                 String role_name = list.getJSONObject(i).getString("role_name");
-                JSONArray list1 = Md.organizationRolePage(role_name, page, size).getJSONArray("list");
+                JSONArray list1 = md.organizationRolePage(role_name, page, size).getJSONArray("list");
                 int account_num = list1.getJSONObject(0).getInteger("account_number");
 
-                Integer Total = Md.organizationAccountPage("", "", "", "", role_name, "", page, size).getInteger("total");
+                Integer Total = md.organizationAccountPage("", "", "", "", role_name, "", page, size).getInteger("total");
                 if (account_num == Total) {
                     result = true;
                 }
@@ -1825,7 +1829,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 //获取列表门店的累计风险事件
                 int risk_total = list.getJSONObject(i).getInteger("risk_total");
@@ -1833,15 +1837,15 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 long shop_id = list.getJSONObject(i).getInteger("id");
                 //获取待处理的数量
                 String current_state = "PENDING";
-                int pend_total = Md.cashier_riskPage(shop_id, "", "", "", "", "", current_state, page, size).getInteger("total");
+                int pend_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
 
                 //获取已处理的数量
-                String current_state1 = "PROCESSE";
-                int processe_total = Md.cashier_riskPage(shop_id, "", "", "", "", "", current_state1, page, size).getInteger("total");
+                String current_state1 = "PROCESSED";
+                int processe_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state1, page, size).getInteger("total");
 
                 //获取已过期的数量
                 String current_state2 = "EXPIRED";
-                int expired_total = Md.cashier_riskPage(shop_id, "", "", "", "", "", current_state2, page, size).getInteger("total");
+                int expired_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state2, page, size).getInteger("total");
 
                 int result = pend_total + processe_total + expired_total;
                 Preconditions.checkArgument(result == risk_total, "累计风险事件：" + risk_total + "!=待处理：" + pend_total + "+已处理：" + processe_total + "+已过期：" + expired_total + "之和：" + result);
@@ -1866,14 +1870,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int normal_num = list.getJSONObject(i).getInteger("normal_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
                 //获取收银风控事件列表的正常事件的数量
                 String handle_result = "NORMAL";
-                int total = Md.cashier_riskPage(shop_id, "", "", "", "", handle_result, "", page, size).getInteger("total");
-                Preconditions.checkArgument(normal_num == total, "收银风控列表门店ID：" + shop_id + "的正常事件：" + normal_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
+                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getInteger("total");
+                Preconditions.checkArgument(normal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + normal_num + "!=【收银风控事件】中该门店正常事件的数量：" + total);
             }
 
         } catch (AssertionError e) {
@@ -1895,14 +1899,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int abnormal_num = list.getJSONObject(i).getInteger("abnormal_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
                 //获取收银风控事件列表的异常事件的数量
                 String handle_result = "ABNORMAL";
-                int total = Md.cashier_riskPage(shop_id, "", "", "", "", handle_result, "", page, size).getInteger("total");
-                Preconditions.checkArgument(abnormal_num == total, "收银风控列表门店ID：" + shop_id + "的正常事件：" + abnormal_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
+                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getInteger("total");
+                Preconditions.checkArgument(abnormal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + abnormal_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
             }
 
         } catch (AssertionError e) {
@@ -1923,14 +1927,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void cashierDataInfo3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int pending_num = list.getJSONObject(i).getInteger("pending_risks_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
                 //获取收银风控事件列表的待处理事件的数量
                 String current_state = "PENDING";
-                int total = Md.cashier_riskPage(shop_id, "", "", "", "", "", current_state, page, size).getInteger("total");
-                Preconditions.checkArgument(pending_num == total, "收银风控列表门店ID：" + shop_id + "的正常事件：" + pending_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
+                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
+                Preconditions.checkArgument(pending_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + pending_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
             }
 
         } catch (AssertionError e) {
@@ -1951,7 +1955,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void cashierDataInfo4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 //获取处理结果为正常和异常的数量
                 int normal_num = list.getJSONObject(i).getInteger("normal_total");
@@ -1960,8 +1964,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 long shop_id = list.getJSONObject(i).getInteger("id");
                 //获取收银风控事件列表的当前状态为已处理的数量
                 String current_state = "PROCESSED";
-                int total = Md.cashier_riskPage(shop_id, "", "", "", "", "", current_state, page, size).getInteger("total");
-                Preconditions.checkArgument(result == total, "收银风控列表门店ID：" + shop_id + "处理结果为正常+处理结果为异常的和：" + result + "！=【收银风控事件】中该门店已处理事件的数量：" + total);
+                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
+                Preconditions.checkArgument(result == total, "收银风控列表门店ID：" + shop_id_01 + "处理结果为正常+处理结果为异常的和：" + result + "！=【收银风控事件】中该门店已处理事件的数量：" + total);
             }
 
         } catch (AssertionError e) {
@@ -1982,23 +1986,24 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void orderDataInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject res = Md.cashier_traceBack(shop_id, "", "", page, size);
+            JSONObject res = md.cashier_traceBack(shop_id, "", "", page, size);
             //获取收银追溯页面的小票数量
             int total = res.getInteger("total");
             JSONArray list = res.getJSONArray("list");
             //获取收银追溯页面的第一个小票单号
-            int order_id = list.getJSONObject(0).getInteger("order_id");
-            String order_time = list.getJSONObject(0).getString("order_time");
+            String order_id = list.getJSONObject(0).getString("order_id");
+            Long order_time = list.getJSONObject(0).getLong("order_time");
+            String order_time_02= dt.timestampToDate("yyyy-MM-dd HH:mm:ss",order_time);
 
-            JSONObject response = Md.cashier_riskPage(shop_id, "", "", "", "", "", "", page, size);
+            JSONObject response = md.cashier_riskPage(shop_id_01, "", order_id, "", "", "", "", page, size);
             //获取收银风控事件列表的小票总数量
             int total1 = response.getInteger("total");
             JSONArray list1 = response.getJSONArray("list");
-            int order_id1 = list1.getJSONObject(0).getInteger("order_id");
-            String order_time1 = list1.getJSONObject(0).getString("order_time");
+            String order_id1 = list1.getJSONObject(0).getString("order_id");
+            String order_time1 = list1.getJSONObject(0).getString("order_date");
 
-            Preconditions.checkArgument(total <= total1, "【收银追溯】中列表门店ID：" + shop_id + "小票数量：" + total + ">【收银风控事件】中的小票数量：" + total1);
-            Preconditions.checkArgument(order_time.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id + "小票：" + order_id + "的下单时间！==【收银风控时间】中小票号" + order_id + "的时间" + order_time1);
+            Preconditions.checkArgument(total <= total1, "【收银追溯】中列表门店ID：" + shop_id_01 + "小票数量：" + total + ">【收银风控事件】中的小票数量：" + total1);
+            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间"+order_time_02+"!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -2010,94 +2015,94 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
     }
 
-    /**
-     * ====================收银风控事件的数据一致性（待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
-     */
-    @Test
-    public void ruleDeal_DataInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取收银追溯列表第一个门店的门第ID和门店名称，累计正常事件，和待处理事件
-            JSONArray dataList = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            long shop_id = dataList.getJSONObject(0).getInteger("shop_id");
-            String shop_name = dataList.getJSONObject(0).getString("shop_name");
-            int normal_total = dataList.getJSONObject(0).getInteger("normal_total");
-            int pending_total = dataList.getJSONObject(0).getInteger("pending_risks_total");
-            int risk_total = dataList.getJSONObject(0).getInteger("risk_total");
+//    /**
+//     * ====================收银风控事件的数据一致性（待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
+//     */
+//    @Test
+//    public void ruleDeal_DataInfo() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取收银追溯列表第一个门店的门第ID和门店名称，累计正常事件，和待处理事件
+//            JSONArray dataList = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+//            long shop_id = dataList.getJSONObject(0).getInteger("shop_id");
+//            String shop_name = dataList.getJSONObject(0).getString("shop_name");
+//            int normal_total = dataList.getJSONObject(0).getInteger("normal_total");
+//            int pending_total = dataList.getJSONObject(0).getInteger("pending_risks_total");
+//            int risk_total = dataList.getJSONObject(0).getInteger("risk_total");
+//
+//
+//            //获取待处理风险事件ID
+//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
+//            long id = list.getJSONObject(0).getInteger("id");
+//
+//            String order = list.getJSONObject(0).getString("order_id");
+//
+//
+//            //将待处理的风控事件处理成正常
+//            md.cashier_riskEventHandle(id, 1, "人工处理订单无异常");
+//            //获取处理完以后的累计正常事件和待处理事项
+//            JSONArray list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
+//            int normal_total1 = list1.getJSONObject(0).getInteger("normal_total");
+//            int pending_total1 = list1.getJSONObject(0).getInteger("pending_risks_total");
+//            int risk_total1 = dataList.getJSONObject(0).getInteger("risk_total");
+//
+//            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表正常事件-处理前正常事件！=1");
+//            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表待处理没有-1");
+//            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成正常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
+//        }
+//    }
 
-
-            //获取待处理风险事件ID
-            JSONArray list = Md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-
-            String order = list.getJSONObject(0).getString("order_id");
-
-
-            //将待处理的风控事件处理成正常
-            Md.cashier_riskEventHandle(id, 1, "人工处理订单无异常");
-            //获取处理完以后的累计正常事件和待处理事项
-            JSONArray list1 = Md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
-            int normal_total1 = list1.getJSONObject(0).getInteger("normal_total");
-            int pending_total1 = list1.getJSONObject(0).getInteger("pending_risks_total");
-            int risk_total1 = dataList.getJSONObject(0).getInteger("risk_total");
-
-            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表正常事件-处理前正常事件！=1");
-            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表待处理没有-1");
-            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成正常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
-        }
-    }
-
-    /**
-     * ====================收银风控事件的数据一致性（待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
-     */
-    @Test
-    public void ruleDeal_DataInf1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取收银追溯列表第一个门店的门第ID和门店名称，累计异常事件，和待处理事件
-            JSONArray data_list = Md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            long shop_id = data_list.getJSONObject(0).getInteger("shop_id");
-            String shop_name = data_list.getJSONObject(0).getString("shop_name");
-            int normal_total = data_list.getJSONObject(0).getInteger("normal_total");
-            int pending_total = data_list.getJSONObject(0).getInteger("pending_risks_total");
-            int risk_total = data_list.getJSONObject(0).getInteger("risk_total");
-
-
-            //获取待处理风险事件ID和order_id
-            JSONArray list = Md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-            String order = list.getJSONObject(0).getString("order_id");
-
-
-            //将待处理的风控事件处理成异常
-            Md.cashier_riskEventHandle(id, 0, "该客户有刷单造假的嫌疑，请注意");
-            //获取处理完以后的累计异常事件和待处理事项
-            JSONArray data_list1 = Md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
-            int normal_total1 = data_list1.getJSONObject(0).getInteger("normal_total");
-            int pending_total1 = data_list1.getJSONObject(0).getInteger("pending_risks_total");
-            int risk_total1 = data_list1.getJSONObject(0).getInteger("risk_total");
-
-            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表异常事件-处理前异常事件！=1");
-            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
-            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
-        }
-    }
+//    /**
+//     * ====================收银风控事件的数据一致性（待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
+//     */
+//    @Test
+//    public void ruleDeal_DataInf1() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取收银追溯列表第一个门店的门第ID和门店名称，累计异常事件，和待处理事件
+//            JSONArray data_list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+//            long shop_id = data_list.getJSONObject(0).getInteger("shop_id");
+//            String shop_name = data_list.getJSONObject(0).getString("shop_name");
+//            int normal_total = data_list.getJSONObject(0).getInteger("normal_total");
+//            int pending_total = data_list.getJSONObject(0).getInteger("pending_risks_total");
+//            int risk_total = data_list.getJSONObject(0).getInteger("risk_total");
+//
+//
+//            //获取待处理风险事件ID和order_id
+//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
+//            long id = list.getJSONObject(0).getInteger("id");
+//            String order = list.getJSONObject(0).getString("order_id");
+//
+//
+//            //将待处理的风控事件处理成异常
+//            md.cashier_riskEventHandle(id, 0, "该客户有刷单造假的嫌疑，请注意");
+//            //获取处理完以后的累计异常事件和待处理事项
+//            JSONArray data_list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
+//            int normal_total1 = data_list1.getJSONObject(0).getInteger("normal_total");
+//            int pending_total1 = data_list1.getJSONObject(0).getInteger("pending_risks_total");
+//            int risk_total1 = data_list1.getJSONObject(0).getInteger("risk_total");
+//
+//            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表异常事件-处理前异常事件！=1");
+//            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
+//            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
+//        }
+//    }
 
     /**
      * ====================收银风控事件的数据一致性（涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空）========================
@@ -2106,7 +2111,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void orderInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = Md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
+            JSONArray list = md.cashier_riskPage(shop_id_01, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String order_id = list.getJSONObject(i).getString("order_id");
                 String response_time = list.getJSONObject(i).getString("response_time");
@@ -2137,13 +2142,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void creatRuleInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = Md.risk_controlPage("", "", "", null, page, size).getInteger("total");
+            int total = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
 
             //新建一个风控规则rule中的参数再调试时要进行修改
-            String name = "QA_test";
+            String name = "QA_test01";
             JSONObject para = new JSONObject();
-            para.put("DAY_RANGE", 30);
-            para.put("ORDER_QUANTITY_UPPER_LIMIT", 30);
+            para.put("DAY_RANGE", 10);
+            para.put("ORDER_QUANTITY_UPPER_LIMIT", 5);
 
             JSONObject rule = new JSONObject();
             rule.put("type", "CASHIER");
@@ -2152,13 +2157,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             String shop_type = "NORMAL";
 
-            int id = Md.riskRuleAdd(name, shop_type, rule).getInteger("id");
-            int total1 = Md.risk_controlPage("", "", "", null, page, size).getInteger("total");
+            int id = md.riskRuleAdd(name, shop_type, rule).getJSONObject("data").getInteger("id");
+            int total1 = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
             Preconditions.checkArgument(total1 - total == 1, "新增一个规则以后，新增前后风控规则列表总数相差不为1，新增前：" + total + "新增后：" + total1);
 
             //删除刚刚新建的这个风控规则
-            Md.risk_controlDelete(id);
-            int total2 = Md.risk_controlPage("", "", "", null, page, size).getInteger("total");
+            md.risk_controlDelete(id);
+            int total2 = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
             Preconditions.checkArgument(total1 - total2 == 1, "删除一个规则以后，删除前后列表的总数相差不为1，删除前：" + total1 + "删除后：" + total2);
 
 
@@ -2180,7 +2185,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     public void ruleSwitch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = Md.alarm_page("", "", "", page, size).getJSONArray("list");
+            JSONArray list = md.alarm_page("", "", "", page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String first_alarm_time = list.getJSONObject(i).getString("first_alarm_time");
                 String last_alarm_time = list.getJSONObject(i).getString("last_alarm_time");
@@ -2209,28 +2214,36 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int total = Md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
+            int total = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
             //新增一个沉默时间为10分钟的告警
             String name = "q_test01";
             String type = "CASHIER";
+
             //风控告警规则的ID
             JSONArray rule_id = new JSONArray();
-            rule_id.add(11);
+            rule_id.add(57);
             //告警接收者按照选择角色的ID
             JSONArray accept_id = new JSONArray();
-            accept_id.add(1);
+            accept_id.add(3);
 
-            String start_time = dt.getHHmm(0);
-            String end_time = dt.getHHmm(8);
-            String silent_time = "600000";
+            String start_time = "08:00";
+            String end_time = "16:00";
+            String silent_time = "6400000";
 
-            int id = Md.alarm_ruleAdd(name, type, rule_id, accept_id, start_time, end_time, silent_time).getInteger("id");
-            int total1 = Md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
+             md.alarm_ruleAdd(name, type, rule_id, accept_id, start_time, end_time, silent_time);
+            int total1 = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
             Preconditions.checkArgument(total1 - total == 1, "新增一个风控告警规则以后，新增前后风控规则列表总数相差不为1，新增前：" + total + "新增后：" + total1);
 
+
+            //在列表查找这个新增成功的规则
+            JSONArray list = md.alarm_rulePage(name, type, "", null, page, size).getJSONArray("list");
+            String name2 = list.getJSONObject(0).getString("name");
+            int id = list.getJSONObject(0).getInteger("id");
+            checkArgument(name2.equals(name), "新增风控告警规则，在列表找不到");
+
             //删除刚刚新增的风控告警规则
-            Md.alarm_ruleDelete(id);
-            int total2 = Md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
+            md.alarm_ruleDelete(id);
+            int total2 = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
             Preconditions.checkArgument(total1 - total2 == 1, "删除一个风控规则以后，删除前后列表的总数相差不为1，删除前：" + total1 + "删除后：" + total2);
 
 
