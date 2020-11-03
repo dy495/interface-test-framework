@@ -209,6 +209,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 "DEAL"
         };
     }
+
+
 //    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
 

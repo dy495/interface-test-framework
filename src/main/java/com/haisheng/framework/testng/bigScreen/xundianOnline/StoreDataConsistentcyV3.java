@@ -1352,7 +1352,32 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //        }
 //
 //    }
+    /**
+     //     *
+     //     * ====================百果园线上昨日客流监控======================
+     * */
+    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void  surveDataTrend(long shop_id){
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+             JSONArray trend_list =  Md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
+             int yestPv = trend_list.getJSONObject(6).getInteger("pv");
+             int yestUv = trend_list.getJSONObject(6).getInteger("uv");
+             String yestDate = trend_list.getJSONObject(6).getString("date");
 
+             Preconditions.checkArgument(yestPv < 800 && yestPv >50 ,"百果园"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了50，pv="+yestPv+"需线上确认数据是否有异常");
+             Preconditions.checkArgument(yestUv < 400 && yestUv >25 ,"百果园"+shop_id+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestUv+"需线上确认数据是否有异常");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("监控百果园昨日pv/uv是否异常");
+        }
+
+    }
 
     /**
      *

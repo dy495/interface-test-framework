@@ -1384,4 +1384,31 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+    /**
+     //     *
+     //     * ====================heyshop昨日客流监控======================
+     * */
+    @Test
+    public void  surveDataTrend(){
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            JSONArray trend_list =  Md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
+            int yestPv = trend_list.getJSONObject(6).getInteger("pv");
+            int yestUv = trend_list.getJSONObject(6).getInteger("uv");
+            String yestDate = trend_list.getJSONObject(6).getString("date");
+
+            Preconditions.checkArgument(yestPv < 400 && yestPv >25 ,"heyshop"+shop_id+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestPv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(yestUv < 400 && yestUv >25 ,"heyshop"+shop_id+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestUv+"需线上确认数据是否有异常");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("监控heyshop昨日pv/uv是否异常");
+        }
+
+    }
+
 }

@@ -1384,4 +1384,30 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+    /**
+     //     *
+     //     * ====================小天才昨日客流监控======================
+     * */
+    @Test(dataProvider = "SHOP_ID_T",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void  surveDataTrend(long shop_id_t){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray trend_list =  Md.historyShopTrendV3("RECENT_SEVEN","",shop_id_t).getJSONArray("trend_list");
+            int yestPv = trend_list.getJSONObject(6).getInteger("pv");
+            int yestUv = trend_list.getJSONObject(6).getInteger("uv");
+            String yestDate = trend_list.getJSONObject(6).getString("date");
+
+            Preconditions.checkArgument(yestPv < 400 && yestPv >25 ,"小天才"+shop_id_t+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestPv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(yestUv < 400 && yestUv >25 ,"小天才"+shop_id_t+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestUv+"需线上确认数据是否有异常");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("监控小天才昨日pv/uv是否异常");
+        }
+
+    }
+
 }
