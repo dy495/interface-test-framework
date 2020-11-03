@@ -17,7 +17,7 @@ public enum EnumAppletCode {
 
     LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", "", ""),
 
-    GLY("Max", "AFhk0ye7mJLjpTdCJfnxAA==", "", "");
+    GLY("Max", "nDQrQZlv4wGTNvNy7Qy78Q==", "", "");
 
     EnumAppletCode(String weChatName, String code, String weChatId, String codeOnline) {
         this.code = code;

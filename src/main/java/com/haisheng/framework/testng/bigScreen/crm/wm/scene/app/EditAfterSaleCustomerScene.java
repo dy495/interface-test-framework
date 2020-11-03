@@ -31,8 +31,16 @@ public class EditAfterSaleCustomerScene extends BaseScene {
     private final String plateNumber;
     private final JSONArray remarks;
     @Builder.Default
-    private final boolean serviceComplete = true;
-    private final Integer travelMileage;
+    private final boolean serviceComplete = false;
+    private final double travelMileage;
+    private final String  customerSecondaryPhone;
+    private final String firstContactName;
+    private final String secondContactName;
+    private final String secondPlateNumber;
+    private final String thirdPlateNumber;
+    private final Double  estimateRepairDays;
+
+
 
     @Override
     public JSONObject getJSONObject() {
@@ -60,6 +68,12 @@ public class EditAfterSaleCustomerScene extends BaseScene {
         object.put("remarks", remarks);
         object.put("service_complete", serviceComplete);
         object.put("travel_mileage", travelMileage);
+        object.put("customer_secondary_phone", customerSecondaryPhone);
+        object.put("first_contact_name", firstContactName);
+        object.put("second_contact_name", secondContactName);
+        object.put("second_plate_number", secondPlateNumber);
+        object.put("third_plate_number", thirdPlateNumber);
+        object.put("estimate_repair_days", estimateRepairDays);
         return object;
     }
 
