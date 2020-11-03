@@ -22,6 +22,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
+
 
         </classes>
     </test>

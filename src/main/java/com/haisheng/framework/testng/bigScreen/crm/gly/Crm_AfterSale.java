@@ -66,7 +66,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         //钉钉推送消息验证
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常-gly");
         //钉钉推送消息选择群
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.shopId = getProscheShop();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
