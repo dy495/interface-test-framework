@@ -251,7 +251,7 @@ public class PackFunctionOnline {
 
     //老客试驾完成接待---for评价
     public Long driverEva() throws Exception {
-        crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+        crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
         JSONObject data = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), pp.car_type, pp.car_model);
         //预约试驾成功后，页面显示数据
         Long appointment_id = data.getLong("appointment_id");
@@ -395,7 +395,7 @@ public class PackFunctionOnline {
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);
         Long start = dt.getHistoryDateTimestamp(-1);
         long end = dt.getHistoryDateTimestamp(3);
-        JSONObject data = crm.carManagementAdd(carName, 1L, 37L, plate_number, vehicle_chassis_code, start, end);
+        JSONObject data = crm.carManagementAdd(carName, 1L, Long.valueOf(pp.car_model), plate_number, vehicle_chassis_code, start, end);
         return data.getLong("test_car_id");
     }
 

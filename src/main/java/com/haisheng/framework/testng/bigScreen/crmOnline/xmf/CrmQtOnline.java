@@ -598,7 +598,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             pm.checkCode = false;
-            pm.belongs_sale_id="id_1dc0f148";
+            pm.belongs_sale_id=pp.belongSaleId;
             int code = crm.finishReception3(pm).getInteger("code");
             Preconditions.checkArgument(code == 1001, "销售顾问变更了所属销售");
             pm.checkCode = true;
@@ -634,7 +634,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             pm.name = data.getString("customer_name");
             pm.reception_type = "FU";
             pm.phoneList = pf.phoneList(customer_phone,"");
-            pm.belongs_sale_id="uid_37ff7893";
+            pm.belongs_sale_id=pp.belongSaleId;
             crm.editCustomer(pm);
 
             crm.finishReception3(pm);

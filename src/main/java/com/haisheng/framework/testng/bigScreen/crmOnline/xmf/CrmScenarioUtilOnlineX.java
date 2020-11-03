@@ -3745,7 +3745,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     public JSONObject driverSelect(int page, int size) {
-        String url = "/porsche/daily-work/deliver-car/app/list";
+        String url = "/porsche/daily-work/test-drive/app/list";
         JSONObject json = new JSONObject();
         json.put("size", size);
         json.put("page", page);

@@ -24,6 +24,7 @@ public class PublicParmOnline {
     public String xsgwPassword="a806f5026dabadc5cff19211d9f4afa2";
 
     public String xiaoshouZongjian = "zjl";      //销售总监账号 密码123456，同总经理
+    public String belongSaleId="uid_da55f38d";
 
 
     //预约使用参数

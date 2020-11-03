@@ -937,7 +937,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序预约
-            sleep(5);
             Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
             //pc查看预约次数
             crm.login(pp.zongjingli, pp.adminpassword);
@@ -946,14 +945,17 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //预约
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            sleep(5);
             Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
 
             crm.login(pp.zongjingli, pp.adminpassword);
             int num2 = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("order_number");
-            checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
 
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             crm.cancle(id);
             crm.cancle(id2);
+            checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
+
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {

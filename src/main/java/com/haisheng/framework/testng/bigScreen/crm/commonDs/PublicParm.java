@@ -32,6 +32,8 @@ public class PublicParm {
     public String customer_phone_numberO = "17770601557";
 //    public String customer_phone_numberO = "17715942601";
     public String customer_phone_numberE = "17767880967";
+    public String belongSaleId="uid_1dc0f148";
+
 
     public String chengeReceiptPhone = "17768996973";
     public String chengeReceiptName = "自动变更接待勿动";

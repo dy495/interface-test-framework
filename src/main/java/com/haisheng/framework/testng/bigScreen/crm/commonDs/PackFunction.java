@@ -395,7 +395,7 @@ public class PackFunction {
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);
         Long start = dt.getHistoryDateTimestamp(-1);
         long end = dt.getHistoryDateTimestamp(3);
-        JSONObject data = crm.carManagementAdd(carName, 1L, 37L, plate_number, vehicle_chassis_code, start, end);
+        JSONObject data = crm.carManagementAdd(carName, 1L, Long.valueOf(pp.car_model), plate_number, vehicle_chassis_code, start, end);
         return data.getLong("test_car_id");
     }
 
