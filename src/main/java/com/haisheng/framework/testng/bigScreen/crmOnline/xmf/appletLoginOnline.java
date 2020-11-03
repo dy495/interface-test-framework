@@ -1,7 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crmOnline;
-
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmScenarioUtilOnlineX;
+package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

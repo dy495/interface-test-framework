@@ -1096,7 +1096,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("新建车辆，车牌号异常验证");
+            saveData("applet-小程序新建车辆，车牌号异常验证");
         }
     }
     //预约试驾/维修/保养  长度/非数字---前端校验

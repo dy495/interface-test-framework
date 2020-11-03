@@ -8,7 +8,7 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.appletLoginOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.appletLoginOnline"/>
         </classes>
     </test>
 </suite>
