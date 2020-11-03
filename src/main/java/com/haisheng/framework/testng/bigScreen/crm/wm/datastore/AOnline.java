@@ -78,7 +78,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
             po.setTodayNewCustomerReceptionNum(responseA.getInteger("today_new_customer"));
             po.setTodayOldCustomerReceptionNum(responseA.getInteger("total_old_customer"));
             po.setTodayOrderNum(responseA.getInteger("today_order"));
-            po.setTodayOrderNum(responseB.getInteger("today_deliver_car_total"));
+            po.setTodayDealNum(responseB.getInteger("today_deliver_car_total"));
             po.setTodayTestDriverNum(responseC.getInteger("today_test_drive_total"));
             po.setTodayDate(DateTimeUtil.getFormat(new Date()));
             po.setShopId(shopId);

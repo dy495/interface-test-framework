@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,9 +24,6 @@ public class DingPushUtil {
     public static void sendTxt(String msg, String sql) {
         try {
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
-            httppost.addHeader("Content-Type", "application/json; charset=utf-8");
             JSONObject object = new JSONObject();
             JSONObject markdown = new JSONObject();
             object.put("msgtype", "markdown");
@@ -35,13 +33,7 @@ public class DingPushUtil {
                     + "\n" + date + "\n"
                     + "\n" + "SQL错误：" + msg + "\n"
                     + "\n" + "SQL语句：" + sql + "\n");
-            StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
-            httppost.setEntity(se);
-            HttpResponse response = httpclient.execute(httppost);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String result = EntityUtils.toString(response.getEntity(), "utf-8");
-                logger.info(result);
-            }
+            send(object);
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -51,24 +43,27 @@ public class DingPushUtil {
         try {
             String text = map.get("text");
             String title = map.get("title");
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
-            httppost.addHeader("Content-Type", "application/json; charset=utf-8");
             JSONObject object = new JSONObject();
             JSONObject markdown = new JSONObject();
             object.put("msgtype", "markdown");
             object.put("markdown", markdown);
             markdown.put("title", title);
             markdown.put("text", text);
-            StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
-            httppost.setEntity(se);
-            HttpResponse response = httpclient.execute(httppost);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String result = EntityUtils.toString(response.getEntity(), "utf-8");
-                logger.info(result);
-            }
+            send(object);
         } catch (Exception e) {
             logger.error(e.toString());
+        }
+    }
+
+    private static void send(JSONObject object) throws IOException {
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
+        StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
+        httppost.setEntity(se);
+        HttpResponse response = httpclient.execute(httppost);
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            String result = EntityUtils.toString(response.getEntity(), "utf-8");
+            logger.info(result);
         }
     }
 }

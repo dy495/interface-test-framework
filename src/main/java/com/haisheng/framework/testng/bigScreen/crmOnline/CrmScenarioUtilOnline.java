@@ -155,6 +155,13 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject receptionList(String customerId) {
+        String url = "/porsche/app/customer/reception-list";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        return invokeApi(url, object);
+    }
+
     //售后：客户管理->编辑客户信息
     public JSONObject receptionAfterCustomerList(Long after_record_id, String customer_name, String customer_phone_number, String customer_secondary_phone,
                                                  String plate_number, int travel_mileage, int car_type, int maintain_type, int maintain_secondary_type,

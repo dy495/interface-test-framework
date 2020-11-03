@@ -80,19 +80,6 @@ public class DbTable extends BasicProperty implements ITable {
         }
     }
 
-    @Override
-    public String toString() {
-        String str = null;
-        List<Map<String, Object>> list = getTable();
-        for (int i = 0; i < list.size(); i++) {
-            Set<String> keys = list.get(i).keySet();
-            for (String key : keys) {
-                str = "第" + i + 1 + "行数据为：[" + key + "(" + list.get(i).get(key) + ")" + "]";
-            }
-        }
-        return str;
-    }
-
     private List<Map<String, Object>> data(String sql) {
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
