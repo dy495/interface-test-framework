@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
  * @author wangmin
  */
 public abstract class BaseScene implements IScene {
-    public int page;
 
     @Override
     public abstract JSONObject getJSONObject();

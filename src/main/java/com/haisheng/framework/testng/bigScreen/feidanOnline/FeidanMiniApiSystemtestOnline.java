@@ -2458,7 +2458,7 @@ public class FeidanMiniApiSystemtestOnline {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
             msg = msg.replace("java.lang.Exception: ", "异常：");
             msg = msg.replace("java.lang.IllegalArgumentException:", "异常：");
             alarmPush.onlineRgn(msg);
@@ -2471,7 +2471,7 @@ public class FeidanMiniApiSystemtestOnline {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航

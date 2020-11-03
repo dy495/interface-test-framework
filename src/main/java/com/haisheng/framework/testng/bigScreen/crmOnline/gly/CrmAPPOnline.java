@@ -86,12 +86,12 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+        commonConfig.shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -163,7 +163,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
 
 
             //销售查看回访记录获取id
-            Long recordid = crm.afterSale_VisitRecordList(1, 1, "", "", "").getJSONArray("list").getJSONObject(0).getLong("id");
+            Long recordid = crm.returnVisitRecordAfterSalePage(1, 1, "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             //添加回访
             String return_visit_pic = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png");

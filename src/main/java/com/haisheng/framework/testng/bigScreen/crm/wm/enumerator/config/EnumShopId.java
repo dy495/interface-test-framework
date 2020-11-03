@@ -14,9 +14,14 @@ public enum EnumShopId {
      */
     PORSCHE_SHOP("22728"),
     /**
-     * 保时捷线上shop_id
+     * 赢识线上shop_id
      */
-    PORSCHE_SHOP_ONLINE("12928");
+    WIN_SENSE_SHOP_ONLINE("12928"),
+
+    /**
+     * 保时捷线上
+     */
+    PORSCHE_SHOP_ONLINE("12732");
 
     EnumShopId(String shopId) {
         this.shopId = shopId;

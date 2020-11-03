@@ -95,8 +95,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常X");
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-//        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -328,13 +328,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int num=crm.myCarList().getJSONArray("list").size();
             String plate_number = "沪W336699";
-//            crm.myCarAdd(car_type, plate_number, car_model);
-            Long code = crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
-//            JSONArray listB = crm.myCarList().getJSONArray("list");
-//            Integer car_idBefore = listB.getJSONObject(0).getInteger("my_car_id");    //车牌号
-//            crm.myCarDelete(Integer.toString(car_idBefore));
-            checkArgument(code == 1001, "添加相同车牌应该失败");
+            crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
+            int numA=crm.myCarList().getJSONArray("list").size();
+            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -939,7 +937,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序预约
-            sleep(5);
             Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
             //pc查看预约次数
             crm.login(pp.zongjingli, pp.adminpassword);
@@ -948,14 +945,17 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //预约
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            sleep(5);
             Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
 
             crm.login(pp.zongjingli, pp.adminpassword);
             int num2 = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("order_number");
-            checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
 
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             crm.cancle(id);
             crm.cancle(id2);
+            checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
+
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {

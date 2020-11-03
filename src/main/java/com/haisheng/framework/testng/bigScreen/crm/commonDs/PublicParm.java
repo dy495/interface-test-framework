@@ -23,13 +23,17 @@ public class PublicParm {
     public Long mycarId2 = 419L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
-    public String xspassword = "e10adc3949ba59abbe56e057f20f883e";
+    public String xsgwPassword = "e10adc3949ba59abbe56e057f20f883e";
     public String dcc = "xdcc";      //销售账号
     public String xiaoshouZongjian = "xszj";      //销售账号
     //预约使用参数
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
     public String customer_phone_numberO = "17770601557";
+//    public String customer_phone_numberO = "17715942601";
+    public String customer_phone_numberE = "17767880967";
+    public String belongSaleId="uid_1dc0f148";
+
 
     public String chengeReceiptPhone = "17768996973";
     public String chengeReceiptName = "自动变更接待勿动";
@@ -56,6 +60,10 @@ public class PublicParm {
     public String reception_phone = "15037286013"; //接待人员电话
 
     public String abString ="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十12";
+    public String abString100 ="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十" +
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十12";
 
 
 }

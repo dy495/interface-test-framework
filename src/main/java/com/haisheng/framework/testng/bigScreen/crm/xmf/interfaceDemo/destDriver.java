@@ -20,9 +20,10 @@ public class destDriver {
     public String country="中国";
     public String city="苏州";
     public String address="西湖";
-    public String email;
+    public String email="1178347789@qq.com";
     public Integer activity=1;
     public String driverLicensePhoto1Url=file.texFile(pp.filePath);;
+    public String oss;
     public String sign_date=dt.getHistoryDate(0);
     public String sign_time=dt.getHHmm(0);
     public String call="MEN";
@@ -30,6 +31,7 @@ public class destDriver {
     public String apply_time;
     public Long test_drive_car;
     public boolean checkCode=true;
+    public String Empty;
     public destDriver() throws ParseException {
     }
 }

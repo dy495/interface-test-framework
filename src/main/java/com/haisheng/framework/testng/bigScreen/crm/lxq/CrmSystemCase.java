@@ -55,7 +55,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -104,7 +104,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         //String carNum = "苏ZDH197";    //试驾车未注销
 
         //String carNum = "京A1ER19";    //试驾车已注销
-        String carNum = "冀A1DF91";    //试驾车已注销
+        String carNum = "津C90866";    //试驾车已注销
 //        String carNum = "苏SDCGUI";    //试驾车已注销
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
@@ -1373,7 +1373,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addDccCustErr(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.lxqgw,cstm.pwd);
+            crm.login(cstm.dccxs,cstm.pwd);
 
             String name = "自动化";
             String nameno = "      ";
@@ -1417,7 +1417,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  addDccCustRe(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.lxqgw,cstm.pwd);
+            crm.login(cstm.dccxs,cstm.pwd);
 
             String name = "自动化";
             String phone = "139000"+(int)((Math.random()*9+1)*10000);
@@ -1437,14 +1437,17 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String car = "苏ZDH"+(int)((Math.random()*9+1)*100);
             String carid = "ZDHZDHZDH"+(long)((Math.random()*9+1)*10000000);
             //新增
+            crm.login(cstm.xszj,cstm.pwd);
             Long test_car_id = crm.carManagementAdd("ZDH"+(int)((Math.random()*9+1)*100),1L,37L,car,carid,starttime,endtime).getLong("test_car_id");
 
-
+            crm.login(cstm.dccxs,cstm.pwd);
             int code2 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表未注销的车牌号
             Preconditions.checkArgument(code2==1001,"使用试驾车列表未注销的车牌号"+car+"期待1001，实际"+ code2);
 
             //注销
+            crm.login(cstm.xszj,cstm.pwd);
             crm.carLogout(test_car_id);
+            crm.login(cstm.dccxs,cstm.pwd);
             int code3 = crm.dccCreateNotChk(name,phone1,car).getInteger("code"); //试驾车列表已注销的车牌号
             Preconditions.checkArgument(code3==1000,"使用试驾车列表已注销的车牌号"+car+"期待1000，实际"+ code3);
 
@@ -1503,10 +1506,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     public String getPlateNum(){
-        String shengfen = "京苏津黑吉辽青宁台琼桂闽";
-        String qu = "ABCDEFGHMJKL";
+        String qu = "CEFGHJKLMNPQY";
         int a = (int)(Math.random()*10);
-        String plateNum = shengfen.substring(a,a+1);
+        String plateNum = "京";
         plateNum = plateNum + qu.substring(a,a+1);
         for (int i = 0; i < 5;i++){
             String b = Integer.toString((int)(Math.random()*10));

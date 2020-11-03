@@ -45,7 +45,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
@@ -153,7 +153,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "交车后，客户不回到公海")
+    @Test(description = "交车后，客户不回到公海", enabled = false)
     public void myCustomer_function_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -172,9 +172,13 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            JSONArray list1 = crm.publicCustomerList("", "", 2 << 10, 1).getJSONArray("list");
-            for (int i = 0; i < list1.size(); i++) {
-                flag = list1.getJSONObject(i).getInteger("customer_id") == customerId;
+            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
+            int s = CommonUtil.getTurningPage(publicTotal, 100);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.publicCustomerList("", "", 100, i).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    flag = list.getJSONObject(i).getInteger("customer_id") == customerId;
+                }
             }
             CommonUtil.valueView(remainDays, flag);
             Preconditions.checkArgument(!flag, "交车后，客户进入了公海");

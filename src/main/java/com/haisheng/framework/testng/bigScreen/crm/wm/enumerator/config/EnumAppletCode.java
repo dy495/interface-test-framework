@@ -8,22 +8,28 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "7t7orXVrbzO2YkPYrDIt1w==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "kCrDHnR0m+ey1x/og8XDoQ=="),
-    WM_SMALL("纯牛奶", "mMzbGVrYnoPRmXCs4nfPdg==", "", "e7KgTxVJJTGokmjSk2exQA=="),
+    WM("w", "OFITFs6XY8f0Hhk+otiK1g==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    XMF("@@@", "cM/ZzMuU5QJqMUEZWEI8vg==", "", ""),
+    WM_SMALL("纯牛奶", "LuglNhOUrOOumkcBk6miRQ==", ""),
 
-    BB("北北", "DJi5GeKsEMIMe3H4XEeqmw==", "", ""),    //请勿使用
+    XMF("@@@", "gYFGLyRAjw6KzxuudVBcGg==", ""),
 
-    LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", "", ""),
+    XMFONLINE("@@@", "DCvScjgLT/QX7fIrcSbvhA==", ""),
 
-    GLY("Max", "nDQrQZlv4wGTNvNy7Qy78Q==", "", "");
+    BB("北北", "DJi5GeKsEMIMe3H4XEeqmw==", ""),    //请勿使用
 
-    EnumAppletCode(String weChatName, String code, String weChatId, String codeOnline) {
+    LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", ""),
+
+    GLY("Max", "AFhk0ye7mJLjpTdCJfnxAA==", ""),
+
+    WM_ONLINE("w", "nDQrQZlv4wGTNvNy7Qy78Q==", ""),
+
+    WM_SMALL_ONLINE("纯牛奶", "e7KgTxVJJTGokmjSk2exQA==", "");
+
+    EnumAppletCode(String weChatName, String code, String weChatId) {
         this.code = code;
         this.weChatName = weChatName;
         this.weChatId = weChatId;
-        this.codeOnline = codeOnline;
     }
 
     @Getter
@@ -32,7 +38,4 @@ public enum EnumAppletCode {
     private final String weChatName;
     @Getter
     private final String weChatId;
-
-    @Getter
-    private final String codeOnline;
 }

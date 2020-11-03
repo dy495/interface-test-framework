@@ -5056,7 +5056,7 @@ public class YuexiuRestApiDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (!DEBUG) {
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -5069,7 +5069,7 @@ public class YuexiuRestApiDaily {
         if (!DEBUG && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //15011479599 谢志东

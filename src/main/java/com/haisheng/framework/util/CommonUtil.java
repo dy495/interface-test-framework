@@ -1,5 +1,6 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
@@ -14,6 +15,8 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangmin
@@ -22,6 +25,77 @@ import java.util.*;
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
+    /**
+     * 判断是否包含中文
+     *
+     * @param str str
+     * @return result
+     */
+    public static boolean isContainChinese(String str) {
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Matcher m = p.matcher(str);
+        return m.find();
+    }
+
+    /**
+     * 时间格式判断
+     *
+     * @param date   实际日期
+     * @param format 比较的日期格式
+     * @return boolean
+     */
+    public static boolean isLegalDate(String date, String format) {
+        if (StringUtils.isEmpty(date) || date.length() < format.length()) {
+            return false;
+        }
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        try {
+            Date date1 = dateFormat.parse(date);
+            return date.equals(dateFormat.format(date1));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 结果展示
+     *
+     * @param value value
+     * @param <T>   T
+     */
+    @SafeVarargs
+    public static <T> void valueView(T... value) {
+        Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+    }
+
+    /**
+     * 错误提示
+     *
+     * @param w 警告
+     */
+    public static void warning(String w) {
+        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + w + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    }
+
+    /**
+     * 日志打印
+     *
+     * @param v v
+     */
+    public static void log(String v) {
+        String type = "---------------------------------------{}---------------------------------------";
+        logger.info(type, v);
+    }
+
+    /**
+     * 日志打印
+     *
+     * @param s s
+     */
+    public static void logger(String s) {
+        log("[" + s + "]" + "跑完");
+    }
+
     public static String getStrField(JSONObject response, int index, String field) {
         String value = response.getJSONArray("list").getJSONObject(index).getString(field);
         return value == null ? "" : value;
@@ -29,6 +103,11 @@ public class CommonUtil {
 
     public static Integer getIntField(JSONObject response, int index, String field) {
         return response.getJSONArray("list").getJSONObject(index).getInteger(field);
+    }
+
+    public static String getStrField(JSONArray jsonArray, int index, String field) {
+        String value = jsonArray.getJSONObject(index).getString(field);
+        return value == null ? "" : value;
     }
 
     public static List<String> getMoreParam(JSONObject object, String... paramName) {
@@ -58,25 +137,6 @@ public class CommonUtil {
         return (double) Math.round(a * cardinal) / cardinal;
     }
 
-    /**
-     * 结果展示
-     *
-     * @param value value
-     * @param <T>   T
-     */
-    @SafeVarargs
-    public static <T> void valueView(T... value) {
-        Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
-    }
-
-    /**
-     * 日志打印
-     *
-     * @param s param
-     */
-    public static void log(String s) {
-        logger.info("---------------------------------------{}---------------------------------------", s);
-    }
 
     /**
      * 获取百分比
@@ -113,26 +173,6 @@ public class CommonUtil {
     }
 
     /**
-     * 时间格式判断
-     *
-     * @param date   实际日期
-     * @param format 比较的日期格式
-     * @return boolean
-     */
-    public static boolean isLegalDate(String date, String format) {
-        if (StringUtils.isEmpty(date) || date.length() < format.length()) {
-            return false;
-        }
-        DateFormat dateFormat = new SimpleDateFormat(format);
-        try {
-            Date date1 = dateFormat.parse(date);
-            return date.equals(dateFormat.format(date1));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
      * @param birthday 生日
      * @return 几零后
      */
@@ -149,14 +189,19 @@ public class CommonUtil {
         return str.toString();
     }
 
-    public static String getGender(String ID_number) {
-        if (StringUtils.isEmpty(ID_number)) {
+    /**
+     * 获取性别
+     *
+     * @param idNumber 身份证号
+     * @return 男/女
+     */
+    public static String getGender(String idNumber) {
+        if (StringUtils.isEmpty(idNumber)) {
             return null;
         }
-        String str = ID_number.substring(16, 17);
+        String str = idNumber.substring(16, 17);
         return Integer.parseInt(str) % 2 == 0 ? "女性" : "男性";
     }
-
 
     /**
      * 获取页面跳转页数
@@ -207,7 +252,6 @@ public class CommonUtil {
         }
         return list;
     }
-
 
     /**
      * 判断字符串列表每一项均不为空，包括空字符串与null
@@ -285,7 +329,6 @@ public class CommonUtil {
         return path;
     }
 
-
     /**
      * 检查接口是否返回1000，且指定data下的字段是否存在
      * yu， 2020.10.22
@@ -297,7 +340,6 @@ public class CommonUtil {
         if (!res.getInteger("code").equals(1000)) {
             throw new Exception("result code is " + res.getInteger("code") + ", request id: " + res.getString("request_id"));
         }
-
         Preconditions.checkArgument(res.containsKey("data"), "response中未包含data字段, request id: " + res.getString("request_id"));
         for (String checkColumn : checkColumnNames) {
             Object column = res.getJSONObject("data").get(checkColumn);

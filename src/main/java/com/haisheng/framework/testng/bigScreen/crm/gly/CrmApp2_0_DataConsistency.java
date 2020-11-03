@@ -73,7 +73,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车 日常 gly");
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -152,7 +152,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
             //销售查看回访记录获取id
-            Long recordid = crm.afterSale_VisitRecordList(1, 1, "", "", "").getJSONArray("list").getJSONObject(0).getLong("id");
+            Long recordid = crm.returnVisitRecordAfterSalePage(1, 1, "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             //添加回访
             String return_visit_pic = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png");

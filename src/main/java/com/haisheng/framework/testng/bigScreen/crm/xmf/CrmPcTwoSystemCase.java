@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppl
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.qtJdSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -88,8 +89,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常x");
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-//        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -1897,6 +1898,74 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("app活动报名，小程序报名人数不变");
         }
     }
+
+//    @Test()
+    public void qtReceiptListSelectTime(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String tj="customer_name";
+//            String tj="phone1";
+            String a[]={};
+            JSONArray evaluateList=crm.pcreceiptPageN("1","10","","","PRE_SALES",a).getJSONArray("list");
+            if(evaluateList==null||evaluateList.size()==0){
+                return;
+            }
+            String tj2=evaluateList.getJSONObject(0).getString(tj);
+            String phone=evaluateList.getJSONObject(0).getString("phone1");
+            String phone2=evaluateList.getJSONObject(0).getString("phone2");
+            String temp[]={tj,tj2};
+
+            JSONArray list=crm.pcreceiptPageN("1","10","","","PRE_SALES",temp).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String nameSlect=list.getJSONObject(i).getString(tj);
+                Preconditions.checkArgument(nameSlect.contains(tj2),"pc-前台接待列表按客户名查询错误");
+            }
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc-前台接待列表按客户名查询错误");
+        }
+    }
+    //前台接待列表查询
+    @Test()
+    public void qtReceiptListSelectTimephone(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray evaluateList=crm.pcreceiptPage("1","10","","","PRE_SALES").getJSONArray("list");
+            if(evaluateList==null||evaluateList.size()==0){
+                return;
+            }
+            String customer_name="";
+            String phone="";
+            for(int i=0;i<evaluateList.size();i++){
+                String nameT=evaluateList.getJSONObject(i).getString("customer_name");
+                String phoneT=evaluateList.getJSONObject(i).getString("phone1");
+                if(nameT!=null&&phoneT!=null){
+                    customer_name=nameT;
+                    phone=phoneT;
+                    break;
+                }
+            }
+            JSONArray list=crm.pcreceiptPage("1","10",customer_name,"","PRE_SALES").getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String nameSlect=list.getJSONObject(i).getString("customer_name");
+                Preconditions.checkArgument(nameSlect.contains(customer_name),"pc-前台接待列表按客户名查询错误");
+            }
+
+            JSONArray list2=crm.pcreceiptPage("1","10","",phone,"PRE_SALES").getJSONArray("list");
+            for(int i=0;i<list2.size();i++){
+                String nameSlect=list2.getJSONObject(i).getString("phone1");
+                String phone2Slect=list2.getJSONObject(0).getString("phone2");
+                Preconditions.checkArgument(nameSlect.contains(phone)||phone2Slect.contains(phone),"pc-前台接待列表按客户电话查询错误");
+            }
+        }catch (AssertionError | Exception e){
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc-前台展厅接待查询");
+        }
+    }
+
+
 
 
      /**

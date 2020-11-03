@@ -315,13 +315,10 @@ public class TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
-        } catch (HttpProcessException e) {
-            e.printStackTrace();
-        }
-        logger.info("response: {}", response);
-        try {
+            logger.info("response: {}", response);
             checkCode(response, StatusCode.SUCCESS, path);
         } catch (Exception e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
@@ -393,7 +390,7 @@ public class TestCaseCommon {
         headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .other("shop_id", commonConfig.shopId)
                 .userAgent(userAgent)
-                .referer("https://servicewechat.com/wx5102264595be8c23/")
+                .referer(commonConfig.referer)
                 .authorization(authorization)
                 .build();
         config = HttpConfig.custom()

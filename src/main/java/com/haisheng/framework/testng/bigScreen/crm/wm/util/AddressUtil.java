@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
 public class AddressUtil {
+
     public static String getNativePlace(int nativePlaceCode) {
         int provinceCode = nativePlaceCode / 10000;
         int citCode = nativePlaceCode / 100;
@@ -9,10 +10,10 @@ public class AddressUtil {
         String district = getNameString(nativePlaceCode);
         String nativePlace = "";
         if (province != null) {
-            nativePlace += province;
+            nativePlace += province + "-";
         }
         if (city != null) {
-            nativePlace += city;
+            nativePlace += city + "-";
         }
         if (district != null) {
             nativePlace += district;

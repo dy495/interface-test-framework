@@ -81,7 +81,7 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
 
-        commonConfig.dingHook = DingWebhook.ONLINE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214","18810332354", "15084928847"};
 
         commonConfig.shopId = getXunDianShopOnline(); //要改！！！

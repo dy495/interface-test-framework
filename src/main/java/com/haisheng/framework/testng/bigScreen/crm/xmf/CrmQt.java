@@ -56,7 +56,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -168,7 +168,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size(); i++) {
                 String reception_date = list.getJSONObject(i).getString("reception_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument((reception_date.equals(select_date)) && (customer_name.equals(nameSelect)), "展厅接待按交车时间" + select_date + "查询，结果错误" + reception_date);
+                Preconditions.checkArgument((reception_date.equals(select_date)) && (customer_name.contains(nameSelect)), "展厅接待按接待时间" + select_date + "查询，结果错误" + reception_date);
             }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -186,6 +186,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
+            if(select_date.equals("")&&list.size()==0){
+                throw new Exception("到访记录为空");
+            }
             for (int i = 0; i < list.size(); i++) {
                 String reception_date = list.getJSONObject(i).getString("visit_day");
                 Preconditions.checkArgument(reception_date.equals(select_date), "到访记录按到访时间{}查询，结果{}错误", select_date, reception_date);
@@ -196,6 +199,23 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("到访记录按到访日期查询，结果校验");
+        }
+    }
+    @Test()
+    public void visitRecodeNontull() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String select_date=dt.getHistoryDate(0);
+            JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("到访记录为空");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("到访记录不为空");
         }
     }
 
@@ -319,13 +339,14 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             String receiptId = json.getString("reception_id");
             String customer_id = json.getString("customerId");
             String belong_sale_id = json.getString("sale_id");
+            String userLoginName = json.getString("userLoginName");
             //完成接待
             JSONArray PhoneList = json.getJSONArray("phoneList");
             //前台登录，变更接待
             crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, sale_id);
 
-            crm.login(pp.xiaoshouGuwen, pp.adminpassword);          //变更接待后原销售接待列表数
+            crm.login(userLoginName, pp.adminpassword);          //变更接待后原销售接待列表数
             int total2 = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
 
             crm.login(loginTemp, pp.adminpassword);   //变更接待后 接待销售接待列表数
@@ -334,12 +355,12 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.login(pp.qiantai, pp.qtpassword);
             crm.changeReceptionSale(receiptId, belong_sale_id);
 
-            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
-            JSONArray faceList = new JSONArray();
-            JSONObject ll = new JSONObject();
-            ll.put("analysis_customer_id", "c2aecb35-9e69-4adb-bc7f-98310e34");
-            ll.put("id", 0);
-            ll.put("is_decision", true);
+            crm.login(userLoginName, pp.adminpassword);
+//            JSONArray faceList = new JSONArray();
+//            JSONObject ll = new JSONObject();
+//            ll.put("analysis_customer_id", "c2aecb35-9e69-4adb-bc7f-98310e34");
+//            ll.put("id", 0);
+//            ll.put("is_decision", true);
 
             finishReceive pm = new finishReceive();
             pm.customer_id = customer_id;
@@ -348,21 +369,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.name = pp.customer_name;
 
             pm.reception_type = "BB";
-            pm.face_list = faceList;
-            pm.plate_number_one = "京DF12334";
+//            pm.face_list = faceList;
+//            pm.plate_number_one = "京DF12334";
 
-//            pm.customer_id="14058";
-//            pm.reception_id="4086";
-//            pm.belongs_sale_id="uid_37ff7893";
-//            JSONArray PhoneList = new JSONArray();
-//            JSONObject phone1 = new JSONObject();
-//            phone1.put("phone", "15037286013");
-//            phone1.put("phone_order", 0);
-//            JSONObject phone2 = new JSONObject();
-//            phone2.put("phone", "");
-//            phone2.put("phone_order", 1);
-//            PhoneList.add(0, phone1);
-//            PhoneList.add(1, phone2);
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             crm.finishReception3(pm);
@@ -593,7 +602,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             pm.checkCode = false;
-            pm.belongs_sale_id="id_1dc0f148";
+            pm.belongs_sale_id=pp.belongSaleId;
             int code = crm.finishReception3(pm).getInteger("code");
             Preconditions.checkArgument(code == 1001, "销售顾问变更了所属销售");
             pm.checkCode = true;
@@ -629,7 +638,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.name = data.getString("customer_name");
             pm.reception_type = "FU";
             pm.phoneList = pf.phoneList(customer_phone,"");
-            pm.belongs_sale_id="uid_37ff7893";
+            pm.belongs_sale_id=pp.belongSaleId;
             crm.editCustomer(pm);
 
             crm.finishReception3(pm);
@@ -648,55 +657,36 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             saveData("销售总监修改客户联系方式1，成功验证 ");
         }
     }
-    /**
-     * @description :前台分配新客含人脸接待列表+1
-     * @date :2020/10/20 18:54
-     **/
-//    @Test()
-    public void qtFenpei() {
+
+
+    @Test(description = "前台老客标记非客失败")
+    public void markab(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            finishReceive fr=new finishReceive();
-            crm.login(pp.qiantai, pp.adminpassword);
-            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
-
-            fr.name = "auto" + dt.getHHmm(0);
-            String phone = pf.genPhoneNum();
-            //获取当前空闲第一位销售id
-            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-            String userLoginName = pf.username(sale_id);
-            boolean isDes = true;
-            JSONObject list = new JSONObject();
-            JSONArray ll = new JSONArray();
-            list.put("customer_name", fr.name);
-            list.put("is_decision", isDes);
-            ll.add(0, list);
-
-            //创建接待
-            crm.creatReception2("FIRST_VISIT", ll);
-            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
-            crm.login(userLoginName, pp.adminpassword);
-
-            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
-            fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
-            fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
-            fr.phoneList =pf.phoneList(phone,"");
-            fr.belongs_sale_id=sale_id;
-            fr.reception_type="FU";
-            crm.finishReception3(fr);
-            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
-
-        } catch (AssertionError e) {
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            String analysis_customer_id = "";
+            JSONArray idlist = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+                if (customer_identity_name.equals("老客")) {
+                    analysis_customer_id = list.getJSONObject(i).getString("analysis_customer_id");
+                    JSONObject id = new JSONObject();
+                    id.put("analysis_customer_id", analysis_customer_id);
+                    idlist.add(id);
+                    break;
+                }
+            }
+            int code1=crm.markNocustomercode(idlist).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"老客不能被标记成非客");
+        }catch (AssertionError | Exception e){
             appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            crm.login(pp.qiantai, pp.qtpassword);
-            saveData("销售总监修改客户联系方式1，成功验证 ");
+        }finally {
+            saveData("前台老客标记非客失败");
         }
     }
-   //不含人脸
-    @Test()
+
+
+    @Test(description = "前台分配新客不含人脸接待列表+1")
     public void qtFenpei2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -730,25 +720,99 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test()
-    public void T() {
+    @Test(description = "前台分配新客含人脸接待列表+1",enabled = false)  //失败
+    public void qtFenpei(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            selectTest ss = new selectTest();
-            ss.page = "1";
-            crm.nonReceptionList(ss);
-            String a = ss.page;
-            System.out.println(ss.page);
+            finishReceive fr=new finishReceive();
+            crm.login(pp.qiantai, pp.adminpassword);
+            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
 
+            fr.name = "auto" + dt.getHHmm(0);
+            String phone = pf.genPhoneNum();
+            //获取当前空闲第一位销售id
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String userLoginName = pf.username(sale_id);
+
+            JSONArray customerlist=crm.markcustomerList().getJSONArray("list");
+
+            JSONObject dd=pf.customermess(customerlist,"新客");
+            String analysis_customer_id=dd.getString("analysis_customer_id");
+
+            boolean isDes = true;
+            JSONObject list = new JSONObject();
+            JSONArray ll = new JSONArray();
+            list.put("customer_name", fr.name);
+            list.put("is_decision", isDes);
+            list.put("analysis_customer_id", analysis_customer_id);
+            ll.add(0, list);
+
+            //创建接待
+            crm.creatReception2("FIRST_VISIT", ll);
+
+            //app接待分配的新客
+            JSONArray analysis_customer_id_list=new JSONArray();
+            JSONObject temp=new JSONObject();
+            temp.put("analysis_customer_id",analysis_customer_id);
+            analysis_customer_id_list.add(temp);
+
+            crm.receptionapp(analysis_customer_id_list);
+            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            crm.login(userLoginName, pp.adminpassword);
+
+            JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
+            fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
+            fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
+            fr.phoneList =pf.phoneList(phone,"");
+            fr.belongs_sale_id=sale_id;
+            fr.reception_type="FU";
+            //face List
+            JSONObject faceList = new JSONObject();
+            JSONArray faceArray = new JSONArray();
+            list.put("is_decision", isDes);
+            list.put("id", 0);
+            list.put("analysis_customer_id", analysis_customer_id);
+            faceArray.add(0, faceList);
+
+            fr.face_list=faceArray;
+            crm.editCustomer(fr);
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+
+        } catch (AssertionError |Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.qiantai, pp.qtpassword);
+            saveData("前台分配新客含人脸接待列表+1 ");
+        }
+    }
+
+    @Test(description = "前台老客解绑")
+    public void jiebang() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list=crm.markcustomerList().getJSONArray("list");
+
+            JSONObject dd=pf.customermess(list,"老客");
+            String analysis_customer_id=dd.getString("analysis_customer_id");
+            String customer_id=dd.getString("customer_id");
+
+            int num[]=pf.qtcustomer(list);   //0 新客数     //老客数
+
+            crm.jiebang(analysis_customer_id,customer_id,"NEW");
+
+            JSONArray listA=crm.markcustomerList().getJSONArray("list");
+            int numA[]=pf.qtcustomer(listA);
+
+            Preconditions.checkArgument(numA[0]-num[0]==1,"前台人脸解绑后，新客人脸数+1");
+            Preconditions.checkArgument(num[1]-numA[1]==1,"前台人脸解绑后，老客人脸数-1");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData(" ");
+            saveData("解绑人脸数变化 ");
         }
     }
-
-
 }

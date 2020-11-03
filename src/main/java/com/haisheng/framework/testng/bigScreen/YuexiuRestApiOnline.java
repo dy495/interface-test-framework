@@ -4776,7 +4776,7 @@ public class YuexiuRestApiOnline {
         if (DEBUG.trim().equals("true")) {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         } else {
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
         }
         alarmPush.onlineMonitorPvuvAlarm(msg);
         this.FAIL = true;
@@ -4790,7 +4790,7 @@ public class YuexiuRestApiOnline {
             if (DEBUG.trim().equals("true")) {
                 alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
             } else {
-                alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+                alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
             }
             //15898182672 华成裕
             //15011479599 谢志东

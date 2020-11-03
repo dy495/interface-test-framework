@@ -13,6 +13,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 public class finishReceive {
     public static DateTimeUtil dt = new DateTimeUtil();
     public boolean checkCode = true;
+    public String Empty;
     public String customer_id;
     public String reception_id;
     public String belongs_sale_id;
