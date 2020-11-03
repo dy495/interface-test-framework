@@ -13,10 +13,12 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.jooq.util.derby.sys.Sys;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -42,8 +44,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
 
     private static volatile StoreScenarioUtil instance = null;
-    public JSONArray patrolShopRealV3;
-
     private StoreScenarioUtil() {
     }
 
@@ -134,7 +134,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String path = "/retail/api/data/biz";
         String IpPort = "http://dev.api.winsenseos.com";
 
-         String requestUrl = "http://dev.api.winsenseos.cn/retail/api/data/biz";
+        String requestUrl = "http://dev.api.winsenseos.cn/retail/api/data/biz";
 
         String str = "{\n" +
                 "        \"shop_id\": \"43072\",\n" +
@@ -328,6 +328,18 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 "[\"accept_role\"]",
                 "[\"statu\"]"
         };
+    }
+    //将账户使用次数为0的角色删除
+    public void deleteRole() throws Exception {
+        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
+        for(int i=0;i<role_list.size();i++){
+            int account_number = role_list.getJSONObject(i).getInteger("account_number");
+            if(account_number==0){
+                Long role_id = role_list.getJSONObject(i).getLong("role_id");
+                organizationRoleDelete(role_id);
+            }
+
+        }
     }
 //    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
@@ -879,29 +891,35 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size) throws Exception {
         String url = "/patrol/organization/account/page";
         String json =
-                "{" ;
-                  if(name !=""){
-                    json= json+ "\"name\" :\"" + name + "\",\n";
-                };
-                  if(account !=""){
-                    json= json+  "\"account\" :\"" + account + "\",\n";
-                   };
-                  if(email !=""){
-                   json= json+ "\"email\" :\"" + email + "\",\n";
-                };
-                  if(phone !=""){
-                  json= json+ "\"phone\" :\"" + phone + "\",\n";
-                };
-                  if(role_name !=""){
-                  json= json+  "\"role_name\" :\"" + role_name + "\",\n";
-                  };
-                 if(shop_list !=""){
-                 json= json+ "\"shop_list\" :\"" + shop_list + "\",\n";
-                  };
-                   json = json+
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                "{";
+        if (name != "") {
+            json = json + "\"name\" :\"" + name + "\",\n";
+        }
+        ;
+        if (account != "") {
+            json = json + "\"account\" :\"" + account + "\",\n";
+        }
+        ;
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        ;
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        ;
+        if (role_name != "") {
+            json = json + "\"role_name\" :\"" + role_name + "\",\n";
+        }
+        ;
+        if (shop_list != "") {
+            json = json + "\"shop_list\" :\"" + shop_list + "\",\n";
+        }
+        ;
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -917,19 +935,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/organization/account/add";
         String json =
                 "{" +
-                        "\"name\" :\"" + name + "\",\n" ;
-                      if(email !=""){
-                        json= json+ "\"email\" :\"" + email + "\",\n";
-                      };
-                      if(phone !=""){
-                          json= json+ "\"phone\" :\"" + phone + "\",\n";
-                      };
-                      json = json+
-                        "\"role_id_list\" :" + role_id_list + ",\n" +
-                        "\"status\" :" + status + ",\n" +
-                        "\"shop_list\" :" + shop_list + ",\n" +
-                        "\"type\" :\"" + type + "\"\n" +
-                        "} ";
+                        "\"name\" :\"" + name + "\",\n";
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        ;
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        ;
+        json = json +
+                "\"role_id_list\" :" + role_id_list + ",\n" +
+                "\"status\" :" + status + ",\n" +
+                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"type\" :\"" + type + "\"\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -964,19 +984,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String json =
                 "{" +
                         "\"account\" :\"" + account + "\",\n" +
-                          "\"name\" :\"" + name + "\",\n" ;
-                         if(email !=""){
-                         json= json+ "\"email\" :\"" + email + "\",\n";
-                         };
-                         if(phone !=""){
-                        json= json+ "\"phone\" :\"" + phone + "\",\n";
-                         };
-                        json = json+
+                        "\"name\" :\"" + name + "\",\n";
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        ;
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        ;
+        json = json +
 
-                        "\"role_id_list\" :" + role_id_list + ",\n" +
-                        "\"shop_list\" :" + shop_list + ",\n" +
-                        "\"type\" :\"" + type + "\"\n" +
-                        "} ";
+                "\"role_id_list\" :" + role_id_list + ",\n" +
+                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"type\" :\"" + type + "\"\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1110,19 +1132,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, String description, JSONArray permission_list) throws Exception {
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id) throws Exception {
         String url = "/patrol/organization/role/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"permission_list\" :\"" + permission_list + "\"\n" +
+                        "\"module_id\" :" + module_id + "\n" +
 
                         "} ";
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        return invokeApi(url, JSONObject.parseObject(json), false);
 
-        return JSON.parseObject(res);
+
     }
 
 
@@ -1149,14 +1171,14 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray permission_list) throws Exception {
+    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray module_ids) throws Exception {
         String url = "/patrol/organization/role/edit";
         String json =
                 "{" +
                         "\"role_id\" :" + role_id + ",\n" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"permission_list\" :\"" + permission_list + "\"\n" +
+                        "\"module_ids\" :" + module_ids + "\n" +
 
                         "} ";
 
@@ -1211,24 +1233,24 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
     public JSONObject device_page(String device_name, String shop_name, String device_id, String status, String type, Integer page, Integer size) throws Exception {
         String url = "/patrol/equipment-management/device/page";
-        String json ="{";
-                  if(device_name!=""){
-                 json = json +   "\"device_name\" :\"" + device_name + "\",\n" ;
-                  }
-                 if(shop_name!=""){
-                json = json +    "\"shop_name\" :\"" + shop_name + "\",\n"  ;
-                 }
-                if(device_id!=""){
-                 json = json +     "\"device_id\" :\"" + device_id + "\",\n"  ;
-                 }
-        if(status!=""){
-            json = json +      "\"status\" :\"" + status + "\",\n"   ;
+        String json = "{";
+        if (device_name != "") {
+            json = json + "\"device_name\" :\"" + device_name + "\",\n";
         }
-                  json = json +
-                        "\"type\" :\"" + type + "\",\n" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (device_id != "") {
+            json = json + "\"device_id\" :\"" + device_id + "\",\n";
+        }
+        if (status != "") {
+            json = json + "\"status\" :\"" + status + "\",\n";
+        }
+        json = json +
+                "\"type\" :\"" + type + "\",\n" +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1246,23 +1268,23 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject cashier_page(String shop_name, String manager_name, String manager_phone, String sort_event_type, Integer sort_event_type_order, Integer page, Integer size) throws Exception {
         String url = "/patrol/risk-control/cashier/page";
         String json =
-                "{" ;
-                       if(shop_name !=""){
-                           json = json+"\"shop_name\" :\"" + shop_name + "\",\n";
-                       }
-                      if(manager_name !=""){
-                           json = json+"\"manager_name\" :\"" + manager_name + "\",\n";
-                       }
-                      if(sort_event_type !=""){
-                          json = json+"\"sort_event_type\" :\"" + sort_event_type + "\",\n";
-                       }
-                      if(sort_event_type_order !=null){
-                          json = json+"\"sort_event_type_order\" :" + sort_event_type_order + ",\n";
-                       }
-                      json = json+
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                "{";
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (manager_name != "") {
+            json = json + "\"manager_name\" :\"" + manager_name + "\",\n";
+        }
+        if (sort_event_type != "") {
+            json = json + "\"sort_event_type\" :\"" + sort_event_type + "\",\n";
+        }
+        if (sort_event_type_order != null) {
+            json = json + "\"sort_event_type_order\" :" + sort_event_type_order + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1278,16 +1300,18 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/cashier/trace-back";
         String json =
                 "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"date\" :\"" + date + "\",\n" ;
-
-                        if(order_id!=""){
-                            json = json +   "\"order_id\" :\"" + order_id + "\",\n";
-                        }
-                      json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                        "\"shop_id\" :" + shop_id + ",\n";
+        if (date != "") {
+            json = json + "\"date\" :\"" + date + "\",\n";
+        }
+        ;
+        if (order_id != "") {
+            json = json + "\"order_id\" :\"" + order_id + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1320,13 +1344,26 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/cashier/risk-event/page";
         String json =
                 "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"event_name\" :\"" + event_name + "\",\n" +
-                        "\"order_id\" :\"" + order_id + "\",\n" +
-                        "\"order_date\" :\"" + order_date + "\",\n" +
-                        "\"member_name\" :\"" + member_name + "\",\n" +
-                        "\"handle_result\" :\"" + handle_result + "\",\n" +
-                        "\"current_state\" :\"" + current_state + "\",\n" +
+                        "\"shop_id\" :" + shop_id + ",\n" ;
+                      if(event_name !=""){
+                       json = json+   "\"event_name\" :\"" + event_name + "\",\n";
+                      }
+                     if(order_id !=""){
+                       json = json+   "\"order_id\" :\"" + order_id + "\",\n";
+                      }
+                     if(order_date !=""){
+                       json = json+   "\"order_date\" :\"" + order_date + "\",\n";
+                      }
+                     if(member_name !=""){
+                       json = json+   "\"member_name\" :\"" + member_name + "\",\n";
+                      }
+                     if(handle_result !=""){
+                       json = json+   "\"handle_result\" :\"" + handle_result + "\",\n";
+                      }
+                     if(current_state !=""){
+                       json = json+   "\"current_state\" :\"" + current_state + "\",\n";
+                      }
+                    json = json +
                         "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
@@ -1416,22 +1453,22 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/rule/page";
         String json =
                 "{";
-                     if(name!=""){
-                         json = json +      "\"name\" :\"" + name + "\",\n";
-                     }
-                    if(type!=""){
-                        json = json +       "\"type\" :\"" + type + "\",\n";
-                     }
-                    if(shop_type!=""){
-                        json = json +         "\"shop_type\" :\"" + shop_type + "\",\n";
-                    }
-                    if(status!=null){
-                        json = json +          "\"status\" :" + status + ",\n";
-                    }
-                    json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+        if (name != "") {
+            json = json + "\"name\" :\"" + name + "\",\n";
+        }
+        if (type != "") {
+            json = json + "\"type\" :\"" + type + "\",\n";
+        }
+        if (shop_type != "") {
+            json = json + "\"shop_type\" :\"" + shop_type + "\",\n";
+        }
+        if (status != null) {
+            json = json + "\"status\" :" + status + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1468,9 +1505,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
                         "\"rule\" :" + rule + "\n" +
                         "} ";
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
+        return invokeApi(url, JSONObject.parseObject(json), false);
     }
 
     /**
@@ -1516,23 +1551,23 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject alarm_rulePage(String name, String type, String accept_role, Integer status, Integer page, Integer size) throws Exception {
         String url = "/patrol/risk-control/alarm-rule/page";
         String json =
-                "{" ;
-                   if(name !=""){
-                      json = json +        "\"name\" :\"" + name + "\",\n";
-                   }
-                  if(type !=""){
-                      json = json +       "\"type\" :\"" + type + "\",\n";
-                  }
-                 if(accept_role !=""){
-                     json = json +        "\"accept_role\" :\"" + accept_role + "\",\n";
-                  }
-                  if(status !=null){
-                     json = json +       "\"status\" :" + status + ",\n" ;
-                  }
-                   json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                "{";
+        if (name != "") {
+            json = json + "\"name\" :\"" + name + "\",\n";
+        }
+        if (type != "") {
+            json = json + "\"type\" :\"" + type + "\",\n";
+        }
+        if (accept_role != "") {
+            json = json + "\"accept_role\" :\"" + accept_role + "\",\n";
+        }
+        if (status != null) {
+            json = json + "\"status\" :" + status + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1556,10 +1591,34 @@ public class StoreScenarioUtil extends TestCaseCommon {
                         "\"end_time\" :\"" + end_time + "\",\n" +
                         "\"silent_time\" :\"" + silent_time + "\"\n" +
                         "} ";
+        return invokeApi(url, JSONObject.parseObject(json), false);
+    }
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res);
+    /**
+     * http请求方法调用
+     *
+     * @param url         url
+     * @param requestBody 请求体
+     * @param checkCode   是否校验code
+     * @return JSONObject response.data
+     */
+    public JSONObject invokeApi(String url, JSONObject requestBody, boolean checkCode) {
+        if (StringUtils.isEmpty(url)) {
+            throw new RuntimeException("url不可为空");
+        }
+        String request = JSON.toJSONString(requestBody);
+        String result = null;
+        if (checkCode) {
+            result = httpPostWithCheckCode(url, request, IpPort);
+            return JSON.parseObject(result).getJSONObject("data");
+        } else {
+            try {
+                result = httpPost(url, request, IpPort);
+            } catch (Exception e) {
+                appendFailreason(e.toString());
+            }
+            return JSON.parseObject(result);
+        }
     }
 
     /**
@@ -1591,8 +1650,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
                         "\"id\" :" + id + ",\n" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"type\" :\"" + type + "\",\n" +
-                        "\"rule_id_list\" :\"" + rule_id_list + "\",\n" +
-                        "\"accept_role_id_list\" :\"" + accept_role_id_list + "\",\n" +
+                        "\"rule_id_list\" :" + rule_id_list + ",\n" +
+                        "\"accept_role_id_list\" :" + accept_role_id_list + ",\n" +
                         "\"start_time\" :\"" + start_time + "\",\n" +
                         "\"end_time\" :\"" + end_time + "\",\n" +
                         "\"silent_time\" :\"" + silent_time + "\"\n" +
@@ -1600,7 +1659,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -1665,19 +1724,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/alarm/page";
         String json =
                 "{";
-                   if(name !=""){
-                       json = json +        "\"name\" :\"" + name + "\",\n";
-                   }
-                  if(type !=""){
-                       json = json +       "\"type\" :\"" + type + "\",\n";
-                  }
-                  if(shop_name !=""){
-                       json = json +        "\"shop_name\" :\"" + shop_name + "\",\n";
-                  }
-                   json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+        if (name != "") {
+            json = json + "\"name\" :\"" + name + "\",\n";
+        }
+        if (type != "") {
+            json = json + "\"type\" :\"" + type + "\",\n";
+        }
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
