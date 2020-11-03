@@ -58,6 +58,7 @@ public class DingPushUtil {
     private static void send(JSONObject object) throws IOException {
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
+        httppost.addHeader("Content-Type", "application/json");
         StringEntity se = new StringEntity(JSONObject.toJSONString(object), "utf-8");
         httppost.setEntity(se);
         HttpResponse response = httpclient.execute(httppost);

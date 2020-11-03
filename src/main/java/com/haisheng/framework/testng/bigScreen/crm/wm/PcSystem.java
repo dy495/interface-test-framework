@@ -581,6 +581,38 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
     }
+
+    @Test(description = "pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页", enabled = false)
+    public void stationMessage_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String title = "自动化站内消息-待删";
+        String content = "自动化";
+        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
+        String appointmentType = EnumAppointmentType.MAINTAIN.getType();
+        try {
+            JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
+            int messageId = response.getInteger("id");
+            sleep(80);
+            UserUtil.loginApplet(EnumAppletCode.WM);
+            JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
+            int id = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getJSONObject(i).getString("date").equals(sendDate)) {
+                    id = list.getJSONObject(i).getInteger("id");
+                }
+            }
+            String appletAppointmentType = crm.messageDetail((long) id).getString("appointment_type");
+            CommonUtil.valueView(appletAppointmentType);
+            Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
+            UserUtil.login(zjl);
+            crm.messageDelete(messageId);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+        }
+    }
+
 }
 
 

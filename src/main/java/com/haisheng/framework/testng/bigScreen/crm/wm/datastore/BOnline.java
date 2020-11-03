@@ -103,10 +103,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("title", "balabala");
-            map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                    + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
-                    + "\n" + "错误：" + e.toString() + "\n");
+            sendText(e.toString());
         } finally {
             DingPushUtil.sendTxt(map);
         }
@@ -166,10 +163,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("title", "balabala");
-            map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                    + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
-                    + "\n" + "错误：" + e.toString() + "\n");
+            sendText(e.toString());
         } finally {
             DingPushUtil.sendTxt(map);
         }
@@ -230,13 +224,17 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("title", "balabala");
-            map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                    + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
-                    + "\n" + "错误：" + e.toString() + "\n");
+            sendText(e.toString());
         } finally {
             DingPushUtil.sendTxt(map);
         }
+    }
+
+    private void sendText(final String e) {
+        map.put("title", "balabala");
+        map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
+                + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
+                + "\n" + "错误：" + "\n");
     }
 
     /**
