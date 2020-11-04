@@ -65,7 +65,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String date = DateTimeUtil.getFormat(new Date());
             UserUtil.loginApplet(applet);
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), "Max", "13373166806", date, "", (long) id);
+            crm.appointmentRepair((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
