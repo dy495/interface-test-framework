@@ -1694,7 +1694,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                     if (array.getJSONObject(i).getString("type").equals("RECEIVE")) {
                         JSONArray detailList = array.getJSONObject(i).getJSONArray("detail");
                         for (int j = 0; j < detailList.size(); j++) {
-                            if (detailList.getJSONObject(j).getString("label").equals("FU")
+                            if (detailList.getJSONObject(j).getString("label").equals("BB")
                                     || detailList.getJSONObject(j).getString("label").equals("PU")) {
                                 createClueNum += detailList.getJSONObject(j).getInteger("value");
                             }
