@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -970,24 +971,16 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int activityId = getActivityId();
             JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
             String articleTitle = response.getString("article_title");
-            String activityStart = response.getString("activity_start");
-            String activityEnd = response.getString("activity_end");
             String articleContent = response.getString("article_content");
             int id = 0;
-            String validEnd = null;
-            String validStart = null;
             JSONArray list = crm.articlePage(1, 100, "ACTIVITY_1").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("article_title").equals(articleTitle)) {
                     id = list.getJSONObject(i).getInteger("id");
-                    validEnd = list.getJSONObject(i).getString("valid_end");
-                    validStart = list.getJSONObject(i).getString("valid_start");
                 }
             }
             JSONObject object = crm.artilceView(id);
             Preconditions.checkArgument(articleContent.equals(object.getString("article_content")), articleTitle + " 活动内容不一致");
-            Preconditions.checkArgument(activityStart.equals(validStart), articleTitle + " 活动开始时间不一致");
-            Preconditions.checkArgument(activityEnd.equals(validEnd), articleTitle + " 活动结束时间不一致");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -1280,9 +1273,15 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(zjl);
+            String plateNumber = null;
             JSONArray list = crm.afterSaleCustomerList("", "", "", 1, 10).getJSONArray("list");
-            String plateNumber = list.getJSONObject(0).getString("plate_number");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("plate_number") != null) {
+                    plateNumber = list.getJSONObject(j).getString("plate_number");
+                }
+            }
             CommonUtil.valueView(plateNumber);
+            Preconditions.checkArgument(plateNumber != null, "售后客户存在空车牌号");
             String findParam = plateNumber.substring(0, 3);
             CommonUtil.valueView(findParam);
             int total = crm.afterSaleCustomerList(findParam, "", "", 1, 10).getInteger("total");
@@ -1295,6 +1294,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
@@ -1306,9 +1306,15 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(zjl);
+            String customerPhoneNumber = null;
             JSONArray list = crm.afterSaleCustomerList("", "", "", 1, 10).getJSONArray("list");
-            String customerPhoneNumber = list.getJSONObject(0).getString("customer_phone_number");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getString("plate_number") != null) {
+                    customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
+                }
+            }
             CommonUtil.valueView(customerPhoneNumber);
+            Preconditions.checkArgument(customerPhoneNumber != null, "电话空电话号");
             String findParam = customerPhoneNumber.substring(0, 3);
             CommonUtil.valueView(findParam);
             int total = crm.afterSaleCustomerList(findParam, "", "", 1, 10).getInteger("total");
@@ -1334,19 +1340,24 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
         try {
             UserUtil.login(zjl);
-            int total = crm.afterSaleCustomerList("", startDate, endDate, 1, 10).getInteger("total");
+            IScene scene = AfterSaleCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).build();
+            int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.afterSaleCustomerList("", startDate, endDate, i, size).getJSONArray("list");
+                IScene scene1 = AfterSaleCustomerListScene.builder().searchDateStart(startDate).searchDateEnd(endDate).page(String.valueOf(i)).size(String.valueOf(size)).build();
+                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     String serviceDate = list.getJSONObject(j).getString("service_date");
-                    CommonUtil.valueView(startDate, serviceDate, endDate);
-                    Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
-                    Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
-                    CommonUtil.log("分割线");
+                    if (!StringUtils.isEmpty(serviceDate)) {
+                        CommonUtil.valueView(startDate, serviceDate, endDate);
+                        Preconditions.checkArgument(serviceDate.compareTo(endDate) <= 0, "");
+                        Preconditions.checkArgument(serviceDate.compareTo(startDate) >= 0, "");
+                        CommonUtil.log("分割线");
+                    }
                 }
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询");

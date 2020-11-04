@@ -8,9 +8,9 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "OFITFs6XY8f0Hhk+otiK1g==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    WM("w", "ECuDrIFOE4fol+4FCT+9gQ==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    WM_SMALL("纯牛奶", "LuglNhOUrOOumkcBk6miRQ==", ""),
+    WM_SMALL("纯牛奶", "LWDrq4RF598MRAqaY1HfAQ==", ""),
 
     XMF("@@@", "gYFGLyRAjw6KzxuudVBcGg==", ""),
 
@@ -20,7 +20,7 @@ public enum EnumAppletCode {
 
     LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", ""),
 
-    GLY("Max", "AFhk0ye7mJLjpTdCJfnxAA==", ""),
+    GLY("Max", "gXroMR6pr3aBzW6GAcgjvw==", ""),
 
     WM_ONLINE("w", "nDQrQZlv4wGTNvNy7Qy78Q==", ""),
 

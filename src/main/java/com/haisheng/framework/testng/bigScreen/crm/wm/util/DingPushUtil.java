@@ -15,13 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DingPushUtil {
     private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.BA.getWebHook();
     private static final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
 
-    public static void sendTxt(String msg, String sql) {
+    public static void sendText(String msg, String sql) {
         try {
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             JSONObject object = new JSONObject();
@@ -39,7 +40,16 @@ public class DingPushUtil {
         }
     }
 
-    public static void sendTxt(Map<String, String> map) {
+    public static void sendText(final String msg) {
+        Map<String, String> map = new HashMap<>();
+        map.put("title", "balabala");
+        map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
+                + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
+                + "\n" + "异常：" + msg + "\n");
+        sendText(map);
+    }
+
+    public static void sendText(Map<String, String> map) {
         try {
             String text = map.get("text");
             String title = map.get("title");

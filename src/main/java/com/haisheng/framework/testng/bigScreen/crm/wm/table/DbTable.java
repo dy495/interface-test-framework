@@ -61,7 +61,7 @@ public class DbTable extends BasicProperty implements ITable {
                 errorMsg.append(e.getMessage());
             } finally {
                 if (errorMsg.length() > 0) {
-                    DingPushUtil.sendTxt(errorMsg.toString(), sql);
+                    DingPushUtil.sendText(errorMsg.toString(), sql);
                 }
             }
         }

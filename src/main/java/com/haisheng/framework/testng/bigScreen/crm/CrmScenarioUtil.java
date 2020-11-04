@@ -4551,9 +4551,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 EnumAppletCode.XMF.getCode(),
 //                EnumAppletCode.BB.getCode(),
                 EnumAppletCode.WM.getCode(),
-                EnumAppletCode.WM_SMALL.getCode()
+                EnumAppletCode.WM_SMALL.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
-//                EnumAppletCode.GLY.getCode()
+                EnumAppletCode.GLY.getCode()
         };
     }
 

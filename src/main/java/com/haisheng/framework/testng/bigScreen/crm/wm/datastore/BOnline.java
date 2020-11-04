@@ -103,9 +103,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            sendText(e.toString());
-        } finally {
-            DingPushUtil.sendTxt(map);
+            DingPushUtil.sendText(e.toString());
         }
     }
 
@@ -163,11 +161,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            sendText(e.toString());
-        } finally {
-            DingPushUtil.sendTxt(map);
+            DingPushUtil.sendText(e.toString());
         }
-
     }
 
     @Test(description = "每日订车记录")
@@ -224,17 +219,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            sendText(e.toString());
-        } finally {
-            DingPushUtil.sendTxt(map);
+            DingPushUtil.sendText(e.toString());
         }
-    }
-
-    private void sendText(final String e) {
-        map.put("title", "balabala");
-        map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
-                + "\n" + "错误：" + "\n");
     }
 
     /**
@@ -265,7 +251,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 return s.getStyleId();
             }
         }
-        return "不知道什么车系";
+        return null;
     }
 
     private long getBatchId(long customerId) {
