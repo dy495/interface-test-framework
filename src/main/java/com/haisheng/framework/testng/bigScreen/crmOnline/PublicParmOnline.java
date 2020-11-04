@@ -43,6 +43,8 @@ public class PublicParmOnline {
     public String linephone= "17792294440";  //线索客户手机号
     public String linephone2= "17777101813";  //线索客户手机号
     public String samePlate= "苏G452282";  //系统已存在的车牌号
+    public String vehicle_code_same1="ASD12345637624599";  //与其他客户的重复
+    public String vehicle_code_same2="ZDHZDHZDH37781359";   //与试驾车中的重复
 
     public Integer car_type = 1;
     public String car_type_name = "Panamera";

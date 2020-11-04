@@ -941,6 +941,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序预约
+            sleep(3);
             Long id = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
             //pc查看预约次数
             crm.login(pp.zongjingli, pp.adminpassword);
@@ -948,7 +949,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             int num = ord.getJSONObject(0).getInteger("order_number");
 
             //预约
-            sleep(5);
+            sleep(3);
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
 

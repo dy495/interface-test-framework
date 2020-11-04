@@ -929,7 +929,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
      * @description :交车 今日数=列表电话去重数   ok
      * @date :2020/7/31 13:55
      **/
-    @Test
+    @Test(description = "需求变更不适用",enabled = false)
     public void jiaocheRecodeApp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1342,7 +1342,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.remark = new JSONArray();
             String vehicle_chassis_code[] = {"12345678901234567", "ASDFGHJKLMNBVCXZA", "ASDFGHJKLmnb12345", "哈SDFGHJKL!@#12345",//纯数字 、纯英文、小写英文、汉字字符
                     "DJFKQWERT1209876", "DJFKQWERT120987635",    //长度16.长度18
-                    "WKSKSKKSKSKSKK123", "ZDHZDHZDH61018911", // 其他客户底盘号、试驾车管理中底盘号
+                    pp.vehicle_code_same1, pp.vehicle_code_same2, // 其他客户底盘号、试驾车管理中底盘号
             };
 
             orderCarOnline oc = new orderCarOnline();
