@@ -98,8 +98,8 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上X");
 
         //replace ding push conf
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -143,6 +143,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             for (Object[] object : objects) {
                 String emptyPara = object[0].toString();
                 caseDesc = "预约试驾" + emptyPara + "为空！";
+                sleep(2);
                 crm.addCheckListEmpty(customer_name, customer_phone_number, appointment_date, car_type, emptyPara, object[1].toString(), car_model);
             }
         } catch (AssertionError | Exception e) {

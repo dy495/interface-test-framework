@@ -613,9 +613,9 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String select_date = dt.getHistoryDate(0);
             JSONArray list = crm.driverSelect(1, 10, customer_name, select_date, select_date).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                String timeSelect = list.getJSONObject(i).getString("sign_time");
+                String timeSelect = list.getJSONObject(i).getString("sign_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
-                Preconditions.checkArgument((timeSelect.equals(select_date)) && (customer_name.equals(nameSelect)), "交车按交车时间{}查询，结果{}错误", select_date, timeSelect);
+                Preconditions.checkArgument((timeSelect.equals(select_date)) && (nameSelect.contains(customer_name)), "交车按交车时间{}&姓名{}查询，结果{}、{}错误", select_date, timeSelect,customer_name,nameSelect);
             }
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
@@ -749,6 +749,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
+            fr.remark=new JSONArray();
             pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), "新车授权", dt.getHistoryDate(0), true);
             crm.finishReception3(fr);
             //小程序登录，查看最新交车
