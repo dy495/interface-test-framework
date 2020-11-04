@@ -9,8 +9,6 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX_11receipt"></class>
-
-
         </classes>
     </test>
 </suite>
