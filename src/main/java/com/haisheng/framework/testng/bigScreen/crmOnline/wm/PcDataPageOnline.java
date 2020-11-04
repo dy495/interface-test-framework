@@ -78,6 +78,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
 
     //    --------------------------------------------------4个数据展示------------------------------------------------------
 
+
     @Test(description = "店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和")
     public void shopPanel_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1439,25 +1440,21 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //今日线索
-            String sql = Sql.instance().select("today_clue_num")
+            String sql = Sql.instance().select("today_clue_num", "today_new_customer_reception_num")
                     .from("t_porsche_today_data")
                     .where("today_date", "=", date)
                     .and("sale_name", "like", "%总经理%")
                     .and("shop_id", "=", shopId)
                     .end().getSql();
             List<Map<String, Object>> array = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            int todayClueNum = (int) array.get(0).get("today_clue_num");
-            //今日新客接待
-            String sql1 = Sql.instance().select("today_new_customer_reception_num")
-                    .from("t_porsche_today_data")
-                    .where("today_date", "=", date)
-                    .and("sale_name", "like", "%总经理%")
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1);
-            int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
-            CommonUtil.valueView(createClueNum, todayClueNum - todayNewCustomerReceptionNum);
-            Preconditions.checkArgument(createClueNum == todayClueNum - todayNewCustomerReceptionNum, "创建线索：" + createClueNum + " 今日线索-今日新客接待：" + (todayClueNum - todayNewCustomerReceptionNum));
+            if (array.size() > 0) {
+                for (Map<String, Object> map : array) {
+                    int todayClueNum = (int) map.get("today_clue_num");
+                    int todayNewCustomerReceptionNum = (int) map.get("today_new_customer_reception_num");
+                    CommonUtil.valueView(createClueNum, todayClueNum - todayNewCustomerReceptionNum);
+                    Preconditions.checkArgument(createClueNum == todayClueNum - todayNewCustomerReceptionNum, "创建线索：" + createClueNum + " 今日线索-今日新客接待：" + (todayClueNum - todayNewCustomerReceptionNum));
+                }
+            }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
             appendFailreason(e.toString());
@@ -1485,16 +1482,18 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //今日新客接待
-            String sql1 = Sql.instance().select("today_new_customer_reception_num")
+            String sql = Sql.instance().select("today_new_customer_reception_num")
                     .from("t_porsche_today_data")
                     .where("today_date", "=", date)
                     .and("sale_name", "like", "%总经理%")
                     .and("shop_id", "=", shopId)
                     .end().getSql();
-            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1);
-            int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
-            CommonUtil.valueView(receptionClueNum, todayNewCustomerReceptionNum);
-            Preconditions.checkArgument(receptionClueNum == todayNewCustomerReceptionNum, "接待线索：" + receptionClueNum + " 今日新客接待" + todayNewCustomerReceptionNum);
+            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+            if (list1.size() > 0) {
+                int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
+                CommonUtil.valueView(receptionClueNum, todayNewCustomerReceptionNum);
+                Preconditions.checkArgument(receptionClueNum == todayNewCustomerReceptionNum, "接待线索：" + receptionClueNum + " 今日新客接待" + todayNewCustomerReceptionNum);
+            }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
             appendFailreason(e.toString());
@@ -1695,7 +1694,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                     if (array.getJSONObject(i).getString("type").equals("RECEIVE")) {
                         JSONArray detailList = array.getJSONObject(i).getJSONArray("detail");
                         for (int j = 0; j < detailList.size(); j++) {
-                            if (detailList.getJSONObject(j).getString("label").equals("FU")
+                            if (detailList.getJSONObject(j).getString("label").equals("BB")
                                     || detailList.getJSONObject(j).getString("label").equals("PU")) {
                                 createClueNum += detailList.getJSONObject(j).getInteger("value");
                             }
@@ -1732,7 +1731,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> list = method.getSaleList("销售顾问");
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName"));
-                int num = getFunnelData("bussiness", "ORDER", map);
+                int num = getFunnelData("business", "ORDER", map);
                 String sql = Sql.instance().select("today_order_num")
                         .from("t_porsche_today_data")
                         .where("shop_id", "=", shopId)
