@@ -10,22 +10,25 @@ import java.io.IOException;
 
 public class ImageUtil {
     /**
-     * @Description:  8、获取图片的base64编码
+     * @Description: 8、获取图片的base64编码
      * @Param: [picPath]
      * @return: java.lang.String
      * @Author: Shine
      * @Date: 2019/4/9
      */
-    public String getImageBinary(String picPath){
+    public String getImageBinary(String picPath) {
+        return getImage(picPath, "jpg");
+    }
+
+    public String getImage(String picPath, String formatName) {
         BASE64Encoder encoder = new sun.misc.BASE64Encoder();
         File f = new File(picPath);
         BufferedImage bi;
         try {
             bi = ImageIO.read(f);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bi, "jpg", baos);
+            ImageIO.write(bi, formatName, baos);
             byte[] bytes = baos.toByteArray();
-
             return encoder.encodeBuffer(bytes).trim();
         } catch (IOException e) {
             e.printStackTrace();

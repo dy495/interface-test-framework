@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements TestCaseStd {
+public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount xs = EnumAccount.XSGW_ONLINE;
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
@@ -425,7 +425,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为接听,是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为接听,是否完成=已完成", priority = 4)
     public void returnVisit_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -437,7 +437,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为其他,是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为其他,是否完成=已完成", priority = 5)
     public void returnVisit_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -449,7 +449,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为无人接听,是否完成=未完成")
+    @Test(description = "销售--回访任务--回访结果为无人接听,是否完成=未完成", priority = 6)
     public void returnVisit_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -461,7 +461,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为挂断,是否完成=未完成")
+    @Test(description = "销售--回访任务--回访结果为挂断,是否完成=未完成", priority = 7)
     public void returnVisit_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -473,7 +473,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为稍后联系,是否完成=未完成")
+    @Test(description = "销售--回访任务--回访结果为稍后联系,是否完成=未完成", priority = 8)
     public void returnVisit_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -485,7 +485,7 @@ public class AppSystemOnline<returnVisitTask> extends TestCaseCommon implements 
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为错号,是否完成=已完成")
+    @Test(description = "销售--回访任务--回访结果为错号,是否完成=已完成", priority = 9)
     public void returnVisit_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

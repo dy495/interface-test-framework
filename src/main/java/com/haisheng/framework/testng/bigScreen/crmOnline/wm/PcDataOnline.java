@@ -28,6 +28,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final EnumAccount xs = EnumAccount.XSGW_ONLINE;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+    private static final EnumAppletCode sale = EnumAppletCode.WM;
 
     @BeforeClass
     @Override
@@ -293,7 +294,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(sale);
             int testDriverTotal = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100).getInteger("total");
             int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
             int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");

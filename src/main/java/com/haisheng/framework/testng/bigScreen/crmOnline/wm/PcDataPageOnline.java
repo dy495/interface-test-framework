@@ -1580,7 +1580,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 CommonUtil.valueView(createClueNum, num);
-                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + "pc端记录创建线索：" + createClueNum + "app查询创建未接待数量：" + num);
+                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + "pc端记录创建线索：" + createClueNum + " app查询创建未接待数量：" + num);
                 CommonUtil.logger(arr.get("userName"));
             }
         } catch (Exception | AssertionError e) {

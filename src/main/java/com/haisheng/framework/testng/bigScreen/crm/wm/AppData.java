@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumReceptionType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -209,23 +211,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "今日订单数<=今日新客接待+今日老客接待")
-    public void myReception_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.customerReceptionTotalInfo();
-            int todayOrder = response.getInteger("today_order");
-            int todayNewCustomer = response.getInteger("today_new_customer");
-            int totalOldCustomer = response.getInteger("total_old_customer");
-            CommonUtil.valueView(todayOrder, todayNewCustomer, totalOldCustomer);
-            Preconditions.checkArgument(todayOrder <= todayNewCustomer + totalOldCustomer, "今日订单数>今日新客接待+今日老客接待");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("今日订单数<=今日新客接待+今日老客接待");
-        }
-    }
-
     @Test(description = "今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数")
     public void myReception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -262,17 +247,16 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int todayDeliverCarTotal = response.getInteger("today_deliver_car_total");
             String startDay = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int todayTotal = crm.deliverCarAppList("", 1, 10, startDay, startDay).getInteger("total");
-            //电话号去重
-            Set<String> set = new HashSet<>();
-            for (int i = 1; i < CommonUtil.getTurningPage(todayTotal, 100); i++) {
-                JSONArray list = crm.deliverCarAppList("", i, 10, startDay, startDay).getJSONArray("list");
+            int s = CommonUtil.getTurningPage(todayTotal, size);
+            int listSize = 0;
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.deliverCarAppList("", i, size, startDay, startDay).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    String customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
-                    set.add(customerPhoneNumber);
+                    listSize++;
                 }
             }
-            CommonUtil.valueView(todayDeliverCarTotal, set.size());
-            Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数!=今日交车列表手机号去重后列数和");
+            CommonUtil.valueView(todayDeliverCarTotal, listSize);
+            Preconditions.checkArgument(todayDeliverCarTotal == listSize, "今日交车数" + todayDeliverCarTotal + "今日交车列表手机号去重后列数和" + listSize);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -872,12 +856,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             saveData("PC预约试驾按照销售顾问分类，与每个销售顾问app-我的预约列表数一致");
         }
     }
-
-
-    /**
-     * @description: 客户管理-我的接待
-     */
-
 //    ---------------------------------------------------私有方法区-------------------------------------------------------
 
     /**
@@ -952,66 +930,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
         }
-    }
-
-    /**
-     * 获取预约时间id
-     *
-     * @param date 预约日期
-     * @return 时间id
-     */
-    private Integer getTimeId(String date) {
-        UserUtil.loginApplet(EnumAppletCode.XMF);
-        JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
-        for (int i = 0; i < list.size(); i++) {
-            if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {
-                return list.getJSONObject(i).getInteger("id");
-            }
-        }
-        throw new RuntimeException("当前时间段可预约次数为0");
-    }
-
-    /**
-     * 获取车辆id
-     */
-    private Integer getCarId() {
-        UserUtil.loginApplet(EnumAppletCode.XMF);
-        JSONArray list = crm.myCarList().getJSONArray("list");
-        if (!list.isEmpty()) {
-            return list.getJSONObject(0).getInteger("my_car_id");
-        }
-        throw new DataException("该用户小程序没有绑定车");
-    }
-
-    /**
-     * 创建一个当天回访任务
-     *
-     * @param startDay 开始时间
-     * @param endDay   结束时间
-     */
-    private int createReturnVisitTask(String startDay, String endDay) {
-        String date = DateTimeUtil.getFormat(new Date());
-        UserUtil.login(zjl);
-        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
-        String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
-        String picture = new ImageUtil().getImageBinary(picPath);
-        int total = crm.returnVisitRecordAfterSalePage(1, 10, "").getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        int id = 0;
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.returnVisitRecordAfterSalePage(i, 100, "").getJSONArray("list");
-            //查询今日之前且回访未完成的任务
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getString("return_visit_status_name").equals("未完成")) {
-                    //获取回访id
-                    id = list.getJSONObject(j).getInteger("id");
-                    break;
-                }
-            }
-        }
-        //回访
-        crm.afterSale_addVisitRecord((long) id, picture, comment, date);
-        return id;
     }
 
     /**

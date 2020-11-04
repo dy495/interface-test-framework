@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -58,5 +59,12 @@ public class CommonTest {
     public void test() {
         boolean re = CommonUtil.isContainChinese("sssssssssss");
         System.err.println(re);
+    }
+
+    @Test
+    public void testImageUtil() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/proportion/718_big_pic.png";
+        String str = new ImageUtil().getImage(path, "png");
+        System.err.println(str);
     }
 }

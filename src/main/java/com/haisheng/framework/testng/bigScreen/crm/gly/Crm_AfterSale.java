@@ -54,7 +54,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
         //钉钉推送消息验证
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常-郭丽雅");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车 日常-郭丽雅");
         //钉钉推送消息选择群
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.shopId = getProscheShop();

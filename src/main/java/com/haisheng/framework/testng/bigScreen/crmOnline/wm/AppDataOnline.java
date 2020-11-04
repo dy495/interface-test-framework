@@ -206,23 +206,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "今日订单数<=今日新客接待+今日老客接待")
-    public void myReception_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = crm.customerReceptionTotalInfo();
-            int todayOrder = response.getInteger("today_order");
-            int todayNewCustomer = response.getInteger("today_new_customer");
-            int totalOldCustomer = response.getInteger("total_old_customer");
-            CommonUtil.valueView(todayOrder, todayNewCustomer, totalOldCustomer);
-            Preconditions.checkArgument(todayOrder <= todayNewCustomer + totalOldCustomer, "今日订单数>今日新客接待+今日老客接待");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("今日订单数<=今日新客接待+今日老客接待");
-        }
-    }
-
     @Test(description = "今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数")
     public void myReception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -259,17 +242,16 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             int todayDeliverCarTotal = response.getInteger("today_deliver_car_total");
             String startDay = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int todayTotal = crm.deliverCarAppList("", 1, 10, startDay, startDay).getInteger("total");
-            //电话号去重
-            Set<String> set = new HashSet<>();
-            for (int i = 1; i < CommonUtil.getTurningPage(todayTotal, 100); i++) {
-                JSONArray list = crm.deliverCarAppList("", i, 10, startDay, startDay).getJSONArray("list");
+            int s = CommonUtil.getTurningPage(todayTotal, size);
+            int listSize = 0;
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.deliverCarAppList("", i, size, startDay, startDay).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    String customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
-                    set.add(customerPhoneNumber);
+                    listSize++;
                 }
             }
-            CommonUtil.valueView(todayDeliverCarTotal, set.size());
-            Preconditions.checkArgument(todayDeliverCarTotal == set.size(), "今日交车数" + todayDeliverCarTotal + "今日交车列表手机号去重后列数和" + set.size());
+            CommonUtil.valueView(todayDeliverCarTotal, listSize);
+            Preconditions.checkArgument(todayDeliverCarTotal == listSize, "今日交车数" + todayDeliverCarTotal + "今日交车列表手机号去重后列数和" + listSize);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
