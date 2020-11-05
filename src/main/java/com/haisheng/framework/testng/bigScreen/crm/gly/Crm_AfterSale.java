@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -15,9 +15,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCus
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -46,31 +45,21 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     @BeforeClass()
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        //checklist相关配置
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        //钉钉推送消息验证
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车 日常-郭丽雅");
-        //钉钉推送消息选择群
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.shopId = getProscheShop();
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String date = DateTimeUtil.getFormat(new Date());
-            UserUtil.loginApplet(applet);
-            int id = getTimeId(date);
-            crm.appointmentRepair((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("预约失败");
-        }
     }
 
     @AfterClass
@@ -92,14 +81,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     public void AfterSaleReceptionException1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerPhoneNumber = response.getString("customer_phone_number");
@@ -125,13 +112,14 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("车主名称长度在1-15字之间"), "车主姓名异常");
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("车主名称长度在1-15字之间"), "车主姓名为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
-            saveData("车主姓名异常");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户姓异常");
         }
     }
 
@@ -139,14 +127,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     public void AfterSaleReceptionException2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -172,13 +158,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("联系方式1必须为11位手机号"), "联系方式1异常 ");
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("联系方式1必须为11位手机号"), "车主电话为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("联系方式1异常");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话--异常");
         }
     }
 
@@ -190,14 +176,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         JSONArray remarks = new JSONArray();
         remarks.add(remark);
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -224,8 +208,8 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .travelMileage(travelMileage)
                     .remarks(remarks)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("备注在10-200字之间"), " ");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("备注在10-200字之间"), "备注200字以上保存成功");
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
             appendFailreason(e.toString());
@@ -235,17 +219,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程")
-    public void AfterSaleReceptionException4() {
+    public void afterSaleReceptionException4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -255,7 +237,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            for (double v : travelMileageArr) {
+            for (double s : travelMileageArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
                         .appointmentCustomerName(appointmentCustomerName)
@@ -269,31 +251,29 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .maintainSaleId(maintainSaleId)
                         .maintainType(maintainType)
                         .plateNumber(plateNumber)
-                        .travelMileage(v)
+                        .travelMileage(s)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("行驶里程数字错误"), "行驶里程不能有小数点");
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("行驶里程数字错误"), "行驶里程为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不能有小数点");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程");
         }
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话2异常")
-    public void AfterSaleReceptionException5() {
+    public void afterSaleReceptionException5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -321,10 +301,11 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .travelMileage(travelMileage)
                         .customerSecondaryPhone(s)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("联系方式2必须为11位手机号"), "联系人手机号为" + s);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("联系方式2必须为11位手机号"), "车主电话2为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话2异常");
@@ -332,17 +313,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常")
-    public void AfterSaleReceptionException6() {
+    public void afterSaleReceptionException6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String customerName = response.getString("customer_name");
             String customerPhoneNumber = response.getString("customer_phone_number");
@@ -369,10 +348,11 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .travelMileage(travelMileage)
                         .customerSecondaryPhone(customerPhoneNumber)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("预约电话2必须为11位手机号"), "联系人手机号为" + s);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("预约电话2必须为11位手机号"), "预约电话2为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常");
@@ -380,17 +360,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人1姓名异常")
-    public void AfterSaleReceptionException7() {
+    public void afterSaleReceptionException7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -417,11 +395,14 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .firstContactName(s)
+                        .firstContactPhone("15623456666")
+                        .firstContactRelation(0)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("预约电话1必须为11位手机号"), "联系人手机号为" + s);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("联系人1姓名长度在1-10字之间"), "联系人1姓名为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人1姓名异常");
@@ -429,17 +410,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人2姓名异常--提示语有问题，填写手机号，提示手机号不能为空")
-    public void AfterSaleReceptionException8() {
+    public void afterSaleReceptionException8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -466,29 +445,30 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .secondContactName(s)
+                        .secondContactPhone("15623456666")
+                        .secondContactRelation(0)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("联系人2必须为11位手机号"), "联系人手机号为" + s);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("联系人2姓名长度在1-10字之间"), "联系人2姓名：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人2姓名异常--提示语有问题，填写手机号，提示手机号不能为空");
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车牌号2异常")
-    public void AfterSaleReceptionException9() {
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-陪同车牌2异常")
+    public void afterSaleReceptionException9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -516,28 +496,27 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .travelMileage(travelMileage)
                         .secondPlateNumber(s)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("车牌号码只允许文字+数字+大写字母") || object.getString("message").equals("请输入7-8位车牌号码位数"), " 异常车牌号：" + s);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("车牌号码只允许文字+数字+大写字母")
+                        || object.getString("message").equals("请输入7-8位车牌号码位数"), " 异常车牌号：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车牌号2异常");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-陪同车牌2异常");
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常--维修天数没有加整数限制")
-    public void AfterSaleReceptionException10() {
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常")
+    public void afterSaleReceptionException10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -548,7 +527,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
             double travelMileage = response.getDouble("travel_mileage");
-            for (int i = 0; i <= days.length; i++) {
+            for (double s : days) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
                         .appointmentCustomerName(appointmentCustomerName)
@@ -563,30 +542,28 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .maintainType(maintainType)
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
-                        .estimateRepairDays(days[i])
+                        .estimateRepairDays(s)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修时间天数为：" + days[i]);
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修天数为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常--维修天数没有加整数限制");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常");
         }
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户名称不填写")
-    public void AfterSaleReceptionException11() {
+    public void afterSaleReceptionException11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerPhoneNumber = response.getString("customer_phone_number");
@@ -610,8 +587,8 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), "客户姓名不允许为空 ");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), object.getString("message"));
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -620,17 +597,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话1不填写")
-    public void AfterSaleReceptionException12() {
+    public void afterSaleReceptionException12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -654,8 +629,8 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("联系方式1不允许为空"), " 联系方式1不允许为空");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("车主电话1不允许为空"), object.getString("message") + " 错误提示描述不正确");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -663,17 +638,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写-没有校验")
-    public void AfterSaleReceptionException13() {
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写")
+    public void afterSaleReceptionException13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -698,27 +671,25 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), " 预约名称不允许为空");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), object.getString("message"));
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写-没有校验");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写");
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写--没有限制")
-    public void AfterSaleReceptionException14() {
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写")
+    public void afterSaleReceptionException14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
             String customerPhoneNumber = response.getString("customer_phone_number");
@@ -742,27 +713,25 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), " 预约电话不允许为空");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), object.getString("message"));
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写--没有限制");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写");
         }
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车牌号1不填写")
-    public void AfterSaleReceptionException15() {
+    public void afterSaleReceptionException15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -786,7 +755,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .maintainType(maintainType)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
+            JSONObject object = crm.invokeApi(scene, false);
             Preconditions.checkArgument(object.getString("message").equals("车牌号1不允许为空"), " 车牌号1不允许为空");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -795,18 +764,16 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写---必填项可以为空，没有限制")
-    public void AfterSaleReceptionException16() {
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写")
+    public void afterSaleReceptionException16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -831,26 +798,24 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .maintainType(maintainType)
                     .build();
             JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), "行驶里程为空 ");
+            Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), object.getString("message"));
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写---必填项可以为空，没有限制");
+            saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写");
         }
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-所属保养顾问不填写---保养顾问不是必填项？？", enabled = false)
-    public void AfterSaleReceptionException17() {
+    public void afterSaleReceptionException17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -876,7 +841,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
+            JSONObject object = crm.invokeApi(scene, false);
             Preconditions.checkArgument(object.getString("message").equals(""), " ");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -886,17 +851,15 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户来源不填写")
-    public void AfterSaleReceptionException19() {
+    public void afterSaleReceptionException19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
             JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
             String appointmentCustomerName = response.getString("appointment_customer_name");
             Integer appointmentId = response.getInteger("appointment_id");
-            if (appointmentId == null) {
-                appointmentId = 0;
-            }
             String appointmentPhoneNumber = response.getString("appointment_phone_number");
             String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
             String customerName = response.getString("customer_name");
@@ -920,8 +883,8 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                     .plateNumber(plateNumber)
                     .travelMileage(travelMileage)
                     .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), " 客户来源为空");
+            JSONObject object = crm.invokeApi(scene, false);
+            Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), object.getString("message"));
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -954,5 +917,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
         throw new DataException("该用户小程序没有绑定车");
+    }
+
+    private void appointmentRepair() throws Exception {
+        String date = DateTimeUtil.getFormat(new Date());
+        boolean haveTask = false;
+        JSONArray list = crm.receptionAfterCustomerList("", "", "", 1, 100).getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("reception_status_name").equals("维修中")
+                    && !list.getJSONObject(i).getBoolean("service_complete")) {
+                CommonUtil.warning("存在未完成接待的维修任务");
+                haveTask = true;
+                break;
+            }
+        }
+        if (!haveTask) {
+            UserUtil.loginApplet(applet);
+            int id = getTimeId(date);
+            crm.appointmentRepair((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
+            UserUtil.login(zjl);
+            //预约中状态查询
+            JSONArray array = crm.mainAppointmentList(1, 10).getJSONArray("list");
+            for (int j = 0; j < array.size(); j++) {
+                if (array.getJSONObject(j).getString("service_status_name").equals("预约中")) {
+                    int appointmentId = array.getJSONObject(j).getInteger("appointment_id");
+                    //接待
+                    crm.reception_customer((long) appointmentId);
+                    break;
+                }
+            }
+        }
     }
 }

@@ -1582,7 +1582,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 CommonUtil.valueView(createClueNum, num);
-                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + "pc端记录创建线索：" + createClueNum + "app查询创建未接待数量：" + num);
+                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + "pc端记录创建线索：" + createClueNum + " app查询创建未接待数量：" + num);
                 CommonUtil.logger(arr.get("userName"));
             }
         } catch (Exception | AssertionError e) {
@@ -2294,15 +2294,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String sql;
                 if (StringUtils.isEmpty(e.getStyleId())) {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("subject_type_name", "=", "个人")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .and("subject_type_name", "=", "个人")
                             .and("car_style", "=", e.getStyleId())
@@ -2339,15 +2339,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String sql;
                 if (StringUtils.isEmpty(e.getStyleId())) {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("subject_type_name", "=", "公司")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .and("subject_type_name", "=", "公司")
                             .and("car_style", "=", e.getStyleId())

@@ -78,7 +78,6 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
 
     //    --------------------------------------------------4个数据展示------------------------------------------------------
 
-
     @Test(description = "店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和")
     public void shopPanel_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1635,7 +1634,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--【各时间段+各销售】接待线索=【该销售-app-销售接待】今日新客接待",enabled = false)
+    @Test(description = "店面数据分析--【各时间段+各销售】接待线索=【该销售-app-销售接待】今日新客接待", enabled = false)
     public void shopPanel_data_68() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2292,15 +2291,15 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 String sql;
                 if (StringUtils.isEmpty(e.getStyleId())) {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("subject_type_name", "=", "个人")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .and("subject_type_name", "=", "个人")
                             .and("car_style", "=", e.getStyleId())
@@ -2337,15 +2336,15 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 String sql;
                 if (StringUtils.isEmpty(e.getStyleId())) {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("subject_type_name", "=", "公司")
                             .and("shop_id", "=", shopId)
                             .end().getSql();
                 } else {
                     sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
+                            .from("t_porsche_deliver_info")
+                            .where("deliver_date", "=", date)
                             .and("shop_id", "=", shopId)
                             .and("subject_type_name", "=", "公司")
                             .and("car_style", "=", e.getStyleId())

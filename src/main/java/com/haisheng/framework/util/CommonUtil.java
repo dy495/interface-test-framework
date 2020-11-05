@@ -58,6 +58,22 @@ public class CommonUtil {
     }
 
     /**
+     * 判断数组中是否包含一个数
+     *
+     * @param str  一个数
+     * @param strs 一个数组
+     * @return boolean 结果
+     */
+    public static boolean isContainStr(String str, String[] strs) {
+        for (String s : strs) {
+            if (str.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 结果展示
      *
      * @param value value
@@ -74,7 +90,9 @@ public class CommonUtil {
      * @param w 警告
      */
     public static void warning(String w) {
-        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + w + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        System.err.println("=================================================================================");
+        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + w + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.err.println("=================================================================================");
     }
 
     /**

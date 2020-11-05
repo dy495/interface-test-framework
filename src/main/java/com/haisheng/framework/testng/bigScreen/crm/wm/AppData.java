@@ -302,20 +302,23 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myTestDriver_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            UserUtil.login(zjl);
+            String date = DateTimeUtil.getFormat(new Date());
             JSONObject response = crm.driverTotal();
             int todayTestDriveTotal = response.getInteger("today_test_drive_total");
-            int total = crm.testDriverAppList("", "", "", 1, size).getInteger("total");
+            int total = crm.testDriverAppList("", date, date, size, 1).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
-            Set<String> set = new HashSet<>();
+            int x = 0;
             for (int i = 1; i < s; i++) {
-                JSONArray list = crm.testDriverAppList("", "", "", i, size).getJSONArray("list");
+                JSONArray list = crm.testDriverAppList("", date, date, size, i).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    String phoneNumber = list.getJSONObject(j).getString("customer_phone_number");
-                    set.add(phoneNumber);
+                    if (list.getJSONObject(j).getString("audit_status_name").equals("已通过")) {
+                        x++;
+                    }
                 }
             }
-            CommonUtil.valueView(todayTestDriveTotal, set.size());
-            Preconditions.checkArgument(todayTestDriveTotal >= set.size(), "今日试驾数!=今日试驾列表手机号去重后列表数和");
+            CommonUtil.valueView(todayTestDriveTotal, x);
+            Preconditions.checkArgument(todayTestDriveTotal == x, "今日试驾数：" + todayTestDriveTotal + " 今日试驾列表手机号去重后列表数和：" + x);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

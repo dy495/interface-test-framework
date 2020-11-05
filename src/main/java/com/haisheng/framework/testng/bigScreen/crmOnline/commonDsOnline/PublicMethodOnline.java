@@ -148,9 +148,6 @@ public class PublicMethodOnline {
         JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
         String appointmentCustomerName = response.getString("appointment_customer_name");
         Integer appointmentId = response.getInteger("appointment_id");
-        if (appointmentId == null) {
-            appointmentId = 0;
-        }
         String appointmentPhoneNumber = response.getString("appointment_phone_number");
         String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
         String customerName = response.getString("customer_name");

@@ -12,6 +12,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailureCause;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReturnVisitTaskExecuteScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -38,6 +40,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount qt = EnumAccount.QT_DAILY;
+    String[] strs = {"15037286013", "17770601557", "17767880967", "17768996973"};
 
     @BeforeClass
     @Override
@@ -98,14 +101,14 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             crm.registeredCustomer((long) activityTaskId, "张三", "13454678912");
             //pc任务客户数量+1
             UserUtil.login(zjl);
-            int activityCustomer1 = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list").size();
+            int activityCustomer1 = crm.customerTaskPage(10, 1, activityId).getJSONArray("list").size();
             Preconditions.checkArgument(activityCustomer1 == activityCustomer + 1, "添加报名人信息后，pc端任务活动未+1");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             UserUtil.login(xs);
             int customerId = 0;
-            JSONArray list = crm.customerTaskPage(10, 1, (long) activityId).getJSONArray("list");
+            JSONArray list = crm.customerTaskPage(10, 1, activityId).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("customer_phone_number").equals("13454678912")) {
                     customerId = list.getJSONObject(i).getInteger("id");
@@ -572,28 +575,40 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
     private void returnVisitTask(EnumFailureCause failureCause, String failureCauseRemark, String otherStoreCarType) {
         String date = DateTimeUtil.addDayFormat(new Date(), 1);
         String preBuyCarTime = DateTimeUtil.dateToStamp(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        String common = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
+        String comment = "一言均赋，四韵俱成。请洒潘江，各倾陆海云尔";
         String picPath = "src/main/resources/test-res-repo/pic/911_big_pic.jpg";
         String picture = new ImageUtil().getImageBinary(picPath);
-        JSONObject response = crm.returnVisitTaskPage(1, 10);
-        int taskId = CommonUtil.getIntField(response, 0, "task_id");
-        //回访
-        crm.returnVisitTaskExecute(common, failureCause.getCause(), failureCauseRemark, false, date,
-                otherStoreCarType, preBuyCarTime, EnumReturnVisitResult.FAILURE.getType(), String.valueOf(taskId), picture);
-        CommonUtil.valueView(taskId);
-        String taskStatusName = null;
-        int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, 100);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = crm.returnVisitTaskPage(i, 100).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                if (list.getJSONObject(j).getInteger("task_id") == taskId) {
-                    taskStatusName = list.getJSONObject(j).getString("task_status_name");
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("return_visit_pic", picture);
+        array.add(object);
+        JSONArray list = crm.returnVisitTaskPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            if (list.getJSONObject(i).getString("task_status_name").equals("未完成")
+                    && !CommonUtil.isContainStr(list.getJSONObject(i).getString("customer_phone"), strs)) {
+                int taskId = list.getJSONObject(i).getInteger("task_id");
+                IScene scene = ReturnVisitTaskExecuteScene.builder().returnVisitPic(array).comment(comment)
+                        .nextReturnVisitDate(date).preBuyCarTime(preBuyCarTime).returnVisitResult(EnumReturnVisitResult.FAILURE.getType())
+                        .taskId(String.valueOf(taskId)).failureCause(failureCause.getCause())
+                        .failureCauseRemark(failureCauseRemark).otherStoreCarType(otherStoreCarType).build();
+                crm.invokeApi(scene, true);
+                String taskStatusName = null;
+                int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
+                int s = CommonUtil.getTurningPage(total, 100);
+                for (int j = 1; j < s; j++) {
+                    JSONArray list1 = crm.returnVisitTaskPage(j, 100).getJSONArray("list");
+                    for (int x = 0; x < list1.size(); x++) {
+                        if (list1.getJSONObject(x).getInteger("task_id") == taskId) {
+                            taskStatusName = list1.getJSONObject(x).getString("task_status_name");
+                        }
+                    }
                 }
+                CommonUtil.valueView(taskStatusName);
+                Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
+            } else {
+                CommonUtil.warning("没有回访任务");
             }
         }
-        CommonUtil.valueView(taskStatusName);
-        Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
     }
 
     @Test(description = "销售--回访任务--回访记录内容包含汉字、英文、数字、符号、10-200字，回访成功")
