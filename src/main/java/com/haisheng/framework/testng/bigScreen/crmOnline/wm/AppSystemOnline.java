@@ -592,32 +592,35 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("return_visit_pic", picture);
         array.add(object);
+        int taskId = 0;
         JSONArray list = crm.returnVisitTaskPage(1, 100).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             if (list.getJSONObject(i).getString("task_status_name").equals("未完成")
                     && !CommonUtil.isContainStr(list.getJSONObject(i).getString("customer_phone"), strs)) {
-                int taskId = list.getJSONObject(i).getInteger("task_id");
-                IScene scene = ReturnVisitTaskExecuteScene.builder().returnVisitPic(array).comment(comment)
-                        .nextReturnVisitDate(date).preBuyCarTime(preBuyCarTime).returnVisitResult(EnumReturnVisitResult.FAILURE.getType())
-                        .taskId(String.valueOf(taskId)).failureCause(failureCause.getCause())
-                        .failureCauseRemark(failureCauseRemark).otherStoreCarType(otherStoreCarType).build();
-                crm.invokeApi(scene, true);
-                String taskStatusName = null;
-                int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
-                int s = CommonUtil.getTurningPage(total, 100);
-                for (int j = 1; j < s; j++) {
-                    JSONArray list1 = crm.returnVisitTaskPage(j, 100).getJSONArray("list");
-                    for (int x = 0; x < list1.size(); x++) {
-                        if (list1.getJSONObject(x).getInteger("task_id") == taskId) {
-                            taskStatusName = list1.getJSONObject(x).getString("task_status_name");
-                        }
+                taskId = list.getJSONObject(i).getInteger("task_id");
+            }
+        }
+        if (taskId != 0) {
+            IScene scene = ReturnVisitTaskExecuteScene.builder().returnVisitPic(array).comment(comment)
+                    .nextReturnVisitDate(date).preBuyCarTime(preBuyCarTime).returnVisitResult(EnumReturnVisitResult.FAILURE.getType())
+                    .taskId(String.valueOf(taskId)).failureCause(failureCause.getCause())
+                    .failureCauseRemark(failureCauseRemark).otherStoreCarType(otherStoreCarType).build();
+            crm.invokeApi(scene, true);
+            String taskStatusName = null;
+            int total = crm.returnVisitTaskPage(1, 10).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, 100);
+            for (int j = 1; j < s; j++) {
+                JSONArray list1 = crm.returnVisitTaskPage(j, 100).getJSONArray("list");
+                for (int x = 0; x < list1.size(); x++) {
+                    if (list1.getJSONObject(x).getInteger("task_id") == taskId) {
+                        taskStatusName = list1.getJSONObject(x).getString("task_status_name");
                     }
                 }
-                CommonUtil.valueView(taskStatusName);
-                Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
-            } else {
-                CommonUtil.warning("没有回访任务");
             }
+            CommonUtil.valueView(taskStatusName);
+            Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
+        } else {
+            CommonUtil.warning("没有回访任务");
         }
     }
 
@@ -704,14 +707,15 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            CommonUtil.valueView(x);
-            JSONArray list = crm.returnVisitTaskPage(1, x).getJSONArray("list");
-            CommonUtil.valueView(list.size());
-            for (int j = 0; j < list.size(); j++) {
-                String taskStatusName = list.getJSONObject(j).getString("task_status_name");
-                int taskId = list.getJSONObject(j).getInteger("task_id");
-                CommonUtil.valueView("任务：" + "[" + j + "]" + taskId + "的完成状态为：" + taskStatusName);
-                Preconditions.checkArgument(taskStatusName.equals("未完成"), "未完成中包含" + taskStatusName + "任务id为：" + taskId);
+            if (x != 0) {
+                JSONArray list = crm.returnVisitTaskPage(1, x).getJSONArray("list");
+                CommonUtil.valueView(list.size());
+                for (int j = 0; j < list.size(); j++) {
+                    String taskStatusName = list.getJSONObject(j).getString("task_status_name");
+                    int taskId = list.getJSONObject(j).getInteger("task_id");
+                    CommonUtil.valueView("任务：" + "[" + j + "]" + taskId + "的完成状态为：" + taskStatusName);
+                    Preconditions.checkArgument(taskStatusName.equals("未完成"), "未完成中包含" + taskStatusName + "任务id为：" + taskId);
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();

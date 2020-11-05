@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
@@ -33,6 +34,7 @@ import java.util.Set;
  */
 public class AppData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumAccount newXs = EnumAccount.XS_DAILY;
@@ -374,7 +376,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
         EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
         try {
-            String phone = getDistinctPhone();
+            String phone = method.getDistinctPhone();
             int total = crm.customerPage(1, 10, "", "", "").getInteger("total");
             //创建线索
             crm.customerCreate(customerInfo.getName(), "2", phone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
@@ -393,7 +395,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
         try {
-            String phone = getDistinctPhone();
+            String phone = method.getDistinctPhone();
             //客户总数
             int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
             //分配客户-获取客户id
@@ -517,7 +519,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             //添加销售
             crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 13, "", "");
             //创建
-            String customerPhone = getDistinctPhone();
+            String customerPhone = method.getDistinctPhone();
             UserUtil.login(newXs);
             crm.customerCreate(customerInfo.getName(), String.valueOf(EnumCustomerLevel.B.getId()), customerPhone, car.getModelId(), car.getStyleId(), customerInfo.getRemark());
             //删除此新增的顾问
@@ -933,18 +935,5 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
         }
-    }
-
-    /**
-     * 获取非重复电话号
-     *
-     * @return phone
-     */
-    private String getDistinctPhone() {
-        UserUtil.login(zjl);
-        String phone = "153" + CommonUtil.getRandom(8);
-        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
-        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
-        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 }

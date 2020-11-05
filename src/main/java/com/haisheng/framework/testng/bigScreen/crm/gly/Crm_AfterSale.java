@@ -36,6 +36,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     EnumAccount zjl = EnumAccount.ZJL_DAILY;
     EnumAppletCode applet = EnumAppletCode.GLY;
+    private static final double travelMileage = 1000;
     String[] customerNameArr = {"1111111111111111", "^%&%$##@#$$%^&&*8"};
     String[] customerPhoneNumberArr = {"11111111111", "1337316600", "133731668066", "哈哈哈哈哈哈哈哈哈哈就", "GHBNBVHHkjl", "%^%$#@#$%&^&"};
     String[] plateNumberArr = {"哈TY12345", "京hj67877", "京U1230090", "京F8989", "京A1239456"};
@@ -78,7 +79,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户姓异常")
-    public void AfterSaleReceptionException1() {
+    public void afterSaleReceptionException1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appointmentRepair();
@@ -95,7 +96,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerNameArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -124,7 +124,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话--异常")
-    public void AfterSaleReceptionException2() {
+    public void afterSaleReceptionException2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appointmentRepair();
@@ -141,7 +141,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerPhoneNumberArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -170,7 +169,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
 
 
     @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-备201个字")
-    public void AfterSaleReceptionException3() {
+    public void afterSaleReceptionException3() {
         logger.logCaseStart(caseResult.getCaseName());
         String remark = EnumCustomerInfo.CUSTOMER_2.getRemark();
         JSONArray remarks = new JSONArray();
@@ -191,7 +190,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -283,7 +281,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerNameArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -330,7 +327,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerNameArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -378,7 +374,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerNameArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -428,7 +423,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : customerNameArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -478,7 +472,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (String s : plateNumberArr) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -526,7 +519,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             for (double s : days) {
                 IScene scene = EditAfterSaleCustomerScene.builder()
                         .afterRecordId(afterRecordId)
@@ -548,6 +540,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修天数为：" + s + "保存成功");
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常");
@@ -572,7 +565,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -614,7 +606,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -656,7 +647,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentId(appointmentId)
@@ -698,7 +688,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -740,7 +729,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String firstRepairCarType = response.getString("first_repair_car_type");
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -825,7 +813,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)
@@ -868,7 +855,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             String maintainSaleId = response.getString("maintain_sale_id");
             int maintainType = response.getInteger("maintain_type");
             String plateNumber = response.getString("plate_number");
-            double travelMileage = response.getDouble("travel_mileage");
             IScene scene = EditAfterSaleCustomerScene.builder()
                     .afterRecordId(afterRecordId)
                     .appointmentCustomerName(appointmentCustomerName)

@@ -51,6 +51,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     //预约信息
     String customer_name = "自动化哈";
     String customer_phone_number = "13400000000";
+    String mes = "存在密码不为123456的销售顾问账号";
 
 
     /**
@@ -113,7 +114,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             String[] a = repair(dt.getHistoryDate(1), my_car_id, "yes");
             Long after_record_id = Long.parseLong(a[2]);
 
-            List<String> remarks = new ArrayList<String>();
+            List<String> remarks = new ArrayList<>();
             for (int i = 1; i < 30; i++) {
                 remarks.add(dt.getHistoryDate(0) + "1Z！@#自动化备注" + i);
             }
@@ -860,7 +861,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //    }
 
     @Test(description = "销售接待--今日试驾>=所有销售 【客户管理-我的试驾】今日试驾之和")
-    public void TodayDriveSum() {
+    public void todayDriveSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(zjl_name, pwd);
@@ -886,14 +887,14 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayTestDrive, max);
             Preconditions.checkArgument(todayTestDrive >= max, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailreason(e.toString() + mes);
         } finally {
             saveData("今日试驾>=所有销售 【客户管理-我的试驾】今日试驾之和");
         }
     }
 
     @Test(description = "销售接待--今日订车=所有销售【客户管理-我的接待】今日订单之和")
-    public void TodayDuySum() {
+    public void todayDuySum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(zjl_name, pwd);
@@ -919,14 +920,14 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayBuyCarNum, max);
             Preconditions.checkArgument(todayBuyCarNum >= max, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailreason(e.toString() + mes);
         } finally {
             saveData("销售接待--今日订车=所有销售【客户管理-我的接待】今日订单之和");
         }
     }
 
     @Test(description = "销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和")
-    public void DeliverCarSum() {
+    public void deliverCarSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(zjl_name, pwd);
@@ -952,7 +953,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayDeliverCarNum, max);
             Preconditions.checkArgument(todayDeliverCarNum >= max, "今日交车的数量为：" + todayDeliverCarNum + "  " + "：各销售交车累计为" + max);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailreason(e.toString() + mes);
         } finally {
             saveData("销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和");
         }

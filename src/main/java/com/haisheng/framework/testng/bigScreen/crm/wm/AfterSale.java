@@ -213,7 +213,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--我的接待--预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1")
+    @Test(description = "售后--我的接待--预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1", enabled = false)
     public void afterSale_reception_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -373,29 +373,6 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("售后--客户管理--本月新增车辆>=今日新增车辆");
-        }
-    }
-
-    @Test(description = "售后--客户管理--今日新增车辆=今日筛选，车牌号去重")
-    public void afterSale_customer_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        try {
-            JSONObject response = crm.afterSaleCustomerList("", date, date, 1, 10);
-            int todayNewCar = response.getInteger("today_new_car");
-            Set<String> set = new HashSet<>();
-            JSONArray list = response.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String plateNumber = list.getJSONObject(i).getString("plate_number");
-                CommonUtil.valueView(plateNumber);
-                set.add(plateNumber);
-            }
-            CommonUtil.valueView(todayNewCar, set.size());
-            Preconditions.checkArgument(todayNewCar == set.size(), "今日新增车辆为 " + todayNewCar + "列表数车牌号去重 " + set.size());
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("APP-今日新增车辆=今日筛选，车牌号去重");
         }
     }
 
@@ -928,7 +905,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     public void afterSale_activity_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         int activityId;
-        String phone = getDistinctPhone();
+        String phone = method.getDistinctPhone();
         try {
             activityId = getActivityId();
             int a = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
@@ -992,7 +969,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     public void afterSale_activity_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String phone = getDistinctPhone();
+            String phone = method.getDistinctPhone();
             int activityId = getActivityId();
             JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
             String activityTitle = response.getString("article_title");
@@ -1691,18 +1668,5 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         }
         return f;
-    }
-
-    /**
-     * 获取非重复电话号
-     *
-     * @return phone
-     */
-    private String getDistinctPhone() {
-        UserUtil.login(zjl);
-        String phone = "153" + CommonUtil.getRandom(8);
-        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
-        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
-        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 }

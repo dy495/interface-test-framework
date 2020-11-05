@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
@@ -31,6 +32,7 @@ import java.util.Date;
  */
 public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
@@ -302,7 +304,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         try {
-            String phone = getDistinctPhone();
+            String phone = method.getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
             crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
@@ -438,18 +440,4 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    ---------------------------------------------------私有方法区-------------------------------------------------------
-
-    /**
-     * 获取非重复电话号
-     *
-     * @return phone
-     */
-    public String getDistinctPhone() {
-        UserUtil.login(zjl);
-        String phone = "153" + CommonUtil.getRandom(8);
-        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
-        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
-        return a == 0 && b == 0 ? phone : getDistinctPhone();
-    }
 }

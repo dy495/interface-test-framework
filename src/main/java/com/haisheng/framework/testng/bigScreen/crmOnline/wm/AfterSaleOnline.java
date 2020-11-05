@@ -376,29 +376,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--客户管理--今日新增车辆=今日筛选，车牌号去重")
-    public void afterSale_customer_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.getFormat(new Date());
-        try {
-            JSONObject response = crm.afterSaleCustomerList("", date, date, 1, 10);
-            int todayNewCar = response.getInteger("today_new_car");
-            Set<String> set = new HashSet<>();
-            JSONArray list = response.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String plateNumber = list.getJSONObject(i).getString("plate_number");
-                CommonUtil.valueView(plateNumber);
-                set.add(plateNumber);
-            }
-            CommonUtil.valueView(todayNewCar, set.size());
-            Preconditions.checkArgument(todayNewCar == set.size(), "今日新增车辆为 " + todayNewCar + "列表数车牌号去重 " + set.size());
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("APP-今日新增车辆=今日筛选，车牌号去重");
-        }
-    }
-
     @Test(description = "售后-客户管理-本月新增车辆<=【我的接待】本月接待售后车辆")
     public void afterSale_customer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());

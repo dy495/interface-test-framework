@@ -754,9 +754,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void contentOperation_4(){
-
+    @Test(enabled = false)
+    public void contentOperation_4() {
     }
 
     private void deleteActivity(int id) throws Exception {
