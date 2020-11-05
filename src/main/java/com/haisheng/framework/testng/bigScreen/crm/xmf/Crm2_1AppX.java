@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
@@ -935,7 +936,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @description :交车 今日数=列表电话去重数   ok
      * @date :2020/7/31 13:55
      **/
-    @Test
+    @Test(enabled = false)
     public void jiaocheRecodeApp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1766,6 +1767,22 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("新建工作计划，列表+1");
+        }
+    }
+
+    @Test
+    public void testlistnull(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+
+            crm.articlePage(1,10,pp.positions);
+
+
+
+        }catch (AssertionError |Exception e){
+            e.toString();
+        }finally {
+            saveData("");
         }
     }
 

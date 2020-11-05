@@ -178,6 +178,44 @@ public class PackFunction {
         return jsonP;
     }
 
+    public JSONObject creatCust2(String phone) throws Exception {
+        //前台登陆
+        crm.login(pp.qiantai, pp.adminpassword);
+        JSONObject jsonP = new JSONObject();
+        String name = pp.customer_name;
+        //获取当前空闲第一位销售id
+        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        String userLoginName = username(sale_id);
+        boolean isDes = true;
+        JSONObject list = new JSONObject();
+        JSONArray ll = new JSONArray();
+        list.put("customer_name", name);
+        list.put("is_decision", isDes);
+        ll.add(0, list);
+
+        //创建接待
+        crm.creatReception2("FIRST_VISIT", ll);
+        crm.login(userLoginName, pp.adminpassword);
+
+        JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
+
+        Long receiptId = data.getJSONArray("list").getJSONObject(0).getLong("id");
+        Long customerID = data.getJSONArray("list").getJSONObject(0).getLong("customer_id");
+
+        JSONArray PhoneList = new JSONArray();
+        PhoneList = phoneList(phone, "");
+
+        jsonP.put("name", name);
+        jsonP.put("phone", phone);
+        jsonP.put("phoneList", PhoneList);
+        jsonP.put("reception_id", receiptId);
+        jsonP.put("customerId", customerID);
+        jsonP.put("userLoginName", userLoginName);
+        jsonP.put("sale_id", sale_id);
+
+        return jsonP;
+    }
+
     //前台点击创建接待按钮接待老客
     public JSONObject creatCustOld(String phone) throws Exception {
         JSONObject jsonCO = new JSONObject();
@@ -188,23 +226,34 @@ public class PackFunction {
         Long customer_id = data.getLong("customer_id");
         String belongs_sale_id = data.getString("belongs_sale_id");
         String userLoginName = username(belongs_sale_id);
-        crm.receptionOld(customer_id, "AGAIN_VISIT");
-        //销售登陆，获取当前接待id
-        crm.login(userLoginName, pp.adminpassword);
-
-        JSONObject dataC = crm.customerMyReceptionList("", "", "", 10, 1);
-        Long id = dataC.getJSONArray("list").getJSONObject(0).getLong("id");
-        Long customerId = dataC.getJSONArray("list").getJSONObject(0).getLong("customer_id");
-        Long receiptId = dataC.getJSONArray("list").getJSONObject(0).getLong("id");
-        JSONArray PhoneList;
-        PhoneList = phoneList(phone, "");
-        jsonCO.put("id", id);
-        jsonCO.put("customerId", customerId);
-        jsonCO.put("userLoginName", userLoginName);
-        jsonCO.put("sale_id", belongs_sale_id);
-        jsonCO.put("reception_id", receiptId);
-        jsonCO.put("phoneList", PhoneList);
-
+        if(customer_id!=null) {
+            crm.receptionOld(customer_id, "AGAIN_VISIT");
+            //销售登陆，获取当前接待id
+            crm.login(userLoginName, pp.adminpassword);
+            Long id = 0L;
+            Long customerId = 0L;
+            Long receiptId = 0L;
+            JSONArray dataC = crm.customerMyReceptionList("", "", "", 10, 1).getJSONArray("list");
+            for (int i = 0; i < dataC.size(); i++) {
+                id = dataC.getJSONObject(i).getLong("id");
+                customerId = dataC.getJSONObject(i).getLong("customer_id");
+                receiptId = dataC.getJSONObject(i).getLong("id");
+                String customer_phone = dataC.getJSONObject(i).getString("customer_phone");
+                if (customer_phone.equals(phone)){
+                    break;
+                }
+            }
+            JSONArray PhoneList;
+            PhoneList = phoneList(phone, "");
+            jsonCO.put("id", id);
+            jsonCO.put("customerId", customerId);
+            jsonCO.put("userLoginName", userLoginName);
+            jsonCO.put("sale_id", belongs_sale_id);
+            jsonCO.put("reception_id", receiptId);
+            jsonCO.put("phoneList", PhoneList);
+        }else {
+            jsonCO=creatCust2(phone);
+        }
         return jsonCO;
     }
 

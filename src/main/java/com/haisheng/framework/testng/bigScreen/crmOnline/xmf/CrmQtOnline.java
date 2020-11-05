@@ -325,21 +325,20 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取空闲销售，sale_id和接待列表数
-            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-            String loginTemp = pf.username(sale_id);
-            crm.login(loginTemp, pp.adminpassword);    //变更接待前 接待销售接待列表数
-            int receiveTotal = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
-            //创建老客接待，获取接待记录id;
-            JSONObject json = pf.creatCustOld(pp.customer_phone_number);   //变更接待前 原销售接待列表数
+            JSONObject json = pf.creatCustOld(pp.customer_phone_number);
             int total = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
             String receiptId = json.getString("reception_id");
             String customer_id = json.getString("customerId");
             String belong_sale_id = json.getString("sale_id");
             String userLoginName = json.getString("userLoginName");
-            //完成接待
             JSONArray PhoneList = json.getJSONArray("phoneList");
             //前台登录，变更接待
             crm.login(pp.qiantai, pp.qtpassword);
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            String loginTemp = pf.username(sale_id);
+            crm.login(loginTemp, pp.adminpassword);    //变更接待前 接待销售接待列表数
+            int receiveTotal = crm.customerMyReceptionList("", "", "", 1, 10).getInteger("total");
+            //创建老客接待，获取接待记录id;
             crm.changeReceptionSale(receiptId, sale_id);
 
             crm.login(userLoginName, pp.adminpassword);          //变更接待后原销售接待列表数

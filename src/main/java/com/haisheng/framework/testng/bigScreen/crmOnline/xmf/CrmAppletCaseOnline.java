@@ -270,7 +270,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(car_type_nameapp.equals(car_type_name), "app预约试驾试驾车型显示异常");
 
             //pc & app 接待人员
-            checkArgument(reception_sale_nameapp.equals(sale_namepc));
+            checkArgument(reception_sale_nameapp.equals(sale_namepc),"pc接待销售与app所属销售不一致");
 
             //TODO:试驾车型；今日总计，本月总计，当天去重，隔天不去重；故一天只能运行一次，且首次运行 pc
 //            Preconditions.checkArgument((Long.parseLong(today_numberA)-Long.parseLong(today_number))==1,"预约试驾成功后，pc预约试驾今日总计没+1");
