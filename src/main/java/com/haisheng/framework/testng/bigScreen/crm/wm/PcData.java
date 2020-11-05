@@ -79,20 +79,23 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void customer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
             //客户总数
-            int total = crm.customerList("", "", "", "", "", 1, size).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
+            int total = object.getInteger("total");
+            int pageSize = CommonUtil.getTurningPage(total, 100);
             int listSizeTotal = 0;
-            for (int i = 1; i < s; i++) {
-                int listSize = crm.customerList("", "", "", "", "", i, size).getJSONArray("list").size();
-                listSizeTotal += listSize;
+            for (int i = 1; i < pageSize; i++) {
+                JSONArray array = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list");
+                for (int j = 0; j < array.size(); j++) {
+                    listSizeTotal++;
+                }
             }
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc--我的客户--我的客户总数=列表的总数");
+            saveData("pc端我的客户总数=列表的总数");
         }
     }
 

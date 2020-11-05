@@ -80,8 +80,10 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             int pageSize = CommonUtil.getTurningPage(total, 100);
             int listSizeTotal = 0;
             for (int i = 1; i < pageSize; i++) {
-                int listSize = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list").size();
-                listSizeTotal += listSize;
+                JSONArray array = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list");
+                for (int j = 0; j < array.size(); j++) {
+                    listSizeTotal++;
+                }
             }
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal);
