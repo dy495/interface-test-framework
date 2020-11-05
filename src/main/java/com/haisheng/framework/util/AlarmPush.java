@@ -475,14 +475,19 @@ public class AlarmPush {
         String summary = "门店每日回归&缺陷简报";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
-        String env = isOnline ? "线上" : "日常";
+        String env = "";
+        if (isOnline) {
+            env = hostPort + "/html/application/5/config/25/overview";
+        } else {
+            env = hostPort + "/html/application/5/config/24/overview";
+        }
 
 
         msg += "\n\n#### " + today + " 记录信息\n";
         msg +=  "\n\n>##### **模块：门店，RD：杨航、华成裕**"
                 + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
                 + "\n>请 *@15084928847、@18513118484、@15898182672* 关注"
-                + "\n\n>失败用例信息点击链接->独立产品->门店-" + env + "->用例管理[详情链接](" + hostPort + ")"
+                + "\n\n>失败用例信息点击[详情链接](" + env + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
 //        DingChatbot.sendMarkdown(msg);
@@ -517,14 +522,19 @@ public class AlarmPush {
         String summary = "汽车每日回归&缺陷简报";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
-        String env = isOnline ? "线上" : "日常";
+        String env = "";
+        if (isOnline) {
+            env = hostPort + "/html/application/5/config/26/overview";
+        } else {
+            env = hostPort + "/html/application/5/config/21/overview";
+        }
 
 
         msg += "\n\n#### " + today + " 记录信息\n";
         msg +=  "\n\n>##### **模块：汽车，RD：谢志东、华成裕**"
                 + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
                 + "\n>请 *@13436941018、@15011479599、@15898182672* 关注"
-                + "\n\n>失败用例信息点击链接->独立产品->汽车-" + env + "->用例管理[详情链接](" + hostPort + ")"
+                + "\n\n>失败用例信息点击[详情链接](" + env + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
 //        DingChatbot.sendMarkdown(msg);
