@@ -1540,7 +1540,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量")
+    @Test(description = "店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量", enabled = false)
     public void shopPanel_data_66() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -1582,7 +1582,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 CommonUtil.valueView(createClueNum, num);
-                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + "pc端记录创建线索：" + createClueNum + " app查询创建未接待数量：" + num);
+                Preconditions.checkArgument(createClueNum >= num, arr.get("userName") + " pc端记录创建线索：" + createClueNum + " app查询创建未接待数量：" + num);
                 CommonUtil.logger(arr.get("userName"));
             }
         } catch (Exception | AssertionError e) {

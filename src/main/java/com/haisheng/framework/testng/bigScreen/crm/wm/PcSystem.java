@@ -247,16 +247,18 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             boolean flag = false;
             int total = crm.messagePage(1, 10).getInteger("total");
-            for (int i = 1; i < CommonUtil.getTurningPage(total, 100); i++) {
-                JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    flag = list.getJSONObject(j).getString("customer_types").contains("销售/售后")
-                            || list.getJSONObject(j).getString("customer_types").contains("销售")
-                            || list.getJSONObject(j).getString("customer_types").contains("售后");
+            if (total != 0) {
+                for (int i = 1; i < CommonUtil.getTurningPage(total, 100); i++) {
+                    JSONArray list = crm.messagePage(1, 100).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        flag = list.getJSONObject(j).getString("customer_types").contains("销售/售后")
+                                || list.getJSONObject(j).getString("customer_types").contains("销售")
+                                || list.getJSONObject(j).getString("customer_types").contains("售后");
+                    }
                 }
+                CommonUtil.valueView(flag);
+                Preconditions.checkArgument(flag, "站内消息投放人群不正确,人群不含销售、售后、销售/售后");
             }
-            CommonUtil.valueView(flag);
-            Preconditions.checkArgument(flag, "站内消息投放人群不正确,人群不含销售、售后、销售/售后");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -269,10 +271,13 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = crm.messagePage(1, 10);
-            String date = CommonUtil.getStrField(response, 0, "send_time");
-            boolean result = CommonUtil.isLegalDate(date, "yyyy-MM-dd HH:mm");
-            CommonUtil.valueView(date, result);
-            Preconditions.checkArgument(result, "站内消息生效日期格式非yyyy-MM-dd hh:mm");
+            int total = response.getInteger("total");
+            if (total != 0) {
+                String date = CommonUtil.getStrField(response, 0, "send_time");
+                boolean result = CommonUtil.isLegalDate(date, "yyyy-MM-dd HH:mm");
+                CommonUtil.valueView(date, result);
+                Preconditions.checkArgument(result, "站内消息生效日期格式非yyyy-MM-dd hh:mm");
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -335,7 +340,9 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                     messageId = list.getJSONObject(i).getInteger("id");
                 }
             }
-            crm.messageDelete(messageId);
+            if (messageId != 0) {
+                crm.messageDelete(messageId);
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {

@@ -1537,7 +1537,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量")
+    @Test(description = "店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量", enabled = false)
     public void shopPanel_data_66() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);

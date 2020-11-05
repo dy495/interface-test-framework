@@ -691,7 +691,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
     //销售接待--接待率=今日接待/今日线索*100
-    @Test
+    @Test(enabled = false)
     public void receptionRatio() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -703,7 +703,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             double allCustomerNum = response.getInteger("all_customer_num");
             //接待率
             String todayReceptionRatio = response.getString("today_reception_ratio");
-            String result = null;
+            String result;
             if (allCustomerNum == 0 && todayReptionNum != 0) {
                 result = "100";
                 Preconditions.checkArgument(todayReceptionRatio.equals(result), "接待率：" + todayReceptionRatio + "  " + "今日接待/今日线索*100：" + result);
@@ -860,7 +860,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //        }
 //    }
 
-    @Test(description = "销售接待--今日试驾>=所有销售 【客户管理-我的试驾】今日试驾之和")
+    @Test(description = "销售接待--今日试驾>=所有销售 【客户管理-我的试驾】今日试驾之和", enabled = false)
     public void todayDriveSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -926,7 +926,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test(description = "销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和")
+    @Test(description = "销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和", enabled = false)
     public void deliverCarSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -953,6 +953,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayDeliverCarNum, max);
             Preconditions.checkArgument(todayDeliverCarNum >= max, "今日交车的数量为：" + todayDeliverCarNum + "  " + "：各销售交车累计为" + max);
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString() + mes);
         } finally {
             saveData("销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和");
