@@ -25,7 +25,7 @@ import java.util.Map;
  */
 
 public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     long shop_id = 13134l;
     int startM=2;
     String cycle_type ="RECENT_THIRTY";
@@ -60,9 +60,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
-        logger.debug("store " + Md);
+        logger.debug("store " + md);
 
-        Md.login("zhoudafu@winsense.ai","d5f396edf97676490dd9e58a7cc60d51");
+        md.login("zhoudafu@winsense.ai","d5f396edf97676490dd9e58a7cc60d51");
 
 
     }
@@ -96,7 +96,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = Md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
@@ -105,7 +105,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
             }
 
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             int pv = 0;
             int count1= trend_list.size();
             for(int i=0;i<count1;i++){
@@ -135,7 +135,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            JSONArray trendList = Md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
+            JSONArray trendList = md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
             int pv =0;
              for(int i=0;i<trendList.size();i++){
                  if(trendList.size()-i==1){
@@ -163,7 +163,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            JSONArray list = Md.realTimeShopPvV3(shop_id).getJSONArray("list");
+            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
             int today_pv =0;
             for(int i=0;i<list.size();i++){
                 Integer count =list.getJSONObject(i).getInteger("today_pv");
@@ -195,7 +195,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         try {
             int pvValues = 0;
             //获取到店趋势数据
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             for(int i=0;i<trend_list.size();i++){
                 JSONObject jsonObject = trend_list.getJSONObject(i);
                 if(jsonObject != null){
@@ -208,7 +208,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             }
 
             //获取进店客群总人次
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("pv1");
 
@@ -242,7 +242,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
             //获取交易客群总人次
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
             int value1 = deal.get("pv1");
 
@@ -266,7 +266,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             int times3 = 0;
             int times4 = 0;
             //获取各个客群时段分布的总和
-            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
             for(int i=0;i<showList.size();i++){
                 Integer deal_pv = showList.getJSONObject(i).getInteger("deal_pv");
                 Integer enter_pv = showList.getJSONObject(i).getInteger("enter_pv");
@@ -322,7 +322,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             boolean result = false;
-            JSONArray list = Md.historyShopConversionV3(shop_id,cycle_type,"").getJSONArray("list");
+            JSONArray list = md.historyShopConversionV3(shop_id,cycle_type,"").getJSONArray("list");
               for(int i=0;i<list.size();i++){
                   String type = list.getJSONObject(i).getString("type");
 
@@ -357,7 +357,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
             int pv2 = pass_by.get("pv2");
@@ -387,7 +387,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
             int pv1 = interest.get("pv1");
             int pv2 = interest.get("pv2");
@@ -419,7 +419,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int pv1 = enter.get("pv1");
             int pv2 = enter.get("pv2");
@@ -445,7 +445,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            JSONArray trend_list = Md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer pv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -456,12 +456,12 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
             }
             //获取过点客群总人次&总人数
-            JSONArray ldlist = Md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int pv1 = pass_by.get("pv1");
 
             //获取客群时段分布
-            JSONArray showList = Md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            JSONArray showList = md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
             boolean result = false;
             if(showList != null){
                 result=true;
@@ -488,7 +488,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
     public void  surveDataTrend(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray trend_list =  Md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
+            JSONArray trend_list =  md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
             int yestPv = trend_list.getJSONObject(6).getInteger("pv");
             String yestDate = trend_list.getJSONObject(6).getString("date");
 

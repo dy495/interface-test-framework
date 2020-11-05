@@ -42,7 +42,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     Integer size = 50;
 
     String name = "是青青的";
-    String email = "317079740@qq.com";
+    String email = "1667009257@qq.com";
     String phone = "15084928847";
 
 
@@ -1691,7 +1691,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer code = res.getInteger("code");
 
 
-           //从列表获取刚刚新增的账户的account
+            //从列表获取刚刚新增的账户的account
             JSONArray accountList = md.organizationAccountPage(name, "", email, "", "", "", page, size).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("account");
 
@@ -1701,14 +1701,12 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
 
 
-
             //编辑账号的名称，是否与列表该账号的一致
             String reName = "qingqing测编辑";
             md.organizationAccountEdit(account, reName, email, "", r_dList, status, shop_list, type);
             JSONArray accountsList = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
-            String name_1 = accountsList.getJSONObject(accountsList.size()-1).getString("name");
+            String name_1 = accountsList.getJSONObject(accountsList.size() - 1).getString("name");
             Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
-
 
 
             //删除账号以后，再查询列表
@@ -1753,29 +1751,32 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String old_phone = "";
             String create_time = "";
             for (int i = 1; i < list.size(); i++) {
-                create_time = list.getJSONObject(i).getString("create_time");
+                create_time = list.getJSONObject(list.size() - 1).getString("create_time");
                 if (!create_time.equals(today)) {
-                    account = list.getJSONObject(list.size()-1).getString("account");
-                    old_phone = list.getJSONObject(list.size()-1).getString("phone");
+                    account = list.getJSONObject(list.size() - 1).getString("account");
+                    old_phone = list.getJSONObject(list.size() - 1).getString("phone");
                     break;
                 }
             }
 
-            //编辑账号的名称，权限
-            String reName = "qingqing测编辑";
-            md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
-            //获取列表该账号
-            JSONArray accountList = md.organizationAccountPage("", "", "", old_phone, "", "", page, size).getJSONArray("list");
-            String create_time_1 = "";
-            String phone_1 = accountList.getJSONObject(0).getString("phone");//获取通过手机号搜索到的账号的手机号
-            if (phone_1.equals(old_phone)) {
-                create_time_1 = accountList.getJSONObject(0).getString("create_time");
+            if (old_phone != "" && old_phone !=null) {
+                //编辑账号的名称，权限
+                String reName = "qingqing在测编辑";
+                md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
+                //获取列表该账号
+                JSONArray accountList = md.organizationAccountPage("", "", "", old_phone, "", "", page, size).getJSONArray("list");
+                String create_time_1 = "";
+                String phone_1 = accountList.getJSONObject(0).getString("phone");//获取通过手机号搜索到的账号的手机号
+                if (phone_1.equals(old_phone)) {
+                    create_time_1 = accountList.getJSONObject(0).getString("create_time");
+
+                }
+                Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
+                //编辑完以后获取列表的数量，是否有增多或者减少
+                Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+                Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
 
             }
-            Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
-            //编辑完以后获取列表的数量，是否有增多或者减少
-            Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
-            Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1783,7 +1784,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
         }
 
     }
@@ -1993,7 +1994,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             //获取收银追溯页面的第一个小票单号
             String order_id = list.getJSONObject(0).getString("order_id");
             Long order_time = list.getJSONObject(0).getLong("order_time");
-            String order_time_02= dt.timestampToDate("yyyy-MM-dd HH:mm:ss",order_time);
+            String order_time_02 = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", order_time);
 
             JSONObject response = md.cashier_riskPage(shop_id_01, "", order_id, "", "", "", "", page, size);
             //获取收银风控事件列表的小票总数量
@@ -2003,7 +2004,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String order_time1 = list1.getJSONObject(0).getString("order_date");
 
             Preconditions.checkArgument(total <= total1, "【收银追溯】中列表门店ID：" + shop_id_01 + "小票数量：" + total + ">【收银风控事件】中的小票数量：" + total1);
-            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间"+order_time_02+"!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
+            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间" + order_time_02 + "!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -2230,7 +2231,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String end_time = "16:00";
             String silent_time = "6400000";
 
-             md.alarm_ruleAdd(name, type, rule_id, accept_id, start_time, end_time, silent_time);
+            md.alarm_ruleAdd(name, type, rule_id, accept_id, start_time, end_time, silent_time);
             int total1 = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
             Preconditions.checkArgument(total1 - total == 1, "新增一个风控告警规则以后，新增前后风控规则列表总数相差不为1，新增前：" + total + "新增后：" + total1);
 

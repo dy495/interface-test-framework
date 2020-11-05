@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  */
 
 public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     long shop_id = 13260;
     int startM=2;
 
@@ -64,9 +64,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
-        logger.debug("store " + Md);
+        logger.debug("store " + md);
 
-        Md.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
+        md.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
 
 
     }
@@ -112,21 +112,21 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             int size = 10;
             int num = 0;
             int num1 = 0;
-            JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 Preconditions.checkArgument(storeList.getJSONObject(i).getString("type").equals("NORMAL") || storeList.getJSONObject(i).getString("type").equals("COMMUNITY"), "筛选栏多选数据有问题");
             }
 
             //单选
             String[] shopType1 = new String[]{"NORMAL"};
-            JSONArray storeList1 = Md.patrolShopRealV3A(district_code, shopType1, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList1 = md.patrolShopRealV3A(district_code, shopType1, shopName, shopManager, page, size).getJSONArray("list");
             for (int j = 0; j < storeList1.size(); j++) {
                 Preconditions.checkArgument(storeList1.getJSONObject(j).getString("type").equals("NORMAL"), "筛选栏单选数据有问题");
             }
 
             //全选
             String[] shopType2 = new String[]{"NORMAL", "COMMUNITY", "PLAZA", "FLAGSHIP"};
-            JSONArray storeList2 = Md.patrolShopRealV3A(district_code, shopType2, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList2 = md.patrolShopRealV3A(district_code, shopType2, shopName, shopManager, page, size).getJSONArray("list");
             for (int m = 0; m < storeList2.size(); m++) {
                 num++;
                 System.out.println("num为  " + num);
@@ -135,7 +135,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             //不选
             String[] shopType3 = new String[]{};
-            JSONArray storeList3 = Md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList3 = md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager, page, size).getJSONArray("list");
             for (int n = 0; n < storeList3.size(); n++) {
                 num1++;
                 //System.out.println("num1为  "+num1);
@@ -161,7 +161,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         int page = 1;
         int size = 10;
         try {
-            JSONArray storeList = Md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 String string = storeList.getJSONObject(i).getString("name");
                 if(string != null&&string.contains(shopName)) {
