@@ -95,29 +95,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-//    /**
-//     *
-//     * ====================三个账号登录======================
-//     * */
-//    @Test(dataProvider = "LOGINFO",dataProviderClass = StoreScenarioUtilOnline.class)
-//    public void loginIn(String name,String pwd) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            md.login(name,pwd);
-//
-////            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("三个账号登录");
-//        }
-//
-//    }
+
     /**
      *
      * ====================今日到访人数<=今天各个时间段内到访人数的累计======================
@@ -1679,51 +1657,51 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-    /**
-     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
-     */
-    //(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void arrival_time(long shop_id) {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            JSONObject response = md.memberTotalListV3(shop_id,page,50);
-            JSONArray list = response.getJSONArray("list");
-            String last_time = "";
-            String customer_id = "";
-            String time = "";
-            for(int i=0;i<list.size();i++){
-                last_time = list.getJSONObject(i).getString("latest_arrival_time");
-                customer_id = list.getJSONObject(i).getString("customer_id");
-                JSONObject res = md.memberDetail(shop_id,customer_id,page,10);
-                JSONArray detailList = res.getJSONArray("list");
-                int total = res.getInteger("total");
-
-                if(total!=0) {
-
-                    time = detailList.getJSONObject(0).getString("time");
-                    Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
-
-                }
-                else {
-                    Preconditions.checkArgument(total!=0, "客户ID："+customer_id+"该客户的留痕事件为空，列表最新留痕时间为："+last_time+"。报错门店的shopId=" + shop_id );
-                }
-
-            }
-
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
-        }
-
-    }
+//    /**
+//     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
+//     */
+//    //(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void arrival_time(long shop_id) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack = false;
+//        try {
+//            JSONObject response = md.memberTotalListV3(shop_id,page,50);
+//            JSONArray list = response.getJSONArray("list");
+//            String last_time = "";
+//            String customer_id = "";
+//            String time = "";
+//            for(int i=0;i<list.size();i++){
+//                last_time = list.getJSONObject(i).getString("latest_arrival_time");
+//                customer_id = list.getJSONObject(i).getString("customer_id");
+//                JSONObject res = md.memberDetail(shop_id,customer_id,page,10);
+//                JSONArray detailList = res.getJSONArray("list");
+//                int total = res.getInteger("total");
+//
+//                if(total!=0) {
+//
+//                    time = detailList.getJSONObject(0).getString("time");
+//                    Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
+//
+//                }
+//                else {
+//                    Preconditions.checkArgument(total!=0, "客户ID："+customer_id+"该客户的留痕事件为空，列表最新留痕时间为："+last_time+"。报错门店的shopId=" + shop_id );
+//                }
+//
+//            }
+//
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
+//        }
+//
+//    }
 
 
 
