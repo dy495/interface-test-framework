@@ -61,7 +61,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
 
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
+        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang

@@ -72,7 +72,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
 
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214", "18810332354", "15084928847"};
+        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
         //13436941018 吕雪晴
         //17610248107 廖祥茹
         //15084928847 黄青青

@@ -65,7 +65,7 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","18810332354", "15084928847"};
+        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
 
 
         commonConfig.shopId = getXundianShop(); //要改！！！

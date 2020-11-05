@@ -92,10 +92,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return new Long[]{
                 246l,
-                1910l,
                 1912l,
                 1914l,
-                1916l,
                 1918l,
                 1920l,
                 1924l,
@@ -108,7 +106,6 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 1938l,
                 1940l,
                 1942l,
-                1944l,
                 1946l,
                 1952l,
                 1954l,
