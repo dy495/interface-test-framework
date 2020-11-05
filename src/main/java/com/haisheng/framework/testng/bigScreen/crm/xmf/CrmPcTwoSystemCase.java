@@ -3,11 +3,11 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.qtJdSelect;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -15,11 +15,12 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
-
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.File;
-
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -31,6 +32,7 @@ import java.util.*;
 
 public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    CustomerInfo cstm = new CustomerInfo();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     PackFunction pf=new PackFunction();
@@ -844,7 +846,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=role_ids; //销售顾问
-            String passwd="123456";
+            String passwd=cstm.pwd;
 
             StringBuilder phone = new StringBuilder("1");
             for (int i = 0; i < 10;i++){
@@ -895,7 +897,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=13; //销售顾问
-            String passwd="123456";
+            String passwd=cstm.pwd;
 
             StringBuilder phone = new StringBuilder("1");
             for (int i = 0; i < 10;i++){
