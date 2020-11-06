@@ -702,7 +702,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验 ok
      * @date :2020/7/15 11:13
      **/
-    @Test(priority = 2)   //TODO:
+    @Test(priority = 2)
     public void pcblackList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1008,13 +1008,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             for(int i=0;i<listC.size();i++){
                 int role_idC=listC.getJSONObject(i).getInteger("role_id");
                 String user_id=listC.getJSONObject(i).getString("user_id");
-                logger.info("------user_id:{}------",user_id);
                 if(role_idC==role_ids){
                     crmRoleTotal=crmRoleTotal+1;
                 }
             }
             //若超过100
-            if(crmTotal>100){
+            if(crmTotal>=100){
                 JSONObject data2=crm.userPage(2,100);
                 JSONArray listC2=data2.getJSONArray("list");
                 for(int i=0;i<listC2.size();i++){

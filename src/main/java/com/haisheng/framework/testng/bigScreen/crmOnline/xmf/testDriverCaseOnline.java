@@ -88,8 +88,8 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
      * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
      * @date :2020/8/2 10:29
      **/
-    @Test(priority = 12)
-    public void driverEvaluate() {
+    @Test()
+    public void driverEvaluate1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(pp.xiaoshouZongjian,pp.adminpassword);
@@ -135,6 +135,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
+            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1");
         }
     }

@@ -439,7 +439,7 @@ public class PackFunctionOnline {
     //添加试驾车
     public long newCarDriver() throws Exception {
         Random r = new Random();
-        String carName = "试驾车" + r.nextInt(10) + dt.getHHmm(0);
+        String carName = "试驾车" + r.nextInt(100) + dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
         String plate_number = "黑Z12I1" + r.nextInt(100);
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);

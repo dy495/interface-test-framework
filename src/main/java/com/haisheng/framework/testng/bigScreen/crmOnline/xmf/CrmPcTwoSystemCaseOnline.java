@@ -967,7 +967,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
                 }
             }
             //若超过100
-            if(crmTotal>100){
+            if(crmTotal>=100){
                 JSONObject data2=crm.userPage(2,100);
                 JSONArray listC2=data2.getJSONArray("list");
                 for(int i=0;i<listC2.size();i++){

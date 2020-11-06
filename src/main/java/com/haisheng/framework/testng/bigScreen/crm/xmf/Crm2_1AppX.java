@@ -1775,8 +1775,6 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
 
-            crm.articlePage(1,10,pp.positions);
-
 
 
         }catch (AssertionError |Exception e){
