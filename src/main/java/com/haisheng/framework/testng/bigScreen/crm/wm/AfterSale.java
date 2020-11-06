@@ -250,7 +250,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
+//            saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
         }
     }
 

@@ -31,4 +31,13 @@ public enum EnumCarStyle {
 
     @Getter
     private final String name;
+
+    public static String getValue(String name) {
+        for (EnumCarStyle e : EnumCarStyle.values()) {
+            if (e.getName().equals(name)) {
+                return e.getName();
+            }
+        }
+        return "不存在此车型";
+    }
 }
