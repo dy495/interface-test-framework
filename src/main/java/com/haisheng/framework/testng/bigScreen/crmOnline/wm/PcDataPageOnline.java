@@ -1790,7 +1790,6 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("【各时间段+各销售】累计交车=【各销售-app-我的交车】今日交车数量");
         }
-
     }
 
     /**
@@ -2220,7 +2219,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
                 int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-                Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
+                Preconditions.checkArgument(pcCustomerNum <= appCustomerNum, "昨日" + e.getName() + "公司车主数为：" + pcCustomerNum + " 昨日app该车系个公司客户交车数量为：" + appCustomerNum);
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {

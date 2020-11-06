@@ -1681,7 +1681,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "店面数据分析--【各时间段+各销售】接待的Pu+BB >=【该销售-app-我的接待】今日老客接待")
+    @Test(description = "店面数据分析--【各时间段+各销售】商机的Pu+BB >=【该销售-app-我的接待】今日老客接待")
     public void shopPanel_data_69() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1713,7 +1713,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 if (list1.size() > 0) {
                     int count = (int) list1.get(0).get("today_old_customer_reception_num");
                     CommonUtil.valueView(createClueNum, count);
-                    Preconditions.checkArgument(createClueNum >= count, arr.get("userName") + "接待的Pu+BB：" + createClueNum + " 该销售今日老客接待：" + count);
+                    Preconditions.checkArgument(createClueNum >= count, arr.get("userName") + "商机的Pu+BB：" + createClueNum + " 该销售老客接待：" + count);
                     CommonUtil.logger(arr.get("userName"));
                 }
             }
@@ -1721,7 +1721,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
-            saveData("店面数据分析--【各时间段+各销售】接待的Pu+BB >=【该销售-app-我的接待】今日老客接待");
+            saveData("店面数据分析--【各时间段+各销售】商机的Pu+BB >=【该销售-app-我的接待】今日老客接待");
         }
     }
 
@@ -1753,7 +1753,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(num, count);
-                Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售今日订单数量：" + count);
+                Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售订单数量：" + count);
                 CommonUtil.logger(userName);
             }
         } catch (Exception | AssertionError e) {
@@ -2223,7 +2223,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
                 int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
-                Preconditions.checkArgument(pcCustomerNum == appCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
+                Preconditions.checkArgument(pcCustomerNum <= appCustomerNum, "昨日" + e.getName() + "公司车主数为：" + pcCustomerNum + " 昨日app该车系公司客户交车数量为：" + appCustomerNum);
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {

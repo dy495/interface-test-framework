@@ -1014,11 +1014,12 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
                 JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("plate_number");
+                    String resultPlateNumber = list1.getJSONObject(j).getString("plate_number");
                     Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
                 }
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("售后--我的接待--车牌号模糊搜索");
