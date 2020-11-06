@@ -426,8 +426,8 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             }
             //删除未接待离店
             int totalB = crm.nonCustomerList(time, time, "1", "100").size();
-            Preconditions.checkArgument(totalA - total == num, "标记为非客后，非客列表+1");
-            Preconditions.checkArgument(totalA - total == num, "删除标记的非客后，非客列表-1");
+            Preconditions.checkArgument(totalA - total == num, "标记为非客后，非客列表没+1");
+            Preconditions.checkArgument(totalA - total == num, "删除标记的非客后，非客列表没-1");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -481,8 +481,8 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             }
             //删除未接待离店
             int totalB = crm.nonReceptionList(time, time, "1", "100").size();
-            Preconditions.checkArgument(totalA - total == num, "标记为未接待离店后，未接待离店列表+1");
-            Preconditions.checkArgument(totalA - total == num, "删除标记的未接待离店后，未接待离店列表-1");
+            Preconditions.checkArgument(totalA - total == num, "标记为未接待离店后，未接待离店列表没+1");
+            Preconditions.checkArgument(totalA - total == num, "删除标记的未接待离店后，未接待离店列表没-1");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

@@ -90,7 +90,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
      * @description :试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1
      * @date :2020/8/2 10:29
      **/
-    @Test(priority = 12)
+    @Test()
     public void driverEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -243,7 +243,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customer_name.equals(fr.name), "新建试驾，试驾列表客户名错误");
             Preconditions.checkArgument(customer_phone_number.equals(phone), "新建试驾，试驾列表电话错误");
             Preconditions.checkArgument(call.equals("先生"), "新建试驾，试驾列表客户称呼错误");
-            Preconditions.checkArgument(test_car_style_name.equals(pp.car_type_name), "新建试驾，试驾列表客户试驾车系错误");
+//            Preconditions.checkArgument(test_car_style_name.equals(pp.car_type_name), "新建试驾，试驾列表客户试驾车系错误");
             Preconditions.checkArgument(audit_status_name.equals("已通过"), "新建试驾，试驾列表审核状态错误");
             Preconditions.checkArgument(isdriver.equals("是"), "新建试驾，接待列表是否试驾不显示 是");
 
@@ -303,7 +303,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customer_name.equals(fr.name), "新建试驾，试驾列表客户名错误");
             Preconditions.checkArgument(customer_phone_number.equals(phone), "新建试驾，试驾列表电话错误");
             Preconditions.checkArgument(call.equals("先生"), "新建试驾，试驾列表客户称呼错误");
-            Preconditions.checkArgument(test_car_style_name.equals(pp.car_type_name), "新建试驾，试驾列表客户试驾车系错误");
+//            Preconditions.checkArgument(test_car_style_name.equals(pp.car_type_name), "新建试驾，试驾列表客户试驾车系错误");
             Preconditions.checkArgument(audit_status_name.equals("已拒绝"), "新建试驾，试驾列表审核状态错误");
 
         } catch (AssertionError | Exception e) {
