@@ -2851,77 +2851,243 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量", enabled = false)
-    public void stockCustomer_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String date = DateTimeUtil.addDayFormat(new Date(), -1);
-        try {
-            int personage = 0;
-            int company = 0;
-            JSONArray ratioLis = crm.carOwner("DAY", "", "").getJSONArray("ratio_list");
-            for (int i = 0; i < ratioLis.size(); i++) {
-                if (ratioLis.getJSONObject(i).getString("name").equals("个人车主")) {
-                    personage = ratioLis.getJSONObject(i).getInteger("value");
-                }
-                if (ratioLis.getJSONObject(i).getString("name").equals("公司车主")) {
-                    company = ratioLis.getJSONObject(i).getInteger("value");
-                }
-            }
-            int receptionPerson = 0;
-            int receptionCompany = 0;
-            int total = crm.customerList("", "", "", date, date, 1, 10).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.customerList("", "", "", date, date, i, 10).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("buy_car_name").equals("是")) {
-                        if (list.getJSONObject(j).getString("customer_name").length() <= 5) {
-                            receptionPerson++;
-                        }
-                        if (list.getJSONObject(j).getString("customer_name").length() >= 6) {
-                            receptionCompany++;
-                        }
-                    }
-                }
-            }
-            CommonUtil.valueView(personage, receptionPerson, company, receptionCompany);
-            Preconditions.checkArgument(personage == receptionPerson, "昨日个人车主客户数为：" + personage + "," + "接待订车个人客户数量：" + receptionPerson);
-            Preconditions.checkArgument(company == receptionCompany, "昨日公司车主客户数为：" + company + "," + "接待订车公司客户数量：" + receptionCompany);
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("个人车主数量=【前一日】客户名称小于等于5个字的客户订车数量");
-        }
-    }
-
-    @Test(description = "试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致")
+    @Test(description = "展厅热区管理--试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致")
     public void exhibitionHall_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            int driver = 0;
-            int appDriver = 0;
-            JSONArray list = crm.skuRank("DAY", "").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int value = list.getJSONObject(i).getInteger("drive");
-                driver += value;
-            }
-            int total = crm.testDriverAppList("", date, date, 10, 1).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray appList = crm.testDriverAppList("", date, date, size, i).getJSONArray("list");
-                for (int j = 0; j < appList.size(); j++) {
-                    if (appList.getJSONObject(j).getString("audit_status_name").equals("已通过")) {
-                        appDriver++;
+            for (EnumCarStyle e : EnumCarStyle.values()) {
+                if (StringUtils.isEmpty(e.getStyleId())) {
+                    continue;
+                }
+                String carStyleName = e.getName();
+                CommonUtil.valueView(carStyleName);
+                int driver = 0;
+                int appDriver = 0;
+                IScene scene = Analysis2SkuRankScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+                JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("sku_name").equals(carStyleName))
+                        driver = list.getJSONObject(i).getInteger("drive");
+                }
+                int total = crm.testDriverAppList("", date, date, 10, 1).getInteger("total");
+                int s = CommonUtil.getTurningPage(total, size);
+                for (int i = 1; i < s; i++) {
+                    JSONArray appList = crm.testDriverAppList("", date, date, size, i).getJSONArray("list");
+                    for (int j = 0; j < appList.size(); j++) {
+                        if (appList.getJSONObject(j).getString("audit_status_name").equals("已通过")
+                                && appList.getJSONObject(j).getString("test_car_style_name").equals(carStyleName)) {
+                            appDriver++;
+                        }
                     }
                 }
+                CommonUtil.valueView(driver, appDriver);
+                Preconditions.checkArgument(driver == appDriver, "昨日app记录" + carStyleName + "试驾数：" + appDriver + " 昨日展厅热区分析" + carStyleName + "试乘试驾数：" + driver);
+                CommonUtil.logger(carStyleName);
             }
-            CommonUtil.valueView(driver, appDriver);
-            Preconditions.checkArgument(driver == appDriver, "昨日app记录试驾数：" + appDriver + "昨日展厅热区分析各车型试乘试驾数：" + driver);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅热区管理--试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致");
+        }
+    }
+
+    @Test(description = "展厅热区管理--成交数量： = （时间段内）【APP-销售总监-我的交车】订单为维度去重数量一致")
+    public void exhibitionHall_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            for (EnumCarStyle e : EnumCarStyle.values()) {
+                if (StringUtils.isEmpty(e.getStyleId())) {
+                    continue;
+                }
+                String carStyleName = e.getName();
+                CommonUtil.valueView(carStyleName);
+                int dealNum = 0;
+                IScene scene = Analysis2SkuRankScene.builder().cycleType(EnumFindType.DAY.getType()).build();
+                JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("sku_name").equals(carStyleName))
+                        dealNum = list.getJSONObject(i).getInteger("deal_num");
+                }
+                String sql = Sql.instance().select()
+                        .from("t_porsche_order_info")
+                        .where("shop_id", "=", shopId)
+                        .and("car_style", "=", e.getStyleId())
+                        .and("order_date", "=", date)
+                        .end().getSql();
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                CommonUtil.valueView(dealNum, count);
+                Preconditions.checkArgument(dealNum == count, "昨日app记录" + carStyleName + "成交量：" + count + " 昨日展厅热区分析" + carStyleName + "成交率数：" + dealNum);
+                CommonUtil.logger(e.getName());
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致");
+            saveData("展厅热区管理--成交数量： = （时间段内）【APP-销售总监-我的交车】订单为维度去重数量一致");
+        }
+    }
+
+    @Test(description = "展厅热区管理--下拉框内数量=【PC-车系管理】车系数量")
+    public void exhibitionHall_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.pcCarStyleList().getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String name = list.getJSONObject(i).getString("car_style_name");
+                String result = EnumCarStyle.getValue(name);
+                CommonUtil.valueView(name, result);
+                Preconditions.checkArgument(name.equals(result), name + "车系不存在于" + EnumCarStyle.class.getName() + "中");
+            }
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅热区管理--下拉框内数量=【PC-车系管理】车系数量");
+        }
+    }
+
+    @Test(description = "展厅热区管理--变更记录--变更一次，记录+1")
+    public void exhibitionHall_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CarStyleChangeListScene.builder().build();
+            int total = crm.invokeApi(scene).getInteger("total");
+            JSONArray list = crm.regionMap(EnumFindType.DAY.getName()).getJSONArray("list");
+            int regionId = 0;
+            for (int i = 0; i < list.size(); i++) {
+                regionId = list.getJSONObject(i).getInteger("region_id");
+            }
+            crm.carStyleEdit(regionId, Integer.parseInt(EnumCarStyle.PANAMERA.getStyleId()));
+            int total1 = crm.invokeApi(scene).getInteger("total");
+            CommonUtil.valueView(total, total1);
+            Preconditions.checkArgument(total1 == total + 1, "变更之前变更记录数：" + total + "变更之后变更记录数：" + total1);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅热区管理--变更记录--变更一次，记录+1");
+        }
+    }
+
+    @Test(description = "展厅热区管理--环比各时间段批次数<=【PC-接待列表】接待时间为前天的各时间段数量")
+    public void potentialCustomer_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -2);
+            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            list.forEach(e -> {
+                IScene scene = Analysis2PotentialTrendScene.builder().saleId(e.get("userId")).cycleType(EnumFindType.DAY.getType()).build();
+                JSONArray array = crm.invokeApi(scene).getJSONArray("list");
+                for (int i = 0; i < array.size(); i++) {
+                    String timeStrStart = array.getJSONObject(i).getString("time_str");
+                    String timeStrEnd;
+                    if (i < array.size() - 1) {
+                        timeStrEnd = array.getJSONObject(i + 1).getString("time_str");
+                    } else {
+                        timeStrEnd = "24:00";
+                    }
+                    CommonUtil.valueView(e.get("userName") + " " + timeStrStart + "--" + timeStrEnd);
+                    //环比
+                    Integer value = array.getJSONObject(i).getJSONArray("list").getInteger(2);
+                    int result = value == null ? 0 : value;
+                    String sql;
+                    if (StringUtils.isEmpty(e.get("userId"))) {
+                        sql = Sql.instance()
+                                .select()
+                                .from("t_porsche_reception_data")
+                                .where("shop_id", "=", shopId)
+                                .and("reception_date", "=", date)
+                                .and("reception_start_time", ">=", timeStrStart)
+                                .and("reception_start_time", "<", timeStrEnd)
+                                .end().getSql();
+                    } else {
+                        sql = Sql.instance()
+                                .select()
+                                .from("t_porsche_reception_data")
+                                .where("shop_id", "=", shopId)
+                                .and("reception_date", "=", date)
+                                .and("reception_start_time", ">=", timeStrStart)
+                                .and("reception_sale_id", "=", e.get("userId"))
+                                .and("reception_start_time", "<", timeStrEnd)
+                                .end().getSql();
+                    }
+                    int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                    CommonUtil.valueView("环比：" + result, "前天接待数：" + count);
+                    if (count != 0) {
+                        Preconditions.checkArgument(result != 0, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段环比数：" + result + " 前天接待数：" + count);
+                    }
+                    Preconditions.checkArgument(count >= result, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段环比数：" + result + " 前天接待数：" + count);
+                    CommonUtil.logger(timeStrStart);
+                }
+                CommonUtil.logger(e.get("userName"));
+            });
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅热区管理--环比各时间段批次数<=【PC-接待列表】接待时间为前天的各时间段数量");
+        }
+    }
+
+    @Test(description = "展厅热区管理--本期各时间段批次数<=【PC-接待列表】接待时间为昨天的各时间段数量")
+    public void potentialCustomer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            list.forEach(e -> {
+                IScene scene = Analysis2PotentialTrendScene.builder().saleId(e.get("userId")).cycleType(EnumFindType.DAY.getType()).build();
+                JSONArray array = crm.invokeApi(scene).getJSONArray("list");
+                for (int i = 0; i < array.size(); i++) {
+                    String timeStrStart = array.getJSONObject(i).getString("time_str");
+                    String timeStrEnd;
+                    if (i < array.size() - 1) {
+                        timeStrEnd = array.getJSONObject(i + 1).getString("time_str");
+                    } else {
+                        timeStrEnd = "24:00";
+                    }
+                    CommonUtil.valueView(e.get("userName") + " " + timeStrStart + "--" + timeStrEnd);
+                    //环比
+                    Integer value = array.getJSONObject(i).getJSONArray("list").getInteger(0);
+                    int result = value == null ? 0 : value;
+                    String sql;
+                    if (StringUtils.isEmpty(e.get("userId"))) {
+                        sql = Sql.instance()
+                                .select()
+                                .from("t_porsche_reception_data")
+                                .where("shop_id", "=", shopId)
+                                .and("reception_date", "=", date)
+                                .and("reception_start_time", ">=", timeStrStart)
+                                .and("reception_start_time", "<", timeStrEnd)
+                                .end().getSql();
+                    } else {
+                        sql = Sql.instance()
+                                .select()
+                                .from("t_porsche_reception_data")
+                                .where("shop_id", "=", shopId)
+                                .and("reception_date", "=", date)
+                                .and("reception_start_time", ">=", timeStrStart)
+                                .and("reception_sale_id", "=", e.get("userId"))
+                                .and("reception_start_time", "<", timeStrEnd)
+                                .end().getSql();
+                    }
+                    int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                    CommonUtil.valueView("环比：" + result, "昨天接待数：" + count);
+                    if (count != 0) {
+                        Preconditions.checkArgument(result != 0, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段本期数：" + result + " 昨天接待数：" + count);
+                    }
+                    Preconditions.checkArgument(count >= result, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段本期数：" + result + " 昨天接待数：" + count);
+                    CommonUtil.logger(timeStrStart);
+                }
+                CommonUtil.logger(e.get("userName"));
+            });
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅热区管理--本期各时间段批次数<=【PC-接待列表】接待时间为昨天的各时间段数量");
         }
     }
 }

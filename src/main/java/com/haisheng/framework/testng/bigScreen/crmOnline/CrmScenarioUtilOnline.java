@@ -205,6 +205,30 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    /**
+     * 热区展厅分析
+     */
+    public JSONObject regionMap(String cycleType) {
+        String url = "/porsche/analysis2/sku/region-map";
+        JSONObject object = new JSONObject();
+        object.put("cycle_type", cycleType);
+        return invokeApi(url, object);
+    }
+
+    public JSONObject carStyleEdit(int regionId, int carStyle) {
+        String url = "/porsche/analysis2/region/car-style-edit";
+        JSONObject object = new JSONObject();
+        object.put("region_id", regionId);
+        object.put("car_style", carStyle);
+        return invokeApi(url, object);
+    }
+
+
+    public JSONObject pcCarStyleList() {
+        String url = "/porsche/car-style/car-style-list";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
 
     /**
      * 发送出门条
