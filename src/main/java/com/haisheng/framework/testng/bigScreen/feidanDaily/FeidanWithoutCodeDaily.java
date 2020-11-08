@@ -70,7 +70,8 @@ public class FeidanWithoutCodeDaily {
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
 
     //long firstAppearTime = 1582684439509L; //原
-    long firstAppearTime = 1583900897877L;
+    //long firstAppearTime = 1583900897877L;
+    long firstAppearTime = 1584936946964L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
