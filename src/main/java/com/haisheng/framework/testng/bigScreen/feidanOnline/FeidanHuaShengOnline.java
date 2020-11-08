@@ -122,8 +122,8 @@ public class FeidanHuaShengOnline {
     /**
      * V3.0人脸搜索页面-上传png人脸图片
      **/
-    @Test
-    public void FaceSearch_jpg(){
+    @Test(dataProvider = "PIC")
+    public void FaceSearch_jpg(String path){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -132,7 +132,6 @@ public class FeidanHuaShengOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png";
             JSONObject response = imageUpload(path);
             requestId = response.getString("request_id");
 
@@ -160,6 +159,13 @@ public class FeidanHuaShengOnline {
         }
     }
 
+    @DataProvider(name = "PIC")
+    public static Object[] pic() {
+        return new String[]{
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng2.jpg"
+        };
+    }
     @Test
     public void devChk(){
         String ciCaseName = new Object() {
