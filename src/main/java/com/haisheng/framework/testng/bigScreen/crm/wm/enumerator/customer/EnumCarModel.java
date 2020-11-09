@@ -21,7 +21,9 @@ public enum EnumCarModel {
 
     CAYENNE(EnumCarStyle.CAYENNE.getStyleId(), ""),
 
-    NINE_ONE_ONE(EnumCarStyle.NINE_ONE_ONE.getStyleId(), "");
+    NINE_ONE_ONE(EnumCarStyle.NINE_ONE_ONE.getStyleId(), ""),
+
+    PANAMERA_ONLINE(EnumCarStyle.PANAMERA.getStyleId(), "82");
 
     EnumCarModel(String styleId, String modelId) {
         this.styleId = styleId;

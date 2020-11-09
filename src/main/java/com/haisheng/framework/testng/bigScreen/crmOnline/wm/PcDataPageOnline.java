@@ -1099,7 +1099,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--人工接待>=【业务漏斗】商机", enabled = false)
+    @Test(description = "店面数据分析--人工接待>=【业务漏斗】商机")
     public void shopPanel_data_26() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1117,7 +1117,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                             funnelService = businessList.getJSONObject(i).getInteger("value");
                         }
                     }
-                    CommonUtil.valueView("人共接待：" + service, "漏斗商机：" + funnelService);
+                    CommonUtil.valueView("人工接待：" + service, "漏斗商机：" + funnelService);
                     Preconditions.checkArgument(service >= funnelService, "人共接待数：" + service + "漏斗接商机数：" + funnelService);
                     CommonUtil.logger(map.get("userName"));
                 }
@@ -1129,7 +1129,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--人工接待=商机的FU+PU+BB", enabled = false)
+    @Test(description = "店面数据分析--人工接待=商机的FU+PU+BB")
     public void shopPanel_data_27() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2675,23 +2675,26 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量", enabled = false)
+    @Test(description = "订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量")
     public void orderCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int listSize = method.getSaleList("销售顾问").size() - 1;
-            for (EnumCarStyle a : EnumCarStyle.values()) {
-                for (EnumFindType b : EnumFindType.values()) {
-                    CommonUtil.valueView(a.getName(), b.getName());
+            for (EnumFindType b : EnumFindType.values()) {
+                for (EnumCarStyle a : EnumCarStyle.values()) {
+                    CommonUtil.valueView(a.getName() + b.getName());
                     IScene scene = Analysis2OrderSaleListScene.builder().carType(a.getStyleId()).cycleType(b.getType()).build();
                     JSONArray list = crm.invokeApi(scene).getJSONArray("list");
                     CommonUtil.valueView(listSize, list.size());
-                    Preconditions.checkArgument(listSize == list.size(), a.getName() + b.getName() + "角色管理中销售数量为：" + listSize + "订单存量图销售数量为：" + list.size());
-                    CommonUtil.log("分割线");
+                    Preconditions.checkArgument(listSize >= list.size(), a.getName() + b.getName() + "订单存量图销售数量为：" + list.size() + " 角色管理中销售数量为：" + listSize);
+                    CommonUtil.logger(a.getName());
                 }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量");
         }
     }
 

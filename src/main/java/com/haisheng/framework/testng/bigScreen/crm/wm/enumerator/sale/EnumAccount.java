@@ -12,10 +12,11 @@ import org.springframework.util.StringUtils;
  * @date 2020/7/24 16:54
  */
 public enum EnumAccount {
+
     /**
      * 销售顾问
      */
-    XSGW_DAILY("xsgwtemp", getPassword("123456"), "uid_41786c76", "daily", "销售顾问temp"),
+    XS_TEMP_DAILY("xsgwtemp", getPassword("123456"), "uid_41786c76", "daily", "销售顾问temp"),
 
     /**
      * 销售顾问
@@ -25,7 +26,7 @@ public enum EnumAccount {
     /**
      * 保养顾问
      */
-    FWGW_DAILY("baoyangr", getPassword("123456"), "", "daily", "baoyangr"),
+    FW_BAOYANG_DAILY("baoyangr", getPassword("123456"), "", "daily", "baoyangr"),
 
     /**
      * 总经理
@@ -40,12 +41,18 @@ public enum EnumAccount {
     /**
      * 保时捷线上销售顾问
      */
-    XSGW_ONLINE("11", getPassword("ys123456"), "uid_c01f9419", "online", "11"),
+    XS_11_ONLINE("11", getPassword("ys123456"), "uid_c01f9419", "online", "11"),
+
+    /**
+     * 保时捷线上销售顾问
+     */
+    XS_22_ONLINE("22", getPassword("ys123456"), "uid_da55f38d", "online", "22"),
 
     /**
      * 销售顾问
      */
-    XS_ONLINE("cs", getPassword("ys123456"), "", "online", "cs"),
+    XS_CS_ONLINE("cs", getPassword("ys123456"), "", "online", "cs"),
+
     /**
      * 前台
      */
@@ -54,7 +61,7 @@ public enum EnumAccount {
     /**
      * 保养顾问
      */
-    FWGW_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
+    FW_55_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
 
     /**
      * 保时捷线上总经
@@ -64,7 +71,7 @@ public enum EnumAccount {
     /**
      * 客户使用保时捷线上，不要轻易使用
      */
-    XSZJ_ONLINE_PORSCHE("xszj", getPassword("123456"), "", "online", "");
+    ZJ_ONLINE_PORSCHE("xszj", getPassword("123456"), "", "online", "");
 
     EnumAccount(String account, String password, String uid, String environment, String username) {
         this.account = account;

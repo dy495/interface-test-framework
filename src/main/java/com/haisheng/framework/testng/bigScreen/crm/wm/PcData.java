@@ -34,7 +34,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount xs = EnumAccount.XSGW_DAILY;
+    private static final EnumAccount xs = EnumAccount.XS_TEMP_DAILY;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
     private static final int size = 100;
 
@@ -73,9 +73,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-//    ---------------------------------------------------2.0------------------------------------------------------------
-
-    @Test(description = "pc--我的客户--我的客户总数=列表的总数")
+    @Test(description = "销售客户管理--我的客户--展厅客户总数=列表的总数")
     public void customer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -95,11 +93,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端我的客户总数=列表的总数");
+            saveData("销售客户管理--我的客户--展厅客户总数=列表的总数");
         }
     }
 
-    @Test(description = "pc--我的客户--DCC客户总数=列表的总数")
+    @Test(description = "销售客户管理--我的客户--DCC客户总数=列表的总数")
     public void customer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -116,11 +114,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc--我的客户--DCC客户总数=列表的总数");
+            saveData("销售客户管理--我的客户--DCC客户总数=列表的总数");
         }
     }
 
-    @Test(description = "pc--我的客户--成交记录总数=列表的总数")
+    @Test(description = "销售客户管理--我的客户--成交记录总数=列表的总数")
     public void customer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -137,7 +135,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc--我的客户--成交记录总数=列表的总数");
+            saveData("销售客户管理--我的客户--成交记录总数=列表的总数");
         }
     }
 
@@ -162,7 +160,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "pc--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致")
+    @Test(description = "销售客户管理--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致")
     public void customer_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -211,11 +209,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
-            saveData("pc--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致");
+            saveData("销售客户管理--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致");
         }
     }
 
-    @Test(description = "公海-共计人数=列表总条数")
+    @Test(description = "销售客户管理--公海--共计人数=列表总条数")
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -232,11 +230,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理公海共计人数=列表总条数");
+            saveData("销售客户管理--公海--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "公海-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--公海--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -254,11 +252,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端-公海今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--公海--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "公海-勾选两个客户分配给销售A,销售A客户名下客户数量+2,列表数-2,减2改为减1操作")
+    @Test(description = "销售客户管理--公海--勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1")
     public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -297,11 +295,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1");
+            saveData("销售客户管理--公海--勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1");
         }
     }
 
-    @Test(description = "公海-新建一个G级客户，公海列表数+1")
+    @Test(description = "销售客户管理--公海--新建一个G级客户，公海列表数+1")
     public void myCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
@@ -317,11 +315,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("新建一个G级客户,公海列表+1");
+            saveData("销售客户管理--公海--新建一个G级客户，公海列表数+1");
         }
     }
 
-    @Test(description = "战败-共计人数=列表总条数")
+    @Test(description = "销售客户管理--战败--共计人数=列表总条数")
     public void myCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -333,11 +331,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理战败共计人数=列表总条数");
+            saveData("销售客户管理--战败--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "战败-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--战败--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -349,11 +347,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc战败客户，今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--战败--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1")
+    @Test(description = "销售客户管理--战败--将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1")
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -375,11 +373,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("将一个战败客户划入公海,战败客户数量-1，公海客户数量+1");
+            saveData("销售客户管理--战败--将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1");
         }
     }
 
-    @Test(description = "小程序-共计人数=列表总条数")
+    @Test(description = "销售客户管理--小程序--共计人数=列表总条数")
     public void myCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -391,11 +389,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理小程序共计人数=列表总数");
+            saveData("销售客户管理--小程序--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "小程序-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--小程序--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -408,11 +406,11 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理小程序今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--小程序--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
+    @Test(description = "销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -439,8 +437,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端小程序后面的预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
+            saveData("销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
         }
     }
-
 }

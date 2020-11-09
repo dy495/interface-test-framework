@@ -162,10 +162,21 @@ public class PublicMethod {
         String maintainSaleId = response.getString("maintain_sale_id");
         int maintainType = response.getInteger("maintain_type");
         String plateNumber = response.getString("plate_number");
-        IScene scene = EditAfterSaleCustomerScene.builder().afterRecordId(afterRecordId).appointmentCustomerName(appointmentCustomerName)
-                .appointmentId(appointmentId).appointmentPhoneNumber(appointmentPhoneNumber).appointmentSecondaryPhone(appointmentSecondaryPhone)
-                .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
-                .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).travelMileage(1000).build();
+        IScene scene = EditAfterSaleCustomerScene.builder()
+                .afterRecordId(afterRecordId)
+                .appointmentCustomerName(appointmentCustomerName)
+                .appointmentId(appointmentId)
+                .appointmentPhoneNumber(appointmentPhoneNumber)
+                .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                .customerName(customerName)
+                .customerPhoneNumber(customerPhoneNumber)
+                .customerSource(customerSource)
+                .firstRepairCarType(firstRepairCarType)
+                .maintainSaleId(maintainSaleId)
+                .maintainType(maintainType)
+                .plateNumber(plateNumber)
+                .travelMileage(1000)
+                .build();
         crm.invokeApi(scene);
     }
 
@@ -190,10 +201,23 @@ public class PublicMethod {
         String maintainSaleId = response.getString("maintain_sale_id");
         int maintainType = response.getInteger("maintain_type");
         String plateNumber = response.getString("plate_number");
-        IScene scene = EditAfterSaleCustomerScene.builder().afterRecordId(afterRecordId).appointmentCustomerName(appointmentCustomerName)
-                .appointmentId(appointmentId).appointmentPhoneNumber(appointmentPhoneNumber).appointmentSecondaryPhone(appointmentSecondaryPhone)
-                .customerName(customerName).customerPhoneNumber(customerPhoneNumber).customerSource(customerSource).firstRepairCarType(firstRepairCarType)
-                .maintainSaleId(maintainSaleId).maintainType(maintainType).plateNumber(plateNumber).serviceComplete(false).remarks(remarks).travelMileage(1000).build();
+        IScene scene = EditAfterSaleCustomerScene.builder()
+                .afterRecordId(afterRecordId)
+                .appointmentCustomerName(appointmentCustomerName)
+                .appointmentId(appointmentId)
+                .appointmentPhoneNumber(appointmentPhoneNumber)
+                .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                .customerName(customerName)
+                .customerPhoneNumber(customerPhoneNumber)
+                .customerSource(customerSource)
+                .firstRepairCarType(firstRepairCarType)
+                .maintainSaleId(maintainSaleId)
+                .maintainType(maintainType)
+                .plateNumber(plateNumber)
+                .serviceComplete(false)
+                .remarks(remarks)
+                .travelMileage(1000)
+                .build();
         crm.invokeApi(scene);
     }
 

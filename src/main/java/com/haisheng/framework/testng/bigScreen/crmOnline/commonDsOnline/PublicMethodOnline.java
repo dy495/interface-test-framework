@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
@@ -22,6 +23,7 @@ import java.util.*;
 
 public class PublicMethodOnline {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    EnumAccount zjl = EnumAccount.ZJL_ONLINE;
 
     /**
      * 获取人员列表
@@ -272,4 +274,18 @@ public class PublicMethodOnline {
         }
         throw new DataException("该用户小程序没有绑定车");
     }
+
+    /**
+     * 获取非重复电话号
+     *
+     * @return phone
+     */
+    public String getDistinctPhone() {
+        UserUtil.login(zjl);
+        String phone = "153" + CommonUtil.getRandom(8);
+        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
+        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
+        return a == 0 && b == 0 ? phone : getDistinctPhone();
+    }
+
 }

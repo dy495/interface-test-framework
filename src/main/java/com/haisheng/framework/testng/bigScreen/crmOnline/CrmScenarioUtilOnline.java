@@ -2536,6 +2536,17 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     }
 
+    /**
+     * 成交记录
+     */
+    public JSONObject orderInfoPage(int page, int size) {
+        String url = "/porsche/order-info/page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
     public JSONObject createMessage(String[] customer_types, int[] car_types, int[] customer_level, String[] customer_property, String send_time, String title, String content) throws Exception {
         String url = "/porsche/message/add";
         JSONObject json1 = new JSONObject();
@@ -3691,6 +3702,16 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    //我的接待-购车档案列表
+    public JSONObject buyCarList(String customer_id) {
+        String url = "/porsche/app/customer/buy-car-list";
+        JSONObject json = new JSONObject();
+        json.put("customer_id", customer_id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
 
     public JSONObject driverSelect(int page, int size, String search_condition) {
         String url = "/porsche/daily-work/test-drive/app/list";

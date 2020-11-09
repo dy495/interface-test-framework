@@ -37,7 +37,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     PublicMethodOnline method = new PublicMethodOnline();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final EnumAccount fw = EnumAccount.FWGW_ONLINE;
+    private static final EnumAccount fw = EnumAccount.FW_55_ONLINE;
     private static final int size = 50;
     int zjl_num = 0;
     int gw_num = 0;

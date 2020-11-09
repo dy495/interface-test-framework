@@ -37,7 +37,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount fw = EnumAccount.FWGW_DAILY;
+    private static final EnumAccount fw = EnumAccount.FW_BAOYANG_DAILY;
     private static final int size = 50;
     int zjl_num = 0;
     int gw_num = 0;

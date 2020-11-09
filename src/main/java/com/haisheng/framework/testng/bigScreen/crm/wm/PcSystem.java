@@ -71,8 +71,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-//    ---------------------------------------------------2.0------------------------------------------------------------
-
     /**
      * 销售客户管理-所有顾客
      */
@@ -194,9 +192,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 商品管理-添加商品
-     */
     @Test(description = "商品管理-添加商品")
     public void goodsManager_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -235,8 +230,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             saveData("商品管理中，各必须参数不填写创建车型&&全部填写创建车型");
         }
     }
-
-//    ---------------------------------------------------3.0------------------------------------------------------------
 
     /**
      * 后台运营-站内消息

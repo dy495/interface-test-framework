@@ -8,13 +8,17 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -25,10 +29,11 @@ import java.util.Date;
 
 public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    PublicMethodOnline method = new PublicMethodOnline();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final EnumAccount xs = EnumAccount.XSGW_ONLINE;
-    private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
-    private static final EnumAppletCode sale = EnumAppletCode.WM;
+    private static final EnumAccount xs = EnumAccount.XS_11_ONLINE;
+    private static final EnumCarModel car = EnumCarModel.PANAMERA_ONLINE;
+    private static final int size = 100;
 
     @BeforeClass
     @Override
@@ -65,13 +70,8 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-//    ---------------------------------------------------2.0------------------------------------------------------------
-
-    /**
-     * @description: 销售客户管理-我的客户
-     */
-    @Test(description = "全部-pc端我的客户总数=列表的总数")
-    public void myCustomer_data_1() {
+    @Test(description = "销售客户管理--我的客户--展厅客户总数=列表的总数")
+    public void customer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
@@ -90,11 +90,127 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端我的客户总数=列表的总数");
+            saveData("销售客户管理--我的客户--展厅客户总数=列表的总数");
         }
     }
 
-    @Test(description = "公海-共计人数=列表总条数")
+    @Test(description = "销售客户管理--我的客户--DCC客户总数=列表的总数")
+    public void customer_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.dccList("", "", "", "", 1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.dccList("", "", "", "", i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端DCC客户总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--我的客户--DCC客户总数=列表的总数");
+        }
+    }
+
+    @Test(description = "销售客户管理--我的客户--成交记录总数=列表的总数")
+    public void customer_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.orderInfoPage(i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--我的客户--成交记录总数=列表的总数");
+        }
+    }
+
+    @Test(description = "pc--我的客户--成交记录总数=列表的总数")
+    public void customer_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSizeTotal = 0;
+            for (int i = 1; i < s; i++) {
+                int listSize = crm.orderInfoPage(i, size).getJSONArray("list").size();
+                listSizeTotal += listSize;
+            }
+            CommonUtil.valueView(total, listSizeTotal);
+            Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("pc--我的客户--成交记录总数=列表的总数");
+        }
+    }
+
+    @Test(description = "销售客户管理--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致")
+    public void customer_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            //客户总数
+            int total = crm.orderInfoPage(1, size).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray list = crm.orderInfoPage(i, size).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    //如果电话号为空，跳过||车牌号为空跳过||不是昨天交车跳过
+                    JSONArray phones = list.getJSONObject(j).getJSONArray("phones");
+                    String orderDate = CommonUtil.getStrField(list, j, "order_date");
+                    String vehicleChassisCode = list.getJSONObject(j).getString("vehicle_chassis_code");
+                    if (phones.size() == 0 || !orderDate.equals(date) || StringUtils.isEmpty(vehicleChassisCode)) {
+                        continue;
+                    }
+                    //pc购车信息
+                    String deliverDate = CommonUtil.getStrField(list, j, "deliver_date");
+                    String carStyleName = CommonUtil.getStrField(list, j, "car_style_name");
+                    String carModelName = CommonUtil.getStrField(list, j, "car_model_name");
+                    String phone = phones.getString(0);
+                    IScene scene = CustomerPageScene.builder().customerPhone(phone).build();
+                    int customerId = crm.invokeApi(scene).getJSONArray("list").getJSONObject(0).getInteger("customer_id");
+                    JSONArray carList = crm.buyCarList(String.valueOf(customerId)).getJSONArray("list");
+                    for (int u = 0; u < carList.size(); u++) {
+                        String code = carList.getJSONObject(u).getString("vehicle_chassis_code");
+                        if (code != null && code.equals(vehicleChassisCode)) {
+                            CommonUtil.valueView(phone, code);
+                            //app购车信息
+                            String buyTime = CommonUtil.getStrField(carList, u, "buy_time");
+                            String deliverTime = CommonUtil.getStrField(carList, u, "deliver_time");
+                            String styleName = CommonUtil.getStrField(carList, u, "car_style_name");
+                            String modelName = CommonUtil.getStrField(carList, u, "car_model_name");
+                            //比较
+                            Preconditions.checkArgument(orderDate.equals(buyTime), phone + " 购车时间不一致，pc端购车时间：" + orderDate + " app购车时间：" + buyTime);
+                            Preconditions.checkArgument(deliverDate.equals(deliverTime), phone + " 交车时间不一致，pc端交车时间：" + deliverDate + " app交车时间：" + deliverTime);
+                            Preconditions.checkArgument(carStyleName.equals(styleName), phone + " 购买车系不一致，pc端购买车系：" + carStyleName + " app购买车系：" + styleName);
+                            Preconditions.checkArgument(carModelName.equals(modelName), phone + " 购买车型不一致，pc端购买车系：" + carModelName + " app购买车型：" + modelName);
+                            CommonUtil.logger(code);
+                        }
+                    }
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致");
+        }
+    }
+
+    @Test(description = "销售客户管理--公海--共计人数=列表总条数")
     public void myCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -111,11 +227,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理公海共计人数=列表总条数");
+            saveData("销售客户管理--公海--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "公海-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--公海--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -133,11 +249,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端-公海今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--公海--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "公海-勾选两个客户分配给销售A,销售A客户名下客户数量+2,列表数-2,减2改为减1操作")
+    @Test(description = "销售客户管理--公海--勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1")
     public void myCustomer_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -176,32 +292,31 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1");
+            saveData("销售客户管理--公海--勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1");
         }
     }
 
-    @Test(description = "公海-新建一个G级客户，公海列表数+1")
+    @Test(description = "销售客户管理--公海--新建一个G级客户，公海列表数+1")
     public void myCustomer_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String name = EnumCustomerInfo.CUSTOMER_1.getName();
         String remark = EnumCustomerInfo.CUSTOMER_1.getRemark();
         try {
-            UserUtil.login(xs);
-            String phone = getDistinctPhone();
+            String phone = method.getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, "14", phone, "82", car.getStyleId(), remark);
+            crm.customerCreate(name, "14", phone, car.getModelId(), car.getStyleId(), remark);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("新建一个G级客户,公海列表+1");
+            saveData("销售客户管理--公海--新建一个G级客户，公海列表数+1");
         }
     }
 
-    @Test(description = "战败-共计人数=列表总条数")
+    @Test(description = "销售客户管理--战败--共计人数=列表总条数")
     public void myCustomer_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -213,11 +328,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理战败共计人数=列表总条数");
+            saveData("销售客户管理--战败--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "战败-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--战败--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -229,11 +344,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc战败客户，今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--战败--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1")
+    @Test(description = "销售客户管理--战败--将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1")
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -255,11 +370,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("将一个战败客户划入公海,战败客户数量-1，公海客户数量+1");
+            saveData("销售客户管理--战败--将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1");
         }
     }
 
-    @Test(description = "小程序-共计人数=列表总条数")
+    @Test(description = "销售客户管理--小程序--共计人数=列表总条数")
     public void myCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -271,11 +386,11 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理小程序共计人数=列表总数");
+            saveData("销售客户管理--小程序--共计人数=列表总条数");
         }
     }
 
-    @Test(description = "小程序-今日人数=按今日搜索展示列表条数")
+    @Test(description = "销售客户管理--小程序--今日人数=按今日搜索展示列表条数")
     public void myCustomer_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -288,15 +403,15 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc销售客户管理小程序今日人数=按今日搜索展示列表条数");
+            saveData("销售客户管理--小程序--今日人数=按今日搜索展示列表条数");
         }
     }
 
-    @Test(description = "小程序-预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
+    @Test(description = "销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            UserUtil.loginApplet(sale);
+            UserUtil.loginApplet(EnumAppletCode.WM);
             int testDriverTotal = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100).getInteger("total");
             int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
             int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");
@@ -319,22 +434,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端小程序后面的预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
+            saveData("销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
         }
-    }
-
-//    ---------------------------------------------------私有方法区-------------------------------------------------------
-
-    /**
-     * 获取非重复电话号
-     *
-     * @return phone
-     */
-    public String getDistinctPhone() {
-        UserUtil.login(zjl);
-        String phone = "153" + CommonUtil.getRandom(8);
-        int a = crm.customerList("", phone, "", "", "", 1, 10).getInteger("total");
-        int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
-        return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 }

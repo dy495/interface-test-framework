@@ -66,7 +66,7 @@ public class CommonUtil {
      */
     public static boolean isContainStr(String str, String[] strs) {
         for (String s : strs) {
-            if (str.equals(s)) {
+            if (s.equals(str)) {
                 return true;
             }
         }
@@ -155,6 +155,19 @@ public class CommonUtil {
         return (double) Math.round(a * cardinal) / cardinal;
     }
 
+    /**
+     * 特殊计算
+     */
+    public static String getPercent(double a, double b) {
+        if (a == 0 && b == 0) {
+            return "0.0%";
+        }
+        if (b == 0) {
+            return "100.0%";
+        } else {
+            return getPercent(a, b, 4);
+        }
+    }
 
     /**
      * 获取百分比
