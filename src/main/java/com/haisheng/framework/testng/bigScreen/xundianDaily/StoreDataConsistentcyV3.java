@@ -1678,8 +1678,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("3");
             r_dList.add("4");
+            r_dList.add("99");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
@@ -1980,41 +1980,40 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
-    /**
-     * ====================收银追溯的数据一致性（小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间）========================
-     */
-    @Test
-    public void orderDataInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject res = md.cashier_traceBack(shop_id, "", "", page, size);
-            //获取收银追溯页面的小票数量
-            int total = res.getInteger("total");
-            JSONArray list = res.getJSONArray("list");
-            //获取收银追溯页面的第一个小票单号
-            String order_id = list.getJSONObject(0).getString("order_id");
-            Long order_time = list.getJSONObject(0).getLong("order_time");
-            String order_time_02 = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", order_time);
-
-            JSONObject response = md.cashier_riskPage(shop_id_01, "", order_id, "", "", "", "", page, size);
-            //获取收银风控事件列表的小票总数量
-            int total1 = response.getInteger("total");
-            JSONArray list1 = response.getJSONArray("list");
-            String order_id1 = list1.getJSONObject(0).getString("order_id");
-            String order_time1 = list1.getJSONObject(0).getString("order_date");
-
-            Preconditions.checkArgument(total <= total1, "【收银追溯】中列表门店ID：" + shop_id_01 + "小票数量：" + total + ">【收银风控事件】中的小票数量：" + total1);
-            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间" + order_time_02 + "!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间");
-        }
-    }
+//    /**
+//     * ====================收银追溯的数据一致性（小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间）========================
+//     */
+//    @Test
+//    public void orderDataInfo() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            //获取收银风控事件列表的小票总数量
+//            JSONArray list1 = response.getJSONArray("list");
+//            String order_id1 = list1.getJSONObject(0).getString("order_id");
+//            String order_time1 = list1.getJSONObject(0).getString("order_date");
+//            JSONObject response = md.cashier_riskPage(shop_id_01, "", order_id1, "", "", "", "", page, size);
+//
+//            JSONObject res = md.cashier_traceBack(shop_id_01, "", "", page, size);
+//            JSONArray list = res.getJSONArray("list");
+//
+//            //获取收银追溯页面的第一个小票单号
+//            String order_id = list.getJSONObject(0).getString("order_id");
+//            Long order_time = list.getJSONObject(0).getLong("order_time");
+//            String order_time_02 = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", order_time);
+//
+//
+//            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间" + order_time_02 + "!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间");
+//        }
+//    }
 
 //    /**
 //     * ====================收银风控事件的数据一致性（待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
