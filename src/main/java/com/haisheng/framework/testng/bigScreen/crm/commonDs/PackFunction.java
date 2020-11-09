@@ -256,13 +256,27 @@ public class PackFunction {
         }
         return jsonCO;
     }
+    //获取试驾车系名
+    public String getdrivercarStyleName(Long carId){
+        String CarStyleName="";
+        JSONArray list=crm.driverCarList().getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            CarStyleName=list.getJSONObject(i).getString("car_style_name");
+            Long id=list.getJSONObject(i).getLong("test_car_id");
+            if(id.equals(carId)){
+                break;
+            }
+        }
+        return CarStyleName;
+    }
 
     //新建试驾+审核封装 ok
-    public void creatDriver(Long receptionId, Long customer_id, String name, String phone, int audit_status) throws Exception {  //1-通过，2-拒绝
+    public String creatDriver(Long receptionId, Long customer_id, String name, String phone, int audit_status) throws Exception {  //1-通过，2-拒绝
 
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date = dt.getHistoryDate(0);
         String sign_time = dt.getHHmm(0);
+
         JSONArray list = crm.testDriverList().getJSONArray("list");
         String apply_time = "";
         Long test_drive_car = dt.getHistoryDateTimestamp(1);
@@ -274,6 +288,7 @@ public class PackFunction {
                 break;
             }
         }
+        String car_style_name = getdrivercarStyleName(test_drive_car);
         String oss = crm.addressDiscernment(driverLicensePhoto1Url).getString("license_face_path");
 
         crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car, oss);
@@ -283,6 +298,7 @@ public class PackFunction {
         if (audit_status == 1 || audit_status == 2) {
             crm.driverAudit(driverid, audit_status);
         }
+        return car_style_name;
         //最后销售要再登陆一次
     }
 
@@ -438,7 +454,7 @@ public class PackFunction {
     //添加试驾车
     public long newCarDriver() throws Exception {
         Random r = new Random();
-        String carName = "试驾车" + r.nextInt(10) + dt.getHHmm(0);
+        String carName = "试驾车" + r.nextInt(1000) + dt.getHHmm(0);
 //        long id[]=carModelId();      //0 试驾车系id, 1 车型id
         String plate_number = "黑Z12I1" + r.nextInt(100);
         String vehicle_chassis_code = "ASD145656" + (random.nextInt(89999999) + 10000000);

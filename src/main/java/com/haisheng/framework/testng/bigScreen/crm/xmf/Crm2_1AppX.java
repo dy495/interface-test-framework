@@ -18,6 +18,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.jayway.jsonpath.JsonPath;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -1774,13 +1775,20 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
     public void testlistnull(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-
-
+          JSONObject date=crm.roleList();
+          JSONObject dd=date.getJSONObject("data");
+          List<String> categorys = JsonPath.read(dd,"$.list[*].role_name");
+          String yunsuanfu="==";
+          String answer="";
+          for(String s:categorys){
+              System.out.println("element:"+s);
+          }
 
         }catch (AssertionError |Exception e){
             e.toString();
         }finally {
-            saveData("");
+//            saveData("");
+            System.out.println("over");
         }
     }
 

@@ -216,7 +216,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.reception_type = "FU";
             String userLoginName = object.getString("userLoginName");
 
-            pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
+            String testcarStyleName=pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
             String isdriver=crm.customerMyReceptionList("","","",10,1).getJSONArray("list").getJSONObject(0).getString("test_drive_name");
 
             JSONObject dataTotal2 = crm.driverTotal();
@@ -243,7 +243,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customer_name.equals(fr.name), "新建试驾，试驾列表客户名错误");
             Preconditions.checkArgument(customer_phone_number.equals(phone), "新建试驾，试驾列表电话错误");
             Preconditions.checkArgument(call.equals("先生"), "新建试驾，试驾列表客户称呼错误");
-//            Preconditions.checkArgument(test_car_style_name.equals(pp.car_type_name), "新建试驾，试驾列表客户试驾车系错误");
+            Preconditions.checkArgument(test_car_style_name.equals(testcarStyleName), "新建试驾，试驾列表客户试驾车系错误");
             Preconditions.checkArgument(audit_status_name.equals("已通过"), "新建试驾，试驾列表审核状态错误");
             Preconditions.checkArgument(isdriver.equals("是"), "新建试驾，接待列表是否试驾不显示 是");
 

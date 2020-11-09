@@ -257,13 +257,27 @@ public class PackFunctionOnline {
         }
         return jsonCO;
     }
+    //获取试驾车系名
+    public String getdrivercarStyleName(Long carId){
+        String CarStyleName="";
+        JSONArray list=crm.driverCarList().getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            CarStyleName=list.getJSONObject(i).getString("car_style_name");
+            Long id=list.getJSONObject(i).getLong("test_car_id");
+            if(id.equals(carId)){
+                break;
+            }
+        }
+        return CarStyleName;
+    }
 
     //新建试驾+审核封装 ok
-    public void creatDriver(Long receptionId, Long customer_id, String name, String phone, int audit_status) throws Exception {  //1-通过，2-拒绝
+    public String creatDriver(Long receptionId, Long customer_id, String name, String phone, int audit_status) throws Exception {  //1-通过，2-拒绝
 
         String driverLicensePhoto1Url = file.texFile(pp.filePath);
         String sign_date = dt.getHistoryDate(0);
         String sign_time = dt.getHHmm(0);
+
         JSONArray list = crm.testDriverList().getJSONArray("list");
         String apply_time = "";
         Long test_drive_car = dt.getHistoryDateTimestamp(1);
@@ -275,6 +289,7 @@ public class PackFunctionOnline {
                 break;
             }
         }
+        String car_style_name = getdrivercarStyleName(test_drive_car);
         String oss = crm.addressDiscernment(driverLicensePhoto1Url).getString("license_face_path");
 
         crm.driveradd5(receptionId, customer_id, name, phone, driverLicensePhoto1Url, sign_date, sign_time, apply_time.toString(), test_drive_car, oss);
@@ -284,9 +299,9 @@ public class PackFunctionOnline {
         if (audit_status == 1 || audit_status == 2) {
             crm.driverAudit(driverid, audit_status);
         }
+        return car_style_name;
         //最后销售要再登陆一次
     }
-
     //订车+交车封装  copy lxq debug ok
     public void creatDeliver(Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Boolean accept_show) throws Exception {
         //订车

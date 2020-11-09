@@ -215,6 +215,23 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+//    @Test(description = "线上人脸为空警告")
+    public void faceListNontull() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("警告：线上人脸列表为空");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("检查前台人脸列表是否为空");
+        }
+    }
+
     /**
      * @description :到访记录按时间查仅输入开始结束时间 ok
      * @date :2020/8/3 12:48
@@ -398,6 +415,9 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             int total = date.size();
 
             JSONArray list = crm.markcustomerList().getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("前台人脸数为0，case无法执行");
+            }
             String analysis_customer_id = "";
             int count = 0;
             JSONArray idlist = new JSONArray();

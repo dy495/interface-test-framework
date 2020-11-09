@@ -202,6 +202,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             saveData("到访记录按到访日期查询，结果校验");
         }
     }
+   //到访记录为空提醒
     @Test()
     public void visitRecodeNontull() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -217,6 +218,23 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("到访记录不为空");
+        }
+    }
+
+//    @Test()
+    public void faceListNontull() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("警告：日常人脸列表为空");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("检查前台人脸列表是否为空");
         }
     }
 
@@ -403,6 +421,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             int total = date.size();
 
             JSONArray list = crm.markcustomerList().getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("前台人脸数为0，case无法执行");
+            }
             String analysis_customer_id = "";
             int count = 0;
             JSONArray idlist = new JSONArray();
