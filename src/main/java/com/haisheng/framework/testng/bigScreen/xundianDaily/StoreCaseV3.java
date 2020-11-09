@@ -389,8 +389,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             String phone1 = "";
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("3");
-            r_dList.add("4");
+            r_dList.add("199");
 
 
             List<String> shop_list = new ArrayList<String>();
@@ -435,8 +434,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         try {
             List<String> r_dList = new ArrayList<String>();//乱写的角色，要改！！！
-            r_dList.add("3");
-            r_dList.add("4");
+            r_dList.add("199");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
@@ -480,8 +478,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             String email1 = "";
             String phone1 = "";
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("3");
-            r_dList.add("4");
+            r_dList.add("199");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
@@ -818,17 +815,17 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 checkArgument(handle_result.contains(handle_result1), "根据订单编号" + handle_result + "搜索,没有查询到应有的结果");
             }
 
-            //根据当前状态进行筛选
-            JSONArray list5 = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getJSONArray("list");
-            for (int i = 0; i < list5.size(); i++) {
-                String current_state1 = list1.getJSONObject(i).getString("current_state");
-                checkArgument(current_state.contains(current_state1), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
-            }
+//            //根据当前状态进行筛选
+//            JSONArray list5 = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getJSONArray("list");
+//            for (int i = 0; i < list5.size(); i++) {
+//                String current_state1 = list1.getJSONObject(i).getString("current_state");
+//                checkArgument(current_state.contains(current_state1), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
+//            }
 
-            //根据全部结果进行筛选
-            JSONArray list6 = md.cashier_riskPage(shop_id_01, event_name, order_id, order_date, "", "", current_state, page, size).getJSONArray("list");
-
-            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
+//            //根据全部结果进行筛选
+//            JSONArray list6 = md.cashier_riskPage(shop_id_01, event_name, order_id, order_date, "", "", current_state, page, size).getJSONArray("list");
+//
+//            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError e) {
@@ -1099,9 +1096,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 checkArgument(shop_name.equals(shop_name1), "根据门店名称" + shop_name + "筛查，没有查询到相应的结果");
             }
 
-            //根据列表第一个告警规则的信息进行筛查
-            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
-            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
+//            //根据列表第一个告警规则的信息进行筛查
+//            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
+//            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError e) {
