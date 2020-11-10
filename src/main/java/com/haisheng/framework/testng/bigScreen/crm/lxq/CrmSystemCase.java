@@ -104,8 +104,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         //String carNum = "苏ZDH197";    //试驾车未注销
 
         //String carNum = "京A1ER19";    //试驾车已注销
-        String carNum = "津C90866";    //试驾车已注销
-//        String carNum = "苏SDCGUI";    //试驾车已注销
+//        String carNum = "苏G452282";    //试驾车已注销
+//        String carNum = "苏G452282";    //试驾车已注销
+        String carNum = "冀A2473";    //试驾车已注销
         String router = "/business/porsche/PLATE_UPLOAD/v1.0";
         //设备与日常环境的设置一致，不要修改
         String deviceId = "7709867521115136";
@@ -201,7 +202,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //        String carNum = "浙ABC1711";    //售前老客，售后新客
         //String carNum = "京ASD1235";    //售前老客，售后新客
 //        String carNum = "京A081800";    //售前新客，售后新客
-        String carNum = "吉E000010";
+        String carNum = "吉EJK0012";
 
 
 

@@ -1,13 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
+import bsh.util.JConsole;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.createArticle;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -1287,24 +1291,6 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    // @Test
-    public void deleteuser(){
-        try {
-            crm.login(baoshijie, adminpassword);
-//              for(int j=0;j<1;j++) {
-            JSONArray list = crm.userPage(6, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
-                crm.userDel(userid);
-            }
-//              }
-
-        }catch (Exception e){
-            appendFailreason(e.toString());
-        }finally {
-            saveData("清多余用户数据");
-        }
-    }
 
     /**
      * @description :预约记录查询验证预约记录查询验证，今日数=列表去重数,数字统计按创建日期，页面无创建日期，故此case不通 可用于app试驾、交车
@@ -1967,6 +1953,132 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Test(description = "创建活动参数全填")
+    public void createActivityall(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.login(pp.zongjingli, pp.adminpassword);
+            createArticle ca=new createArticle();
+            ca.customer_types = new String[]{"PRE_SALES", "AFTER_SALES"};
+            ca.customer_level = new int[]{8, 6, 3, 2, 1, 7, 4, 16};
+            ca.customer_property = new String[]{"LOST", "LOYAL", "MAINTENANCE"};
+            ca.car_styles = new int[]{1, 2, 3, 4, 5, 6};
+
+            Long article_id = crm.createArticle(ca).getLong("id");
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
+
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("创建文章参数全填");
+        }
+    }
+
+    @Test(dataProvider = "PARM",dataProviderClass = CrmScenarioUtil.class,description = "创建活动必填项不填")
+    public void createActivityno(String parm,String messageP){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.login(pp.zongjingli, pp.adminpassword);
+            createArticle ca=new createArticle();
+            ca.checkCode=false;
+            ca.Empty=parm;
+            JSONObject data=crm.createArticle(ca);
+            int code = data.getInteger("code");
+            String message = data.getString("message");
+            $Preconditions.checkArgument(code==1001,parm+"必填项不填仍成功");
+            $Preconditions.checkArgument(message.contains(messageP),parm+"必填项不填仍成功");
+
+//            crm.articleStatusChange(article_id);
+//            crm.articleDelete(article_id);
+
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("创建文章必填项不填");
+        }
+    }
+
+    @Test(description = "创建文章必填项全填")
+    public void createActiceall(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.login(pp.zongjingli, pp.adminpassword);
+            createArticle ca=new createArticle();
+            ca.customer_types = new String[]{"PRE_SALES", "AFTER_SALES"};
+            ca.customer_level = new int[]{8, 6, 3, 2, 1, 7, 4, 16};
+            ca.customer_property = new String[]{"LOST", "LOYAL", "MAINTENANCE"};
+            ca.car_styles = new int[]{1, 2, 3, 4, 5, 6};
+            ca.is_online_activity=false;
+
+            Long article_id=crm.createArticleReal(ca).getLong("id");
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
+
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("创建文章参数全填");
+        }
+    }
+
+    @Test(description = "banner管理")
+    public void bannerconfig(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray showList=crm.articleShowList().getJSONArray("list");
+            Long show_article_id=showList.getJSONObject(0).getLong("id");
+
+            JSONArray ll=new JSONArray();
+            JSONObject data1=getlist(show_article_id,1L,"AFTER_SALES");
+            JSONObject data2=getlist(show_article_id,2L,"ALL");
+            JSONObject data3=getlist(show_article_id,3L,"PRE_SALES");
+            JSONObject data4=getlist(show_article_id,4L,"PRE_SALES");
+            JSONObject data5=getlist(show_article_id,5L,"PRE_SALES");
+
+            ll.add(data1);
+            ll.add(data2);
+            ll.add(data3);
+            ll.add(data4);
+            ll.add(data5);
+            //banner配置
+            crm.pcBannerconfig(ll);
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("banner管理");
+        }
+    }
+
+    public JSONObject getlist(Long article_id,Long banner_id,String customer_type){
+        JSONObject data=new JSONObject();
+        data.put("article_id",article_id);
+        data.put("banner_id",banner_id);
+        data.put("customer_type",customer_type);
+        return data;
+    }
+    @Test(description = "pc车型推荐")
+    public void carcommend(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String title="自动编辑车型推荐";
+            String content="自动编辑车型推荐内容";
+            crm.pccaredit(content,pp.car_model,title);
+            JSONObject data=crm.pccardetile(pp.car_model);
+            String titleA=data.getString("title");
+            String contentA=data.getString("content");
+            $Preconditions.checkArgument(title.equals(titleA),"车型推荐标题异常");
+            $Preconditions.checkArgument(content.equals(contentA),"车型推荐内容异常");
+
+        }catch (AssertionError |Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("banner管理");
+        }
+    }
+
+
+
 
 
      /**
@@ -2113,6 +2225,25 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("删除文章活动");
         }
     }
+//     @Test
+    public void deleteuser(){
+        try {
+            crm.login(baoshijie, adminpassword);
+//              for(int j=0;j<1;j++) {
+            JSONArray list = crm.userPage(11, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
+                crm.userDel(userid);
+            }
+//              }
+
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("清多余用户数据");
+        }
+    }
+
 
 
 
