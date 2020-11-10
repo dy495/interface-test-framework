@@ -1682,50 +1682,6 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "店面数据分析--【各时间段+各销售】商机的Pu+BB >=【该销售-app-我的接待】今日老客接待")
-    public void shopPanel_data_69() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
-            for (Map<String, String> arr : list) {
-                CommonUtil.valueView(arr.get("userName"));
-                int createClueNum = 0;
-                IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).saleId(arr.get("userId")).build();
-                JSONArray array = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
-                for (int i = 0; i < array.size(); i++) {
-                    if (array.getJSONObject(i).getString("type").equals("RECEIVE")) {
-                        JSONArray detailList = array.getJSONObject(i).getJSONArray("detail");
-                        for (int j = 0; j < detailList.size(); j++) {
-                            if (detailList.getJSONObject(j).getString("label").equals("BB")
-                                    || detailList.getJSONObject(j).getString("label").equals("PU")) {
-                                createClueNum += detailList.getJSONObject(j).getInteger("value");
-                            }
-                        }
-                    }
-                }
-                String sql = Sql.instance().select("today_old_customer_reception_num")
-                        .from("t_porsche_today_data")
-                        .where("shop_id", "=", shopId)
-                        .and("sale_id", "=", arr.get("userId"))
-                        .and("today_date", "=", date)
-                        .end().getSql();
-                List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                if (list1.size() > 0) {
-                    int count = (int) list1.get(0).get("today_old_customer_reception_num");
-                    CommonUtil.valueView(createClueNum, count);
-                    Preconditions.checkArgument(createClueNum >= count, arr.get("userName") + "商机的Pu+BB：" + createClueNum + " 该销售老客接待：" + count);
-                    CommonUtil.logger(arr.get("userName"));
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailreason(e.toString());
-        } finally {
-            saveData("店面数据分析--【各时间段+各销售】商机的Pu+BB >=【该销售-app-我的接待】今日老客接待");
-        }
-    }
-
     @Test(description = "店面数据分析--【各时间段+各销售】累计订单=【各销售-app-我的接待】今日订单数量")
     public void shopPanel_data_71() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1736,26 +1692,20 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String userName = map.get("userName");
                 CommonUtil.valueView(userName);
                 int num = getFunnelData("business", "ORDER", map);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select().from("t_porsche_order_info")
-                            .where("shop_id", "=", shopId)
-                            .and("source_channel_name", "is not", null)
-                            .and("order_date", "=", date)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("shop_id", "=", shopId)
-                            .and("source_channel_name", "is not", null)
-                            .and("sale_id", "=", map.get("userId"))
-                            .and("order_date", "=", date)
-                            .end().getSql();
+                String sql = Sql.instance()
+                        .select("today_order_num")
+                        .from("t_porsche_today_data")
+                        .where("sale_id", "=", map.get("userId"))
+                        .and("shop_id", "=", shopId)
+                        .and("today_date", "=", date)
+                        .end().getSql();
+                List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                if (list1.size() > 0) {
+                    int count = (int) list1.get(0).get("today_order_num");
+                    CommonUtil.valueView(num, count);
+                    Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售今日订单数量：" + count);
+                    CommonUtil.logger(userName);
                 }
-                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
-                CommonUtil.valueView(num, count);
-                Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售订单数量：" + count);
-                CommonUtil.logger(userName);
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -1774,10 +1724,11 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName"));
                 int num = getFunnelData("business", "DEAL", map);
-                String sql = Sql.instance().select("today_deal_num")
+                String sql = Sql.instance()
+                        .select("today_deal_num")
                         .from("t_porsche_today_data")
-                        .where("shop_id", "=", shopId)
-                        .and("sale_id", "=", map.get("userId"))
+                        .where("sale_id", "=", map.get("userId"))
+                        .and("shop_id", "=", shopId)
                         .and("today_date", "=", date)
                         .end().getSql();
                 List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
@@ -1794,7 +1745,6 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("【各时间段+各销售】累计交车=【各销售-app-我的交车】今日交车数量");
         }
-
     }
 
     /**

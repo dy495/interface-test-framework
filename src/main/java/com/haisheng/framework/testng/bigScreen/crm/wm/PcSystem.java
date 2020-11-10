@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ArticleAddScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.DccEditScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.MessageAddScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -32,9 +36,11 @@ import java.util.Date;
  */
 public class PcSystem extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAppletCode sale = EnumAppletCode.WM;
     private static final EnumAppletCode afterSale = EnumAppletCode.WM_SMALL;
+    private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
 
     @BeforeClass
     @Override
@@ -231,6 +237,50 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(enabled = false)
+    public void myCustomer_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.getFormat(new Date());
+            JSONArray array = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("comment", "清风徐来，水波不兴");
+            object.put("next_return_visit_date", date);
+            array.add(object);
+            String[] records = {"壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴", "纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙"};
+            String expectedBuyDay = DateTimeUtil.addDayFormat(new Date(), 10);
+            JSONArray list = crm.dccList("", "", "", "", 1, 10).getJSONArray("list");
+            String customerName = list.getJSONObject(0).getString("customer_name");
+            String customerLevel = list.getJSONObject(0).getString("customer_level");
+            String belongsSaleId = list.getJSONObject(0).getString("belongs_sale_id");
+            String recordDate = list.getJSONObject(0).getString("record_date");
+            String customerPhone = list.getJSONObject(0).getString("customer_phone");
+            int customerId = list.getJSONObject(0).getInteger("customer_id");
+            String platNumber = method.getDistinctPlat("辽A", 6);
+            DccEditScene.DccEditSceneBuilder builder = DccEditScene.builder();
+            IScene scene = builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
+                    .belongsSaleId(belongsSaleId).createDate("").carStyle(Integer.parseInt(car.getStyleId()))
+                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(6).expectedBuyDay(expectedBuyDay)
+                    .plateNumber1(platNumber).region("110101").records(records).visits(array).customerPhone1(customerPhone).customerPhone2(customerPhone)
+                    .customerId(customerId).build();
+            System.out.println(scene.getJSONObject());
+//            String message = crm.invokeApi(scene).getString("message");
+//            if (!message.equals("成功")) {
+            String platNumber1 = method.getDistinctPlat("辽A", 6);
+            IScene scene1 = builder.plateNumber2(platNumber1).build();
+            System.out.println(scene1.getJSONObject());
+//                crm.invokeApi(scene1);
+//            }
+//            String message = crm.invokeApi(scene, false).getString("message");
+//            if (!message.equals("成功")) {
+//
+//            }
+//            Preconditions.checkArgument(message.equals(""));
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        }
+    }
+
     /**
      * 后台运营-站内消息
      */
@@ -343,7 +393,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "站内消息配置人群为销售，小程序销售可见消息，售后不可见消息")
+    @Test(description = "站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息")
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售可见消息-待删";
@@ -383,11 +433,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售，小程序销售可见消息，售后不可见消息");
+            saveData("站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息");
         }
     }
 
-    @Test(description = "站内消息配置人群为售后，小程序销售不可见消息，售后可见消息")
+    @Test(description = "站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息消息配置人群为售后，小程序销售不可见消息，售后可见消息")
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "售后可见消息-待删";
@@ -427,11 +477,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售，小程序销售不可见消息，售后可见消息");
+            saveData("站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息消息配置人群为售后，小程序销售不可见消息，售后可见消息");
         }
     }
 
-    @Test(description = "站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息")
+    @Test(description = "站内消息--配置人群为销售/售后，小程序销售可见消息，售后可见消息")
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售/售后均可见消息-待删";
@@ -471,11 +521,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息");
+            saveData("站内消息--配置人群为销售/售后，小程序销售可见消息，售后可见消息");
         }
     }
 
-    @Test(description = "站内消息内容可包括中英文，符号，数字，空格")
+    @Test(description = "站内消息--内容可包括中英文，符号，数字，空格")
     public void stationMessage_9() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "Chinese&&English is No.1 in use!";
@@ -490,11 +540,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息内容可包括中英文，符号，数字，空格");
+            saveData("站内消息--内容可包括中英文，符号，数字，空格");
         }
     }
 
-    @Test(description = "pc创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页")
+    @Test(description = "站内消息--创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页")
     public void stationMessage_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -521,11 +571,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页");
+            saveData("站内消息--创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页");
         }
     }
 
-    @Test(description = "pc创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页")
+    @Test(description = "站内消息--创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页")
     public void stationMessage_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -552,11 +602,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页");
+            saveData("站内消息--创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页");
         }
     }
 
-    @Test(description = "pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页")
+    @Test(description = "站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页")
     public void stationMessage_12() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -583,11 +633,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+            saveData("站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
     }
 
-    @Test(description = "pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页")
+    @Test(description = "站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页")
     public void stationMessage_13() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -614,7 +664,31 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+            saveData("站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+        }
+    }
+
+    @Test(description = "站内消息--所有项全部都填，发送成功")
+    public void stationMessage_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String title = "自动化站内消息-待删";
+        String content = "自动化";
+        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
+        String appointmentType = EnumAppointmentType.MAINTAIN.getType();
+        String[] customerTypes = {"PRE_SALES", "AFTER_SALES"};
+        int[] carTypes = {6, 5, 4, 3, 2, 1};
+        int[] customerLevel = {6, 3, 2, 1, 14, 7, 15, 17};
+        String[] customerProperty = {"LOST", "MAINTENANCE", "LOYAL"};
+        try {
+            IScene scene = MessageAddScene.builder().title(title).content(content).sendTime(sendDate).appointmentType(appointmentType)
+                    .carTypes(carTypes).customerTypes(customerTypes).customerLevel(customerLevel).customerProperty(customerProperty)
+                    .build();
+            String message = crm.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("成功"), "创建消息时所有项全部填创建失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("站内消息--所有项全部都填，发送成功");
         }
     }
 

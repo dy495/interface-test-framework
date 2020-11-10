@@ -363,4 +363,8 @@ public class PublicMethod {
         int b = crm.dccList("", phone, "", "", 1, 10).getInteger("total");
         return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
+
+    public String getDistinctPlat(String title, int digitNumber) {
+        return title + CommonUtil.getRandom(digitNumber);
+    }
 }

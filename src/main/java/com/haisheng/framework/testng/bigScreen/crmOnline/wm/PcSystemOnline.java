@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.MessageAddScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -228,7 +230,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * 后台运营-站内消息
      */
-    @Test(description = "投放人群:售前、售后、售前/售后")
+    @Test(description = "站内消息--投放人群:售前、售后、售前/售后")
     public void stationMessage_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -249,11 +251,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息可投放人群为售前、售后、售前/售后");
+            saveData("站内消息--投放人群:售前、售后、售前/售后");
         }
     }
 
-    @Test(description = "生效时间-生效日期：格式yyyy-MM-dd hh：mm")
+    @Test(description = "站内消息--生效时间-生效日期：格式yyyy-MM-dd hh：mm")
     public void stationMessage_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -268,11 +270,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息生效日期格式：yyyy-MM-dd hh：mm");
+            saveData("站内消息--生效时间-生效日期：格式yyyy-MM-dd hh：mm");
         }
     }
 
-    @Test(description = "状态：排期中、发送成功,都可以查看")
+    @Test(description = "站内消息--状态：排期中、发送成功,都可以查看")
     public void stationMessage_3() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售可见消息-待删";
@@ -289,11 +291,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("排期中的消息可以查看操作，接口不做限制，前端限制");
+            saveData("站内消息--状态：排期中、发送成功,都可以查看");
         }
     }
 
-    @Test(description = "倒叙排列-最新的在最上方")
+    @Test(description = "站内消息--站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除")
     public void stationMessage_4() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -312,11 +314,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
+            saveData("站内消息--站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
         }
     }
 
-    @Test(description = "任何状态均可删除")
+    @Test(description = "站内消息--发送成功的站内消息可以删除")
     public void stationMessage_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -334,11 +336,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("发送成功的站内消息可以删除");
+            saveData("站内消息--发送成功的站内消息可以删除");
         }
     }
 
-    @Test(description = "站内消息配置人群为销售，小程序销售可见消息，售后不可见消息", enabled = false)
+    @Test(description = "站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息", enabled = false)
     public void stationMessage_6() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售可见消息-待删";
@@ -378,11 +380,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售，小程序销售可见消息，售后不可见消息");
+            saveData("站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息");
         }
     }
 
-    @Test(description = "站内消息配置人群为售后，小程序销售不可见消息，售后可见消息", enabled = false)
+    @Test(description = "站内消息--配置人群为售后，小程序销售不可见消息，售后可见消息", enabled = false)
     public void stationMessage_7() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "售后可见消息-待删";
@@ -422,11 +424,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售，小程序销售不可见消息，售后可见消息");
+            saveData("站内消息--配置人群为销售，小程序销售不可见消息，售后可见消息");
         }
     }
 
-    @Test(description = "站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息", enabled = false)
+    @Test(description = "站内消息--配置人群为销售/售后，小程序销售可见消息，售后可见消息", enabled = false)
     public void stationMessage_8() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售/售后均可见消息-待删";
@@ -466,11 +468,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息配置人群为销售/售后，小程序销售可见消息，售后可见消息");
+            saveData("站内消息--配置人群为销售/售后，小程序销售可见消息，售后可见消息");
         }
     }
 
-    @Test(description = "站内消息内容可包括中英文，符号，数字，空格")
+    @Test(description = "站内消息--内容可包括中英文，符号，数字，空格")
     public void stationMessage_9() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "Chinese&&English is No.1 in use!";
@@ -484,11 +486,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息内容可包括中英文，符号，数字，空格");
+            saveData("站内消息--内容可包括中英文，符号，数字，空格");
         }
     }
 
-    @Test(description = "pc创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页", enabled = false)
+    @Test(description = "站内消息--创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页", enabled = false)
     public void stationMessage_10() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -515,11 +517,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页");
+            saveData("站内消息--创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页");
         }
     }
 
-    @Test(description = "pc创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页", enabled = false)
+    @Test(description = "站内消息--创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页", enabled = false)
     public void stationMessage_11() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -546,11 +548,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页");
+            saveData("站内消息--创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页");
         }
     }
 
-    @Test(description = "pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页", enabled = false)
+    @Test(description = "站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页", enabled = false)
     public void stationMessage_12() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -577,7 +579,31 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+            saveData("站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
+        }
+    }
+
+    @Test(description = "站内消息--所有项全部都填，发送成功")
+    public void stationMessage_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String title = "自动化站内消息-待删";
+        String content = "自动化";
+        String sendDate = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 70), "yyyy-MM-dd HH:mm");
+        String appointmentType = EnumAppointmentType.MAINTAIN.getType();
+        String[] customerTypes = {"PRE_SALES", "AFTER_SALES"};
+        int[] carTypes = {6, 5, 4, 3, 2, 1};
+        int[] customerLevel = {6, 3, 2, 1, 14, 7, 15, 17};
+        String[] customerProperty = {"LOST", "MAINTENANCE", "LOYAL"};
+        try {
+            IScene scene = MessageAddScene.builder().title(title).content(content).sendTime(sendDate).appointmentType(appointmentType)
+                    .carTypes(carTypes).customerTypes(customerTypes).customerLevel(customerLevel).customerProperty(customerProperty)
+                    .build();
+            String message = crm.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("成功"), "创建消息时所有项全部填创建失败");
+        } catch (Exception | AssertionError e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("站内消息--所有项全部都填，发送成功");
         }
     }
 }
