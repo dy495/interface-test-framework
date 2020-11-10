@@ -996,9 +996,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 checkArgument(shop_name.equals(shop_name1), "根据门店名称" + shop_name + "筛查，没有查询到相应的结果");
             }
 
-            //根据列表第一个告警规则的信息进行筛查
-            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
-            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
+//            //根据列表第一个告警规则的信息进行筛查
+//            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
+//            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError e) {
@@ -1392,8 +1392,16 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             int pv2 = pass_by.get("pv2");
             int uv1 = pass_by.get("uv1");
             int uv2 = pass_by.get("uv2");
-            Preconditions.checkArgument(pv1 == pv2, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
-            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
+                        Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+            int pvIn1 = interest.get("pv1");
+            int uvIn1 = interest.get("uv1");
+
+            int passPv = pv2 +  pvIn1;
+            int passUv = uv2 + uvIn1;
+            Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
+            Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"兴趣客群总人次"+uvIn1);
+//            Preconditions.checkArgument(pv1 == pv2, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
+//            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -2133,34 +2141,34 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    /**
-     * ====================实时客流监控======================
-     */
-    @Test
-    public void surveDataReal() {
-        logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
-        try {
-            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
-            int today_pv = 0;
-            for (int i = 0; i < list.size(); i++) {
-                Integer count = list.getJSONObject(i).getInteger("today_pv");
-                if (count != null) {
-                    today_pv += count;
-                }
-
-            }
-            Preconditions.checkArgument(today_pv < 800 && today_pv > 50, "实时到店人次超过800或低于了50，现在pv=" + today_pv + "需线上确认数据是否有异常" + "。报错门店的shopId=" + shop_id);
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("监控今日实时人次是否异常，小于800高于50为正常");
-        }
-
-    }
+//    /**
+//     * ====================实时客流监控======================
+//     */
+//    @Test
+//    public void surveDataReal() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+//        try {
+//            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
+//            int today_pv = 0;
+//            for (int i = 0; i < list.size(); i++) {
+//                Integer count = list.getJSONObject(i).getInteger("today_pv");
+//                if (count != null) {
+//                    today_pv += count;
+//                }
+//
+//            }
+//            Preconditions.checkArgument(today_pv < 800 && today_pv > 50, "实时到店人次超过800或低于了50，现在pv=" + today_pv + "需线上确认数据是否有异常" + "。报错门店的shopId=" + shop_id);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("监控今日实时人次是否异常，小于800高于50为正常");
+//        }
+//
+//    }
 
 
     /**

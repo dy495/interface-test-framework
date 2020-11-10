@@ -741,53 +741,53 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         return count;
     }
 
-    /**
-     * @description :9.巡店后，巡店次数加1，且巡店时间更新
-     * @date :2020/6/24 12:20
-     **/
-    @Test
-    public void xundianTimesAndTime() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String submit_commit = "巡店测试巡店次数、时间更新";
-            //1.获取该店铺原始巡店次数和时间
-            int before_num = 0;
-            String before_time = "";
-            JSONObject data = xd.xunDianCenterPage(1, 10);
-            int pages = data.getInteger("pages");
-
-            for (int i = 1; i < pages; i++) {
-                JSONObject data2 = xd.xunDianCenterPage(i, 10);
-                before_num = patrol_num(data2);
-
-
-                before_time = patrol_time(data2);
-                logger.info("巡店前巡店时间：{}", before_time);
-                if (before_num != 0) {
-                    logger.info("巡店前巡店次数:{}", before_num);
-                    break;
-                }
-            }
-            //2.巡店
-            xundianP(submit_commit);
-            //3.获取新的巡店时间和次数,巡店完成的数据必然是首页第一个数据故直接取0下标
-            int dataAfter = xd.xunDianCenterPage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
-            String AfterTime = xd.xunDianCenterPage(1, 10).getJSONArray("list").getJSONObject(0).getString("last_patrol_time");
-
-            logger.info("巡店后巡店次数：{}", dataAfter);
-            logger.info("巡店后巡店时间：{}", AfterTime);
-
-            Preconditions.checkArgument((dataAfter - before_num) == 1, "巡店后店铺巡店次数没加1");
-            Preconditions.checkArgument(!before_time.equals(AfterTime), "巡店后店铺巡店时间没更新");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("巡店后次数加1巡店时间更新");
-        }
-    }
+//    /**
+//     * @description :9.巡店后，巡店次数加1，且巡店时间更新
+//     * @date :2020/6/24 12:20
+//     **/
+//    @Test
+//    public void xundianTimesAndTime() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            String submit_commit = "巡店测试巡店次数、时间更新";
+//            //1.获取该店铺原始巡店次数和时间
+//            int before_num = 0;
+//            String before_time = "";
+//            JSONObject data = xd.xunDianCenterPage(1, 10);
+//            int pages = data.getInteger("pages");
+//
+//            for (int i = 1; i < pages; i++) {
+//                JSONObject data2 = xd.xunDianCenterPage(i, 10);
+//                before_num = patrol_num(data2);
+//
+//
+//                before_time = patrol_time(data2);
+//                logger.info("巡店前巡店时间：{}", before_time);
+//                if (before_num != 0) {
+//                    logger.info("巡店前巡店次数:{}", before_num);
+//                    break;
+//                }
+//            }
+//            //2.巡店
+//            xundianP(submit_commit);
+//            //3.获取新的巡店时间和次数,巡店完成的数据必然是首页第一个数据故直接取0下标
+//            int dataAfter = xd.xunDianCenterPage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+//            String AfterTime = xd.xunDianCenterPage(1, 10).getJSONArray("list").getJSONObject(0).getString("last_patrol_time");
+//
+//            logger.info("巡店后巡店次数：{}", dataAfter);
+//            logger.info("巡店后巡店时间：{}", AfterTime);
+//
+//            Preconditions.checkArgument((dataAfter - before_num) == 1, "巡店后店铺巡店次数没加1");
+//            Preconditions.checkArgument(!before_time.equals(AfterTime), "巡店后店铺巡店时间没更新");
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("巡店后次数加1巡店时间更新");
+//        }
+//    }
 
     /**
      * @description :10.门店列表页查询

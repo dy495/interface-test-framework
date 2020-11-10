@@ -104,7 +104,6 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 1928l,
                 1930l,
                 1932l,
-                1934l,
                 1936l,
                 1938l,
                 1940l,

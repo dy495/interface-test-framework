@@ -132,9 +132,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
         //saveData("登陆");
 
         String path = "/retail/api/data/biz";
-        String IpPort = "http://dev.api.winsenseos.com";
+        String IpPort = "http://api.winsenseos.com";
 
-        String requestUrl = "http://dev.api.winsenseos.cn/retail/api/data/biz";
+        String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
 
         String str = "{\n" +
                 "        \"shop_id\": \"43072\",\n" +
@@ -191,11 +191,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
 
-        String uid = "uid_ef6d2de5";
-        String appId = "49998b971ea0";
-        String ak = "3fdce1db0e843ee0";
+        String uid = "uid_580f244a";
+        String appId = "c30dcafc59c8";
+        String ak = "0d17651c55595b9b";
         String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
-        String sk = "5036807b1c25b9312116fd4b22c351ac";
+        String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";
         final String ALGORITHM = "HmacSHA256";
 
         Long timestamp = System.currentTimeMillis();
