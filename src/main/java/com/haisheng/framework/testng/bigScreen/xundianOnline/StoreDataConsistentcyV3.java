@@ -1344,8 +1344,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
              int yestUv = trend_list.getJSONObject(6).getInteger("uv");
              String yestDate = trend_list.getJSONObject(6).getString("date");
 
-             Preconditions.checkArgument(yestPv < 800 && yestPv >50 ,"百果园"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了50，pv="+yestPv+"需线上确认数据是否有异常");
-             Preconditions.checkArgument(yestUv < 400 && yestUv >25 ,"百果园"+shop_id+"昨日"+yestDate+"到店人次超过400或低于了25，pv="+yestUv+"需线上确认数据是否有异常");
+             Preconditions.checkArgument(yestPv < 800 && yestPv >50 ,"百果园ID:"+shop_id+"在"+yestDate+"到店人次超过800或低于了50，pv="+yestPv+"需线上确认数据是否有异常");
+             Preconditions.checkArgument(yestUv < 400 && yestUv >25 ,"百果园ID:"+shop_id+"在"+yestDate+"到店人次超过400或低于了25，pv="+yestUv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
