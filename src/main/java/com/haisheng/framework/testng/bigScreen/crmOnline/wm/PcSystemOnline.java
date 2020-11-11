@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.DccEditScene;
@@ -72,7 +71,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * 销售客户管理-所有顾客
      */
-    @Test(description = "开始时间<=结束时间,筛选出公海日期在此区间内的客户")
+    @Test(description = "销售客户管理--公海--开始时间<=结束时间,筛选出公海日期在此区间内的客户")
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
@@ -95,11 +94,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出公海日期在此区间内的客户");
+            saveData("销售客户管理--公海--开始时间<=结束时间,筛选出公海日期在此区间内的客户");
         }
     }
 
-    @Test(description = "开始时间<=结束时间,筛选出战败日期在此区间内的客户")
+    @Test(description = "销售客户管理--战败--开始时间<=结束时间,筛选出战败日期在此区间内的客户")
     public void myCustomer_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -120);
@@ -122,11 +121,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出战败日期在此区间内的客户");
+            saveData("销售客户管理--战败--开始时间<=结束时间,筛选出战败日期在此区间内的客户");
         }
     }
 
-    @Test(description = "战败-筛选-异常")
+    @Test(description = "销售客户管理--战败--异常筛选")
     public void myCustomer_function_3() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
@@ -136,11 +135,11 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端战败客户按照日期筛选-开始时间>结束时间,接口不限制，前端限制时间");
+            saveData("销售客户管理--战败--异常筛选");
         }
     }
 
-    @Test(description = "开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户")
+    @Test(description = "销售客户管理--小程序--开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户")
     public void myCustomer_function_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -149,44 +148,46 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
+            saveData("销售客户管理--小程序--开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
         }
     }
 
-    @Test(description = "交车后，客户不回到公海", enabled = false)
-    public void myCustomer_function_5() {
+    @Test(description = "商品管理--各必须参数不填写创建车型&&全部填写创建车型")
+    public void goodsManager_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/goodsmanager/";
+        String bigPic = new ImageUtil().getImageBinary(path + "大图照片.jpg");
+        String interiorPic = new ImageUtil().getImageBinary(path + "内饰照片.jpg");
+        String spacePic = new ImageUtil().getImageBinary(path + "空间照片.jpg");
+        String appearancePic = new ImageUtil().getImageBinary(path + "外观照片.jpg");
+        String carPic = new ImageUtil().getImageBinary(path + "车辆照片.jpg");
+        String carTypeName = "凯迪拉克CT6";
+        String carIntroduce = "无介绍";
         try {
-            int remainDays = 1;
-            int customerId = 0;
-            boolean flag = false;
-            int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            for (int k = 1; k < CommonUtil.getTurningPage(total, 100); k++) {
-                JSONArray list = crm.customerPage(100, k, "", "", "").getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())) {
-                        Integer day = list.getJSONObject(i).getInteger("remain_days");
-                        remainDays = day == null ? 0 : 1;
-                        customerId = list.getJSONObject(i).getInteger("customer_id");
-                        break;
-                    }
-                }
-            }
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            int s = CommonUtil.getTurningPage(publicTotal, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.publicCustomerList("", "", 100, i).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    flag = list.getJSONObject(i).getInteger("customer_id") == customerId;
-                }
-            }
-            CommonUtil.valueView(remainDays, flag);
-            Preconditions.checkArgument(!flag, "交车后，客户进入了公海");
-            Preconditions.checkArgument(remainDays == 0, "交车后，剩余天数不等于0");
+            String message = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, "", carTypeName, 10, interiorPic, 20, spacePic).getString("message");
+            String message1 = crm.goodsManagerAddCar("", bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, spacePic).getString("message");
+            String message2 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, "", 20, spacePic).getString("message");
+            String message3 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
+            String message4 = crm.goodsManagerAddCar(appearancePic, "", "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
+            String message5 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, -1, interiorPic, 20, spacePic).getString("message");
+            String message6 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, -1, spacePic).getString("message");
+            String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
+            String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
+            String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
+            Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
+            Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
+            Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
+            Preconditions.checkArgument(message3.equals("车辆空间图片不能为空"), "pc商品管理，空间照片为空也可创建成功");
+            Preconditions.checkArgument(message4.equals("车辆大图不能为空"), "pc商品管理，大图照片为空也可创建成功");
+            Preconditions.checkArgument(message5.equals("车辆最高价格不能为空"), "pc商品管理，最高价格为空也可创建成功");
+            Preconditions.checkArgument(message6.equals("车辆最低价格不能为空"), "pc商品管理，最低价格为空也可创建成功");
+            Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
+            Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
+            Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("交车后，客户不回到公海");
+            saveData("商品管理--各必须参数不填写创建车型&&全部填写创建车型");
         }
     }
 
@@ -226,6 +227,41 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "销售客户管理--DCC客户编辑--不填写联系方式")
+    public void myCustomer_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.getFormat(new Date());
+            JSONArray array = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("comment", "清风徐来，水波不兴");
+            object.put("next_return_visit_date", date);
+            array.add(object);
+            String[] records = {"壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴", "纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙"};
+            String expectedBuyDay = DateTimeUtil.addDayFormat(new Date(), 10);
+            JSONArray list = crm.dccList("", "", "", "", 1, 10).getJSONArray("list");
+            String platNumber = method.getDistinctPlat("辽A", 6);
+            String customerName = list.getJSONObject(0).getString("customer_name");
+            String customerLevel = list.getJSONObject(0).getString("customer_level");
+            String belongsSaleId = list.getJSONObject(0).getString("belongs_sale_id");
+            String recordDate = list.getJSONObject(0).getString("record_date");
+            int customerId = list.getJSONObject(0).getInteger("customer_id");
+            DccEditScene.DccEditSceneBuilder builder = DccEditScene.builder();
+            builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
+                    .belongsSaleId(belongsSaleId).createDate("").carStyle(Integer.parseInt(car.getStyleId()))
+                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(1).expectedBuyDay(expectedBuyDay)
+                    .plateNumber1(platNumber).plateNumber2(platNumber).region("110101").records(records).visits(array)
+                    .customerId(customerId).build();
+            String message = dccEdit(builder);
+            Preconditions.checkArgument(message.equals("DCC客户手机号不能为空"), message);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--DCC客户编辑--不填写联系方式");
+        }
+    }
+
     private String dccEdit(DccEditScene.DccEditSceneBuilder builder) {
         String message = crm.invokeApi(builder.build(), false).getString("message");
         if (!message.equals("车牌号已存在") && !message.equals("车牌号已被试驾车占用")) {
@@ -234,48 +270,6 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         String platNumber = method.getDistinctPlat("川A", 6);
         builder.plateNumber1(platNumber).plateNumber2(platNumber).build();
         return dccEdit(builder);
-    }
-
-    /**
-     * @description: 商品管理-添加商品
-     */
-    @Test(description = "商品管理-添加商品")
-    public void goodsManager_function_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/goodsmanager/";
-        String bigPic = new ImageUtil().getImageBinary(path + "大图照片.jpg");
-        String interiorPic = new ImageUtil().getImageBinary(path + "内饰照片.jpg");
-        String spacePic = new ImageUtil().getImageBinary(path + "空间照片.jpg");
-        String appearancePic = new ImageUtil().getImageBinary(path + "外观照片.jpg");
-        String carPic = new ImageUtil().getImageBinary(path + "车辆照片.jpg");
-        String carTypeName = "凯迪拉克CT6";
-        String carIntroduce = "无介绍";
-        try {
-            String message = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, "", carTypeName, 10, interiorPic, 20, spacePic).getString("message");
-            String message1 = crm.goodsManagerAddCar("", bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, spacePic).getString("message");
-            String message2 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, "", 20, spacePic).getString("message");
-            String message3 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
-            String message4 = crm.goodsManagerAddCar(appearancePic, "", "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 20, "").getString("message");
-            String message5 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, -1, interiorPic, 20, spacePic).getString("message");
-            String message6 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, -1, spacePic).getString("message");
-            String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
-            String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
-            String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
-            Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
-            Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
-            Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
-            Preconditions.checkArgument(message3.equals("车辆空间图片不能为空"), "pc商品管理，空间照片为空也可创建成功");
-            Preconditions.checkArgument(message4.equals("车辆大图不能为空"), "pc商品管理，大图照片为空也可创建成功");
-            Preconditions.checkArgument(message5.equals("车辆最高价格不能为空"), "pc商品管理，最高价格为空也可创建成功");
-            Preconditions.checkArgument(message6.equals("车辆最低价格不能为空"), "pc商品管理，最低价格为空也可创建成功");
-            Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
-            Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
-            Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("商品管理中，各必须参数不填写创建车型&&全部填写创建车型");
-        }
     }
 
     /**

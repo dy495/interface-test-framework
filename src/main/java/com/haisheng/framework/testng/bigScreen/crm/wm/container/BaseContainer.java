@@ -14,6 +14,7 @@ import java.util.Map;
 public abstract class BaseContainer extends BasicProperty implements IContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseContainer.class);
     protected static List<Map<String, Object>> table;
+
     @Getter
     private String path;
 
@@ -29,6 +30,9 @@ public abstract class BaseContainer extends BasicProperty implements IContainer 
     public List<Map<String, Object>> getTable() {
         return table;
     }
+
+    @Override
+    public abstract <T> List<T> getTable(Class<T> clazz);
 
     @Override
     public void setPath(String path) {

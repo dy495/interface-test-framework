@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.property;
 
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +36,13 @@ public class BasicProperty implements IProperty {
 
     @Override
     public void clearErrorMsg() {
+    }
+
+    @Override
+    public void sendDing() {
+        if (errorMsg.length() > 0) {
+            DingPushUtil.sendText(errorMsg.toString());
+        }
     }
 
     public static class Builder {

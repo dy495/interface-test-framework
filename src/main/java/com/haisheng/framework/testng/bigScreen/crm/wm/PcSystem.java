@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ArticleAddScene;
@@ -80,7 +79,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     /**
      * 销售客户管理-所有顾客
      */
-    @Test(description = "开始时间<=结束时间,筛选出公海日期在此区间内的客户")
+    @Test(description = "销售客户管理--公海--开始时间<=结束时间,筛选出公海日期在此区间内的客户")
     public void myCustomer_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -30);
@@ -103,11 +102,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出公海日期在此区间内的客户");
+            saveData("销售客户管理--公海--开始时间<=结束时间,筛选出公海日期在此区间内的客户");
         }
     }
 
-    @Test(description = "开始时间<=结束时间,筛选出战败日期在此区间内的客户")
+    @Test(description = "销售客户管理--战败--开始时间<=结束时间,筛选出战败日期在此区间内的客户")
     public void myCustomer_function_2() {
         logger.logCaseStart(caseResult.getCaseName());
         String startDate = DateTimeUtil.addDayFormat(new Date(), -120);
@@ -130,11 +129,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出战败日期在此区间内的客户");
+            saveData("销售客户管理--战败--开始时间<=结束时间,筛选出战败日期在此区间内的客户");
         }
     }
 
-    @Test(description = "战败-筛选-异常")
+    @Test(description = "销售客户管理--战败--异常筛选")
     public void myCustomer_function_3() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
@@ -144,11 +143,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("pc端战败客户按照日期筛选-开始时间>结束时间,接口不限制，前端限制时间");
+            saveData("销售客户管理--战败--异常筛选");
         }
     }
 
-    @Test(description = "开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户")
+    @Test(description = "销售客户管理--小程序--开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户")
     public void myCustomer_function_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -157,48 +156,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
+            saveData("销售客户管理--小程序--开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
         }
     }
 
-    @Test(description = "交车后，客户不回到公海", enabled = false)
-    public void myCustomer_function_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int remainDays = 1;
-            int customerId = 0;
-            boolean flag = false;
-            int total = crm.customerPage(10, 1, "", "", "").getInteger("total");
-            for (int k = 1; k < CommonUtil.getTurningPage(total, 100); k++) {
-                JSONArray list = crm.customerPage(100, k, "", "", "").getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.getJSONObject(i).getString("customer_level_name").equals(EnumCustomerLevel.D.getName())) {
-                        Integer day = list.getJSONObject(i).getInteger("remain_days");
-                        remainDays = day == null ? 0 : 1;
-                        customerId = list.getJSONObject(i).getInteger("customer_id");
-                        break;
-                    }
-                }
-            }
-            int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
-            int s = CommonUtil.getTurningPage(publicTotal, 100);
-            for (int i = 1; i < s; i++) {
-                JSONArray list = crm.publicCustomerList("", "", 100, i).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    flag = list.getJSONObject(i).getInteger("customer_id") == customerId;
-                }
-            }
-            CommonUtil.valueView(remainDays, flag);
-            Preconditions.checkArgument(!flag, "交车后，客户进入了公海");
-            Preconditions.checkArgument(remainDays == 0, "交车后，剩余天数不等于0");
-        } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("交车后，客户不回到公海");
-        }
-    }
-
-    @Test(description = "商品管理-添加商品")
+    @Test(description = "商品管理--各必须参数不填写创建车型&&全部填写创建车型")
     public void goodsManager_function_1() {
         logger.logCaseStart(caseResult.getCaseName());
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/goodsmanager/";
@@ -233,7 +195,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("商品管理中，各必须参数不填写创建车型&&全部填写创建车型");
+            saveData("商品管理--各必须参数不填写创建车型&&全部填写创建车型");
         }
     }
 
@@ -273,6 +235,41 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "销售客户管理--DCC客户编辑--不填写联系方式")
+    public void myCustomer_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.getFormat(new Date());
+            JSONArray array = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("comment", "清风徐来，水波不兴");
+            object.put("next_return_visit_date", date);
+            array.add(object);
+            String[] records = {"壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴", "纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙"};
+            String expectedBuyDay = DateTimeUtil.addDayFormat(new Date(), 10);
+            JSONArray list = crm.dccList("", "", "", "", 1, 10).getJSONArray("list");
+            String platNumber = method.getDistinctPlat("辽A", 6);
+            String customerName = list.getJSONObject(0).getString("customer_name");
+            String customerLevel = list.getJSONObject(0).getString("customer_level");
+            String belongsSaleId = list.getJSONObject(0).getString("belongs_sale_id");
+            String recordDate = list.getJSONObject(0).getString("record_date");
+            int customerId = list.getJSONObject(0).getInteger("customer_id");
+            DccEditScene.DccEditSceneBuilder builder = DccEditScene.builder();
+            builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
+                    .belongsSaleId(belongsSaleId).createDate("").carStyle(Integer.parseInt(car.getStyleId()))
+                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(1).expectedBuyDay(expectedBuyDay)
+                    .plateNumber1(platNumber).plateNumber2(platNumber).region("110101").records(records).visits(array)
+                    .customerId(customerId).build();
+            String message = dccEdit(builder);
+            Preconditions.checkArgument(message.equals("DCC客户手机号不能为空"), message);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--DCC客户编辑--不填写联系方式");
+        }
+    }
+
     private String dccEdit(DccEditScene.DccEditSceneBuilder builder) {
         String message = crm.invokeApi(builder.build(), false).getString("message");
         if (!message.equals("车牌号已存在") && !message.equals("车牌号已被试驾车占用")) {
@@ -286,7 +283,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     /**
      * 后台运营-站内消息
      */
-    @Test(description = "投放人群:售前、售后、售前/售后")
+    @Test(description = "站内消息--投放人群:售前、售后、售前/售后")
     public void stationMessage_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -307,11 +304,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息可投放人群为售前、售后、售前/售后");
+            saveData("站内消息--站内消息可投放人群为售前、售后、售前/售后");
         }
     }
 
-    @Test(description = "生效时间-生效日期：格式yyyy-MM-dd hh：mm")
+    @Test(description = "站内消息--生效时间-生效日期：格式yyyy-MM-dd hh：mm")
     public void stationMessage_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -326,11 +323,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息生效日期格式：yyyy-MM-dd hh：mm");
+            saveData("站内消息--站内消息生效日期格式：yyyy-MM-dd hh：mm");
         }
     }
 
-    @Test(description = "状态：排期中、发送成功,都可以查看")
+    @Test(description = "站内消息--状态：排期中、发送成功,都可以查看")
     public void stationMessage_3() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "销售可见消息-待删";
@@ -347,11 +344,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("排期中的消息可以查看操作，接口不做限制，前端限制");
+            saveData("站内消息--排期中的消息可以查看操作，接口不做限制，前端限制");
         }
     }
 
-    @Test(description = "倒叙排列-最新的在最上方")
+    @Test(description = "站内消息--倒叙排列-最新的在最上方")
     public void stationMessage_4() {
         logger.logCaseStart(caseResult.getCaseName());
         String title = "自动化站内消息-待删";
@@ -370,11 +367,11 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
+            saveData("站内消息--站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
         }
     }
 
-    @Test(description = "任何状态均可删除")
+    @Test(description = "站内消息--任何状态均可删除")
     public void stationMessage_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -391,7 +388,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("发送成功的站内消息可以删除");
+            saveData("站内消息--发送成功的站内消息可以删除");
         }
     }
 

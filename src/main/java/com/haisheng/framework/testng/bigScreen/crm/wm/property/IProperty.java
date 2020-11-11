@@ -39,4 +39,6 @@ public interface IProperty {
      * 清理错误信息string builder，避免内存溢出
      */
     void clearErrorMsg();
+
+    void sendDing();
 }

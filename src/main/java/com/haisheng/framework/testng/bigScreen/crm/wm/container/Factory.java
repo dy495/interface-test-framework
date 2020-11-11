@@ -21,6 +21,11 @@ public class Factory extends BasicProperty {
         return container.getTable();
     }
 
+    public <T> List<T> create(String sql, Class<T> clazz) {
+        container.setPath(sql);
+        return container.getTable(clazz);
+    }
+
     @Setter
     @Accessors(chain = true, fluent = true)
     public static class Builder extends BasicProperty.Builder {

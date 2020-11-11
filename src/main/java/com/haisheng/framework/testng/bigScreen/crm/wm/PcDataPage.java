@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.*;
@@ -2971,7 +2972,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                                 .and("reception_start_time", "<", timeStrEnd)
                                 .end().getSql();
                     }
-                    int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                    List<TPorscheReceptionData> db = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql, TPorscheReceptionData.class);
+                    int count = db.size();
                     CommonUtil.valueView("环比：" + result, "前天接待数：" + count);
                     if (count != 0) {
                         Preconditions.checkArgument(result != 0, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段环比数：" + result + " 前天接待数：" + count);

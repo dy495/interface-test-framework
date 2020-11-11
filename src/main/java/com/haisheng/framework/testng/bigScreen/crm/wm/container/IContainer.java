@@ -11,5 +11,7 @@ public interface IContainer {
 
     List<Map<String, Object>> getTable();
 
+    <T> List<T> getTable(Class<T> clazz);
+
     void setPath(String path);
 }

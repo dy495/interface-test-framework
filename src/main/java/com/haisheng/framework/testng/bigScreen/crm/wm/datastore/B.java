@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCa
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheDeliverInfoDO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheOrderInfoDO;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionDataDO;
+import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderInfoPageScene;
@@ -69,7 +69,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日接待记录")
     public void receptionData() {
         try {
-            TPorscheReceptionDataDO po = new TPorscheReceptionDataDO();
+            TPorscheReceptionData po = new TPorscheReceptionData();
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
             int total = crm.invokeApi(scene).getInteger("total");
