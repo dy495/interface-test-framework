@@ -76,7 +76,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    //    --------------------------------------------------4个数据展示------------------------------------------------------
+//    --------------------------------------------------4个数据展示------------------------------------------------------
 
     @Test(description = "店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和")
     public void shopPanel_data_2() {
@@ -2407,6 +2407,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】公司车主百分比=公司车主数量/（个人+公司车主数量）");
@@ -2625,7 +2626,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量")
+    @Test(description = "订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量", enabled = false)
     public void orderCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

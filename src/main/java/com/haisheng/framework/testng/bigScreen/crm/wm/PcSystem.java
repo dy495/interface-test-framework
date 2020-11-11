@@ -237,7 +237,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(enabled = false)
+    @Test(description = "销售客户管理--DCC客户编辑--填写所有项，保存")
     public void myCustomer_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -250,35 +250,37 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String[] records = {"壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴", "纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙"};
             String expectedBuyDay = DateTimeUtil.addDayFormat(new Date(), 10);
             JSONArray list = crm.dccList("", "", "", "", 1, 10).getJSONArray("list");
+            String platNumber = method.getDistinctPlat("辽A", 6);
             String customerName = list.getJSONObject(0).getString("customer_name");
             String customerLevel = list.getJSONObject(0).getString("customer_level");
             String belongsSaleId = list.getJSONObject(0).getString("belongs_sale_id");
             String recordDate = list.getJSONObject(0).getString("record_date");
             String customerPhone = list.getJSONObject(0).getString("customer_phone");
             int customerId = list.getJSONObject(0).getInteger("customer_id");
-            String platNumber = method.getDistinctPlat("辽A", 6);
             DccEditScene.DccEditSceneBuilder builder = DccEditScene.builder();
-            IScene scene = builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
+            builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
                     .belongsSaleId(belongsSaleId).createDate("").carStyle(Integer.parseInt(car.getStyleId()))
-                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(6).expectedBuyDay(expectedBuyDay)
-                    .plateNumber1(platNumber).region("110101").records(records).visits(array).customerPhone1(customerPhone).customerPhone2(customerPhone)
-                    .customerId(customerId).build();
-            System.out.println(scene.getJSONObject());
-//            String message = crm.invokeApi(scene).getString("message");
-//            if (!message.equals("成功")) {
-            String platNumber1 = method.getDistinctPlat("辽A", 6);
-            IScene scene1 = builder.plateNumber2(platNumber1).build();
-            System.out.println(scene1.getJSONObject());
-//                crm.invokeApi(scene1);
-//            }
-//            String message = crm.invokeApi(scene, false).getString("message");
-//            if (!message.equals("成功")) {
-//
-//            }
-//            Preconditions.checkArgument(message.equals(""));
+                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(1).expectedBuyDay(expectedBuyDay)
+                    .plateNumber1(platNumber).plateNumber2(platNumber).region("110101").records(records).visits(array)
+                    .customerPhone1(customerPhone).customerPhone2(customerPhone).customerId(customerId).build();
+            String message = dccEdit(builder);
+            Preconditions.checkArgument(message.equals("成功"), message);
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--DCC客户编辑--填写所有项，保存");
         }
+    }
+
+    private String dccEdit(DccEditScene.DccEditSceneBuilder builder) {
+        String message = crm.invokeApi(builder.build(), false).getString("message");
+        if (!message.equals("车牌号已存在") && !message.equals("车牌号已被试驾车占用")) {
+            return message;
+        }
+        String platNumber = method.getDistinctPlat("川A", 6);
+        builder.plateNumber1(platNumber).plateNumber2(platNumber).build();
+        return dccEdit(builder);
     }
 
     /**

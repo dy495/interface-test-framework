@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.DccEditScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.MessageAddScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -27,7 +30,9 @@ import java.util.Date;
 
 public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
+    PublicMethodOnline method = new PublicMethodOnline();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
+    private static final EnumCarModel car = EnumCarModel.PANAMERA_ONLINE;
 
     @BeforeClass
     @Override
@@ -183,6 +188,52 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("交车后，客户不回到公海");
         }
+    }
+
+    @Test(description = "销售客户管理--DCC客户编辑--填写所有项，保存")
+    public void myCustomer_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.getFormat(new Date());
+            JSONArray array = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("comment", "清风徐来，水波不兴");
+            object.put("next_return_visit_date", date);
+            array.add(object);
+            String[] records = {"壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴", "纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙"};
+            String expectedBuyDay = DateTimeUtil.addDayFormat(new Date(), 10);
+            JSONArray list = crm.dccList("", "", "", "", 1, 10).getJSONArray("list");
+            String platNumber = method.getDistinctPlat("辽A", 6);
+            String customerName = list.getJSONObject(0).getString("customer_name");
+            String customerLevel = list.getJSONObject(0).getString("customer_level");
+            String belongsSaleId = list.getJSONObject(0).getString("belongs_sale_id");
+            String recordDate = list.getJSONObject(0).getString("record_date");
+            String customerPhone = list.getJSONObject(0).getString("customer_phone");
+            int customerId = list.getJSONObject(0).getInteger("customer_id");
+            DccEditScene.DccEditSceneBuilder builder = DccEditScene.builder();
+            builder.customerName(customerName).customerLevel(customerLevel).recordDate(recordDate)
+                    .belongsSaleId(belongsSaleId).createDate("").carStyle(Integer.parseInt(car.getStyleId()))
+                    .carModel(Integer.parseInt(car.getModelId())).sourceChannel(1).expectedBuyDay(expectedBuyDay)
+                    .plateNumber1(platNumber).plateNumber2(platNumber).region("110101").records(records).visits(array)
+                    .customerPhone1(customerPhone).customerPhone2(customerPhone).customerId(customerId).build();
+            String message = dccEdit(builder);
+            Preconditions.checkArgument(message.equals("成功"), message);
+        } catch (Exception | AssertionError e) {
+            e.printStackTrace();
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售客户管理--DCC客户编辑--填写所有项，保存");
+        }
+    }
+
+    private String dccEdit(DccEditScene.DccEditSceneBuilder builder) {
+        String message = crm.invokeApi(builder.build(), false).getString("message");
+        if (!message.equals("车牌号已存在") && !message.equals("车牌号已被试驾车占用")) {
+            return message;
+        }
+        String platNumber = method.getDistinctPlat("川A", 6);
+        builder.plateNumber1(platNumber).plateNumber2(platNumber).build();
+        return dccEdit(builder);
     }
 
     /**

@@ -59,7 +59,7 @@ public class DccEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/porsche/message/add";
+        return "/porsche/customer/dcc-edit";
     }
 
     @Override

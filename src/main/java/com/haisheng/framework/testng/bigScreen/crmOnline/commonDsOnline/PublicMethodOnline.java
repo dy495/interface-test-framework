@@ -288,4 +288,7 @@ public class PublicMethodOnline {
         return a == 0 && b == 0 ? phone : getDistinctPhone();
     }
 
+    public String getDistinctPlat(String title, int digitNumber) {
+        return title + CommonUtil.getRandom(digitNumber);
+    }
 }
