@@ -161,8 +161,16 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int pv2 = pass_by.get("pv2");
             int uv1 = pass_by.get("uv1");
             int uv2 = pass_by.get("uv2");
-            Preconditions.checkArgument(pv1 == pv2, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
-            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+            int pvIn1 = interest.get("pv1");
+            int uvIn1 = interest.get("uv1");
+
+            int passPv = pv2 +  pvIn1;
+            int passUv = uv2 + uvIn1;
+            Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
+            Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"兴趣客群总人次"+uvIn1);
+//            Preconditions.checkArgument(pv1 == pv2, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
+//            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1738,8 +1746,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("3");
             r_dList.add("4");
+            r_dList.add("99");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");

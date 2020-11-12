@@ -191,11 +191,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
 
-        String uid = "uid_580f244a";
-        String appId = "c30dcafc59c8";
-        String ak = "0d17651c55595b9b";
+        String uid = "uid_0ba743d8";
+        String appId = "672170545f50";//c30dcafc59c8
+        String ak = "691ff41137d954f3";
         String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
-        String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";
+        String sk = "d76f2d8a7846382f633c1334139767fe";
         final String ALGORITHM = "HmacSHA256";
 
         Long timestamp = System.currentTimeMillis();
