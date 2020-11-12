@@ -69,7 +69,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     public void receptionData() {
         try {
             TPorscheReceptionData po = new TPorscheReceptionData();
-            String date = DateTimeUtil.addDayFormat(new Date(), 0);
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
