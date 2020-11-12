@@ -2063,7 +2063,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         try{
             String title="自动编辑车型推荐";
             String content="自动编辑车型推荐内容";
-            crm.pccaredit(content,pp.car_model,title);
+            String bg_pic=file.texFile(pp.filePath);
+            crm.pccaredit(content,pp.car_model,title,bg_pic);
             JSONObject data=crm.pccardetile(pp.car_model);
             String titleA=data.getString("title");
             String contentA=data.getString("content");
@@ -2229,8 +2230,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void deleteuser(){
         try {
             crm.login(baoshijie, adminpassword);
-//              for(int j=0;j<1;j++) {
-            JSONArray list = crm.userPage(11, 10).getJSONArray("list");
+//              for(int j=0;j<5;j++) {
+            JSONArray list = crm.userPage(9, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
                 crm.userDel(userid);

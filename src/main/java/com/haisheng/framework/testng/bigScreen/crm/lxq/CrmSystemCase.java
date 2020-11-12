@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -14,6 +15,9 @@ import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -603,42 +607,30 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void  addUse200(){
+    @Test()
+    public void  addUse201(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
-            String userName = ""+ System.currentTimeMillis();
             String userLoginName=""+ System.currentTimeMillis();
+            ArrayList<String> ll=new ArrayList();
+            PackFunction pf=new PackFunction();
 
-            String passwd=cstm.pwd;
             int roleId=13; //销售顾问
             int before_total = crm.userPage(1,1).getInteger("total");
             while (before_total<200){
                 String newloginname = userLoginName+before_total;
-                String phone = "1";
-                for (int i = 0; i < 10;i++){
-                    String a = Integer.toString((int)(Math.random()*10));
-                    phone = phone + a;
-                }
                 //添加账号
-                String username1 = userName + before_total;
-
-                crm.addUser(username1,newloginname,phone,passwd,roleId,"","");
-                before_total = before_total +1;
+                ll.add(pf.createUserId(newloginname,roleId));
+                before_total=before_total+1;
             }
-            String userid = "";
-            for (int i = 0 ; i < 20;i++){
-                JSONArray list = crm.userPage(1,100).getJSONArray("list");
-                for (int j = list.size()-1; j >= 0 ; j--) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_name").contains("160")){
-                        userid = single.getString("user_id"); //获取用户id
-                        //删除账号
-                        crm.userDel(userid);
-                    }
-                }
+            //创建201个账户
+            String phone201=pf.genPhoneNum();
+            int code=crm.addUserNotChk("201个账户","201个账户", phone201,"123456",roleId).getInteger("code");
+            for(String userid: ll){
+                crm.userDel(userid);
             }
+            Preconditions.checkArgument(code==1001,"创建201个账户成功");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -650,52 +642,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
-    public void  addUse201(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            crm.login(cstm.baoshijie,cstm.pwd);
-            String userName = ""+ System.currentTimeMillis();
-            String userLoginName=userName;
-
-            String passwd=cstm.pwd;
-            int roleId=13; //销售顾问
-            int before_total = crm.userPage(1,1).getInteger("total");
-            while (before_total<200){
-                String newloginname = userLoginName+before_total;
-                String phone = "1";
-                for (int i = 0; i < 10;i++){
-                    String a = Integer.toString((int)(Math.random()*10));
-                    phone = phone + a;
-                }
-                //添加账号
-                crm.addUser(userName,newloginname,phone,passwd,roleId,"","");
-                before_total = before_total +1;
-            }
-            int code = crm.addUserNotChk(userName,userLoginName,"19900000000",passwd,roleId).getInteger("code");
-            String userid = "";
-            for (int i = 0 ; i < 3;i++){
-                JSONArray list = crm.userPage(1,100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_name").equals(userName)){
-                        userid = single.getString("user_id"); //获取用户id
-                        //删除账号
-                        crm.userDel(userid);
-                    }
-                }
-            }
-            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            crm.login(cstm.lxqgw,cstm.pwd);
-            saveData("创建201个账号");
-        }
-    }
 
     @Test(dataProvider = "ROLE_ID",dataProviderClass = CrmScenarioUtil.class)
     public void  delUserDiffRole(String role){

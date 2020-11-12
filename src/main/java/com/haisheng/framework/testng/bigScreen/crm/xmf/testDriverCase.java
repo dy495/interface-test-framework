@@ -269,34 +269,37 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "FU";
             String userLoginName = object.getString("userLoginName");
+            crm.editCustomer(fr);
 
             //pc客户信息
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
-            JSONObject list=crm.customerListPC("",1,10).getJSONArray("list").getJSONObject(0);
+            JSONObject list=crm.customerListPC(phone,1,10).getJSONArray("list").getJSONObject(0);
             String is_test=list.getString("is_test");
             String is_order=list.getString("is_order");
             String is_deliver=list.getString("is_deliver");
             //试驾
+            crm.login(userLoginName, pp.adminpassword);
             String testcarStyleName=pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
 
-            JSONObject listA=crm.customerListPC("",1,10).getJSONArray("list").getJSONObject(0);
+            crm.finishReception3(fr);
+
+            JSONObject listA=crm.customerListPC(phone,1,10).getJSONArray("list").getJSONObject(0);
             String is_testA=listA.getString("is_test");
             String is_orderA=listA.getString("is_order");
             String is_deliverA=listA.getString("is_deliver");
 
-            crm.login(userLoginName, pp.adminpassword);
 
-            crm.finishReception3(fr);
+            Preconditions.checkArgument(is_testA.equals("true"), "新建试驾，pc客户信息是否试驾没显示 是");
+            Preconditions.checkArgument(is_test.equals("false"), "新建试驾前，pc客户信息是否试驾没显示 否");
 
-            Preconditions.checkArgument(is_orderA.equals("True"), "新建试驾，pc客户信息是否订车没显示 是");
-            Preconditions.checkArgument(is_deliverA.equals("True"), "新建试驾，pc客户信息是否试驾没显示 是");
-            Preconditions.checkArgument(is_testA.equals("True"), "新建试驾，pc客户信息是否试驾没显示 是");
+//            Preconditions.checkArgument(is_orderA.equals("true"), "新建试驾，pc客户信息是否订车没显示 是");
+//            Preconditions.checkArgument(is_deliverA.equals("true"), "新建试驾，pc客户信息是否试驾没显示 是");
 
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("创建新客试驾,今日试驾次数+1,总计+1，信息校验");
+            saveData("创建新客试驾pc客户信息是否试驾变更是");
         }
     }
 

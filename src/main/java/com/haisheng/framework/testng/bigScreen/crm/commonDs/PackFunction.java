@@ -24,15 +24,24 @@ public class PackFunction {
         return num;
     }
 
+    public String getname(JSONArray userlist,String sale_id){
+        String userLoginName = "";
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+                break;
+            }
+        }
+        return userLoginName;
+    }
     public String username(String sale_id) throws Exception {
         String userLoginName = "";
         JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
-        for (int i = 0; i < userlist.size(); i++) {
-            JSONObject obj = userlist.getJSONObject(i);
-
-            if (obj.getString("user_id").equals(sale_id)) {
-                userLoginName = obj.getString("user_login_name");
-            }
+        userLoginName=getname(userlist,sale_id);
+        if(userLoginName.equals("")){
+            JSONArray userlist2 = crm.userPage(2, 100).getJSONArray("list");
+            userLoginName=getname(userlist2,sale_id);
         }
         return userLoginName;
     }
@@ -523,7 +532,7 @@ public class PackFunction {
         //创建销售/顾问
         String phone=genPhoneNum();
 
-        crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
+
         JSONObject data=crm.userPage(1,100);
         int total=data.getInteger("total");
         JSONArray list;
@@ -531,8 +540,10 @@ public class PackFunction {
            throw new Exception("用户数量已达上线，case运行终止");
         }
         else if(total<100){
+            crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
             list = data.getJSONArray("list");
         }else{
+            crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
             list=crm.userPage(2,100).getJSONArray("list");
         }
         String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id

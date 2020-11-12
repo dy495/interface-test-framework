@@ -5741,9 +5741,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
     //pc车型推荐，编辑车型文章
-    public JSONObject pccaredit(String content,Integer id,String title) {
+    public JSONObject pccaredit(String content,Integer id,String title,String bg_pic) {
         String url = "/porsche/sku/car/edit";
         JSONObject object = new JSONObject();
+        object.put("bg_pic",bg_pic);
         object.put("content",content);
         object.put("id",id);
         object.put("title",title);
