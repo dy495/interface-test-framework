@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheTodayDataDO;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -60,15 +60,15 @@ public class A extends TestCaseCommon implements TestCaseStd {
     @Test
     public void everydayDat() {
         try {
-            TPorscheTodayDataDO po = new TPorscheTodayDataDO();
+            TPorscheTodayData db = new TPorscheTodayData();
             List<Map<String, String>> list = method.getSaleList("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 if (arr.get("userName").contains("总经理")) {
                     UserUtil.login(zjl);
                     JSONObject response = crm.receptionPage(1, 10, "", "");
-                    po.setTodayReceptionNum(response.getInteger("today_reception_num"));
-                    po.setTodayClueNum(response.getInteger("all_customer_num"));
+                    db.setTodayReceptionNum(response.getInteger("today_reception_num"));
+                    db.setTodayClueNum(response.getInteger("all_customer_num"));
                 } else {
                     crm.login(arr.get("account"), zjl.getPassword());
                 }
@@ -76,22 +76,22 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 JSONObject responseB = crm.deliverCarTotal();
                 JSONObject responseC = crm.driverTotal();
                 JSONObject responseD = crm.appointmentTestDriverNumber();
-                po.setTodayAppointmentNum(responseD.getInteger("appointment_today_number"));
-                po.setTodayNewCustomerReceptionNum(responseA.getInteger("today_new_customer"));
-                po.setTodayOldCustomerReceptionNum(responseA.getInteger("total_old_customer"));
-                po.setTodayOrderNum(responseA.getInteger("today_order"));
-                po.setTodayDealNum(responseB.getInteger("today_deliver_car_total"));
-                po.setTodayTestDriverNum(responseC.getInteger("today_test_drive_total"));
-                po.setTodayDate(DateTimeUtil.getFormat(new Date()));
-                po.setShopId(shopId);
-                po.setSaleName(arr.get("userName"));
-                po.setSaleId(arr.get("userId"));
+                db.setTodayAppointmentNum(responseD.getInteger("appointment_today_number"));
+                db.setTodayNewCustomerReceptionNum(responseA.getInteger("today_new_customer"));
+                db.setTodayOldCustomerReceptionNum(responseA.getInteger("total_old_customer"));
+                db.setTodayOrderNum(responseA.getInteger("today_order"));
+                db.setTodayDealNum(responseB.getInteger("today_deliver_car_total"));
+                db.setTodayTestDriverNum(responseC.getInteger("today_test_drive_total"));
+                db.setTodayDate(DateTimeUtil.getFormat(new Date()));
+                db.setShopId(shopId);
+                db.setSaleName(arr.get("userName"));
+                db.setSaleId(arr.get("userId"));
                 String sql = Sql.instance().insert()
-                        .from("t_porsche_today_data")
+                        .from(TPorscheTodayData.class)
                         .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name", "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
-                        .value(po.getTodayTestDriverNum(), po.getTodayOrderNum(), po.getTodayDealNum(), po.getTodayClueNum(),
-                                po.getTodayReceptionNum(), po.getTodayAppointmentNum(), po.getTodayDate(), po.getShopId(),
-                                po.getSaleName(), po.getTodayNewCustomerReceptionNum(), po.getTodayOldCustomerReceptionNum(), po.getSaleId())
+                        .setValue(db.getTodayTestDriverNum(), db.getTodayOrderNum(), db.getTodayDealNum(), db.getTodayClueNum(),
+                                db.getTodayReceptionNum(), db.getTodayAppointmentNum(), db.getTodayDate(), db.getShopId(),
+                                db.getSaleName(), db.getTodayNewCustomerReceptionNum(), db.getTodayOldCustomerReceptionNum(), db.getSaleId())
                         .end().getSql();
                 new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
             });

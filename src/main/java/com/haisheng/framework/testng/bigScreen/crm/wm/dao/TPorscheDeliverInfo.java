@@ -1,11 +1,14 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.pojo;
+package com.haisheng.framework.testng.bigScreen.crm.wm.dao;
 
 import lombok.Data;
 
+/**
+ * 每日交车表
+ */
 @Data
-public class TPorscheDeliverInfoDO {
+public class TPorscheDeliverInfo {
 
-    private long id;
+    private Long id;
     private String shopId;
     private String customerId;
     private String customerName;

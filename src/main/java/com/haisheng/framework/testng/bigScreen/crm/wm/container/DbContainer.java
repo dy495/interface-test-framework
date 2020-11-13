@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.container;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.ContainerException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -32,8 +31,9 @@ public class DbContainer extends BaseRdbmsContainer {
             connect = DriverManager.getConnection(this.jdbcUrl, this.username, this.password);
             return connect.createStatement();
         } catch (Exception e) {
-            throw new ContainerException(e.toString());
+            errorMsg.append(e);
         }
+        return null;
     }
 
     @Setter

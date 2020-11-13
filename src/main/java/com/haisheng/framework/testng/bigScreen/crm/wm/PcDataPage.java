@@ -7,11 +7,11 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.*;
@@ -37,6 +37,7 @@ import java.util.Map;
  * 门店数据中心测试用例
  */
 public class PcDataPage extends TestCaseCommon implements TestCaseStd {
+    public static final Factory ONE_PIECE_FACTORY = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build();
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
@@ -1038,7 +1039,6 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
                     JSONArray businessList = data.getJSONObject("business").getJSONArray("list");
                     JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
-
                     class Inner {
                         int[] getValue(JSONArray array) {
                             int[] ints = new int[2];
@@ -1178,26 +1178,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> array = method.getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                CommonUtil.valueView(userName);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 10)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 10)
-                            .and("reception_sale", "=", userName)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                long count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 String userId = arr.get("userId");
+                CommonUtil.valueView(userName);
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheReceptionData.class)
+                        .where("reception_date", "=", date)
+                        .and("reception_duration", "<", 10)
+                        .and("reception_start_time", "is not", null)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("reception_sale_id", "=", userId).end();
+                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1210,6 +1200,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(userName);
             });
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量");
@@ -1224,28 +1215,17 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> array = method.getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                CommonUtil.valueView(userName);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 30)
-                            .and("reception_duration", ">=", 10)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 30)
-                            .and("reception_duration", ">=", 10)
-                            .and("reception_sale", "=", userName)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                long count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 String userId = arr.get("userId");
+                CommonUtil.valueView(userName);
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheReceptionData.class)
+                        .where("reception_date", "=", date)
+                        .and("reception_duration", "<", 30)
+                        .and("reception_duration", ">=", 10)
+                        .and("reception_start_time", "is not", null)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("reception_sale_id", "=", userId).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1272,28 +1252,17 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> array = method.getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                CommonUtil.valueView(userName);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 60)
-                            .and("reception_duration", ">=", 30)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 60)
-                            .and("reception_duration", ">=", 30)
-                            .and("reception_sale", "=", userName)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
                 String userId = arr.get("userId");
-                long count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                CommonUtil.valueView(userName);
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheReceptionData.class)
+                        .where("reception_date", "=", date)
+                        .and("reception_duration", "<", 60)
+                        .and("reception_duration", ">=", 30)
+                        .and("reception_start_time", "is not", null)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("reception_sale_id", "=", userId).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1320,28 +1289,17 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> array = method.getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                CommonUtil.valueView(userName);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 120)
-                            .and("reception_duration", ">=", 60)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", "<", 120)
-                            .and("reception_duration", ">=", 60)
-                            .and("reception_sale", "=", userName)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
                 String userId = arr.get("userId");
-                long count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                CommonUtil.valueView(userName);
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheReceptionData.class)
+                        .where("reception_date", "=", date)
+                        .and("reception_duration", "<", 120)
+                        .and("reception_duration", ">=", 60)
+                        .and("reception_start_time", "is not", null)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("reception_sale_id", "=", userId).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1368,26 +1326,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> array = method.getSaleList("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
-                CommonUtil.valueView(userName);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", ">=", 120)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_reception_data")
-                            .where("reception_date", "=", date)
-                            .and("reception_duration", ">=", 120)
-                            .and("reception_sale", "=", userName)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
                 String userId = arr.get("userId");
-                long count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                CommonUtil.valueView(userName);
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheReceptionData.class)
+                        .where("reception_date", "=", date)
+                        .and("reception_duration", ">=", 120)
+                        .and("reception_start_time", "is not", null)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("reception_sale_id", "=", userId).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 int value = 0;
                 JSONArray list = crm.receptTime("DAY", "", userId).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -1432,10 +1380,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             int createClueNum = 0;
             IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
-            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("type").equals("CLUE")) {
-                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+            JSONArray array = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < array.size(); i++) {
+                if (array.getJSONObject(i).getString("type").equals("CLUE")) {
+                    JSONArray detailList = array.getJSONObject(i).getJSONArray("detail");
                     for (int j = 0; j < detailList.size(); j++) {
                         if (detailList.getJSONObject(j).getString("label").equals("创建线索")) {
                             createClueNum = detailList.getJSONObject(j).getInteger("value");
@@ -1444,19 +1392,19 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //今日线索
-            String sql = Sql.instance().select("today_clue_num", "today_new_customer_reception_num")
-                    .from("t_porsche_today_data")
+            Sql sql = Sql.instance().select("today_clue_num", "today_new_customer_reception_num")
+                    .from(TPorscheTodayData.class)
                     .where("today_date", "=", date)
                     .and("sale_name", "like", "%总经理%")
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            List<Map<String, Object>> array = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            if (array.size() > 0) {
-                for (Map<String, Object> map : array) {
-                    int todayClueNum = (int) map.get("today_clue_num");
-                    int todayNewCustomerReceptionNum = (int) map.get("today_new_customer_reception_num");
+                    .and("shop_id", "=", shopId).end();
+            List<TPorscheTodayData> list = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
+            if (list.size() > 0) {
+                for (TPorscheTodayData tPorscheTodayData : list) {
+                    int todayClueNum = tPorscheTodayData.getTodayClueNum();
+                    int todayNewCustomerReceptionNum = tPorscheTodayData.getTodayNewCustomerReceptionNum();
                     CommonUtil.valueView(createClueNum, todayClueNum - todayNewCustomerReceptionNum);
-                    Preconditions.checkArgument(createClueNum == todayClueNum - todayNewCustomerReceptionNum, "创建线索：" + createClueNum + " 今日线索-今日新客接待：" + (todayClueNum - todayNewCustomerReceptionNum));
+                    Preconditions.checkArgument(createClueNum == todayClueNum - todayNewCustomerReceptionNum,
+                            "创建线索：" + createClueNum + " 今日线索-今日新客接待：" + (todayClueNum - todayNewCustomerReceptionNum));
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -1474,10 +1422,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             int receptionClueNum = 0;
             IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).build();
-            JSONArray list = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("type").equals("CLUE")) {
-                    JSONArray detailList = list.getJSONObject(i).getJSONArray("detail");
+            JSONArray array = crm.invokeApi(scene).getJSONObject("business").getJSONArray("list");
+            for (int i = 0; i < array.size(); i++) {
+                if (array.getJSONObject(i).getString("type").equals("CLUE")) {
+                    JSONArray detailList = array.getJSONObject(i).getJSONArray("detail");
                     for (int j = 0; j < detailList.size(); j++) {
                         if (detailList.getJSONObject(j).getString("label").equals("接待线索")) {
                             receptionClueNum = detailList.getJSONObject(j).getInteger("value");
@@ -1486,17 +1434,18 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //今日新客接待
-            String sql = Sql.instance().select("today_new_customer_reception_num")
-                    .from("t_porsche_today_data")
+            Sql sql = Sql.instance().select("today_new_customer_reception_num")
+                    .from(TPorscheTodayData.class)
                     .where("today_date", "=", date)
                     .and("sale_name", "like", "%总经理%")
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            if (list1.size() > 0) {
-                int todayNewCustomerReceptionNum = (int) list1.get(0).get("today_new_customer_reception_num");
-                CommonUtil.valueView(receptionClueNum, todayNewCustomerReceptionNum);
-                Preconditions.checkArgument(receptionClueNum == todayNewCustomerReceptionNum, "接待线索：" + receptionClueNum + " 今日新客接待" + todayNewCustomerReceptionNum);
+                    .and("shop_id", "=", shopId).end();
+            List<TPorscheTodayData> list = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
+            if (list.size() > 0) {
+                for (TPorscheTodayData tPorscheTodayData : list) {
+                    int todayNewCustomerReceptionNum = tPorscheTodayData.getTodayNewCustomerReceptionNum();
+                    CommonUtil.valueView(receptionClueNum, todayNewCustomerReceptionNum);
+                    Preconditions.checkArgument(receptionClueNum == todayNewCustomerReceptionNum, "接待线索：" + receptionClueNum + " 今日新客接待" + todayNewCustomerReceptionNum);
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -1525,14 +1474,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            String sql = Sql.instance().select("today_old_customer_reception_num")
-                    .from("t_porsche_today_data")
+            Sql sql = Sql.instance().select("today_old_customer_reception_num")
+                    .from(TPorscheTodayData.class)
                     .where("today_date", "=", date)
                     .and("sale_name", "like", "%总经理%")
-                    .and("shop_id", "=", shopId)
-                    .end().getSql();
-            List<Map<String, Object>> entity = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-            int todayNewCustomerReceptionNum = (int) entity.get(0).get("today_old_customer_reception_num");
+                    .and("shop_id", "=", shopId).end();
+            List<TPorscheTodayData> entity = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
+            int todayNewCustomerReceptionNum = entity.get(0).getTodayOldCustomerReceptionNum();
             CommonUtil.valueView(receive, todayNewCustomerReceptionNum);
             Preconditions.checkArgument(receive >= todayNewCustomerReceptionNum, "接待的PU+BB：" + receive + "今日老客接待：" + todayNewCustomerReceptionNum);
         } catch (Exception | AssertionError e) {
@@ -1660,15 +1608,14 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         }
                     }
                 }
-                String sql = Sql.instance().select("today_new_customer_reception_num")
-                        .from("t_porsche_today_data")
+                Sql sql = Sql.instance().select("today_new_customer_reception_num")
+                        .from(TPorscheTodayData.class)
                         .where("shop_id", "=", shopId)
                         .and("sale_id", "=", arr.get("userId"))
-                        .and("today_date", "=", date)
-                        .end().getSql();
-                List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                        .and("today_date", "=", date).end();
+                List<TPorscheTodayData> list1 = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
                 if (list1.size() > 0) {
-                    int count = (int) list1.get(0).get("today_new_customer_reception_num");
+                    int count = list1.get(0).getTodayNewCustomerReceptionNum();
                     CommonUtil.valueView(createClueNum, count);
                     Preconditions.checkArgument(createClueNum == count, arr.get("userName") + "接待线索：" + createClueNum + " 该销售今日新客接待：" + count);
                     CommonUtil.logger(arr.get("userName"));
@@ -1693,16 +1640,14 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 String userName = map.get("userName");
                 CommonUtil.valueView(userName);
                 int num = getFunnelData("business", "ORDER", map);
-                String sql = Sql.instance()
-                        .select("today_order_num")
-                        .from("t_porsche_today_data")
+                Sql sql = Sql.instance().select("today_order_num")
+                        .from(TPorscheTodayData.class)
                         .where("sale_id", "=", map.get("userId"))
                         .and("shop_id", "=", shopId)
-                        .and("today_date", "=", date)
-                        .end().getSql();
-                List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                        .and("today_date", "=", date).end();
+                List<TPorscheTodayData> list1 = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
                 if (list1.size() > 0) {
-                    int count = (int) list1.get(0).get("today_order_num");
+                    int count = list1.get(0).getTodayOrderNum();
                     CommonUtil.valueView(num, count);
                     Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售今日订单数量：" + count);
                     CommonUtil.logger(userName);
@@ -1725,16 +1670,14 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName"));
                 int num = getFunnelData("business", "DEAL", map);
-                String sql = Sql.instance()
-                        .select("today_deal_num")
-                        .from("t_porsche_today_data")
+                Sql sql = Sql.instance().select("today_deal_num")
+                        .from(TPorscheTodayData.class)
                         .where("sale_id", "=", map.get("userId"))
                         .and("shop_id", "=", shopId)
-                        .and("today_date", "=", date)
-                        .end().getSql();
-                List<Map<String, Object>> list1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                        .and("today_date", "=", date).end();
+                List<TPorscheTodayData> list1 = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
                 if (list1.size() > 0) {
-                    int count = (int) list1.get(0).get("today_deal_num");
+                    int count = list1.get(0).getTodayDealNum();
                     CommonUtil.valueView(num, count);
                     Preconditions.checkArgument(num == count, map.get("userName") + "各车型订单：" + num + " 该销售今日交车数量：" + count);
                     CommonUtil.logger(map.get("userName"));
@@ -1774,27 +1717,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> list = method.getSaleList("销售顾问");
             for (Map<String, String> map : list) {
                 String userName = map.get("userName");
+                String userId = map.get("userId");
                 CommonUtil.valueView(userName);
                 int num = getFunnelData("car_type", "ORDER", map);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("car_style", "is not", null)
-                            .and("car_model", "is not ", null)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("sale_id", "=", map.get("userId"))
-                            .and("car_style", "is not", null)
-                            .and("car_model", "is not ", null)
-                            .end().getSql();
-                }
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheOrderInfo.class)
+                        .where("order_date", "=", date)
+                        .and("shop_id", "=", shopId)
+                        .and("car_style", "is not", null)
+                        .and("car_model", "is not ", null);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("sale_id", "=", userId).end();
                 int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                 CommonUtil.valueView(num, count);
                 Preconditions.checkArgument(num == count, userName + "车系漏斗中订单：" + num + "成交记录中的订单数量：" + count);
@@ -1816,28 +1748,17 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             List<Map<String, String>> list = method.getSaleList("销售顾问");
             for (Map<String, String> map : list) {
                 String userName = map.get("userName");
+                String userId = map.get("userId");
                 CommonUtil.valueView(userName);
                 int num = getFunnelData("car_type", "DEAL", map);
-                String sql;
-                if (userName.contains("总经理")) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("car_style", "is not", null)
-                            .and("car_model", "is not ", null)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("sale_id", "=", map.get("userId"))
-                            .and("car_style", "is not", null)
-                            .and("car_model", "is not ", null)
-                            .end().getSql();
-                }
-                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheDeliverInfo.class)
+                        .where("deliver_date", "=", date)
+                        .and("shop_id", "=", shopId)
+                        .and("car_style", "is not", null)
+                        .and("car_model", "is not ", null);
+                Sql sql = StringUtils.isEmpty(userId) ? builder.end() : builder.and("sale_id", "=", userId).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(num, count);
                 Preconditions.checkArgument(num == count, userName + "车系漏斗中交车：" + num + "成交记录中的交车数量：" + count);
                 CommonUtil.logger(userName);
@@ -2112,24 +2033,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (e.getStyleId() == null) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("subject_type_name", "=", "个人")
-                            .and("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("subject_type_name", "=", "个人")
-                            .and("car_style", "=", e.getStyleId())
-                            .and("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheDeliverInfo.class)
+                        .where("subject_type_name", "=", "个人")
+                        .and("deliver_date", "=", date)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int appCustomerNum = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
                 Preconditions.checkArgument(appCustomerNum >= pcCustomerNum, "昨日" + e.getName() + "个人车主数为：" + pcCustomerNum + "昨日app该车系个人客户交车数量为：" + appCustomerNum);
                 CommonUtil.logger(e.getName());
@@ -2156,24 +2066,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (e.getStyleId() == null) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("subject_type_name", "=", "公司")
-                            .and("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_deliver_info")
-                            .where("subject_type_name", "=", "公司")
-                            .and("car_style", "=", e.getStyleId())
-                            .and("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                int appCustomerNum = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                Sql.Builder builder = Sql.instance().select()
+                        .from(TPorscheDeliverInfo.class)
+                        .where("subject_type_name", "=", "公司")
+                        .and("deliver_date", "=", date)
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int appCustomerNum = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(pcCustomerNum, appCustomerNum);
                 Preconditions.checkArgument(pcCustomerNum <= appCustomerNum, "昨日" + e.getName() + "公司车主数为：" + pcCustomerNum + " 昨日app该车系公司客户交车数量为：" + appCustomerNum);
                 CommonUtil.logger(e.getName());
@@ -2197,24 +2096,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     String province = list.getJSONObject(i).getString("province");
                     int pcCustomerNum = list.getJSONObject(i).getInteger("value");
                     String date = DateTimeUtil.addDayFormat(new Date(), -1);
-                    String sql;
-                    if (e.getStyleId() == null) {
-                        sql = Sql.instance().select()
-                                .from("t_porsche_deliver_info")
-                                .where("deliver_date", "=", date)
-                                .and("address", "like", "%" + province + "%")
-                                .and("shop_id", "=", shopId)
-                                .end().getSql();
-                    } else {
-                        sql = Sql.instance().select()
-                                .from("t_porsche_deliver_info")
-                                .where("deliver_date", "=", date)
-                                .and("address", "like", "%" + province + "%")
-                                .and("car_style", "=", e.getStyleId())
-                                .and("shop_id", "=", shopId)
-                                .end().getSql();
-                    }
-                    int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                    Sql.Builder builder = Sql.instance().select()
+                            .from(TPorscheDeliverInfo.class)
+                            .where("deliver_date", "=", date)
+                            .and("address", "like", "%" + province + "%")
+                            .and("shop_id", "=", shopId);
+                    Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                    int count = ONE_PIECE_FACTORY.create(sql).size();
                     CommonUtil.valueView(pcCustomerNum, count);
                     Preconditions.checkArgument(count >= pcCustomerNum, "昨日" + province + e.getName() + "交车数为：" + pcCustomerNum + "昨日app该省此车系交车数量为：" + count);
                     CommonUtil.logger(province);
@@ -2243,26 +2131,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (StringUtils.isEmpty(e.getStyleId())) {
-                    sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("subject_type_name", "=", "个人")
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("subject_type_name", "=", "个人")
-                            .and("car_style", "=", e.getStyleId())
-                            .end().getSql();
-                }
-                List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                CommonUtil.valueView(pcCustomerNum, list.size());
-                Preconditions.checkArgument(pcCustomerNum == list.size(), e.getName() + "个人车主数量：" + pcCustomerNum + "手机号去重数量" + list.size());
+                Sql.Builder builder = Sql.instance()
+                        .select("distinct(phones)")
+                        .from(TPorscheDeliverInfo.class)
+                        .where("deliver_date", "=", date)
+                        .and("subject_type_name", "=", "个人")
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
+                CommonUtil.valueView(pcCustomerNum, count);
+                Preconditions.checkArgument(pcCustomerNum == count, e.getName() + "个人车主数量：" + pcCustomerNum + "手机号去重数量" + count);
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
@@ -2288,26 +2166,16 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         pcCustomerNum = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (StringUtils.isEmpty(e.getStyleId())) {
-                    sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("subject_type_name", "=", "公司")
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select("distinct(phones)")
-                            .from("t_porsche_deliver_info")
-                            .where("deliver_date", "=", date)
-                            .and("shop_id", "=", shopId)
-                            .and("subject_type_name", "=", "公司")
-                            .and("car_style", "=", e.getStyleId())
-                            .end().getSql();
-                }
-                List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-                CommonUtil.valueView(pcCustomerNum, list.size());
-                Preconditions.checkArgument(pcCustomerNum == list.size(), e.getName() + "公司车主数量：" + pcCustomerNum + "手机号去重数量" + list.size());
+                Sql.Builder builder = Sql.instance()
+                        .select("distinct(phones)")
+                        .from(TPorscheDeliverInfo.class)
+                        .where("deliver_date", "=", date)
+                        .and("subject_type_name", "=", "公司")
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
+                CommonUtil.valueView(pcCustomerNum, count);
+                Preconditions.checkArgument(pcCustomerNum == count, e.getName() + "公司车主数量：" + pcCustomerNum + "手机号去重数量" + count);
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
@@ -2694,24 +2562,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (e.getStyleId() == null) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("subject_type_name", "=", "个人")
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("subject_type_name", "=", "个人")
-                            .and("car_style", "=", e.getStyleId())
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                Sql.Builder builder = Sql.instance()
+                        .select().from(TPorscheOrderInfo.class)
+                        .where("order_date", "=", date)
+                        .and("subject_type_name", "=", "个人")
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(value, count);
                 Preconditions.checkArgument(count >= value, e.getName() + EnumFindType.DAY.getName() + "pc端个人车主数量为：" + value + " app订车数量为：" + count);
                 CommonUtil.logger(e.getName());
@@ -2738,29 +2595,19 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         value = ratioList.getJSONObject(i).getInteger("value");
                     }
                 }
-                String sql;
-                if (e.getStyleId() == null) {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("subject_type_name", "=", "公司")
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                } else {
-                    sql = Sql.instance().select()
-                            .from("t_porsche_order_info")
-                            .where("order_date", "=", date)
-                            .and("subject_type_name", "=", "公司")
-                            .and("car_style", "=", e.getStyleId())
-                            .and("shop_id", "=", shopId)
-                            .end().getSql();
-                }
-                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                Sql.Builder builder = Sql.instance()
+                        .select().from(TPorscheOrderInfo.class)
+                        .where("order_date", "=", date)
+                        .and("subject_type_name", "=", "公司")
+                        .and("shop_id", "=", shopId);
+                Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(value, count);
                 Preconditions.checkArgument(count >= value, e.getName() + EnumFindType.DAY.getName() + "pc端个公司主数量为：" + value + " app接待数量为：" + count);
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("订单客户分析--公司车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为公司&购车日期在该时间段内&交车日期为空的购车档案数量");
@@ -2779,23 +2626,12 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     String province = list.getJSONObject(i).getString("province");
                     int pcCustomerNum = list.getJSONObject(i).getInteger("value");
                     String date = DateTimeUtil.addDayFormat(new Date(), -1);
-                    String sql;
-                    if (e.getStyleId() == null) {
-                        sql = Sql.instance().select()
-                                .from("t_porsche_order_info")
-                                .where("order_date", "=", date)
-                                .and("address", "like", "%" + province + "%")
-                                .and("shop_id", "=", shopId)
-                                .end().getSql();
-                    } else {
-                        sql = Sql.instance().select()
-                                .from("t_porsche_order_info")
-                                .where("order_date", "=", date)
-                                .and("address", "like", "%" + province + "%")
-                                .and("car_style", "=", e.getStyleId())
-                                .and("shop_id", "=", shopId)
-                                .end().getSql();
-                    }
+                    Sql.Builder builder = Sql.instance()
+                            .select().from(TPorscheOrderInfo.class)
+                            .where("order_date", "=", date)
+                            .and("address", "like", "%" + province + "%")
+                            .and("shop_id", "=", shopId);
+                    Sql sql = StringUtils.isEmpty(e.getStyleId()) ? builder.end() : builder.and("car_style", "=", e.getStyleId()).end();
                     int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
                     CommonUtil.valueView(pcCustomerNum, count);
                     Preconditions.checkArgument(count >= pcCustomerNum, "昨日" + province + e.getName() + "交车数为：" + pcCustomerNum + " 昨日app该省此车系交车数量为：" + count);
@@ -2852,7 +2688,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "展厅热区管理--成交数量： = （时间段内）【APP-销售总监-我的交车】订单为维度去重数量一致")
+    @Test(description = "展厅热区管理--成交数量=（时间段内）【APP-销售总监-我的交车】订单为维度去重数量一致")
     public void exhibitionHall_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -2870,13 +2706,12 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     if (list.getJSONObject(i).getString("sku_name").equals(carStyleName))
                         dealNum = list.getJSONObject(i).getInteger("deal_num");
                 }
-                String sql = Sql.instance().select()
-                        .from("t_porsche_order_info")
+                Sql sql = Sql.instance().select()
+                        .from(TPorscheOrderInfo.class)
                         .where("shop_id", "=", shopId)
                         .and("car_style", "=", e.getStyleId())
-                        .and("order_date", "=", date)
-                        .end().getSql();
-                int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                        .and("order_date", "=", date).end();
+                int count = ONE_PIECE_FACTORY.create(sql).size();
                 CommonUtil.valueView(dealNum, count);
                 Preconditions.checkArgument(dealNum == count, "昨日app记录" + carStyleName + "成交量：" + count + " 昨日展厅热区分析" + carStyleName + "成交率数：" + dealNum);
                 CommonUtil.logger(e.getName());
@@ -2913,7 +2748,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             IScene scene = CarStyleChangeListScene.builder().build();
             int total = crm.invokeApi(scene).getInteger("total");
-            JSONArray list = crm.regionMap(EnumFindType.DAY.getName()).getJSONArray("list");
+            JSONArray list = crm.regionMap(EnumFindType.DAY.getType()).getJSONArray("list");
             int regionId = 0;
             for (int i = 0; i < list.size(); i++) {
                 regionId = list.getJSONObject(i).getInteger("region_id");
@@ -2941,44 +2776,25 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 JSONArray array = crm.invokeApi(scene).getJSONArray("list");
                 for (int i = 0; i < array.size(); i++) {
                     String timeStrStart = array.getJSONObject(i).getString("time_str");
-                    String timeStrEnd;
-                    if (i < array.size() - 1) {
-                        timeStrEnd = array.getJSONObject(i + 1).getString("time_str");
-                    } else {
-                        timeStrEnd = "24:00";
-                    }
-                    CommonUtil.valueView(e.get("userName") + " " + timeStrStart + "--" + timeStrEnd);
+                    String timeStrEnd = array.size() - 1 > i ? array.getJSONObject(i + 1).getString("time_str") : "24:00";
+                    String time = " " + timeStrStart + "--" + timeStrEnd;
+                    CommonUtil.valueView(e.get("userName") + time);
                     //环比
                     Integer value = array.getJSONObject(i).getJSONArray("list").getInteger(2);
                     int result = value == null ? 0 : value;
-                    String sql;
-                    if (StringUtils.isEmpty(e.get("userId"))) {
-                        sql = Sql.instance()
-                                .select()
-                                .from("t_porsche_reception_data")
-                                .where("shop_id", "=", shopId)
-                                .and("reception_date", "=", date)
-                                .and("reception_start_time", ">=", timeStrStart)
-                                .and("reception_start_time", "<", timeStrEnd)
-                                .end().getSql();
-                    } else {
-                        sql = Sql.instance()
-                                .select()
-                                .from("t_porsche_reception_data")
-                                .where("shop_id", "=", shopId)
-                                .and("reception_date", "=", date)
-                                .and("reception_start_time", ">=", timeStrStart)
-                                .and("reception_sale_id", "=", e.get("userId"))
-                                .and("reception_start_time", "<", timeStrEnd)
-                                .end().getSql();
-                    }
-                    List<TPorscheReceptionData> db = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql, TPorscheReceptionData.class);
-                    int count = db.size();
+                    Sql.Builder builder = Sql.instance()
+                            .select().from(TPorscheReceptionData.class)
+                            .where("shop_id", "=", shopId)
+                            .and("reception_date", "=", date)
+                            .and("reception_start_time", ">=", timeStrStart)
+                            .and("reception_start_time", "<", timeStrEnd);
+                    Sql sql = StringUtils.isEmpty(e.get("userId")) ? builder.end() : builder.and("reception_sale_id", "=", e.get("userId")).end();
+                    int count = ONE_PIECE_FACTORY.create(sql).size();
                     CommonUtil.valueView("环比：" + result, "前天接待数：" + count);
                     if (count != 0) {
-                        Preconditions.checkArgument(result != 0, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段环比数：" + result + " 前天接待数：" + count);
+                        Preconditions.checkArgument(result != 0, e.get("userName") + time + "时间段环比数：" + result + " 前天接待数：" + count);
                     }
-                    Preconditions.checkArgument(count >= result, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段环比数：" + result + " 前天接待数：" + count);
+                    Preconditions.checkArgument(count >= result, e.get("userName") + time + "时间段环比数：" + result + " 前天接待数：" + count);
                     CommonUtil.logger(timeStrStart);
                 }
                 CommonUtil.logger(e.get("userName"));
@@ -3002,43 +2818,25 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 JSONArray array = crm.invokeApi(scene).getJSONArray("list");
                 for (int i = 0; i < array.size(); i++) {
                     String timeStrStart = array.getJSONObject(i).getString("time_str");
-                    String timeStrEnd;
-                    if (i < array.size() - 1) {
-                        timeStrEnd = array.getJSONObject(i + 1).getString("time_str");
-                    } else {
-                        timeStrEnd = "24:00";
-                    }
-                    CommonUtil.valueView(e.get("userName") + " " + timeStrStart + "--" + timeStrEnd);
+                    String timeStrEnd = array.size() - 1 > i ? array.getJSONObject(i + 1).getString("time_str") : "24:00";
+                    String time = " " + timeStrStart + "--" + timeStrEnd;
+                    CommonUtil.valueView(e.get("userName") + time);
                     //环比
                     Integer value = array.getJSONObject(i).getJSONArray("list").getInteger(0);
                     int result = value == null ? 0 : value;
-                    String sql;
-                    if (StringUtils.isEmpty(e.get("userId"))) {
-                        sql = Sql.instance()
-                                .select()
-                                .from("t_porsche_reception_data")
-                                .where("shop_id", "=", shopId)
-                                .and("reception_date", "=", date)
-                                .and("reception_start_time", ">=", timeStrStart)
-                                .and("reception_start_time", "<", timeStrEnd)
-                                .end().getSql();
-                    } else {
-                        sql = Sql.instance()
-                                .select()
-                                .from("t_porsche_reception_data")
-                                .where("shop_id", "=", shopId)
-                                .and("reception_date", "=", date)
-                                .and("reception_start_time", ">=", timeStrStart)
-                                .and("reception_sale_id", "=", e.get("userId"))
-                                .and("reception_start_time", "<", timeStrEnd)
-                                .end().getSql();
-                    }
-                    int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+                    Sql.Builder builder = Sql.instance()
+                            .select().from(TPorscheReceptionData.class)
+                            .where("shop_id", "=", shopId)
+                            .and("reception_date", "=", date)
+                            .and("reception_start_time", ">=", timeStrStart)
+                            .and("reception_start_time", "<", timeStrEnd);
+                    Sql sql = StringUtils.isEmpty(e.get("userId")) ? builder.end() : builder.and("reception_sale_id", "=", e.get("userId")).end();
+                    int count = ONE_PIECE_FACTORY.create(sql).size();
                     CommonUtil.valueView("环比：" + result, "昨天接待数：" + count);
                     if (count != 0) {
-                        Preconditions.checkArgument(result != 0, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段本期数：" + result + " 昨天接待数：" + count);
+                        Preconditions.checkArgument(result != 0, e.get("userName") + time + "时间段本期数：" + result + " 昨天接待数：" + count);
                     }
-                    Preconditions.checkArgument(count >= result, e.get("userName") + " " + timeStrStart + "-" + timeStrEnd + "时间段本期数：" + result + " 昨天接待数：" + count);
+                    Preconditions.checkArgument(count >= result, e.get("userName") + time + "时间段本期数：" + result + " 昨天接待数：" + count);
                     CommonUtil.logger(timeStrStart);
                 }
                 CommonUtil.logger(e.get("userName"));

@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.container;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.property.BasicProperty;
+import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -21,8 +22,17 @@ public class Factory extends BasicProperty {
         return container.getTable();
     }
 
+    public List<Map<String, Object>> create(Sql sql) {
+        return create(sql.getSql());
+    }
+
     public <T> List<T> create(String sql, Class<T> clazz) {
         container.setPath(sql);
+        return container.getTable(clazz);
+    }
+
+    public <T> List<T> create(Sql sql, Class<T> clazz) {
+        container.setPath(sql.getSql());
         return container.getTable(clazz);
     }
 
