@@ -533,15 +533,15 @@ public class PackFunction {
         String phone=genPhoneNum();
 
 
-        JSONObject data=crm.userPage(1,100);
-        int total=data.getInteger("total");
+        JSONObject data1=crm.userPage(1,100);
+        int total=data1.getInteger("total");
         JSONArray list;
         if(total==200){
            throw new Exception("用户数量已达上线，case运行终止");
         }
         else if(total<100){
             crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
-            list = data.getJSONArray("list");
+            list = crm.userPage(1,100).getJSONArray("list");
         }else{
             crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
             list=crm.userPage(2,100).getJSONArray("list");
