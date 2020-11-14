@@ -4,7 +4,9 @@ package com.haisheng.framework.util;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.Shelf;
+import com.haisheng.framework.testng.commonDataStructure.AlarmSummary;
 import com.haisheng.framework.testng.commonDataStructure.ConstantVar;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -552,6 +554,74 @@ public class AlarmPush {
         //15084928847 黄青青
         String[] atArray = {"13436941018", "18513118484", "15898182672"};
         DingChatbot.sendMarkdown(msg, atArray, false);
+
+    }
+
+    /**
+     * @param alarmList 推送内容集合列表
+     */
+    public void onlineAlarmSummary(List<AlarmSummary> alarmList) {
+
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.ONLINE_ALARM_SUMMARY;
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "线上每日报警简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+        String env = "";
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+
+        for (AlarmSummary alarmSummary : alarmList) {
+            List<String> passRate = alarmSummary.getPassRate();
+            msg +=  "\n\n>##### **产品：" + alarmSummary.getProduct() + ", RD: " + alarmSummary.getRd() + "**";
+            msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
+            msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
+            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
+        }
+
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13436941018 吕雪晴
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //15084928847 黄青青
+        String[] atArray = {"13436941018", "15084928847", "15898182672", "18210113587"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
+
+    }
+
+    /**
+     * @param alarmList 推送内容集合列表
+     */
+    public void dailyAlarmSummary(List<AlarmSummary> alarmList) {
+
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.QA_GRP;
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "日常每日报警简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+        String env = "";
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+
+        for (AlarmSummary alarmSummary : alarmList) {
+            List<String> passRate = alarmSummary.getPassRate();
+            msg +=  "\n\n>##### **产品：" + alarmSummary.getProduct() + ", RD: " + alarmSummary.getRd() + "**";
+            msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
+            msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
+            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
+        }
+
+        DingChatbot.sendMarkdown(msg);
 
     }
 }

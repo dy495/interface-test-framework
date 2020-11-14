@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IConfigDao">
+    <resultMap id="ConfigMap" type="com.haisheng.framework.model.bean.Config">
+        <result property="id" column="id"/>
+        <result property="applicationId" column="application_id" />
+        <result property="service" column="service" />
+        <result property="caseTotal" column="case_total" />
+        <result property="scenarioTotal" column="scenario_total" />
+        <result property="passTotal" column="pass_total" />
+        <result property="rdOwner" column="rd_owner" />
+        <result property="qaOwner" column="qa_owner" />
+    </resultMap>
+
+
+    <!-- select -->
+    <select id="queryOnlineConfigSummary"
+            resultMap="ConfigMap">
+        select
+          id,application_id,service,case_total,scenario_total,pass_total,rd_owner,qa_owner
+        from
+        t_config
+        <where>
+            service like "%线上%"
+        </where>
+    </select>
+
+    <!-- select -->
+    <select id="queryDailyConfigSummary"
+            resultMap="ConfigMap">
+        select
+        id,application_id,service,case_total,scenario_total,pass_total,rd_owner,qa_owner
+        from
+        t_config
+        <where>
+            service like "%日常%"
+        </where>
+    </select>
+</mapper>

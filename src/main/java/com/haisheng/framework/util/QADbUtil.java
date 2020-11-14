@@ -317,4 +317,18 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
+
+    public List<Config> selectOnlineAlarmSummary() {
+        getNewSqlSession();
+        IConfigDao dao = sqlSession.getMapper(IConfigDao.class);
+
+        return dao.queryOnlineConfigSummary();
+    }
+
+    public List<Config> selectDailyAlarmSummary() {
+        getNewSqlSession();
+        IConfigDao dao = sqlSession.getMapper(IConfigDao.class);
+
+        return dao.queryDailyConfigSummary();
+    }
 }
