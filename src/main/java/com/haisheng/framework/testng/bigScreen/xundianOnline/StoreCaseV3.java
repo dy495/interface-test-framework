@@ -1,7 +1,13 @@
 package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -12,19 +18,21 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -42,7 +50,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     String district_code = "";
     String month = "";
     long shop_id = 14630;
-    int startM=2;
+    int startM = 2;
     String districtCode = "";
     String shopManager = "";
     int page = 1;
@@ -58,7 +66,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     *
      */
     @BeforeClass
     @Override
@@ -83,7 +90,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -96,7 +103,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("store " + md);
 
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
 
 
     }
@@ -109,7 +116,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: get a fresh case ds to save case result, such as result/response
-     *
      */
     @BeforeMethod
     @Override
@@ -121,18 +127,114 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
 
-    /**
-     * @author : guoliya
-     * @date :  2020/08/04
-     */
+    @Test
+    public void getA() throws Exception {
 
+        for (int i=0;i<6;i++){
+
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+            String uid = "uid_0ba743d8";
+            String appId = "672170545f50";
+            String ak = "691ff41137d954f3";
+            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            String sk = "d76f2d8a7846382f633c1334139767fe";
+            // java代码示例
+            // java代码示例
+            String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
+
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+            String transId = "QAtest_" + CommonUtil.getRandom(4);
+//        String s = "\"" + transId + "\"";
+//        System.err.println(s);
+            String str = "{\n" +
+                    "  \"uid\": \"uid_0ba743d8\",\n" +
+                    "  \"app_id\": \"672170545f50\",\n" +
+                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \"13260\",\n" +
+                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                    "        \"trans_time\": \"1605065792336\",\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"W\"\n" +
+                    "        ],\n" +
+                    "        \"user_id\": \"2020100009\",\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"memberName\":\"单笔金额大于1200要触发\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"iPhone12\",\n" +
+                    "                \"commodity_name\":\"苹果派12\",\n" +
+                    "                \"unit_price\": 200,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"banana\",\n" +
+                    "                \"commodity_name\":\"香蕉2根\",\n" +
+                    "                \"unit_price\": 2,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"Apple\",\n" +
+                    "                \"commodity_name\":\"苹果16个\",\n" +
+                    "                \"unit_price\": 3,\n" +
+                    "                \"num\": 1\n" +
+                    "            }\n" +
+                    "        ]\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+//        System.err.println(str);
+
+            JSONObject jsonObject = JSON.parseObject(str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+            String post = HttpClientUtil.post(config);
+            System.out.println(post);
+        }
+    }
     /**
      * ====================门店类型（单选、多选、全选、不选）======================
      */
     @Test
     public void storeType() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //多选
             String district_code = "";
@@ -195,13 +297,13 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 String string = storeList.getJSONObject(i).getString("name");
-                if(string != null&&string.contains(shopName)) {
+                if (string != null && string.contains(shopName)) {
                     Preconditions.checkArgument(true, "\"t\"的模糊搜索的结果为：" + string);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             saveData("门店筛选栏--模糊搜索");
         }
 
@@ -214,7 +316,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void role_add() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
 
         try {
 
@@ -266,7 +368,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void role_add_work() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray moduleId = new JSONArray();
             moduleId.add(7);
@@ -315,7 +417,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void role_add_work1() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
             JSONArray moduleId = new JSONArray();
@@ -359,7 +461,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountAdd_Email() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String phone1 = "";
             List<String> r_dList = new ArrayList<String>();
@@ -405,7 +507,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountAdd_Phone() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             List<String> r_dList = new ArrayList<String>();//乱写的角色，要改！！！
             r_dList.add("107");
@@ -447,7 +549,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountEdit() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String email1 = "";
             String phone1 = "";
@@ -496,7 +598,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountPage_search() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
@@ -534,7 +636,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "STATUS", dataProviderClass = StoreScenarioUtil.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.device_page("", "", "", "", "CAMERA", page, size).getJSONArray("list");
             String device_name = list.getJSONObject(0).getString("device_name");
@@ -583,7 +685,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void cashier_page_search() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONObject res = md.cashier_page("", "", "", "", null, page, size);
             JSONArray list = res.getJSONArray("list");
@@ -819,7 +921,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void rule_pageSearch() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.risk_controlPage("", "", "", null, page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
@@ -878,7 +980,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void riskRuleAdd() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //新建一个定检规则rule中的参数再调试时要进行修改
             String name = "QA_test";
@@ -921,7 +1023,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void riskRuleCheck() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //新建一个定检规则rule中的参数再调试时要进行修改
 //            String name = "QA_test";
@@ -969,7 +1071,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void alarm_pageSearch() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.alarm_page("", "", "", page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
@@ -1011,7 +1113,80 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+    /**
+     * ====================风控事项的处理======================
+     */
+    @Test
+    public void trace_dealWith() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "PENDING", page, size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+            String order = list.getJSONObject(0).getString("order_id");
+            long id1 = list.getJSONObject(1).getInteger("id");
+            String order1 = list.getJSONObject(1).getString("order_id");
 
+            //将待处理的风控事件处理成正常
+            int code1 = md.cashier_riskEventHandle(id, 1, "人工处理订单无异常").getInteger("code");
+            checkArgument(code1 == 1000, "将待处理事件中小票单号为" + order + "处理成正常报错了" + code1);
+            //查巡列表该事件的状态
+            JSONArray list1 = md.cashier_riskPage(shop_id, "", order, "", "", "", "", page, size).getJSONArray("list");
+            String state_name = list1.getJSONObject(0).getString("state_name");
+            String result_name = list1.getJSONObject(0).getString("result_name");
+            checkArgument(state_name.equals("已处理") && result_name.equals("正常"), "将待处理事件中小票单号为" + order + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name + "处理结果：" + result_name);
+
+            //将待处理的风控事件处理成异常
+            int code2 = md.cashier_riskEventHandle(id1, 0, "该客户有刷单造假的嫌疑，请注意").getInteger("code");
+            checkArgument(code2 == 1000, "将待处理事件中id为" + id1 + "处理成异常报错了" + code2);
+
+            //查巡列表该事件的状态
+            JSONArray list2 = md.cashier_riskPage(shop_id, "", order1, "", "", "", "", page, size).getJSONArray("list");
+            String state_name1 = list2.getJSONObject(0).getString("state_name");
+            String result_name1 = list1.getJSONObject(0).getString("result_name");
+            checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成异常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "处理结果：" + result_name1);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("风控事项的处理");
+        }
+
+    }
+
+    /**
+     * ====================风控事项的处理（订单处理备注的字数）======================
+     */
+    @Test
+    public void trace_dealMark() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+            String order = list.getJSONObject(0).getString("order_id");
+
+            //将待处理的风控事件处理成正常
+            JSONObject res = md.cashier_riskEventHandle(id, 1, remark);
+            checkArgument(res.getString("message").equals("成功"), "风控事项的处理，备注填写为500字，创建失败");
+
+            //将待处理的风控事件处理成正常
+            JSONObject res1 = md.cashier_riskEventHandle(id, 1, remarks);
+            checkArgument(res1.getString("message").equals("备注不能超过500字"), "风控事项的处理，备注填写为501字，创建成功");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("风控事项的处理（订单处理备注的字数）");
+        }
+
+    }
 
     /**
      * ====================风控告警规则（增删改查）======================
@@ -1019,7 +1194,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void alarm_ruleAdd() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //新增一个沉默时间为10分钟的告警
             String name = "q_test01";
@@ -1081,7 +1256,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void alarm_ruleCheck() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //新增一个沉默时间为10分钟的告警
 //            String name = "q_test01";
@@ -1133,7 +1308,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void alarm_ruleSearch() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.alarm_rulePage("", "", "", null, page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
@@ -1183,13 +1358,14 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
     /**
      * ====================收银风控事件的数据一致性（涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空）========================
      */
     @Test
     public void orderInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1221,7 +1397,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void creatRuleInfo() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             int total = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
 
@@ -1265,7 +1441,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void ruleSwitch() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.alarm_page("", "", "", page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1294,7 +1470,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void risk_ruleDataInfo() {
         logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
             int total = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
@@ -1347,8 +1523,8 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void realTimeTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-       
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //获取今日实时得到访人数uv
             JSONArray iPvlist = md.realTimeShopTotalV3((long) 14630l).getJSONArray("list");
@@ -1383,7 +1559,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void passByTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //获取过点客群总人次&总人数
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -1392,14 +1568,14 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             int pv2 = pass_by.get("pv2");
             int uv1 = pass_by.get("uv1");
             int uv2 = pass_by.get("uv2");
-                        Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
             int pvIn1 = interest.get("pv1");
             int uvIn1 = interest.get("uv1");
 
-            int passPv = pv2 +  pvIn1;
+            int passPv = pv2 + pvIn1;
             int passUv = uv2 + uvIn1;
-            Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
-            Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"兴趣客群总人次"+uvIn1);
+            Preconditions.checkArgument(pv1 == passPv, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 + "+ 兴趣客群总人次" + pvIn1);
+            Preconditions.checkArgument(uv1 == passUv, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 + "兴趣客群总人次" + uvIn1);
 //            Preconditions.checkArgument(pv1 == pv2, "过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2);
 //            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
 
@@ -1457,7 +1633,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void enterTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
@@ -1485,7 +1661,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void interestTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
@@ -1513,7 +1689,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dealTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
@@ -1541,7 +1717,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void enterInterPass() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
@@ -1576,7 +1752,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void mpvTotals() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             int pvValues = 0;
             //获取到店趋势数据
@@ -1619,7 +1795,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void mpvTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 //            int count = 0;
 //            //获取到店趋势数据
@@ -1713,7 +1889,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void attractRate() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //获取过店客群总人次
             JSONObject res = md.historyShopConversionV3(shop_id, cycle_type, month);
@@ -1768,7 +1944,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void averageFlowTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             int values = 0;
             int values1 = 0;//值不为Null的个数，求平均值时用
@@ -1807,7 +1983,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void manSexScale() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //过店客群的各个年龄段的男性比例累计和
             double count = 0;
@@ -1874,7 +2050,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String district_code = "110000";
             Integer page = 1;
@@ -1912,7 +2088,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void memberAllTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
 
@@ -1987,7 +2163,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
             Integer customer_uv = 0;
@@ -2042,7 +2218,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void shop_memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
             Integer customer_uv = 0;
@@ -2105,7 +2281,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 
 
@@ -2177,7 +2353,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void uvWithPvScrole() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             //获取今日实时得到访人数uv
             JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
@@ -2212,7 +2388,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void custmerWithThing() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
             int count1 = trend_list.size();
@@ -2246,7 +2422,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void custInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
 //            customer_id
             //根据门店id获取customer_id
@@ -2379,7 +2555,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dataSurveillanceForMo() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String cycle_type = "";
             String month = "2020-08";
@@ -2425,7 +2601,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dataSurveillanceForS() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String cycle_type = "RECENT_SEVEN";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2470,7 +2646,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dataSurveillanceForF() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String cycle_type = "RECENT_FOURTEEN";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2515,7 +2691,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dataSurveillanceForT() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String cycle_type = "RECENT_THIRTY";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2562,7 +2738,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dataSurveillanceForSix() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             String cycle_type = "RECENT_SIXTY";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2610,7 +2786,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void arrival_time() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONObject response = md.memberTotalListV3(shop_id, page, 50);
             JSONArray list = response.getJSONArray("list");
@@ -2653,7 +2829,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void deal_thing() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONObject response = md.memberTotalListV3(shop_id, page, 50);
             JSONArray list = response.getJSONArray("list");
@@ -2690,7 +2866,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
@@ -2749,7 +2925,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountInfoData_1() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
@@ -2775,7 +2951,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-            if (old_phone != "" && old_phone !=null) {
+            if (old_phone != "" && old_phone != null) {
                 //编辑账号的名称，权限
                 String reName = "qingqing在测编辑";
                 md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
@@ -2811,7 +2987,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void accountInfoData_2() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.organizationRolePage("", page, size).getJSONArray("list");
             boolean result = false;
@@ -2844,7 +3020,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void cashierDataInfo() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -2885,7 +3061,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void cashierDataInfo1() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -2914,7 +3090,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void cashierDataInfo2() {
         logger.logCaseStart(caseResult.getCaseName());
-         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
             JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -2995,4 +3171,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+
 }

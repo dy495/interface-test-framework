@@ -95,6 +95,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     @Test
     public void getA() throws Exception {
+        final String NUMBER = ".";
+        final String ALGORITHM = "HmacSHA256";
         HttpClient client = null;
         try {
             client = HCB.custom()
@@ -104,88 +106,87 @@ public class StoreScenarioUtil extends TestCaseCommon {
             e.printStackTrace();
         }
         String timestamp = "" + System.currentTimeMillis();
-        String uid = "uid_ef6d2de5";
-        String appId = "49998b971ea0";
-        String ak = "3fdce1db0e843ee0";
+        String uid = "uid_0ba743d8";
+        String appId = "672170545f50";
+        String ak = "691ff41137d954f3";
         String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
-        String nonce = "64a1597074884673";
-        String sk = "5036807b1c25b9312116fd4b22c351ac";
-        String signStr = uid + "." + appId + "." + ak + "." + router + "." + timestamp + "." + nonce;
+        String nonce = UUID.randomUUID().toString();
+        String sk = "d76f2d8a7846382f633c1334139767fe";
         // java代码示例
-        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes("utf-8"), "HmacSHA256");
-        sha256_HMAC.init(encodeSecretKey);
+        // java代码示例
+        String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
 
-        byte[] hash = sha256_HMAC.doFinal(signStr.getBytes("utf-8"));
+        // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+        String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+        // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+        Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+        sha256Hmac.init(encodeSecretKey);
+        byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+        // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+        String auth = Base64.getEncoder().encodeToString(hash);
+
         Header[] headers = HttpHeader.custom()
                 .other("Accept", "application/json")
                 .other("Content-Type", "application/json;charset=utf-8")
                 .other("timestamp", timestamp)
                 .other("nonce", nonce)
                 .other("ExpiredTime", "50 * 1000")
-                .other("Authorization", authorization)
+                .other("Authorization", auth)
                 .build();
-        // java代码示例
-        String authorization = Base64.getEncoder().encodeToString(hash);
-        System.err.println(authorization);
 
-        //saveData("登陆");
-
-        String path = "/retail/api/data/biz";
-        String IpPort = "http://api.winsenseos.com";
-
-        String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
 
         String str = "{\n" +
-                "        \"shop_id\": \"43072\",\n" +
-                "        \"trans_id\": \"QAtest20201028001\",\n" +
-                "        \"trans_time\": \"1603354249588\",\n" +
+                "  \"uid\": \"uid_0ba743d8\",\n" +
+                "  \"app_id\": \"672170545f50\",\n" +
+                "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
+                "  \"version\": \"v1.0\",\n" +
+                "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                "  \"data\": {\n" +
+                "    \"biz_data\":  {\n" +
+                "        \"shop_id\": \"13260\",\n" +
+                "        \"trans_id\": \"QAtest1111_0999\",\n" +
+                "        \"trans_time\": \"1605065792336\",\n" +
                 "        \"trans_type\": [\n" +
                 "            \"W\"\n" +
                 "        ],\n" +
-                "        \"user_id\": \"4532ec9c-de23-4e18-9e1a-ab0feec0\",\n" +
-                "        \"total_price\": 998.888,\n" +
-                "        \"real_price\": 666.6666,\n" +
+                "        \"user_id\": \"2020100009\",\n" +
+                "        \"total_price\": 1800,\n" +
+                "        \"real_price\": 1500,\n" +
                 "        \"shopType\": \"SHOP_TYPE\",\n" +
-                "        \"orderNumber\": \"8888888888888\",\n" +
-                "        \"memberName\":\"志东\",\n" +
+                "        \"orderNumber\": \"13444894484\",\n" +
+                "        \"memberName\":\"单笔金额大于1200要触发\",\n" +
                 "        \"receipt_type\":\"小票类型\",\n" +
                 "        \"posId\": \"pos-1234586789\",\n" +
                 "        \"commodityList\": [\n" +
                 "            {\n" +
                 "                \"commodityId\": \"iPhone12\",\n" +
-                "                \"unit_price\": 123.123,\n" +
-                "                \"num\": 5\n" +
+                "                \"commodity_name\":\"苹果派12\",\n" +
+                "                \"unit_price\": 200,\n" +
+                "                \"num\": 1\n" +
                 "            },\n" +
                 "            {\n" +
                 "                \"commodityId\": \"banana\",\n" +
-                "                \"unit_price\": 456.456,\n" +
-                "                \"num\": 6\n" +
+                "                \"commodity_name\":\"香蕉2根\",\n" +
+                "                \"unit_price\": 2,\n" +
+                "                \"num\": 1\n" +
                 "            },\n" +
                 "            {\n" +
                 "                \"commodityId\": \"Apple\",\n" +
-                "                \"unit_price\": 789.789,\n" +
-                "                \"num\": 8\n" +
+                "                \"commodity_name\":\"苹果16个\",\n" +
+                "                \"unit_price\": 3,\n" +
+                "                \"num\": 1\n" +
                 "            }\n" +
                 "        ]\n" +
-                "    }";
-        Credential credential = new Credential(sk, sk);
-        // 封装request对象
-        String requestId = UUID.randomUUID().toString();
-        logger.debug("try to invoke apirequest");
-        ApiRequest apiRequest = new ApiRequest.Builder()
-                .uid(uid)
-                .appId(appId)
-                .version(SdkConstant.API_VERSION)
-                .requestId(requestId)
-                .router(router)
-                .dataResource(new String[]{})
-                .dataBizData(JSON.parseObject(str))
-                .build();
-        // client 请求
-        ApiClient apiClient = new ApiClient(requestUrl, credential);
-        ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-        logger.info(JSON.toJSONString(apiResponse));
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        JSONObject jsonObject = JSON.parseObject(str);
+        HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+        String post = HttpClientUtil.post(config);
+        System.out.println(post);
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -202,15 +203,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String non = "2e4b56c4-ac4c-4778-aa12-81657f5feb44";
 
 
-        // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
-        String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + non;
-        // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
-        Mac sha256Hmac = Mac.getInstance(ALGORITHM);
-        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-        sha256Hmac.init(encodeSecretKey);
-        byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
-        // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
-        System.out.println(Base64.getEncoder().encodeToString(hash));
+
         System.out.println(timestamp);
     }
 
