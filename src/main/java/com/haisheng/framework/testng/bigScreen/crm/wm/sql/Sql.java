@@ -5,6 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.ContainerConstan
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.SqlCreateException;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * sql类
@@ -73,7 +75,7 @@ public class Sql {
         }
 
         @SafeVarargs
-        public final <T> Builder value(T... value) {
+        public final <T> Builder setValue(T... value) {
             StringBuilder valueList = new StringBuilder();
             Arrays.stream(value).forEach(val -> valueList.append(setSqlValue(val)).append(",").append(blank));
             this.valueList = valueList.toString();
@@ -102,13 +104,13 @@ public class Sql {
         }
 
         public Builder from(String tableName) {
-            if (grammar.contains(ContainerConstants.INSERT)) {
-                this.tableName = tableName + blank;
-            }
-            if (grammar.contains(ContainerConstants.SELECT)) {
-                this.tableName = "from" + blank + tableName + blank;
-            }
+            this.tableName = grammar.contains(ContainerConstants.SELECT) ? "from" + blank + tableName + blank : tableName + blank;
             return this;
+        }
+
+        public <T> Builder from(Class<T> clazz) {
+            String tableName = clazz.getSimpleName();
+            return from(humpToLine(tableName));
         }
 
         public Builder where(String condition) {
@@ -121,6 +123,10 @@ public class Sql {
                     .append(compareTo).append(blank).append(setSqlValue(value)).append(blank);
             return this;
         }
+
+//        public <T> Builder where(Class<T> clazz, String compareTo, T value) {
+//            clazz.getClass().
+//        }
 
         public Builder and(String condition) {
             this.condition.append("and").append(blank).append(condition).append(blank);
@@ -172,13 +178,18 @@ public class Sql {
      * @return object
      */
     private static <T> Object setSqlValue(T value) {
-        if (value == null) {
-            return null;
-        }
-        if (value instanceof Integer) {
-            return value;
-        } else {
-            return "'" + value.toString().replaceAll("'", "\\\\'") + "'";
-        }
+        return value == null ? null : value instanceof Integer ? value : "'" + value.toString().replaceAll("'", "\\\\'") + "'";
     }
+
+    public static String humpToLine(String str) {
+        Pattern humpPattern = Pattern.compile("[A-Z]");
+        Matcher matcher = humpPattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString().replaceFirst("_", "");
+    }
+
 }

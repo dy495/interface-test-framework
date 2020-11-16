@@ -28,6 +28,7 @@ import java.util.Random;
 public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
+    PackFunction pf=new PackFunction();
 
 
 
@@ -458,51 +459,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
+            int roleId=13;
             String userLoginName=userName;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            String phone2 = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone2 = phone2 + a;
-            }
-            String passwd=cstm.pwd;
-            int roleId=13; //销售顾问
-            //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
-            int a = 0;
-            int total = crm.userPage(1,1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)){
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1,50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)){
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
-
+            String userid=pf.createUserId(userLoginName,roleId);
+            String phone2=pf.genPhoneNum();
             //重复添加
-            int code = crm.addUserNotChk(userName,userLoginName,phone2,passwd,roleId).getInteger("code");
+            int code = crm.addUserNotChk(userName,userLoginName,phone2,"123456",roleId).getInteger("code");
             //删除账号
             crm.userDel(userid);
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
@@ -523,49 +485,24 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.baoshijie,cstm.pwd);
             String userName = ""+ System.currentTimeMillis();
             String userLoginName=userName;
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
+            int roleId=13;
+            String phone=pf.genPhoneNum();
+            //创建用户
+            JSONObject data=crm.userPage(1,100);
+            int total=data.getInteger("total");
+            JSONArray list;
+            if(total==200){
+                throw new Exception("用户数量已达上线，case运行终止");
             }
-            String phone2 = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone2 = phone2 + a;
+            else if(total<100){
+                crm.addUser(userName,userName, phone,"123456",roleId,"","");
+                list = data.getJSONArray("list");
+            }else{
+                crm.addUser(userName,userName, phone,"123456",roleId,"","");
+                list=crm.userPage(2,100).getJSONArray("list");
             }
-            String passwd=cstm.pwd;
-            int roleId=13; //销售顾问
-            //添加账号
-            crm.addUser(userName,userLoginName,phone,passwd,roleId,"","");
-            //查询userid
-            int a = 0;
-            int total = crm.userPage(1,1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)){
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1,50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)){
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
-
+            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+           String  passwd="123456";
             //重复添加
             int code = crm.addUserNotChk(userName+"1",userLoginName+"1",phone,passwd+"1",roleId).getInteger("code");
             //删除账号
@@ -614,7 +551,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.baoshijie,cstm.pwd);
             String userLoginName=""+ System.currentTimeMillis();
             ArrayList<String> ll=new ArrayList();
-            PackFunction pf=new PackFunction();
 
             int roleId=13; //销售顾问
             int before_total = crm.userPage(1,1).getInteger("total");

@@ -1,10 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.pojo;
+package com.haisheng.framework.testng.bigScreen.crm.wm.dao;
 
 import lombok.Data;
 
+/**
+ * 每日接待表
+ */
 @Data
 public class TPorscheReceptionData {
-
+    @Column("id")
     private Integer id;
     private String shopId;
     private String receptionSale;
@@ -19,6 +22,4 @@ public class TPorscheReceptionData {
     private String customerPhone;
     private String receptionDate;
     private java.sql.Timestamp gmtCreate;
-
-
 }

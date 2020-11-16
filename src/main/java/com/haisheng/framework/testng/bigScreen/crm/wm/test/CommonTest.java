@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.DbContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class CommonTest {
         object.put("2", "455");
         String sql = Sql.instance().insert().from("t_porsche_deliver_car")
                 .field("a", "b", "b", "d", "f")
-                .value(null, 1.99, "3", "4", object)
+                .setValue(null, 1.99, "3", "4", object)
                 .end().getSql();
         System.err.println(sql);
     }
@@ -63,8 +63,7 @@ public class CommonTest {
 
     @Test
     public void testImageUtil() {
-        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/proportion/718_big_pic.png";
-        String str = new ImageUtil().getImage(path, "png");
-        System.err.println(str);
+        String name = CommonUtil.humpToLine(TPorscheReceptionData.class.getSimpleName());
+        System.out.println(name);
     }
 }

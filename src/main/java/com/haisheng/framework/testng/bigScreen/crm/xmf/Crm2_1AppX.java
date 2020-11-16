@@ -1675,7 +1675,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             int role_ids=13;
-            String userName = dt.getHHmm(0);
+            String userName = ""+ System.currentTimeMillis();
             String userid = pf.createUserId(userName,role_ids);
             //创建的销售登录
             int codeA=crm.tryLogin(userName,pp.adminpassword).getInteger("code");
@@ -1703,7 +1703,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "修改密码异常 后台未作校验，均是前端校验",enabled = false)
+//    @Test(description = "修改密码异常 后台未作校验，均是前端校验",enabled = false)
     public void appchangepassword2(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1711,7 +1711,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             //主账号登录
             crm.login(pp.zongjingli,pp.superpassword);
             //创建销售/顾问
-            String userName = dt.getHHmm(0);
+            String userName = ""+ System.currentTimeMillis();
             String userid=pf.createUserId(userName,role_ids);
             //创建的销售登录
             int code=crm.tryLogin(userName,pp.adminpassword).getInteger("code");

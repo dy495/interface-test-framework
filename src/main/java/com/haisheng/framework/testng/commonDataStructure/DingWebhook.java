@@ -3,8 +3,15 @@ package com.haisheng.framework.testng.commonDataStructure;
 public class DingWebhook {
 //    public static String QA_TEST_GRP = ""; //QA测试群
 
+
+    //线上报警总览
+    public static String ONLINE_ALARM_SUMMARY = "https://oapi.dingtalk.com/robot/send?access_token=7edde694c5e53e280f128ba81209df66904deeb7ac849b4c321110b1c15a0f43";
+
     //QA测试群
     public static String QA_TEST_GRP = "https://oapi.dingtalk.com/robot/send?access_token=0732a60532e16e85c37dcbbd350d461d51e5b877b6e4cd7aba498acffdf1c175"; //QA测试群
+
+    //QA组内机器人
+    public static String QA_GRP = "https://oapi.dingtalk.com/robot/send?access_token=9adf376ca1a8b6cff3bb39ee66ac413851a7b41cfcb897cd179d387e4c7f895f";
 
     //日常回归-开放平台&独立项目
     public static String CAR_OPEN_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=8a9eb2c50f9b3a62bca0d9963f6a7938d7f06df6ba62889673432448ea6abb4a";

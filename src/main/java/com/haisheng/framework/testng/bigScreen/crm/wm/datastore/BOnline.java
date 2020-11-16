@@ -3,12 +3,12 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheDeliverInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheOrderInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheDeliverInfoDO;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheOrderInfoDO;
-import com.haisheng.framework.testng.bigScreen.crm.wm.pojo.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderInfoPageScene;
@@ -29,16 +29,15 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BOnline extends TestCaseCommon implements TestCaseStd {
-    private static final Map<String, String> map = new HashMap<>();
+    private static final String shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
+    private static final int day = -1;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     PublicMethodOnline method = new PublicMethodOnline();
-    String shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
 
     @BeforeClass
     @Override
@@ -68,8 +67,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日接待记录")
     public void receptionData() {
         try {
-            TPorscheReceptionData po = new TPorscheReceptionData();
-            String date = DateTimeUtil.addDayFormat(new Date(), 0);
+            TPorscheReceptionData db = new TPorscheReceptionData();
+            String date = DateTimeUtil.addDayFormat(new Date(), day);
             IScene scene = CustomerMyReceptionListScene.builder().page(1).size(10).searchDateStart(date).searchDateEnd(date).build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
@@ -77,26 +76,26 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = CustomerMyReceptionListScene.builder().page(i).size(100).searchDateStart(date).searchDateEnd(date).build();
                 JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
-                    po.setShopId(shopId);
-                    po.setReceptionSale(list.getJSONObject(j).getString("sale_name"));
-                    po.setReceptionSaleId(getSaleId(list.getJSONObject(j).getString("sale_name")));
-                    po.setReceptionStartTime(list.getJSONObject(j).getString("reception_time_str"));
-                    po.setReceptionEndTime(list.getJSONObject(j).getString("leave_time_str"));
-                    String start = po.getReceptionStartTime() == null ? "00:00" : po.getReceptionStartTime();
-                    String end = po.getReceptionEndTime() == null ? "00:00" : po.getReceptionEndTime();
-                    po.setReceptionDuration(new DateTimeUtil().calTimeHourDiff(start, end));
-                    po.setCustomerId(list.getJSONObject(j).getInteger("customer_id"));
-                    po.setCustomerName(list.getJSONObject(j).getString("customer_name"));
-                    po.setCustomerTypeName(list.getJSONObject(j).getString("customer_type_name"));
-                    po.setCustomerPhone(list.getJSONObject(j).getString("customer_phone"));
-                    po.setReceptionDate(list.getJSONObject(j).getString("day_date"));
+                    db.setShopId(shopId);
+                    db.setReceptionSale(list.getJSONObject(j).getString("sale_name"));
+                    db.setReceptionSaleId(getSaleId(list.getJSONObject(j).getString("sale_name")));
+                    db.setReceptionStartTime(list.getJSONObject(j).getString("reception_time_str"));
+                    db.setReceptionEndTime(list.getJSONObject(j).getString("leave_time_str"));
+                    String start = db.getReceptionStartTime() == null ? "00:00" : db.getReceptionStartTime();
+                    String end = db.getReceptionEndTime() == null ? "00:00" : db.getReceptionEndTime();
+                    db.setReceptionDuration(new DateTimeUtil().calTimeHourDiff(start, end));
+                    db.setCustomerId(list.getJSONObject(j).getInteger("customer_id"));
+                    db.setCustomerName(list.getJSONObject(j).getString("customer_name"));
+                    db.setCustomerTypeName(list.getJSONObject(j).getString("customer_type_name"));
+                    db.setCustomerPhone(list.getJSONObject(j).getString("customer_phone"));
+                    db.setReceptionDate(list.getJSONObject(j).getString("day_date"));
                     String sql = Sql.instance().insert()
                             .from("t_porsche_reception_data")
                             .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
-                            .value(po.getShopId(), po.getReceptionSaleId(), po.getReceptionSale(),
-                                    po.getReceptionStartTime(), po.getReceptionEndTime(),
-                                    po.getReceptionDuration(), po.getCustomerId(), po.getCustomerName(),
-                                    po.getCustomerTypeName(), po.getCustomerPhone(), po.getReceptionDate())
+                            .setValue(db.getShopId(), db.getReceptionSaleId(), db.getReceptionSale(),
+                                    db.getReceptionStartTime(), db.getReceptionEndTime(),
+                                    db.getReceptionDuration(), db.getCustomerId(), db.getCustomerName(),
+                                    db.getCustomerTypeName(), db.getCustomerPhone(), db.getReceptionDate())
                             .end().getSql();
                     new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
                 }
@@ -110,8 +109,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日交车记录")
     public void deliverCarData() {
         try {
-            TPorscheDeliverInfoDO DO = new TPorscheDeliverInfoDO();
-            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            TPorscheDeliverInfo db = new TPorscheDeliverInfo();
+            String date = DateTimeUtil.addDayFormat(new Date(), day);
             IScene scene = OrderInfoPageScene.builder().build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
@@ -121,39 +120,39 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 for (int j = 0; j < list.size(); j++) {
                     if (list.getJSONObject(j).getString("deliver_date") != null
                             && list.getJSONObject(j).getString("deliver_date").equals(date)) {
-                        DO.setShopId(shopId);
-                        DO.setCustomerName(list.getJSONObject(j).getString("customer_name"));
-                        DO.setIdNumber(list.getJSONObject(j).getString("id_number"));
-                        DO.setBirthday(list.getJSONObject(j).getString("birthday"));
-                        DO.setAddress(list.getJSONObject(j).getString("district_name"));
-                        DO.setGender(list.getJSONObject(j).getString("gender"));
-                        DO.setAge(list.getJSONObject(j).getString("age"));
+                        db.setShopId(shopId);
+                        db.setCustomerName(list.getJSONObject(j).getString("customer_name"));
+                        db.setIdNumber(list.getJSONObject(j).getString("id_number"));
+                        db.setBirthday(list.getJSONObject(j).getString("birthday"));
+                        db.setAddress(list.getJSONObject(j).getString("district_name"));
+                        db.setGender(list.getJSONObject(j).getString("gender"));
+                        db.setAge(list.getJSONObject(j).getString("age"));
                         JSONArray phones = list.getJSONObject(j).getJSONArray("phones");
                         if (phones.size() > 0) {
-                            DO.setPhones(phones.getString(0));
+                            db.setPhones(phones.getString(0));
                         }
-                        DO.setSubjectTypeName(list.getJSONObject(j).getString("subject_type_name"));
-                        DO.setSaleName(list.getJSONObject(j).getString("belongs_sale_name"));
-                        DO.setSaleId(getSaleId(DO.getSaleName()));
-                        DO.setCarStyle(getCarStyleId(list.getJSONObject(j).getString("car_style_name")));
-                        DO.setCarModel(list.getJSONObject(j).getString("car_model_name"));
-                        DO.setDeliverDate(list.getJSONObject(j).getString("deliver_date"));
-                        DO.setPlateTypeName(list.getJSONObject(j).getString("plate_type_name"));
-                        DO.setDefrayTypeName(list.getJSONObject(j).getString("defray_type_name"));
-                        DO.setSourceChannelName(list.getJSONObject(j).getString("source_channel_name"));
-                        DO.setPayTypeName(list.getJSONObject(j).getString("pay_type_name"));
-                        DO.setPlateNumber(list.getJSONObject(j).getString("plate_number"));
-                        DO.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
+                        db.setSubjectTypeName(list.getJSONObject(j).getString("subject_type_name"));
+                        db.setSaleName(list.getJSONObject(j).getString("belongs_sale_name"));
+                        db.setSaleId(getSaleId(db.getSaleName()));
+                        db.setCarStyle(getCarStyleId(list.getJSONObject(j).getString("car_style_name")));
+                        db.setCarModel(list.getJSONObject(j).getString("car_model_name"));
+                        db.setDeliverDate(list.getJSONObject(j).getString("deliver_date"));
+                        db.setPlateTypeName(list.getJSONObject(j).getString("plate_type_name"));
+                        db.setDefrayTypeName(list.getJSONObject(j).getString("defray_type_name"));
+                        db.setSourceChannelName(list.getJSONObject(j).getString("source_channel_name"));
+                        db.setPayTypeName(list.getJSONObject(j).getString("pay_type_name"));
+                        db.setPlateNumber(list.getJSONObject(j).getString("plate_number"));
+                        db.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
                         String sql = Sql.instance().insert()
-                                .from("t_porsche_deliver_info")
+                                .from(TPorscheDeliverInfo.class)
                                 .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phones",
                                         "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "deliver_date", "plate_type_name",
                                         "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
-                                .value(DO.getShopId(), DO.getCustomerId(), DO.getCustomerName(), DO.getIdNumber(),
-                                        DO.getBirthday(), DO.getAddress(), DO.getGender(), DO.getAge(), DO.getPhones(),
-                                        DO.getSubjectTypeName(), DO.getSaleName(), DO.getSaleId(), DO.getCarStyle(),
-                                        DO.getCarModel(), DO.getDeliverDate(), DO.getPlateTypeName(), DO.getDefrayTypeName(),
-                                        DO.getSourceChannelName(), DO.getPayTypeName(), DO.getPlateNumber(), DO.getVehicleChassisCode())
+                                .setValue(db.getShopId(), db.getCustomerId(), db.getCustomerName(), db.getIdNumber(),
+                                        db.getBirthday(), db.getAddress(), db.getGender(), db.getAge(), db.getPhones(),
+                                        db.getSubjectTypeName(), db.getSaleName(), db.getSaleId(), db.getCarStyle(),
+                                        db.getCarModel(), db.getDeliverDate(), db.getPlateTypeName(), db.getDefrayTypeName(),
+                                        db.getSourceChannelName(), db.getPayTypeName(), db.getPlateNumber(), db.getVehicleChassisCode())
                                 .end().getSql();
                         new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
                     }
@@ -168,8 +167,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "每日订车记录")
     public void orderCarData() {
         try {
-            TPorscheOrderInfoDO orderDO = new TPorscheOrderInfoDO();
-            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            TPorscheOrderInfo db = new TPorscheOrderInfo();
+            String date = DateTimeUtil.addDayFormat(new Date(), day);
             IScene scene = OrderInfoPageScene.builder().build();
             int total = crm.invokeApi(scene).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
@@ -179,39 +178,39 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 for (int j = 0; j < list.size(); j++) {
                     if (list.getJSONObject(j).getString("order_date") != null
                             && list.getJSONObject(j).getString("order_date").equals(date)) {
-                        orderDO.setShopId(shopId);
-                        orderDO.setCustomerName(list.getJSONObject(j).getString("customer_name"));
-                        orderDO.setIdNumber(list.getJSONObject(j).getString("id_number"));
-                        orderDO.setBirthday(list.getJSONObject(j).getString("birthday"));
-                        orderDO.setAddress(list.getJSONObject(j).getString("district_name"));
-                        orderDO.setGender(list.getJSONObject(j).getString("gender"));
-                        orderDO.setAge(list.getJSONObject(j).getString("age"));
+                        db.setShopId(shopId);
+                        db.setCustomerName(list.getJSONObject(j).getString("customer_name"));
+                        db.setIdNumber(list.getJSONObject(j).getString("id_number"));
+                        db.setBirthday(list.getJSONObject(j).getString("birthday"));
+                        db.setAddress(list.getJSONObject(j).getString("district_name"));
+                        db.setGender(list.getJSONObject(j).getString("gender"));
+                        db.setAge(list.getJSONObject(j).getString("age"));
                         JSONArray phones = list.getJSONObject(j).getJSONArray("phones");
                         if (phones.size() > 0) {
-                            orderDO.setPhones(phones.getString(0));
+                            db.setPhones(phones.getString(0));
                         }
-                        orderDO.setSubjectTypeName(list.getJSONObject(j).getString("subject_type_name"));
-                        orderDO.setSaleName(list.getJSONObject(j).getString("belongs_sale_name"));
-                        orderDO.setSaleId(getSaleId(orderDO.getSaleName()));
-                        orderDO.setCarStyle(getCarStyleId(list.getJSONObject(j).getString("car_style_name")));
-                        orderDO.setCarModel(list.getJSONObject(j).getString("car_model_name"));
-                        orderDO.setOrderDate(list.getJSONObject(j).getString("order_date"));
-                        orderDO.setPlateTypeName(list.getJSONObject(j).getString("plate_type_name"));
-                        orderDO.setDefrayTypeName(list.getJSONObject(j).getString("defray_type_name"));
-                        orderDO.setSourceChannelName(list.getJSONObject(j).getString("source_channel_name"));
-                        orderDO.setPayTypeName(list.getJSONObject(j).getString("pay_type_name"));
-                        orderDO.setPlateNumber(list.getJSONObject(j).getString("plate_number"));
-                        orderDO.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
+                        db.setSubjectTypeName(list.getJSONObject(j).getString("subject_type_name"));
+                        db.setSaleName(list.getJSONObject(j).getString("belongs_sale_name"));
+                        db.setSaleId(getSaleId(db.getSaleName()));
+                        db.setCarStyle(getCarStyleId(list.getJSONObject(j).getString("car_style_name")));
+                        db.setCarModel(list.getJSONObject(j).getString("car_model_name"));
+                        db.setOrderDate(list.getJSONObject(j).getString("order_date"));
+                        db.setPlateTypeName(list.getJSONObject(j).getString("plate_type_name"));
+                        db.setDefrayTypeName(list.getJSONObject(j).getString("defray_type_name"));
+                        db.setSourceChannelName(list.getJSONObject(j).getString("source_channel_name"));
+                        db.setPayTypeName(list.getJSONObject(j).getString("pay_type_name"));
+                        db.setPlateNumber(list.getJSONObject(j).getString("plate_number"));
+                        db.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
                         String sql = Sql.instance().insert()
-                                .from("t_porsche_order_info")
+                                .from(TPorscheOrderInfo.class)
                                 .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phones",
                                         "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "order_date", "plate_type_name",
                                         "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
-                                .value(orderDO.getShopId(), orderDO.getCustomerId(), orderDO.getCustomerName(), orderDO.getIdNumber(),
-                                        orderDO.getBirthday(), orderDO.getAddress(), orderDO.getGender(), orderDO.getAge(), orderDO.getPhones(),
-                                        orderDO.getSubjectTypeName(), orderDO.getSaleName(), orderDO.getSaleId(), orderDO.getCarStyle(),
-                                        orderDO.getCarModel(), orderDO.getOrderDate(), orderDO.getPlateTypeName(), orderDO.getDefrayTypeName(),
-                                        orderDO.getSourceChannelName(), orderDO.getPayTypeName(), orderDO.getPlateNumber(), orderDO.getVehicleChassisCode())
+                                .setValue(db.getShopId(), db.getCustomerId(), db.getCustomerName(), db.getIdNumber(),
+                                        db.getBirthday(), db.getAddress(), db.getGender(), db.getAge(), db.getPhones(),
+                                        db.getSubjectTypeName(), db.getSaleName(), db.getSaleId(), db.getCarStyle(),
+                                        db.getCarModel(), db.getOrderDate(), db.getPlateTypeName(), db.getDefrayTypeName(),
+                                        db.getSourceChannelName(), db.getPayTypeName(), db.getPlateNumber(), db.getVehicleChassisCode())
                                 .end().getSql();
                         new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
                     }
@@ -252,14 +251,5 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
             }
         }
         return null;
-    }
-
-    private long getBatchId(long customerId) {
-        String sql = Sql.instance().select()
-                .from("pre_sales_reception")
-                .where("customer_id", "=", customerId)
-                .end().getSql();
-        List<Map<String, Object>> list = new Factory.Builder().container(EnumContainer.BUSINESS_PORSCHE.getContainer()).build().create(sql);
-        return (long) list.get(0).get("batch_id");
     }
 }

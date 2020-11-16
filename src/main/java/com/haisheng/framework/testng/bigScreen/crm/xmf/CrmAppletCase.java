@@ -349,6 +349,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public void deleteMycar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             String plate_number = "豫GBBA24";
             String my_car_id=crm.myCarAdd(car_type, plate_number, car_model).getString("my_car_id");
             JSONObject carData = crm.myCarList();
@@ -363,7 +364,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
                 aftercount = 0;
             }
             checkArgument((count - aftercount) == 1, "删除车辆，数量没-1");
-
 
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());

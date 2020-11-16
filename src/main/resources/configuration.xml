@@ -38,5 +38,6 @@
         <mapper resource="mapper/onlineYuexiuUvGap.xml"/>
         <mapper resource="mapper/onlineYuexiuCustomerSearch.xml"/>
         <mapper resource="mapper/feidanPicSearch.xml"/>
+        <mapper resource="mapper/config.xml"/>
     </mappers>
 </configuration>

@@ -2187,11 +2187,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("pc批量删除车辆");
         }
     }
-    /**
-     * @description :删除历史数据
-     * @date :2020/7/19 20:27
-     **/
-//    @Test
+//    @Test(description = "删除车主活动多余数据")
     public void deletaDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2226,7 +2222,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("删除文章活动");
         }
     }
-//     @Test
+//     @Test(description = "删除用户管理中多余用户数据")
     public void deleteuser(){
         try {
             crm.login(baoshijie, adminpassword);

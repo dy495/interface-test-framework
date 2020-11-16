@@ -375,7 +375,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
+    //@Test
     public void customerListSearchDate() {
         logger.logCaseStart(caseResult.getCaseName());
 

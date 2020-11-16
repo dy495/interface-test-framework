@@ -71,7 +71,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
     //long firstAppearTime = 1582684439509L; //原
     //long firstAppearTime = 1583900897877L;
-    long firstAppearTime = 1584936946964L;
+    //long firstAppearTime = 1584936946964L;
+    long firstAppearTime = 1603353621624L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
@@ -2651,7 +2652,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         try {
 
             String cardId = feidan.genCardId();
-            String personName = "1";
+            String personName = "半脸测试";
 
             String s = feidan.witnessUpload(cardId, personName);
 
