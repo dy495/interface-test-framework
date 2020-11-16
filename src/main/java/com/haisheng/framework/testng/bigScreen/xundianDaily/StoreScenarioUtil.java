@@ -1743,6 +1743,316 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * -------------------------------门店1.0APP-----------------------------------------------------------------------------------------------
+    */
+
+
+    /**
+     * @description:2.1 搜索筛选-门店类型列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject typeSearch( Integer page, Integer size) throws Exception {
+        String url = "/store/m-app/auth/shop/shop-type-list";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.2搜索筛选-长逛店铺列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject longSee_list( Integer page, Integer size) throws Exception {
+        String url = "/store/m-app/auth/shop/often-shop-list";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.3 搜索筛选-省份地区列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject citySearch_list(Integer page, Integer size) throws Exception {
+        String url = "/store/m-app/auth/shop/district-list";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.4 搜索筛选-搜索门店
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject shopName_Search(String district_code ,JSONArray shop_type ,String shop_name,Integer page, Integer size) throws Exception {
+        String url = "/store/m-app/auth/shop/shop-search";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :" + district_code + ",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.5 门店详情页
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_shopDetail(String shop_id ) throws Exception {
+        String url = "/store/m-app/auth/shop/shop-detail";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.6 门店数量查询
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_shopNum() throws Exception {
+        String url = "/store/m-app/auth/shop/shop-statistic";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2.7 切换门店
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_changeStore() throws Exception {
+        String url = "/store/m-app/auth/shop/switch";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description:3.1 巡店中心
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_patrolCenter() throws Exception {
+        String url = "/store/m-app/auth/patrol/center";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:3.1 门店详情-设备列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_deviceList( long shop_id) throws Exception {
+        String url = "/store/m-app/auth/patrol/device-list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:3.2 巡店-直播流
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_deviceList( long shop_id,String device_id) throws Exception {
+        String url = "/store/m-app/auth/patrol/device-live";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"device_id\" :\"" + device_id + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+
+    /**----------------------------------------------------------------------四. 账号相关---------------------------**/
+    /**
+     * @description:1.1 获取登录验证码
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_deviceList( String phone) throws Exception {
+        String url = "/store/m-app/login-verification-code";
+        String json =
+                "{" +
+                        "\"phone\" :\"" + phone + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:1.2 登录
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_login( String phone,String verification_code) throws Exception {
+        String url = "/store/m-app/login";
+        String json =
+                "{" +
+                        "\"verification_code\" :\"" + verification_code + "\",\n" +
+                        "\"phone\" :\"" + phone + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:4.2 个人中心
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject user_center() throws Exception {
+        String url = "/store/m-app/auth/user/center";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //--------------------------------------五. 数据统计相关---------------------------
+    /**
+     * @description:5.3 门店详情-实时客流-用户画像
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject real_userInfo( long shop_id) throws Exception {
+        String url = "/store/m-app/auth/shop/real-hour/age-gender/distribution";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.4 门店详情-实时客流-趋势图
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject real_pv_uv( long shop_id) throws Exception {
+        String url = "/store/m-app/auth/shop/real-hour/pv-uv";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.5 门店详情-历史客流-用户画像
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject history_userInfo( long shop_id) throws Exception {
+        String url = "/store/m-app/auth/shop/history/age-gender/distribution";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:5.6 门店详情-历史客流-到店趋势图
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject history_pv_uv( long shop_id) throws Exception {
+        String url = "/store/m-app/auth/shop/history/age-gender/distribution";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.7 门店详情-历史客流-客群漏斗
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject history_conversion( long shop_id,String date,String cecle_type) throws Exception {
+        String url = "/store/m-app/auth/shop/history/conversion";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"date\" :\"" + date + "\",\n" +
+                        "\"cecle_type\" :\"" + cecle_type + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 }
 
 
