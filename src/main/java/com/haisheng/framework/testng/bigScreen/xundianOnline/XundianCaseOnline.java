@@ -32,7 +32,7 @@ import java.util.List;
  * @date :  2020/05/30
  */
 
-public class XundianCaseForSales extends TestCaseCommon implements TestCaseStd {
+public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     String xjy4="uid_9e7bc0a2";
     String test = "uid_1a48c5e1";

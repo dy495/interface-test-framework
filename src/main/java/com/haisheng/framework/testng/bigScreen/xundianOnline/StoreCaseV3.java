@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @date :  2020/07/06 10:00
  */
 
-public class StoreCaseForStore extends TestCaseCommon implements TestCaseStd {
+public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     Integer status = 1;
     String type = "PHONE";
