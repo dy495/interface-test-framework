@@ -92,7 +92,9 @@ public class B extends TestCaseCommon implements TestCaseStd {
                     db.setReceptionDate(list.getJSONObject(j).getString("day_date"));
                     String sql = Sql.instance().insert()
                             .from("t_porsche_reception_data")
-                            .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
+                            .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time",
+                                    "reception_end_time", "reception_duration", "customer_id", "customer_name",
+                                    "customer_type_name", "customer_phone", "reception_date")
                             .setValue(db.getShopId(), db.getReceptionSaleId(), db.getReceptionSale(),
                                     db.getReceptionStartTime(), db.getReceptionEndTime(),
                                     db.getReceptionDuration(), db.getCustomerId(), db.getCustomerName(),
@@ -146,9 +148,10 @@ public class B extends TestCaseCommon implements TestCaseStd {
                         db.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
                         String sql = Sql.instance().insert()
                                 .from(TPorscheDeliverInfo.class)
-                                .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phones",
-                                        "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "deliver_date", "plate_type_name",
-                                        "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
+                                .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address",
+                                        "gender", "age", "phones", "subject_type_name", "sale_name", "sale_id",
+                                        "car_style", "car_model", "deliver_date", "plate_type_name", "defray_type_name",
+                                        "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
                                 .setValue(db.getShopId(), db.getCustomerId(), db.getCustomerName(), db.getIdNumber(),
                                         db.getBirthday(), db.getAddress(), db.getGender(), db.getAge(), db.getPhones(),
                                         db.getSubjectTypeName(), db.getSaleName(), db.getSaleId(), db.getCarStyle(),
@@ -204,9 +207,10 @@ public class B extends TestCaseCommon implements TestCaseStd {
                         db.setVehicleChassisCode(list.getJSONObject(j).getString("vehicle_chassis_code"));
                         String sql = Sql.instance().insert()
                                 .from(TPorscheOrderInfo.class)
-                                .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phones",
-                                        "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "order_date", "plate_type_name",
-                                        "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
+                                .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address",
+                                        "gender", "age", "phones", "subject_type_name", "sale_name", "sale_id",
+                                        "car_style", "car_model", "order_date", "plate_type_name", "defray_type_name",
+                                        "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
                                 .setValue(db.getShopId(), db.getCustomerId(), db.getCustomerName(), db.getIdNumber(),
                                         db.getBirthday(), db.getAddress(), db.getGender(), db.getAge(), db.getPhones(),
                                         db.getSubjectTypeName(), db.getSaleName(), db.getSaleId(), db.getCarStyle(),

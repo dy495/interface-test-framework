@@ -761,7 +761,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             int s = CommonUtil.getTurningPage(response.getInteger("total"), size);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, size).getJSONArray("list");
-                for (int j = 0; j < 50; j++) {
+                for (int j = 0; j < list.size() / 2; j++) {
                     String customerPhone = list.getJSONObject(j).getString("customer_phone");
                     Preconditions.checkArgument(!StringUtils.isEmpty(customerPhone), "我的回访存在空电话号码");
                     Preconditions.checkArgument(!CommonUtil.isContainChinese(customerPhone), "我的回访存在非电话号" + customerPhone);

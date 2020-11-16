@@ -12,7 +12,7 @@ public class Factory extends BasicProperty {
     private final IContainer container;
 
     public Factory(Builder builder) {
-        super(builder);
+        super();
         this.container = builder.container;
     }
 
@@ -32,8 +32,7 @@ public class Factory extends BasicProperty {
     }
 
     public <T> List<T> create(Sql sql, Class<T> clazz) {
-        container.setPath(sql.getSql());
-        return container.getTable(clazz);
+        return create(sql.getSql(), clazz);
     }
 
     @Setter

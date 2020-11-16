@@ -88,7 +88,9 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 db.setSaleId(arr.get("userId"));
                 String sql = Sql.instance().insert()
                         .from(TPorscheTodayData.class)
-                        .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num", "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name", "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
+                        .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num",
+                                "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name",
+                                "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
                         .setValue(db.getTodayTestDriverNum(), db.getTodayOrderNum(), db.getTodayDealNum(), db.getTodayClueNum(),
                                 db.getTodayReceptionNum(), db.getTodayAppointmentNum(), db.getTodayDate(), db.getShopId(),
                                 db.getSaleName(), db.getTodayNewCustomerReceptionNum(), db.getTodayOldCustomerReceptionNum(), db.getSaleId())

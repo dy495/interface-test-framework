@@ -19,7 +19,7 @@ public abstract class BaseContainer extends BasicProperty implements IContainer 
     private String path;
 
     protected BaseContainer(BaseBuilder<?, ?> builder) {
-        super(builder);
+        super();
         this.path = builder.path;
     }
 

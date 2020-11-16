@@ -27,7 +27,7 @@ public class DbTable extends BasicProperty implements ITable {
     private final String tableName;
 
     public DbTable(Builder builder) {
-        super(builder);
+        super();
         this.statement = builder.statement;
         this.path = builder.path;
         this.tableName = builder.tableName;

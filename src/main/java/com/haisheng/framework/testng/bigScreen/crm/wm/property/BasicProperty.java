@@ -47,11 +47,11 @@ public class BasicProperty implements IProperty {
 
     public static class Builder {
         public BasicProperty build() {
-            return new BasicProperty(this);
+            return new BasicProperty();
         }
     }
 
-    public BasicProperty(Builder builder) {
+    public BasicProperty() {
         this.errorMsg = new StringBuilder();
     }
 }

@@ -97,7 +97,7 @@ public class Entity {
 //        System.out.println(sb.toString());
 //        new TPorscheReceptionData().setId();
         String sql = Sql.instance().select()
-                .from("t_porsche_reception_data")
+                .from(TPorscheReceptionData.class)
                 .where("reception_date", "=", "2020-11-10")
                 .and("shop_id", "=", "22728")
                 .end().getSql();
