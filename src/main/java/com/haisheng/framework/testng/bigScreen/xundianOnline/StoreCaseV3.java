@@ -213,7 +213,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "                \"commodityId\": \"Apple\",\n" +
                     "                \"commodity_name\":\"苹果16个\",\n" +
                     "                \"unit_price\": 3,\n" +
-                    "                \"num\": 1\n" +
+                    "                \"num\": 4\n" +
                     "            }\n" +
                     "        ]\n" +
                     "    }\n" +
