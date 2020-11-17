@@ -806,116 +806,112 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-//    /**
-//     * ====================收银追溯的筛选（单一查询）======================
-//     */
-//    @Test
-//    public void trace_backSearch() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
-//        try {
-//            md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-//
-//            JSONArray list = md.cashier_traceBack(shop_id, "", "", page, size).getJSONArray("list");
-//            String order_id = list.getJSONObject(0).getString("order_id");
-//            Long date = list.getJSONObject(0).getLong("order_time");
-//            String date_01 = dt.timestampToDate("yyyy-MM-dd", date);
-//            //根据日期进行查询
-//
-//            JSONArray list1 = md.cashier_traceBack(shop_id, date_01, "", page, size).getJSONArray("list");
-//
-//            if (list.size() > 0) {
-//                for (int i = 0; i < list1.size(); i++) {
-//                    Long the_date = list1.getJSONObject(i).getLong("order_time");//the_date需要对时间戳进行转换，在调试接口时勿忘
-//                    String the_dates = dt.timestampToDate("yyyy-MM-dd", the_date);
-//                    checkArgument(date_01.contains(the_dates), "根据日期" + date + "搜索,没有查询到应有的结果");
-//                }
-//
-//                //根据小票单号进行查询
-//                JSONArray list2 = md.cashier_traceBack(shop_id, "", order_id, page, size).getJSONArray("list");
-//
-//                String order_id1 = list2.getJSONObject(0).getString("order_id");
-//                checkArgument(order_id.equals(order_id1), "根据小票单号" + order_id + "搜索,没有查询到应有的结果");
-//            } else {
-//                System.err.println("该数组下无数据，取不到小票单号");
-//            }
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("收银追溯的筛选（单一条件筛选）");
-//        }
-//
-//    }
+    /**
+     * ====================收银追溯的筛选（单一查询）======================
+     */
+    @Test
+    public void trace_backSearch() {
+        logger.logCaseStart(caseResult.getCaseName());
+        md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+        try {
 
-//    /**
-//     * ====================收银风控事件的筛选（单一查询）======================
-//     */
-//    @Test
-//    public void risk_eventSearch() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-//        try {
-//            md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
-//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "", page, size).getJSONArray("list");
-//            String event_name = list.getJSONObject(0).getString("event_name");
-//            String order_id = list.getJSONObject(0).getString("order_id");
-//            String order_date = list.getJSONObject(0).getString("order_date").substring(0, 10);
-//            String order_date_01 = list.getJSONObject(0).getString("order_date");
-//            String handle_result = list.getJSONObject(0).getString("handle_result");
-//            String current_state = list.getJSONObject(0).getString("current_state");
-//
-//            //根据事件名称进行筛选
-//            JSONArray list1 = md.cashier_riskPage(shop_id, event_name, "", "", "", "", "", page, size).getJSONArray("list");
-//            String event_name1 = list1.getJSONObject(0).getString("event_name");
-//            checkArgument(event_name.contains(event_name1), "根据日期" + event_name + "搜索,没有查询到应有的结果");
-//
-//            //根据小票单号进行筛选
-//            JSONArray list2 = md.cashier_riskPage(shop_id, "", order_id, "", "", "", "", page, size).getJSONArray("list");
-//            String order_id1 = list1.getJSONObject(0).getString("order_id");
-//            checkArgument(order_id.contains(order_id1), "根据订单编号" + order_id + "搜索,没有查询到应有的结果");
-//
-//            //根据收银日期进行筛选
-//            JSONArray list3 = md.cashier_riskPage(shop_id, "", "", order_date, "", "", "", page, size).getJSONArray("list");
-//            for (int i = 0; i < list3.size(); i++) {
-//                String order_date1 = list1.getJSONObject(i).getString("order_date");
-//                checkArgument(order_date_01.equals(order_date1), "根据收银日期" + order_date + "搜索,没有查询到应有的结果");
-//
-//            }
-//
-//            //根据处理结果进行筛选
-//            JSONArray list4 = md.cashier_riskPage(shop_id, "", "", "", "", handle_result, "", page, size).getJSONArray("list");
-//            for (int i = 0; i < list4.size(); i++) {
-//                String handle_result1 = list1.getJSONObject(i).getString("handle_result");
-//                checkArgument(handle_result.contains(handle_result1), "根据订单编号" + handle_result + "搜索,没有查询到应有的结果");
-//            }
-//
-//            //根据当前状态进行筛选
-//            JSONArray list5 = md.cashier_riskPage(shop_id, "", "", "", "", "", current_state, page, size).getJSONArray("list");
-//            for (int i = 0; i < list5.size(); i++) {
-//                String current_state1 = list1.getJSONObject(i).getString("current_state");
-//                checkArgument(current_state.contains(current_state1), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
-//            }
+            JSONArray list = md.cashier_traceBack(shop_id, "", "", page, size).getJSONArray("list");
+            String order_id = list.getJSONObject(0).getString("order_id");
+            Long date = list.getJSONObject(0).getLong("order_time");
+            String date_01 = dt.timestampToDate("yyyy-MM-dd", date);
+            //根据日期进行查询
 
-//            //根据全部结果进行筛选
-//            JSONArray list6 = md.cashier_riskPage(shop_id, event_name, order_id, order_date, "", "", current_state, page, size).getJSONArray("list");
-//
-//            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
+            JSONArray list1 = md.cashier_traceBack(shop_id, date_01, "", page, size).getJSONArray("list");
 
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("收银风控事件的筛选（单一条件筛选）");
-//        }
-//
-//    }
+            if (list.size() > 0) {
+                for (int i = 0; i < list1.size(); i++) {
+                    Long the_date = list1.getJSONObject(i).getLong("order_time");//the_date需要对时间戳进行转换，在调试接口时勿忘
+                    String the_dates = dt.timestampToDate("yyyy-MM-dd", the_date);
+                    checkArgument(date_01.contains(the_dates), "根据日期" + date + "搜索,没有查询到应有的结果");
+                }
+
+                //根据小票单号进行查询
+                JSONArray list2 = md.cashier_traceBack(shop_id, "", order_id, page, size).getJSONArray("list");
+                String order_id1 = list2.getJSONObject(0).getString("order_id");
+                checkArgument(order_id.equals(order_id1), "根据小票单号" + order_id + "搜索,没有查询到应有的结果");
+            } else {
+                System.err.println("该数组下无数据，取不到小票单号");
+            }
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("收银追溯的筛选（单一条件筛选）");
+        }
+
+    }
+
+    /**
+     * ====================收银风控事件的筛选（单一查询）======================
+     */
+    @Test
+    public void risk_eventSearch() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "", page, size).getJSONArray("list");
+            String event_name = list.getJSONObject(0).getString("event_name");
+            String order_id = list.getJSONObject(0).getString("order_id");
+            String order_date = list.getJSONObject(0).getString("order_date").substring(0, 10);
+            String order_date_01 = list.getJSONObject(0).getString("order_date");
+            String handle_result = list.getJSONObject(0).getString("handle_result");
+            String current_state = list.getJSONObject(0).getString("current_state");
+
+            //根据事件名称进行筛选
+            JSONArray list1 = md.cashier_riskPage(shop_id, event_name, "", "", "", "", "", page, size).getJSONArray("list");
+            String event_name1 = list1.getJSONObject(0).getString("event_name");
+            checkArgument(event_name.contains(event_name1), "根据日期" + event_name + "搜索,没有查询到应有的结果");
+
+            //根据小票单号进行筛选
+            JSONArray list2 = md.cashier_riskPage(shop_id, "", order_id, "", "", "", "", page, size).getJSONArray("list");
+            String order_id1 = list1.getJSONObject(0).getString("order_id");
+            checkArgument(order_id.contains(order_id1), "根据订单编号" + order_id + "搜索,没有查询到应有的结果");
+
+            //根据收银日期进行筛选
+            JSONArray list3 = md.cashier_riskPage(shop_id, "", "", order_date, "", "", "", page, size).getJSONArray("list");
+                String order_date1 = list3.getJSONObject(0).getString("order_date");
+                checkArgument(order_date_01.equals(order_date1), "根据收银日期" + order_date + "搜索,没有查询到应有的结果");
+
+
+
+            //根据处理结果进行筛选
+            JSONArray list4 = md.cashier_riskPage(shop_id, "", "", "", "", handle_result, "", page, size).getJSONArray("list");
+            for (int i = 0; i < list4.size(); i++) {
+                String handle_result1 = list4.getJSONObject(i).getString("handle_result");
+                checkArgument(handle_result.contains(handle_result1), "根据订单编号" + handle_result + "搜索,没有查询到应有的结果");
+            }
+
+            //根据当前状态进行筛选
+            JSONArray list5 = md.cashier_riskPage(shop_id, "", "", "", "", "", current_state, page, size).getJSONArray("list");
+            for (int i = 0; i < list5.size(); i++) {
+                String current_state1 = list5.getJSONObject(i).getString("current_state");
+                checkArgument(current_state.contains(current_state1), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
+            }
+
+            //根据全部结果进行筛选
+            JSONArray list6 = md.cashier_riskPage(shop_id, event_name, order_id, order_date, "", "", current_state, page, size).getJSONArray("list");
+
+            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("收银风控事件的筛选（单一条件筛选）");
+        }
+
+    }
 
     /**
      * ====================风控规则列表筛选（单一查询）======================
@@ -1118,7 +1114,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理======================
      */
-    //@Test
+    @Test
     public void trace_dealWith() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1145,7 +1141,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONArray list2 = md.cashier_riskPage(shop_id, "", order1, "", "", "", "", page, size).getJSONArray("list");
             String state_name1 = list2.getJSONObject(0).getString("state_name");
             String result_name1 = list1.getJSONObject(0).getString("result_name");
-            checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成异常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "处理结果：" + result_name1);
+            checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成异常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "。处理结果：" + result_name1);
 
 
         } catch (AssertionError e) {
@@ -1162,7 +1158,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理（订单处理备注的字数）======================
      */
-    //@Test
+    @Test
     public void trace_dealMark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
