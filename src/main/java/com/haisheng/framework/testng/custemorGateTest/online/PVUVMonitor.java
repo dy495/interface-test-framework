@@ -256,8 +256,8 @@ public class PVUVMonitor {
     public static Object[][] pocShop() {
 
         return new String[][] {
-                {"0ce5748b33a5", "18356", "七匹狼"},
-                {"260e37669f42", "18540", "百威上海"},
+//                {"0ce5748b33a5", "18356", "七匹狼"},
+                {"b6509d0ad3d8", "4614", "heyshop"},
                 {"d55c19a4937b", "18176", "雷诺表"},
                 {"60b00a8a9acb", "15694", "德众赢"}
         };
