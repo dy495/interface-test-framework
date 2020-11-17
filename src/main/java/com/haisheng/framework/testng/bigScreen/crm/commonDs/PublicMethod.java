@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReceptionAfterCustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentMaintainScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentRepairScene;
@@ -188,10 +189,7 @@ public class PublicMethod {
     public void saveReception(String afterRecordId, JSONArray remarks) {
         JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
         String appointmentCustomerName = response.getString("appointment_customer_name");
-        Integer appointmentId = response.getInteger("appointment_id");
-        if (appointmentId == null) {
-            appointmentId = 0;
-        }
+        int appointmentId = response.getInteger("appointment_id");
         String appointmentPhoneNumber = response.getString("appointment_phone_number");
         String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
         String customerName = response.getString("customer_name");
@@ -220,6 +218,41 @@ public class PublicMethod {
                 .build();
         crm.invokeApi(scene);
     }
+
+    public void saveCustomer(String vehicleId, String customerId, JSONArray remarks) {
+        JSONObject response = crm.afterSaleCustomerDetail(customerId, vehicleId);
+        String appointmentCustomerName = response.getString("appointment_customer_name");
+        int appointmentId = response.getInteger("appointment_id");
+        String appointmentPhoneNumber = response.getString("appointment_phone_number");
+        String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+        String customerName = response.getString("customer_name");
+        String customerPhoneNumber = response.getString("customer_phone_number");
+        int customerSource = response.getInteger("customer_source");
+        String firstRepairCarType = response.getString("first_repair_car_type");
+        String maintainSaleId = response.getString("maintain_sale_id");
+        int maintainType = response.getInteger("maintain_type");
+        String plateNumber = response.getString("plate_number");
+        IScene scene = EditCustomerScene.builder()
+                .customerId(customerId)
+                .vehicleId(vehicleId)
+                .appointmentCustomerName(appointmentCustomerName)
+                .appointmentId(appointmentId)
+                .appointmentPhoneNumber(appointmentPhoneNumber)
+                .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                .customerName(customerName)
+                .customerPhoneNumber(customerPhoneNumber)
+                .customerSource(customerSource)
+                .firstRepairCarType(firstRepairCarType)
+                .maintainSaleId(maintainSaleId)
+                .maintainType(maintainType)
+                .plateNumber(plateNumber)
+                .serviceComplete(false)
+                .remarks(remarks)
+                .travelMileage(1000)
+                .build();
+        crm.invokeApi(scene);
+    }
+
 
     /**
      * 获取已完成/维修中数量

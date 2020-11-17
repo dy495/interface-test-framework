@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -164,18 +165,20 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int completeNum = method.getStatusNum("已完成");
             int listSize = maintainNum + completeNum;
             CommonUtil.valueView(maintainNum, completeNum);
-            int afterRecordId = method.getAfterRecordId(false, "维修中", 30);
-            //提车
-            crm.invokeApi(SendPickUpNewsScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
-            //交车
-            crm.invokeApi(ConfirmCarScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
-            int maintainNum1 = method.getStatusNum("维修中");
-            int completeNum1 = method.getStatusNum("已完成");
-            int listSize1 = maintainNum1 + completeNum1;
-            CommonUtil.valueView(maintainNum1, completeNum1);
-            Preconditions.checkArgument(maintainNum1 == maintainNum - 1, "交车前维修中数量为：" + maintainNum + "交车后维修中数量为：" + maintainNum1);
-            Preconditions.checkArgument(completeNum1 == completeNum + 1, "交车前已完成数量为：" + completeNum + "交车后已完成数量为：" + completeNum1);
-            Preconditions.checkArgument(listSize == listSize1, "交车前列表数量为：" + listSize + "交车后列表数数量为：" + listSize1);
+            int afterRecordId = method.getAfterRecordId(true, "维修中", 30);
+            if (afterRecordId != 0) {
+                //提车
+                crm.invokeApi(SendPickUpNewsScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
+                //交车
+                crm.invokeApi(ConfirmCarScene.builder().afterRecordId(String.valueOf(afterRecordId)).build());
+                int maintainNum1 = method.getStatusNum("维修中");
+                int completeNum1 = method.getStatusNum("已完成");
+                int listSize1 = maintainNum1 + completeNum1;
+                CommonUtil.valueView(maintainNum1, completeNum1);
+                Preconditions.checkArgument(maintainNum1 == maintainNum - 1, "交车前维修中数量为：" + maintainNum + "交车后维修中数量为：" + maintainNum1);
+                Preconditions.checkArgument(completeNum1 == completeNum + 1, "交车前已完成数量为：" + completeNum + "交车后已完成数量为：" + completeNum1);
+                Preconditions.checkArgument(listSize == listSize1, "交车前列表数量为：" + listSize + "交车后列表数数量为：" + listSize1);
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -250,7 +253,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
-//            saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
+            saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
         }
     }
 
@@ -329,12 +332,14 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 remarks.add(str);
             }
             int afterRecordId = method.getAfterRecordId(false, 30);
-            method.saveReception(String.valueOf(afterRecordId), remarks);
-            IScene scene = DetailAfterSaleCustomerScene.builder().afterRecordId(String.valueOf(afterRecordId)).build();
-            JSONObject response = crm.invokeApi(scene);
-            JSONArray array = response.getJSONArray("remarks");
-            String platNumber = response.getString("plate_number");
-            Preconditions.checkArgument(array.size() == 20, "车牌号为：" + platNumber + "的客户，备注列表展示条数为：" + array.size());
+            if (afterRecordId != 0) {
+                method.saveReception(String.valueOf(afterRecordId), remarks);
+                IScene scene = DetailAfterSaleCustomerScene.builder().afterRecordId(String.valueOf(afterRecordId)).build();
+                JSONObject response = crm.invokeApi(scene);
+                JSONArray array = response.getJSONArray("remarks");
+                String platNumber = response.getString("plate_number");
+                Preconditions.checkArgument(array.size() == 20, "车牌号为：" + platNumber + "的客户，备注列表展示条数为：" + array.size());
+            }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
         } finally {
@@ -950,10 +955,12 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String articleTitle = response.getString("article_title");
             String articleContent = response.getString("article_content");
             int id = 0;
-            JSONArray list = crm.articlePage(1, 100, "ACTIVITY_1").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("article_title").equals(articleTitle)) {
-                    id = list.getJSONObject(i).getInteger("id");
+            for (EnumOperation e : EnumOperation.values()) {
+                JSONArray list = crm.articlePage(1, 100, e.name()).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.getJSONObject(i).getString("article_title").equals(articleTitle)) {
+                        id = list.getJSONObject(i).getInteger("id");
+                    }
                 }
             }
             JSONObject object = crm.artilceView(id);

@@ -766,14 +766,15 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             int s = CommonUtil.getTurningPage(response.getInteger("total"), size);
             for (int i = 1; i < s; i++) {
                 JSONArray list = crm.returnVisitTaskPage(i, size).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
+                for (int j = 0; j < list.size() / 2; j++) {
                     String customerPhone = list.getJSONObject(j).getString("customer_phone");
-                    Preconditions.checkArgument(!CommonUtil.isContainChinese(customerPhone), "我的回访存在非电话号" + customerPhone);
                     Preconditions.checkArgument(!StringUtils.isEmpty(customerPhone), "我的回访存在空电话号码");
+                    Preconditions.checkArgument(!CommonUtil.isContainChinese(customerPhone), "我的回访存在非电话号" + customerPhone);
                     Preconditions.checkArgument(customerPhone.length() == 11, "我的回访存在非11位电话号，电话号为：" + customerPhone);
                 }
             }
         } catch (Exception | AssertionError e) {
+            e.printStackTrace();
             appendFailreason(e.toString());
         } finally {
             saveData("销售--回访任务，联系电话为11位数字、非空");

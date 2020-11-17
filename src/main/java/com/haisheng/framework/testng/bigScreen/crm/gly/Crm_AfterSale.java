@@ -85,35 +85,37 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerNameArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(s)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("车主名称长度在1-15字之间"), "车主姓名为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerNameArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(s)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("车主名称长度在1-15字之间"), "车主姓名为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -130,35 +132,37 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerPhoneNumberArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(s)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("联系方式1必须为11位手机号"), "车主电话为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerPhoneNumberArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(s)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("联系方式1必须为11位手机号"), "车主电话为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -178,36 +182,38 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .remarks(remarks)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("备注在10-200字之间"), "备注200字以上保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .remarks(remarks)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("备注在10-200字之间"), "备注200字以上保存成功");
+            }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
             appendFailreason(e.toString());
@@ -223,36 +229,38 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (double s : travelMileageArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(s)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("行驶里程数字错误"), "行驶里程为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (double s : travelMileageArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(s)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("行驶里程数字错误"), "行驶里程为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -269,37 +277,39 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerNameArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .customerSecondaryPhone(s)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("联系方式2必须为11位手机号"), "车主电话2为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerNameArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .customerSecondaryPhone(s)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("联系方式2必须为11位手机号"), "车主电话2为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -316,36 +326,38 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerNameArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(s)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .customerSecondaryPhone(customerPhoneNumber)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("预约电话2必须为11位手机号"), "预约电话2为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerNameArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(s)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .customerSecondaryPhone(customerPhoneNumber)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("预约电话2必须为11位手机号"), "预约电话2为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -362,39 +374,41 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerNameArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .firstContactName(s)
-                        .firstContactPhone("15623456666")
-                        .firstContactRelation(0)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("联系人1姓名长度在1-10字之间"), "联系人1姓名为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerNameArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .firstContactName(s)
+                            .firstContactPhone("15623456666")
+                            .firstContactRelation(0)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("联系人1姓名长度在1-10字之间"), "联系人1姓名为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -411,39 +425,41 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : customerNameArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .secondContactName(s)
-                        .secondContactPhone("15623456666")
-                        .secondContactRelation(0)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("联系人2姓名长度在1-10字之间"), "联系人2姓名：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : customerNameArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .secondContactName(s)
+                            .secondContactPhone("15623456666")
+                            .secondContactRelation(0)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("联系人2姓名长度在1-10字之间"), "联系人2姓名：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -460,38 +476,40 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (String s : plateNumberArr) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .secondPlateNumber(s)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("车牌号码只允许文字+数字+大写字母")
-                        || object.getString("message").equals("请输入7-8位车牌号码位数"), " 异常车牌号：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (String s : plateNumberArr) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .secondPlateNumber(s)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("车牌号码只允许文字+数字+大写字母")
+                            || object.getString("message").equals("请输入7-8位车牌号码位数"), " 异常车牌号：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
@@ -507,37 +525,39 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            for (double s : days) {
-                IScene scene = EditAfterSaleCustomerScene.builder()
-                        .afterRecordId(afterRecordId)
-                        .appointmentCustomerName(appointmentCustomerName)
-                        .appointmentId(appointmentId)
-                        .appointmentPhoneNumber(appointmentPhoneNumber)
-                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                        .customerName(customerName)
-                        .customerPhoneNumber(customerPhoneNumber)
-                        .customerSource(customerSource)
-                        .firstRepairCarType(firstRepairCarType)
-                        .maintainSaleId(maintainSaleId)
-                        .maintainType(maintainType)
-                        .plateNumber(plateNumber)
-                        .travelMileage(travelMileage)
-                        .estimateRepairDays(s)
-                        .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修天数为：" + s + "保存成功");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                for (double s : days) {
+                    IScene scene = EditAfterSaleCustomerScene.builder()
+                            .afterRecordId(afterRecordId)
+                            .appointmentCustomerName(appointmentCustomerName)
+                            .appointmentId(appointmentId)
+                            .appointmentPhoneNumber(appointmentPhoneNumber)
+                            .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                            .customerName(customerName)
+                            .customerPhoneNumber(customerPhoneNumber)
+                            .customerSource(customerSource)
+                            .firstRepairCarType(firstRepairCarType)
+                            .maintainSaleId(maintainSaleId)
+                            .maintainType(maintainType)
+                            .plateNumber(plateNumber)
+                            .travelMileage(travelMileage)
+                            .estimateRepairDays(s)
+                            .build();
+                    JSONObject object = crm.invokeApi(scene, false);
+                    Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修天数为：" + s + "保存成功");
+                }
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
@@ -554,33 +574,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), object.getString("message"));
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), object.getString("message"));
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -595,33 +617,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("车主电话1不允许为空"), object.getString("message") + " 错误提示描述不正确");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("车主电话1不允许为空"), object.getString("message") + " 错误提示描述不正确");
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -636,33 +660,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), object.getString("message"));
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), object.getString("message"));
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -677,33 +703,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), object.getString("message"));
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), object.getString("message"));
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -718,33 +746,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("车牌号1不允许为空"), " 车牌号1不允许为空");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("车牌号1不允许为空"), " 车牌号1不允许为空");
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -759,34 +789,36 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .plateNumber(plateNumber)
-                    .maintainType(maintainType)
-                    .build();
-            JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-            Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), object.getString("message"));
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .plateNumber(plateNumber)
+                        .maintainType(maintainType)
+                        .build();
+                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
+                Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), object.getString("message"));
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -801,35 +833,37 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            int customerSource = response.getInteger("customer_source");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .customerSource(customerSource)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals(""), " ");
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                int customerSource = response.getInteger("customer_source");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .customerSource(customerSource)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals(""), " ");
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -844,33 +878,35 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             appointmentRepair();
             int id = method.getAfterRecordId(false, 30);
             String afterRecordId = String.valueOf(id);
-            JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
-            String appointmentCustomerName = response.getString("appointment_customer_name");
-            Integer appointmentId = response.getInteger("appointment_id");
-            String appointmentPhoneNumber = response.getString("appointment_phone_number");
-            String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
-            String customerName = response.getString("customer_name");
-            String customerPhoneNumber = response.getString("customer_phone_number");
-            String firstRepairCarType = response.getString("first_repair_car_type");
-            String maintainSaleId = response.getString("maintain_sale_id");
-            int maintainType = response.getInteger("maintain_type");
-            String plateNumber = response.getString("plate_number");
-            IScene scene = EditAfterSaleCustomerScene.builder()
-                    .afterRecordId(afterRecordId)
-                    .appointmentCustomerName(appointmentCustomerName)
-                    .appointmentId(appointmentId)
-                    .appointmentPhoneNumber(appointmentPhoneNumber)
-                    .appointmentSecondaryPhone(appointmentSecondaryPhone)
-                    .customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber)
-                    .firstRepairCarType(firstRepairCarType)
-                    .maintainSaleId(maintainSaleId)
-                    .maintainType(maintainType)
-                    .plateNumber(plateNumber)
-                    .travelMileage(travelMileage)
-                    .build();
-            JSONObject object = crm.invokeApi(scene, false);
-            Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), object.getString("message"));
+            if (!afterRecordId.equals("0")) {
+                JSONObject response = crm.detailAfterSaleCustomer(afterRecordId);
+                String appointmentCustomerName = response.getString("appointment_customer_name");
+                Integer appointmentId = response.getInteger("appointment_id");
+                String appointmentPhoneNumber = response.getString("appointment_phone_number");
+                String appointmentSecondaryPhone = response.getString("appointment_secondary_phone");
+                String customerName = response.getString("customer_name");
+                String customerPhoneNumber = response.getString("customer_phone_number");
+                String firstRepairCarType = response.getString("first_repair_car_type");
+                String maintainSaleId = response.getString("maintain_sale_id");
+                int maintainType = response.getInteger("maintain_type");
+                String plateNumber = response.getString("plate_number");
+                IScene scene = EditAfterSaleCustomerScene.builder()
+                        .afterRecordId(afterRecordId)
+                        .appointmentCustomerName(appointmentCustomerName)
+                        .appointmentId(appointmentId)
+                        .appointmentPhoneNumber(appointmentPhoneNumber)
+                        .appointmentSecondaryPhone(appointmentSecondaryPhone)
+                        .customerName(customerName)
+                        .customerPhoneNumber(customerPhoneNumber)
+                        .firstRepairCarType(firstRepairCarType)
+                        .maintainSaleId(maintainSaleId)
+                        .maintainType(maintainType)
+                        .plateNumber(plateNumber)
+                        .travelMileage(travelMileage)
+                        .build();
+                JSONObject object = crm.invokeApi(scene, false);
+                Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), object.getString("message"));
+            }
         } catch (Exception | AssertionError e) {
             appendFailreason(e.toString());
         } finally {
@@ -920,7 +956,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         if (!haveTask) {
             UserUtil.loginApplet(applet);
             int id = getTimeId(date);
-            crm.appointmentRepair((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
+            crm.appointmentRepairA((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
             UserUtil.login(zjl);
             //预约中状态查询
             JSONArray array = crm.mainAppointmentList(1, 10).getJSONArray("list");
