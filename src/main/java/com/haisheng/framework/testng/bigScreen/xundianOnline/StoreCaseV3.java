@@ -125,8 +125,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
-
+    /**
+     *生成交易订单
+     **/
     @Test
     public void getA() throws Exception {
 
@@ -143,12 +144,12 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 e.printStackTrace();
             }
             String timestamp = "" + System.currentTimeMillis();
-            String uid = "uid_0ba743d8";
-            String appId = "672170545f50";
-            String ak = "691ff41137d954f3";
+            String uid = "uid_580f244a";
+            String appId = "c30dcafc59c8";
+            String ak = "0d17651c55595b9b";
             String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
-            String sk = "d76f2d8a7846382f633c1334139767fe";
+            String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";
             // java代码示例
             // java代码示例
             String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
@@ -171,24 +172,25 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     .other("ExpiredTime", "50 * 1000")
                     .other("Authorization", auth)
                     .build();
-            String transId = "QAtest_" + CommonUtil.getRandom(4);
+            String transId = "QAtest_" + CommonUtil.getRandom(5);
+            String transTime = ""+System.currentTimeMillis();
 //        String s = "\"" + transId + "\"";
 //        System.err.println(s);
             String str = "{\n" +
-                    "  \"uid\": \"uid_0ba743d8\",\n" +
-                    "  \"app_id\": \"672170545f50\",\n" +
-                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
+                    "  \"uid\": \"uid_580f244a\",\n" +
+                    "  \"app_id\": \"c30dcafc59c8\",\n" +
+                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a76\",\n" +
                     "  \"version\": \"v1.0\",\n" +
                     "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
-                    "        \"shop_id\": \"13260\",\n" +
+                    "        \"shop_id\": \"14630\",\n" +
                     "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
-                    "        \"trans_time\": \"1605065792336\",\n" +
+                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"2020100009\",\n" +
+                    "        \"user_id\": \"202010001011\",\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +

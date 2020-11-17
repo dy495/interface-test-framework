@@ -605,7 +605,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
     @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void mpvTotal(long shop_id) {
+    public void mpvTotalForHour(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -1142,7 +1142,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String face_url = "";
             String member_type = "";
             String member_id = "";
-            JSONArray list1=  md.memberTotalListV3(shop_id, page, 30).getJSONArray("list");
+            JSONArray list1=  md.memberTotalListV3(shop_id, page, 15).getJSONArray("list");
             for (int j = 0; j < list1.size(); j++) {
 
                 customer_id = list1.getJSONObject(j).getString("customer_id");

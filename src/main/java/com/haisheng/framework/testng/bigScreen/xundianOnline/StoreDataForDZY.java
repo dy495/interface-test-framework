@@ -385,7 +385,7 @@ public class StoreDataForDZY extends TestCaseCommon implements TestCaseStd {
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
     @Test
-    public void mpvTotal() {
+    public void  mpvTotalForHour() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -449,10 +449,6 @@ public class StoreDataForDZY extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result2<=346,"进店客群总人次=" + value2 + "时段分布中各个时段进店pv累计=" + times2);
             Preconditions.checkArgument(result3<=346,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
             Preconditions.checkArgument(result4<=346,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
-
-
-
-
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

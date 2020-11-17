@@ -235,7 +235,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
     @Test()
-    public void mpvTotal() {
+    public void  mpvTotalForHour() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {

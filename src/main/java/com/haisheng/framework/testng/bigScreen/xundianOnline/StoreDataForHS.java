@@ -385,7 +385,7 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
     @Test
-    public void mpvTotal() {
+    public void  mpvTotalForHour() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
@@ -449,10 +449,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result2<=346,"进店客群总人次=" + value2 + "时段分布中各个时段进店pv累计=" + times2);
             Preconditions.checkArgument(result3<=346,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
             Preconditions.checkArgument(result4<=346,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
-
-
-
-
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -650,10 +646,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
             }
 
             int id = storeList.getJSONObject(0).getInteger("id");
-
-
-
-
             Preconditions.checkArgument((check = true),"门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）不等于实时客流中的门店基本信息");
 
 
@@ -694,7 +686,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
                 }
 
             }
-
 
             String shop_type = "";
             String shop_name="";
@@ -787,9 +778,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
             int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
-
-
-
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv);
             Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+今天新增的（全渠道会员）之和=" + qa_omni_uv);
 
@@ -834,7 +822,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
                     omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
                     paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
 
-
                 }
 
                 //获取前天的累计顾客总数
@@ -846,9 +833,6 @@ public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
             }
             int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
-
-
-
 
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id);
             Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+昨天新增的（全渠道会员）之和=" + qa_omni_uv +"。报错门店shop_id="+shop_id);

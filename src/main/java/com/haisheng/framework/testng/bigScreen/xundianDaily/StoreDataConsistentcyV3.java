@@ -1101,7 +1101,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
 
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) 43072).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
@@ -1110,7 +1110,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
 
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, 43072).getJSONArray("trend_list");
             int pv = 0;
             int count1 = trend_list.size();
             for (int i = 0; i < count1; i++) {
@@ -1118,7 +1118,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + 43072);
 
 
         } catch (AssertionError e) {

@@ -385,7 +385,7 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
      * ====================各个客群总人次==到店时段分布中各个时段pv累计======================
      * */
     @Test(dataProvider = "SHOP_ID_T",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void mpvTotal(long shop_id_t) {
+    public void  mpvTotalForHour(long shop_id_t) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
