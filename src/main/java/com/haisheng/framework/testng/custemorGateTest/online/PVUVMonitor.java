@@ -197,6 +197,18 @@ public class PVUVMonitor {
     }
 
     /**
+     * 德众赢、雷诺表、heyshop
+     * */
+    @Test(dataProvider = "pocShop")
+    public void getHistoryDataOnline(String appId, String shopId, String shopName) {
+        String com    = shopName + "-" + shopId;
+        getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataOnline-"+shopName);
+
+    }
+
+    /**
     * 1958、1922 调试AI摄像头，故暂不监控
     * */
     @DataProvider(name = "baiguoyuan")
@@ -237,6 +249,17 @@ public class PVUVMonitor {
         return new String[] {
                 "15615",
                 "15617"
+        };
+    }
+
+    @DataProvider(name = "pocShop")
+    public static Object[][] pocShop() {
+
+        return new String[][] {
+                {"0ce5748b33a5", "18356", "七匹狼"},
+                {"260e37669f42", "18540", "百威上海"},
+                {"d55c19a4937b", "18176", "雷诺表"},
+                {"60b00a8a9acb", "15694", "德众赢"}
         };
     }
 
@@ -639,6 +662,12 @@ public class PVUVMonitor {
                 if (dt.getCurrentHour().contains("10")) {
                     alarmPush.baiguoyuanZeroAlarm(summary);
                 }
+            } else if (key.contains("雷诺表")) {
+                //百果园数据为0且只在10点时段，单独发到【雷诺表项目信息同步群】群
+                DateTimeUtil dt = new DateTimeUtil();
+                if (dt.getCurrentHour().contains("10")) {
+                    alarmPush.pocZeroAlarm(summary);
+                }
             }
         }
         if (diffSize > 0) {
@@ -652,7 +681,7 @@ public class PVUVMonitor {
         ArrayList<String> recordList = ALARM_STACK.get(key);
         String record = "";
         for (int i=0; i<recordList.size(); i++) {
-            record = recordList.get(i) + "\n";
+            record += recordList.get(i) + "\n";
         }
         alarmPush.onlineMonitorPvuvAlarm(record);
     }
@@ -666,7 +695,7 @@ public class PVUVMonitor {
             if (ALARM_STACK.size() > 0) {
                 for(String key : ALARM_STACK.keySet()) {
 
-                    if (key.contains("百果园") || key.contains("小天才")) {
+                    if (key.contains("百果园") || key.contains("小天才") || key.contains("雷诺表")) {
                         multipleShopAlarm(alarmPush, key);
                     } else {
                         oneShopAlarm(alarmPush, key);
