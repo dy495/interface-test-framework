@@ -119,7 +119,8 @@ public class FeidanMiniApiSTDaily {
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
 
     //long firstAppearTime = 1582684439509L;
-    long firstAppearTime = 1603353621624L;
+    //long firstAppearTime = 1603353621624L;
+    long firstAppearTime = 1603158881173L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
