@@ -347,7 +347,7 @@ public class FeidanMiniApiSystemtestDaily {
             String code = trace.getString("code");
             String message = trace.getString("message");
             Preconditions.checkArgument(code.equals("1000"), "状态码不正确，期待1000，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+//            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
