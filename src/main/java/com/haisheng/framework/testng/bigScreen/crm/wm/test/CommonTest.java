@@ -1,30 +1,26 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.DbContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.Activity;
+import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.dao.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.Test;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class CommonTest {
     @Test
-    public void testA() {
-        String driverName = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/business-porsche";
-        String username = "read_only";
-        String password = "read_only";
+    public void testSelectA() {
         String sql = "select * from activity where id=19";
-        DbContainer db = new DbContainer.Builder().driverName(driverName).jdbcUrl(url).password(password).username(username).path(sql).build();
-        db.init();
-        List<Map<String, Object>> list = db.getTable();
-        System.err.println(list.get(0).get("id"));
+        List<Activity> list = new Factory.Builder().container(EnumContainer.BUSINESS_PORSCHE.getContainer()).build().create(sql, Activity.class);
+        System.err.println(list.get(0).getGmtCreate());
     }
 
     @Test()
@@ -32,38 +28,42 @@ public class CommonTest {
         JSONObject object = new JSONObject();
         object.put("1", 1);
         object.put("2", "455");
-        String sql = Sql.instance().insert().from("t_porsche_deliver_car")
+        Sql sql = Sql.instance().insert()
+                .from(TPorscheDeliverInfo.class)
                 .field("a", "b", "b", "d", "f")
                 .setValue(null, 1.99, "3", "4", object)
-                .end().getSql();
-        System.err.println(sql);
+                .end();
+        System.err.println(sql.getSql());
+        new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
     }
 
     @Test
     public void testSelect() {
-        String sql = Sql.instance().select("deliver_time")
-                .from("t_porsche_deliver_car")
-                .where("deliver_time", "=", "2020-10-14")
-                .and("customer_type", "=", "PERSON")
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        String sql = Sql.instance().select()
+                .from(TPorscheDeliverInfo.class)
+                .where("deliver_date", "=", date)
+                .and("shop_id", "=", "22728")
                 .end().getSql();
-        List<Map<String, Object>> result = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
-        System.err.println(result.get(0));
+        List<TPorscheDeliverInfo> list = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql, TPorscheDeliverInfo.class);
+        System.err.println(list);
     }
 
     @Test
-    public void testAddress() {
-        System.err.println(AddressUtil.getNativePlace(132624));
+    public void testGetNativePlace() {
+        System.err.println(AddressUtil.getNativePlace(340822));
     }
 
-    @Test
-    public void test() {
-        boolean re = CommonUtil.isContainChinese("sssssssssss");
-        System.err.println(re);
-    }
 
     @Test
-    public void testImageUtil() {
+    public void testHumpToLine() {
         String name = CommonUtil.humpToLine(TPorscheReceptionData.class.getSimpleName());
         System.out.println(name);
+    }
+
+    @Test
+    public void testIsContainChinese() {
+        boolean b = CommonUtil.isContainChinese(null);
+        System.out.println(b);
     }
 }

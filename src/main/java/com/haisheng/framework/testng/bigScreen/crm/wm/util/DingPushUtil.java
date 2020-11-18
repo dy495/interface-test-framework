@@ -22,7 +22,7 @@ public class DingPushUtil {
     private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.BA.getWebHook();
     private static final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
 
-    public static void sendText(String msg, String sql) {
+    public static void sendText(String msg, String sql, String caseName) {
         try {
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             JSONObject object = new JSONObject();
@@ -32,6 +32,7 @@ public class DingPushUtil {
             markdown.put("title", "balabala");
             markdown.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
                     + "\n" + date + "\n"
+                    + "\n" + "caseName：" + caseName + "\n"
                     + "\n" + "SQL错误：" + msg + "\n"
                     + "\n" + "SQL语句：" + sql + "\n");
             send(object);

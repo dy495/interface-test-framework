@@ -51,7 +51,7 @@ public class Sql {
 
     public String getSql() {
         String result = grammar + tableName + condition;
-        clear(condition);
+        clear();
         return result;
     }
 
@@ -163,11 +163,9 @@ public class Sql {
 
     /**
      * 条件语句清空
-     *
-     * @param condition 条件语句
      */
-    private static void clear(StringBuilder condition) {
-        condition.setLength(0);
+    private void clear() {
+        this.condition.setLength(0);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.table;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.ContainerConstants;
 import com.haisheng.framework.testng.bigScreen.crm.wm.property.BasicProperty;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class DbTable extends BasicProperty implements ITable {
+public class DbTable extends BaseTable {
     private static final Logger logger = LoggerFactory.getLogger(DbTable.class);
     private static ResultSet resultSet;
     private final Statement statement;
@@ -52,10 +53,7 @@ public class DbTable extends BasicProperty implements ITable {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                errorMsg.append(e.toString());
-            } finally {
-                sendDing();
+                exceptionCollect(e);
             }
         }
         return list;
@@ -87,10 +85,7 @@ public class DbTable extends BasicProperty implements ITable {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            errorMsg.append(e.toString());
-        } finally {
-            sendDing();
+            exceptionCollect(e);
         }
         return list;
     }
@@ -110,12 +105,14 @@ public class DbTable extends BasicProperty implements ITable {
             resultSet = statement.executeQuery(sql);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            errorMsg.append(e.toString());
-        } finally {
-            sendDing();
+            exceptionCollect(e);
         }
         return false;
+    }
+
+    @Override
+    public void sendDing() {
+        DingPushUtil.sendText(errorMsg.toString(), getPath(), getMethodName());
     }
 
     @Setter

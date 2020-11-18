@@ -326,6 +326,22 @@ public class TestCaseCommon {
         return response;
     }
 
+    public void httpPost(String path, JSONObject object, String IpPort) {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
+        config.url(queryUrl).json(JSONObject.toJSONString(object));
+        logger.info("{} json param: {}", path, JSONObject.toJSONString(object));
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+    }
+
     public String httpPost(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
@@ -341,13 +357,14 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
-    public String httpPostFile(String path, String[] filepath,String type, String IpPort) throws Exception {
+
+    public String httpPostFile(String path, String[] filepath, String type, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
         Map<String, Object> map = new HashMap<>();
-        map.put("type",type);
-        config.url(queryUrl).files(filepath,"file",true).map(map);
-        logger.info("{} json param: {}", path, filepath,type);
+        map.put("type", type);
+        config.url(queryUrl).files(filepath, "file", true).map(map);
+        logger.info("{} json param: {}", path, filepath, type);
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
@@ -358,6 +375,7 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
     public String httpGet(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
@@ -401,12 +419,10 @@ public class TestCaseCommon {
     public String getProscheShop() {
         return "22728";
     }
+
     public String getProscheShopOline() {
         return "12928";
     }
-
-
-
 
 
     public String getXundianShop() {
@@ -416,6 +432,7 @@ public class TestCaseCommon {
     public String getXunDianShop() {
         return "4116";
     }
+
     public String getXunDianShopOnline() {
         return "13260";
     }

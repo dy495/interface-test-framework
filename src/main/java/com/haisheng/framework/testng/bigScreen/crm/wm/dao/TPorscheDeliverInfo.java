@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class TPorscheDeliverInfo {
 
-    private Long id;
+    private Integer id;
     private String shopId;
     private String customerId;
     private String customerName;
