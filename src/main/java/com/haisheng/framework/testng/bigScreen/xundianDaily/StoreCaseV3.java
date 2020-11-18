@@ -122,99 +122,101 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        final String NUMBER = ".";
-        final String ALGORITHM = "HmacSHA256";
-        HttpClient client = null;
-        try {
-            client = HCB.custom()
-                    .pool(50, 10)
-                    .retry(3).build();
-        } catch (HttpProcessException e) {
-            e.printStackTrace();
+        for (int i=0;i<6;i++) {
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+            String uid = "uid_ef6d2de5";
+            String appId = "49998b971ea0";
+            String ak = "3fdce1db0e843ee0";
+            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            String sk = "5036807b1c25b9312116fd4b22c351ac";
+            // java代码示例
+            // java代码示例
+            String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
+
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+
+            String transId = "QAtest_" + CommonUtil.getRandom(5);
+            String transTime = "" + System.currentTimeMillis();
+            String str = "{\n" +
+                    "  \"uid\": \"uid_ef6d2de5\",\n" +
+                    "  \"app_id\": \"49998b971ea0\",\n" +
+                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \"13260\",\n" +
+                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"W\"\n" +
+                    "        ],\n" +
+                    "        \"user_id\": \"2020100009\",\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"memberName\":\"单笔金额大于1200要触发\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"iPhone12\",\n" +
+                    "                \"commodity_name\":\"苹果派12\",\n" +
+                    "                \"unit_price\": 200,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"banana\",\n" +
+                    "                \"commodity_name\":\"香蕉2根\",\n" +
+                    "                \"unit_price\": 2,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"Apple\",\n" +
+                    "                \"commodity_name\":\"苹果16个\",\n" +
+                    "                \"unit_price\": 3,\n" +
+                    "                \"num\": 1\n" +
+                    "            }\n" +
+                    "        ]\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+
+            JSONObject jsonObject = JSON.parseObject(str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+            String post = HttpClientUtil.post(config);
+            System.out.println(post);
         }
-        String timestamp = "" + System.currentTimeMillis();
-        String uid = "uid_ef6d2de5";
-        String appId = "49998b971ea0";
-        String ak = "3fdce1db0e843ee0";
-        String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
-        String nonce = UUID.randomUUID().toString();
-        String sk = "5036807b1c25b9312116fd4b22c351ac";
-        // java代码示例
-        // java代码示例
-        String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
-
-        // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
-        String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
-        // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
-        Mac sha256Hmac = Mac.getInstance(ALGORITHM);
-        SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-        sha256Hmac.init(encodeSecretKey);
-        byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
-        // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
-        String auth = Base64.getEncoder().encodeToString(hash);
-
-        Header[] headers = HttpHeader.custom()
-                .other("Accept", "application/json")
-                .other("Content-Type", "application/json;charset=utf-8")
-                .other("timestamp", timestamp)
-                .other("nonce", nonce)
-                .other("ExpiredTime", "50 * 1000")
-                .other("Authorization", auth)
-                .build();
-
-        String transId = "QAtest_" + CommonUtil.getRandom(5);
-        String transTime = ""+System.currentTimeMillis();
-        String str = "{\n" +
-                "  \"uid\": \"uid_ef6d2de5\",\n" +
-                "  \"app_id\": \"49998b971ea0\",\n" +
-                "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
-                "  \"version\": \"v1.0\",\n" +
-                "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
-                "  \"data\": {\n" +
-                "    \"biz_data\":  {\n" +
-                "        \"shop_id\": \"13260\",\n" +
-                "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
-                "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
-                "        \"trans_type\": [\n" +
-                "            \"W\"\n" +
-                "        ],\n" +
-                "        \"user_id\": \"2020100009\",\n" +
-                "        \"total_price\": 1800,\n" +
-                "        \"real_price\": 1500,\n" +
-                "        \"shopType\": \"SHOP_TYPE\",\n" +
-                "        \"orderNumber\": \"13444894484\",\n" +
-                "        \"memberName\":\"单笔金额大于1200要触发\",\n" +
-                "        \"receipt_type\":\"小票类型\",\n" +
-                "        \"posId\": \"pos-1234586789\",\n" +
-                "        \"commodityList\": [\n" +
-                "            {\n" +
-                "                \"commodityId\": \"iPhone12\",\n" +
-                "                \"commodity_name\":\"苹果派12\",\n" +
-                "                \"unit_price\": 200,\n" +
-                "                \"num\": 1\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"commodityId\": \"banana\",\n" +
-                "                \"commodity_name\":\"香蕉2根\",\n" +
-                "                \"unit_price\": 2,\n" +
-                "                \"num\": 1\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"commodityId\": \"Apple\",\n" +
-                "                \"commodity_name\":\"苹果16个\",\n" +
-                "                \"unit_price\": 3,\n" +
-                "                \"num\": 1\n" +
-                "            }\n" +
-                "        ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-
-        JSONObject jsonObject = JSON.parseObject(str);
-        HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
-
-        String post = HttpClientUtil.post(config);
-        System.out.println(post);
     }
 
     /**
@@ -959,30 +961,31 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
         try {
             JSONArray list = md.cashier_riskPage(shop_id_01, "", "", "", "", "", "PENDING", page, size).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-            String order = list.getJSONObject(0).getString("order_id");
-            long id1 = list.getJSONObject(1).getInteger("id");
-            String order1 = list.getJSONObject(1).getString("order_id");
+            if(list.size() != 0 ) {
+                long id = list.getJSONObject(0).getInteger("id");
+                String order = list.getJSONObject(0).getString("order_id");
+                long id1 = list.getJSONObject(1).getInteger("id");
+                String order1 = list.getJSONObject(1).getString("order_id");
 
-            //将待处理的风控事件处理成正常
-            int code1 = md.cashier_riskEventHandle(id, 1, "人工处理订单无异常").getInteger("code");
-            checkArgument(code1 == 1000, "将待处理事件中小票单号为" + order + "处理成正常报错了" + code1);
-            //查巡列表该事件的状态
-            JSONArray list1 = md.cashier_riskPage(shop_id_01, "", order, "", "", "", "", page, size).getJSONArray("list");
-            String state_name = list1.getJSONObject(0).getString("state_name");
-            String result_name = list1.getJSONObject(0).getString("result_name");
-            checkArgument(state_name.equals("已处理") && result_name.equals("正常"), "将待处理事件中小票单号为" + order + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name + "处理结果：" + result_name);
+                //将待处理的风控事件处理成正常
+                int code1 = md.cashier_riskEventHandle(id, 1, "人工处理订单无异常").getInteger("code");
+                checkArgument(code1 == 1000, "将待处理事件中小票单号为" + order + "处理成正常报错了" + code1);
+                //查巡列表该事件的状态
+                JSONArray list1 = md.cashier_riskPage(shop_id_01, "", order, "", "", "", "", page, size).getJSONArray("list");
+                String state_name = list1.getJSONObject(0).getString("state_name");
+                String result_name = list1.getJSONObject(0).getString("result_name");
+                checkArgument(state_name.equals("已处理") && result_name.equals("正常"), "将待处理事件中小票单号为" + order + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name + "处理结果：" + result_name);
 
-            //将待处理的风控事件处理成异常
-            int code2 = md.cashier_riskEventHandle(id1, 0, "该客户有刷单造假的嫌疑，请注意").getInteger("code");
-            checkArgument(code2 == 1000, "将待处理事件中id为" + id1 + "处理成异常报错了" + code2);
+                //将待处理的风控事件处理成异常
+                int code2 = md.cashier_riskEventHandle(id1, 0, "该客户有刷单造假的嫌疑，请注意").getInteger("code");
+                checkArgument(code2 == 1000, "将待处理事件中id为" + id1 + "处理成异常报错了" + code2);
 
-            //查巡列表该事件的状态
-            JSONArray list2 = md.cashier_riskPage(shop_id_01, "", order1, "", "", "", "", page, size).getJSONArray("list");
-            String state_name1 = list2.getJSONObject(0).getString("state_name");
-            String result_name1 = list1.getJSONObject(0).getString("result_name");
-            checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "处理结果：" + result_name1);
-
+                //查巡列表该事件的状态
+                JSONArray list2 = md.cashier_riskPage(shop_id_01, "", order1, "", "", "", "", page, size).getJSONArray("list");
+                String state_name1 = list2.getJSONObject(0).getString("state_name");
+                String result_name1 = list2.getJSONObject(0).getString("result_name");
+                checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "处理结果：" + result_name1);
+            }
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

@@ -1112,17 +1112,15 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
     /**
-     * ====================风控事项的处理======================
+     * ====================风控事项的处理为正常======================
      */
     @Test
-    public void trace_dealWith() {
+    public void trace_dealWith_true() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "PENDING", page, size).getJSONArray("list");
             long id = list.getJSONObject(0).getInteger("id");
             String order = list.getJSONObject(0).getString("order_id");
-            long id1 = list.getJSONObject(1).getInteger("id");
-            String order1 = list.getJSONObject(1).getString("order_id");
 
             //将待处理的风控事件处理成正常
             int code1 = md.cashier_riskEventHandle(id, 1, "人工处理订单无异常").getInteger("code");
@@ -1133,6 +1131,28 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             String result_name = list1.getJSONObject(0).getString("result_name");
             checkArgument(state_name.equals("已处理") && result_name.equals("正常"), "将待处理事件中小票单号为" + order + "处理成正常，但在风控事件列表中该事件的当前状态为：" + state_name + "处理结果：" + result_name);
 
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("风控事项的处理");
+        }
+
+    }
+    /**
+     * ====================风控事项的处理成异常======================
+     */
+    @Test
+    public void trace_dealWith_false() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "PENDING", page, size).getJSONArray("list");
+            long id1 = list.getJSONObject(1).getInteger("id");
+            String order1 = list.getJSONObject(1).getString("order_id");
+
             //将待处理的风控事件处理成异常
             int code2 = md.cashier_riskEventHandle(id1, 0, "该客户有刷单造假的嫌疑，请注意").getInteger("code");
             checkArgument(code2 == 1000, "将待处理事件中id为" + id1 + "处理成异常报错了" + code2);
@@ -1140,7 +1160,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             //查巡列表该事件的状态
             JSONArray list2 = md.cashier_riskPage(shop_id, "", order1, "", "", "", "", page, size).getJSONArray("list");
             String state_name1 = list2.getJSONObject(0).getString("state_name");
-            String result_name1 = list1.getJSONObject(0).getString("result_name");
+            String result_name1 = list2.getJSONObject(0).getString("result_name");
             checkArgument(state_name1.equals("已处理") && result_name1.equals("异常"), "将待处理事件中小票单号为" + order1 + "处理成异常，但在风控事件列表中该事件的当前状态为：" + state_name1 + "。处理结果：" + result_name1);
 
 
@@ -1158,7 +1178,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理（订单处理备注的字数）======================
      */
-    @Test
+   // @Test
     public void trace_dealMark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
