@@ -1114,7 +1114,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理为正常======================
      */
-    @Test
+   // @Test
     public void trace_dealWith_true() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
