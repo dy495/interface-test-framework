@@ -19,12 +19,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
 public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
     PackFunctionOnline pf = new PackFunctionOnline();
+    Random r=new Random();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -149,7 +151,8 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             long id2 = list.getJSONObject(0).getLong("test_car_id");
 
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
-            long id = pf.newCarDriver();
+            String carName = "试驾车列表" + r.nextInt(100) + dt.getHHmm(0);
+            long id = pf.newCarDriver(carName);
             int totalAfterAdd = crm.testDriverList().getJSONArray("list").size();
 
             crm.carLogout(id);    //注销试驾车
@@ -177,7 +180,8 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
         try {
             JSONObject data = crm.driverCarList();
             int total = data.getInteger("total");
-            long id = pf.newCarDriver();    //新建试驾车，获取试驾车id
+            String carName = "新建试驾" + r.nextInt(100) + dt.getHHmm(0);
+            long id = pf.newCarDriver(carName);    //新建试驾车，获取试驾车id
             JSONObject data2 = crm.driverCarList();
             int total2 = data2.getInteger("total");
             crm.carLogout(id);    //注销试驾车

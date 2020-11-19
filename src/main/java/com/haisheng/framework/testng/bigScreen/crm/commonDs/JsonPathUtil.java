@@ -14,6 +14,10 @@ public class JsonPathUtil {
 //          String json="{\"list\":[{\"role_name\":\"超级管理员\",\"role_id\":9},{\"role_name\":\"总经理\",\"role_id\":10},{\"role_name\":\"销售总监\",\"role_id\":11},{\"role_name\":\"销售经理\",\"role_id\":12},{\"role_name\":\"销售顾问\",\"role_id\":13},{\"role_name\":\"销售前台\",\"role_id\":14},{\"role_name\":\"定损顾问\",\"role_id\":15},{\"role_name\":\"服务顾问\",\"role_id\":16},{\"role_name\":\"服务总监\",\"role_id\":18},{\"role_name\":\"市场总监\",\"role_id\":20},{\"role_name\":\"DCC销售顾问\",\"role_id\":23}]}";
 //          String jsonpath = "$.list[*].role_name0&&$.list[*].role_id";
 //          spiltString(json,jsonpath);
+        String json1="{\"er_code\" : \"\"}";
+        String jsonpath1="$.er_code";
+        spiltString(json1,jsonpath1);
+
 
 
     }
@@ -45,8 +49,8 @@ public class JsonPathUtil {
             }
         } else {
             Object result = JSONPath.read(json, retval);
-            if (result==null) {
-                throw new Exception("except:not null" + ",actual:"+"ob" );
+            if (result==null||result.equals("")) {
+                throw new Exception("except:not null" + ",actual:"+result );
             }
         }
     }

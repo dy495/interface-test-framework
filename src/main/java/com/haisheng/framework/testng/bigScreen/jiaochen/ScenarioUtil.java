@@ -1,11 +1,16 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.DataProvider;
+
+import java.util.List;
 
 /**
  * 轿辰接口类
@@ -28,6 +33,42 @@ public class ScenarioUtil extends TestCaseCommon {
             }
         }
         return instance;
+    }
+    //----------------------登陆--------------------
+    public void login(String username, String password) {
+        initHttpConfig();
+        String path = "/jiaochen/pc/login";
+        String loginUrl = IpPort + path;
+        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        config.url(loginUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+    }
+
+    public void applogin(String username, String password) {
+        initHttpConfig();
+        String path = "/jiaochen/m-app/login";
+        String loginUrl = IpPort + path;
+        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        config.url(loginUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
 
     //pc登录
@@ -92,6 +133,16 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(pic, object);
     }
 
+
+    public JSONObject tryLogin(String userName, String passwd) throws Exception {
+        String url = "/jiaochen/pc/login";
+        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
+    /**
+     * invokeApi重构
+     */
     public JSONObject invokeApi(IScene scene) {
         return invokeApi(scene, true);
     }
@@ -130,4 +181,401 @@ public class ScenarioUtil extends TestCaseCommon {
             return JSON.parseObject(result);
         }
     }
+
+    //---------------------十一、组织架构接口-----------------
+
+
+    /**
+     * @description:11.1.1 账号管理列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size)  {
+        String url = "/patrol/organization/account/page";
+        String json =
+                "{";
+        if (name != "") {
+            json = json + "\"name\" :\"" + name + "\",\n";
+        }
+        if (account != "") {
+            json = json + "\"account\" :\"" + account + "\",\n";
+        }
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        if (role_name != "") {
+            json = json + "\"role_name\" :\"" + role_name + "\",\n";
+        }
+        if (shop_list != "") {
+            json = json + "\"shop_list\" :\"" + shop_list + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.2 新增账号
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountAdd(String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type)  {
+        String url = "/patrol/organization/account/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n";
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        json = json +
+                "\"role_id_list\" :" + role_id_list + ",\n" +
+                "\"status\" :" + status + ",\n" +
+                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"type\" :\"" + type + "\"\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
+    /**
+     * @description:11.1.3 账号详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountDetail(String account)  {
+        String url = "/patrol/organization/account/detail";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.4 账号编辑
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type)  {
+        String url = "/patrol/organization/account/edit";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\",\n" +
+                        "\"name\" :\"" + name + "\",\n";
+        if (email != "") {
+            json = json + "\"email\" :\"" + email + "\",\n";
+        }
+        ;
+        if (phone != "") {
+            json = json + "\"phone\" :\"" + phone + "\",\n";
+        }
+        ;
+        json = json +
+
+                "\"role_id_list\" :" + role_id_list + ",\n" +
+                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"type\" :\"" + type + "\"\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.1.5 账号删除
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountDelete(String account)  {
+        String url = "/patrol/organization/account/delete";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.1.6 账号状态更改（不是启用就是禁用，点击就更改对应的状态，前端传入当前账号状态就可以，后台判断更改）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationAccountButtom(String account, Integer status) {
+        String url = "/patrol/organization/account/change-status";
+        String json =
+                "{" +
+                        "\"account\" :\"" + account + "\",\n" +
+                        "\"status\" :\"" + status + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.7 角色列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleList() {
+        String url = "/patrol/organization/role/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:11.1.8 门店列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopList(String district_code) {
+        String url = "/patrol/shop/list";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.1.9 修改密码
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopList(String new_password, String old_password)  {
+        String url = "/patrol/organization/account/change-password";
+        String json =
+                "{" +
+                        "\"new_password\" :\"" + new_password + "\",\n" +
+                        "\"old_password\" :\"" + old_password + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:11.2.2 角色管理列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRolePage(String role_name, Integer page, Integer size)  {
+        String url = "/patrol/organization/role/page";
+        String json =
+                "{" +
+                        "\"role_name\" :\"" + role_name + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    public JSONObject organizationRolePage(Integer page, Integer size)  {
+        String url = "/patrol/organization/role/page";
+        String json =
+                "{" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.3 新增角色
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id,Boolean checkcode)  {
+        String url = "/patrol/organization/role/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"description\" :\"" + description + "\",\n" +
+                        "\"module_id\" :" + module_id + "\n" +
+
+                        "} ";
+
+        return invokeApi(url, JSONObject.parseObject(json), checkcode);
+
+
+    }
+
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id)  {
+        String url = "/patrol/organization/role/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"description\" :\"" + description + "\",\n" +
+                        "\"module_id\" :" + module_id + "\n" +
+
+                        "} ";
+
+        return invokeApi(url, JSONObject.parseObject(json), false);
+
+
+    }
+
+
+    /**
+     * @description:11.2.4 角色详情
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleDetail(long role_id)  {
+        String url = "/patrol/organization/role/detail";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:11.2.5 角色编辑
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray module_ids)  {
+        String url = "/patrol/organization/role/edit";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + ",\n" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"description\" :\"" + description + "\",\n" +
+                        "\"module_ids\" :" + module_ids + "\n" +
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * @description:11.2.6 角色删除
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject organizationRoleDelete(long role_id,Boolean checkcode)  {
+        String url = "/patrol/organization/role/delete";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+
+                        "} ";
+
+
+        return invokeApi(url, JSONObject.parseObject(json), checkcode);
+    }
+
+    public JSONObject organizationRoleDelete(long role_id)  {
+        String url = "/patrol/organization/role/delete";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+
+                        "} ";
+
+
+        return invokeApi(url, JSONObject.parseObject(json));
+    }
+
+    /**
+     * @description:11.2.7 角色对应的账号列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject AccountRolePage(long role_id, Integer page, Integer size)  {
+        String url = "/patrol/organization/account/role/page";
+        String json =
+                "{" +
+                        "\"role_id\" :" + role_id + "\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description :app上小程序码
+     * @date :2020/11/19 14:24
+     *
+     * @return*/
+    public JSONObject apperCOde(){
+        String url="";
+        JSONObject json=new JSONObject();
+        return invokeApi(url,json);
+    }
+
+
+
+    //将账户使用次数为0的角色删除
+    public void deleteRole()  {
+        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
+        for(int i=0;i<role_list.size();i++){
+            int account_number = role_list.getJSONObject(i).getInteger("account_number");
+            if(account_number==0){
+                Long role_id = role_list.getJSONObject(i).getLong("role_id");
+                organizationRoleDelete(role_id);
+            }
+
+        }
+    }
+
+   //角色权限列表
+    @DataProvider(name = "LIMITID")
+    public static Object[][] limitid() {
+        return new Integer[][]{
+                {1,2,3,4},
+                {2,2,3,4},
+        };
+    }
+
+
 }

@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class CrmScenarioUtil extends TestCaseCommon {
@@ -5771,6 +5772,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
 }
 
 

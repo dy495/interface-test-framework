@@ -1792,6 +1792,11 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+//    @Test(dataProvider = "NUMA",dataProviderClass = CrmScenarioUtil.class)
+    public void tt(int a[]){
+        for(int i=0;i<a.length;i++){
+        System.out.println(a[i]);}
+    }
 
 
 }
