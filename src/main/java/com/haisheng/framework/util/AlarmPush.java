@@ -584,8 +584,13 @@ public class AlarmPush {
         msg += "\n\n#### " + today + " 记录信息\n";
 
         for (AlarmSummary alarmSummary : alarmList) {
+            String product = alarmSummary.getProduct();
+            if (product.contains("AI社区")) {
+                //去除已不维护的产品
+                continue;
+            }
             List<String> passRate = alarmSummary.getPassRate();
-            msg +=  "\n\n>##### **产品：" + alarmSummary.getProduct() + ", RD: " + alarmSummary.getRd() + "**";
+            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummary.getRd() + "**";
             msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
             msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
             msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
@@ -625,8 +630,22 @@ public class AlarmPush {
         msg += "\n\n#### " + today + " 记录信息\n";
 
         for (AlarmSummary alarmSummary : alarmList) {
+            String product = alarmSummary.getProduct();
+            if (
+                    product.contains("广告") ||
+                    product.contains("货架") ||
+                    product.contains("控制中心") ||
+                    product.contains("越秀") ||
+                    product.contains("魔镜") ||
+                    product.contains("门禁") ||
+                    product.contains("AI社区")
+            ) {
+                //去除已不维护的产品
+                continue;
+            }
+
             List<String> passRate = alarmSummary.getPassRate();
-            msg +=  "\n\n>##### **产品：" + alarmSummary.getProduct() + ", RD: " + alarmSummary.getRd() + "**";
+            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummary.getRd() + "**";
             msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
             msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
             msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
