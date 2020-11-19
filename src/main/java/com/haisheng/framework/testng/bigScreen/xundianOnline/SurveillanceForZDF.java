@@ -158,7 +158,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
      *
      * ====================周大福线上实时客流监控======================
      * */
-    @Test
+    //@Test
     public void  surveDataReal(){
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -170,7 +170,6 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
                 if(count != null ){
                     today_pv += count;
                 }
-
             }
             Preconditions.checkArgument(today_pv < 800 && today_pv >30 ,"今日周大福的历史客流到店人次超过800或低于了50，现在的pv="+today_pv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
