@@ -173,7 +173,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
-                    "        \"shop_id\": \"13260\",\n" +
+                    "        \"shop_id\": \"43072\",\n" +
                     "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
                     "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
                     "        \"trans_type\": [\n" +
