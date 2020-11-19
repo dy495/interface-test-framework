@@ -1620,9 +1620,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     time = detailList.getJSONObject(0).getString("time");
                     Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
 
-                } else {
-                    Preconditions.checkArgument(total != 0, "客户ID：" + customer_id + "该客户的留痕事件为空，列表最新留痕时间为：" + last_time + "。报错门店的shopId=" + shop_id);
                 }
+//                else {
+//                    Preconditions.checkArgument(total != 0, "客户ID：" + customer_id + "该客户的留痕事件为空，列表最新留痕时间为：" + last_time + "。报错门店的shopId=" + shop_id);
+//                }
 
             }
 
@@ -1686,8 +1687,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("4");
-            r_dList.add("99");
+            r_dList.add("296");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");
@@ -1746,8 +1746,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("4");
-            r_dList.add("99");
+            r_dList.add("296");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("4116");

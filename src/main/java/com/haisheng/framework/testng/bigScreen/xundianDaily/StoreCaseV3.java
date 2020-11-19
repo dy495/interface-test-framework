@@ -910,21 +910,20 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             //根据小票单号进行筛选
             JSONArray list2 = md.cashier_riskPage(shop_id_01, "", order_id, "", "", "", "", page, size).getJSONArray("list");
-            String order_id1 = list1.getJSONObject(0).getString("order_id");
+            String order_id1 = list2.getJSONObject(0).getString("order_id");
             checkArgument(order_id.contains(order_id1), "根据订单编号" + order_id + "搜索,没有查询到应有的结果");
 
             //根据收银日期进行筛选
             JSONArray list3 = md.cashier_riskPage(shop_id_01, "", "", order_date, "", "", "", page, size).getJSONArray("list");
-            for (int i = 0; i < list3.size(); i++) {
-                String order_date1 = list1.getJSONObject(i).getString("order_date");
+                String order_date1 = list3.getJSONObject(0).getString("order_date");
                 checkArgument(order_date_01.equals(order_date1), "根据收银日期" + order_date + "搜索,没有查询到应有的结果");
 
-            }
+
 
             //根据处理结果进行筛选
             JSONArray list4 = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getJSONArray("list");
             for (int i = 0; i < list4.size(); i++) {
-                String handle_result1 = list1.getJSONObject(i).getString("handle_result");
+                String handle_result1 = list4.getJSONObject(i).getString("handle_result");
                 checkArgument(handle_result.contains(handle_result1), "根据订单编号" + handle_result + "搜索,没有查询到应有的结果");
             }
 
