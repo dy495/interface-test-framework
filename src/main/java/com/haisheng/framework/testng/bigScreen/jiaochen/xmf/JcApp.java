@@ -20,16 +20,16 @@ import java.util.Random;
 
 public class JcApp extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc=new ScenarioUtil();
-    JsonPathUtil jpu=new JsonPathUtil();
+    ScenarioUtil jc = new ScenarioUtil();
+    JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
     FileUtil file = new FileUtil();
     Random random = new Random();
-    public int page=1;
-    public int size=50;
-    public String name="";
-    public String email="";
-    public String phone ="";
+    public int page = 1;
+    public int size = 50;
+    public String name = "";
+    public String email = "";
+    public String phone = "";
 
     Integer status = 1;
     String type = "PHONE";
@@ -70,7 +70,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.login("","");
+        jc.appLogin("", "");
 
 
     }
@@ -93,16 +93,16 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void erCode(){
+    public void erCode() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            JSONObject data=jc.apperCOde();
-            String jsonpath="$.er_code_url1";
-            jpu.spiltString(data.toJSONString(),jsonpath);
+        try {
+            JSONObject data = jc.apperCOde();
+            String jsonpath = "$.er_code_url1";
+            jpu.spiltString(data.toJSONString(), jsonpath);
 
-        }catch (AssertionError |Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("app个人中心，小程序码返回结果不为空");
         }
     }

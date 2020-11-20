@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -34,46 +34,19 @@ public class ScenarioUtil extends TestCaseCommon {
         }
         return instance;
     }
-    //----------------------登陆--------------------
-    public void login(String username, String password) {
-        initHttpConfig();
-        String path = "/jiaochen/pc/login";
-        String loginUrl = IpPort + path;
-        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
-        config.url(loginUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-    }
-
-    public void applogin(String username, String password) {
-        initHttpConfig();
-        String path = "/jiaochen/m-app/login";
-        String loginUrl = IpPort + path;
-        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
-        config.url(loginUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-    }
 
     //pc登录
     public void pcLogin(String username, String password) {
         String path = "/jiaochen/pc/login";
+        JSONObject object = new JSONObject();
+        object.put("username", username);
+        object.put("password", password);
+        httpPost(path, object, IpPort);
+    }
+
+    //app登录
+    public void appLogin(String username, String password) {
+        String path = "/jiaochen/app/login";
         JSONObject object = new JSONObject();
         object.put("username", username);
         object.put("password", password);
@@ -130,9 +103,17 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("pic", pic);
         object.put("is_permanent", isPermanent);
-        return invokeApi(pic, object);
+        return invokeApi(path, object);
     }
 
+    //pc接待管理 -> 列表
+    public JSONObject pcReceptionManagePage(int page, int size) {
+        String path = "/jiaochen/pc/reception-manage/page";
+        JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(path, object);
+    }
 
     public JSONObject tryLogin(String userName, String passwd) throws Exception {
         String url = "/jiaochen/pc/login";
@@ -140,9 +121,70 @@ public class ScenarioUtil extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
-    /**
-     * invokeApi重构
-     */
+
+    //pc接待管理 -> 开始接待
+    public JSONObject pcStartReception(String customerId, String voucherIdList, String customerName, String customerPhone) {
+        String path = "/jiaochen/pc/reception-manage/start-reception";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        object.put("voucher_id_list", voucherIdList);
+        object.put("customer_name", customerName);
+        object.put("customer_phone", customerPhone);
+        return invokeApi(path, object);
+    }
+
+    //pc接待管理 -> 完成接待
+    public JSONObject pcFinishReception(Long receptionId) {
+        String path = "/jiaochen/pc/reception-manage/finish-reception";
+        JSONObject object = new JSONObject();
+        object.put("reception_id", receptionId);
+        return invokeApi(path, object);
+    }
+
+    //pc接待管理 -> 取消接待
+    public JSONObject pcCancelReception(Long receptionId) {
+        String path = "/jiaochen/pc/reception-manage/cancel-reception";
+        JSONObject object = new JSONObject();
+        object.put("reception_id", receptionId);
+        return invokeApi(path, object);
+    }
+
+    //pc接待管理 -> 套餐列表
+    public JSONObject pcPackageList(Long customerId) {
+        String path = "/jiaochen/pc/reception-manage/package-list";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        return invokeApi(path, object);
+    }
+
+    //pc接待管理 -> 卡券列表
+    public JSONObject pcVoucherList(Long customerId) {
+        String path = "/jiaochen/pc/reception-manage/voucher-list";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customerId);
+        return invokeApi(path, object);
+    }
+
+    //pc客户管理 -> 客户类型
+    public JSONObject pcCustomerType() {
+        String path = "/jiaochen/pc/customer-manage/pre-sale-customer/customer-type";
+        JSONObject object = new JSONObject();
+        return invokeApi(path, object);
+    }
+
+    //pc客户管理 -> 售后客户列表
+    public JSONObject pcAfterSaleCustomerPage(String customerName, String customerPhone, String createDate, String vehicleChassisCode, Integer page, Integer size) {
+        String path = "/jiaochen/pc/customer-manage/after-sale-customer/page";
+        JSONObject object = new JSONObject();
+        object.put("customer_name", customerName);
+        object.put("customer_phone", customerPhone);
+        object.put("create_date", createDate);
+        object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(path, object);
+    }
+
     public JSONObject invokeApi(IScene scene) {
         return invokeApi(scene, true);
     }
@@ -165,7 +207,7 @@ public class ScenarioUtil extends TestCaseCommon {
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
         if (StringUtils.isEmpty(path)) {
-            throw new RuntimeException("path不可为空");
+            throw new DataException("path不可为空");
         }
         String request = JSON.toJSONString(requestBody);
         String result = null;
@@ -190,7 +232,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size)  {
+    public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size) {
         String url = "/patrol/organization/account/page";
         String json =
                 "{";
@@ -227,7 +269,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountAdd(String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type)  {
+    public JSONObject organizationAccountAdd(String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) {
         String url = "/patrol/organization/account/add";
         String json =
                 "{" +
@@ -256,7 +298,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountDetail(String account)  {
+    public JSONObject organizationAccountDetail(String account) {
         String url = "/patrol/organization/account/detail";
         String json =
                 "{" +
@@ -273,7 +315,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type)  {
+    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) {
         String url = "/patrol/organization/account/edit";
         String json =
                 "{" +
@@ -304,7 +346,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountDelete(String account)  {
+    public JSONObject organizationAccountDelete(String account) {
         String url = "/patrol/organization/account/delete";
         String json =
                 "{" +
@@ -372,7 +414,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject patrolShopList(String new_password, String old_password)  {
+    public JSONObject patrolShopList(String new_password, String old_password) {
         String url = "/patrol/organization/account/change-password";
         String json =
                 "{" +
@@ -391,7 +433,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRolePage(String role_name, Integer page, Integer size)  {
+    public JSONObject organizationRolePage(String role_name, Integer page, Integer size) {
         String url = "/patrol/organization/role/page";
         String json =
                 "{" +
@@ -405,7 +447,8 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-    public JSONObject organizationRolePage(Integer page, Integer size)  {
+
+    public JSONObject organizationRolePage(Integer page, Integer size) {
         String url = "/patrol/organization/role/page";
         String json =
                 "{" +
@@ -424,7 +467,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id,Boolean checkcode)  {
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id, Boolean checkcode) {
         String url = "/patrol/organization/role/add";
         String json =
                 "{" +
@@ -439,7 +482,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     }
 
-    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id)  {
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id) {
         String url = "/patrol/organization/role/add";
         String json =
                 "{" +
@@ -460,7 +503,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleDetail(long role_id)  {
+    public JSONObject organizationRoleDetail(long role_id) {
         String url = "/patrol/organization/role/detail";
         String json =
                 "{" +
@@ -478,7 +521,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray module_ids)  {
+    public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray module_ids) {
         String url = "/patrol/organization/role/edit";
         String json =
                 "{" +
@@ -499,7 +542,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleDelete(long role_id,Boolean checkcode)  {
+    public JSONObject organizationRoleDelete(long role_id, Boolean checkcode) {
         String url = "/patrol/organization/role/delete";
         String json =
                 "{" +
@@ -511,7 +554,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, JSONObject.parseObject(json), checkcode);
     }
 
-    public JSONObject organizationRoleDelete(long role_id)  {
+    public JSONObject organizationRoleDelete(long role_id) {
         String url = "/patrol/organization/role/delete";
         String json =
                 "{" +
@@ -528,7 +571,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject AccountRolePage(long role_id, Integer page, Integer size)  {
+    public JSONObject AccountRolePage(long role_id, Integer page, Integer size) {
         String url = "/patrol/organization/account/role/page";
         String json =
                 "{" +
@@ -543,24 +586,23 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @return
      * @description :app上小程序码
      * @date :2020/11/19 14:24
-     *
-     * @return*/
-    public JSONObject apperCOde(){
-        String url="";
-        JSONObject json=new JSONObject();
-        return invokeApi(url,json);
+     */
+    public JSONObject apperCOde() {
+        String url = "";
+        JSONObject json = new JSONObject();
+        return invokeApi(url, json);
     }
 
 
-
     //将账户使用次数为0的角色删除
-    public void deleteRole()  {
-        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
-        for(int i=0;i<role_list.size();i++){
+    public void deleteRole() {
+        JSONArray role_list = organizationRolePage("", 1, 100).getJSONArray("list");
+        for (int i = 0; i < role_list.size(); i++) {
             int account_number = role_list.getJSONObject(i).getInteger("account_number");
-            if(account_number==0){
+            if (account_number == 0) {
                 Long role_id = role_list.getJSONObject(i).getLong("role_id");
                 organizationRoleDelete(role_id);
             }
@@ -568,12 +610,12 @@ public class ScenarioUtil extends TestCaseCommon {
         }
     }
 
-   //角色权限列表
+    //角色权限列表
     @DataProvider(name = "LIMITID")
     public static Object[][] limitid() {
         return new Integer[][]{
-                {1,2,3,4},
-                {2,2,3,4},
+                {1, 2, 3, 4},
+                {2, 2, 3, 4},
         };
     }
 

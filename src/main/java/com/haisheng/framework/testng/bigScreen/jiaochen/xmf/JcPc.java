@@ -26,15 +26,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcPc extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc=new ScenarioUtil();
+    ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     FileUtil file = new FileUtil();
     Random random = new Random();
-    public int page=1;
-    public int size=50;
-    public String name="";
-    public String email="";
-    public String phone ="";
+    public int page = 1;
+    public int size = 50;
+    public String name = "";
+    public String email = "";
+    public String phone = "";
 
     Integer status = 1;
     String type = "PHONE";
@@ -75,7 +75,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.login("","");
+        jc.pcLogin("", "");
 
 
     }
@@ -98,26 +98,26 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     }
 
     //创建复合权限角色
-    @Test(dataProvider = "NUMA",dataProviderClass = ScenarioUtil.class)
-    public void createRole(int a[]){
+    @Test(dataProvider = "NUMA", dataProviderClass = ScenarioUtil.class)
+    public void createRole(int a[]) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String name=""+a[0];
+            String name = "" + a[0];
             JSONArray moduleId = new JSONArray();
-            for(int i=1;i<a.length;i++){
+            for (int i = 1; i < a.length; i++) {
                 moduleId.add(i);
             }
-            String description = "自动创建"+a[0];
+            String description = "自动创建" + a[0];
             //新增一个角色
-            jc.organizationRoleAdd(name, description, moduleId,true);
+            jc.organizationRoleAdd(name, description, moduleId, true);
 
-            int size=jc.organizationRolePage(1,10).getInteger("total");
-            if(size<100){
-               JSONArray list=jc.organizationRolePage(name, 1, 100).getJSONArray("list");
-               Long role_id =list.getJSONObject(list.size()-1).getLong("role_id");
-               jc.organizationRoleDelete(role_id,true);
-            }else {
-                 logger.warn("警告：角色数量超过100个，不在删除新增角色，将造成数据冗余");
+            int size = jc.organizationRolePage(1, 10).getInteger("total");
+            if (size < 100) {
+                JSONArray list = jc.organizationRolePage(name, 1, 100).getJSONArray("list");
+                Long role_id = list.getJSONObject(list.size() - 1).getLong("role_id");
+                jc.organizationRoleDelete(role_id, true);
+            } else {
+                logger.warn("警告：角色数量超过100个，不在删除新增角色，将造成数据冗余");
             }
 
         } catch (AssertionError | Exception e) {
@@ -355,7 +355,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-            if (old_phone != "" && old_phone !=null) {
+            if (old_phone != "" && old_phone != null) {
                 //编辑账号的名称，权限
                 String reName = "自动化在测编辑";
                 jc.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
@@ -410,20 +410,20 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
     //禁用账户登录失败，开启登录成功
     @Test
-    public void accountStart(){
+    public void accountStart() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //禁用开启按钮
-            jc.organizationAccountButtom("",1);
-        }catch (AssertionError |Exception e){
+            jc.organizationAccountButtom("", 1);
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("禁用账户登录失败，开启登录成功");
         }
     }
-
 
 
 }
