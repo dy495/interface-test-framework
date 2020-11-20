@@ -22,7 +22,9 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -1373,8 +1375,12 @@ public class SpecialPersonManage {
             //1、register five pictures
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            List<String> faceIdArray = new ArrayList<>();
             for (int i = 0; i < picPathArr.length; i++) {
-                registerFace(vipGroup, userId, picPathArr[i], StatusCode.SUCCESS, aCase, step);
+                ApiResponse response = registerFace(vipGroup, userId, picPathArr[i], StatusCode.SUCCESS, aCase, step);
+                JSONObject dataJson = (JSONObject) response.getData();
+                String faceId = dataJson.getString("face_id");
+                faceIdArray.add(faceId);
             }
             //2、query user before delete face.
             logger.info("\n\n");
@@ -1384,7 +1390,7 @@ public class SpecialPersonManage {
             String faceIdConcat = (String) beforeDeleteResult.get("faceIdConcat");
             int index;
             for (index = 0; index < faceIdArrLen; index++) {
-                if (!faceIdConcat.contains(faceIdArray[index])) {
+                if (!faceIdConcat.contains(faceIdArray.get(index))) {
                     msg = "search face failed!"
                             + "group: " + vipGroup
                             + "userid: " + userId;
@@ -1395,17 +1401,17 @@ public class SpecialPersonManage {
             //3、delete one picture
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            deleteFace(vipGroup, userId, faceIdArray[0], StatusCode.SUCCESS, aCase, step);
+            deleteFace(vipGroup, userId, faceIdArray.get(0), StatusCode.SUCCESS, aCase, step);
 
             //4、query user
             apiResponse = queryUser(vipGroup, userId, StatusCode.SUCCESS, aCase, step);
             HashMap afterDeleteOneResult = getQueryUserResult(apiResponse);
             String AfterDeleteOnefaceIdConcat = (String) afterDeleteOneResult.get("faceIdConcat");
-            if (AfterDeleteOnefaceIdConcat.contains(faceIdArray[0])) {
+            if (AfterDeleteOnefaceIdConcat.contains(faceIdArray.get(0))) {
                 msg = "delete one picture failed!"
                         + "group: " + vipGroup
                         + "userid: " + userId
-                        + "faceId: " + faceIdArray[0];
+                        + "faceId: " + faceIdArray.get(0);
                 throw new Exception(msg);
             }
 
@@ -1413,7 +1419,7 @@ public class SpecialPersonManage {
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             for (int i = 0; i < faceIdArrLen; i++) {
-                deleteFace(vipGroup, userId, faceIdArray[i], StatusCode.SUCCESS, aCase, step);
+                deleteFace(vipGroup, userId, faceIdArray.get(i), StatusCode.SUCCESS, aCase, step);
             }
 
             //6、query user
@@ -1430,7 +1436,7 @@ public class SpecialPersonManage {
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             for (int i = 0; i < faceIdArrLen; i++) {
-                deleteFace(vipGroup, userId, faceIdArray[i], StatusCode.SUCCESS, aCase, step);
+                deleteFace(vipGroup, userId, faceIdArray.get(i), StatusCode.SUCCESS, aCase, step);
             }
             //8、register again
             logger.info("\n\n");
@@ -1446,7 +1452,7 @@ public class SpecialPersonManage {
             HashMap reAddResult = getQueryUserResult(apiResponse);
             String reAddfaceIdConcat = (String) reAddResult.get("faceIdConcat");
             for (index = 0; index < faceIdArrLen; index++) {
-                if (!reAddfaceIdConcat.contains(faceIdArray[index])) {
+                if (!reAddfaceIdConcat.contains(faceIdArray.get(index))) {
                     msg = "can't register again after delete face!"
                             + "group: " + vipGroup
                             + "userid: " + userId;
