@@ -29,7 +29,9 @@ public class PublicParm {
     //预约使用参数
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";
-    public String customer_phone_numberO = "17770601557";
+    public String customer_plate = "京GV15666";
+
+    public String customer_phone_numberO = "17770601557";  //京GV15666
 //    public String customer_phone_numberO = "17715942601";
     public String customer_phone_numberE = "17767880967";
     public String belongSaleId="uid_1dc0f148";

@@ -956,7 +956,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         if (!haveTask) {
             UserUtil.loginApplet(applet);
             int id = getTimeId(date);
-            crm.appointmentRepairA((long) getCarId(), "Max", "13373166806", date, "测试测试", "", (long) id);
+            crm.appointmentRepairCode((long) getCarId(), "Max", "13373166806",  "测试测试",  (long) id,"");
             UserUtil.login(zjl);
             //预约中状态查询
             JSONArray array = crm.mainAppointmentList(1, 10).getJSONArray("list");

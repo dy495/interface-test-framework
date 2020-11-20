@@ -126,6 +126,56 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    @Test()
+    public void mainTainparm() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String appointment_date=dt.getHistoryDate(1);
+            JSONObject dd=pf.appointmentTimeListO("MAINTAIN",appointment_date);
+            long timelist = dd.getLong("time_id");
+            String must[]={
+                    "my_car_id",
+                    "customer_name",
+                    "customer_gender",
+                    "customer_phone_number",
+                    "time_range_id",
+            };
+            for(int i=0;i<must.length;i++){
+                int code = crm.appointmentMaintainCode(pp.mycarId, customer_name, customer_phone_number, timelist,must[i]).getInteger("code");
+                Preconditions.checkArgument(code==1001,"预约保养必填参数不填校验"+must[i]);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约保养必填参数不填校验");
+        }
+    }
+
+    @Test()
+    public void repairparm() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String appointment_date=dt.getHistoryDate(1);
+            JSONObject dd=pf.appointmentTimeListO("REPAIR",appointment_date);
+            long timelist = dd.getLong("time_id");
+            String must[]={
+                    "my_car_id",
+                    "customer_name",
+                    "customer_gender",
+                    "customer_phone_number",
+                    "time_range_id",
+            };
+            for(int i=0;i<must.length;i++){
+                int code = crm.appointmentRepairCode(pp.mycarId, customer_name, customer_phone_number, "weixiu",timelist,must[i]).getInteger("code");
+                Preconditions.checkArgument(code==1001,"预约维修填参数不填校验"+must[i]);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("预约保养必填参数不填校验");
+        }
+    }
+
     /**
      * @description :1.0预约试驾 必填项不填异常验证
      * @date :2020/7/8 18:43
@@ -1117,7 +1167,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             long timelist = pf.appointmentTimeListO("MAINTAIN",dt.getHistoryDate(2)).getLong("time_id");
-            int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, appointment_date, "09:00", timelist).getInteger("code");
+            int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, timelist,"").getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
         } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());

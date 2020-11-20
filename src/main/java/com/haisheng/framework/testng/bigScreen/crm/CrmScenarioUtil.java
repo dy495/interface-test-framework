@@ -1698,8 +1698,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("customer_name", customer_name);
         json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
-        json1.put("appointment_date", appointment_date);
-        json1.put("appointment_time", appointment_time);
         json1.put("time_range_id", time_range_id);
         String json = json1.toJSONString();
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1707,18 +1705,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约保养
-    public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
+    public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, Long time_range_id,String empty) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
         json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
-        json1.put("appointment_date", appointment_date);
-        json1.put("appointment_time", appointment_time);
         json1.put("time_range_id", time_range_id);
+        if (empty != null) {
+            json1.put(empty, "");
+        }
         String json = json1.toJSONString();
         String res = httpPost(url, json, IpPort);
+
         return JSON.parseObject(res);
     }
 
@@ -1741,17 +1741,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约维修
-    public JSONObject appointmentRepairA(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, String description, Long time_range_id) throws Exception {
+    public JSONObject appointmentRepairCode(Long my_car_id, String customer_name, String customer_phone_number, String description, Long time_range_id,String empty) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/repair";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
         json1.put("customer_name", customer_name);
         json1.put("customer_gender", "MALE");
         json1.put("customer_phone_number", customer_phone_number);
-        json1.put("appointment_date", appointment_date);
-        json1.put("appointment_time", appointment_time);
         json1.put("description", description);
         json1.put("time_range_id", time_range_id);
+        if (empty != null) {
+            json1.put(empty, "");
+        }
         String json = json1.toJSONString();
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
@@ -3866,7 +3867,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("size", size);
         json.put("type", type);
-        String result = httpPost(url, JSON.toJSONString(json), IpPort);
+        String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
 
@@ -5769,6 +5770,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/sku/car/article/detail";
         JSONObject object = new JSONObject();
         object.put("id", id);
+        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    //销售开出门条
+    public JSONObject goout(String customer_id,String plate_number) {
+        String url = "/porsche/app/customer/go-out-operation";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customer_id);
+        object.put("plate_number", plate_number);
         String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }

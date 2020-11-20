@@ -1771,6 +1771,40 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "发出门条验证")
+    public void chementiao() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //小程序查看我的消息数
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            int total=crm.messageList(20,"").getInteger("total");
+            JSONObject object = pf.creatCustOld(pp.customer_phone_number);
+            finishReceive fr = new finishReceive();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "BB";
+            fr.plate_number_two=pp.customer_plate;
+            String userLoginName = object.getString("userLoginName");
+            fr.name = "编辑客户";
+            fr.remark = new JSONArray();
+            crm.finishReception3(fr);
+            //发送出门条
+            crm.goout(fr.customer_id,fr.plate_number_two);
+
+            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            int total2=crm.messageList(20,"").getInteger("total");
+            Preconditions.checkArgument(total2-total==2,"发送出门条消息，小程序消息没有+2（评价消息和出门条）");
+
+        } catch (AssertionError | Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen, pp.adminpassword);
+            saveData("编辑客户姓名/备注51/201，异常验证");
+        }
+    }
+
     @Test
     public void testlistnull(){
         logger.logCaseStart(caseResult.getCaseName());
