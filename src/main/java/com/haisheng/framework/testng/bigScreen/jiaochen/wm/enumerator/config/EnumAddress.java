@@ -6,7 +6,7 @@ public enum EnumAddress {
 
     JIAOCHEN_DAILY(""),
 
-    JIAOCHE_ONLINE(""),
+    JIAOCHEN_ONLINE(""),
     ;
 
     EnumAddress(String address) {

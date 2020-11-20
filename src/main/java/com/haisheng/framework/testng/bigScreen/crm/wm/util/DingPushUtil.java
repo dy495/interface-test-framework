@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumDingTalkWebHook;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -34,7 +35,15 @@ public class DingPushUtil {
                     + "\n" + date + "\n"
                     + "\n" + "caseName：" + caseName + "\n"
                     + "\n" + "SQL错误：" + msg + "\n"
-                    + "\n" + "SQL语句：" + sql + "\n");
+                    + "\n" + "SQL语句：" + sql + "\n"
+                    + "\n" + "@15321527989" + "\n");
+            JSONObject at = new JSONObject();
+            JSONArray atMobiles = new JSONArray();
+            atMobiles.add("15321527989");
+            at.put("atMobiles", atMobiles);
+            at.put("isAtAll", false);
+            object.put("at", at);
+            System.out.println(object);
             send(object);
         } catch (Exception e) {
             logger.error(e.toString());
