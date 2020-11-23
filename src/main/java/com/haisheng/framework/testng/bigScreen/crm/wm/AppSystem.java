@@ -167,7 +167,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response3 = crm.customerCreate(name, customerLevel, method.getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建线索,客户姓名为汉字，长度1-10，备注20-200字之内");
         }

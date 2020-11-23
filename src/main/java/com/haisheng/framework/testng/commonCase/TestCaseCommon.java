@@ -45,8 +45,8 @@ public class TestCaseCommon {
 
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
-    private String DEBUG = System.getProperty("DEBUG", "true");
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final String DEBUG = System.getProperty("DEBUG", "true");
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
 
 
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
@@ -169,7 +169,7 @@ public class TestCaseCommon {
         }
     }
 
-    public String apiCustomerRequestNotCheck(String router, String json) throws Exception {
+    public String apiCustomerRequestNotCheck(String router, String json) {
         try {
             long start = System.currentTimeMillis();
             Credential credential = new Credential(commonConfig.ak, commonConfig.sk);
@@ -202,7 +202,7 @@ public class TestCaseCommon {
     }
 
     public ApiResponse sendRequest(String router, String[] resource, String json) {
-        ApiResponse apiResponse = null;
+        ApiResponse apiResponse;
         try {
             Credential credential = new Credential(commonConfig.ak, commonConfig.sk);
             String requestId = UUID.randomUUID().toString();
