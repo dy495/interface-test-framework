@@ -32,7 +32,6 @@ import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class CrmScenarioUtil extends TestCaseCommon {
@@ -77,7 +76,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
@@ -3645,7 +3644,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         try {
             result = httpPost(url, request, IpPort);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         return JSON.parseObject(result);
     }
@@ -4238,7 +4237,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
             try {
                 result = httpPost(url, request, IpPort);
             } catch (Exception e) {
-                appendFailreason(e.toString());
+                appendFailReason(e.toString());
             }
             return JSON.parseObject(result);
         }

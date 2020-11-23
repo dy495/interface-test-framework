@@ -121,7 +121,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新增角色");
         }
@@ -170,9 +170,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增删改查角色");
@@ -215,9 +215,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.deleteRole();
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(名称校验)");
@@ -257,7 +257,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.deleteRole();
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(权限说明校验)");
@@ -313,9 +313,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
@@ -375,7 +375,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
@@ -403,7 +403,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("角色的使用账号数量==账号列表中该角色的数量");
@@ -419,7 +419,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //禁用开启按钮
             jc.organizationAccountButtom("", 1);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("禁用账户登录失败，开启登录成功");
         }

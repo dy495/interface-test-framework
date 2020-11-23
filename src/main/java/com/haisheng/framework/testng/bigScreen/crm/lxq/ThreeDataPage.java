@@ -261,9 +261,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("");
         }
@@ -282,9 +282,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(service >= test_drive, "累计接待" + service + " < " + "累计试驾" + test_drive);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：累计接待>=累计试驾");
         }
@@ -298,9 +298,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(service >= deal, "累计接待" + service + " < " + "累计成交" + deal);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：累计接待>=累计成交");
         }
@@ -314,9 +314,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(deal >= delivery, "累计成交" + deal + " < " + "累计交车" + delivery);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：累计成交>=累计交车");
         }
@@ -346,9 +346,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：4个tab【不选销售顾问】累计数据=各个销售顾问累计数据之和");
         }
@@ -388,9 +388,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：各时间段接待时长【不选销售顾问】接待组数=各个销售顾问接待组数之和");
         }
@@ -406,9 +406,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(clue == all, "线索" + clue + " != " + "创建线索" + creat + " + 接待线索" + recp);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：线索=创建线索+接待线索");
         }
@@ -423,9 +423,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(receive == all, "接待" + receive + " != " + "首次" + receive_first + " + 邀约" + receive_visit);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：接待=首次+邀约+再次");
         }
@@ -440,9 +440,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(testDriver == all, "试驾" + testDriver + " != " + "首次" + testDriver_first + " + 邀约" + testDriver_visit + " + 再次" + testDriver_second);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：试驾=首次+邀约+再次");
         }
@@ -458,9 +458,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(order == all, "订单" + order + " != " + "首次" + order_first + " + 邀约" + order_visit + " + 再次" + order_second);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：订单=首次+邀约+再次");
         }
@@ -474,9 +474,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(clue >= receive, "线索" + clue + " < 接待" + receive);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：线索>=接待");
         }
@@ -490,9 +490,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(receive >= testDriver, "接待" + receive + " < 试驾" + testDriver);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：接待>=试驾");
         }
@@ -506,9 +506,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(receive == recp, "接待" + receive + " != 接待线索" + recp);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：接待==接待线索");
         }
@@ -522,9 +522,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(receive >= order, "接待" + receive + " < 订单" + order);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-业务漏斗：接待>=订单");
         }
@@ -538,9 +538,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(order >= deal, "订单" + order + " < 交车" + deal);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("【店面数据分析】业务漏斗：订单>=交车");
         }
@@ -560,9 +560,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(service == sum, "累计接待" + service + " != 各组时长之和" + sum);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[店面数据分析] 业务漏斗：累计接待=【客户接待时长分析】各时间段组数之和");
         }
@@ -576,9 +576,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(service == receive, "累计接待" + service + " != 业务漏斗接待" + receive);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析: 累计接待=【业务漏斗】接待");
         }
@@ -592,9 +592,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(test_drive == testDriver, "累计试驾" + test_drive + " != 业务漏斗试驾" + testDriver);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析: 累计试驾=【业务漏斗】试驾");
         }
@@ -608,9 +608,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(deal == order, "累计成交" + deal + " != 业务漏斗订单" + order);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析: 累计成交=【业务漏斗】订单");
         }
@@ -624,9 +624,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(delivery == funnel_deal, "累计交车" + delivery + " != 业务漏斗交车" + funnel_deal);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析: 累计交车=【业务漏斗】交车");
         }
@@ -642,9 +642,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(s <= b, small1 + s + " > " + big1 + b);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：" + small1 + "<=" + big1);
         }
@@ -658,9 +658,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(clue == car_clue, "【业务漏斗】线索" + clue + " != 【车型漏斗】线索" + car_clue);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：【业务漏斗】线索=【车型漏斗】线索");
         }
@@ -675,9 +675,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(s >= b, bus1 + s + " < " + car1 + b);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析：" + bus1 + ">=" + car1);
         }
@@ -693,9 +693,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(s >= b, bus1 + s + " < " + car1 + b);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-车型漏斗：" + bus1 + ">=" + car1);
         }
@@ -711,9 +711,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(car_clue == all, "线索" + car_clue + " != " + "创建线索" + car_creat + " + 接待线索" + car_recp);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-车型漏斗：线索=创建线索+接待线索");
         }
@@ -794,9 +794,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待+今日老客接待").split("/")[1]);
             Preconditions.checkArgument(service == yesterday, "累计接待=" + service + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-4个tab：累计接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待 之和");
         }
@@ -810,9 +810,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日试驾").split("/")[1]);
             Preconditions.checkArgument(test_drive == yesterday, "累计试驾=" + test_drive + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
         }
@@ -826,9 +826,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日交车").split("/")[1]);
             Preconditions.checkArgument(deal >= yesterday, "累计成交=" + deal + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-4个tab：累计成交>=【前一日】【销售总监-app-我的交车】今日交车 之和");
         }
@@ -842,9 +842,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日交车").split("/")[1]);
             Preconditions.checkArgument(delivery == yesterday, "累计交车=" + delivery + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-4个tab：累计交车=【前一日】【销售总监-app-我的交车】今日交车 之和");
         }
@@ -858,9 +858,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待+今日老客接待").split("/")[1]);
             Preconditions.checkArgument(receive == yesterday, "接待=" + receive + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-漏斗：接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待");
         }
@@ -874,9 +874,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待1").split("/")[1]);
             Preconditions.checkArgument(recp == yesterday, "接待线索=" + recp + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-漏斗：接待线索=【前一日】【销售总监-app-销售接待】今日新客接待");
         }
@@ -890,9 +890,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日老客接待1").split("/")[1]);
             Preconditions.checkArgument(receive_second == yesterday, "再次接待=" + receive_second + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-漏斗：再次接待=【前一日】【销售总监-app-我的接待】今日老客接待");
         }
@@ -908,9 +908,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             int yesterday = clue - newa;
             Preconditions.checkArgument(creat == yesterday, "创建线索=" + creat + "前一日=" + yesterday);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
         }
@@ -995,9 +995,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析-客户接待时长分析：时间段内组数=【前一日】【销售总监-app-销售接待】对应接待时长的数量");
         }
@@ -1023,9 +1023,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             double all = a0 + a1 + a2 + a3 + a4 + a5;
             Preconditions.checkArgument(all == 1 || all == 0, "百分比之和为" + all);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("潜在客户分析-潜在年龄分布：各年龄段百分比之和=100%或0%");
         }
@@ -1042,9 +1042,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             double all = a0 + a1;
             Preconditions.checkArgument(all == 1 || all == 0, "百分比之和为" + all);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("潜在客户分析-潜在性别分布：男+女百分比之和=100% 或0%");
         }
@@ -1067,9 +1067,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(all == 1 || all == 0, "个人车主" + personal + " + 公司车主" + business + " != 100% 或0%");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("成交客户分析: 个人车主百分比+公司车主百分比=100%或0%");
         }
@@ -1092,9 +1092,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(jisuan.equals(personalPer), "不等于");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("成交客户分析: 个人车主百分比=个人车主数量/（个人+公司车主数量）");
         }
@@ -1117,9 +1117,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(jisuan.equals(businessPer), "不等于");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("成交客户分析: 公司车主百分比=公司车主数量/（个人+公司车主数量）");
         }
@@ -1138,9 +1138,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sum == 1 || sum == 0, "总和为" + sum);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[成交客户分析] 车主年龄分析 各年龄段之和=100% 或0%");
         }
@@ -1159,9 +1159,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sum == 1 || sum == 0, "总和为" + sum);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[成交客户分析] 车主性别分析 性别之和=100% 或0%");
         }
@@ -1181,9 +1181,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(Math.abs(abs) <= 1 || Math.abs(abs) == 0, "总和为" + sum);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[成交客户分析] 全国各省成交量 成交量百分比之和=100% 或0%");
         }
@@ -1203,9 +1203,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(Math.abs(abs) <= 1 || Math.abs(abs) == 0, "总和为" + sum);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[成交客户分析] 苏州各区成交量 成交量百分比之和=100% 或0%");
         }
@@ -1225,9 +1225,9 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sum <= jiangsu, "苏州各区之和" + sum + "> 江苏" + jiangsu);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("[成交客户分析] 苏州各区成交量之和<=江苏成交量");
         }

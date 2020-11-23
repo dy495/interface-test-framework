@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -160,9 +159,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("PC端巡检配置新建定检任务");
@@ -221,9 +220,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("PC端巡检配置新建定检任务");
@@ -294,9 +293,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code_thr == 1000,"删除定检规则失败，code="+code_thr);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("PC端巡检配置新建定检任务");
@@ -318,9 +317,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             xd.ShopPage(page,size);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("PC端巡店中心列表");
@@ -358,9 +357,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(i==1,"新增门店执行清单，门店详情清单没+1");
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("新增门店执行清单，门店详情清单+1");
         }
@@ -395,9 +394,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             xd.checkSubmit("\"自动化提交全部合格xiaxia\"",patrol_id);
 
         } catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("pc远程巡店全部合格");
         }
@@ -441,9 +440,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             xd.checkSubmit("\"自动化提交全不合格xiaxia\"",patrol_id);
 
         } catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("pc远程巡店不合格提交");
         }
@@ -476,9 +475,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             xd.submitOne(1,item_id,list_id,patrol_id);
             xd.checkSubmit("\"提交\"",patrol_id);
         } catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("pc远程巡店单执行清单");
         }
@@ -523,9 +522,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
                     inspectorId);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建定检任务-月");
         }
@@ -572,9 +571,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
                     inspectorId);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建定检任务特殊规则");
         }
@@ -629,9 +628,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1001,"六张不合格图片上传成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         finally {
             saveData("6次留痕异常验证");
@@ -679,9 +678,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         finally {
             saveData("五次留痕");
@@ -744,9 +743,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 //            xd.checkSubmit("自动化提交全部合格xiaxia",patrol_id);  //巡店完成提交
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc远程巡店");
         }
@@ -821,9 +820,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         }catch(AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch(Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("门店名查询");
         }
@@ -883,9 +882,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         }catch(AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
 
         }
@@ -945,9 +944,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("巡店后信息校验");
         }
@@ -1006,9 +1005,9 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             String audit_comment="pc 截屏留痕推送给门店负责人";
             xd.problemMark(responsorId,listId,itemId,pic_list,audit_comment);
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("pc特有截屏留痕");
         }

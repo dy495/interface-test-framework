@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -147,7 +144,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
                 crm.addCheckListEmpty(customer_name, customer_phone_number, appointment_date, car_type, emptyPara, object[1].toString(), car_model);
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData(caseDesc);
         }
@@ -183,7 +180,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.cancle(appointment_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾成功后，页面间一致性验证，填写预约信息页+预约成功+预约消息");
         }
@@ -282,7 +279,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument((Long.parseLong(appointment_total_numberB)-Long.parseLong(appointment_total_numberA))==1,"预约试驾成功后，app预约试驾全部累计没+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("预约试驾成功后，pc和app预约试驾信息校验");
@@ -318,7 +315,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.myCarDelete(Integer.toString(car_idBefore));
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加车辆，applet我的车辆列表加1");
         }
@@ -339,7 +336,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加重复车牌验证");
         }
@@ -370,7 +367,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("删除车辆，列表数量-1");
         }
@@ -408,7 +405,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
                 crm.myCarDelete(Integer.toString(car_id));
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序我的车辆，增加十辆");
         }
@@ -452,7 +449,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 //                JSONArray listq = crm.myCarList().getJSONArray("list");
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序我的车辆，增加十一辆异常验证");
         }
@@ -481,7 +478,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(service_status_name.equals("预约中"), "预约记录接待状态错误");
             checkArgument(service_status_nameD.equals("已取消"), "预约记录接待状态错误");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("小程序取消预约，pc预约记录，接待状态预约中变更已取消");
@@ -532,7 +529,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(arcile_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("预约活动，小程序页面间数据一致性");
@@ -564,7 +561,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("取消预约/活动/，我的预约消息状态改变为已取消");
         }
@@ -626,7 +623,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(arcile_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("applet活动报名,pc报名客户+1");
@@ -677,7 +674,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
@@ -727,7 +724,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("取消预约/活动/，我的预约消息状态改变为已取消");
@@ -760,7 +757,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("pc新建活动，applet报名人数=假定基数+报名人数");
@@ -802,9 +799,9 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(arcile_id);
             crm.articleDelete(arcile_id);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("报名活动，小程序报名人数+1");
@@ -852,7 +849,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(arcile_id);
             crm.articleDelete(arcile_id);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
@@ -900,7 +897,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(arcile_id2);
             Preconditions.checkArgument(code == 1001, "黑名单用户不能报名活动");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("黑名单用户不能报名活动");
@@ -925,7 +922,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             checkArgument(list.size() == listpc.size(), "applet看车和pc商品管理车辆列表数量一致");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("applet看车和pc商品管理车辆列表数量一致");
@@ -961,7 +958,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.cancle(id2);
             checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("预约试驾pc预约次数+1");
@@ -987,7 +984,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument((total2 - total) == 1, "预约试驾，试驾消息没+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾，我的试驾消息+1");
         }
@@ -1022,7 +1019,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
             checkArgument((total2 - total) == 1, "预约活动，我的活动消息没+1");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("预约活动，我的活动消息+1");
@@ -1044,7 +1041,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(p.equals("苏"),"省份默认不是苏");
         } catch (AssertionError | Exception e) {
 
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("车牌号验证");
         }
@@ -1061,7 +1058,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long code = crm.appletEditCar(pp.mycarId2, car_type, plate, car_model).getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("车辆，车牌号异常验证");
         }
@@ -1078,7 +1075,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long code = crm.appletEditCar(pp.mycarId2, car_type, plate, car_model).getLong("code");
             $Preconditions.checkArgument(code == 1000, "编辑车辆接口报错");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("编辑车辆");
         }
@@ -1097,7 +1094,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long code = data.getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("applet-小程序新建车辆，车牌号异常验证");
         }
@@ -1110,7 +1107,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long code1 = crm.appointmentTestDrivecode("MALE", pp.abString, customer_phone_number, appointment_date, car_type, car_model).getLong("code");
             Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾，名称长度异常校验");
         }
@@ -1123,7 +1120,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, appointment_date, "09:00", timelist).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约维修，名称长度异常校验");
         }
@@ -1138,7 +1135,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             sleep(5);
             Preconditions.checkArgument(code2 == 1001, "预约试驾，电话异常仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾，电话验证异常");
         }
@@ -1153,7 +1150,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 
         } catch (AssertionError | Exception e) {
 
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("车牌号验证");
         }
@@ -1191,9 +1188,9 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
             saveData("报名取消三次后再报名失败");

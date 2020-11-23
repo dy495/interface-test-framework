@@ -117,9 +117,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
@@ -144,9 +144,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
              }
             Preconditions.checkArgument(pv < 800 && pv>50 ,"昨日周大福的历史客流到店人次超过800或低于了50，现在的pv="+pv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("监控周大福人次是否异常，50-800之间为正常");
@@ -173,9 +173,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             }
             Preconditions.checkArgument(today_pv < 800 && today_pv >30 ,"今日周大福的历史客流到店人次超过800或低于了50，现在的pv="+today_pv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("监控周大福今日实时人次是否异常，小于800为正常");
@@ -217,9 +217,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_id);
@@ -301,9 +301,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_id);
@@ -337,9 +337,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
               }
             Preconditions.checkArgument(result = true ,"周大福客群漏斗兴趣客群两侧漏斗不正常");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("监控周大福客群漏斗兴趣客群两个橱窗是否正常");
@@ -367,9 +367,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1 +"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
@@ -399,9 +399,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
@@ -425,9 +425,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(pv1== pv2,"进店客群总人次=" + pv1 + "各个门的进店人次之和=" + pv2+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("进店客群总人次==各个门的进店人次之和");
@@ -470,9 +470,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( pv1 != 0 ),"客群漏斗-"+cycle_type+"数据过店pv等于"+pv1+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-"+cycle_type+"的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("历史客流/客群漏斗-选择\"+cycle_type+\"数据是否正常");
@@ -494,9 +494,9 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(yestPv < 400 && yestPv >10 ,"百果园"+shop_id+"昨日"+yestDate+"到店人次超过400或低于了10，pv="+yestPv+"需线上确认数据是否有异常");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("监控周大福昨日pv是否异常");

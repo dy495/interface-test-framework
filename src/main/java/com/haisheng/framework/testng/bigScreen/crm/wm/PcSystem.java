@@ -100,7 +100,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--公海--开始时间<=结束时间,筛选出公海日期在此区间内的客户");
         }
@@ -127,7 +127,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--战败--开始时间<=结束时间,筛选出战败日期在此区间内的客户");
         }
@@ -141,7 +141,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             crm.failureCustomerList(date1, date, 1, 10);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--战败--异常筛选");
         }
@@ -154,7 +154,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.wechatCustomerList("", "", 1, 10).getJSONArray("list");
             Preconditions.checkArgument(list.size() > 0, "开始时间>=结束时间，筛选不出小程序客户");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--小程序--开始时间<=结束时间,筛选出小程序人员创建日期在此区间内的客户");
         }
@@ -193,7 +193,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
             Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("商品管理--各必须参数不填写创建车型&&全部填写创建车型");
         }
@@ -229,7 +229,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message.equals("成功"), message);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--DCC客户编辑--填写所有项，保存");
         }
@@ -264,7 +264,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message.equals("DCC客户手机号不能为空"), message);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--DCC客户编辑--不填写联系方式");
         }
@@ -302,7 +302,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(flag, "站内消息投放人群不正确,人群不含销售、售后、销售/售后");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--站内消息可投放人群为售前、售后、售前/售后");
         }
@@ -321,7 +321,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(result, "站内消息生效日期格式非yyyy-MM-dd hh:mm");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--站内消息生效日期格式：yyyy-MM-dd hh：mm");
         }
@@ -342,7 +342,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(title.equals(title1), "排期中的站内消息可以查看操作");
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--排期中的消息可以查看操作，接口不做限制，前端限制");
         }
@@ -365,7 +365,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(title.equals(title1), "新创建的文章未排列在第一位");
             crm.messageDelete(messageId);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--站内消息倒叙排列-最新的在最上方&&排期中的站内消息可以删除");
         }
@@ -386,7 +386,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
                 crm.messageDelete(messageId);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--发送成功的站内消息可以删除");
         }
@@ -430,7 +430,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(!result2, "小程序售后客户能看见消息");
             deleteMessage(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息");
         }
@@ -474,7 +474,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
             deleteMessage(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--配置人群为销售，小程序销售可见消息，售后不可见消息消息配置人群为售后，小程序销售不可见消息，售后可见消息");
         }
@@ -518,7 +518,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result2, "小程序售后客户不能看见消息");
             deleteMessage(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--配置人群为销售/售后，小程序销售可见消息，售后可见消息");
         }
@@ -537,7 +537,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(id != 0, "创建站内消息失败");
             crm.messageDelete(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--内容可包括中英文，符号，数字，空格");
         }
@@ -568,7 +568,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约试驾按钮");
             deleteMessage(messageId);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--创建预约试驾的站内消息，小程序显示按钮,小程序可跳转填写试驾信息页");
         }
@@ -599,7 +599,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约维修按钮");
             deleteMessage(messageId);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--创建预约维修的站内消息，小程序显示按钮,小程序可跳转填写维修信息页");
         }
@@ -630,7 +630,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
             deleteMessage(messageId);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
@@ -661,7 +661,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appointmentType.equals(appletAppointmentType), "pc端发送的站内消息，小程序接收到以后没有预约保养按钮");
             deleteMessage(messageId);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--创建预约保养的站内消息，小程序显示按钮,小程序可跳转填写保养信息页");
         }
@@ -685,7 +685,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             String message = crm.invokeApi(scene, false).getString("message");
             Preconditions.checkArgument(message.equals("成功"), "创建消息时所有项全部填创建失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("站内消息--所有项全部都填，发送成功");
         }
@@ -731,7 +731,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             deleteActivity(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("内容运营--创建售前/售后活动，小程序售前、售后均可见");
         }
@@ -776,7 +776,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             deleteActivity(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("内容运营--创建售前活动，小程序售前可见，售后不可见");
         }
@@ -821,7 +821,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             deleteActivity(id);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("内容运营--创建售后活动，小程序售后可见，售前不可见");
         }

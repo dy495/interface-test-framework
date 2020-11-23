@@ -278,7 +278,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
             Preconditions.checkArgument(num == num1, "全选：" + num + "不选：" + num1);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("门店类型（单选、多选、全选、不选）");
         }
@@ -354,9 +354,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增删改查角色");
@@ -403,9 +403,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(名称校验)");
@@ -446,9 +446,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             md.deleteRole();
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(权限说明校验)");
@@ -493,9 +493,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用邮箱新增账号");
@@ -535,9 +535,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用手机号新增账号，删除账号");
@@ -584,9 +584,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用手机号新增账号，修改该账号的登录方式为邮箱登录");
@@ -621,9 +621,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("账号列表的筛选（单一条件筛选）");
@@ -671,9 +671,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 //            }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("筛选摄像头是否有异常");
@@ -796,9 +796,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银风控筛选（单一筛选）和根据累计风险事件，累计正常事件，累计异常事件，累计待处理事件进行排序");
@@ -839,9 +839,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银追溯的筛选（单一条件筛选）");
@@ -903,9 +903,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银风控事件的筛选（单一条件筛选）");
@@ -962,9 +962,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("账号列表的筛选（单一条件筛选）");
@@ -1005,9 +1005,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控规则的增删查");
@@ -1053,9 +1053,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控规则的名称在1-20字之间，字母中文数字字符均可");
@@ -1102,9 +1102,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警列表的筛选（单一条件筛选）");
@@ -1133,9 +1133,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控事项的处理");
@@ -1165,9 +1165,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控事项的处理");
@@ -1196,9 +1196,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控事项的处理（订单处理备注的字数）");
@@ -1258,9 +1258,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警规则（增删改查）");
@@ -1310,9 +1310,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警规则名称在1-20字之间，字母中文数字字符均可");
@@ -1367,9 +1367,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警列表的筛选（单一条件筛选）");
@@ -1399,9 +1399,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空");
@@ -1443,9 +1443,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控规则的数据一致性（新增一个规则，列表+1/删除一个规则，列表-1）");
@@ -1471,9 +1471,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警列表的数据一致性（最新告警时间>=首次告警时间）");
@@ -1525,9 +1525,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警规则的数据一致性（新增一个规则，列表+1/删除一个规则，列表-1）");
@@ -1560,9 +1560,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv <= count, "今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("今日到访人数<=今天各个时间段内到访人数的累计");
@@ -1598,9 +1598,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(uv1 == uv2, "过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("过店客群总人次==各个门的过店人次之和|过店客群总人数==各个门的过店人次之数");
@@ -1663,9 +1663,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1 == uv2, "进店客群总人数=" + uv1 + "各个门的进店人数之和=" + uv2);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("进店客群总人次==各个门的进店人次之和");
@@ -1691,9 +1691,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1 == uv2, "兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("兴趣客群总人次==各个门的进店人次之和");
@@ -1719,9 +1719,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1 == uv2, "交易客群总人数=" + uv1 + "会员+非会员的人数之和=" + uv2);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("交易客群总人次==会员+非会员的交易pv之和");
@@ -1753,9 +1753,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(result = true, "过店客群" + pv1 + "兴趣客群pv" + pv2 + "进店客群" + pv3 + "进店客群" + pv4);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("过店客群pv>=兴趣客群pv>=进店客群pv");
@@ -1796,9 +1796,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("消费者到店趋势中各天pv累计==到店客群总人次");
@@ -1890,9 +1890,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("到店客群总人次==到店时段分布中各个时段pv累计");
@@ -1947,9 +1947,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((reslut = true), "过店客群pv>=兴趣客群pv>=进店客群不成立");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("吸引率==兴趣客群pv/过店客群pv");
@@ -1985,9 +1985,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("日均客流==所选时间段内的日均客流pv");
@@ -2052,9 +2052,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
@@ -2090,9 +2090,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）等于实时客流中的门店基本信息");
@@ -2165,9 +2165,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("累计顾客总人数==所有门店顾客之和|累计全渠道会员总人数==所有门店全渠道会员之和|累计付费会员总人数==所有门店付费会员之和");
@@ -2220,9 +2220,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("（所有门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
@@ -2283,9 +2283,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("（单个门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
@@ -2325,9 +2325,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
@@ -2389,9 +2389,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("uv与pv之间的比例要保持在1：4的范围间" + "门店shopId=");
@@ -2424,9 +2424,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("累计顾客与事件是否异常，有累计顾客但无事件或有事件无累计顾客");
@@ -2557,9 +2557,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("客户详情累计交易的次数==留痕事件中门店下单的次数||累计到店的数据==留痕事件中进店次数+门店下单的次数||门店客户的照片不能为空||全渠道会员一定有会员ID||顾客没有会员ID");
@@ -2603,9 +2603,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((pv1 != 0 && uv1 != 0), "客群漏斗-自然月9月的数据过店pv等于" + pv1 + "过店uv" + uv1 + "。报错门店的shopId=" + shop_id + "请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument((result = true), "客群漏斗-自然月9月的客群时段分布数据为空" + "。报错门店的shopId=" + shop_id + "请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("历史客流-选择自然月9月的数据是否正常");
@@ -2648,9 +2648,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((pv1 != 0 && uv1 != 0), "客群漏斗-最近7天的数据过店pv等于" + pv1 + "过店uv" + uv1 + "。报错门店的shopId=" + shop_id + "请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument((result = true), "客群漏斗-最近7天的客群时段分布数据为空" + "。报错门店的shopId=" + shop_id + "请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("历史客流-选择最近7天的数据是否正常");
@@ -2693,9 +2693,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((pv1 != 0 && uv1 != 0), "客群漏斗-最近14天的数据过店pv等于" + pv1 + "过店uv" + uv1 + "。报错门店的shopId=" + shop_id + "请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument((result = true), "客群漏斗-最近14天的客群时段分布数据为空" + "。报错门店的shopId=" + shop_id + "请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("历史客流-选择最近14天的数据是否正常");
@@ -2740,9 +2740,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((pv1 != 0 && uv1 != 0), "客群漏斗-最近30天的数据过店pv等于" + pv1 + "过店uv" + uv1 + "。报错门店的shopId=" + shop_id + "请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument((result = true), "客群漏斗-最近30天的客群时段分布数据为空" + "。报错门店的shopId=" + shop_id + "请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("历史客流-选择最近30天的数据是否正常");
@@ -2788,9 +2788,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((result = true), "客群漏斗-最近60天的客群时段分布数据为空" + "。报错门店的shopId=" + shop_id + "请线上确认");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("选择最近60天的数据是否正常");
@@ -2831,9 +2831,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
@@ -2865,9 +2865,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(allsum != 50, "客户ID：" + customer_id + "。交易次数为：" + total_deal_times + "。该客户详情中的进店次数为：" + total_visit_times + "。报错门店的shopId=" + shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
@@ -2927,9 +2927,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
@@ -2989,9 +2989,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
@@ -3022,9 +3022,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("角色的使用账号数量==账号列表中该角色的数量");
@@ -3063,9 +3063,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("累计的风险事件==【收银风控事件】待处理+已处理+已过期");
@@ -3092,9 +3092,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("正常事件==【收银风控事件】列表页处理结果为正常的数量");
@@ -3121,9 +3121,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("异常事件==【收银风控事件】列表页处理结果为异常的数量");
@@ -3149,9 +3149,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("待处理事件==【收银风控事件】列表页中当前状态为待处理的事件");
@@ -3180,9 +3180,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("正常事件+异常事件==【收银风控事件】列表页的当前状态为已处理的数量");

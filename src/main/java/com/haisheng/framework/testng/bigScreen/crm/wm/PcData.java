@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCa
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.AppCustomerCreateScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -91,7 +92,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--我的客户--展厅客户总数=列表的总数");
         }
@@ -112,7 +113,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端DCC客户总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--我的客户--DCC客户总数=列表的总数");
         }
@@ -133,7 +134,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--我的客户--成交记录总数=列表的总数");
         }
@@ -154,7 +155,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端成交记录总数为：" + total + "列表总数为：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc--我的客户--成交记录总数=列表的总数");
         }
@@ -207,7 +208,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--我的客户--交车记录--相同底盘号 校验app购车档案和PC成交记录对应数据一致");
         }
@@ -228,7 +229,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(total == listSizeTotal, "pc销售客户管理公海共计人数为：" + total + "列表总数为：" + listSizeTotal + "两者不相等");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--公海--共计人数=列表总条数");
         }
@@ -250,7 +251,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSizeTotal);
             Preconditions.checkArgument(listSizeTotal == total, "pc端今日客戶人数：" + total + "不等于" + "按今日搜索展示列表条数：" + listSizeTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--公海--今日人数=按今日搜索展示列表条数");
         }
@@ -293,7 +294,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(publicTotal1 == publicTotal - 1, "公海客户分配给销售顾问后，公海客户数量未-1");
             Preconditions.checkArgument(customerLevelName != null && customerLevelName.equals("C"), "客户从公海分配销售后，等级未变为C");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--公海--勾选公海客户分配给销售A，销售A客户名下客户数量+1，列表数-1");
         }
@@ -308,12 +309,17 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             String phone = method.getDistinctPhone();
             int publicTotal = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             //创建线索
-            crm.customerCreate(name, "8", phone, car.getModelId(), car.getStyleId(), remark);
+            IScene scene = AppCustomerCreateScene.builder().customerName(name)
+                    .customerLevel("8").customerPhone(phone)
+                    .intentionCarModel(car.getModelId())
+                    .intentionCarStyle(car.getStyleId())
+                    .remark(remark).build();
+            crm.invokeApi(scene);
             int publicTotal1 = crm.publicCustomerList("", "", 10, 1).getInteger("total");
             CommonUtil.valueView(publicTotal, publicTotal1);
             Preconditions.checkArgument(publicTotal1 == publicTotal + 1, "新建一个G级客户，公海数未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--公海--新建一个G级客户，公海列表数+1");
         }
@@ -329,7 +335,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(listSize, total);
             Preconditions.checkArgument(listSize == total, "pc销售客户管理战败共计人数为" + total + "列表总条数为" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--战败--共计人数=列表总条数");
         }
@@ -345,7 +351,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             int today = failureCustomerList.getInteger("today");
             Preconditions.checkArgument(listSize == today, "pc销售客户管理战败今日人数为" + today + "按今日搜索列表总条数为" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--战败--今日人数=按今日搜索展示列表条数");
         }
@@ -371,7 +377,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(publicTotal == publicTotal1 - 1, "战败转移公海前公海数量为" + failureTotal + "战败转公海后公海数量为" + failureTotal1);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--战败--将一个战败客户划入公海,战败客户列表数量-1,公海客户列表数量+1");
         }
@@ -387,7 +393,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(listSize, total);
             Preconditions.checkArgument(listSize == total, "小程序客户总数为：" + total + "列表总数为：" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--小程序--共计人数=列表总条数");
         }
@@ -404,7 +410,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(listSize, today);
             Preconditions.checkArgument(listSize == today, "小程序今日客户总数为：" + today + "按今日搜索列表总数为：" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--小程序--今日人数=按今日搜索展示列表条数");
         }
@@ -435,7 +441,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(maintainTotal == appointmentMaintain, "pc端预约保养次数为：" + maintainTotal + "小程序我的保养预约总数：" + appointmentMaintain);
             Preconditions.checkArgument(repairTotal == appointmentMend, "pc端预约维修次数为：" + repairTotal + "小程序我的维修预约总数：" + appointmentMend);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
         }

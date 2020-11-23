@@ -39,7 +39,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAccount fw = EnumAccount.FW_BAOYANG_DAILY;
-    private static final int size = 50;
+    private static final int size = 100;
     int zjl_num = 0;
     int gw_num = 0;
 
@@ -89,7 +89,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(monthReceptionCar, monthRepairedCar, todayReceptionCar, todayRepairedCar);
             Preconditions.checkArgument(monthReceptionCar >= todayReceptionCar && monthRepairedCar >= todayRepairedCar, "本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆异常");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆");
         }
@@ -115,7 +115,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayReceptionCar, set.size());
             Preconditions.checkArgument(todayReceptionCar == set.size(), zjl.getUsername() + "今日接待售后车辆数：" + todayReceptionCar + "列表数：" + set.size());
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--今日接待售后车辆=今天筛选，列表数车牌去重");
         }
@@ -151,7 +151,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(maintainNum - maintainNum1 == 1, "");
             Preconditions.checkArgument(completeNum1 - completeNum == 1, "");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--接待日期为今天的记录，确认交车，今日完成维修车辆+1&&本月完成维修车辆+1");
         }
@@ -180,7 +180,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(listSize == listSize1, "交车前列表数量为：" + listSize + "交车后列表数数量为：" + listSize1);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--接待日期为今天的记录，确认交车，列表总条数不变，接待状态=已完成+1&&接待状态=维修中-1");
         }
@@ -210,7 +210,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(pcMaintainTotal == appMaintainTotal, "app预约保养总数为：" + appMaintainTotal + "pc预约保养总数为：" + pcMaintainTotal);
             Preconditions.checkArgument(pcRepairTotal == appRepairTotal, "app预约维修总数为" + appRepairTotal + "pc预约维修总数为：" + pcRepairTotal);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--app预约保养列表数与pc预约保养列表数一致，app预约维修列表数与pc预约维修列表数一致");
         }
@@ -237,7 +237,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--预约保养/维修页点击接待按钮（客户类型=新客）--接待页列表+1");
         }
@@ -251,7 +251,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理本月接待售后车辆为   " + zjl_num + "各个顾问本月接待售后车辆之和  " + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
         }
@@ -265,7 +265,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理本月完成维修车辆为   " + zjl_num + "各个顾问本月完成维修车辆之和  " + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--总经理本月完成维修车辆>=各个顾问本月完成维修车辆之和");
         }
@@ -279,7 +279,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理今日接待售后车辆   " + zjl_num + "各个顾问今日接待售后车辆之和  " + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后-我的接待--总经理今日接待售后车辆>=各个顾问今日接待售后车辆之和");
         }
@@ -293,7 +293,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理今日完成维修车辆   " + zjl_num + "各个顾问今日完成维修车辆之和  " + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--总经理今日完成维修车辆>=各个顾问今日完成维修车辆之和");
         }
@@ -358,7 +358,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(monthReceptionCar, totalReceptionCar);
             Preconditions.checkArgument(totalReceptionCar >= monthReceptionCar, "全部车辆为：" + totalReceptionCar + "本月新增车辆为：" + monthReceptionCar);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--全部车辆>=本月新增车辆");
         }
@@ -375,7 +375,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(monthReceptionCar, todayNewCar);
             Preconditions.checkArgument(todayNewCar <= monthReceptionCar, "今日新增车辆为：" + todayNewCar + "本月新增车辆为：" + monthReceptionCar);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--本月新增车辆>=今日新增车辆");
         }
@@ -392,7 +392,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(monthReceptionCar, monthReceptionCar1);
             Preconditions.checkArgument(monthReceptionCar >= monthReceptionCar1, "本月新增车辆：" + monthReceptionCar1 + "本月接待售后车辆：" + monthReceptionCar);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后-客户管理-本月新增车辆<=【我的接待】本月接待售后车辆");
         }
@@ -409,7 +409,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayNewCar, todayReceptionCar);
             Preconditions.checkArgument(todayReceptionCar >= todayNewCar, "今日新增车辆：" + todayNewCar + "今日接待售后车辆：" + todayReceptionCar);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后-客户管理-今日新增车辆<=【我的接待】今日接待售后车辆");
         }
@@ -423,7 +423,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理的全部车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和");
         }
@@ -442,7 +442,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayTotal, todayNew);
             Preconditions.checkArgument(todayTotal >= todayNew, "今日接待售后数量" + todayTotal + "<今日新增售后数量" + todayNew);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--今日接待售后车辆>=今日新增售后车辆");
         }
@@ -456,7 +456,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理的本月新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和");
         }
@@ -470,7 +470,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(zjl_num, gw_num);
             Preconditions.checkArgument(zjl_num >= gw_num, "总经理的今日新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--总经理的今日新增车辆>=各个顾问的今日新增之和");
         }
@@ -511,7 +511,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int all = list1.getInteger("total_reception_car");
             Preconditions.checkArgument(all >= todayTotal, "全部车辆" + all + "<今日接待售后数量" + todayTotal);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--客户管理--全部车辆>=今日接待售后车辆");
 
@@ -534,7 +534,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSize);
             Preconditions.checkArgument(total == listSize, "售后--我的回访-全部回访=列表条数");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--回访任务--全部回访=列表条数");
         }
@@ -550,7 +550,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayReturnVisitNumber, listSize);
             Preconditions.checkArgument(todayReturnVisitNumber == listSize, "服务--今日回访!=任务日期为今天的条数");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--回访任务--今日回访=任务日期为今天的条数");
         }
@@ -565,7 +565,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int total = response.getInteger("total");
             Preconditions.checkArgument(total >= todayReturnVisitNumber, "服务--全部回访<今日回访");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--回访任务--全部回访>=今日回访");
         }
@@ -593,7 +593,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(returnVisitStatusName != null && returnVisitStatusName.equals("已完成"), "回访任务日期为今天的回访任务，是否完成!=已完成");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("服务--回访任务日期为今天的回访任务，是否完成=已完成");
         }
@@ -638,7 +638,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(todayReturnVisitNumber + 1 == todayReturnVisitNumber1, "今日回访未+1");
             Preconditions.checkArgument(listSize + 1 == listSize1, "售后回访页条数未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--回访任务--小程序预约今日的保养/维修（不取消）,售后回访页条数+1,售后回访页 全部回访+1,今日回访+1");
         }
@@ -682,7 +682,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(todayReturnVisitNumber == todayReturnVisitNumber1 + 1, "今日回访未-1");
             Preconditions.checkArgument(listSize == listSize1 + 1, "售后回访页条数未-1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--回访任务--小程序预约今日的保养/维修（取消）,售后回访页条数-1,售后回访页 全部回访-1,今日回访-1");
         }
@@ -698,7 +698,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, today);
             Preconditions.checkArgument(total >= today, "全部预约保养：" + total + "今日预约保养：" + today);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理-全部预约保养>=今日预约保养");
         }
@@ -713,7 +713,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int list = crm.mainAppointmentList().getInteger("total");
             Preconditions.checkArgument(total <= list, "全部预约保养" + total + ">列表数" + list);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理-全部预约保养<=列表数");
         }
@@ -762,7 +762,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于后工作管理中我的回访-售后回访中任务日期为今天的条数" + todayListTotal);
             Preconditions.checkArgument(flag, "全部回访" + total + "大于今日回访" + todayListTotal);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--首保提醒--全部回访=列表条数&&今日回访=任务日期为今天的条数&&全部回访>=今日回访");
         }
@@ -779,7 +779,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, todayReturnVisitNumber);
             Preconditions.checkArgument(total == todayReturnVisitNumber, "按" + date + "搜索回访条数为：" + total + "今日回访数为：" + todayReturnVisitNumber);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--首保提醒--全部回访=列表条数&&今日回访=任务日期为今天的条数&&全部回访>=今日回访");
         }
@@ -807,7 +807,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(returnVisitStatusName != null && returnVisitStatusName.equals("已完成"), "任务日期为今天的回访任务，是否完成!=已完成");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--首保提醒--回访任务日期为今天的回访任务，是否完成=已完成");
         }
@@ -855,7 +855,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-流失预警中的今日回访" + todayViNum + "不等于售后工作管理中我的回访-流失预警中任务日期为今天的条数" + todayListTotal);
             Preconditions.checkArgument(flag, "全部回访" + total + "大于今日回访" + todayListTotal);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--流失预警--全部回访=列表条数&&今日回访=任务日期为今天的条数&&全部回访>=今日回访");
         }
@@ -872,7 +872,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, todayReturnVisitNumber);
             Preconditions.checkArgument(total == todayReturnVisitNumber, "按" + date + "搜索回访条数为：" + total + "今日回访数为：" + todayReturnVisitNumber);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--流失预警--按照今天日期进行搜索，结果条数=今日回访数");
         }
@@ -900,7 +900,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(returnVisitStatusName != null && returnVisitStatusName.equals("已完成"), "任务日期为今天的回访任务，是否完成!=已完成");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--任务管理--流失预警--回访任务日期为今天的回访任务，是否完成=已完成");
         }
@@ -922,7 +922,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(b == a + 1, "报名活动成功，客户列表未+1");
             Preconditions.checkArgument(c == b - 1, "删除活动报名客户，客户列表未-1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动任务--添加1个报名,报名条数+1");
         }
@@ -939,7 +939,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(i);
             Preconditions.checkArgument(i > 0, "可填写报名的活动当前时间>活动结束时间");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动任务--可填写报名的活动当前时间<活动结束时间");
         }
@@ -966,7 +966,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             JSONObject object = crm.artilceView(id);
             Preconditions.checkArgument(articleContent.equals(object.getString("article_content")), articleTitle + " 活动内容不一致");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动任务--活动信息与运营中心发布文章时信息一致");
         }
@@ -996,7 +996,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(b.size() == a.size() + 1, "添加1个报名,后台任务客户未+1");
             Preconditions.checkArgument(c.size() == b.size() - 1, "删除1个报名,后台任务客户未-1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动任务--添加1个报名,后台任务客户+1");
         }
@@ -1027,7 +1027,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--车牌号模糊搜索");
         }
@@ -1039,24 +1039,36 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         try {
             UserUtil.login(zjl);
             IScene scene = ReceptionAfterCustomerListScene.builder().build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
-            String customerPhoneNumber = list.getJSONObject(0).getString("customer_phone_number");
-            CommonUtil.valueView(customerPhoneNumber);
-            String findParam = customerPhoneNumber.substring(0, 3);
-            CommonUtil.valueView(findParam);
-            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
-            int total = crm.invokeApi(scene1).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, 100);
+            int total = crm.invokeApi(scene).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            String customerPhoneNumber = null;
             for (int i = 1; i < s; i++) {
-                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
-                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("customer_phone_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按电话号查询失败,搜索参数为：" + findParam);
+                IScene scene1 = ReceptionAfterCustomerListScene.builder().page(i).size(size).build();
+                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    if (!StringUtils.isEmpty(list.getJSONObject(j).getString("customer_phone_number"))) {
+                        customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
+                        CommonUtil.valueView(customerPhoneNumber);
+                        break;
+                    }
+                }
+            }
+            if (customerPhoneNumber != null) {
+                String findParam = customerPhoneNumber.substring(0, 3);
+                CommonUtil.valueView(findParam);
+                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
+                int x = CommonUtil.getTurningPage(crm.invokeApi(scene1).getInteger("total"), 100);
+                for (int i = 1; i < x; i++) {
+                    IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(100).build();
+                    JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
+                    for (int j = 0; j < list1.size(); j++) {
+                        String resultPlateNumber = list1.getJSONObject(j).getString("customer_phone_number");
+                        Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按电话号查询失败,搜索参数为：" + findParam);
+                    }
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--联系方式模糊搜索");
         }
@@ -1085,7 +1097,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--联系方式模糊搜索");
         }
@@ -1113,7 +1125,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询");
         }
@@ -1141,7 +1153,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询");
         }
@@ -1158,7 +1170,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.invokeApi(scene).getJSONArray("list");
             Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询，开始时间>结束时间");
         }
@@ -1173,7 +1185,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String qrcodeUrl = crm.invokeApi(scene).getString("qrcode_url");
             Preconditions.checkArgument(qrcodeUrl != null, "接待二维码为空");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--获取接待二维码");
         }
@@ -1211,7 +1223,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后接待--我的接待列表，维度1: 维修中在上，已完成在下,维度2: 接待日期倒序");
         }
@@ -1247,7 +1259,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(y);
             Preconditions.checkArgument(y == 1, "当天开出门条后还无法继续开");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--发送提车消息，成功后，按钮置灰。发送确认交车，按钮置灰");
         }
@@ -1280,7 +1292,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }
@@ -1312,7 +1324,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }
@@ -1343,7 +1355,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询");
         }
@@ -1359,7 +1371,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.afterSaleCustomerList("", endDate, startDate, 1, 10).getJSONArray("list");
             Preconditions.checkArgument(list.size() == 0, "开始时间>结束时间,查询出了结果");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--我的接待--按照接待日期查询，开始时间>结束时间");
         }
@@ -1378,7 +1390,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String message1 = returnVisit("售后回访", picture, "", date);
             Preconditions.checkArgument(message1.equals("回访描述不能为空"), "售后回访描述为空也可回访成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--售后回访--不填必填参数");
         }
@@ -1397,7 +1409,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String message1 = returnVisit("首保提醒", picture, "", date);
             Preconditions.checkArgument(message1.equals("回访描述不能为空"), "首保提醒回访描述为空也可回访成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--首保提醒回访--不填必填参数");
         }
@@ -1416,7 +1428,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String message1 = returnVisit("流失预警", picture, "", date);
             Preconditions.checkArgument(message1.equals("回访描述不能为空"), "流失预警回访描述为空也可回访成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--流失预警回访--不填必填参数");
         }
@@ -1446,7 +1458,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动报名--当前日期>=开始日期，填写报名置灰。当前日期<开始日期，填写报名高亮可点击");
         }
@@ -1481,7 +1493,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message10.equals("请输入有效手机号码"), "数字+标点号码报名成功");
             Preconditions.checkArgument(message11.equals("请输入有效手机号码"), phone.substring(0, phone.length() - 1).length() + "位手机号码报名成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后--活动任务--异常情况");
         }
@@ -1507,7 +1519,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String message = crm.registeredCustomer1(activityId, "哈哈哈", "13473166806").getString("message");
             Preconditions.checkArgument(message.equals("最多50条哦~"), "活动报名人数51人成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             for (String s : set) {
                 deleteActivityCustomer(activityId, s);
@@ -1527,7 +1539,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             String message = crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
             Preconditions.checkArgument(message.equals("当前手机号已经报过了哦~"), "添加销售添加过的联系方式，成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             deleteActivityCustomer(activityId, phone);
             saveData("售后--活动任务--添加销售添加过的联系方式,失败");

@@ -131,9 +131,9 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
             System.out.println(fileUtil.findLineByKey(filePath,"service"));
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存数据");
         }
@@ -146,9 +146,9 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
             dt.calTimeHourDiff("15:00","16:01");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存数据");
         }

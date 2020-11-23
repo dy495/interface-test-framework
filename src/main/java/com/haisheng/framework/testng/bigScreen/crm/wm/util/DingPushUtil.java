@@ -43,7 +43,6 @@ public class DingPushUtil {
             at.put("atMobiles", atMobiles);
             at.put("isAtAll", false);
             object.put("at", at);
-            System.out.println(object);
             send(object);
         } catch (Exception e) {
             logger.error(e.toString());

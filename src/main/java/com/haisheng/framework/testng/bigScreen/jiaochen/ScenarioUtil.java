@@ -218,7 +218,7 @@ public class ScenarioUtil extends TestCaseCommon {
             try {
                 result = httpPost(path, request, IpPort);
             } catch (Exception e) {
-                appendFailreason(e.toString());
+                appendFailReason(e.toString());
             }
             return JSON.parseObject(result);
         }

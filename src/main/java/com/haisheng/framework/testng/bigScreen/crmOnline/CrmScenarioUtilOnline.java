@@ -74,7 +74,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
@@ -3563,7 +3563,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         try {
             result = httpPost(url, request, IpPort);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         return JSONObject.parseObject(result);
     }
@@ -3633,7 +3633,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         try {
             result = httpPost(url, request, IpPort);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         return JSON.parseObject(result);
     }
@@ -4222,7 +4222,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
                 String result = httpPost(url, request, IpPort);
                 return JSON.parseObject(result);
             } catch (Exception e) {
-                appendFailreason(e.toString());
+                appendFailReason(e.toString());
             }
         }
         return null;

@@ -101,4 +101,17 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
             DingPushUtil.sendText(e.toString());
         }
     }
+
+    @Test(priority = 1)
+    public void dataCheck() {
+        String date = DateTimeUtil.getFormat(new Date());
+        Sql sql = Sql.instance().select().from(TPorscheTodayData.class)
+                .where("today_date", "=", date)
+                .and("shop_id", "=", shopId)
+                .end();
+        int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+        if (!(count > 0)) {
+            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
+        }
+    }
 }

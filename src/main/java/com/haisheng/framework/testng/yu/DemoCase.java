@@ -82,9 +82,9 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
         try {
             scenarioUtil.scopeAdd("xxxx", "2", "111");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("demo测试");
         }
@@ -100,9 +100,9 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
         try {
             throw new Exception("测试异常");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("demo测试2");
         }

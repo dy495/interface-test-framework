@@ -1,29 +1,22 @@
 package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.orderCar;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * @description :晚上十一点接待客户
@@ -112,9 +105,9 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
             crm.finishReception3(fr);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客完成接待");
         }
@@ -132,9 +125,9 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
             fr.reception_type = "FU";
             crm.finishReception3(fr);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客完成接待");
         }

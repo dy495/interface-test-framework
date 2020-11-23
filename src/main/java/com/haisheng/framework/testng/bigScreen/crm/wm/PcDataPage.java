@@ -89,7 +89,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFourData("service", "接待");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计接待>=各个销售顾问累计接待之和");
         }
@@ -101,7 +101,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFourData("test_drive", "试驾");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计试驾=各个销售顾问累计试驾之和");
         }
@@ -113,7 +113,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFourData("deal", "成交");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计成交=各个销售顾问累计成交之和");
         }
@@ -125,7 +125,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFourData("delivery", "交车");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】相同时间段内：【不选销售顾问】累计交车=各个销售顾问累计交车之和");
         }
@@ -170,7 +170,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("10分钟以内");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】10分钟内组数=各个销售顾问10分钟内组数之和");
         }
@@ -182,7 +182,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("10-30分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】10～30分钟组数=各个销售顾问10～30分钟组数之和");
         }
@@ -194,7 +194,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("30-60分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】30～60分钟组数=各个销售顾问30～60分钟组数之和");
         }
@@ -206,7 +206,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("60-120分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】60～120分钟组数=各个销售顾问60～120分钟组数之和");
         }
@@ -218,7 +218,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("120分钟以上");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】大于120分钟组数=各个销售顾问大于120分钟组数之和");
         }
@@ -271,7 +271,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("CLUE", "business");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】线索=创建线索+接待线索");
         }
@@ -307,7 +307,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】商机=FU+PU");
         }
@@ -319,7 +319,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("TEST_DRIVE", "business");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】试驾=FU+PU+BB");
         }
@@ -331,7 +331,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("ORDER", "business");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】订单FU+PU+BB");
         }
@@ -409,7 +409,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段各销售】留档率=商机FU/该时间段内每一天【销售总监-app-我的接待】今日新客接待之和");
         }
@@ -421,7 +421,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFunnelPercent("TEST_DRIVE", "test_drive_percentage");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】试驾率=（试驾的：FU+PU+BB）/（商机的：FU+PU）");
         }
@@ -433,7 +433,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareFunnelPercent("ORDER", "deal_percentage");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】成交率=（订单的：FU+PU+BB）/（商机的：FU+PU）");
         }
@@ -467,7 +467,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 });
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗，【各时间段+各销售】交车率=交车/订单");
         }
@@ -545,7 +545,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--业务漏斗,接待线索>=商机的FU");
         }
@@ -559,7 +559,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("CLUE", "car_type");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗，【各时间段+各销售】线索=创建线索+接待线索");
         }
@@ -571,7 +571,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("RECEIVE", "car_type");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗，【各时间段+各销售】接待=各车型数量之和（意向车型）");
         }
@@ -583,7 +583,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("TEST_DRIVE", "car_type");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗，【各时间段+各销售】试驾=各车型数量之和（审核通过&&没取消的试驾车型）");
         }
@@ -595,7 +595,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("ORDER", "car_type");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗，【各时间段+各销售】订单=各车型数量之和");
         }
@@ -607,7 +607,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareBusinessFunnelData("DEAL", "car_type");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗，【各时间段+各销售】交车=各车型数量之和（购买车型）");
         }
@@ -626,7 +626,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "日接待数量为：" + s + "周接待数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【日】累计接待<=【周】累计接待");
         }
@@ -643,7 +643,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "周接待数量为：" + s + "月接待数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【周】累计接待<=【月】累计接待");
         }
@@ -660,7 +660,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "月接待数量为：" + s + "季接待数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【月】累计接待<=【季】累计接待");
         }
@@ -677,7 +677,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "季接待数量为：" + s + "年接待数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【季】累计接待<=【年】累计接待");
         }
@@ -694,7 +694,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "日试驾数量为：" + s + "周试驾数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【日】累计试驾<=【周】累计试驾");
         }
@@ -711,7 +711,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "周试驾数量为：" + s + "月试驾数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【周】累计试驾<=【月】累计试驾");
         }
@@ -728,7 +728,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "月试驾数量为：" + s + "季试驾数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【月】累计试驾<=【季】累计试驾");
         }
@@ -745,7 +745,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "季试驾数量为：" + s + "年试驾数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【季】累计试驾<=【年】累计试驾");
         }
@@ -762,7 +762,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "日成交数量为：" + s + "周成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【日】累计成交<=【周】累计成交");
         }
@@ -779,7 +779,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "周成交数量为：" + s + "月成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【周】累计成交<=【月】累计成交");
         }
@@ -796,7 +796,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "月成交数量为：" + s + "季成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【月】累计成交<=【季】累计成交");
         }
@@ -813,7 +813,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "季成交数量为：" + s + "年成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【季】累计成交<=【年】累计成交");
         }
@@ -830,7 +830,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "日交车数量为：" + s + "周成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【日】累计交车<=【周】累计交车");
         }
@@ -847,7 +847,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "周交车数量为：" + s + "月成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【周】累计交车<=【月】累计交车");
         }
@@ -864,7 +864,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "月交车数量为：" + s + "季成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【月】累计交车<=【季】累计交车");
         }
@@ -881,7 +881,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(s <= v, arr.get("userName") + "季交车数量为：" + s + "年成交数量为：" + v);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【季】累计交车<=【年】累计交车");
         }
@@ -906,7 +906,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareCarTypeFunnelData("CLUE");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗--总经理线索>=各个销售之和");
         }
@@ -918,7 +918,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareCarTypeFunnelData("RECEIVE");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗--总经理商机>=各个销售之和");
         }
@@ -930,7 +930,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareCarTypeFunnelData("TEST_DRIVE");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗--总经理试驾>=各个销售之和");
         }
@@ -942,7 +942,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareCarTypeFunnelData("ORDER");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗--总经理订单>=各个销售之和");
         }
@@ -954,7 +954,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareCarTypeFunnelData("DEAL");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--车系漏斗--总经理交车>=各个销售之和");
         }
@@ -1009,7 +1009,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareTwoFunnelData("CLUE");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【业务漏斗】线索=【车型漏斗】线索");
         }
@@ -1021,7 +1021,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         try {
             compareTwoFunnelData("DEAL");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【业务漏斗】交车==【车型漏斗】交车");
         }
@@ -1064,7 +1064,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 });
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面數據分析--【业务漏斗】创建线索=【车型漏斗】创建线索,【业务漏斗】接待线索=【车型漏斗】接待线索");
         }
@@ -1128,7 +1128,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--人工接待>=【业务漏斗】商机");
         }
@@ -1162,7 +1162,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--人工接待=商机的FU+PU+BB");
         }
@@ -1201,7 +1201,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             });
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("10分钟内组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间<10分钟的数量");
         }
@@ -1238,7 +1238,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(userName);
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("10～30分钟组数=【前一日】【销售总监-PC-接待列表】10分钟<=离店时间-接待时间<30分钟的数量");
         }
@@ -1275,7 +1275,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("30～60分钟内组数=【前一日】【销售总监-PC-接待列表】30分钟<=离店时间-接待时间<60分钟的数量");
         }
@@ -1312,7 +1312,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("60～120分钟内组数=【前一日】【销售总监-PC-接待列表】60分钟<=离店时间-接待时间<120分钟的数量");
         }
@@ -1348,7 +1348,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.log(userName + "跑完");
             });
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("大于120分钟组数=【前一日】【销售总监-PC-接待列表】离店时间-接待时间>=120分钟的数量");
         }
@@ -1367,7 +1367,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(total == bath, e.getName() + "智能接待组数为：" + bath + "进店批次列表数为：" + total);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--智能接待=【进店批次分析页】所选时间段列表数");
         }
@@ -1409,7 +1409,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】创建线索=【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
         }
@@ -1449,7 +1449,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段】创建线索=【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
         }
@@ -1537,7 +1537,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量");
         }
@@ -1581,7 +1581,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(createClueNum >= num, "昨日创建线索：" + createClueNum + " 创建日期为当天且没有接待记录的客户数量：" + num);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段+各销售】创建线索>=【该销售-app-展厅客户】创建日期在该时间范围内&&该客户接待记录为空的数量");
         }
@@ -1623,7 +1623,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段+各销售】接待线索=【该销售-app-销售接待】今日新客接待");
         }
@@ -1655,7 +1655,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【各时间段+各销售】累计订单=【各销售-app-我的接待】今日订单数量");
         }
@@ -1685,7 +1685,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("【各时间段+各销售】累计交车=【各销售-app-我的交车】今日交车数量");
         }
@@ -1734,7 +1734,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【时间段＋销售顾问】车系漏斗中订单＝成交记录中订车时间为【时间段＋销售顾问】的订单数量");
         }
@@ -1765,7 +1765,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--【时间段＋销售顾问】车系漏斗中交车＝成交记录中交车时间为【时间段＋销售顾问】的订单数量");
         }
@@ -1797,7 +1797,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析页--【各时间段+各车型筛选】个人车主百分比+公司车主百分比=100% 或 0%");
         }
@@ -1827,7 +1827,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析页--【各时间段+各车型筛选】车主年龄分析 各年龄段之和=100%或 0%");
         }
@@ -1857,7 +1857,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+各车型筛选】车主性别分析 性别之和=100%或 0%");
         }
@@ -1891,7 +1891,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+各车型筛选】苏州各区成交量之和<=江苏成交量");
         }
@@ -1925,7 +1925,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(a.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段】全国各省成交量，某个省的百分比=该省成交量/各省成交量之和");
         }
@@ -1953,7 +1953,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段】全国各省成交量，各省百分比之和=100%");
         }
@@ -1985,7 +1985,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段筛选】苏州各区成交量，某个区的百分比=该区成交量/各区成交量之和");
         }
@@ -2012,7 +2012,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段筛选】苏州各区成交量，各区百分比之和=100%");
         }
@@ -2045,7 +2045,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+车系筛选】个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&交车日期在该时间段内&购买车系为筛选车系的购车档案数量");
         }
@@ -2078,7 +2078,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+车系筛选】公司车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为公司&交车日期在该时间段内&购买车系为筛选车系的购车档案数量");
         }
@@ -2110,7 +2110,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+车系筛选】全国各省成交量=【app-销售总监-展厅客户-购车档案】交车日期在该时间段内&购买车系为筛选车系的购车档案数量");
         }
@@ -2145,7 +2145,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【时间段＋车系】个人车主数量＝＝成交记录中交车时间在【时间段＋车系＋客户类型为个人】的车主的订单数量（手机号时间段内去重）");
         }
@@ -2180,7 +2180,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【时间段＋车系】公司车主数量＝＝成交记录中交车时间在【时间段＋车系＋客户类型为公司】的车主的订单数量（手机号时间段内去重）");
         }
@@ -2213,7 +2213,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】个人车主百分比+公司车主百分比=100% 或 0%");
         }
@@ -2247,7 +2247,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】个人车主百分比=个人车主数量/（个人+公司车主数量）");
         }
@@ -2281,7 +2281,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】公司车主百分比=公司车主数量/（个人+公司车主数量）");
         }
@@ -2310,7 +2310,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】车主年龄分析 各年龄段之和=100%或 0%");
         }
@@ -2339,7 +2339,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】车主性别分析 性别之和=100%或 0%");
         }
@@ -2371,7 +2371,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段】全国各省成交量，某个省的百分比=该省成交量/各省成交量之和");
         }
@@ -2399,7 +2399,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段】全国各省成交量，各省百分比之和=100%");
         }
@@ -2432,7 +2432,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段筛选】苏州各区成交量，某个区的百分比=该区成交量/各区成交量之和");
         }
@@ -2460,7 +2460,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--【各时间段筛选】苏州各区成交量,各区百分比之和=100%");
         }
@@ -2493,7 +2493,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--苏州各区成交量之和<=江苏成交量");
         }
@@ -2516,7 +2516,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--订单存量图，销售数量=PC角色管理中销售顾问数量");
         }
@@ -2541,7 +2541,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--订单存量图，柱状图1数据>= 柱状图2数据>=柱状图3数据..");
         }
@@ -2574,7 +2574,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--个人车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为个人&购车日期在该时间段内&交车日期为空的购车档案数量");
         }
@@ -2608,7 +2608,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("订单客户分析--公司车主数量<=【app-销售总监-展厅客户-购车档案】客户类型为公司&购车日期在该时间段内&交车日期为空的购车档案数量");
         }
@@ -2640,7 +2640,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("存量客户分析--【各时间段+车系筛选】全国各省成交量=【app-销售总监-展厅客户-购车档案】交车日期在该时间段内&购买车系为筛选车系的购车档案数量");
         }
@@ -2682,7 +2682,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--试乘试驾次数：= （时间段内）【APP-销售总监-我的试驾】审核通过&未取消的数量一致");
         }
@@ -2717,7 +2717,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.logger(e.getName());
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--成交数量： = （时间段内）【APP-销售总监-我的交车】订单为维度去重数量一致");
         }
@@ -2736,7 +2736,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--下拉框内数量=【PC-车系管理】车系数量");
         }
@@ -2759,7 +2759,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total1 == total + 1, "变更之前变更记录数：" + total + "变更之后变更记录数：" + total1);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--变更记录--变更一次，记录+1");
         }
@@ -2801,7 +2801,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             });
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--环比各时间段批次数<=【PC-接待列表】接待时间为前天的各时间段数量");
         }
@@ -2843,7 +2843,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             });
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅热区管理--本期各时间段批次数<=【PC-接待列表】接待时间为昨天的各时间段数量");
         }

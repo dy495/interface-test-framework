@@ -57,7 +57,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         //saveData("登陆");
@@ -558,7 +558,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 

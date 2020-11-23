@@ -110,7 +110,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(totalReception, listTotal, waitTotal, arr.size(), s);
             Preconditions.checkArgument(totalReception == listTotal - waitTotal - s, "共计接待!=列表总数-等待中数量-去重手机号数量");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("共计接待==列表总数-等待中数量-去重手机号数量");
         }
@@ -144,7 +144,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayNewCustomer, ss, x);
             Preconditions.checkArgument(todayNewCustomer == ss - x, "今日新客接待" + todayNewCustomer + "接待日期为今天 客户类型为新客的手机号去重数量" + (ss - x));
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
         }
@@ -178,7 +178,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayOldCustomer, ss, s);
             Preconditions.checkArgument(todayOldCustomer == ss - s, "今日老客接待!=接待日期为今天 客户类型为老客的手机号去重数量");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日新客接待==接待日期为今天 客户类型为新客的手机号去重数量");
         }
@@ -202,7 +202,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayCustomerNum, todayNewCustomer, todayOldCustomer);
             Preconditions.checkArgument(todayCustomerNum >= todayNewCustomer + todayOldCustomer, "今日新客接待+今日老客接待：" + todayNewCustomer + todayOldCustomer + "【PC端销售排班】该销售今日接待次数：" + todayCustomerNum);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日新客接待+今日老客接待=【PC端销售排班】该销售今日接待次数");
         }
@@ -231,7 +231,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayDeliverCarTotal, listSize);
             Preconditions.checkArgument(todayDeliverCarTotal == listSize, "今日交车数" + todayDeliverCarTotal + "今日交车列表手机号去重后列数和" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日交车数=今日交车列表手机号去重后列数和");
         }
@@ -247,7 +247,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(deliverCarTotal, todayDeliverCarTotal);
             Preconditions.checkArgument(deliverCarTotal >= todayDeliverCarTotal, "实际交车<今日交车");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("实际交车>=今日交车");
         }
@@ -262,7 +262,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             int deliverCarTotal = response.getInteger("deliver_car_total");
             Preconditions.checkArgument(totalOrder >= deliverCarTotal, "全部交车<实际交车");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部交车>=实际交车");
         }
@@ -293,7 +293,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayTestDriveTotal, x);
             Preconditions.checkArgument(todayTestDriveTotal == x, "今日试驾数：" + todayTestDriveTotal + " 今日试驾列表手机号去重后列表数和：" + x);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日试驾数=今日试驾列表手机号去重后列表数和");
         }
@@ -309,7 +309,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(testDriveTotal, testDriveTotal);
             Preconditions.checkArgument(testDriveTotal >= todayTestDriveTotal, "全部试驾<今日试驾");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部试驾>=今日试驾");
         }
@@ -335,7 +335,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSize);
             Preconditions.checkArgument(total == listSize, "全部客户数量:" + total + "列表数:" + listSize + "不相等");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部客户=列表数");
         }
@@ -354,7 +354,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索,全部客户+1");
         }
@@ -377,7 +377,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "前台分配新客，创建时手机号不存在,全部客户没有+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("前台分配新客，创建时手机号不存在,全部客户+1");
         }
@@ -402,7 +402,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(buyCarNum, listSize);
             Preconditions.checkArgument(buyCarNum == listSize, "已订车数量!=列表中是否订车为是的数量");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("已订车=列表中是否订车为是的数量");
         }
@@ -420,7 +420,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total >= buyCarNum, "全部客户<已定车数");
             Preconditions.checkArgument(buyCarNum >= deliverCarNum, "已定车数<已交车数");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部客户>=已订车>=已交车");
         }
@@ -445,7 +445,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("非订单客户,1=<剩余天数<90");
         }
@@ -468,7 +468,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, listSize);
             Preconditions.checkArgument(total == listSize, "app我的客户页列表数!=PC我的客户页列表数");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app我的客户页列表数=PC我的客户页列表数");
         }
@@ -498,7 +498,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "删除所属销售，公海数量未增加");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数");
         }
@@ -529,7 +529,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((testDriverToday + maintainTodayNumber + repairTodayNumber) <=
                     (testDriverTotal + maintainTotalNumber + repairTotalNumber), "全部预约人数<今日预约人数");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部预约人数>=今日预约人数");
         }
@@ -557,7 +557,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(maintainTotalNumber <= maintainTotal, "售后保养--全部预约车辆>售后预约列表数");
             Preconditions.checkArgument(repairTotalNumber <= repairTotal, "售后维修--全部预约车辆>售后预约列表数");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("全部预约人数<=列表数");
         }
@@ -611,7 +611,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(phoneAppointmentNum, x);
             Preconditions.checkArgument(x == phoneAppointmentNum + 1, "完成回访任务，我的预约列表电话预约没有变为已完成，还是未完成状态");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("完成回访任务，我的预约列表电话预约变为已完成");
         }
@@ -638,7 +638,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(cancelNum1, cancelNum2);
             Preconditions.checkArgument(cancelNum2 == cancelNum1 + 1, "小程序预约试驾后，再取消，已取消状态未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("客户小程序取消预约试驾,客户状态=已取消的数量+1");
         }
@@ -668,7 +668,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total.equals(total1), "小程序取消预约试驾后，app我的预约列表数量变化了，应该不变");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("客户小程序取消预约试驾,列表总数不变");
         }
@@ -717,7 +717,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total2 == total1 + 1, "预约试驾后，app我的预约列表条数未+1");
             Preconditions.checkArgument(appointmentNum1 == appointmentNum + 1, "预约试驾后，app我的预约列表预约中状态未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾后，验证小程序和app数据一致性");
         }
@@ -759,7 +759,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appointmentTotalNumber == appointmentTotalNumber1 + 1, "全部预约未+1");
             Preconditions.checkArgument(appointmentTodayNumber1 == appointmentTodayNumber + 1, "今日预约未+1");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("同一客户，一天内小程序预约试驾2次,列表条数+2,今日预约人数+1,全部预约+1");
         }
@@ -793,7 +793,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalNumber + 2 == totalNumber1, "两个客户，预约今天/明天明天试驾,全部预约没有+2");
             Preconditions.checkArgument(listSize + 2 == listSize1, "两个客户，预约今天/明天明天试驾,列表条数没有+2");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("两个客户，预约今天/明天明天试驾,列表条数+2、今日预约人数+2、全部预约+2");
         }
@@ -821,7 +821,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(pcTotal == appTotal, "PC某个销售顾问预约试驾数：" + pcTotal + " ！=该销售在【app-我的预约】记录总数量：" + appTotal);
             Preconditions.checkArgument(pcTotal == listSize, "PC某个销售顾问预约试驾数：" + pcTotal + " ！=该销售在【app-我的预约】记录列表总数：" + listSize);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC预约试驾按照销售顾问分类，与每个销售顾问app-我的预约列表数一致");
         }

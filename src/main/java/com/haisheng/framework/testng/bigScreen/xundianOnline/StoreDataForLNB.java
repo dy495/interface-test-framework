@@ -8,9 +8,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -121,9 +119,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv <= count,"雷诺表今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表今日到访人数<=今天各个时间段内到访人数的累计");
@@ -160,9 +158,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"。报错门店的shopId="+shop_id_t);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
@@ -224,9 +222,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1== uv2,"进店客群总人数=" + uv1 + "各个门的进店人数之和=" + uv2+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表进店客群总人次==各个门的进店人次之和");
@@ -261,9 +259,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1== uv2,"兴趣客群总人数=" + uv1 + "各个门的兴趣人数之和=" + uv2 +"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
@@ -289,9 +287,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(uv1== uv2,"交易客群总人数=" + uv1 + "会员+非会员的人数之和=" + uv2+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表交易客群总人次==会员+非会员的交易pv之和");
@@ -324,9 +322,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument( result=true,"过店客群" + pv1 + "兴趣客群pv" + pv2+ "进店客群" + pv3 +"进店客群" + pv4+"。报错门店的shopId="+shop_id);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表过店客群pv>=兴趣客群pv>=进店客群pv");
@@ -369,9 +367,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_id);
@@ -455,9 +453,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_id);
@@ -512,9 +510,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立"+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表吸引率==兴趣客群pv/过店客群pv");
@@ -550,9 +548,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表日均客流==所选时间段内的日均客流uv");
@@ -618,9 +616,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
@@ -658,9 +656,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）等于实时客流中的门店基本信息");
@@ -701,9 +699,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
@@ -737,9 +735,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
@@ -780,9 +778,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-自然月9月的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认自然月9月的数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-自然月9月的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-历史客流-选择自然月9月的数据是否正常");
@@ -826,9 +824,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近7天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近7天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-历史客流-选择最近7天的数据是否正常");
@@ -876,9 +874,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( result = true),"客群漏斗-最近14天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-历史客流-选择最近14天的数据是否正常");
@@ -923,9 +921,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近30天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近30天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-历史客流-选择最近30天的数据是否正常");
@@ -970,9 +968,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(( result = true),"客群漏斗-最近60天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("雷诺表-选择最近60天的数据是否正常");
@@ -995,9 +993,9 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(yestPv < 800 && yestPv >15 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了15，pv="+yestPv+"需线上确认数据是否有异常");
             Preconditions.checkArgument(yestUv < 600 && yestUv >5 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过600或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("监控雷诺表昨日pv/uv是否异常");

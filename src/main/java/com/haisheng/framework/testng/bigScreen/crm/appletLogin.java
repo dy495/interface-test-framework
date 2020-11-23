@@ -92,7 +92,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             crm.cancle(appoint_id);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序每4小时登陆一次，防止失效");
         }

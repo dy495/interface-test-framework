@@ -135,7 +135,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 Preconditions.checkArgument(!search_remark.equals(dt.getHistoryDate(0) + "1Z！@#自动化备注1"), "包含第一条备注");
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户管理：添加21条备注，展示最新20条");
 
@@ -177,7 +177,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("售后客户管理：添加21条回访，展示最新20条");
 
@@ -204,7 +204,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-新客的所属顾问=当前登陆账号销售名字");
         }
@@ -271,7 +271,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人1个车预约1次，校验预约保养页面统计数据");
 
@@ -334,7 +334,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(total2 == total3, "取消全部预约后，列表数期待不变，实际+" + changetotal2);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人1个车预约2次，校验预约保养页面统计数据");
 
@@ -385,7 +385,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人2个车各预约1次，校验预约保养页面统计数据");
 
@@ -405,7 +405,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(total >= today, "全部预约维修{}<今日预约维修{}", total, today);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-全部预约维修>=今日预约维修");
         }
@@ -424,7 +424,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(total <= list, "全部预约维修" + total + ">列表数" + list);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-全部预约维修<=列表数");
 
@@ -453,7 +453,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-新客的所属顾问=当前登陆账号销售名字");
 
@@ -500,7 +500,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人1个车预约1次，校验预约维修页面统计数据");
 
@@ -563,7 +563,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(total2 == total3, "取消全部预约后，列表数期待不变，实际+" + changetotal2);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人1个车预约2次，校验预约维修页面统计数据");
 
@@ -614,7 +614,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序1个人2个车各预约1次，校验预约维修页面统计数据");
 
@@ -715,7 +715,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 Preconditions.checkArgument(todayReceptionRatio.equals(result), "接待率：" + todayReceptionRatio + "  " + "今日接待/今日线索*100：" + result);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售接待--接待率=今日接待/今日线索*100");
         }
@@ -747,7 +747,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 Preconditions.checkArgument(todayRestDriveatio.equals(result), "试驾率：" + todayRestDriveatio + "  " + "试驾/接待*100：" + result);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售接待--试驾率=试驾/接待*100");
         }
@@ -778,7 +778,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 Preconditions.checkArgument(todayBuyCaratio.equals(result), "订单率：" + todayBuyCaratio + "  " + "订单/试驾*100：" + result);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售接待--订单率=订单/试驾*100");
         }
@@ -810,7 +810,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 Preconditions.checkArgument(todayDeliverCarRatio.equals(result), "交车率：" + todayDeliverCarRatio + "  " + "交车/订单*100：" + result);
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("交车率=交车/订单*100");
         }
@@ -887,7 +887,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayTestDrive, max);
             Preconditions.checkArgument(todayTestDrive >= max, "今日试驾的数量为：" + todayTestDrive + "  " + "：各销售试驾累计为" + max);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString() + mes);
+            appendFailReason(e.toString() + mes);
         } finally {
             saveData("今日试驾>=所有销售 【客户管理-我的试驾】今日试驾之和");
         }
@@ -920,7 +920,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(todayBuyCarNum, max);
             Preconditions.checkArgument(todayBuyCarNum >= max, "今日订车的数量为：" + todayBuyCarNum + "  " + "：各销售订车累计为" + max);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString() + mes);
+            appendFailReason(e.toString() + mes);
         } finally {
             saveData("销售接待--今日订车=所有销售【客户管理-我的接待】今日订单之和");
         }
@@ -954,7 +954,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(todayDeliverCarNum >= max, "今日交车的数量为：" + todayDeliverCarNum + "  " + "：各销售交车累计为" + max);
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString() + mes);
+            appendFailReason(e.toString() + mes);
         } finally {
             saveData("销售接待--今日交车>=所有销售【客户管理-我的交车】今日交车之和");
         }
@@ -965,7 +965,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         try {
             crm.receptionExport();
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("接待列表导出");
         }
@@ -1002,7 +1002,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             CommonUtil.valueView(appList, pcList);
             Preconditions.checkArgument(appList == pcList, "APP列表数：" + appList + "  " + "PC列表数" + pcList);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP销售接待列表数==PC销售接待列表数");
         }
@@ -1031,7 +1031,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("V2.1活动报名-是否完成，未完成高亮，已完成不高亮");
         }
@@ -1062,7 +1062,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动开始日期>当前日期，活动可以报名，填写报名，高亮可点击");
         }
@@ -1087,7 +1087,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
     }
 
@@ -1113,7 +1113,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             //删除销售顾问账号
             delectXS(phone);
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("修改密码-填写全部必填项：原密码、新密码、新密码确认");
         }
@@ -1143,7 +1143,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             delectXS(phone);
 
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("修改密码-填写全部必填项：新密码输入长度21位--1234!@#$我们111111111111111qq");
         }

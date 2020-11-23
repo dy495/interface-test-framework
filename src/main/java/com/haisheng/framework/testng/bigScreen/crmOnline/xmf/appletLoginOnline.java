@@ -87,7 +87,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
             Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1,81).getLong("appointment_id");
             crm.cancle(appoint_id);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序每4小时登陆一次，防止失效");
         }

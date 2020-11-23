@@ -71,7 +71,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("10分钟以内");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】10分钟内组数=各个销售顾问10分钟内组数之和");
         }
@@ -83,7 +83,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("10-30分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】10～30分钟组数=各个销售顾问10～30分钟组数之和");
         }
@@ -95,7 +95,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("30-60分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】30～60分钟组数=各个销售顾问30～60分钟组数之和");
         }
@@ -107,7 +107,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("60-120分钟");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】60～120分钟组数=各个销售顾问60～120分钟组数之和");
         }
@@ -119,7 +119,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         try {
             compareReceptionTime("120分钟以上");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("店面数据分析--客户接待时长分析，【各时间段】相同时间段内：【不选销售顾问】大于120分钟组数=各个销售顾问大于120分钟组数之和");
         }

@@ -123,7 +123,7 @@ public class TestCaseCommon {
         return caseResult;
     }
 
-    public void appendFailreason(String msg) {
+    public void appendFailReason(String msg) {
         String failreason = caseResult.getFailReason();
         if (StringUtils.isEmpty(failreason)) {
             failreason = msg;
@@ -319,7 +319,7 @@ public class TestCaseCommon {
             checkCode(response, StatusCode.SUCCESS, path);
         } catch (Exception e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         caseResult.setResponse(response);
@@ -337,7 +337,7 @@ public class TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
@@ -516,5 +516,10 @@ public class TestCaseCommon {
      */
     public void sleep(long second) throws InterruptedException {
         Thread.sleep(second * 1000);
+    }
+
+    public void collectMessage(Throwable e) {
+        e.printStackTrace();
+        appendFailReason(e.toString());
     }
 }

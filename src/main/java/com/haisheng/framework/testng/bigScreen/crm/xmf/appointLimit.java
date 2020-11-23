@@ -171,7 +171,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约保养，保养成功，预约消息数据校验");
         }
@@ -276,9 +276,9 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             saveData("预约保养成功后，pc和app预约试驾信息校验");
@@ -318,7 +318,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             checkArgument(descriptionB.equals(description), "预约消息故障说明显示错误");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约维修，小程序页面间数据一致性，填写预约信息&预约成功&我的预约消息");
         }
@@ -425,7 +425,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument((Long.parseLong(appointment_total_numberB)-Long.parseLong(appointment_total_numberA))==1,"预约试驾成功后，app预约试驾全部累计没+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约维修成功后，pc和app预约试驾信息校验");
         }
@@ -501,7 +501,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             int totalB = evaluateList.size();
             checkArgument((totalB - total) == 1, "评价后，pc评价列表没+1");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("保养评价");
         }
@@ -535,7 +535,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             checkArgument((leftNum3 - leftNum2) == 1, "预约后时段剩余名额没有+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约该时段剩余-1，取消+1");
         }
@@ -568,7 +568,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            crm.cancle(appoint_id2);    //取消预约
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约该时段剩余-1，取消+1");
         }

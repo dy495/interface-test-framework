@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
-import bsh.util.JConsole;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -9,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.createArticle;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -174,7 +172,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             crm.articleDelete(article_id);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc新建活动，数据一致，活动列表+1，新建活动时投放人数等于该活动发送短信页总人数,文章列表数据校验，查看文章详情数据校验");
         }
@@ -215,7 +213,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalB==total,"删除活动，报名管理-活动列表没-1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc新建活动，报名客户和任务客户活动列表+1，删除-1");
         }
@@ -251,7 +249,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("活动详情报名人数==报名管理-活动报名列表数（除已取消，已拒绝）");
         }
@@ -286,7 +284,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             logger.info("删除后 文章列表总数：{}",totalA);
             Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除活动，活动列表未-1");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展示中的活动不应该能被删除，下架的活动能被删除且活动列表-1");
         }
@@ -314,7 +312,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,"删除排期活动不成功");
             Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc删除排期中活动，活动列表-1");
         }
@@ -342,7 +340,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,"删除排期活动不成功");
             Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc删除排期中活动，活动列表-1");
         }
@@ -374,7 +372,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int totalB=crm.articleShowList().getJSONArray("list").size();
             Preconditions.checkArgument((totalA-totalB)==1,"banner 删除文章，管理文章列表没-1");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("banner 新建文章，管理文章列表+1,删除文章，列表-1");
         }
@@ -423,7 +421,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalB==count,"下拉菜单中数("+totalB+")!=内容运营文章数（除已下架、已过期）"+count);
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("下拉菜单中数==内容运营文章数（除已下架、已过期）");
         }
@@ -450,7 +448,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.login(adminname,adminpassword);
             //创建文章
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc新建文章，applet文章列表+1");
         }
@@ -483,7 +481,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)");
         }
@@ -522,7 +520,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((totalA-total)==1,"pc创建车辆后，pc车辆列表数未+1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc创建车辆后，pc车辆列表数+1");
         }
@@ -554,7 +552,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((total-totalA)==1,"pc删除车型，pc车辆列表没-1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc删除车型，车辆列表-1");
         }
@@ -593,7 +591,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc创建商品车辆 50辆边界");
         }
@@ -642,7 +640,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
         }
@@ -694,7 +692,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((totalA-totalB)==1,"pc删除车型，pc车辆列表没-1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("看车。pc新建车型，pc车辆列表+1&信息校验");
         }
@@ -781,7 +779,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("报名列表加入黑名单，黑名单增+1；释放-1,&黑名单信息校验");
         }
@@ -829,7 +827,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalD==total,"删除排班销售，排版数-1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("【人员管理】增删销售排班，列表+-1");
         }
@@ -881,7 +879,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.userDel(userid);
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.zongjingli,pp.adminpassword);
             saveData("人员管理，新增销售，pc人员管理 下拉列表数+1");
@@ -937,7 +935,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((totalA-totalB)==1,"人员管理，删除大池子销售/维修/保养顾问，小池子没-1");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
         }
@@ -975,7 +973,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalD==total,"删除排版，用户数量不变");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("增删小池子，大池子不变");
         }
@@ -1032,7 +1030,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(crmRoleTotal==total+totalNoSelect,"crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}",crmRoleTotal,totalNoSelect,total);
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("【人员管理】crm中销售数量{}=新增下拉框销售数量{}+当前列表数量{}");
         }
@@ -1072,7 +1070,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(id);
             crm.articleDelete(id);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动报名，报名信息上限50");
         }
@@ -1106,7 +1104,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(id);
             crm.articleDelete(id);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动报名，添加报过名的电话，失败");
         }
@@ -1158,7 +1156,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sale_name.equals(xiaoshou),"任务客户报名销售名错误");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动报名，pc任务客户+1&信息校验");
         }
@@ -1207,7 +1205,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleStatusChange(id);
             crm.articleDelete(id);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动报名，删除报名客户，pc任务客户-1");
         }
@@ -1252,7 +1250,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //            crm.articleStatusChange(id);
 //            crm.articleDelete(id);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app活动报名，删除报名客户，pc任务客户-1");
         }
@@ -1284,7 +1282,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total<=totalDeliverCar,"小程序车主风采>pc今日交车数");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("小程序车主风采<=pc今日交车数 ");
         }
@@ -1321,7 +1319,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(similar==today_number,"今日预约数！=今日列表电话号码去重数");
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约记录查询验证预约记录查询验证，今日数=列表去重数");
         }
@@ -1345,7 +1343,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约试驾记录查询");
         }
@@ -1369,7 +1367,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约保养记录查询");
         }
@@ -1393,7 +1391,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(order_date.equals(select_date),"预约记录按日期查询，查询到记录日期{}",order_date);
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("预约维修记录查询");
         }
@@ -1416,7 +1414,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(order_date.equals(select_date),"黑名单按日期查询，查询到记录日期{}",order_date);
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("黑名单记录查询");
         }
@@ -1439,7 +1437,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
             Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日试驾共计<本月共计<累计<列表总数");
         }
@@ -1461,7 +1459,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
 //            Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日保养共计<本月共计<累计<列表总数");
         }
@@ -1484,7 +1482,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(month_number<=total_number,"本月共计>累计");
 //            Preconditions.checkArgument(total_number<=total,"今日累计>列表总数");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日维修共计<本月共计<累计<列表总数");
         }
@@ -1510,7 +1508,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              Preconditions.checkArgument(totalCar==totalRecomend,"车型推荐车数量！=商品管理数量");
 
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              saveData("车型推荐车数量==商品管理数量");
          }
@@ -1570,7 +1568,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              crm.login(pp.zongjingli,pp.adminpassword);
              saveData("站内消息与小程序收到的消息一致性校验");
@@ -1604,7 +1602,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              int totalA=crm.messagePage(1,10).getInteger("total");
              Preconditions.checkArgument((totalA-total)==1,"站内消息列表没+1");
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              saveData("发送站内消息，站内消息列表+1");
          }
@@ -1684,7 +1682,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 //             crm.articleDelete(article_id);
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              saveData("pc新建车主活动，数据一致，活动列表+1,文章列表数据校验，查看文章详情数据校验");
          }
@@ -1709,7 +1707,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                  Preconditions.checkArgument(nameSlect.equals(name),"pc评价页按接待人员名查询错误");
              }
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              saveData("pc评价页按接待人员名查询");
          }
@@ -1750,7 +1748,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              int code=res.getInteger("code");
              Preconditions.checkArgument(code==1001,"假定基数>活动报名上限，应该失败");
           }catch (AssertionError |Exception e){
-              appendFailreason(e.toString());
+              appendFailReason(e.toString());
           }finally {
               saveData("创建活动，假定基数<活动报名上限");
           }
@@ -1778,7 +1776,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
               Preconditions.checkArgument(num[2]==numA[2],"！关闭显示中活动，列表数不变");
 
           }catch (AssertionError | Exception e){
-              appendFailreason(e.toString());
+              appendFailReason(e.toString());
           }finally {
               saveData("活动状态，关闭显示中活动");
           }
@@ -1809,7 +1807,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("改变活动状态数据一致性验证");
         }
@@ -1835,7 +1833,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((numA[3]-num[3])==1,"删除排期中，排期中状态-1");
             Preconditions.checkArgument((numA[2]-num[2])==1,"删除排期中，列数-1");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("删除排期中，排期中状态-1");
         }
@@ -1880,7 +1878,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(id);
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("app活动报名，小程序报名人数不变");
         }
@@ -1908,7 +1906,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(nameSlect.contains(tj2),"pc-前台接待列表按客户名查询错误");
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc-前台接待列表按客户名查询错误");
         }
@@ -1946,7 +1944,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(nameSlect.contains(phone)||phone2Slect.contains(phone),"pc-前台接待列表按客户电话查询错误");
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc-前台展厅接待查询");
         }
@@ -1969,7 +1967,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("创建文章参数全填");
         }
@@ -1993,7 +1991,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //            crm.articleDelete(article_id);
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("创建文章必填项不填");
         }
@@ -2016,7 +2014,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.articleDelete(article_id);
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("创建文章参数全填");
         }
@@ -2044,7 +2042,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             //banner配置
             crm.pcBannerconfig(ll);
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("banner管理");
         }
@@ -2072,7 +2070,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             $Preconditions.checkArgument(content.equals(contentA),"车型推荐内容异常");
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("banner管理");
         }
@@ -2101,7 +2099,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                  Preconditions.checkArgument(code==1000,"导入正常模板文件失败");
              }
          }catch (AssertionError | Exception e){
-             appendFailreason(e.toString());
+             appendFailReason(e.toString());
          } finally {
              saveData("客户导入，正常导入");
          }
@@ -2125,7 +2123,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("导入,异常模板导入");
         }
@@ -2138,7 +2136,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String textPath=pp.textPath;  //需要删除的用户名单
             pf.deleteUser(textPath);
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("测试删除指定用户");
         }
@@ -2157,7 +2155,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.outportC();
 
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc评价页按接待人员名查询");
         }
@@ -2182,7 +2180,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 crm.carDelete(id);
             }
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc批量删除车辆");
         }
@@ -2199,7 +2197,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 crm.articleDelete(id);
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("删除文章活动");
         }
@@ -2217,7 +2215,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 pf.createAArcile_id("2020-07-21", "10");
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("删除文章活动");
         }
@@ -2235,7 +2233,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //              }
 
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("清多余用户数据");
         }

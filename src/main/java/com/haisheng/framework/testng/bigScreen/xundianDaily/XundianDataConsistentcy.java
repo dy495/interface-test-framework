@@ -119,9 +119,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 
             Preconditions.checkArgument(shops==shoptotals,"门店列表中得门店数=" + shoptotals + "不等于巡店中心中的门店数=" + shops);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("pc门店列表中门店=app巡店中心中门店");
@@ -197,9 +197,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 
             Preconditions.checkArgument(patrol_num == total,"巡店中心各个门店的巡店次数" + patrol_num + "不等于巡店详情中的巡店条数=" + total);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("巡店中心各个门店的巡店次数=巡店详情中的巡店条数");
@@ -241,9 +241,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             }
             Preconditions.checkArgument(rusultsNum == sum,"巡店记录的巡店详情中的巡店结果中的总项数" + rusultsNum + "不等于执行清单中的总项数=" + sum);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("巡店记录的巡店详情中的巡店结果中的总项数=执行清单中的总项数");
@@ -373,9 +373,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
              }
             Preconditions.checkArgument(check,"修改巡店清单后，门店基本信息中没有变为修改之后的");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("修改巡店清单后，门店基本信息中变为修改之后的");
@@ -489,9 +489,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
              //删除新建的定检任务
             xd.scheduleCheckDelete(task_id);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("某定检任务中的发送设置=对应巡店员的待办事项中的定检任务数");

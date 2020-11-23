@@ -119,7 +119,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户姓异常");
         }
@@ -165,7 +165,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话--异常");
         }
@@ -216,7 +216,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-备201个字");
         }
@@ -264,7 +264,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程");
         }
@@ -313,7 +313,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话2异常");
         }
@@ -361,7 +361,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常");
         }
@@ -412,7 +412,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人1姓名异常");
         }
@@ -463,7 +463,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人2姓名异常--提示语有问题，填写手机号，提示手机号不能为空");
         }
@@ -512,7 +512,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-陪同车牌2异常");
         }
@@ -561,7 +561,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常");
         }
@@ -604,7 +604,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), object.getString("message"));
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户名称不填写");
         }
@@ -647,7 +647,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("车主电话1不允许为空"), object.getString("message") + " 错误提示描述不正确");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话1不填写");
         }
@@ -690,7 +690,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), object.getString("message"));
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写");
         }
@@ -733,7 +733,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), object.getString("message"));
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写");
         }
@@ -776,7 +776,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("车牌号1不允许为空"), " 车牌号1不允许为空");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车牌号1不填写");
         }
@@ -820,7 +820,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), object.getString("message"));
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写");
         }
@@ -865,7 +865,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals(""), " ");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-所属保养顾问不填写");
         }
@@ -908,7 +908,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), object.getString("message"));
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户来源不填写");
         }

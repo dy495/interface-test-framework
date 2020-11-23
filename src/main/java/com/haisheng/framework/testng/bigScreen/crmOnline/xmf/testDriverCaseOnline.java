@@ -135,7 +135,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
 //            Preconditions.checkArgument((num2 - num) == 1, "接待完成，接待次数没+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("试驾评价 && 完成接待接待次数+1 ；评价完成pc评价列表+1");
@@ -162,7 +162,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(totalAfterAdd - totalAfterlogout == 1, "注销试驾车型，试驾车列表没-1");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("新建、注销试驾车，新建试驾页：试驾车列表+-1");
@@ -191,7 +191,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(total2 - total3 == 0, "注销试驾车型，试驾车列表不变");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建、注销试驾车，试驾车列表+-1");
         }
@@ -252,7 +252,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
 
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客试驾,今日试驾次数+1,总计+1，信息校验");
         }
@@ -310,7 +310,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(audit_status_name.equals("已拒绝"), "新建试驾，试驾列表审核状态错误");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客试驾审批拒绝,今日试驾次数+0,总计+0,列表+1");
         }
@@ -352,7 +352,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(driverNum2[2] - driverNum[2] == 2, "新建试驾，试驾列表+2，试驾后：" + driverNum2[2] + "，试驾前：{}" + driverNum[2]);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客两次试驾,今日试驾次数+1,总计+1");
         }
@@ -395,7 +395,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(driverNum2[2] - driverNum[2] == 2, "新建试驾，试驾列表+2，试驾后：" + driverNum2[2] + "，试驾前：{}" + driverNum[2]);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客试驾两次审批拒绝,今日试驾次数+0,总计+0,列表+2");
         }
@@ -438,7 +438,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(audit_status_name2.equals("已通过"),"申请试驾，审核装态错误");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("申请试驾，审批，申请状态由审核中变为已通过");
         }
@@ -476,7 +476,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(audit_status_name2.equals("已拒绝"),"申请试驾，审核装态错误");
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("申请试驾，审批拒绝，申请状态由审核中变为已拒绝");
         }
@@ -553,7 +553,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(code2 == 1001, "试驾客户手机号超过50个字");
             Preconditions.checkArgument(code3 == 1001, "试驾客户地址超过50个字");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建试驾异常判断");
         }
@@ -603,7 +603,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             crm.finishReception3(fr);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("试驾取消，试驾时间段验证");
         }
@@ -655,7 +655,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             crm.finishReception3(fr);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("试驾审批拒绝，试驾时间段验证");
@@ -725,7 +725,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
 //            bw.close();
             crm.finishReception3(fr);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.xiaoshouGuwen, pp.adminpassword);
             saveData("试驾必填项校验");
@@ -753,7 +753,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
             crm.finishReception3(fr);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("试驾取消，试驾时间段验证");
         }

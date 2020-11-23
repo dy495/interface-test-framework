@@ -128,9 +128,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"回访记录数量增加了"+change);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录数量+1");
         }
@@ -202,9 +202,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(afterSub==beforeAdd,"人脸排除，删除1人，期待：" + beforeAdd + ", 实际：" + afterSub);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("人脸排除-新增、删除验证");
@@ -243,9 +243,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,"添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注字数=200");
         }
@@ -274,9 +274,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list==50,"添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注条数=50");
         }
@@ -295,9 +295,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注条数=51");
         }
@@ -317,9 +317,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total>=1,"我的客户数量期待>=1，实际="+total);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的客户页面直接点击查询按钮");
         }
@@ -342,9 +342,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("我的客户页面根据姓名查询");
@@ -365,9 +365,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String search_phone1 = obj1.getJSONArray("phones").getString(0);
             Preconditions.checkArgument(search_phone.equals(search_phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的客户页面根据手机号查询");
         }
@@ -390,9 +390,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(date.equals(starttime) || date==null ,"查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的客户页面根据日期查询");
         }
@@ -413,9 +413,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(single.getString("belongs_sale_name").equals(cstm.lxqsale),"展示信息不正确");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的客户页面所属销售的顾客信息");
         }
@@ -440,9 +440,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售顾问修改顾客手机号,应失败");
         }
@@ -482,9 +482,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(cstm.lxqsale,cstm.pwd);
             saveData("销售总监修改顾客手机号");
@@ -508,9 +508,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售顾问修改顾客所属顾问");
         }
@@ -537,9 +537,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("总经理修改顾客所属顾问应成功");
         }
@@ -567,9 +567,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("创建已存在账号");
@@ -587,9 +587,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("使用已存在手机号创建账号");
@@ -613,9 +613,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int code = crm.addUserNotChk(userName,userLoginName,phone,passwd,roleId).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("创建账号时手机号格式不正确");
@@ -676,9 +676,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(message.equals("用户名或密码错误"),"提示语为："+message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("删除不同身份账号");
         }
@@ -701,9 +701,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code!=1000,"登陆成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("使用存在的销售账号，错误的密码登陆");
@@ -719,9 +719,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code!=1000,"登陆成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("使用不存在的销售账号登陆");
@@ -742,9 +742,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int code = crm.faceOutUpload(path).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             //crm.login(cstm.lxqsale,cstm.pwd);
             saveData("人脸排除上传识别不出人脸的图片");
@@ -784,9 +784,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建试驾车-名字20位+车牌7位/8位");
         }
@@ -813,9 +813,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code2!=1000,"车架号重复时成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建试驾车-车牌号和已注销车牌重复可成功，车架号和已注销的重复应失败");
         }
@@ -869,9 +869,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code7==1001,"车架号17位纯字母成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建试驾车-名字车牌号车架号内容校验");
         }
@@ -904,9 +904,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(exit==true,"注销后车辆不存在");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("注销试驾车，该车辆仍在列表中");
         }
@@ -962,9 +962,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(caridresult.equals(caridnew),"车架号未更新");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("修改试驾车，判断信息是否更新");
         }
@@ -996,9 +996,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Thread.sleep(1000);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建dcc线索-校验姓名/手机号/车牌号格式");
         }
@@ -1040,9 +1040,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code6==1001,"姓名为空格时期待1001，实际"+ code6);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建dcc线索-姓名/手机号/车牌号格式不正确");
         }
@@ -1085,9 +1085,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("新建dcc线索-使用存在手机号/车牌号期待失败");
         }
@@ -1111,9 +1111,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result.equals(email),"配置后，邮箱未改变");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("配置收件箱，邮箱格式，长度1-100");
         }
@@ -1128,9 +1128,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1001,"邮箱为"+ email + "时修改成功");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("配置收件箱，邮箱格式/长度不正确");
         }

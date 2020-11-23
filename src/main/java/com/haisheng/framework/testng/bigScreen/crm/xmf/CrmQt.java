@@ -7,8 +7,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.selectTest;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -21,7 +19,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.Random;
 
 public class CrmQt extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
@@ -105,9 +102,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅接待按名字查询，结果校验");
         }
@@ -127,9 +124,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(reception_date.equals(select_date), "展厅接待按接待时间{}查询，结果{}错误", select_date, reception_date);
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅接待按接待日期查询，结果校验");
         }
@@ -146,9 +143,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.qtreceptionPage("", dt.getHistoryDate(0), "", "1", "10");
             crm.qtreceptionPage("", dt.getHistoryDate(0), dt.getHistoryDate(0), "1", "10");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅接待按时间查仅输入开始结束时间 ");
         }
@@ -172,7 +169,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument((reception_date.equals(select_date)) && (customer_name.contains(nameSelect)), "展厅接待按接待时间" + select_date + "查询，结果错误" + reception_date);
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("展厅接待组合查询，结果校验");
         }
@@ -195,9 +192,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(reception_date.equals(select_date), "到访记录按到访时间{}查询，结果{}错误", select_date, reception_date);
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("到访记录按到访日期查询，结果校验");
         }
@@ -213,9 +210,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("到访记录为空");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("到访记录不为空");
         }
@@ -230,9 +227,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("警告：日常人脸列表为空");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("检查前台人脸列表是否为空");
         }
@@ -249,9 +246,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.visitList(dt.getHistoryDate(0), "", "1", "10");
             crm.visitList("", dt.getHistoryDate(0), "1", "10");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("到访记录按时间查仅输入开始结束时间 ");
         }
@@ -271,9 +268,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(reception_date.equals(select_date), "到访记录按到访时间{}查询，结果{}错误", select_date, reception_date);
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("为接待离店风控按到访日期查询，结果校验");
         }
@@ -290,9 +287,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.nonReceptionList(dt.getHistoryDate(0), "", "1", "10");
             crm.nonReceptionList("", dt.getHistoryDate(0), "1", "10");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("为接待离店风控按时间查仅输入开始结束时间 ");
         }
@@ -312,9 +309,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(reception_date.equals(select_date), "非客按到访时间{}查询，结果{}错误", select_date, reception_date);
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("非客风控按到访日期查询，结果校验");
         }
@@ -331,9 +328,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.nonCustomerList(dt.getHistoryDate(0), "", "1", "10");
             crm.nonCustomerList("", dt.getHistoryDate(0), "1", "10");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("非客风控按时间查仅输入开始结束时间 ");
         }
@@ -398,9 +395,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("变更接待 ");
@@ -456,9 +453,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalB - totalA == num, "删除标记的非客后，非客列表-1");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("标记非客列表+1/3，删除-1/3 ");
         }
@@ -511,9 +508,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalB - totalA == num, "删除标记的未接待离店后，未接待离店列表-1");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("标记未接待离店列表+1/3，删除-1/3 ");
         }
@@ -580,9 +577,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("变更接待，数据统计 ");
@@ -631,9 +628,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.finishReception3(pm);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("销售顾问变更所属销售失败 ");
@@ -670,9 +667,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(phoneA.equals(customer_phone),"销售总监修改联系方式失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("销售总监修改客户联系方式1，成功验证 ");
@@ -700,7 +697,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             int code1=crm.markNocustomercode(idlist).getInteger("code");
             Preconditions.checkArgument(code1==1001,"老客不能被标记成非客");
         }catch (AssertionError | Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("前台老客标记非客失败");
         }
@@ -733,9 +730,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("前台分配新客接待列表+1");
         }
@@ -801,7 +798,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
 
         } catch (AssertionError |Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
             saveData("前台分配新客含人脸接待列表+1 ");
@@ -829,9 +826,9 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(num[1]-numA[1]==1,"前台人脸解绑后，老客人脸数-1");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("解绑人脸数变化 ");
         }

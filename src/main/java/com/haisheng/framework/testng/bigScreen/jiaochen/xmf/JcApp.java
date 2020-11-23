@@ -101,7 +101,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             jpu.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app个人中心，小程序码返回结果不为空");
         }

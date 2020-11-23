@@ -242,9 +242,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("添加事件(结束时间为开始时间&结束时间大于开始时间)");
@@ -275,7 +275,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("列表页排序按照的今日到访人次从大到小排序");
         }
@@ -322,7 +322,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
             checkArgument(num == num1, "全选：" + num + "不选：" + num1);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("门店类型（单选、多选、全选、不选）");
         }
@@ -389,9 +389,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增删改查角色");
@@ -438,9 +438,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(名称校验)");
@@ -481,9 +481,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             md.deleteRole();
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("新增角色(权限说明校验)");
@@ -528,9 +528,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用邮箱新增账号");
@@ -570,9 +570,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用手机号新增账号，删除账号");
@@ -619,9 +619,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("用手机号新增账号，修改该账号的登录方式为邮箱登录");
@@ -656,9 +656,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("账号列表的筛选（单一条件筛选）");
@@ -706,9 +706,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 //            }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("筛选摄像头是否有异常");
@@ -831,9 +831,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银风控筛选（单一筛选）和根据累计风险事件，累计正常事件，累计异常事件，累计待处理事件进行排序");
@@ -876,9 +876,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银追溯的筛选（单一条件筛选）");
@@ -941,9 +941,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("收银风控事件的筛选（单一条件筛选）");
@@ -987,9 +987,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控事项的处理");
@@ -1077,9 +1077,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("账号列表的筛选（单一条件筛选）");
@@ -1119,9 +1119,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控规则的增删查");
@@ -1166,9 +1166,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控规则的名称在1-20字之间，字母中文数字字符均可");
@@ -1215,9 +1215,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警列表的筛选（单一条件筛选）");
@@ -1278,9 +1278,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警规则（增删改查）");
@@ -1330,9 +1330,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警规则名称在1-20字之间，字母中文数字字符均可");
@@ -1387,9 +1387,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("风控告警列表的筛选（单一条件筛选）");

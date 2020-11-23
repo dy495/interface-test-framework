@@ -1,40 +1,16 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
-import ai.winsense.ApiClient;
-import ai.winsense.common.Credential;
-import ai.winsense.constant.SdkConstant;
-import ai.winsense.model.ApiRequest;
-import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
-import org.jooq.util.derby.sys.Sys;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
-import static org.apache.poi.poifs.crypt.HashAlgorithm.none;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -86,7 +62,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         //saveData("登陆");
@@ -1514,7 +1490,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
             try {
                 result = httpPost(url, request, IpPort);
             } catch (Exception e) {
-                appendFailreason(e.toString());
+                appendFailReason(e.toString());
             }
             return JSON.parseObject(result);
         }

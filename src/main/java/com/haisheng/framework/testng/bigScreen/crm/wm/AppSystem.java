@@ -108,7 +108,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total5 > 0, "搜索全部客户失败");
             Preconditions.checkArgument(total6 > 0, "按照等级筛选失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--客户管理--DCC客户--正常搜索");
         }
@@ -138,7 +138,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total6 == 0, "姓名存在，开始日期>当前日期，查出了结果");
             Preconditions.checkArgument(total7 == 0, "姓名不存在，开始日期>当前日期，查出了结果");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--客户管理--DCC客户--异常搜索");
         }
@@ -167,7 +167,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response3 = crm.customerCreate(name, customerLevel, method.getDistinctPhone(), carModel.getModelId(), carModel.getStyleId(), str);
             Preconditions.checkArgument(response3.getString("message").equals("成功"), "客户姓名为汉字，长度1个字创建线索失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索,客户姓名为汉字，长度1-10，备注20-200字之内");
         }
@@ -191,7 +191,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索,意向车型与商品管理中车型一致");
         }
@@ -209,7 +209,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(strings.contains(level), "客户级别不包含" + strings + "之一");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索，客户级别,下拉，包含HABCFG");
         }
@@ -238,7 +238,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response4 = crm.customerCreate("望京", customerLevel, phone, car.getModelId(), car.getStyleId(), "");
             Preconditions.checkArgument(response4.getString("message").equals("备注信息不能为空"), "备注信息为空也可创建成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索，不填写必填项");
         }
@@ -271,7 +271,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject response1 = crm.customerCreate(name, customerLevel, phone, car.getModelId(), car.getStyleId(), remarks);
             Preconditions.checkArgument(response1.getString("message").equals("备注信息20-200字之间"), "备注信息超过200字也可创建成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建线索，不填写必填项");
         }
@@ -300,7 +300,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--show_pic字段为true的回访任务均有截图");
         }
@@ -325,7 +325,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--show_pic字段为false的回访任务均无截图且状态为未完成");
         }
@@ -351,7 +351,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject result1 = crm.returnVisitTaskExecute(common, "", "", false, date, "", preBuyCarTime, EnumReturnVisitResult.CONTACT_LATER.getType(), String.valueOf(taskId), picture1, picture2, picture3);
             Preconditions.checkArgument(result1.getString("message").equals("成功"), "回访截图3张,回访失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访截图2张-3张成功");
         }
@@ -363,7 +363,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.ANSWER.getType(), "已完成");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为接听,是否完成=已完成");
         }
@@ -375,7 +375,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.OTHER.getType(), "已完成");
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为其他,是否完成=已完成");
         }
@@ -387,7 +387,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.NO_ONE_ANSWER.getType(), "未完成");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为无人接听,是否完成=未完成");
         }
@@ -399,7 +399,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.HANG_UP.getType(), "未完成");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为挂断,是否完成=未完成");
         }
@@ -411,7 +411,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.CONTACT_LATER.getType(), "未完成");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为稍后联系,是否完成=未完成");
         }
@@ -423,7 +423,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         try {
             returnVisitTask(EnumReturnVisitResult.WRONG_NUMBER.getType(), "已完成");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为错号,是否完成=已完成");
         }
@@ -456,7 +456,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             returnVisitTask(EnumFailureCause.OTHER_STORE_PURCHASE_CAR, "", EnumCarModel.PANAMERA.getModelId());
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为战败，战败原因为他店购车，是否完成=已完成");
         }
@@ -469,7 +469,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             UserUtil.login(xs);
             returnVisitTask(EnumFailureCause.BUY_COMPETING_PRODUCTS, "凯迪拉克CT6", "");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为战败，战败原因为购买竞品，是否完成=已完成");
         }
@@ -482,7 +482,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             UserUtil.login(xs);
             returnVisitTask(EnumFailureCause.GIVE_UP_TO_BUY, "没钱不买了", "");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访结果为战败，战败原因为放弃购车，是否完成=已完成");
         }
@@ -667,7 +667,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     date, "", preBuyCarTime, EnumReturnVisitResult.CONTACT_LATER.getType(), String.valueOf(taskId), picture);
             Preconditions.checkArgument(result.getString("message").equals("成功"), "回访失败");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访记录内容包含汉字、英文、数字、符号、10-200字，回访成功");
         }
@@ -689,7 +689,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     date, "", preBuyCarTime, EnumReturnVisitResult.CONTACT_LATER.getType(), String.valueOf(taskId), picture);
             Preconditions.checkArgument(result.getString("message").equals("下次回访内容长度必须在10和200之间"), "下次回访内容长度在10和200之外也可以回访成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--回访记录内容200字以上，回访失败");
         }
@@ -711,7 +711,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                     date, "", preBuyCarTime, EnumReturnVisitResult.CONTACT_LATER.getType(), String.valueOf(taskId), picture);
             Preconditions.checkArgument(result.getString("message").equals("下次回访日期不允许在今日之前"), "下次回访日期在今日之前也可以回访成功");
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--下次回访日期为今日之前，回访失败");
         }
@@ -747,7 +747,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务排序，一级：未完成在上，已完成在下");
         }
@@ -775,7 +775,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务，联系电话为11位数字、非空");
         }
@@ -797,7 +797,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--列表客户的所属销售都是当前登陆账号");
         }
@@ -818,7 +818,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("task_status_name"), "接口返回参数中不包含字段：task_status_name");
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--列表项包括:所属销售、客户等级、客户名称、联系电话、意向车系、回访类型、是否完成");
         }
@@ -853,7 +853,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--创建接待时“订车”标记为否的客户回访类型为潜客，展厅客户回访任务类型为潜客");
         }
@@ -883,7 +883,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--创建接待时“订车”标记为是的客户回访类型为成交");
         }
@@ -910,7 +910,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售--回访任务--预约记录中存在的客户回访类型为预约");
         }
@@ -929,7 +929,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             //销售排班
             crm.saleOrder(saleId, 2);
         } catch (AssertionError | Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售排班");
         }

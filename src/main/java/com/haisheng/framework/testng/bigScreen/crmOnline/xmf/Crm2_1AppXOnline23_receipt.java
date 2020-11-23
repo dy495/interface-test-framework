@@ -101,9 +101,9 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
             crm.finishReception3(fr);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客完成接待");
         }
@@ -121,9 +121,9 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
             fr.reception_type = "FU";
             crm.finishReception3(fr);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("创建新客完成接待");
         }

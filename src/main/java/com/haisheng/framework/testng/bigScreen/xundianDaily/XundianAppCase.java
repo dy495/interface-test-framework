@@ -154,9 +154,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             xd.appcheckSubmit(shop_id,comment, patrol_id);  //巡店完成提交
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app定检任务");
         }
@@ -222,9 +222,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             xd.appcheckSubmit(shop_id,comment2, patrol_id);  //巡店完成提交
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("pc远程巡店");
         }
@@ -276,9 +276,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("定检巡店合格不产生待办事项");
         }
@@ -314,9 +314,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument((tasksNumAfter-tasksNum)==0,"app现场、远程巡店 处理结果全部合格，不应该产生待办事项");
             xd.logout();
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
         }
@@ -382,9 +382,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("处理待办事项，清除账号数据");
         }
@@ -453,9 +453,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
             }
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("处理定检、远程、现场巡店、复检不合格，主账号增加1个【查看结果】，减少一个待处理事项");
         }
@@ -508,9 +508,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 break;       //为调试代码只循环一次，处理一个待办事项
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("执行定检任务，不合格，店长待办事项增加");
         }
@@ -563,9 +563,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 break;       //为调试代码只循环一次，处理一个待办事项
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("执行定检任务，不合格，店长待办事项增加");
         }
@@ -634,9 +634,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
             }
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("查看处理结果，合格，不产生待办事项");
         }
@@ -702,9 +702,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
            }
        }catch (AssertionError e){
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        }catch (Exception e){
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        }finally {
            saveData("巡检员代办事项（查看处理结果）完成，不合格 产生1待办事项");
        }
@@ -756,9 +756,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 //            JSONObject data2 = xd.Task_list(0, 10, null);
 
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("查看处理结果，不合格，产生1个待办事项");
         }
@@ -801,9 +801,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 break;   }
             }
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("处理现场巡店不合格，为查看处理事项备数据");
         }
@@ -907,9 +907,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
            xd.logout();
 
        } catch (AssertionError e) {
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        } catch (Exception e) {
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        }
        finally {
            saveData("app6次留痕异常验证");
@@ -950,9 +950,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
            }
        }catch (AssertionError e){
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        }catch (Exception e){
-           appendFailreason(e.toString());
+           appendFailReason(e.toString());
        }finally {
            saveData("复检说明为空异常");
        }
@@ -1009,9 +1009,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
             }
         }catch (AssertionError e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }catch (Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证");
         }
@@ -1064,9 +1064,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                     }
 
         }catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("app定检巡店留痕超过五张异常验证");
         }

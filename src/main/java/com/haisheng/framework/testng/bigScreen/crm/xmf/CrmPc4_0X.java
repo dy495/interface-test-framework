@@ -107,7 +107,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total2-total1==1,"新建车系，车系列表+1");
             Preconditions.checkArgument(modelTotal2-modelTotal1==1,"新建车系，车系列表+1");
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             saveData("新建车系，车系列表数+1");
         }
@@ -138,7 +138,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total-total2==1,"禁用车系，小程序车系列表没-1");
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             crm.login(pp.zongjingli,pp.adminpassword);
             saveData("禁用车系，小程序车系列表-1");
@@ -171,7 +171,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total-total2==1,"禁用车型，小程序车型列表没-1");
 
         }catch (AssertionError |Exception e){
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         }finally {
             crm.login(pp.zongjingli,pp.adminpassword);
             saveData("禁用车型，小程序车型列表-1");

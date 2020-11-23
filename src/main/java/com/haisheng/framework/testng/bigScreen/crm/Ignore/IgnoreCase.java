@@ -106,9 +106,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.carUploadToDaily(router, deviceId, resource, json);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("离场车牌号上传");
         }
@@ -140,9 +140,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             crm.scheduleDel_PC(scheduleid);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，工作描述字数=10");
 
@@ -175,9 +175,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             crm.scheduleDel_PC(scheduleid);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，工作描述字数=200");
 
@@ -207,9 +207,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，工作描述字数=9");
 
@@ -242,9 +242,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，工作描述字数=201");
 
@@ -276,9 +276,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，开始时间>结束时间");
 
@@ -316,9 +316,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             crm.scheduleDel_PC(scheduleid);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，工作时间与已存在的安排时间重叠");
 
@@ -349,9 +349,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，开始时间<结束时间<当前时间");
 
@@ -382,9 +382,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，结束时间与开始时间间隔为5分钟");
 
@@ -415,9 +415,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，结束时间<开始时间<当前时间");
 
@@ -448,9 +448,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，结束时间=开始时间");
 
@@ -481,9 +481,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待1001，实际" + code + "，提示" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("PC端添加工作安排，时间格式异常");
 
@@ -521,9 +521,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total >= 1, "我的回访数量期待>=1，实际=" + total);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面直接点击查询按钮");
         }
@@ -555,9 +555,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(search_name.equals(name), "查询结果与查询条件不一致");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("我的回访页面根据姓名查询");
@@ -588,9 +588,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_phone = obj.getString("customer_phone");
             Preconditions.checkArgument(search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据手机号查询");
         }
@@ -621,9 +621,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(single.getString("customer_level").equals("7"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据客户等级查询");
         }
@@ -657,9 +657,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据姓名+手机号查询");
         }
@@ -691,9 +691,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_level.equals("H") && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据姓名+级别查询");
         }
@@ -725,9 +725,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_phone = obj.getString("customer_phone");
             Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据手机号+级别查询");
         }
@@ -760,9 +760,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据姓名+手机号+级别查询");
         }
@@ -792,9 +792,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据存在姓名+不匹配手机号查询");
         }
@@ -822,9 +822,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据存在姓名+不匹配级别查询");
         }
@@ -852,9 +852,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据存在手机号+不匹配级别查询");
         }
@@ -881,9 +881,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的回访页面根据不存在的姓名+存在手机号+匹配的级别查询");
         }
@@ -926,9 +926,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 1, "添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录字数=10");
         }
@@ -969,9 +969,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 1, "添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录字数=200");
         }
@@ -1012,9 +1012,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 50, "添加50条失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录条数=50");
         }
@@ -1055,9 +1055,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录条数=51");
         }
@@ -1095,9 +1095,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录字数=9");
         }
@@ -1134,9 +1134,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录字数=201");
         }
@@ -1172,9 +1172,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录字数=0");
         }
@@ -1210,9 +1210,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访日期是昨天");
         }
@@ -1254,9 +1254,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("点击列表中回访按钮添加回访，app端由未联系转为已联系");
         }
@@ -1302,9 +1302,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("顾客详情页添加回访，app端该记录仍为未联系");
         }
@@ -1342,9 +1342,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 2, "添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注字数=20");
         }
@@ -1381,9 +1381,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 2, "添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注字数=200");
         }
@@ -1423,9 +1423,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(list == 50, "添加失败");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注条数=50");
         }
@@ -1461,9 +1461,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注字数=19");
         }
@@ -1498,9 +1498,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注字数=19");
         }
@@ -1541,9 +1541,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "，提示语：" + message);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注条数=51");
         }
@@ -1575,9 +1575,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total >= 1, "今日来访数量期待>=1，实际=" + total);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面直接点击查询按钮");
         }
@@ -1609,9 +1609,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(search_name.equals(name), "查询结果与查询条件不一致");
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
 
             saveData("今日来访页面根据姓名查询");
@@ -1642,9 +1642,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_phone = obj.getString("customer_phone");
             Preconditions.checkArgument(search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据手机号查询");
         }
@@ -1676,9 +1676,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(single.getString("customer_level_name").equals("H"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据客户等级查询");
         }
@@ -1710,9 +1710,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据姓名+手机号查询");
         }
@@ -1742,9 +1742,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_level.equals("H") && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据姓名+级别查询");
         }
@@ -1776,9 +1776,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_phone = obj.getString("customer_phone");
             Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据手机号+级别查询");
         }
@@ -1810,9 +1810,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_level.equals("H") && search_phone.equals(phone1) && search_name.equals(name), "查询结果与查询条件不一致");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据姓名+手机号+级别查询");
         }
@@ -1841,9 +1841,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据存在姓名+不匹配手机号查询");
         }
@@ -1873,9 +1873,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据存在姓名+不匹配级别查询");
         }
@@ -1904,9 +1904,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据存在手机号+不匹配级别查询");
         }
@@ -1936,9 +1936,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(total == 0, "不应有查询结果");
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据不存在的姓名+存在手机号+匹配的级别查询");
         }
@@ -1967,9 +1967,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(single.getString("customer_level_name").equals("H"), "查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("今日来访页面根据客户等级查询");
         }
@@ -2415,9 +2415,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("XXXXXX");
         }
@@ -2533,9 +2533,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"备注数增加"+change);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加备注，备注条数+1");
         }
@@ -2582,9 +2582,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(change==1,"回访记录数量增加了"+change);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("添加回访，回访记录数量+1");
         }
@@ -2707,9 +2707,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售顾问状态");
         }
@@ -2731,9 +2731,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(single.getString("belongs_sale_name").equals(cstm.lxqgw),"展示信息不正确");
             }
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("我的客户页面所属销售的顾客信息");
         }
@@ -2771,9 +2771,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(cstm.lxqgw,cstm.pwd);
             saveData("我的客户页面删除后再查询");
@@ -2799,9 +2799,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.lxqgw,cstm.pwd);
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除接待中客户");
@@ -2828,9 +2828,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             crm.login(cstm.lxqgw,cstm.pwd);
             saveData("删除已完成接待客户");
@@ -2867,9 +2867,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售顾问修改顾客手机号");
         }
@@ -2898,9 +2898,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售总监修改顾客手机号");
         }
@@ -2929,9 +2929,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售总监修改顾客所属顾问");
         }
@@ -2964,9 +2964,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("总经理修改顾客所属顾问");
         }
@@ -3002,9 +3002,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("销售顾问修改顾客多项信息");
         }
@@ -3031,9 +3031,9 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.carUploadToDaily(router, deviceId, resource, json);
         } catch (AssertionError e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailreason(e.toString());
+            appendFailReason(e.toString());
         } finally {
             saveData("日常入场车牌号上传");
         }

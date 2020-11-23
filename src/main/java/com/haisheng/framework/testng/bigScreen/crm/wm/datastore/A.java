@@ -57,8 +57,8 @@ public class A extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test
-    public void everydayDat() {
+    @Test()
+    public void everydayData() {
         try {
             TPorscheTodayData db = new TPorscheTodayData();
             List<Map<String, String>> list = method.getSaleList("销售顾问");
@@ -100,6 +100,19 @@ public class A extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             e.printStackTrace();
             DingPushUtil.sendText(e.toString());
+        }
+    }
+
+    @Test(priority = 1)
+    public void dataCheck() {
+        String date = DateTimeUtil.getFormat(new Date());
+        Sql sql = Sql.instance().select().from(TPorscheTodayData.class)
+                .where("today_date", "=", date)
+                .and("shop_id", "=", shopId)
+                .end();
+        int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+        if (!(count > 0)) {
+            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
         }
     }
 }
