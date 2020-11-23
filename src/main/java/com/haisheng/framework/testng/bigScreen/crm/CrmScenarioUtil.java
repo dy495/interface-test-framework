@@ -5781,7 +5781,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
+    //销售开出门条
+    public JSONObject wechatuserinfo(String encrypted_data,String iv,String pk,String ruid,String empty) throws Exception  {
+        String url = "/WeChat-applet/porsche/a/user-info/phone";
+        JSONObject object = new JSONObject();
+        object.put("encrypted_data", encrypted_data);
+        object.put("iv", iv);
+        object.put("pk", pk);
+        object.put("ruid", ruid);
+        if (empty != null||empty.equals("")) {
+            object.put(empty, "");
+        }
+        String result = httpPost(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
 }
 
 

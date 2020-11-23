@@ -125,6 +125,24 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+    @Test()
+    public void wechatInfo() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String must[]={
+                    "encrypted_data",
+                    "iv",
+            };
+            for(int i=0;i<must.length;i++){
+                int code = crm.wechatuserinfo("asdasdasd","asdasdasd","asdasdasd","1345",must[i]).getInteger("code");
+                Preconditions.checkArgument(code==1001,"预约保养必填参数不填校验"+must[i]);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小程序客户信息");
+        }
+    }
 
     @Test()
     public void mainTainparm() {
