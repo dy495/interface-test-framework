@@ -18,6 +18,7 @@ import java.util.List;
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.name();
+    private static final String shopId = "";
 
     /**
      * 单例
@@ -98,7 +99,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //图片上传
-    public JSONObject pcFileUpload(String pic, boolean isPermanent) {
+    public JSONObject pcFileUpload(String pic, Boolean isPermanent) {
         String path = "/jiaochen/pc/file/upload";
         JSONObject object = new JSONObject();
         object.put("pic", pic);
@@ -107,19 +108,12 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 列表
-    public JSONObject pcReceptionManagePage(int page, int size) {
+    public JSONObject pcReceptionManagePage(Integer page, Integer size) {
         String path = "/jiaochen/pc/reception-manage/page";
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
         return invokeApi(path, object);
-    }
-
-    public JSONObject tryLogin(String userName, String passwd) throws Exception {
-        String url = "/jiaochen/pc/login";
-        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
-        String res = httpPost(url, json, IpPort);
-        return JSON.parseObject(res);
     }
 
     //pc接待管理 -> 开始接待
@@ -172,17 +166,194 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(path, object);
     }
 
-    //pc客户管理 -> 售后客户列表
-    public JSONObject pcAfterSaleCustomerPage(String customerName, String customerPhone, String createDate, String vehicleChassisCode, Integer page, Integer size) {
-        String path = "/jiaochen/pc/customer-manage/after-sale-customer/page";
+    //客户管理 -> 维修记录
+    public JSONObject pcAfterSaleCustomerRepairPage(Integer page, Integer size, String vehicleChassisCode) {
+        String url = "/jiaochen/pc/customer-manage/after-sale-customer/repair-page";
         JSONObject object = new JSONObject();
-        object.put("customer_name", customerName);
-        object.put("customer_phone", customerPhone);
-        object.put("create_date", createDate);
+        object.put("size", size);
+        object.put("page", page);
         object.put("vehicle_chassis_code", vehicleChassisCode);
+        return invokeApi(url, object);
+    }
+
+    //客户管理 -> 小程序客户
+    public JSONObject pcWechatCustomerPage(String createDate, String customerPhone, Integer activeType, Integer page, Integer size) {
+        String url = "/jiaochen/pc/customer-manage/wechat-customer/page";
+        JSONObject object = new JSONObject();
+        object.put("create_date", createDate);
+        object.put("customer_phone", customerPhone);
+        object.put("active_type", activeType);
         object.put("page", page);
         object.put("size", size);
-        return invokeApi(path, object);
+        return invokeApi(url, object);
+    }
+
+    //预约管理 -> 预约看板
+    public JSONObject pcTimeTableList(String appointmentMonth) {
+        String url = "/jiaochen/pc/appointment-manage/time-table/list";
+        JSONObject object = new JSONObject();
+        object.put("appointment_month", appointmentMonth);
+        return invokeApi(url, object);
+    }
+
+    //预约管理 -> 确认预约
+    public JSONObject pcAppointmentRecordConfirm(Long id) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/confirm";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    //预约管理 -> 取消预约
+    public JSONObject pcAppointmentRecordCancel(Long id) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/cancel";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    //日期可预约时间段
+    public JSONObject pcMaintainTimeList(Long shopId, String day) {
+        String url = "/jiaochen/pc/appointment-manage/maintain/time/list";
+        JSONObject object = new JSONObject();
+        object.put("shop_id", shopId);
+        object.put("day", day);
+        return invokeApi(url, object);
+    }
+
+    //预约管理 -> 调整
+    public JSONObject pcAppointmentRecordAdjust(Long id, Long timeId) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/adjust";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("time_id", timeId);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 是否自助核销
+    public JSONObject pcSwichSelfVerification(Long id, Boolean status) {
+        String url = "/jiaochen/pc/voucher-manage/swich_self_verification";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("status", status);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 卡券作废
+    public JSONObject pcInvalidVoucher(Long id) {
+        String url = "/jiaochen/pc/voucher-manage/invalid-voucher";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 卡券增发
+    public JSONObject pcAddVoucher(Long id, Integer addNumber) {
+        String url = "/jiaochen/pc/voucher-manage/add-voucher";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("add_number", addNumber);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 卡券转移
+    public JSONObject pcTransfer(String transferPhone, String receivePhone, String voucherIds) {
+        String url = "/jiaochen/pc/voucher-manage/transfer";
+        JSONObject object = new JSONObject();
+        object.put("transfer_phone", transferPhone);
+        object.put("receive_phone", receivePhone);
+        object.put("voucher_ids", voucherIds);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 手机号查询卡券列表
+    public JSONObject pcVoucherList(String transferPhone) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-list";
+        JSONObject object = new JSONObject();
+        object.put("transfer_phone", transferPhone);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 发卡记录
+    public JSONObject pcSendRecord(String voucherName, String sender, Long startTime, Long endTime, Integer page, Integer size) {
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject object = new JSONObject();
+        object.put("voucher_name", voucherName);
+        object.put("sender", sender);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 核销记录
+    public JSONObject pcVerificationRecord(String voucherName, String sender, Long startTime, Long endTime, Integer page, Integer size) {
+        String url = "/jiaochen/pc/voucher-manage/verification-record";
+        JSONObject object = new JSONObject();
+        object.put("voucher_name", voucherName);
+        object.put("sender", sender);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 核销人员
+    public JSONObject pcVerificationPeople(String verificationPerson, String verificationPhone, String verificationCode, Integer page, Integer size) {
+        String url = "/jiaochen/pc/voucher-manage/verification-people";
+        JSONObject object = new JSONObject();
+        object.put("verification_person", verificationPerson);
+        object.put("verification_phone", verificationPhone);
+        object.put("verification_code", verificationCode);
+        object.put("page", page);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 创建核销员
+    public JSONObject pcCreateVerificationPeople(String verificationPersonName, String verificationPersonPhone, Integer status, Integer type) {
+        String url = "/jiaochen/pc/voucher-manage/create-verification-people";
+        JSONObject object = new JSONObject();
+        object.put("verification_person_name", verificationPersonName);
+        object.put("verification_person_phone", verificationPersonPhone);
+        object.put("status", status);
+        object.put("type", type);
+        return invokeApi(url, object);
+    }
+
+    //套餐管理 -> 套餐开启状态
+    public JSONObject pcSwitchPackageStatus(Boolean status, Long id) {
+        String url = "/jiaochen/pc/package-manage/package-form/switch-package-status";
+        JSONObject object = new JSONObject();
+        object.put("status", status);
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    //套餐管理 -> 套餐详情
+    public JSONObject pcPackageDetail(Long id) {
+        String url = "/jiaochen/pc/package-manage/package-detail";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
+
+    //套餐管理 -> 手机号查询客户信息
+    public JSONObject pcSearchCustomer(String customerPhone) {
+        String url = "/jiaochen/pc/package-manage/search-customer";
+        JSONObject object = new JSONObject();
+        object.put("customer_phone", customerPhone);
+        return invokeApi(url, object);
+    }
+
+    //卡券管理 -> 套餐确认购买
+    public JSONObject pcMakeSureBuy(Long id) {
+        String url = "/jiaochen/pc/packsge-manage/make-sure-buy";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        return invokeApi(url, object);
     }
 
     public JSONObject invokeApi(IScene scene) {

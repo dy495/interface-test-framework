@@ -1,0 +1,52 @@
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager;
+
+import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
+import lombok.Builder;
+
+/**
+ * 预约管理 -> 预约记录
+ */
+@Builder
+public class AppointmentRecordAppointmentPage extends BaseScene {
+    private final String plateNumber;
+    private final String customerManager;
+    private final String appointmentDate;
+    private final Long shopId;
+    private final String customerName;
+    private final Integer appointmentStatus;
+    private final String createDate;
+    private final String confirmTime;
+    private final String customerPhone;
+    private final boolean isOvertime;
+    private final Integer page;
+    private final Integer size;
+
+    @Override
+    public JSONObject getJSONObject() {
+        JSONObject object = new JSONObject();
+        object.put("plate_number", plateNumber);
+        object.put("customer_manager", customerManager);
+        object.put("appointment_date", appointmentDate);
+        object.put("shop_id", shopId);
+        object.put("customer_name", customerName);
+        object.put("appointment_status", appointmentStatus);
+        object.put("create_date", createDate);
+        object.put("confirm_time", confirmTime);
+        object.put("customer_phone", customerPhone);
+        object.put("is_overtime", isOvertime);
+        object.put("page", page);
+        object.put("size", size);
+        return object;
+    }
+
+    @Override
+    public String getPath() {
+        return "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+    }
+
+    @Override
+    public String getIpPort() {
+        return null;
+    }
+}

@@ -37,24 +37,22 @@ public class DbTable extends BaseTable {
     @Override
     public List<Map<String, Object>> getTable() {
         List<Map<String, Object>> list = new ArrayList<>();
-        if (statement != null) {
-            try {
-                if (load() && resultSet != null) {
-                    ResultSetMetaData md = resultSet.getMetaData();
-                    int count = md.getColumnCount();
-                    while (resultSet.next()) {
-                        Map<String, Object> map = new HashMap<>();
-                        for (int i = 1; i <= count; i++) {
-                            String columnName = md.getColumnName(i);
-                            Object rsValue = resultSet.getObject(i);
-                            map.put(columnName, rsValue);
-                        }
-                        list.add(map);
+        try {
+            if (load() && resultSet != null) {
+                ResultSetMetaData md = resultSet.getMetaData();
+                int count = md.getColumnCount();
+                while (resultSet.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    for (int i = 1; i <= count; i++) {
+                        String columnName = md.getColumnName(i);
+                        Object rsValue = resultSet.getObject(i);
+                        map.put(columnName, rsValue);
                     }
+                    list.add(map);
                 }
-            } catch (Exception e) {
-                exceptionCollect(e);
             }
+        } catch (Exception e) {
+            exceptionCollect(e);
         }
         return list;
     }
@@ -93,19 +91,21 @@ public class DbTable extends BaseTable {
     @Override
     public boolean load() {
         String sql = !StringUtils.isEmpty(path) ? getPath() : String.format(ContainerConstants.DB_TABLE_DEFAULT_SQL, tableName);
-        try {
-            if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {
-                statement.executeUpdate(sql);
+        if (statement != null) {
+            try {
+                if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {
+                    statement.executeUpdate(sql);
+                    return true;
+                }
+                if (sql.contains(ContainerConstants.INSERT)) {
+                    statement.execute(sql);
+                    return true;
+                }
+                resultSet = statement.executeQuery(sql);
                 return true;
+            } catch (Exception e) {
+                exceptionCollect(e);
             }
-            if (sql.contains(ContainerConstants.INSERT)) {
-                statement.execute(sql);
-                return true;
-            }
-            resultSet = statement.executeQuery(sql);
-            return true;
-        } catch (Exception e) {
-            exceptionCollect(e);
         }
         return false;
     }

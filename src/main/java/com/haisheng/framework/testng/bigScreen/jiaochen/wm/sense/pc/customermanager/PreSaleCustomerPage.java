@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
