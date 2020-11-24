@@ -2823,9 +2823,10 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     time = detailList.getJSONObject(0).getString("time");
                     Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
 
-                } else {
-                    Preconditions.checkArgument(total != 0, "客户ID：" + customer_id + "该客户的留痕事件为空，列表最新留痕时间为：" + last_time + "。报错门店的shopId=" + shop_id);
                 }
+//                else {
+//                    Preconditions.checkArgument(total != 0, "客户ID：" + customer_id + "该客户的留痕事件为空，列表最新留痕时间为：" + last_time + "。报错门店的shopId=" + shop_id);
+//                }
 
             }
 
