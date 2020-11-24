@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -432,16 +434,17 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/3 12:48
      **/
     @Test(dataProvider = "SELECT_PARM", dataProviderClass = ScenarioUtil.class)
-    public void customerSelectTimeAndname(String parm,String output) {
+    public void receptionSelect(String parm,String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopId="";
             JSONObject data = jc.receptionManage(shopId,"1", "10","","");
-            String result = data.getJSONArray("list").getJSONObject(0).getString(parm);
-            JSONArray list = jc.receptionManage(shopId, "1","10", parm,result).getJSONArray("list");
+
+            String Expetresult = data.getJSONArray("list").getJSONObject(0).getString(parm);
+            JSONArray list = jc.receptionManage(shopId, "1","10", parm,Expetresult).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                String nameSelect = list.getJSONObject(i).getString(output);
-                Preconditions.checkArgument((result.equals(nameSelect)), "接待管理按"+parm+"查询，结果错误"+nameSelect);
+                String SelectResult = list.getJSONObject(i).getString(output);
+                Preconditions.checkArgument((Expetresult.equals(SelectResult)), "接待管理按"+parm+"查询，结果错误"+SelectResult);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
