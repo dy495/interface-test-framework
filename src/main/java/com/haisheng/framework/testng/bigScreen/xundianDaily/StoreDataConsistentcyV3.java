@@ -1134,7 +1134,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================实时客流监控======================
      */
-    @Test
+    //@Test
     public void surveDataReal() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
