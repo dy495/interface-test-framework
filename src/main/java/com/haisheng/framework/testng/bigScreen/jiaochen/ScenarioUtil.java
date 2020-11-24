@@ -620,4 +620,230 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
 
+
+    /**
+     * @description:品牌管理-品牌列表分页
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject brandPage(int page, int size,  String name, String first_letter) {
+        String url = "/jiaochen/pc/brand/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if ( name != ""){
+            json.put("name", name);
+        }
+        if (first_letter != ""){
+            json.put("first_letter", first_letter);
+        }
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description:品牌管理-新建品牌
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject addBrand(String name, String logo) {
+        String url = "/jiaochen/pc/brand/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("logo_path", logo);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-编辑品牌
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject editBrand(Long id, String name, String logo) {
+        String url = "/jiaochen/pc/brand/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        if ( name != ""){
+            json.put("name", name);
+        }
+        if (logo != ""){
+            json.put("logo_path", logo);
+        }
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-删除品牌
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject delBrand(Long id) {
+        String url = "/jiaochen/pc/brand/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:品牌管理-品牌车系列表分页
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject carStylePage(int page, int size,  Long brand_id, String name) {
+        String url = "/jiaochen/pc/brand/car-style/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("brand_id", brand_id);
+        if ( name != ""){
+            json.put("name", name);
+        }
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-新建品牌车系
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject addCarStyle(Long brand_id, String manufacturer, String name, String online_time) {
+        String url = "/jiaochen/pc/brand/car-style/add";
+        JSONObject json = new JSONObject();
+        json.put("brand_id", brand_id);
+        json.put("manufacturer", manufacturer); //生产商
+        json.put("name", name); //车系名称
+        json.put("online_time", online_time); // 上线时间
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-编辑品牌车系
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject editCarStyle(Long id, Long brand_id, String manufacturer, String name, String online_time) {
+        String url = "/jiaochen/pc/brand/car-style/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("brand_id", brand_id);
+        json.put("manufacturer", manufacturer); //生产商
+        json.put("name", name); //车系名称
+        json.put("online_time", online_time); // 上线时间
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-删除品牌车系
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject delCarStyle(Long id, Long brand_id, String manufacturer, String name, String online_time) {
+        String url = "/jiaochen/pc/brand/car-style/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:品牌管理-品牌车系车型列表分页
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject carModelPage(int page, int size,  Long brand_id, Long style_id, String name, String year, String status) { //预约状态ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/brand/car-style/car-model/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
+        if ( name != ""){
+            json.put("name", name);
+        }
+        if ( year != ""){
+            json.put("year", year);
+        }
+        if ( status != ""){
+            json.put("status", status);
+        }
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-新建品牌车系车型
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject addCarModel( Long brand_id, Long style_id, String name, String year, String status) { //预约状态ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/brand/car-style/car-model/add";
+        JSONObject json = new JSONObject();
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
+        json.put("name", name);
+        json.put("year", year);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-编辑品牌车系车型
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject editCarModel( Long id, Long brand_id, Long style_id, String name, String year, String status) { //预约状态ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/brand/car-style/car-model/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
+        json.put("name", name);
+        json.put("year", year);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:品牌管理-删除品牌车系车型
+     * @author: lxq
+     * @time: 2020-11-24
+     */
+
+    public JSONObject delCarModel( Long id) {
+        String url = "/jiaochen/pc/brand/car-style/car-model/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
+
+
+
 }
