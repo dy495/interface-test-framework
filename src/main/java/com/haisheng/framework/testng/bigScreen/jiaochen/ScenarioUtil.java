@@ -659,6 +659,16 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject addBrandNotChk(String name, String logo) throws Exception {
+        String url = "/jiaochen/pc/brand/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("logo_path", logo);
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
+
     /**
      * @description:品牌管理-编辑品牌
      * @author: lxq
@@ -729,6 +739,18 @@ public class ScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    public JSONObject addCarStyleNotChk(Long brand_id, String manufacturer, String name, String online_time) throws Exception {
+        String url = "/jiaochen/pc/brand/car-style/add";
+        JSONObject json = new JSONObject();
+        json.put("brand_id", brand_id);
+        json.put("manufacturer", manufacturer); //生产商
+        json.put("name", name); //车系名称
+        json.put("online_time", online_time); // 上线时间
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
 
     /**
      * @description:品牌管理-编辑品牌车系
@@ -806,6 +828,19 @@ public class ScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
+    public JSONObject addCarModelNotChk( Long brand_id, Long style_id, String name, String year, String status) throws Exception { //预约状态ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/brand/car-style/car-model/add";
+        JSONObject json = new JSONObject();
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
+        json.put("name", name);
+        json.put("year", year);
+        json.put("status", status);
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
 
     /**
      * @description:品牌管理-编辑品牌车系车型
