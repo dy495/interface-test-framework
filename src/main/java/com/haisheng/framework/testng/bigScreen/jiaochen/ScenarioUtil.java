@@ -1187,7 +1187,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
 
-    public JSONObject delCarStyle(Long id, Long brand_id, String manufacturer, String name, String online_time) {
+    public JSONObject delCarStyle(Long id) {
         String url = "/jiaochen/pc/brand/car-style/delete";
         JSONObject json = new JSONObject();
         json.put("id", id);
