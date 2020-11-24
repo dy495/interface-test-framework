@@ -129,6 +129,10 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
             JSONArray messagePage = crm.messageList(10, type).getJSONArray("list");
             Long id = messagePage.getJSONObject(0).getLong("id");
+            String title = messagePage.getJSONObject(0).getString("title");
+            if(!title.equals("评价消息")){
+                throw new Exception("销售接待完成后，未向小程序发送评价消息");
+            }
 
             int totalB = crm.messageList(100, type).getInteger("total");
             //小程序评价
