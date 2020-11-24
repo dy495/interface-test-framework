@@ -698,7 +698,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/3 12:48
      **/
 //    @Test()
-    public void customerSelectTimeAndname() {
+    public void customerSelectTimeAndname2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = crm.customerSelect(1, 10);
@@ -709,6 +709,28 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
                 String timeSelect = list.getJSONObject(i).getString("create_date");
                 String nameSelect = list.getJSONObject(i).getString("customer_name");
                 Preconditions.checkArgument((timeSelect.equals(select_date)) && (customer_name.equals(nameSelect)), "客户按交车时间{}查询，结果{}错误", select_date, timeSelect);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户组合查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :客户名查询  eg
+     * @date :2020/8/3 12:48
+     **/
+    @Test(dataProvider = "SELECT_PARM", dataProviderClass = CrmScenarioUtil.class)
+    public void customerSelectTimeAndname(String parm,String result) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = crm.customerSelect(1, 10);
+            String customer_name = data.getJSONArray("list").getJSONObject(0).getString(parm);
+            JSONArray list = crm.customerSelect(1, 10, customer_name).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String nameSelect = list.getJSONObject(i).getString(result);
+                Preconditions.checkArgument( (customer_name.contains(nameSelect)), "客户按交车时间{}查询，结果{}错误",nameSelect);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

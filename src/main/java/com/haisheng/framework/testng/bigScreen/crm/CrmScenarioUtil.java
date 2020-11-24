@@ -4639,6 +4639,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
+    @DataProvider(name = "SELECT_PARM")
+    public static Object[] select_parm() {
+        return new String[][]{
+                {"customer_name", "customer_name"},
+        };
+    }
+
     //文章投放位置
     @DataProvider(name = "APOSITIONS")
     public static Object[] apositions() {

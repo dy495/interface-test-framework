@@ -597,6 +597,20 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
 
+
+    public JSONObject receptionManage(String shop_id,String page,String size,String parm,String result) {
+        String url = "/jiaochen/pc/reception-manage/page";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+        json1.put("page",page);
+        json1.put("size",size);
+        if(parm!=null||!parm.equals(result)){
+            json1.put(parm,result);
+        }
+        return invokeApi(url, json1);
+    }
+
+
     //将账户使用次数为0的角色删除
     public void deleteRole() {
         JSONArray role_list = organizationRolePage("", 1, 100).getJSONArray("list");
@@ -618,6 +632,26 @@ public class ScenarioUtil extends TestCaseCommon {
                 {2, 2, 3, 4},
         };
     }
+
+    @DataProvider(name = "SELECT_PARM")
+    public static Object[] select_parm() {
+        return new String[][]{
+                {"plate_number", "plate_numbe"},
+                {"reception_sale_id", "reception_sale_name"},
+                {"plate_number","plate_number"},
+                {"reception_sale_id","reception_sale_id"},
+                {"reception_date","reception_date"},
+                {"customer_name","customer_name"},
+                {"reception_status","reception_status"},
+                {"finish_date","finish_date"},
+                {"customer_phone","customer_phone"},
+                {"reception_type","reception_type"},
+
+        };
+    }
+
+
+
 
 
 
