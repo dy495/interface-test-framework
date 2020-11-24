@@ -1,19 +1,18 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 客户管理 -> 销售客户列表
+ * 客户管理 -> 售后客户列表
  */
 @Builder
-public class PreSaleCustomerPage extends BaseScene {
+public class AfterSaleCustomerPage extends BaseScene {
     private final String customerName;
     private final String customerPhone;
     private final String createDate;
-    private final String saleName;
-    private final String customerType;
+    private final String vehicleChassisCode;
     private final Integer page;
     private final Integer size;
 
@@ -23,8 +22,7 @@ public class PreSaleCustomerPage extends BaseScene {
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("create_date", createDate);
-        object.put("sale_name", saleName);
-        object.put("customer_type", customerType);
+        object.put("vehicle_chassis_code", vehicleChassisCode);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -32,7 +30,7 @@ public class PreSaleCustomerPage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/page";
+        return "/jiaochen/pc/customer-manage/after-sale-customer/page";
     }
 
     @Override

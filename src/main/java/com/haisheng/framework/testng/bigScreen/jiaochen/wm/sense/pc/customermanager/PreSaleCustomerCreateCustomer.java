@@ -1,11 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 客户管理 -> 新建
+ * 客户管理 -> 新建销售客户
  */
 @Builder
 public class PreSaleCustomerCreateCustomer extends BaseScene {

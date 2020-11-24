@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.dao;
+package com.haisheng.framework.testng.bigScreen.crm.wm.bean;
 
 import lombok.Data;
 

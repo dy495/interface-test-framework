@@ -1,36 +1,38 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 客户管理 -> 新建售后客户
+ * 客户管理 -> 销售客户列表
  */
 @Builder
-public class AfterSaleCustomerCreateCustomer extends BaseScene {
+public class PreSaleCustomerPage extends BaseScene {
     private final String customerName;
     private final String customerPhone;
-    private final Integer sex;
-    private final Integer customerType;
-    private final String saleId;
-    private final String plateNumber;
+    private final String createDate;
+    private final String saleName;
+    private final String customerType;
+    private final Integer page;
+    private final Integer size;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
-        object.put("sex", sex);
+        object.put("create_date", createDate);
+        object.put("sale_name", saleName);
         object.put("customer_type", customerType);
-        object.put("sale_id", saleId);
-        object.put("plate_number", plateNumber);
+        object.put("page", page);
+        object.put("size", size);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/after-sale-customer/create-customer";
+        return "/jiaochen/pc/customer-manage/pre-sale-customer/page";
     }
 
     @Override

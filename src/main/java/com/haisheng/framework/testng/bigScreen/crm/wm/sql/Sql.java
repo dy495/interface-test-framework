@@ -68,8 +68,7 @@ public class Sql {
             StringBuilder fieldList = new StringBuilder();
             Arrays.stream(field).forEach(key -> fieldList.append(key).append(",").append(blank));
             this.fieldList = fieldList.toString();
-            this.condition.append("(").append(blank)
-                    .append(fieldList.toString(), 0, fieldList.length() - 2)
+            this.condition.append("(").append(blank).append(fieldList.toString(), 0, fieldList.length() - 2)
                     .append(blank).append(")").append(blank);
             return this;
         }
@@ -104,7 +103,8 @@ public class Sql {
         }
 
         public Builder from(String tableName) {
-            this.tableName = grammar.contains(ContainerConstants.SELECT) ? "from" + blank + tableName + blank : tableName + blank;
+            this.tableName = grammar.contains(ContainerConstants.SELECT) ?
+                    "from" + blank + tableName + blank : tableName + blank;
             return this;
         }
 
@@ -176,7 +176,8 @@ public class Sql {
      * @return object
      */
     private static <T> Object setSqlValue(T value) {
-        return value == null ? null : value instanceof Integer ? value : "'" + value.toString().replaceAll("'", "\\\\'") + "'";
+        return value == null ? null : value instanceof Integer ?
+                value : "'" + value.toString().replaceAll("'", "\\\\'") + "'";
     }
 
     public static String humpToLine(String str) {
