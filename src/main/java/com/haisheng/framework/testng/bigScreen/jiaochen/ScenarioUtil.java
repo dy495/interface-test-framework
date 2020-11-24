@@ -909,6 +909,437 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    /**
+     * @description:销售管理列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject preSleCustomeMangae(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:售后管理列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject afterSleCustomeManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/customer-manage/after-sale-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+    /**
+     * @description:小程序客户管理列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject weChatSleCustomeMangage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/customer-manage/wechat-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+    /**
+     * @description:预约记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject appointmentRecordManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:保养配置
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject maintainFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/manage/maintain/car-model/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:卡券管理
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject voucherFormFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:发卡记录
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject sendRecordFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:核销记录
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject verificationReordFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/voucher-manage/verification-record";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:核销人员记录
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject verificationPeopleFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/voucher-manage/verification-people";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:套餐表单
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject packageFormFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/package-manage/package-form/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:套餐购买记录
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject buyPackageRecordFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/packsge-manage/buy-package-record";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:消息表单
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject messageFormFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/message-manage/message-form/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:文章表单
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject articleFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/operation/article/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:报名列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject registerListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/operation/register/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:活动审批
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject approvalListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/operation/approval/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+
+    /**
+     * @description:卡券申请
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject applyListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/voucher/apply/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:门店列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject shopListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/shop/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:品牌列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject brandListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/brand/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:车系列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject carStyleListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/brand/car-style/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:车型列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject carModelListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/brand/car-style/car-model/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:角色列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject roleListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/role/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:员工列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject staffListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/staff/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:导入记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject importListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/record/import/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:导入记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject exportListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/record/export/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:消息记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject pushMsgListFilterManage(String shopId,String page,String size,String pram,String result){
+        String url = "/jiaochen/pc/record/push-msg/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        if(pram!=null||!pram.equals("")){
+            json.put(pram,result);
+        }
+        return invokeApi(url, json);
+    }
+
+
+
+
+
+
+
+
 
 
 
