@@ -740,8 +740,8 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             JSONArray res=jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
             JSONObject data=res.getJSONObject(0);
             sr.plate_number=data.getString(ss[0][1]);
-            sr.reception_sale_id=data.getString(ss[0][2]);
-            sr.reception_date=data.getString(ss[0][3]);
+            sr.reception_sale_id=data.getString(ss[1][1]);
+            sr.reception_date=data.getString(ss[2][1]);
 
             JSONObject result=jc.receptionManageC(sr);
 
