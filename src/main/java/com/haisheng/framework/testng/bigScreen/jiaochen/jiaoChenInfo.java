@@ -4,14 +4,52 @@ import com.haisheng.framework.util.DateTimeUtil;
 
 public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
-
+    ScenarioUtil jc = ScenarioUtil.getInstance();
     public final String logo = "";//120*120 品牌logo
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2～！啊67aaa";//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)(Math.random()*100000));//随机字符串长度6
     public final String stringfifty = "ZDHZDHZDHZDH1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890";//随机字符串长度50
+    public final String stringfifty1 = "ZDHZDHZDHZDH1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final long BrandID = 1L;//自动化用的品牌id
-    public final long CarStyleID = 1L;//自动化用的品牌车型系id
+    public final long CarStyleID = 1L;//自动化用的品牌车系id
+
+    //创建品牌，返回品牌id
+    public final long getBrandID(int n){
+        String name = ""+Math.random()*n;
+        jc.addBrand(name,logo);
+        //品牌1id
+        Long id = jc.brandPage(1,1,name,"").getJSONArray("list").getJSONObject(0).getLong("id");
+        return id;
+    }
+
+    //创建某品牌下的车系，返回车系id
+    public final long getCarStyleID(long id, int n){
+        //创建车系
+        String manufacturer = "自动化"+System.currentTimeMillis();
+        String name= "自动化"+System.currentTimeMillis();
+        String online_time= dt.getHistoryDate(0);
+        jc.addCarStyle(id, manufacturer,  name,  online_time);
+        //获取车系id
+        Long carStyleId = jc.carStylePage(1,1,id,name).getJSONArray("list").getJSONObject(0).getLong("id");
+        return carStyleId;
+    }
+
+    //创建某品牌车系下的车型，返回车型id
+    public final long getCarStyleID(long brand_id, long carStyle_id){
+        //创建车型
+        String name1 = "自动化"+System.currentTimeMillis();
+        String year1= dt.getHistoryDate(-100);
+        String status1 = "ENABLE";
+        jc.addCarModel(brand_id, carStyle_id,  name1,year1,  status1);
+        //获取车系id
+        Long id = jc.carModelPage(1,1,brand_id, carStyle_id,name1,"","").getJSONArray("list").getJSONObject(0).getLong("id");
+        return  id;
+    }
+
+
+
+
 
 
 
