@@ -7,12 +7,14 @@ public class jiaoChenInfo {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     public final String logo = "";//120*120 品牌logo
     public final String stringone = "a";//字符串长度1
-    public final String stringten = "a2～！啊67aaa";//字符串长度10
+    public final String stringten = "a2～！啊A"+Integer.toString((int)(Math.random()*100000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)(Math.random()*100000));//随机字符串长度6
-    public final String stringfifty = "ZDHZDHZDHZDH1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890";//随机字符串长度50
-    public final String stringfifty1 = "ZDHZDHZDHZDH1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
+    public final String stringfifty = "ZDHZDH"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890";//随机字符串长度50
+    public final String stringfifty1 = "ZDHZDH"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final long BrandID = 1L;//自动化用的品牌id
     public final long CarStyleID = 1L;//自动化用的品牌车系id
+    public final String  district_code= "222402000000";
+    public final String phone = "13800"+Integer.toString((int)(Math.random()*1000000));//手机号
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
