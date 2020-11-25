@@ -239,5 +239,28 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")
+    public void receptionTodayTask() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //接待前，接待任务列表总数
+            int total=jc.appreceptionPage(null,10).getInteger("total");
+            Long id=pf.startReception(pp.carplate);
+
+            int totalA=jc.appreceptionPage(null,10).getInteger("total");
+
+            //完成接待
+            jc.finishReception(id);
+            int totalC=jc.appreceptionPage(null,10).getInteger("total");
+            Preconditions.checkArgument(totalA-total==1,"接待后接待列表未+1,接待前："+total+"，接待后："+totalA);
+            Preconditions.checkArgument(totalA-totalC==1,"完成接待后接待列表未-1,接待前："+totalA+"，接待后："+totalA);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待,接待任务+1,完成接待，接待任务-1");
+        }
+    }
+
 
 }

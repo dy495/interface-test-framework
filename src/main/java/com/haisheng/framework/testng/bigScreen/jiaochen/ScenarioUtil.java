@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -827,6 +828,16 @@ public class ScenarioUtil extends TestCaseCommon {
         if(parm!=null||!parm.equals("")){
             json1.put(parm,result);
         }
+
+        return invokeApi(url, json1);
+    }
+
+    public JSONObject receptionManageC(SelectReception sr) {
+        String url = "/jiaochen/pc/reception-manage/page";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",sr.shop_id);
+        json1.put("page",sr.page);
+        json1.put("size",sr.size);
 
         return invokeApi(url, json1);
     }

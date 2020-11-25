@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -712,6 +713,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         }finally{
             saveData("消息记录列表查询，结果校验");
+        }
+    }
+    /**
+     * @description :参数全填案例
+     * @date :2020/11/25 12:15
+     **/
+    @Test()
+    public void selectAppointmentRecodeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String ss[][]={
+                {"plate_number", "plate_number"},
+                {"reception_sale_id", "reception_sale_name"},
+                {"reception_date","reception_date"},
+                {"customer_name","customer_name"},
+                {"reception_date","reception_date"},
+                {"reception_status","registration_status"},
+                {"finish_date","finish_time"},
+                {"customer_phone","customer_phone"},
+                {"reception_type","reception_type"},
+                {"shop_id","shop_name"},
+            };
+
+            SelectReception sr=new SelectReception();
+            JSONArray res=jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            sr.plate_number=data.getString(ss[0][1]);
+            sr.reception_sale_id=data.getString(ss[0][2]);
+            sr.reception_date=data.getString(ss[0][3]);
+
+            JSONObject result=jc.receptionManageC(sr);
+
+            Preconditions.checkArgument(sr.plate_number.contains(result.getString(ss[0][1])),"");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("接待管理列表查询全填，结果校验");
         }
     }
 
