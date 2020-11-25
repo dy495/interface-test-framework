@@ -235,7 +235,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app接待,接待任务+1");
+            saveData("app接待,接待任务+1,完成接待，接待任务-1");
         }
     }
 

@@ -75,7 +75,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
            int pages=respon.getInteger("pages");
            String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
            for(int page=1;page<=pages;page++){
-               JSONArray list=jc.receptionManage(shopId,"1","10",pram,result).getJSONArray("list");
+               JSONArray list=jc.receptionManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                for(int i=0;i<10;i++){
                    String Flag=list.getJSONObject(i).getString(output);
                    Preconditions.checkArgument(Flag.contains(result), "接待管理按"+result+"查询，结果错误"+Flag);
@@ -101,7 +101,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
          int pages=respon.getInteger("pages");
          String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
          for(int page=1;page<=pages;page++){
-             JSONArray list=jc.preSleCustomeMangae(shopId,"1","10",pram,result).getJSONArray("list");
+             JSONArray list=jc.preSleCustomeMangae(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
              for(int i=0;i<10;i++){
                  String Flag=list.getJSONObject(i).getString(output);
                  Preconditions.checkArgument(Flag.contains(result), "销售管理按"+result+"查询，结果错误"+Flag);
@@ -127,7 +127,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.afterSleCustomeManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.afterSleCustomeManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "售后客户管理按"+result+"查询，结果错误"+Flag);
@@ -152,7 +152,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.weChatSleCustomeMangage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.weChatSleCustomeMangage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "小程序客户管理按"+result+"查询，结果错误"+Flag);
@@ -177,7 +177,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.appointmentRecordManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.appointmentRecordManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "预约记录管理按"+result+"查询，结果错误"+Flag);
@@ -202,7 +202,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.maintainFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.maintainFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "保养配置按"+result+"查询，结果错误"+Flag);
@@ -227,7 +227,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.voucherFormFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.voucherFormFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "卡券管理管理按"+result+"查询，结果错误"+Flag);
@@ -252,7 +252,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.sendRecordFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.sendRecordFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "发卡记录管理按"+result+"查询，结果错误"+Flag);
@@ -277,7 +277,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.verificationReordFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.verificationReordFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "核销记录管理按"+result+"查询，结果错误"+Flag);
@@ -302,7 +302,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.verificationPeopleFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.verificationPeopleFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "核销记录管理按"+result+"查询，结果错误"+Flag);
@@ -327,7 +327,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.packageFormFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.packageFormFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "套餐表单管理按"+result+"查询，结果错误"+Flag);
@@ -352,7 +352,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.buyPackageRecordFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.buyPackageRecordFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "套餐购买管理按"+result+"查询，结果错误"+Flag);
@@ -377,7 +377,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.messageFormFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.messageFormFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "消息表单管理按"+result+"查询，结果错误"+Flag);
@@ -402,7 +402,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.articleFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.articleFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "文章表单按"+result+"查询，结果错误"+Flag);
@@ -427,7 +427,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.registerListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.registerListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "报名列表按"+result+"查询，结果错误"+Flag);
@@ -452,7 +452,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.approvalListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.approvalListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "报名审批按"+result+"查询，结果错误"+Flag);
@@ -477,7 +477,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.applyListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.applyListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "卡券申请按"+result+"查询，结果错误"+Flag);
@@ -502,7 +502,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.shopListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.shopListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "门店列表按"+result+"查询，结果错误"+Flag);
@@ -527,7 +527,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.brandListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.brandListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "品牌列表按"+result+"查询，结果错误"+Flag);
@@ -552,7 +552,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.carStyleListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.carStyleListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "车系列表按"+result+"查询，结果错误"+Flag);
@@ -577,7 +577,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.carModelListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.carModelListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "车型列表按"+result+"查询，结果错误"+Flag);
@@ -602,7 +602,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.roleListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.roleListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "角色列表按"+result+"查询，结果错误"+Flag);
@@ -627,7 +627,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.staffListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.staffListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "员工列表按"+result+"查询，结果错误"+Flag);
@@ -652,7 +652,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.importListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.importListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "导入记录按"+result+"查询，结果错误"+Flag);
@@ -677,7 +677,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.exportListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.exportListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "导出记录按"+result+"查询，结果错误"+Flag);
@@ -702,7 +702,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             int pages=respon.getInteger("pages");
             String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
             for(int page=1;page<=pages;page++){
-                JSONArray list=jc.pushMsgListFilterManage(shopId,"1","10",pram,result).getJSONArray("list");
+                JSONArray list=jc.pushMsgListFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
                 for(int i=0;i<10;i++){
                     String Flag=list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "消息记录按"+result+"查询，结果错误"+Flag);
