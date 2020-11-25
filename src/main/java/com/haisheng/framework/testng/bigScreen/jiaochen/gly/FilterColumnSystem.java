@@ -723,29 +723,19 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     public void selectAppointmentRecodeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String ss[][]={
-                {"plate_number", "plate_number"},
-                {"reception_sale_id", "reception_sale_name"},
-                {"reception_date","reception_date"},
-                {"customer_name","customer_name"},
-                {"reception_date","reception_date"},
-                {"reception_status","registration_status"},
-                {"finish_date","finish_time"},
-                {"customer_phone","customer_phone"},
-                {"reception_type","reception_type"},
-                {"shop_id","shop_name"},
-            };
-
+            Object[][] ss = Constant.receptionManageFilter_pram();
             SelectReception sr=new SelectReception();
-            JSONArray res=jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONArray res=jc.receptionManage(shopId,"1","10","","").getJSONArray("list");
             JSONObject data=res.getJSONObject(0);
-            sr.plate_number=data.getString(ss[0][1]);
-            sr.reception_sale_id=data.getString(ss[1][1]);
-            sr.reception_date=data.getString(ss[2][1]);
+
+            sr.plate_number=data.getString(ss[0][1].toString());
+
+            sr.reception_sale_id=data.getString(ss[1][1].toString());
+            sr.reception_date=data.getString(ss[2][1].toString());
 
             JSONObject result=jc.receptionManageC(sr);
 
-            Preconditions.checkArgument(sr.plate_number.contains(result.getString(ss[0][1])),"");
+            Preconditions.checkArgument(sr.plate_number.contains(result.getString(ss[0][1].toString())),"");
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());

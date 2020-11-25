@@ -10,7 +10,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_ReceptionManageFilter")
-    public static Object[] receptionManageFilter_pram() {
+    public static Object[][]receptionManageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
                 {"reception_sale_id", "reception_sale_name"},
