@@ -1722,6 +1722,128 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
 
+    /**
+     * @description:门店管理-门店列表
+     * @author: lxq
+     * @time: 2020-11-25
+     */
+
+    public JSONObject shopPage(int page, int size, String name) {
+        String url = "/jiaochen/pc/shop/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:门店管理-新建门店
+     * @author: lxq
+     * @time: 2020-11-25
+     */
+
+    public JSONObject addShop(String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
+                              String sale_tel, String service_tel, double longitude, double latitude,
+                              String appointment_status, String washing_status) { // 预约状态：ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/shop/add";
+        JSONObject json = new JSONObject();
+        json.put("avatar_path", avatar_path);
+        json.put("simple_name", simple_name);
+        json.put("name", name);
+        json.put("brand_list", brand_list);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("sale_tel", sale_tel);
+        json.put("service_tel", service_tel);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("appointment_status", appointment_status);
+        json.put("washing_status", washing_status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject addShopNotChk(String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
+                              String sale_tel, String service_tel, double longitude, double latitude,
+                              String appointment_status, String washing_status) throws Exception { // 预约状态：ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/shop/add";
+        JSONObject json = new JSONObject();
+        json.put("avatar_path", avatar_path);
+        json.put("simple_name", simple_name);
+        json.put("name", name);
+        json.put("brand_list", brand_list);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("sale_tel", sale_tel);
+        json.put("service_tel", service_tel);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("appointment_status", appointment_status);
+        json.put("washing_status", washing_status);
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
+
+    /**
+     * @description:门店管理-编辑门店
+     * @author: lxq
+     * @time: 2020-11-25
+     */
+
+    public JSONObject editShop(Long id ,String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
+                              String sale_tel, String service_tel, double longitude, double latitude,
+                              String appointment_status, String washing_status) { // 预约状态：ENABLE（开启） DISABLE（关闭）
+        String url = "/jiaochen/pc/shop/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("avatar_path", avatar_path);
+        json.put("simple_name", simple_name);
+        json.put("name", name);
+        json.put("brand_list", brand_list);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("sale_tel", sale_tel);
+        json.put("service_tel", service_tel);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("appointment_status", appointment_status);
+        json.put("washing_status", washing_status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:门店管理-门店详情
+     * @author: lxq
+     * @time: 2020-11-25
+     */
+
+    public JSONObject shopDetail(Long id) {
+        String url = "/jiaochen/pc/shop/detail";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:门店管理-修改门店状态
+     * @author: lxq
+     * @time: 2020-11-25
+     */
+
+    public JSONObject shopDetail(Long id, String type, String status) {
+        String url = "/jiaochen/pc/shop/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("type", type);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
 
 

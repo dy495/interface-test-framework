@@ -83,6 +83,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+
+    /**
+     *    PC 品牌管理-系统测试
+     */
+
+
     //品牌--正常
     @Test
     public void addBrand_name1() {
@@ -560,7 +566,25 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
+    /**
+     *    PC 门店管理-系统测试
+     */
 
+
+    @Test
+    public void addshop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型时品牌被删除， 期待失败");
+        }
+    }
 
 
 
