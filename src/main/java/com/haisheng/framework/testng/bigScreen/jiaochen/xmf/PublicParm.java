@@ -6,6 +6,7 @@ public class PublicParm {
     public String reception_sale_id="";
     public String name="";
     public String carplate="";
+    public String guwenname="jdgwxia"; //单个店的客户的数据
 
 
 

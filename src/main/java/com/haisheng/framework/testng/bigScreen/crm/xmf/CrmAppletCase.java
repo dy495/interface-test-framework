@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.apache.commons.lang.ArrayUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -1285,6 +1286,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
+
+
+
 
 
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import org.apache.commons.lang.ArrayUtils;
 
 public class JcFunction {
     ScenarioUtil jc=new ScenarioUtil();
@@ -30,4 +31,41 @@ public class JcFunction {
         return receptionID;
     }
 
+    //app今日任务数据
+    public int [] appTask(){
+        JSONObject data = jc.appTask();
+        int sum []=new int[4];
+        //预约
+       sum[0] = data.getInteger("surplus_appointment");   //分子
+        sum[1] = data.getInteger("all_appointment");     //分母
+        //接待
+        sum[2] = data.getInteger("surplus_reception");  //分子
+        sum[3] = data.getInteger("all_reception");      //分母
+        return sum;
+    }
+   //根据门店名称或接待顾问名称，获取今日数据中待处理数据
+    public int [] apptodayDate(String type,String name){
+        //今日数据
+        JSONArray todaydate = jc.apptodayDate(type, null, 10).getJSONArray("list");
+        String[] both =new String[4];
+
+        for (int i = 0; i < todaydate.size(); i++) {
+            JSONObject list_data = todaydate.getJSONObject(i);
+            //待处理预约数和
+            String name1 = list_data.getString("name");
+            if(name1.equals(name)){
+                String pending_appointment = list_data.getString("pending_appointment");
+                String[] appointment = pending_appointment.split("/");   //0待处理预约分子，1预约分母，2接待分子，3接待分母
+                //接待
+                String pending_reception = list_data.getString("pending_reception");
+                String[] reception = pending_reception.split("/");
+                both = (String[]) ArrayUtils.addAll(appointment, reception);
+            }
+        }
+        int result[]=new int[both.length];
+        for(int j=0;j<both.length;j++){
+            result[j]=Integer.valueOf(both[j]);
+        }
+        return result;
+    }
 }
