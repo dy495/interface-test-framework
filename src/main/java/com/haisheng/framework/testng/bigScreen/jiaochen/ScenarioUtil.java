@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
@@ -831,7 +832,10 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url, json1);
     }
-
+    /**
+     * @description :pc接待管理查询  ---x
+     * @date :2020/11/24 15:13
+     **/
     public JSONObject receptionManageC(SelectReception sr) {
         String url = "/jiaochen/pc/reception-manage/page";
         JSONObject json1=new JSONObject();
@@ -928,7 +932,7 @@ public class ScenarioUtil extends TestCaseCommon {
    * @date :2020/11/24 15:30
    **/
 
-    public JSONObject appointmentHandle(String id,String type) {
+    public JSONObject appointmentHandle(Long id,String type) {
         String url = "/jiaochen/m-app/task/appointment/handle";
         JSONObject json=new JSONObject();
         json.put("id",id);
@@ -963,7 +967,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :app开始接待
+     * @description :app开始接待x
      * @date :2020/11/24 19:28
      **/
 
@@ -994,12 +998,29 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:32
      **/
 
-    public JSONObject cancleReception(String id,Boolean isNew,String plate_number,String customer_name,String customer_phone) {
+    public JSONObject cancleReception(Long id) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
         JSONObject json=new JSONObject();
         json.put("id",id);
 
         return invokeApi(url, json);
+    }
+
+    /**
+     * @description :小程序预约
+     * @date :2020/11/25 17:01
+     **/
+    public JSONObject appletAppointment(appletAppointment pm) {
+        String url = "/jiaochen/m-app/task/reception/cancel-reception";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",pm.shop_id);
+        json1.put("staff_id",pm.staff_id);
+        json1.put("time_id",pm.time_id);
+        json1.put("car_id",pm.car_id);
+        json1.put("appointment_name",pm.appointment_name);
+        json1.put("appointment_phone",pm.appointment_phone);
+
+        return invokeApi(url, json1);
     }
 
 

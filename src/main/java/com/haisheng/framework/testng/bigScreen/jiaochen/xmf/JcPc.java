@@ -6,6 +6,8 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -31,6 +33,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
+    PublicParm pp = new PublicParm();
     FileUtil file = new FileUtil();
     Random random = new Random();
     public int page = 1;
@@ -450,6 +453,31 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("接待管理查询，结果校验");
+        }
+    }
+
+//    @Test()
+    public void selectAppointmentRecodeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] ss = Constant.receptionManageFilter_pram();
+            SelectReception sr=new SelectReception();
+            JSONArray res=jc.receptionManage(pp.shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+
+            sr.plate_number=data.getString(ss[0][1].toString());
+
+            sr.reception_sale_id=data.getString(ss[1][1].toString());
+            sr.reception_date=data.getString(ss[2][1].toString());
+
+            JSONObject result=jc.receptionManageC(sr);
+
+            Preconditions.checkArgument(sr.plate_number.contains(result.getString(ss[0][1].toString())),"");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("接待管理列表查询全填，结果校验");
         }
     }
 

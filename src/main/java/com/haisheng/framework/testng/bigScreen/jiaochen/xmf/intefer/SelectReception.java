@@ -10,6 +10,6 @@ public class SelectReception {
     public String customer_phone;
     public String reception_type;
     public String shop_id;
-    public String page;
-    public String size;
+    public String page="1";
+    public String size="10";
 }
