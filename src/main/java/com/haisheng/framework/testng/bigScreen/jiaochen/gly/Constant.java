@@ -284,7 +284,6 @@ public class Constant {
     public static Object[][] brandListFilter_pram(){
         return new String[][]{
                 {"name", "name"},
-                {"first_letter", "first_letter"}
         };
     }
     /**
@@ -359,7 +358,7 @@ public class Constant {
     @DataProvider(name = "SELECT_exportListFilter")
     public static Object[][] exportListFilter_pram(){
         return new String[][]{
-                {"start_time", "export_time"},
+                {"export_time", "export_time"},
                 {"type", "type"},
                 {"user", "user_name"}
         };
@@ -374,7 +373,6 @@ public class Constant {
     public static Object[][] pushMsgListFilter_pram(){
         return new String[][]{
                 {"customer_type", "customer_type"},
-                {"type", "type"},
                 {"push_date", "start_time"}
         };
     }

@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 
 public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
+    JsonPathUtil jpu = new JsonPathUtil();
     public String shopId="";
 
     /**
@@ -86,7 +88,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
        }catch(AssertionError | Exception e){
            appendFailReason(e.toString());
        }finally{
-           saveData("接待管理查询，结果校验");
+           saveData("接待管理查询单项查询，结果校验");
        }
     }
 
@@ -131,6 +133,38 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description :接待管路-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void selectAppointmentRecodeAllFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.receptionManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("接待管理列表查询参数不填写，结果校验");
+        }
+    }
+
+//    @Test
+//    public void Jc_erCode() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONObject data = jc.apperCOde();
+//            String jsonpath = "$.er_code_url1";
+//            jpu.spiltString(data.toJSONString(), jsonpath);
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("轿辰-app个人中心，小程序码返回结果不为空");
+//        }
+//    }
+
 
     /**
      * @description :销售客户查询-筛选栏单项查询
@@ -153,7 +187,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      }catch(AssertionError | Exception e){
          appendFailReason(e.toString());
      }finally{
-         saveData("销售客户查询，结果校验");
+         saveData("销售客户查询单项查询，结果校验");
      }
     }
 
@@ -185,7 +219,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("销售客户查询，结果校验");
+            saveData("销售客户查询填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :销售客户查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void preSleCustomerManageFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+           jc.preSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("销售客户列表参数不填写，结果校验");
         }
     }
 
@@ -211,7 +262,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("售后客户客户查询，结果校验");
+            saveData("售后客户客户查询单项搜索，结果校验");
         }
     }
 
@@ -240,7 +291,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("售后客户客户查询，结果校验");
+            saveData("售后客户客户查询填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :售后客户查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void selectAfterSleCustomerManageAllFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("售后客户列表参数不填写，结果校验");
         }
     }
 
@@ -265,7 +333,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("客户小程序客户查询，结果校验");
+            saveData("客户小程序客户单项查询，结果校验");
         }
     }
 
@@ -294,7 +362,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("客户小程序客户查询，结果校验");
+            saveData("客户小程序客户填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :客户小程序查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void weChatSleCustomerManageFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+           jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("客户小程序列表参数不填写，结果校验");
         }
     }
 
@@ -319,7 +404,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("预约记录查询，结果校验");
+            saveData("预约记录单项查询，结果校验");
         }
     }
     /**
@@ -357,7 +442,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("预约记录查询，结果校验");
+            saveData("预约记录填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :预约记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void appointmentRecordFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.appointmentRecordManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("预约记录列表参数不填写，结果校验");
         }
     }
 
@@ -382,7 +484,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("保养配置查询，结果校验");
+            saveData("保养配置单项查询，结果校验");
         }
     }
 
@@ -412,7 +514,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("保养配置查询，结果校验");
+            saveData("保养配置填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :保养配置查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void maintainFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.maintainFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("保养配置列表参数不填写，结果校验");
         }
     }
 
@@ -437,7 +556,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("卡券管理查询，结果校验");
+            saveData("卡券管理单项查询，结果校验");
         }
     }
 
@@ -468,7 +587,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("卡券管理查询，结果校验");
+            saveData("卡券管理填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :卡券管理查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void voucherFormFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+           jc.voucherFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("卡券管理列表参数不填写，结果校验");
         }
     }
 
@@ -493,7 +629,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("发卡记录查询，结果校验");
+            saveData("发卡记录单项查询，结果校验");
         }
     }
 
@@ -522,7 +658,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("发卡记录查询，结果校验");
+            saveData("发卡记录填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :发卡记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void sendRecordFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+          jc.sendRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("发卡记录列表参数不填写，结果校验");
         }
     }
 
@@ -547,7 +700,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("核销记录查询，结果校验");
+            saveData("核销记录单项查询，结果校验");
         }
     }
 
@@ -578,7 +731,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("核销记录查询，结果校验");
+            saveData("核销记录填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :核销记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void verificationRecordFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.verificationReordFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("核销记录列表参数不填写，结果校验");
         }
     }
 
@@ -603,7 +773,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("核销记录查询，结果校验");
+            saveData("核销记录单项查询，结果校验");
         }
     }
     /**
@@ -632,7 +802,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("核销记录查询，结果校验");
+            saveData("核销人员记录填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :核销人员记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void verificationPeopleFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.verificationPeopleFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("核销人员记录参数不填写，结果校验");
         }
     }
 
@@ -657,7 +844,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("套餐表单查询，结果校验");
+            saveData("套餐表单单项查询，结果校验");
         }
     }
 
@@ -688,7 +875,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("套餐表单查询，结果校验");
+            saveData("套餐表单填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :套餐表单查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void packageFormFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.packageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("套餐表单参数不填写，结果校验");
         }
     }
 
@@ -713,7 +917,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("套餐购买记录查询，结果校验");
+            saveData("套餐购买记录单项查询，结果校验");
         }
     }
 
@@ -741,14 +945,32 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("套餐购买记录查询，结果校验");
+            saveData("套餐购买记录填写全部参数查询，结果校验");
         }
     }
 
     /**
-     * @description :消息表单-筛选栏单项查询
-     * @date :2020/11/24
+     * @description :套餐购买记录查询-筛选栏参数不填写
+     * @date :2020/11/27
      **/
+    @Test
+    public void buyPackageRecordFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.buyPackageRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("套餐购买记录参数不填写，结果校验");
+        }
+    }
+
+
+            /**
+             * @description :消息表单-筛选栏单项查询
+             * @date :2020/11/24
+             **/
     @Test(dataProvider = "SELECT_messageFormFilter",dataProviderClass = Constant.class)
     public void messageFormFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
@@ -766,7 +988,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("消息表单查询，结果校验");
+            saveData("消息表单单项查询，结果校验");
         }
     }
 
@@ -797,7 +1019,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("消息表单查询，结果校验");
+            saveData("消息表单填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :消息表单查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void messageFormFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.messageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息表单参数不填写，结果校验");
         }
     }
 
@@ -822,7 +1061,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("文章表单查询，结果校验");
+            saveData("文章表单单项查询，结果校验");
         }
     }
 
@@ -848,7 +1087,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("文章表单查询，结果校验");
+            saveData("文章表单填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :文章表单查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void articleFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.articleFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("文章表单参数不填写，结果校验");
         }
     }
 
@@ -909,6 +1165,22 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             saveData("报名列表查询，结果校验");
         }
     }
+    /**
+     * @description :报名列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void registerListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+           jc.registerListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("报名列表参数不填写，结果校验");
+        }
+    }
 
     /**
      * @description :报名审批列表-筛选栏单项查询
@@ -965,6 +1237,23 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :报名审批查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void approvalListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.approvalListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("报名审批参数不填写，结果校验");
+        }
+    }
+
+    /**
      * @description :卡券申请-筛选栏单项查询
      * @date :2020/11/24
      **/
@@ -991,7 +1280,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :卡券申请-筛选栏填写全部参数查询
-     * @date :2020/11/24
+     * @date :2020/11/27
      **/
     @Test()
     public void applyListFilter(){
@@ -1025,6 +1314,23 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :卡券申请查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void voidapplyListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.applyListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("卡券申请参数不填写，结果校验");
+        }
+    }
+
+    /**
      * @description :门店列表-筛选栏单项查询
      * @date :2020/11/24
      **/
@@ -1051,12 +1357,20 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :门店列表-筛选栏填写全部参数查询
-     * @date :2020/11/24
+     * @date :2020/11/27
      **/
     @Test()
     public void shopListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.shopListFilter_pram();
+            JSONArray res=jc.shopListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.shopListFilterManage(shopId,"1","10",name).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1066,7 +1380,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :品牌列表
+     * @description :门店列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void shopListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.shopListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("门店列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :品牌列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
@@ -1091,13 +1422,21 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :品牌列表
-     * @date :2020/11/24
+     * @description :品牌列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void brandListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.brandListFilter_pram();
+            JSONArray res=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.brandListFilterManage(shopId,"1","10",name).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1107,7 +1446,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车系列表
+     * @description :品牌列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void brandListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("品牌列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :车系列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
@@ -1132,13 +1488,21 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车系列表
-     * @date :2020/11/24
+     * @description :车系列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void carStyleListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.carStyleListFilter_pram();
+            JSONArray res=jc.carStyleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.carStyleListFilterManage(shopId,"1","10",name).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1148,7 +1512,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车型列表
+     * @description :车系列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void carStyleListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.carStyleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("车系列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :车型列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
@@ -1172,13 +1553,26 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :车型列表
-     * @date :2020/11/24
+     * @description :车型列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void carModelListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.carModelListFilter_pram();
+            JSONArray res=jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+            String year=data.getString(flag[1][1].toString());
+            String status=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.carModelListFilterManage(shopId,"1","10",name,year,status).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
+            Preconditions.checkArgument(year.contains(result.getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getString(flag[1][1].toString()+"与列表信息的第一行的"+year+"不一致"));
+            Preconditions.checkArgument(status.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+status+"不一致"));
+
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1188,8 +1582,25 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :角色列表
-     * @date :2020/11/24
+     * @description :车型列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void carModelListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("车型列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :角色列表-筛选栏单项查询
+     * @date :2020/11/27
      **/
     @Test(dataProvider = "SELECT_roleListFilter",dataProviderClass = Constant.class)
     public void roleListFilter(String pram,String output){
@@ -1213,13 +1624,21 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :角色列表
-     * @date :2020/11/24
+     * @description :角色列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void roleListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.roleListFilter_pram();
+            JSONArray res=jc.roleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.roleListFilterManage(shopId,"1","10",name).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1229,7 +1648,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :员工列表
+     * @description :角色列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void roleListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+           jc.roleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("角色列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :员工列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_roleListFilter",dataProviderClass = Constant.class)
@@ -1254,13 +1690,22 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :员工列表
-     * @date :2020/11/24
+     * @description :员工列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void staffListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.satffListFilter_pram();
+            JSONArray res=jc.staffListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String role_name=data.getString(flag[0][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.staffListFilterManage(shopId,"1","10",role_name).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(role_name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+role_name+"不一致"));
+
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1270,7 +1715,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :导入记录列表
+     * @description :员工列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void staffListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.staffListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("员工列表参数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :导入记录列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_importListFilter",dataProviderClass = Constant.class)
@@ -1295,13 +1757,26 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :导入记录列表
-     * @date :2020/11/24
+     * @description :导入记录列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void importListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.importListFilter_pram();
+            JSONArray res=jc.importListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String type=data.getString(flag[0][1].toString());
+            String user=data.getString(flag[1][1].toString());
+            String import_date=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.importListFilterManage(shopId,"1","10",type,user,import_date).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(type.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+type+"不一致"));
+            Preconditions.checkArgument(user.contains(result.getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getString(flag[1][1].toString()+"与列表信息的第一行的"+user+"不一致"));
+            Preconditions.checkArgument(import_date.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+import_date+"不一致"));
+
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1311,7 +1786,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :导出记录列表
+     * @description :导入记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void importListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.importListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("导入记录数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :导出记录列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_exportListFilter",dataProviderClass = Constant.class)
@@ -1336,13 +1828,25 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :导出记录列表
-     * @date :2020/11/24
+     * @description :导出记录列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void exportListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.exportListFilter_pram();
+            JSONArray res=jc.exportListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String type=data.getString(flag[0][1].toString());
+            String user=data.getString(flag[1][1].toString());
+            String export_time=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.exportListFilterManage(shopId,"1","10",type,user,export_time).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(type.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+type+"不一致"));
+            Preconditions.checkArgument(user.contains(result.getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getString(flag[1][1].toString()+"与列表信息的第一行的"+user+"不一致"));
+            Preconditions.checkArgument(export_time.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+export_time+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1352,7 +1856,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :消息记录列表
+     * @description :导出记录查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void exportListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.exportListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("导出记录数不填写，结果校验");
+        }
+    }
+
+    /**
+     * @description :消息记录列表-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_pushMsgListFilter",dataProviderClass = Constant.class)
@@ -1376,13 +1897,23 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :消息记录列表
-     * @date :2020/11/24
+     * @description :消息记录列表-筛选栏填写全部参数查询
+     * @date :2020/11/27
      **/
     @Test()
     public void pushMsgListFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Object[][] flag = Constant.pushMsgListFilter_pram();
+            JSONArray res=jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String customer_type=data.getString(flag[0][1].toString());
+            String push_date=data.getString(flag[1][1].toString());
+
+            //全部筛选之后的结果
+            JSONObject result=jc.pushMsgListFilterManage1(shopId,"1","10",customer_type,push_date).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(customer_type.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+customer_type+"不一致"));
+            Preconditions.checkArgument(push_date.contains(result.getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getString(flag[1][1].toString()+"与列表信息的第一行的"+push_date+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -1390,6 +1921,24 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             saveData("消息记录列表查询，结果校验");
         }
     }
+
+    /**
+     * @description :消息记录列表查询-筛选栏参数不填写
+     * @date :2020/11/27
+     **/
+    @Test
+    public void pushMsgListFilterEmpty(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息记录列表数不填写，结果校验");
+        }
+    }
+
 
 
 
