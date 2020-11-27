@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public enum EnumAddress {
 
-    JIAOCHEN_DAILY("http://dev.porsche.dealer-ydauto.winsenseos.cn"),
+    JIAOCHEN_DAILY("http://http://dev.dealer-jc.winsenseos.cn"),
 
     JIAOCHEN_ONLINE(""),
     ;

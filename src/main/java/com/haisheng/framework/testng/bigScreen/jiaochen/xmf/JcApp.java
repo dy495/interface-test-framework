@@ -28,7 +28,7 @@ import java.util.Random;
 public class JcApp extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
-    JsonPathUtil jpu = new JsonPathUtil();
+
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
@@ -66,7 +66,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -79,7 +79,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.appLogin("", "");
+        jc.appLogin(pp.gwphone, pp.gwpassword);
 
 
     }
@@ -101,23 +101,10 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test
-    public void erCode() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject data = jc.apperCOde();
-            String jsonpath = "$.er_code_url1";
-            jpu.spiltString(data.toJSONString(), jsonpath);
 
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app个人中心，小程序码返回结果不为空");
-        }
-    }
 
     @Test(description = "今日任务数==今日数据各列数据之和")
-    public void taskEquelDate() {
+    public void Jc_taskEquelDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String type = "all";   //home \all
@@ -153,12 +140,12 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("今日任务数=今日数据各列数据之和");
+            saveData("轿辰-今日任务数=今日数据各列数据之和");
         }
     }
 
     @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")
-    public void appointmentPageAndtodaydate() {
+    public void Jc_appointmentPageAndtodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app今日任务数
@@ -173,18 +160,19 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("今日任务未完成接待数（分子）==【任务-接待】列表条数");
+            saveData("轿辰-今日任务未完成接待数（分子）==【任务-接待】列表条数");
         }
     }
 
     @Test(description = "今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和")
-    public void receptionPageAndpctodaydate() {
+    public void Jc_receptionPageAndpctodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app今日任务数
             int tasknum[] = pf.appTask();
 
-            //pc登录  预约记录页该顾问今日数据    TODO：获取pc登录的tocken
+            //pc登录  预约记录页该顾问今日数据
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10").customer_manager(pp.name)
                     .create_date(dt.getHistoryDate(0)).build();
@@ -201,12 +189,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("今日任务接待（预约）总数（分母）==pc【】列表条数");
+            jc.appLogin(pp.gwphone,pp.gwpassword);
+            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
         }
     }
 
     @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
-    public void reception() {
+    public void Jc_reception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //接待前，接待任务列表总数
@@ -227,12 +216,12 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app接待,接待任务+1,完成接待，接待任务-1");
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
         }
     }
 
     @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")
-    public void receptionTodayTask() {
+    public void Jc_receptionTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //接待前，今日任务
@@ -253,28 +242,33 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app接待,接待任务+1,完成接待，接待任务-1");
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
         }
     }
 
     @Test(description = "app接待,pc接待管理列表+1")
-    public void receptionPcPage() {
+    public void Jc_receptionPcPage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc登录
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             //接待前，接待任务列表总数
             int total = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             //app登录 开始接待
+            jc.appLogin(pp.gwphone,pp.gwpassword);
             Long id = pf.startReception(pp.carplate);
 
             //pc登录
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             int totalA = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             //完成接待
+            jc.appLogin(pp.gwphone,pp.gwpassword);
             jc.finishReception(id);
 
             //pc登录
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             int totalC = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
@@ -283,13 +277,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            //APP登录 TODO：
-            saveData("app接待,接待任务+1,完成接待，接待任务-1");
+            jc.appLogin(pp.gwphone,pp.gwpassword);   //最后app登录
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
         }
     }
 
     @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1")
-    public void canclereception() {
+    public void Jc_canclereception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //开始接待
@@ -310,17 +304,17 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app取消接待,接待任务-1,今日任务-1");
+            saveData("轿辰-app取消接待,接待任务-1,今日任务-1");
         }
     }
 
-    //**************************今日任务******************************
-    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")
-    public void receptionTodayDate() {
+    //**************************今日数据******************************
+    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")
+    public void Jc_receptionTodayDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String type = "";
-            String name = ""; //Todo:账号名称, 或者店铺的名字
+            String type = "all";
+            String name = pp.gwname; //Todo:账号名称, 或者店铺的名字
             //接待前，今日任务
             int tasknum[] = pf.apptodayDate(type, name);
             //开始接待
@@ -339,7 +333,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app接待,接待任务+1,完成接待，接待任务-1");
+            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
 
@@ -355,7 +349,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE")
-    public void agreeCancleAppointment(String type) {
+    public void Jc_agreeCancleAppointment(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appointmentPage(null, 10);
@@ -381,22 +375,24 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app确认、取消预约,预约任务-1,今日任务-1");
+            saveData("轿辰-app确认、取消预约,预约任务-1,今日任务-1");
         }
     }
 
     @Test(description = "小程序预约,app任务列表+1，今日任务数+1")
-    public void AppletAppointment() {
+    public void Jc_AppletAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appointmentPage(null, 10);
             int total = data.getInteger("total");
             int tasknum[] = pf.appTask();
             appletAppointment pm = new appletAppointment();
-            //TODO:小程序 tocken
+
+            jc.appletLoginToken(pp.appletTocken);
             //小程序预约
             jc.appletAppointment(pm);
 
+            jc.appLogin(pp.gwphone,pp.gwpassword);
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
@@ -407,9 +403,10 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序预约,app任务列表+1，今日任务数+1");
+            saveData("轿辰-小程序预约,app任务列表+1，今日任务数+1");
         }
     }
+
 
 
 }
