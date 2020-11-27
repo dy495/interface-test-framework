@@ -8,7 +8,7 @@ import java.util.*;
 public class DbDataHeleper {
     static Connection conn = null;
 
-    public static String driverClassName = "com.mysql.jdbc.Driver";
+    public static String driverClassName = "com.mysql.cj.jdbc.Driver";
     public static String url = "jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/business-porsche";
     public static String username = "read_only";
     public static String password = "read_only";
@@ -81,6 +81,9 @@ public class DbDataHeleper {
         Object[][] files = new Object[result.size()][];
         for (int i = 0; i < result.size(); i++) {
             files[i] = new Object[]{result.get(i)};
+        }
+        for(Object s:result){
+            System.out.println(s);
         }
 
     }

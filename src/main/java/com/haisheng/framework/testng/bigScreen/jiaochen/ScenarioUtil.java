@@ -58,6 +58,11 @@ public class ScenarioUtil extends TestCaseCommon {
         httpPost(path, object, IpPort);
     }
 
+    public void appletLoginToken(String token) {
+        authorization = token;
+        logger.info("applet authorization is:{}", authorization);
+    }
+
     //pc修改密码
     public JSONObject pcModifyPassword(String oldPassword, String newPassword) {
         String path = "/jiaochen/pc/modifyPassword";

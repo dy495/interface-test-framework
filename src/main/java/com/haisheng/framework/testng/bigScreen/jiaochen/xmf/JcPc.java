@@ -68,7 +68,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -105,7 +105,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     //创建复合权限角色
     @Test(dataProvider = "NUMA", dataProviderClass = ScenarioUtil.class)
-    public void createRole(int a[]) {
+    public void Jc_createRole(int a[]) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String name = "" + a[0];
@@ -129,7 +129,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("新增角色");
+            saveData("轿辰-新增角色");
         }
 
 
@@ -139,7 +139,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色======================
      */
     @Test(description = "角色的CURD,数据校验")
-    public void role_add() {
+    public void Jc_role_add() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -181,7 +181,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("新增删改查角色");
+            saveData("轿辰-新增删改查角色");
         }
 
     }
@@ -190,7 +190,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色(名称校验)======================
      */
     @Test
-    public void role_add_work() {
+    public void Jc_role_add_work() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -226,7 +226,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("新增角色(名称校验)");
+            saveData("轿辰-新增角色(名称校验)");
         }
 
     }
@@ -235,7 +235,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色(权限说明校验)======================
      */
     @Test
-    public void role_add_work1() {
+    public void Jc_role_add_work1() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -266,7 +266,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("新增角色(权限说明校验)");
+            saveData("轿辰-新增角色(权限说明校验)");
         }
 
     }
@@ -276,7 +276,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================账户管理中的一致性========================
      */
     @Test(description = "新增1个账号，列表+1；删除1个账号，列表-1；修改账号名称后与列表是否一致")
-    public void accountInfoData() {
+    public void Jc_accountInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
@@ -324,7 +324,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
 
     }
@@ -333,7 +333,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================账户管理中的一致性========================
      */
     @Test
-    public void accountInfoData_1() {
+    public void Jc_accountInfoData_1() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
@@ -384,7 +384,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
+            saveData("轿辰-编辑账号信息以后，创建者和创建时间是否发生改变");
         }
 
     }
@@ -393,7 +393,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================账户管理中的一致性（使用账号数量==账号列表中的数量）========================
      */
     @Test
-    public void accountInfoData_2() {
+    public void Jc_accountInfoData_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = jc.organizationRolePage("", page, size).getJSONArray("list");
@@ -412,14 +412,14 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("角色的使用账号数量==账号列表中该角色的数量");
+            saveData("轿辰-角色的使用账号数量==账号列表中该角色的数量");
         }
 
     }
 
     //禁用账户登录失败，开启登录成功
     @Test
-    public void accountStart() {
+    public void Jc_accountStart() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //禁用开启按钮
@@ -427,7 +427,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("禁用账户登录失败，开启登录成功");
+            saveData("轿辰-禁用账户登录失败，开启登录成功");
         }
     }
 
@@ -437,7 +437,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * @date :2020/8/3 12:48
      **/
     @Test(dataProvider = "SELECT_PARM", dataProviderClass = ScenarioUtil.class)
-    public void receptionSelect(String parm,String output) {
+    public void Jc_receptionSelect(String parm,String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopId="";
@@ -452,12 +452,12 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("接待管理查询，结果校验");
+            saveData("轿辰-接待管理查询，结果校验");
         }
     }
 
 //    @Test()
-    public void selectAppointmentRecodeFilter(){
+    public void Jc_selectAppointmentRecodeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] ss = Constant.receptionManageFilter_pram();
@@ -477,7 +477,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("接待管理列表查询全填，结果校验");
+            saveData("轿辰-接待管理列表查询全填，结果校验");
         }
     }
 
