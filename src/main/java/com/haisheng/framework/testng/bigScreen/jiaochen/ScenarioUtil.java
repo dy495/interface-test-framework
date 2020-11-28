@@ -2694,6 +2694,166 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    /**
+     * @description:内容运营-文章列表分页
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject articlePage(Integer page, Integer size, String start_date , String end_date,String register_start_date,String register_end_date) {
+        String url = "/jiaochen/pc/operation/article/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        json.put("register_start_date", register_start_date);
+        json.put("register_end_date", register_end_date);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:内容运营-新建活动
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject articlePage(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
+                                  String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
+                                  String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
+                                  String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) {
+        String url = "/jiaochen/pc/operation/article/add";
+        JSONObject json = new JSONObject();
+        json.put("title", title);
+        json.put("pic_type", pic_type);
+        json.put("pic_list", pic_list);
+        json.put("content", content);
+        json.put("label", label);
+        json.put("content_type", content_type);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        json.put("register_start_date", register_start_date);
+        json.put("register_end_date", register_end_date);
+        json.put("total_quota", total_quota);
+        json.put("address", address);
+        json.put("is_can_maintain", is_can_maintain);
+        json.put("is_voucher", is_voucher);
+        json.put("voucher_list", voucher_list);
+        json.put("voucher_receive_type", voucher_receive_type);
+        json.put("voucher_start_date", voucher_start_date);
+        json.put("voucher_end_date", voucher_end_date);
+        json.put("voucher_get_use_days", voucher_get_use_days);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject articlePageNotChk(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
+                                  String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
+                                  String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
+                                  String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) throws Exception {
+        String url = "/jiaochen/pc/operation/article/add";
+        JSONObject json = new JSONObject();
+        json.put("title", title);
+        json.put("pic_type", pic_type);
+        json.put("pic_list", pic_list);
+        json.put("content", content);
+        json.put("label", label);
+        json.put("content_type", content_type);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        json.put("register_start_date", register_start_date);
+        json.put("register_end_date", register_end_date);
+        json.put("total_quota", total_quota);
+        json.put("address", address);
+        json.put("is_can_maintain", is_can_maintain);
+        json.put("is_voucher", is_voucher);
+        json.put("voucher_list", voucher_list);
+        json.put("voucher_receive_type", voucher_receive_type);
+        json.put("voucher_start_date", voucher_start_date);
+        json.put("voucher_end_date", voucher_end_date);
+        json.put("voucher_get_use_days", voucher_get_use_days);
+        String result = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result);
+    }
+
+    /**
+     * @description:内容运营-编辑活动
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject editArticle(Long id, String content, String address) {
+        String url = "/jiaochen/pc/operation/article/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("content", content);
+        json.put("address", address);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:内容运营-活动置顶
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject topArticle(Long id) {
+        String url = "/jiaochen/pc/operation/article/top";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:内容运营-查看活动详情
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject detailArticle(Long id) {
+        String url = "/jiaochen/pc/operation/article/detail";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:内容运营-报名批量审批
+     * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject approvalArticle(JSONArray register_ids, String status) {
+        String url = "/jiaochen/pc/operation/approval";
+        JSONObject json = new JSONObject();
+        json.put("register_ids", register_ids);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    /**
+     * @description:内容运营-活动开启/关闭
+     * * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject changeArticleStatus(Long id) {
+        String url = "/jiaochen/pc/operation/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
+
 
 
 
