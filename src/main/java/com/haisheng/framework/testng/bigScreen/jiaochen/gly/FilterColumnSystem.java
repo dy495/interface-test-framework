@@ -94,7 +94,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :接待管路-筛选栏参数全填查询
-     * @date :2020/11/25 12:15
+     * @date :2020/11/28
      **/
     @Test()
     public void selectAppointmentRecodeAllFilter(){
@@ -116,15 +116,14 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
             //全部筛选之后的结果
             JSONObject result=jc.receptionManageC(sr).getJSONArray("list").getJSONObject(0);
-            Preconditions.checkArgument(sr.plate_number.contains(result.getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getString(ss[0][1].toString()+"与列表信息的第一行的"+sr.plate_number+"不一致"));
-            Preconditions.checkArgument(sr.reception_sale_id.contains(result.getString(ss[1][1].toString())),"参数全部输入的查询的"+result.getString(ss[1][1].toString()+"与列表信息的第一行的"+sr.reception_sale_id+"不一致"));
-            Preconditions.checkArgument(sr.reception_date.contains(result.getString(ss[2][1].toString())),"参数全部输入的查询的"+result.getString(ss[2][1].toString()+"与列表信息的第一行的"+sr.reception_date+"不一致"));
-            Preconditions.checkArgument(sr.customer_name.contains(result.getString(String.valueOf(ss[3][1]))),"参数全部输入的查询的"+result.getString(ss[3][1].toString()+"与列表信息的第一行的"+sr.customer_name+"不一致"));
-            Preconditions.checkArgument(sr.reception_status.contains(result.getString(ss[4][1].toString())),"参数全部输入的查询的"+result.getString(ss[4][1].toString()+"与列表信息的第一行的"+sr.reception_status+"不一致"));
-            Preconditions.checkArgument(sr.finish_date.contains(result.getString(ss[5][1].toString())),"参数全部输入的查询的"+result.getString(ss[5][1].toString()+"与列表信息的第一行的"+sr.finish_date+"不一致"));
-            Preconditions.checkArgument(sr.customer_phone.contains(result.getString(String.valueOf(ss[6][1]))),"参数全部输入的查询的"+result.getString(ss[6][1].toString()+"与列表信息的第一行的"+sr.customer_phone+"不一致"));
-            Preconditions.checkArgument(sr.reception_type.contains(result.getString(ss[7][1].toString())),"参数全部输入的查询的"+result.getString(ss[7][1].toString()+"与列表信息的第一行"+sr.reception_type+"不一致"));
-            Preconditions.checkArgument(sr.shop_id.contains(result.getString(ss[8][1].toString())),"参数全部输入的查询的"+result.getString(ss[8][1].toString()+"与列表信息的第一行的"+sr.shop_id+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number),"参数全部输入的查询的"+sr.plate_number+"与列表信息的第一行的"+result.getString(ss[0][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[1][1].toString()).contains(sr.reception_sale_id ),"参数全部输入的查询的"+result.getString(ss[1][1].toString()+"与列表信息的第一行的"+sr.reception_sale_id+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[2][1].toString()).contains(sr.reception_date),"参数全部输入的查询的"+sr.reception_date+"与列表信息的第一行的"+result.getString(ss[2][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(String.valueOf(ss[3][1])).contains(sr.customer_name),"参数全部输入的查询的"+sr.customer_name+"与列表信息的第一行的"+result.getString(ss[3][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[4][1].toString()).contains(sr.reception_status),"参数全部输入的查询的"+sr.reception_status+"与列表信息的第一行的"+result.getString(ss[4][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(String.valueOf(ss[6][1])).contains(sr.customer_phone),"参数全部输入的查询的"+sr.customer_phone+"与列表信息的第一行的"+result.getString(ss[6][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[7][1].toString()).contains(sr.reception_type),"参数全部输入的查询的"+sr.reception_type+"与列表信息的第一行"+result.getString(ss[7][1].toString()+"不一致"));
+            Preconditions.checkArgument(result.getString(ss[8][1].toString()).contains(sr.shop_id),"参数全部输入的查询的"+sr.shop_id+"与列表信息的第一行的"+result.getString(ss[8][1].toString()+"不一致"));
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -133,12 +132,57 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    /**
+     * @description :接待管路-筛选栏参数多项查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void selectAppointmentRecodeSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] ss = Constant.receptionManageFilter_pram();
+            SelectReception sr=new SelectReception();
+            JSONArray res=jc.receptionManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            sr.plate_number=data.getString(ss[0][1].toString());
+            sr.reception_sale_id=data.getString(ss[1][1].toString());
+            sr.reception_date=data.getString(ss[2][1].toString());
+            sr.customer_name=data.getString(ss[3][1].toString());
+            sr.reception_status =data.getString(ss[4][1].toString());
+//            sr.finish_date=data.getString(ss[5][1].toString());
+//            sr.customer_phone=data.getString(ss[6][1].toString());
+//            sr.reception_type =data.getString(ss[7][1].toString());
+//            sr.shop_id=data.getString(ss[8][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.receptionManageC(sr).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(sr.plate_number.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.plate_number+"不一致"));
+                Preconditions.checkArgument(sr.reception_sale_id.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.reception_sale_id+"不一致"));
+                Preconditions.checkArgument(sr.reception_date.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.reception_date+"不一致"));
+                Preconditions.checkArgument(sr.customer_name.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.customer_name+"不一致"));
+                Preconditions.checkArgument(sr.reception_status.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.reception_status+"不一致"));
+//            Preconditions.checkArgument(sr.finish_date.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.finish_date+"不一致"));
+//            Preconditions.checkArgument(sr.customer_phone.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.customer_phone+"不一致"));
+//            Preconditions.checkArgument(sr.reception_type.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行"+sr.reception_type+"不一致"));
+//            Preconditions.checkArgument(sr.shop_id.contains(result.getJSONObject(i).getString(String.valueOf(ss[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(String.valueOf(ss[0][1])+"与列表信息的第一行的"+sr.shop_id+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("接待管理列表多项查询，结果校验");
+        }
+    }
+
     /**
      * @description :接待管路-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void selectAppointmentRecodeAllFilterEmpty(){
+    public void selectAppointmentRecodeEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.receptionManage(shopId,"1","10","","").getJSONArray("list");
@@ -171,7 +215,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_PreSleCustomerManageFilter",dataProviderClass = Constant.class)
-    public void preSleCustomerManageFilter(String pram,String output){
+    public void preSleCustomerManageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
      try{
          JSONObject respon=jc.preSleCustomerManage(shopId,"1","10","","");
@@ -196,7 +240,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void preSleCustomerManageFilter(){
+    public void preSleCustomerManageALLFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.preSleCustomerManage_pram();
@@ -224,11 +268,47 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :销售客户查询-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void preSleCustomerManageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.preSleCustomerManage_pram();
+            PreSleCustomerVariable variable=new PreSleCustomerVariable();
+            JSONArray res=jc.preSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.customer_name=data.getString(flag[0][1].toString());
+            variable.customer_phone=data.getString(flag[1][1].toString());
+            variable.create_date=data.getString(flag[2][1].toString());
+//            variable.sale_name=data.getString(flag[3][1].toString());
+//            variable.customer_type=data.getString(flag[4][1].toString());
+            //全部筛选之后的结果
+
+            JSONArray result=jc.preSleCustomerManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.customer_name.contains(result.getJSONObject(i).getString(flag[0][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.customer_name+"不一致"));
+                Preconditions.checkArgument(variable.customer_phone.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.customer_phone+"不一致"));
+                Preconditions.checkArgument(variable.create_date.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.create_date+"不一致"));
+//            Preconditions.checkArgument(variable.sale_name.contains(result.getJSONObject(i).getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.sale_name+"不一致"));
+//            Preconditions.checkArgument(variable.customer_type.contains(result.getJSONObject(i).getString(flag[4][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[4][1].toString()+"与列表信息的第一行的"+variable.customer_type+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("销售客户查询填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :销售客户查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void preSleCustomerManageFilterEmpty(){
+    public void preSleCustomerManageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
            jc.preSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
@@ -282,6 +362,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             variable.create_date=data.getString(flag[1][1].toString());
             variable.customer_name=data.getString(flag[2][1].toString());
             variable.customer_phone=data.getString(flag[3][1].toString());
+
             //全部筛选之后的结果
             JSONObject result=jc.afterSleCustomerManage(variable).getJSONArray("list").getJSONObject(0);
             Preconditions.checkArgument(variable.vehicle_chassis_code.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.vehicle_chassis_code+"不一致"));
@@ -296,11 +377,43 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :售后客户查询-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void selectAfterSleCustomerManageFSomeilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.afterSleCustomerManage_pram();
+            AfterSleCustomerVariable variable=new AfterSleCustomerVariable();
+            JSONArray res=jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.vehicle_chassis_code=data.getString(flag[0][1].toString());
+            variable.create_date=data.getString(flag[1][1].toString());
+//            variable.customer_name=data.getString(flag[2][1].toString());
+//            variable.customer_phone=data.getString(flag[3][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.afterSleCustomerManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.vehicle_chassis_code.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.vehicle_chassis_code+"不一致"));
+                Preconditions.checkArgument(variable.create_date.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.create_date+"不一致"));
+//            Preconditions.checkArgument(variable.customer_name.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.customer_name+"不一致"));
+//            Preconditions.checkArgument(variable.customer_phone.contains(result.getJSONObject(i).getString(String.valueOf(flag[3][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.customer_phone+"不一致"));
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("售后客户客户查询填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :售后客户查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void selectAfterSleCustomerManageAllFilterEmpty(){
+    public void selectAfterSleCustomerManageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
@@ -317,7 +430,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_weChatSleCustomerManageFilter",dataProviderClass = Constant.class)
-    public void weChatSleCustomerManageFilter(String pram,String output){
+    public void weChatSleCustomerManageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.weChatSleCustomerManage(shopId,"1","10","","");
@@ -342,7 +455,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void weChatSleCustomerManageFilter(){
+    public void weChatSleCustomerManageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.weChatSleCustomerManage_pram();
@@ -367,11 +480,43 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :小程序客户查询-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void weChatSleCustomerManageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.weChatSleCustomerManage_pram();
+            weChatSleCustomerVariable variable=new weChatSleCustomerVariable();
+            JSONArray res=jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.create_date=data.getString(flag[0][1].toString());
+            variable.active_type=data.getString(flag[1][1].toString());
+//            variable.customer_phone=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.weChatSleCustomerManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.create_date.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.create_date+"不一致"));
+                Preconditions.checkArgument(variable.active_type.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.active_type+"不一致"));
+//            Preconditions.checkArgument(variable.customer_phone.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.customer_phone+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("客户小程序客户填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :客户小程序查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void weChatSleCustomerManageFilterEmpty(){
+    public void weChatSleCustomerManageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
            jc.afterSleCustomerManage(shopId,"1","10","","").getJSONArray("list");
@@ -388,7 +533,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_appointmentRecordFilter",dataProviderClass = Constant.class)
-    public void appointmentRecordFilter(String pram,String output){
+    public void appointmentRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.appointmentRecordManage(shopId,"1","10","","");
@@ -412,7 +557,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void appointmentRecordFilter(){
+    public void appointmentRecordAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.appointmentRecordFilter_pram();
@@ -447,11 +592,53 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :预约记录-筛选栏填写参数多项查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void appointmentRecordSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.appointmentRecordFilter_pram();
+            appointmentRecordVariable variable=new appointmentRecordVariable();
+            JSONArray res=jc.appointmentRecordManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.plate_number=data.getString(flag[0][1].toString());
+            variable.customer_manager=data.getString(flag[1][1].toString());
+            variable.shop_id=data.getString(flag[2][1].toString());
+            variable.customer_name=data.getString(flag[3][1].toString());
+            variable.appointment_status=data.getString(flag[4][1].toString());
+//            variable.customer_phone=data.getString(flag[5][1].toString());
+//            variable.is_overtime=data.getString(flag[6][1].toString());
+//            variable.confirm_time=data.getString(flag[7][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.appointmentRecordManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.plate_number.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.plate_number+"不一致"));
+                Preconditions.checkArgument(variable.customer_manager.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.customer_manager+"不一致"));
+                Preconditions.checkArgument(variable.shop_id.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.shop_id+"不一致"));
+                Preconditions.checkArgument(variable.customer_name.contains(result.getJSONObject(i).getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.customer_name+"不一致"));
+                Preconditions.checkArgument(variable.appointment_status.contains(result.getJSONObject(i).getString(flag[4][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[4][1].toString()+"与列表信息的第一行的"+variable.appointment_status+"不一致"));
+//            Preconditions.checkArgument(variable.customer_phone.contains(result.getString(flag[5][1].toString())),"参数全部输入的查询的"+result.getString(flag[5][1].toString()+"与列表信息的第一行的"+variable.customer_phone+"不一致"));
+//            Preconditions.checkArgument(variable.is_overtime.contains(result.getString(flag[6][1].toString())),"参数全部输入的查询的"+result.getString(flag[6][1].toString()+"与列表信息的第一行的"+variable.is_overtime+"不一致"));
+//            Preconditions.checkArgument(variable.confirm_time.contains(result.getString(flag[7][1].toString())),"参数全部输入的查询的"+result.getString(flag[7][1].toString()+"与列表信息的第一行的"+variable.confirm_time+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("预约记录填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :预约记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void appointmentRecordFilterEmpty(){
+    public void appointmentRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.appointmentRecordManage(shopId,"1","10","","").getJSONArray("list");
@@ -468,7 +655,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_maintainFilter",dataProviderClass = Constant.class)
-    public void maintainFilter(String pram,String output){
+    public void maintainOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.maintainFilterManage(shopId,"1","10","","");
@@ -493,7 +680,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void maintainFilter(){
+    public void maintainALLFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.maintainFilter_pram();
@@ -519,11 +706,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :保养配置-筛选栏填写参数多项查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void maintainSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.maintainFilter_pram();
+            maintainVariable variable=new maintainVariable();
+            JSONArray res=jc.maintainFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.brand_name=data.getString(flag[0][1].toString());
+            variable.manufacturer=data.getString(flag[1][1].toString());
+            variable.car_model=data.getString(flag[2][1].toString());
+//            variable.year=data.getString(flag[3][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.maintainFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.brand_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.brand_name+"不一致"));
+                Preconditions.checkArgument(variable.manufacturer.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.manufacturer+"不一致"));
+                Preconditions.checkArgument(variable.car_model.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.car_model+"不一致"));
+//            Preconditions.checkArgument(variable.year.contains(result.getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.year+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("保养配置填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :保养配置查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void maintainFilterEmpty(){
+    public void maintainEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.maintainFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -540,7 +760,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_voucherFormFilter",dataProviderClass = Constant.class)
-    public void voucherFormFilter(String pram,String output){
+    public void voucherFormOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.voucherFormFilterManage(shopId,"1","10","","");
@@ -565,7 +785,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void voucherFormFilter(){
+    public void voucherFormAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.voucherFormFilter_pram();
@@ -592,11 +812,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :卡券管理-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void voucherFormSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.voucherFormFilter_pram();
+            voucherFormVariable variable=new voucherFormVariable();
+            JSONArray res=jc.voucherFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.subject_name=data.getString(flag[0][1].toString());
+            variable.voucher_name=data.getString(flag[1][1].toString());
+//            variable.creator=data.getString(flag[2][1].toString());
+//            variable.is_diff=data.getString(flag[3][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.voucherFormFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.subject_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.subject_name+"不一致"));
+                Preconditions.checkArgument(variable.voucher_name.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.voucher_name+"不一致"));
+//            Preconditions.checkArgument(variable.creator.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.creator+"不一致"));
+//            Preconditions.checkArgument(variable.is_diff.contains(result.getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.is_diff+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("卡券管理填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :卡券管理查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void voucherFormFilterEmpty(){
+    public void voucherFormEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
            jc.voucherFormFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -613,7 +866,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_sendRecordFilter",dataProviderClass = Constant.class)
-    public void sendRecordFilter(String pram,String output){
+    public void sendRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.sendRecordFilterManage(shopId,"1","10","","");
@@ -638,7 +891,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void sendRecordFilter(){
+    public void sendRecordAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.sendRecordFilter_pram();
@@ -663,11 +916,43 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :发卡记录-筛选栏填写多数参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void sendRecordSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.sendRecordFilter_pram();
+            sendRecordVariable variable=new sendRecordVariable();
+            JSONArray res=jc.sendRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.voucher_name=data.getString(flag[0][1].toString());
+            variable.sender=data.getString(flag[1][1].toString());
+//            variable.start_time=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.sendRecordFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.voucher_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.voucher_name+"不一致"));
+                Preconditions.checkArgument(variable.sender.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.sender+"不一致"));
+//            Preconditions.checkArgument(variable.start_time.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.start_time+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("发卡记录填写多数参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :发卡记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void sendRecordFilterEmpty(){
+    public void sendRecordFilterEmptyEmpty(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
           jc.sendRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -684,7 +969,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_verificationRecordFilter",dataProviderClass = Constant.class)
-    public void verificationRecordFilter(String pram,String output){
+    public void verificationRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.verificationReordFilterManage(shopId,"1","10","","");
@@ -711,7 +996,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void verificationRecordFilter(){
+    public void verificationRecordAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.verificationRecordFilter_pram();
@@ -736,11 +1021,42 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :核销记录-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void verificationRecordSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.verificationRecordFilter_pram();
+            verificationRecordVariable variable=new verificationRecordVariable();
+            JSONArray res=jc.verificationReordFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.voucher_name=data.getString(flag[0][1].toString());
+            variable.sender=data.getString(flag[1][1].toString());
+//            variable.start_time=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.verificationReordFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.voucher_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.voucher_name+"不一致"));
+                Preconditions.checkArgument(variable.sender.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.sender+"不一致"));
+//            Preconditions.checkArgument(variable.start_time.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.start_time+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("核销记录填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :核销记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void verificationRecordFilterEmpty(){
+    public void verificationRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.verificationReordFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -757,7 +1073,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_verificationPeopleFilter",dataProviderClass = Constant.class)
-    public void verificationPeopleFilter(String pram,String output){
+    public void verificationPeopleOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.verificationPeopleFilterManage(shopId,"1","10","","");
@@ -776,12 +1092,13 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             saveData("核销记录单项查询，结果校验");
         }
     }
+
     /**
      * @description :核销人员记录-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
     @Test()
-    public void verificationPeopleFilter(){
+    public void verificationPeopleAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.verificationPeopleFilter_pram();
@@ -790,13 +1107,13 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             JSONObject data=res.getJSONObject(0);
             variable.verification_person=data.getString(flag[0][1].toString());
             variable.verification_phone=data.getString(flag[1][1].toString());
-            variable.verification_code=data.getString(flag[2][1].toString());
+//            variable.verification_code=data.getString(flag[2][1].toString());
 
             //全部筛选之后的结果
             JSONObject result=jc.verificationPeopleFilterManage(variable).getJSONArray("list").getJSONObject(0);
             Preconditions.checkArgument(variable.verification_person.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.verification_person+"不一致"));
             Preconditions.checkArgument(variable.verification_phone.contains(result.getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.verification_phone+"不一致"));
-            Preconditions.checkArgument(variable.verification_code.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.verification_code+"不一致"));
+//            Preconditions.checkArgument(variable.verification_code.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.verification_code+"不一致"));
 
 
         }catch(AssertionError | Exception e){
@@ -807,11 +1124,43 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :核销人员记录-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void verificationPeopleSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.verificationPeopleFilter_pram();
+            verificationPeopleVariable variable=new verificationPeopleVariable();
+            JSONArray res=jc.verificationPeopleFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.verification_person=data.getString(flag[0][1].toString());
+            variable.verification_phone=data.getString(flag[1][1].toString());
+//            variable.verification_code=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.verificationPeopleFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.verification_person.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.verification_person+"不一致"));
+                Preconditions.checkArgument(variable.verification_phone.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.verification_phone+"不一致"));
+//            Preconditions.checkArgument(variable.verification_code.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.verification_code+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("核销人员记录填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :核销人员记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void verificationPeopleFilterEmpty(){
+    public void verificationPeopleEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.verificationPeopleFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -828,7 +1177,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_packageFormFilter",dataProviderClass = Constant.class)
-    public void packageFormFilter(String pram,String output){
+    public void packageFormOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.packageFormFilterManage(shopId,"1","10","","");
@@ -853,7 +1202,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void packageFormFilter(){
+    public void packageFormAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.packageFormFilter_pram();
@@ -880,11 +1229,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :套餐表单-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void packageFormSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.packageFormFilter_pram();
+            packageFormVariable variable=new packageFormVariable();
+            JSONArray res=jc.packageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.package_name=data.getString(flag[0][1].toString());
+            variable.creator=data.getString(flag[1][1].toString());
+            variable.start_time=data.getString(flag[2][1].toString());
+//            variable.shop_name=data.getString(flag[3][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.packageFormFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.package_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.package_name+"不一致"));
+                Preconditions.checkArgument(variable.creator.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.creator+"不一致"));
+                Preconditions.checkArgument(variable.start_time.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.start_time+"不一致"));
+//            Preconditions.checkArgument(variable.shop_name.contains(result.getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.shop_name+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("套餐表单填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :套餐表单查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void packageFormFilterEmpty(){
+    public void packageFormEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.packageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -901,7 +1283,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_buyPackageRecordFilter",dataProviderClass = Constant.class)
-    public void buyPackageRecordFilter(String pram,String output){
+    public void buyPackageRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.buyPackageRecordFilterManage(shopId,"1","10","","");
@@ -926,7 +1308,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void buyPackageRecordFilter(){
+    public void buyPackageRecordAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.buyPackageRecordFilter_pram();
@@ -950,11 +1332,42 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :套餐购买记录-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void buyPackageRecordSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.buyPackageRecordFilter_pram();
+            buyPackageVariable variable=new buyPackageVariable();
+            JSONArray res=jc.buyPackageRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.package_name=data.getString(flag[0][1].toString());
+            variable.start_time=data.getString(flag[1][1].toString());
+//            variable.send_type=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.buyPackageRecordFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.package_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.package_name+"不一致"));
+                Preconditions.checkArgument(variable.start_time.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.start_time+"不一致"));
+//            Preconditions.checkArgument(variable.send_type.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.send_type+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("套餐购买记录填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :套餐购买记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void buyPackageRecordFilterEmpty(){
+    public void buyPackageRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.buyPackageRecordFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -972,7 +1385,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
              * @date :2020/11/24
              **/
     @Test(dataProvider = "SELECT_messageFormFilter",dataProviderClass = Constant.class)
-    public void messageFormFilter(String pram,String output){
+    public void messageFormOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.messageFormFilterManage(shopId,"1","10","","");
@@ -994,10 +1407,10 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :消息表单-筛选栏填写全部参数查询
-     * @date :2020/11/24
+     * @date :2020/11/28
      **/
     @Test()
-    public void messageFormFilter(){
+    public void messageFormAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.buyPackageRecordFilter_pram();
@@ -1024,11 +1437,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :消息表单-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void messageFormSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.buyPackageRecordFilter_pram();
+            messageFormVariable variable=new messageFormVariable();
+            JSONArray res=jc.messageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.shop_id=data.getString(flag[0][1].toString());
+            variable.start_time=data.getString(flag[1][1].toString());
+//            variable.customer_name=data.getString(flag[2][1].toString());
+//            variable.message_type=data.getString(flag[3][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.messageFormFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.shop_id.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.shop_id+"不一致"));
+                Preconditions.checkArgument(variable.start_time.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.start_time+"不一致"));
+//            Preconditions.checkArgument(variable.customer_name.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.customer_name+"不一致"));
+//            Preconditions.checkArgument(variable.message_type.contains(result.getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.message_type+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息表单填写多项参数查询，结果校验");
+        }
+    }
+
+    /**
      * @description :消息表单查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void messageFormFilterEmpty(){
+    public void messageFormEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.messageFormFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1045,7 +1491,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_articleFilter",dataProviderClass = Constant.class)
-    public void articleFilter(String pram,String output){
+    public void articleOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.articleFilterManage(shopId,"1","10","","");
@@ -1067,10 +1513,10 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :内容管理-文章表单-筛选栏填写全部参数查询-----活动开始时间结束时间，报名开始时间结束时间对不上
-     * @date :2020/11/24
+     * @date :2020/11/28
      **/
     @Test()
-    public void articleFilter(){
+    public void articleAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.articleFilter_pram();
@@ -1090,6 +1536,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             saveData("文章表单填写全部参数查询，结果校验");
         }
     }
+
 
     /**
      * @description :文章表单查询-筛选栏参数不填写
@@ -1113,7 +1560,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_registerListFilter",dataProviderClass = Constant.class)
-    public void registerListFilter(String pram,String output){
+    public void registerListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.registerListFilterManage(shopId,"1","10","","");
@@ -1129,7 +1576,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("报名列表查询，结果校验");
+            saveData("报名列表单项查询，结果校验");
         }
     }
 
@@ -1138,7 +1585,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void registerListFilter(){
+    public void registerListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.registerListFilter_pram();
@@ -1162,15 +1609,51 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("报名列表查询，结果校验");
+            saveData("报名列表填写全部参数查询，结果校验");
         }
     }
+
+    /**
+     * @description :报名列表-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void registerListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.registerListFilter_pram();
+            registerListVariable variable=new registerListVariable();
+            JSONArray res=jc.registerListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.title=data.getString(flag[0][1].toString());
+            variable.start_date=data.getString(flag[1][1].toString());
+            variable.end_date=data.getString(flag[2][1].toString());
+//            variable.register_start_date=data.getString(flag[3][1].toString());
+//            variable.register_end_date=data.getString(flag[4][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.registerListFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.title.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.title+"不一致"));
+                Preconditions.checkArgument(variable.start_date.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.start_date+"不一致"));
+                Preconditions.checkArgument(variable.end_date.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.end_date+"不一致"));
+//            Preconditions.checkArgument(variable.register_start_date.contains(result.getString(flag[3][1].toString())),"参数全部输入的查询的"+result.getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.register_start_date+"不一致"));
+//            Preconditions.checkArgument(variable.register_end_date.contains(result.getString(flag[4][1].toString())),"参数全部输入的查询的"+result.getString(flag[4][1].toString()+"与列表信息的第一行的"+variable.register_end_date+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("报名列表填写多项参数查询，结果校验");
+        }
+    }
+
     /**
      * @description :报名列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void registerListFilterEmpty(){
+    public void registerListFilterSomeEmpty(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
            jc.registerListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1187,7 +1670,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_registerListFilter",dataProviderClass = Constant.class)
-    public void approvalListFilter(String pram,String output){
+    public void approvalListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.approvalListFilterManage(shopId,"1","10","","");
@@ -1203,7 +1686,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("报名审批查询，结果校验");
+            saveData("报名审批单项查询，结果校验");
         }
     }
 
@@ -1212,7 +1695,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test()
-    public void approvalListFilter(){
+    public void approvalListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.approvalListFilter_pram();
@@ -1232,7 +1715,38 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("报名审批查询，结果校验");
+            saveData("报名审批填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :报名审批列表-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void approvalListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.approvalListFilter_pram();
+            approvalListVariable variable=new approvalListVariable();
+            JSONArray res=jc.approvalListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.customer_name=data.getString(flag[0][1].toString());
+            variable.phone=data.getString(flag[1][1].toString());
+//            variable.status=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.approvalListFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.customer_name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.customer_name+"不一致"));
+                Preconditions.checkArgument(variable.phone.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.phone+"不一致"));
+//            Preconditions.checkArgument(variable.status.contains(result.getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.status+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("报名审批填写多项参数查询，结果校验");
         }
     }
 
@@ -1258,7 +1772,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_applyListFilter",dataProviderClass = Constant.class)
-    public void applyListFilter(String pram,String output){
+    public void applyListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.applyListFilterManage(shopId,"1","10","","");
@@ -1274,7 +1788,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("卡券申请查询，结果校验");
+            saveData("卡券申请单项查询，结果校验");
         }
     }
 
@@ -1283,7 +1797,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void applyListFilter(){
+    public void applyListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.applyListFilter_pram();
@@ -1309,7 +1823,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("卡券申请查询，结果校验");
+            saveData("卡券申请填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :卡券申请-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void applyListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.applyListFilter_pram();
+            applyListVariable variable=new applyListVariable();
+            JSONArray res=jc.applyListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            variable.name=data.getString(flag[0][1].toString());
+            variable.apply_name=data.getString(flag[1][1].toString());
+            variable.status=data.getString(flag[2][1].toString());
+            variable.apply_time=data.getString(flag[3][1].toString());
+//            variable.apply_group=data.getString(flag[4][1].toString());
+//            variable.apply_item=data.getString(flag[5][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.applyListFilterManage(variable).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(variable.name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+variable.name+"不一致"));
+                Preconditions.checkArgument(variable.apply_name.contains(result.getJSONObject(i).getString(flag[1][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+variable.apply_name+"不一致"));
+                Preconditions.checkArgument(variable.status.contains(result.getJSONObject(i).getString(flag[2][1].toString())),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[2][1].toString()+"与列表信息的第一行的"+variable.status+"不一致"));
+                Preconditions.checkArgument(variable.apply_time.contains(result.getJSONObject(i).getString(String.valueOf(flag[3][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[3][1].toString()+"与列表信息的第一行的"+variable.apply_time+"不一致"));
+//            Preconditions.checkArgument(variable.apply_group.contains(result.getString(flag[4][1].toString())),"参数全部输入的查询的"+result.getString(flag[4][1].toString()+"与列表信息的第一行的"+variable.apply_group+"不一致"));
+//            Preconditions.checkArgument(variable.apply_item.contains(result.getString(flag[5][1].toString())),"参数全部输入的查询的"+result.getString(flag[5][1].toString()+"与列表信息的第一行的"+variable.apply_item+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("卡券申请填写多项参数查询，结果校验");
         }
     }
 
@@ -1318,7 +1869,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test
-    public void voidapplyListFilterEmpty(){
+    public void voidapplyListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.applyListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1335,7 +1886,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_shopListFilter",dataProviderClass = Constant.class)
-    public void shopListFilter(String pram,String output){
+    public void shopListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.shopListFilterManage(shopId,"1","10","","");
@@ -1351,7 +1902,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("门店列表查询，结果校验");
+            saveData("门店列表单项查询，结果校验");
         }
     }
 
@@ -1360,7 +1911,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void shopListFilter(){
+    public void shopListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.shopListFilter_pram();
@@ -1375,16 +1926,17 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("门店列表查询，结果校验");
+            saveData("门店列表填写全部参数查询，结果校验");
         }
     }
+
 
     /**
      * @description :门店列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void shopListFilterEmpty(){
+    public void shopListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.shopListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1401,7 +1953,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
-    public void brandListFilter(String pram,String output){
+    public void brandListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.brandListFilterManage(shopId,"1","10","","");
@@ -1417,7 +1969,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("品牌列表查询，结果校验");
+            saveData("品牌列表单项查询，结果校验");
         }
     }
 
@@ -1426,7 +1978,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void brandListFilter(){
+    public void brandListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.brandListFilter_pram();
@@ -1441,16 +1993,18 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("品牌列表查询，结果校验");
+            saveData("品牌列表填写全部参数查询，结果校验");
         }
     }
+
+
 
     /**
      * @description :品牌列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void brandListFilterEmpty(){
+    public void brandListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1467,7 +2021,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
-    public void carStyleListFilter(String pram,String output){
+    public void carStyleListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.carStyleListFilterManage(shopId,"1","10","","");
@@ -1483,7 +2037,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("车系列表查询，结果校验");
+            saveData("车系列表单项查询，结果校验");
         }
     }
 
@@ -1492,7 +2046,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void carStyleListFilter(){
+    public void carStyleListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.carStyleListFilter_pram();
@@ -1507,16 +2061,17 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("车系列表查询，结果校验");
+            saveData("车系列表填写全部参数查询，结果校验");
         }
     }
+
 
     /**
      * @description :车系列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void carStyleListFilterEmpty(){
+    public void carStyleListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.carStyleListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1533,7 +2088,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
-    public void carModelListFilter(String pram,String output){
+    public void carModelListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.carModelListFilterManage(shopId,"1","10","","");
@@ -1549,15 +2104,16 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("车型列表查询，结果校验");
+            saveData("车型列表单项查询，结果校验");
         }
     }
+
     /**
      * @description :车型列表-筛选栏填写全部参数查询
      * @date :2020/11/27
      **/
     @Test()
-    public void carModelListFilter(){
+    public void carModelListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.carModelListFilter_pram();
@@ -1577,7 +2133,38 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("车型列表查询，结果校验");
+            saveData("车型列表填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :车型列表-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void carModelListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.carModelListFilter_pram();
+            JSONArray res=jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String name=data.getString(flag[0][1].toString());
+            String year=data.getString(flag[1][1].toString());
+//            String status=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.carModelListFilterManage(shopId,"1","10",name,year).getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(name.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
+                Preconditions.checkArgument(year.contains(result.getJSONObject(i).getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+year+"不一致"));
+//            Preconditions.checkArgument(status.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+status+"不一致"));
+
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("车型列表填写多项参数查询，结果校验");
         }
     }
 
@@ -1586,7 +2173,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test
-    public void carModelListFilterEmpty(){
+    public void carModelListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1603,7 +2190,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test(dataProvider = "SELECT_roleListFilter",dataProviderClass = Constant.class)
-    public void roleListFilter(String pram,String output){
+    public void roleListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.roleListFilterManage(shopId,"1","10","","");
@@ -1619,7 +2206,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("角色列表查询，结果校验");
+            saveData("角色列表单项查询，结果校验");
         }
     }
 
@@ -1628,7 +2215,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void roleListFilter(){
+    public void roleListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.roleListFilter_pram();
@@ -1643,16 +2230,17 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("角色列表查询，结果校验");
+            saveData("角色列表填写全部参数查询，结果校验");
         }
     }
+
 
     /**
      * @description :角色列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void roleListFilterEmpty(){
+    public void roleListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
            jc.roleListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1669,7 +2257,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_roleListFilter",dataProviderClass = Constant.class)
-    public void staffListFilter(String pram,String output){
+    public void staffListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.staffListFilterManage(shopId,"1","10","","");
@@ -1685,7 +2273,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("员工列表查询，结果校验");
+            saveData("员工列表单项查询，结果校验");
         }
     }
 
@@ -1694,7 +2282,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void staffListFilter(){
+    public void staffListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.satffListFilter_pram();
@@ -1710,16 +2298,17 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("员工列表查询，结果校验");
+            saveData("员工列表填写全部参数查询，结果校验");
         }
     }
+
 
     /**
      * @description :员工列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
     @Test
-    public void staffListFilterEmpty(){
+    public void staffListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.staffListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1736,7 +2325,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_importListFilter",dataProviderClass = Constant.class)
-    public void importListFilter(String pram,String output){
+    public void importListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
@@ -1752,7 +2341,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导入记录列表查询，结果校验");
+            saveData("导入记录列表单项查询，结果校验");
         }
     }
 
@@ -1761,7 +2350,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void importListFilter(){
+    public void importListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.importListFilter_pram();
@@ -1781,7 +2370,44 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导入记录列表查询，结果校验");
+            saveData("导入记录列表填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :导入记录列表-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void importListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.importListFilter_pram();
+            JSONArray res=jc.importListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String type=data.getString(flag[0][1].toString());
+            String user=data.getString(flag[1][1].toString());
+//            String import_date=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+//            JSONArray result=jc.importListFilterManage(shopId,"1","10",type,user,"").getJSONArray("list").getJSONObject(0);
+////            for(int i=0;i<result.size();i++){
+//                     }
+
+            JSONArray result=jc.importListFilterManage(shopId,"1","10",type,user,"").getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(type.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+type+"不一致"));
+                Preconditions.checkArgument(user.contains(result.getJSONObject(i).getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+user+"不一致"));
+//            Preconditions.checkArgument(import_date.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+import_date+"不一致"));
+
+            }
+
+
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("导入记录列表填写多项参数查询，结果校验");
         }
     }
 
@@ -1790,7 +2416,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test
-    public void importListFilterEmpty(){
+    public void importListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.importListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1807,7 +2433,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_exportListFilter",dataProviderClass = Constant.class)
-    public void exportListFilter(String pram,String output){
+    public void exportListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.exportListFilterManage(shopId,"1","10","","");
@@ -1823,7 +2449,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导出记录列表查询，结果校验");
+            saveData("导出记录列表单项查询，结果校验");
         }
     }
 
@@ -1832,7 +2458,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void exportListFilter(){
+    public void exportListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.exportListFilter_pram();
@@ -1851,7 +2477,37 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导出记录列表查询，结果校验");
+            saveData("导出记录列表填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :导出记录列表-筛选栏填写多项参数查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void exportListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.exportListFilter_pram();
+            JSONArray res=jc.exportListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String type=data.getString(flag[0][1].toString());
+            String user=data.getString(flag[1][1].toString());
+//            String export_time=data.getString(flag[2][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.exportListFilterManage(shopId,"1","10",type,user,"").getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(type.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+type+"不一致"));
+                Preconditions.checkArgument(user.contains(result.getJSONObject(i).getString(String.valueOf(flag[1][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[1][1].toString()+"与列表信息的第一行的"+user+"不一致"));
+//            Preconditions.checkArgument(export_time.contains(result.getString(String.valueOf(flag[2][1]))),"参数全部输入的查询的"+result.getString(flag[2][1].toString()+"与列表信息的第一行的"+export_time+"不一致"));
+
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("导出记录列表填写多项参数查询，结果校验");
         }
     }
 
@@ -1860,7 +2516,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test
-    public void exportListFilterEmpty(){
+    public void exportListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.exportListFilterManage(shopId,"1","10","","").getJSONArray("list");
@@ -1877,7 +2533,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_pushMsgListFilter",dataProviderClass = Constant.class)
-    public void pushMsgListFilter(String pram,String output){
+    public void pushMsgListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.pushMsgListFilterManage(shopId,"1","10","","");
@@ -1893,7 +2549,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("消息记录列表查询，结果校验");
+            saveData("消息记录列表单项查询，结果校验");
         }
     }
     /**
@@ -1901,7 +2557,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test()
-    public void pushMsgListFilter(){
+    public void pushMsgListAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.pushMsgListFilter_pram();
@@ -1918,7 +2574,33 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("消息记录列表查询，结果校验");
+            saveData("消息记录列表填写全部参数查询，结果校验");
+        }
+    }
+
+    /**
+     * @description :消息记录列表-筛选栏填写参数多项查询
+     * @date :2020/11/28
+     **/
+    @Test()
+    public void pushMsgListSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.pushMsgListFilter_pram();
+            JSONArray res=jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            JSONObject data=res.getJSONObject(0);
+            String customer_type=data.getString(flag[0][1].toString());
+//            String push_date=data.getString(flag[1][1].toString());
+
+            //全部筛选之后的结果
+            JSONArray result=jc.pushMsgListFilterManage1(shopId,"1","10",customer_type,"").getJSONArray("list");
+            for(int i=0;i<result.size();i++){
+                Preconditions.checkArgument(customer_type.contains(result.getJSONObject(i).getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getJSONObject(i).getString(flag[0][1].toString()+"与列表信息的第一行的"+customer_type+"不一致"));
+            }
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息记录列表填写多项参数查询，结果校验");
         }
     }
 
@@ -1927,7 +2609,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/27
      **/
     @Test
-    public void pushMsgListFilterEmpty(){
+    public void pushMsgListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             jc.pushMsgListFilterManage(shopId,"1","10","","").getJSONArray("list");
