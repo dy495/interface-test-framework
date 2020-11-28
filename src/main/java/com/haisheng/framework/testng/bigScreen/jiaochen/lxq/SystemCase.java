@@ -697,4 +697,53 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+    /**
+     *    PC 内容运营-系统测试
+     */
+
+
+    //新建文章
+    @Test(dataProvider = "ARTICLE")
+    public void addArticle(String title, String pic_type,  String content, String label) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray pic_list1 =new JSONArray();
+            pic_list1.add("");
+
+            JSONArray pic_list2 =new JSONArray();
+            pic_list2.add("");
+            pic_list2.add("");
+            pic_list2.add("");
+            int code = jc.addArticle(title,pic_type,pic_list1,content,label,"ARTICEL",null,null,null,
+                    null,null,null,null,null,null,
+                    null,null,null,null).getInteger("code");
+            Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【内容运营】，新建文章1张图");
+        }
+    }
+    @DataProvider(name = "ARTICLE") //要补充
+    public  Object[] article() {
+
+
+        return new String[][]{
+                {"1234", "",info.stringone, ""},
+                {info.stringten, "",info.stringfifty, ""},
+                {info.string20, "",info.stringten, ""},
+                {info.stringten, "",info.stringlong, ""},
+                {info.stringone, "",info.stringten, ""},
+
+        };
+    }
+
+    //新建活动
+
+
 }

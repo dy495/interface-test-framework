@@ -2719,7 +2719,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-28
      */
 
-    public JSONObject articlePage(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
+    public JSONObject addArticle(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
                                   String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
                                   String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
                                   String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) {
@@ -2748,7 +2748,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject articlePageNotChk(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
+    public JSONObject addArticleNotChk(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
                                   String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
                                   String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
                                   String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) throws Exception {
