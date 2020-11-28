@@ -68,4 +68,30 @@ public class JcFunction {
         }
         return result;
     }
+    //增加车辆，返回车辆id
+    public String appletAddCar(String plateNumber){
+        jc.appletAddCar( plateNumber, pp.carModelId);
+        String car_id="";
+        JSONArray carData = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
+        for(int i=0;i<carData.size();i++){
+            String plate_numberAfter = carData.getJSONObject(i).getString("plate_number");
+            if(plate_numberAfter.equals(plateNumber)){
+                car_id= carData.getJSONObject(i).getString("id");
+                break;
+            }
+        }
+        return car_id;
+    }
+    public int carListNumber(String carStyleId){
+        JSONObject carData = jc.appletMyCar(carStyleId);
+        JSONArray list = carData.getJSONArray("list");
+        int count;
+        if (list == null || list.size() == 0) {
+            count = 0;
+        } else {
+            count = list.size();
+        }
+        return count;
+    }
+
 }
