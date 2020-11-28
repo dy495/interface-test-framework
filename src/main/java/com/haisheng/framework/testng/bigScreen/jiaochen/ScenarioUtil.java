@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -982,7 +983,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :app开始接待x
+     * @description :app开始接待xmf
      * @date :2020/11/24 19:28
      **/
 
@@ -997,7 +998,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :完成接待X
+     * @description :完成接待Xmf
      * @date :2020/11/24 19:31
      **/
 
@@ -1009,7 +1010,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :取消接待X
+     * @description :取消接待Xmf
      * @date :2020/11/24 19:32
      **/
 
@@ -1022,7 +1023,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :小程序预约
+     * @description :小程序预约xmf
      * @date :2020/11/25 17:01
      **/
     public JSONObject appletAppointment(appletAppointment pm) {
@@ -1037,6 +1038,354 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url, json1);
     }
+
+    /**
+     * @description :门店信息 xmf
+     * @date :2020/11/28 12:11
+     **/
+    public JSONObject appletShopInfo() {
+        String url = "/jiaochen/applet/shop-info";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :banner xmf
+     * @date :2020/11/28 12:14
+     **/
+
+    public JSONObject appletbanner() {
+        String url = "/jiaochen/applet/banner";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :文章列表xmf
+     * @date :2020/11/28 12:14
+     **/
+    public JSONObject appletArticleList() {
+        String url = "/jiaochen/applet/article/list";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :文章详情xmf
+     * @date :2020/11/28 12:14
+     **/
+    public JSONObject appletArticleDetile(String id) {
+        String url = "/jiaochen/applet/article/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :文章发放卡券列表xmf
+     * @date :2020/11/28 12:14
+     **/
+    public JSONObject appletArticlevoucher(String id) {
+        String url = "/jiaochen/applet/article/voucher/list";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :文章发放卡券列表 xmf
+     * @date :2020/11/28 12:14
+     **/
+    public JSONObject appletvoucherReceive(String article_id,String voucher_id) {
+        String url = "/jiaochen/applet/granted/article/voucher/receive";
+        JSONObject json1=new JSONObject();
+        json1.put("article_id",article_id);
+        json1.put("voucher_id",voucher_id);
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :活动报名xmf
+     * @date :2020/11/28 12:20
+     **/
+    public JSONObject appletactivityRegister(appletActivityRegister pm) {
+        String url = "/jiaochen/applet/granted/article/activity/register";
+        JSONObject json1=new JSONObject();
+        json1.put("id",pm.id);
+        json1.put("name",pm.name);
+        json1.put("num",pm.num);
+        json1.put("phone",pm.phone);
+        json1.put("car_style",pm.car_style);
+        json1.put("other_car_style",pm.other_car_style);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :新增车辆xmf
+     * @date :2020/11/28 12:29
+     **/
+    public JSONObject appletAddCar(String plate_number,String model_id) {
+        String url = "/jiaochen/applet/granted/car/create";
+        JSONObject json1=new JSONObject();
+        json1.put("plate_number",plate_number);
+        json1.put("model_id",model_id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :新增车辆xmf
+     * @date :2020/11/28 12:29
+     **/
+    public JSONObject appletAddCarcode(String plate_number,String model_id) {
+        String url = "/jiaochen/applet/granted/car/create";
+        JSONObject json1=new JSONObject();
+        json1.put("plate_number",plate_number);
+        json1.put("model_id",model_id);
+
+        return invokeApi(url, json1,false);
+    }
+  /**
+   * @description :我的车辆
+   * @date :2020/11/28 12:44
+   **/
+    public JSONObject appletMyCar(String style_id) {
+        String url = "/jiaochen/applet/granted/car/create";
+        JSONObject json1=new JSONObject();
+        json1.put("style_id",style_id);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :我的预约XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletMyAppointment(String last_value,String type,String size) {
+        String url = "/jiaochen/applet/granted/car/create";
+        JSONObject json1=new JSONObject();
+        json1.put("last_value",last_value);
+        json1.put("type",type);
+        json1.put("size",size);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :取消预约XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletCancleAppointment(String id) {
+        String url = "/jiaochen/applet/granted/appointment/maintain/cancel";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :删除预约记录XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletmaintainDelete(String id) {
+        String url = "/jiaochen/applet/granted/appointment/maintain/delete";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+
+    //888888
+    /**
+     * @description :我的活动报名XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletMyActually(String last_value,String size) {
+        String url = "/jiaochen/applet/granted/appointment/activity/list";
+        JSONObject json1=new JSONObject();
+        json1.put("last_value",last_value);
+        json1.put("size",size);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :取消预约XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletactivityCancel(String id) {
+        String url = "/jiaochen/applet/granted/appointment/activity/cancel";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :删除预约记录XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletactivityDelete(String id) {
+        String url = "/jiaochen/applet/granted/appointment/activity/delete";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :预约评价项 XMF
+     * @date :2020/11/28 12:45
+     **/
+
+    public JSONObject appletevaluateItems(String id) {
+        String url = "/jiaochen/applet/granted/appointment/evaluate/items";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :我的消息XMF
+     * @date :2020/11/28 12:45
+     **/
+    public JSONObject appletmessageList(String last_value,String size) {
+        String url = "/jiaochen/applet/granted/message/list";
+        JSONObject json1=new JSONObject();
+        json1.put("last_value",last_value);
+        json1.put("size",size);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :我的消息详情 XMF
+     * @date :2020/11/28 12:45
+     **/
+    public JSONObject appletmessageDetail(String id) {
+        String url = "/jiaochen/applet/granted/message/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :编辑车辆xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletCarEdit(String id,String plate_number,String model_id) {
+        String url = "/jiaochen/applet/granted/car/edit";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("plate_number",plate_number);
+        json1.put("model_id",model_id);
+
+        return invokeApi(url, json1,false);
+    }
+    /**
+     * @description :删除车辆xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletCarDelst(String id) {
+        String url = "/jiaochen/applet/granted/car/delete";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :品牌列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletBrandList() {
+        String url = "/jiaochen/applet/brand/list";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :车系列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletCarStyleList() {
+        String url = "/jiaochen/applet/style/list";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :车型列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletCarModelList(String brand_id,String style_id) {
+        String url = "/jiaochen/applet/model/list";
+        JSONObject json1=new JSONObject();
+        json1.put("brand_id",brand_id);
+        json1.put("style_id",style_id);
+        return invokeApi(url, json1);
+    }
+    //00
+    /**
+     * @description :车型列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletName() {
+        String url = "/jiaochen/applet/name";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :车型列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletplateNumberProvinceList() {
+        String url = "/jiaochen/applet/plate-number-province-list";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :保养门店列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletmaintainShopList(String car_id,String coordinate) {
+        String url = "/jiaochen/applet/granted/maintain/shop/list";
+        JSONObject json1=new JSONObject();
+        json1.put("car_id",car_id);
+        json1.put("coordinate",coordinate);
+
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :服务顾问列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletStaffList(String shop_id) {
+        String url = "/jiaochen/applet/granted/maintain/staff/list";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :可预约时段列表 xmf
+     * @date :2020/11/28 12:58
+     **/
+    public JSONObject appletmaintainTimeList(String shop_id) {
+        String url = "/jiaochen/applet/granted/maintain/time/list";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+
+        return invokeApi(url, json1);
+    }
+
 
 
 
@@ -1076,6 +1425,18 @@ public class ScenarioUtil extends TestCaseCommon {
                 {"customer_phone", "customer_phone"},
                 {"reception_type", "reception_type"},
 
+        };
+    }
+
+    @DataProvider(name = "PLATE")
+    public static Object[] plate() {
+        return new String[]{
+                "苏BJ123",   //6位
+                "BJ12345",    //不含汉字
+                "京1234567",  //不含英文
+                "京bj12345", //含小写
+                "京B@12345", //含字母
+                "苏BJ123456",//9位
         };
     }
 

@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 /**
- * @description :校验但接口列表返回值各项不为空
+ * @description :校验但接口列表返回值各项不为空xmf
  * @date :2020/11/27 15:30
  **/
 
@@ -71,8 +71,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.pcLogin(pp.gwphone, pp.gwpassword);
 
+        jc.appletLoginToken(pp.appletTocken);
 
     }
 
@@ -97,6 +97,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_erCode() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.gwphone, pp.gwpassword);
             JSONObject data = jc.apperCOde();
             String jsonpath = "$.er_code_url1";
             jpu.spiltString(data.toJSONString(), jsonpath);
@@ -104,10 +105,123 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+            jc.appletLoginToken(pp.appletTocken);
             saveData("轿辰-app个人中心，小程序码返回结果不为空");
         }
     }
+    @Test
+    public void Jc_bannerList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletbanner();
+            String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].address&&$.list[*].tel&&$.list[*].coordinate&&$.list[*].distance";
+            jpu.spiltString(data.toJSONString(), jsonpath);
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-applet首页-banner返回不为空");
+        }
+    }
+    @Test
+    public void Jc_ArticleList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletArticleList();
+            String jsonpath = "$.list[*].id&&$.list[*].label&&$.list[*].label_name&&$.list[*].title&&$.list[*].pic_type&&$.list[*].pic_list&&$.list[*].timestamp&&$.list[*].time_str";
+            jpu.spiltString(data.toJSONString(), jsonpath);
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-applet首页-文章列表返回为空警告");
+        }
+    }
+    @Test
+    public void Jc_shopList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletShopInfo();
+            String jsonpath = "$.id&&$.name&&$.address&&$.tel&&$.coordinate&&$.distance";
+            jpu.spiltString(data.toJSONString(), jsonpath);
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-applet首页-门店信息返回不为空");
+        }
+    }
+    @Test
+    public void Jc_bandList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletBrandList();
+            String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].logo";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-applet品牌列表返回不为空");
+        }
+    }
+    @Test
+    public void Jc_appletName() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletName();
+            String jsonpath = "$.name";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-applet名不为空");
+        }
+    }
+
+    @Test
+    public void Jc_appletProvinceList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletplateNumberProvinceList();
+            String jsonpath = "$.list[*].province&&$.list[*].province_name";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-apple车牌号列表不为空");
+        }
+    }
+
+    @Test
+    public void Jc_appletMaintainShop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletmaintainShopList(pp.car_id,pp.coordinate);
+            String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-apple保养门店列表不为空");
+        }
+    }
+
+    @Test
+    public void Jc_appletStaffList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appletStaffList(pp.shopId);
+            String jsonpath = "$.list[*].uid&&$.list[*].name&&$.list[*].greetings&&$.list[*].pic_url&&$.list[*].label&&$.list[*].is_selected";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-apple保养门店服务列表为空提醒");
+        }
+    }
 }
