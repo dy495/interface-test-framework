@@ -335,10 +335,13 @@ public class TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
+            checkCode(response, StatusCode.SUCCESS, path);
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
             appendFailReason(e.toString());
+        } finally {
+            saveData(path);
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }

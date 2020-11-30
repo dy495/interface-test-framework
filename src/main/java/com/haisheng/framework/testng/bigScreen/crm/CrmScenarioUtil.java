@@ -7,7 +7,6 @@ import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
@@ -19,6 +18,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StatusCode;
+import jdk.nashorn.internal.scripts.JS;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -64,21 +64,12 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //----------------------登陆--------------------
     public void login(String username, String password) {
-        initHttpConfig();
         String path = "/porsche-login";
-        String loginUrl = IpPort + path;
-        String json = "{\"type\":0, \"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
-        config.url(loginUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        JSONObject object = new JSONObject();
+        object.put("type", 0);
+        object.put("username", username);
+        object.put("password", password);
+        httpPost(path, object, IpPort);
     }
 
     public JSONObject tryLogin(String userName, String passwd) throws Exception {
@@ -1704,7 +1695,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约保养
-    public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, Long time_range_id,String empty) throws Exception {
+    public JSONObject appointmentMaintainCode(Long my_car_id, String customer_name, String customer_phone_number, Long time_range_id, String empty) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
@@ -1740,7 +1731,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约维修
-    public JSONObject appointmentRepairCode(Long my_car_id, String customer_name, String customer_phone_number, String description, Long time_range_id,String empty) throws Exception {
+    public JSONObject appointmentRepairCode(Long my_car_id, String customer_name, String customer_phone_number, String description, Long time_range_id, String empty) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/repair";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
@@ -5779,8 +5770,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //销售开出门条
-    public JSONObject goout(String customer_id,String plate_number) {
+    public JSONObject goout(String customer_id, String plate_number) {
         String url = "/porsche/app/customer/go-out-operation";
         JSONObject object = new JSONObject();
         object.put("customer_id", customer_id);
@@ -5788,15 +5780,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     //销售开出门条
-    public JSONObject wechatuserinfo(String encrypted_data,String iv,String pk,String ruid,String empty) throws Exception  {
+    public JSONObject wechatuserinfo(String encrypted_data, String iv, String pk, String ruid, String empty) throws Exception {
         String url = "/WeChat-applet/porsche/a/user-info/phone";
         JSONObject object = new JSONObject();
         object.put("encrypted_data", encrypted_data);
         object.put("iv", iv);
         object.put("pk", pk);
         object.put("ruid", ruid);
-        if (empty != null||empty.equals("")) {
+        if (empty != null || empty.equals("")) {
             object.put(empty, "");
         }
         String result = httpPost(url, object.toJSONString(), IpPort);
