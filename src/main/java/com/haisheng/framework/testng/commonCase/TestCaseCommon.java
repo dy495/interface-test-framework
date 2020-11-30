@@ -89,7 +89,8 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-        caseResult.setCaseName(commonConfig.produce + commonConfig.caseName);
+        String caseName = StringUtils.isEmpty(commonConfig.produce) ? commonConfig.caseName : commonConfig.produce + "_" + commonConfig.caseName;
+        caseResult.setCaseName(caseName);
         logger.debug("beforeClassInit");
         logger.debug("config: " + commonConfig);
         logger.debug("case: " + caseResult);
@@ -482,7 +483,8 @@ public class TestCaseCommon {
     }
 
     public void setBasicParaToDB(String caseDesc) {
-        caseResult.setCaseDescription(commonConfig.produce + caseDesc);
+        String desc = StringUtils.isEmpty(commonConfig.produce) ? caseDesc : commonConfig.produce + caseDesc;
+        caseResult.setCaseDescription(desc);
         caseResult.setExpect("见描述");
 
         logger.debug("save db");
