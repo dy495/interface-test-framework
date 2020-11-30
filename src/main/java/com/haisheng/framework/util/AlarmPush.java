@@ -4,7 +4,7 @@ package com.haisheng.framework.util;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.Shelf;
-import com.haisheng.framework.testng.commonDataStructure.AlarmSummary;
+import com.haisheng.framework.testng.commonDataStructure.AlarmSummaryUnit;
 import com.haisheng.framework.testng.commonDataStructure.ConstantVar;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 
@@ -571,7 +571,7 @@ public class AlarmPush {
     /**
      * @param alarmList 推送内容集合列表
      */
-    public void onlineAlarmSummary(List<AlarmSummary> alarmList) {
+    public void onlineAlarmSummary(List<AlarmSummaryUnit> alarmList) {
 
         DingChatbot.WEBHOOK_TOKEN = DingWebhook.ONLINE_ALARM_SUMMARY;
         DateTimeUtil dt = new DateTimeUtil();
@@ -583,17 +583,17 @@ public class AlarmPush {
 
         msg += "\n\n#### " + today + " 记录信息\n";
 
-        for (AlarmSummary alarmSummary : alarmList) {
-            String product = alarmSummary.getProduct();
+        for (AlarmSummaryUnit alarmSummaryUnit : alarmList) {
+            String product = alarmSummaryUnit.getProduct();
             if (product.contains("AI社区")) {
                 //去除已不维护的产品
                 continue;
             }
-            List<String> passRate = alarmSummary.getPassRate();
-            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummary.getRd() + "**";
+            List<String> passRate = alarmSummaryUnit.getPassRate();
+            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummaryUnit.getRd() + "**";
             msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
-            msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
-            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
+            msg += "\n\n>回归失败用例[详情链接](" + alarmSummaryUnit.getRgnLink() + ")";
+            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummaryUnit.getAlarmSumLink() + ")";
         }
 
 //        DingChatbot.sendMarkdown(msg);
@@ -617,9 +617,9 @@ public class AlarmPush {
     /**
      * @param alarmList 推送内容集合列表
      */
-    public void dailyAlarmSummary(List<AlarmSummary> alarmList) {
+    public void dailyAlarmSummary(List<AlarmSummaryUnit> alarmList) {
 
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.QA_GRP;
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_ALARM_SUMMARY;
         DateTimeUtil dt = new DateTimeUtil();
 
         String summary = "日常每日报警简报";
@@ -629,8 +629,8 @@ public class AlarmPush {
 
         msg += "\n\n#### " + today + " 记录信息\n";
 
-        for (AlarmSummary alarmSummary : alarmList) {
-            String product = alarmSummary.getProduct();
+        for (AlarmSummaryUnit alarmSummaryUnit : alarmList) {
+            String product = alarmSummaryUnit.getProduct();
             if (
                     product.contains("广告") ||
                     product.contains("货架") ||
@@ -644,11 +644,11 @@ public class AlarmPush {
                 continue;
             }
 
-            List<String> passRate = alarmSummary.getPassRate();
-            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummary.getRd() + "**";
+            List<String> passRate = alarmSummaryUnit.getPassRate();
+            msg +=  "\n\n>##### **产品：" + product + ", RD: " + alarmSummaryUnit.getRd() + "**";
             msg += "\n>##### 通过率：" + passRate.get(0) + "，FAIL：" + passRate.get(1) + "，TOTAL：" + passRate.get(2);
-            msg += "\n\n>回归失败用例[详情链接](" + alarmSummary.getRgnLink() + ")";
-            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummary.getAlarmSumLink() + ")";
+            msg += "\n\n>回归失败用例[详情链接](" + alarmSummaryUnit.getRgnLink() + ")";
+            msg += "\n\n>回归、流量、设备报警summary[详情链接](" + alarmSummaryUnit.getAlarmSumLink() + ")";
         }
 
         DingChatbot.sendMarkdown(msg);
