@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -41,7 +42,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
 
-        commonConfig.produce = "轿辰";
+        commonConfig.produce = EnumProduce.JC.name();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
