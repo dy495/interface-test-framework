@@ -38,6 +38,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());

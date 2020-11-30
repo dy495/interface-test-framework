@@ -6,15 +6,18 @@ import lombok.Builder;
 
 import java.util.List;
 
+/**
+ * 消息管理 -> 推送消息
+ */
 @Builder
 public class PushMessage extends BaseScene {
-    private final Integer messageType;
-    private final String messageName;
-    private final Long customerId;
-    private final Boolean ifAllSelect;
+    private final String pushTarget;
+    private final List<Long> shopList;
+    private final List<String> telList;
+    private final String  messageName;
     private final String messageContent;
     private final Integer type;
-    private final List<String> voucherOrPackageList;
+    private final List<Long> voucherOrPackageList;
     private final String beginUseTime;
     private final String endUseTime;
     private final Integer useDays;
@@ -25,10 +28,10 @@ public class PushMessage extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("message_type", messageType);
+        object.put("push_target", pushTarget);
+        object.put("shop_list", shopList);
+        object.put("tel_list", telList);
         object.put("message_name", messageName);
-        object.put("customer_id", customerId);
-        object.put("if_all_select", ifAllSelect);
         object.put("message_content", messageContent);
         object.put("type", type);
         object.put("voucher_or_package_list", voucherOrPackageList);

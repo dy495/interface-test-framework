@@ -410,7 +410,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--累计发出=【发卡记录】中按该卡券名称搜索结果的列表数")
-    public void voucherManage_data_15() {
+    public void voucherManage_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -438,7 +438,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--累计使用=【核销记录】中按该卡券名称搜索结果的列表数")
-    public void voucherManage_data_16() {
+    public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -466,7 +466,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--增发库存=【卡券审核】该卡券所有通过申请记录(标记为增发)发出个数之和")
-    public void voucherManage_data_12() {
+    public void voucherManage_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -502,28 +502,47 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1")
-    public void voucherManage_data_14() {
+    @Test(description = "卡券表单--创建一种卡券，【卡券审核】列表+1")
+    public void voucherManage_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //查询列表数
-            int total = jc.invokeApi(VerificationPeople.builder().build()).getInteger("total");
-            //创建核销人员
-            CreateVerificationPeople.CreateVerificationPeopleBuilder builder = CreateVerificationPeople.builder();
-            builder.verificationPersonName("aa").verificationPersonPhone("15321527989").status(1).type(0);
-            int total1 = jc.invokeApi(builder.build()).getInteger("total");
-            Preconditions.checkArgument(total1 == total + 1, "");
-            int total2 = jc.invokeApi(builder.type(1).build()).getInteger("total");
-            Preconditions.checkArgument(total2 == total1 + 1, "");
+            //创建卡券前卡券审核页列表数
+            ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
+            Long total = jc.invokeApi(builder.build()).getLong("total");
+            //创建一种卡券
+            util.createVoucher();
+            //创建卡券后卡券审核页列表数
+            Long newTotal = jc.invokeApi(builder.build()).getLong("total");
+            Preconditions.checkArgument(newTotal == total + 1, "");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1");
+            saveData("卡券表单--增发库存=【卡券审核】该卡券所有通过申请记录(标记为增发)发出个数之和");
+        }
+    }
+
+
+    @Test(description = "卡券表单--每增发一次卡券，【卡券审核】列表+1")
+    public void voucherManage_data_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //增发卡券前卡券审核页列表数
+            ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
+            Long total = jc.invokeApi(builder.build()).getLong("total");
+            //增发一种卡券
+            util.createVoucher();
+            //增发卡券后卡券审核页列表数
+            Long newTotal = jc.invokeApi(builder.build()).getLong("total");
+            Preconditions.checkArgument(newTotal == total + 1, "");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--每增发一次卡券，【卡券审核】列表+1");
         }
     }
 
     @Test(description = "卡券表单--创建一张卡券后，【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）")
-    public void messageManage_data_1() {
+    public void voucherManage_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -549,4 +568,45 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         }
     }
+
+    @Test(description = "卡券表单--消息发出此一张卡券，累计发出+1")
+    public void voucherManage_data_18() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发消息前累计发出数量
+            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName("");
+            Long cumulativeDelivery = jc.invokeApi(builder.build()).getLong("cumulative_delivery");
+            //推送消息
+            util.pushMessage();
+            //推送消息后累计发出数量
+            Long newCumulativeDelivery = jc.invokeApi(builder.build()).getLong("cumulative_delivery");
+            Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1, "");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        }
+
+    }
+
+
+    @Test(description = "核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1")
+    public void voucherManage_data_30() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //查询列表数
+            int total = jc.invokeApi(VerificationPeople.builder().build()).getInteger("total");
+            //创建核销人员
+            CreateVerificationPeople.CreateVerificationPeopleBuilder builder = CreateVerificationPeople.builder();
+            builder.verificationPersonName("aa").verificationPersonPhone("15321527989").status(1).type(0);
+            int total1 = jc.invokeApi(builder.build()).getInteger("total");
+            Preconditions.checkArgument(total1 == total + 1, "");
+            int total2 = jc.invokeApi(builder.type(1).build()).getInteger("total");
+            Preconditions.checkArgument(total2 == total1 + 1, "");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1");
+        }
+    }
+
+
 }

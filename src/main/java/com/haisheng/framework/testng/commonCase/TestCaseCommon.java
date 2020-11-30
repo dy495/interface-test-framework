@@ -13,6 +13,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
@@ -477,8 +478,10 @@ public class TestCaseCommon {
             String macroCaseName = commonConfig.CASE_NAME;
             String macroCaseDesc = commonConfig.CASE_DESC;
             String macroCaseFail = commonConfig.CASE_FAIL;
-            message = message.replace(macroCaseName, caseResult.getCaseName());
-            message = message.replace(macroCaseDesc, caseResult.getCaseDescription());
+            String caseName = dingPushResult(caseResult.getCaseName());
+            String caseDescription = dingPushResult(caseResult.getCaseDescription());
+            message = message.replace(macroCaseName, caseName);
+            message = message.replace(macroCaseDesc, caseDescription);
             message = message.replace(macroCaseFail, caseResult.getFailReason());
 
             dingPushDaily(message);
@@ -526,5 +529,21 @@ public class TestCaseCommon {
     public void collectMessage(Throwable e) {
         e.printStackTrace();
         appendFailReason(e.toString());
+    }
+
+    /**
+     * 处理dingPush的结果
+     *
+     * @param str str
+     * @return newStr
+     */
+    public String dingPushResult(String str) {
+        String result = str;
+        for (EnumProduce p : EnumProduce.values()) {
+            if (str.contains(p.name())) {
+                result = CommonUtil.replace(str, "_");
+            }
+        }
+        return result;
     }
 }

@@ -25,6 +25,11 @@ import java.util.regex.Pattern;
 public class CommonUtil {
     private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
+    public static String replace(String str, String subChar) {
+        int s = str.indexOf(subChar);
+        return str.replace(str.substring(0, s + 1), "");
+    }
+
     /**
      * 判断是否包含中文
      *
