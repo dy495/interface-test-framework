@@ -2893,6 +2893,27 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    /**
+     * @description:小程序-预约保养
+     * * @author: gly
+     * @time: 2020-11-30
+     */
+
+    public JSONObject appointmentMaintain(Long shop_id,String staff_id,long time_id,long car_id,String appointment_name,String appointment_phone) {
+        String url = "/jiaochen/applet/granted/maintain/appointment";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("staff_id", staff_id);
+        json.put("time_id", time_id);
+        json.put("car_id", car_id);
+        json.put("appointment_name", appointment_name	);
+        json.put("appointment_phone", appointment_phone);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
 
 
 
