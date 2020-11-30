@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.name();
+    private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.getAddress();
     private static final String shopId = "";
 
     /**
@@ -127,7 +127,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 开始接待
-    public JSONObject pcStartReception(String customerId, String voucherIdList, String customerName, String customerPhone) {
+    public JSONObject pcStartReception(String customerId, List<Long> voucherIdList, String customerName, String customerPhone) {
         String path = "/jiaochen/pc/reception-manage/start-reception";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
@@ -177,12 +177,12 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //客户管理 -> 维修记录
-    public JSONObject pcAfterSaleCustomerRepairPage(Integer page, Integer size, String vehicleChassisCode) {
+    public JSONObject pcAfterSaleCustomerRepairPage(Integer page, Integer size, Integer carId) {
         String url = "/jiaochen/pc/customer-manage/after-sale-customer/repair-page";
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);
-        object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("car_id", carId);
         return invokeApi(url, object);
     }
 
@@ -409,6 +409,49 @@ public class ScenarioUtil extends TestCaseCommon {
         String url = "/jiaochen/pc/manage/evaluate/config/detail";
         JSONObject object = new JSONObject();
         object.put("type", type);
+        return invokeApi(url, object);
+    }
+
+    //卡券申请审批
+    public JSONObject pcApplyApproval(Long id, String status) {
+        String url = "/jiaochen/pc/voucher/apply/approval";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("status", status);
+        return invokeApi(url, object);
+    }
+
+    //小程序我的卡券
+    public JSONObject appletVoucherList(Long lastValue, String type, Integer size) {
+        String url = "/jiaochen/applet/granted/voucher/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("type", type);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    public JSONObject appletMessageList(Long lastValue, Integer size) {
+        String url = "/jiaochen/applet/granted/message/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //app今日任务
+    public JSONObject appTodayTask() {
+        String url = "/jiaochen/m-app/home-page/today-task";
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
+    }
+
+    //app接待列表
+    public JSONObject appReceptionPage(Integer lastValue, Integer size) {
+        String url = "/jiaochen/m-app/task/reception/page";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("size", size);
         return invokeApi(url, object);
     }
 

@@ -13,10 +13,15 @@ public enum EnumChecklistConfId {
      * CRM_日常
      */
     DB_SERVICE_ID_CRM_DAILY_SERVICE(21),
+
     /**
      * CRM_线上
      */
     DB_SERVICE_ID_CRM_ONLINE_SERVICE(26),
+
+    /**
+     * 轿辰日常
+     */
     DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE(27),
     ;
 

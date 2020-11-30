@@ -14,8 +14,10 @@ public class BuyPackageRecord extends BaseScene {
     private final Long startTime;
     private final Integer endTime;
     private final Integer sendType;
-    private final Integer page;
-    private final Integer size;
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -33,10 +35,5 @@ public class BuyPackageRecord extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/packsge-manage/buy-package-record";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

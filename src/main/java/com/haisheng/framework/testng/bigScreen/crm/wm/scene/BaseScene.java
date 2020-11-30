@@ -14,5 +14,7 @@ public abstract class BaseScene implements IScene {
     public abstract String getPath();
 
     @Override
-    public abstract String getIpPort();
+    public String getIpPort() {
+        return null;
+    }
 }

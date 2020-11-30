@@ -5,14 +5,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 客户管理 -> 售后客户列表
+ * 客户管理 -> 小程序客户
  */
 @Builder
-public class AfterSaleCustomerPage extends BaseScene {
-    private final String customerName;
-    private final String customerPhone;
+public class WechatCustomerPage extends BaseScene {
     private final String createDate;
-    private final String vehicleChassisCode;
+    private final String customerPhone;
+    private final String activeType;
     @Builder.Default
     private final Integer page = 1;
     @Builder.Default
@@ -21,10 +20,9 @@ public class AfterSaleCustomerPage extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("customer_name", customerName);
-        object.put("customer_phone", customerPhone);
         object.put("create_date", createDate);
-        object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("customer_phone", customerPhone);
+        object.put("active_type", activeType);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -32,6 +30,6 @@ public class AfterSaleCustomerPage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/after-sale-customer/page";
+        return "/jiaochen/pc/customer-manage/wechat-customer/page";
     }
 }

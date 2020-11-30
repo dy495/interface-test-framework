@@ -278,6 +278,11 @@ public class CommonUtil {
         return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
     }
 
+    public static Integer getRandom(int start, int bound) {
+        Random random = new Random();
+        return random.nextInt(bound - start) + start;
+    }
+
     /**
      * 集合去重
      *

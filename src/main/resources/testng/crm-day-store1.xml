@@ -8,8 +8,9 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.BOnline"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.BOnline"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.Q"/>
         </classes>
     </test>
 </suite>

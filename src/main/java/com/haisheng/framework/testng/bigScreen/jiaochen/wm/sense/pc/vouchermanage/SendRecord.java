@@ -8,13 +8,11 @@ import lombok.Builder;
  * 预约管理 -> 预约记录
  */
 @Builder
-public class VoucherFormPage extends BaseScene {
-    private final String voucherStatus;
-    private final String subjectName;
+public class SendRecord extends BaseScene {
     private final String voucherName;
-    private final String creator;
-    private final Boolean isDiff;
-    private final Boolean isSelfVerification;
+    private final String sender;
+    private final Long startTime;
+    private final Long endTime;
     @Builder.Default
     private final Integer page = 1;
     @Builder.Default
@@ -23,12 +21,10 @@ public class VoucherFormPage extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("voucher_status", voucherStatus);
-        object.put("subject_name", subjectName);
         object.put("voucher_name", voucherName);
-        object.put("creator", creator);
-        object.put("is_diff", isDiff);
-        object.put("is_self_verification", isSelfVerification);
+        object.put("sender", sender);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -36,7 +32,7 @@ public class VoucherFormPage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/voucher-form/page";
+        return "/jiaochen/pc/voucher-manage/send-record";
     }
 
     @Override

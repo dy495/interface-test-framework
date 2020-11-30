@@ -14,8 +14,10 @@ public enum EnumTestProduce {
 
     CRM_ONLINE("汽车-保时捷 赢识线上 王敏"),
 
-    CRM_ONLINE_PORSCHE("汽车-保时捷 保时捷线上 王敏");
+    CRM_ONLINE_PORSCHE("汽车-保时捷 保时捷线上 王敏"),
 
+    JIAOCHEN_DAILY("汽车-轿辰 日常"),
+    ;
 
     EnumTestProduce(String name) {
         this.name = name;

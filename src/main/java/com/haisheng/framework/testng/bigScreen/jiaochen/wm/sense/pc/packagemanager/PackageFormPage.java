@@ -36,9 +36,4 @@ public class PackageFormPage extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/package-manage/package-form/page";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

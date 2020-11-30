@@ -834,13 +834,15 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
      */
     private Integer getCancelNum(String serviceStatusName) {
         UserUtil.login(xs);
-        JSONObject response = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
-        JSONArray list = response.getJSONArray("list");
+        int total = crm.appointmentTestDriverList("", "", "", 1, size).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
         int cancelNum = 0;
-        //获取已取消数量
-        for (int i = 0; i < list.size(); i++) {
-            if (list.getJSONObject(i).getString("service_status_name").equals(serviceStatusName)) {
-                cancelNum++;
+        for (int i = 1; i < s; i++) {
+            JSONArray array = crm.appointmentTestDriverList("", "", "", i, size).getJSONArray("list");
+            for (int j = 0; j < array.size(); j++) {
+                if (array.getJSONObject(j).getString("service_status_name").equals(serviceStatusName)) {
+                    cancelNum++;
+                }
             }
         }
         return cancelNum;

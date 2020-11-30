@@ -23,6 +23,8 @@ public class PurchaseFixedPackage extends BaseScene {
     private final Integer extendedInsuranceCopies;
     private final String voucherType;
     private final Integer type;
+    private final String subjectType;
+    private final Integer subjectId;
 
     @Override
     public JSONObject getJSONObject() {
@@ -39,6 +41,8 @@ public class PurchaseFixedPackage extends BaseScene {
         object.put("extended_insurance_copies", extendedInsuranceCopies);
         object.put("voucher_type", voucherType);
         object.put("type", type);
+        object.put("subject_type", subjectType);
+        object.put("subjet_id", subjectId);
         return object;
     }
 
