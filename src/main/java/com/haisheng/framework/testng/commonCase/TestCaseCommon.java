@@ -89,7 +89,7 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-        caseResult.setCaseName(commonConfig.caseName);
+        caseResult.setCaseName(commonConfig.produce + commonConfig.caseName);
         logger.debug("beforeClassInit");
         logger.debug("config: " + commonConfig);
         logger.debug("case: " + caseResult);
@@ -482,12 +482,12 @@ public class TestCaseCommon {
     }
 
     public void setBasicParaToDB(String caseDesc) {
-        caseResult.setCaseDescription(caseDesc);
+        caseResult.setCaseDescription(commonConfig.produce + caseDesc);
         caseResult.setExpect("见描述");
 
         logger.debug("save db");
-        logger.debug("case name: " + commonConfig.produce + "_" + caseResult.getCaseName());
-        logger.debug("case desc: " + commonConfig.produce + "_" + caseResult.getCaseDescription());
+        logger.debug("case name: " + caseResult.getCaseName());
+        logger.debug("case desc: " + caseResult.getCaseDescription());
         logger.debug("case appid: " + caseResult.getApplicationId());
         logger.debug("case confid: " + caseResult.getConfigId());
         logger.debug("case cicmd: " + caseResult.getCiCmd());
