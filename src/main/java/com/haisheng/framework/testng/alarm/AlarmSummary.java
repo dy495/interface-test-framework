@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.alarm;
 
 import com.haisheng.framework.model.bean.Config;
+import com.haisheng.framework.testng.commonDataStructure.AlarmSummaryUnit;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,11 @@ public class AlarmSummary {
     public void onlineAlarmSummary() {
 
         List<Config> configList = qaDbUtil.selectOnlineAlarmSummary();
-        List<com.haisheng.framework.testng.commonDataStructure.AlarmSummary> alarmSummaryList = constructAlarmList(configList);
-        if (alarmSummaryList.size() > 0) {
+        List<AlarmSummaryUnit> alarmSummaryUnitList = constructAlarmList(configList);
+        if (alarmSummaryUnitList.size() > 0) {
             //失败才推送
             AlarmPush alarmPush = new AlarmPush();
-            alarmPush.onlineAlarmSummary(alarmSummaryList);
+            alarmPush.onlineAlarmSummary(alarmSummaryUnitList);
         }
     }
 
@@ -41,28 +42,28 @@ public class AlarmSummary {
     public void dailyAlarmSummary() {
 
         List<Config> configList = qaDbUtil.selectDailyAlarmSummary();
-        List<com.haisheng.framework.testng.commonDataStructure.AlarmSummary> alarmSummaryList = constructAlarmList(configList);
-        if (alarmSummaryList.size() > 0) {
+        List<AlarmSummaryUnit> alarmSummaryUnitList = constructAlarmList(configList);
+        if (alarmSummaryUnitList.size() > 0) {
             AlarmPush alarmPush = new AlarmPush();
-            alarmPush.dailyAlarmSummary(alarmSummaryList);
+            alarmPush.dailyAlarmSummary(alarmSummaryUnitList);
         }
     }
 
-    private List<com.haisheng.framework.testng.commonDataStructure.AlarmSummary> constructAlarmList(List<Config> configList) {
-        List<com.haisheng.framework.testng.commonDataStructure.AlarmSummary> alarmSummaryList = new ArrayList<>();
+    private List<AlarmSummaryUnit> constructAlarmList(List<Config> configList) {
+        List<AlarmSummaryUnit> alarmSummaryUnitList = new ArrayList<>();
 
         for (Config config : configList) {
-            com.haisheng.framework.testng.commonDataStructure.AlarmSummary alarmSummary = new com.haisheng.framework.testng.commonDataStructure.AlarmSummary();
+            AlarmSummaryUnit alarmSummaryUnit = new AlarmSummaryUnit();
 
             String configAppId = String.valueOf(config.getApplicationId());
             String configId = String.valueOf(config.getId());
 
             String alarmSummaryLink = alarmSummaryTmp.replace(appIdTmp, configAppId);
             alarmSummaryLink = alarmSummaryLink.replace(confIdTmp, configId);
-            alarmSummary.setAlarmSumLink(alarmSummaryLink);
+            alarmSummaryUnit.setAlarmSumLink(alarmSummaryLink);
             String rgnLink = rgnLinkTmp.replace(appIdTmp, configAppId);
             rgnLink = rgnLink.replace(confIdTmp, configId);
-            alarmSummary.setRgnLink(rgnLink);
+            alarmSummaryUnit.setRgnLink(rgnLink);
 
             int totalNum = Integer.parseInt(config.getCaseTotal());
             int passNum = Integer.parseInt(config.getPassTotal());
@@ -74,22 +75,28 @@ public class AlarmSummary {
                 passRate.add(StringUtil.calAccuracyString(passNum, totalNum));
                 passRate.add(String.valueOf(failNum));
                 passRate.add(config.getCaseTotal());
-                alarmSummary.setPassRate(passRate);
+                alarmSummaryUnit.setPassRate(passRate);
 
                 String product = config.getService();
                 product = product.substring(0, product.lastIndexOf("-"));
-                alarmSummary.setProduct(product);
-                alarmSummary.setRd(config.getRdOwner());
+                alarmSummaryUnit.setProduct(product);
+                alarmSummaryUnit.setRd(config.getRdOwner());
 
-                alarmSummaryList.add(alarmSummary);
+                alarmSummaryUnitList.add(alarmSummaryUnit);
+                printAlarmSummaryUnit(alarmSummaryUnit);
             }
 
         }
 
 
-        return alarmSummaryList;
+        return alarmSummaryUnitList;
     }
 
+    private void printAlarmSummaryUnit(AlarmSummaryUnit alarmSummaryUnit) {
+        logger.info("\n\n==============================");
+        logger.info(alarmSummaryUnit.getProduct());
+        logger.info(alarmSummaryUnit.getPassRate().toString());
+    }
 
     @BeforeSuite
     public void initial() {

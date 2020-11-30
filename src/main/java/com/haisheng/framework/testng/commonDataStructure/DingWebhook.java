@@ -7,6 +7,9 @@ public class DingWebhook {
     //线上报警总览
     public static String ONLINE_ALARM_SUMMARY = "https://oapi.dingtalk.com/robot/send?access_token=7edde694c5e53e280f128ba81209df66904deeb7ac849b4c321110b1c15a0f43";
 
+    //日常报警总览
+    public static String DAILY_ALARM_SUMMARY = "https://oapi.dingtalk.com/robot/send?access_token=9f2a627b7030d13ef7a7add07220386f892f1925ebde84534b9e497299106106";
+
     //QA测试群
     public static String QA_TEST_GRP = "https://oapi.dingtalk.com/robot/send?access_token=0732a60532e16e85c37dcbbd350d461d51e5b877b6e4cd7aba498acffdf1c175"; //QA测试群
 

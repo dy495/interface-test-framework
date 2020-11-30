@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class AlarmSummary {
+public class AlarmSummaryUnit {
 
     private String alarmSumLink;
     private String product;
