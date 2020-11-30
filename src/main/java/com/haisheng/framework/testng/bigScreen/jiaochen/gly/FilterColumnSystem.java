@@ -30,7 +30,6 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "gly";
-        commonConfig.produce="轿辰";
         //replace backend gateway url
         //commonConfig.gateway = "";
         //replace jenkins job name
