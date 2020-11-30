@@ -12,7 +12,7 @@ public enum EnumAppletCode {
 
     WM_SMALL("纯牛奶", "LWDrq4RF598MRAqaY1HfAQ==", ""),
 
-    XMF("@@@", "gYFGLyRAjw6KzxuudVBcGg==", ""),
+    XMF("@@@", "81jJmdatFdQ55Ht8L1wmag==", ""),
 
     XMFONLINE("@@@", "PSksMGG/ny2DQZr8U/2NDA==", ""),
 

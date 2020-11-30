@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -18,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.lang.Integer.parseInt;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
@@ -281,5 +284,121 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description :活动报名
+     * @date :2020/11/30 15:52
+     **/
+    /**
+     * @description :活动报名 pc报名人数变化
+     * @date :2020/7/12 11:48
+     **/
+    @Test(priority = 5)
+    public void activityConsistency() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //活动报名前
+            Long[] aid = {};
+            Long activity_id = aid[1];
+            jc.pcLogin(pp.shichang,pp.shichangPassword);
+            int num[]=pf.jsonActivityNUm(activity_id.toString());
+            appletActivityRegister ar=new appletActivityRegister();
 
-}
+            jc.appletLoginToken(pp.appletTocken);
+            JSONObject data = jc.appletactivityRegister(ar);
+            String appointment_id = data.getString("appointment_id");
+
+            //活动报名后
+            jc.pcLogin(pp.shichang,pp.shichangPassword);
+            int numA[]=pf.jsonActivityNUm(activity_id.toString());
+
+            jc.appletLoginToken(pp.appletTocken);
+            jc.appletactivityCancel(appointment_id);  //取消活动报名
+            //TODO:
+            checkArgument(numA[1]-num[1]==0, "小程序活动报名，pc报名总数变了");
+            checkArgument(numA[2]-num[2]==1, "小程序活动报名，pc已报名客户未+1");
+            checkArgument(numA[3]-num[3]==0, "小程序活动报名，未审批 pc已入选变了");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.appletLoginToken(pp.appletTocken);
+            saveData("applet活动报名,pc报名客户+1");
+
+        }
+    }
+
+    /**
+     * @description :活动报名；未审核 applet文章详情，报名人数+1
+     * @date :2020/7/21 15:29
+     **/
+    @Test(priority = 5)
+    public void pcappointmentSum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //活动报名前
+            Long[] aid = {};
+            Long activity_id = aid[1];
+
+            int num[]=pf.appletActivityDetail(activity_id.toString());
+            appletActivityRegister ar=new appletActivityRegister();
+            //活动报名
+            JSONObject data = jc.appletactivityRegister(ar);
+            String appointment_id = data.getString("appointment_id");
+
+            //活动报名后
+            int numA[]=pf.appletActivityDetail(activity_id.toString());
+            jc.appletactivityCancel(appointment_id);      //取消活动报名
+            checkArgument(numA[0]-num[0]==1, "小程序活动报名，小程序文章全部名额未+0");
+            checkArgument(numA[1]-num[1]==1, "小程序活动报名，小程序文章已报名名额未+1");
+            checkArgument(numA[2]-num[2]==1, "小程序活动报名，小程序文章报名名单未+1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.appletLoginToken(pp.appletTocken);
+            saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
+        }
+    }
+
+    /**
+     * @description :活动审批通过
+     * @date :2020/11/30 17:23
+     **/
+
+    @Test(priority = 5)
+    public void pcappointmentSumPass() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //活动报名前
+            Long[] aid = {};
+            Long activity_id = aid[1];
+
+            int num[]=pf.appletActivityDetail(activity_id.toString());
+            appletActivityRegister ar=new appletActivityRegister();
+            //活动报名
+            jc.appletactivityRegister(ar);
+
+            jc.pcLogin(pp.shichang,pp.shichangPassword);
+            registerListVariable sv=new registerListVariable();
+            JSONObject ll=jc.registerListFilterManage(sv);
+            String appointment_id = ll.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray passItem=new JSONArray();
+            passItem.add(appointment_id);    //审批取得id与预约id是否一致？？ TODO:
+            //审批
+            jc.approvalArticle(passItem,"APPROVAL_CONFIRM(");
+            //活动报名审批后
+            jc.appletLoginToken(pp.appletTocken);
+            int numA[]=pf.appletActivityDetail(activity_id.toString());
+
+            checkArgument(numA[0]-num[0]==1, "小程序活动报名，pc报名客户未+1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.appletLoginToken(pp.appletTocken);
+            saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
+        }
+    }
+
+   }

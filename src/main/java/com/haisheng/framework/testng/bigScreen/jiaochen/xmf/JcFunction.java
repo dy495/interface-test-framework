@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -92,6 +93,41 @@ public class JcFunction {
             count = list.size();
         }
         return count;
+    }
+
+    //获取pc活动报名人数
+    public int [] jsonActivityNUm(String id){   //活动id
+        registerListVariable sv=new registerListVariable();
+        int num[]=new int[4];
+
+        JSONObject ll=jc.registerListFilterManage(sv);
+        num[0]=ll.getInteger("total");
+        JSONArray list=ll.getJSONArray("list");
+
+        for(int i=0;i<list.size();i++){
+            JSONObject temp=list.getJSONObject(i);
+            String idt=temp.getString("id");
+            if(idt.equals(id)){
+                num[1]=temp.getInteger("total_quota");   //总数
+                num[2]=temp.getInteger("register_num");   //已报名
+                num[3]=temp.getInteger("passed_num");     //入选
+                break;
+            }
+        }
+        return num;
+    }
+
+    //applet文章详情
+    public int [] appletActivityDetail(String id){   //活动id
+
+        int num[]=new int[3];   //0
+
+        JSONObject ll=jc.appletArticleDetile(id);
+        num[0]=ll.getInteger("total_quota");    //全部名额
+        num[1]=ll.getInteger("register_num");   //已报名名额
+        JSONArray list=ll.getJSONArray("list");  //报名成功名单输
+        num[2]=list.size();
+        return num;
     }
 
 }

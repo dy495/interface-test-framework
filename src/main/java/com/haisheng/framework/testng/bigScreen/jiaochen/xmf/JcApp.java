@@ -406,6 +406,44 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-小程序预约,app任务列表+1，今日任务数+1");
         }
     }
+    @DataProvider(name = "HEXIAONUM")
+    public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
+        return new String[]{
+                "1234567890123456",     //16位
+                "12345678901234561234",     //20位
+                "一二三四五六七八九十一二三四五六七",    //汉字
+                "123456789012四五六七",  //含汉字
+                "1234567890123ASD", //含小写
+                "1234567890123asd", //含字母
+                "234567890123asd&**",//含字符
+        };
+    }
+    //核销码异常验证
+    @Test(description = "app核销码异常验证",dataProvider = "HEXIAONUM")
+    public void Jc_ApphexiaoAB(String num) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+           int code= jc.verification(num,false).getInteger("code");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app核销码异常验证");
+        }
+    }
+
+    //车牌号异常验证
+    @Test(description = "app接待车牌号验证",dataProvider = "PLATE",dataProviderClass = ScenarioUtil.class)
+    public void Jc_AppReceiptAb(String plate) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code=jc.appReceptionAdmitcode(plate).getInteger("code");
+            Preconditions.checkArgument(code==1000,"异常车牌号依然成功");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待车牌号验证");
+        }
+    }
 
 
 

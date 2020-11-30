@@ -6,6 +6,10 @@ public class PublicParm {
     public String reception_sale_id="";
     public String name="";
 
+    public String shichang="";
+    public String shichangPassword="";
+
+
     public String car_id="";    //小程序车id
     public String carplate="";      //编辑小程序车牌号
 

@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 /**
- * @description :校验但接口列表返回值各项不为空xmf
+ * @description :校验单接口列表返回值各项不为空 xmf
  * @date :2020/11/27 15:30
  **/
 
