@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -39,6 +40,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
+        commonConfig.produce = EnumProduce.JC.name();
 
 
         //replace backend gateway url

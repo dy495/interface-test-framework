@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -162,10 +163,9 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 卡券列表
-    public JSONObject pcVoucherList(Long customerId) {
+    public JSONObject pcVoucherList() {
         String path = "/jiaochen/pc/reception-manage/voucher-list";
         JSONObject object = new JSONObject();
-        object.put("customer_id", customerId);
         return invokeApi(path, object);
     }
 
@@ -738,7 +738,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id, Boolean checkcode) {
-        String url = "/patrol/organization/role/add";
+        String url = "/jiaochen/pc/role/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
@@ -857,7 +857,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * @return
-     * @description :app上小程序码
+     * @description :app上小程序码 xmf
      * @date :2020/11/19 14:24
      */
     public JSONObject apperCOde() {
@@ -867,7 +867,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
      /**
-      * @description :pc接待管理查询  ---x
+      * @description :pc接待管理查询  ---xmf
       * @date :2020/11/24 15:13
       **/
     public JSONObject receptionManage(String shop_id,String page,String size,String parm,String result) {
@@ -883,7 +883,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json1);
     }
     /**
-     * @description :pc接待管理查询  ---x
+     * @description :pc接待管理查询  ---xmf
      * @date :2020/11/24 15:13
      **/
     public JSONObject receptionManageC(SelectReception sr) {
@@ -906,7 +906,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :pc接待管理查询  ---x
+     * @description :pc接待管理查询  ---xmf
      * @date :2020/11/24 15:13
      **/
     public JSONObject receptionManage(String shop_id,String page,String size,String parm,String result,String parm2,String result2) {
@@ -926,7 +926,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :今日任务x
+     * @description :今日任务xmf
      * @date :2020/11/24 15:15
      **/
     public JSONObject appTask() {
@@ -936,7 +936,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :app今日数据X
+     * @description :app今日数据Xmf
      * @date :2020/11/24 15:21
      **/
 
@@ -950,20 +950,20 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :   卡券核销X
+     * @description :   卡券核销Xmf
      * @date :2020/11/24 15:24
      **/
 
-    public JSONObject verification(String card_number) {
+    public JSONObject verification(String card_number, Boolean checkCode) {
         String url = "/jiaochen/m-app/voucher/verification";
         JSONObject json=new JSONObject();
         json.put("card_number",card_number);
 
-        return invokeApi(url, json);
+        return invokeApi(url, json,checkCode);
     }
 
     /**
-     * @description :代办事项数X
+     * @description :代办事项数Xmf
      * @date :2020/11/24 15:25
      **/
 
@@ -974,7 +974,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :预约任务页X
+     * @description :预约任务页Xmf
      * @date :2020/11/24 15:30
      **/
 
@@ -987,7 +987,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
   /**
-   * @description :取消/确定预约X
+   * @description :取消/确定预约Xmf
    * @date :2020/11/24 15:30
    **/
 
@@ -1001,7 +1001,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :app接待任务页X
+     * @description :app接待任务页Xmf
      * @date :2020/11/24 19:26
      **/
 
@@ -1014,7 +1014,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
     /**
-     * @description :输入车牌，确认接待X
+     * @description :输入车牌，确认接待Xmf
      * @date :2020/11/24 19:27
      **/
 
@@ -1024,6 +1024,14 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("plate_number",plate_number);
 
         return invokeApi(url, json);
+    }
+
+    public JSONObject appReceptionAdmitcode(String plate_number) {
+        String url = "/jiaochen/m-app/task/reception/admit";
+        JSONObject json=new JSONObject();
+        json.put("plate_number",plate_number);
+
+        return invokeApi(url, json,false);
     }
     /**
      * @description :app开始接待xmf
@@ -1445,7 +1453,7 @@ public class ScenarioUtil extends TestCaseCommon {
         }
     }
 
-    //角色权限列表
+    //角色权限列表 xmf
     @DataProvider(name = "LIMITID")
     public static Object[][] limitid() {
         return new Integer[][]{
@@ -1454,7 +1462,7 @@ public class ScenarioUtil extends TestCaseCommon {
         };
     }
 
-    @DataProvider(name = "SELECT_PARM")
+    @DataProvider(name = "SELECT_PARM")  //xmf
     public static Object[] select_parm() {
         return new String[][]{
                 {"plate_number", "plate_number"},
@@ -1471,8 +1479,8 @@ public class ScenarioUtil extends TestCaseCommon {
         };
     }
 
-    @DataProvider(name = "PLATE")
-    public static Object[] plate() {
+    @DataProvider(name = "PLATE")  //xmf
+    public static Object[] plate() {   //异常车牌号集合
         return new String[]{
                 "苏BJ123",   //6位
                 "BJ12345",    //不含汉字
@@ -1482,6 +1490,8 @@ public class ScenarioUtil extends TestCaseCommon {
                 "苏BJ123456",//9位
         };
     }
+
+
 
 
     /**

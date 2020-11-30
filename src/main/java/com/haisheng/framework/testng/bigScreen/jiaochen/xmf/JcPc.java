@@ -472,7 +472,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             JSONObject result=jc.receptionManageC(sr);
 
-            Preconditions.checkArgument(sr.plate_number.contains(result.getString(ss[0][1].toString())),"");
+            Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number),"");
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
