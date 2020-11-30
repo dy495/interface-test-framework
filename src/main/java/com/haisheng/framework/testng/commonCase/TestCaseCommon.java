@@ -89,7 +89,7 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-        caseResult.setCaseName(commonConfig.produce + commonConfig.caseName);
+        caseResult.setCaseName(commonConfig.caseName);
         logger.debug("beforeClassInit");
         logger.debug("config: " + commonConfig);
         logger.debug("case: " + caseResult);
@@ -117,7 +117,8 @@ public class TestCaseCommon {
         if (StringUtils.isEmpty(method.getName())) {
             caseResult.setCaseName("login");
         } else {
-            caseResult.setCaseName(method.getName());
+            String caseName = StringUtils.isEmpty(commonConfig.produce) ? method.getName() : commonConfig.produce + "_" + method.getName();
+            caseResult.setCaseName(caseName);
         }
         logger.debug("fresh case: " + caseResult);
         return caseResult;
@@ -334,10 +335,13 @@ public class TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
+            checkCode(response, StatusCode.SUCCESS, path);
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
             appendFailReason(e.toString());
+        } finally {
+            saveData(path);
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
@@ -482,7 +486,8 @@ public class TestCaseCommon {
     }
 
     public void setBasicParaToDB(String caseDesc) {
-        caseResult.setCaseDescription(commonConfig.produce + caseDesc);
+        String desc = StringUtils.isEmpty(commonConfig.produce) ? caseDesc : commonConfig.produce + "_" + caseDesc;
+        caseResult.setCaseDescription(desc);
         caseResult.setExpect("见描述");
 
         logger.debug("save db");

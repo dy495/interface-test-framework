@@ -3,14 +3,14 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderInfoPageScene;
@@ -65,7 +65,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "每日接待记录")
+    @Test(description = "每日接待记录", priority = 0)
     public void receptionData() {
         try {
             TPorscheReceptionData db = new TPorscheReceptionData();
@@ -109,7 +109,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "每日交车记录")
+    @Test(description = "每日交车记录", priority = 0)
     public void deliverCarData() {
         try {
             TPorscheDeliverInfo db = new TPorscheDeliverInfo();
@@ -168,7 +168,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "每日订车记录")
+    @Test(description = "每日订车记录", priority = 0)
     public void orderCarData() {
         try {
             TPorscheOrderInfo db = new TPorscheOrderInfo();
@@ -257,5 +257,34 @@ public class B extends TestCaseCommon implements TestCaseStd {
             }
         }
         return null;
+    }
+
+    @Test(priority = 1)
+    public void dataCheck() {
+        String date = DateTimeUtil.addDayFormat(new Date(), day);
+        Sql sql = Sql.instance().select().from(TPorscheDeliverInfo.class)
+                .where("deliver_date", "=", date)
+                .and("shop_id", "=", shopId)
+                .end();
+        int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+        if (count <= 0) {
+            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheDeliverInfo.class.getSimpleName()) + "表记录数据失败");
+        }
+        Sql sql1 = Sql.instance().select().from(TPorscheOrderInfo.class)
+                .where("order_date", "=", date)
+                .and("shop_id", "=", shopId)
+                .end();
+        int count1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1).size();
+        if (count1 <= 0) {
+            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheOrderInfo.class.getSimpleName()) + "表记录数据失败");
+        }
+        Sql sql2 = Sql.instance().select().from(TPorscheReceptionData.class)
+                .where("reception_date", "=", date)
+                .and("shop_id", "=", shopId)
+                .end();
+        int count2 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql2).size();
+        if (count2 <= 0) {
+            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheReceptionData.class.getSimpleName()) + "表记录数据失败");
+        }
     }
 }
