@@ -65,7 +65,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "lxq";
-
+        commonConfig.produce = "保时捷";
 
         //replace backend gateway url
         //commonConfig.gateway = "";

@@ -39,7 +39,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
-
+        commonConfig.produce = "轿辰";
 
         //replace backend gateway url
         //commonConfig.gateway = "";
