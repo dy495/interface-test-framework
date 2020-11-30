@@ -282,7 +282,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
                     //总产值
                     int totalPrice = array.getJSONObject(j).getInteger("total_price");
                     int carId = array.getJSONObject(j).getInteger("car_id");
-                    //维修记录中
+                    //维修记录中数据
                     int repairTotal = jc.pcAfterSaleCustomerRepairPage(1, size, carId).getInteger("total");
                     int x = CommonUtil.getTurningPage(repairTotal, size);
                     int priceSum = 0;
@@ -318,7 +318,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
                     String repairCustomerPhone = array.getJSONObject(j).getString("repair_customer_phone");
                     int newestMiles = array.getJSONObject(j).getInteger("newest_miles");
                     int carId = array.getJSONObject(j).getInteger("car_id");
-                    //维修记录中
+                    //维修记录中数据
                     JSONObject object = jc.pcAfterSaleCustomerRepairPage(1, size, carId).getJSONArray("list").getJSONObject(0);
                     String repairCustomerName1 = object.getString("repair_customer_name");
                     String repairCustomerPhone1 = object.getString("repair_customer_phone");

@@ -162,10 +162,9 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 卡券列表
-    public JSONObject pcVoucherList(Long customerId) {
+    public JSONObject pcVoucherList() {
         String path = "/jiaochen/pc/reception-manage/voucher-list";
         JSONObject object = new JSONObject();
-        object.put("customer_id", customerId);
         return invokeApi(path, object);
     }
 

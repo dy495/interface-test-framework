@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.util.List;
 
 /**
- * 接待管理 -> 购买固定套餐
+ * 套餐管理 -> 购买固定套餐
  */
 @Builder
 public class PurchaseFixedPackage extends BaseScene {

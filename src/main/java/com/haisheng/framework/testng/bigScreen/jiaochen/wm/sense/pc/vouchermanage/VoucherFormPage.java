@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 预约管理 -> 预约记录
+ * 卡券管理 -> 卡券表单
  */
 @Builder
 public class VoucherFormPage extends BaseScene {
