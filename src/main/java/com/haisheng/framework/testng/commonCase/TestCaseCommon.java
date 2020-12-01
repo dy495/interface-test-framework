@@ -425,6 +425,10 @@ public class TestCaseCommon {
         return "22728";
     }
 
+    public String getJCShop() {
+        return "22728";
+    }
+
     public String getProscheShopOline() {
         return "12928";
     }

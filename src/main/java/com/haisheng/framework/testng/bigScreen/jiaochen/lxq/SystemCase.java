@@ -62,8 +62,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = getProscheShop();
         beforeClassInit(commonConfig);
 
-
-
     }
 
     @AfterClass
@@ -82,6 +80,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+
+        jc.pcLogin("15711300001","000000");
     }
 
 
@@ -313,13 +313,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String message = obj.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+",提示语："+ message);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【品牌管理】，创建车系，生产商/车系51字");
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
         }
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【品牌管理】，创建车系，生产商/车系51字");
+//        }
     }
 
     @DataProvider(name = "CAR_STYLEERR")

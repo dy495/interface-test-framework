@@ -5,7 +5,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    public final String logo = "";//120*120 品牌logo
+    public final String logo = "general_temp/16de43e8-e98f-44d2-a005-62cab62b26ef";//120*120 品牌logo
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2～！啊A"+Integer.toString((int)(Math.random()*100000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)(Math.random()*100000));//随机字符串长度6
@@ -13,7 +13,7 @@ public class jiaoChenInfo {
     public final String stringfifty1 = "ZDHZDH"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final String string20 = "ZdH啊！_*"+System.currentTimeMillis(); //20位字符串
     public final String stringlong = "自动化"+System.currentTimeMillis()+"a2～！啊A"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101"+System.currentTimeMillis();
-    public final long BrandID = 1L;//自动化用的品牌id
+    public final long BrandID = 16L;//自动化用的品牌id
     public final long CarStyleID = 1L;//自动化用的品牌车系id
     public final String  district_code= "222402000000";
     public final String phone = "13800"+Integer.toString((int)(Math.random()*1000000));//手机号

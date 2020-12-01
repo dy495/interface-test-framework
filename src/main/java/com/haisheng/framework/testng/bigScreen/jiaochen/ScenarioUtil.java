@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -24,7 +23,7 @@ import java.util.List;
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.getAddress();
-    private static final String shopId = "";
+    private static final String shopId = "-1";
 
     /**
      * 单例
@@ -43,11 +42,11 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc登录
-    public void pcLogin(String username, String password) {
-        String path = "/jiaochen/pc/login";
+    public void pcLogin(String phone, String verificationCode) {
+        String path = "/jiaochen/login-pc";
         JSONObject object = new JSONObject();
-        object.put("username", username);
-        object.put("password", password);
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
         httpPost(path, object, IpPort);
     }
 
@@ -2923,6 +2922,20 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
 
+    /**
+     * @description:PC 登陆
+     * * @author: lxq
+     * @time: 2020-11-28
+     */
+
+    public JSONObject loginPC(String phone, String code) {
+        String url = "/jiaochen/login-pc";
+        JSONObject json = new JSONObject();
+        json.put("phone", phone);
+        json.put("verification_code", code);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
 
 
