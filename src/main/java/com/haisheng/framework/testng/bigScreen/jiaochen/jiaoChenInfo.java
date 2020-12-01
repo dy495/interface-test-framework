@@ -14,8 +14,8 @@ public class jiaoChenInfo {
     public final String string20 = "ZdH啊！_*"+System.currentTimeMillis(); //20位字符串
     public final String stringlong = "自动化"+System.currentTimeMillis()+"a2～！啊A"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101"+System.currentTimeMillis();
     public final long BrandID = 16L;//自动化用的品牌id
-    public final long CarStyleID = 1L;//自动化用的品牌车系id
-    public final String  district_code= "222402000000";
+    public final long CarStyleID = 50L;//自动化用的品牌车系id
+    public final String  district_code= "222402";
     public final String phone = "13800"+Integer.toString((int)(Math.random()*1000000));//手机号
 
 
@@ -24,8 +24,12 @@ public class jiaoChenInfo {
     public final long getBrandID(int n){
         String name = ""+Math.random()*n;
         jc.addBrand(name,logo);
-        //品牌1id
-        Long id = jc.brandPage(1,1,name,"").getJSONArray("list").getJSONObject(0).getLong("id");
+
+        //删除品牌
+        int size= jc.brandPage(1,1,"","").getInteger("total") - 1;
+
+        Long id = jc.brandPage(1,size+1,"","").getJSONArray("list").getJSONObject(size).getLong("id");
+
         return id;
     }
 
