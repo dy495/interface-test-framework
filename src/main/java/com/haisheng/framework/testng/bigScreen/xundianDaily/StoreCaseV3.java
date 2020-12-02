@@ -640,7 +640,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             String email = list.getJSONObject(0).getString("email");
-            String phone = list.getJSONObject(0).getString("phone");
+            String phone = list.getJSONObject(1).getString("phone");
 
             //根据账号名称筛选
             JSONArray list1 = md.organizationAccountPage(name, "", "", "", "", "", page, size).getJSONArray("list");
