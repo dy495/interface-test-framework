@@ -176,7 +176,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌--异常
-    @Test //前端校验 后端未做校验
+    @Test //ok bug5364 已解决
     public void addBrand_nameerr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -196,7 +196,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //品牌车系--正常
 
-    @Test(dataProvider = "CAR_STYLE") // 车系删除接口不正确  bug5362
+    @Test(dataProvider = "CAR_STYLE") // OK bug5362 已解决
     public void addCarStyle(String manufacturer, String name, String online_time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -217,7 +217,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test //bug 5369
+    @Test //ok bug 5369 已修复
     public void editCarStyle() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -238,15 +238,19 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String search_manufacturer1 = "";
             String search_name1 = "";
             String search_online_time1= "";
-            JSONArray arr = jc.carStylePage(1,30,info.BrandID,name).getJSONArray("list");
+            JSONArray arr = jc.carStylePage(1,30,info.BrandID,"").getJSONArray("list");
             for (int i = 0 ; i < arr.size(); i++){
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getLong("id")==id){
+                    Thread.sleep(1000);
                     search_manufacturer1 = obj.getString("manufacturer");
                     search_name1 = obj.getString("name");
                     search_online_time1= obj.getString("online_time");
+                    Thread.sleep(1000);
+                    break;
                 }
             }
+
             Preconditions.checkArgument(search_manufacturer1.equals(manufacturer1),"修改前生产商="+manufacturer+"，期望修改为"+manufacturer1+"，实际修改后为"+search_manufacturer1);
             Preconditions.checkArgument(search_name1.equals(name1),"修改前车系="+name+"，期望修改为"+name1+"，实际修改后为"+search_name1);
             Preconditions.checkArgument(search_online_time1.equals(online_time1),"修改前上线时间="+online_time+"，期望修改为"+online_time1+"，实际修改后为"+search_online_time1);
@@ -310,7 +314,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌车系--异常
-    @Test(dataProvider = "CAR_STYLEERR") // bug 5371
+    @Test(dataProvider = "CAR_STYLEERR") // OK bug 5371 已解决
     public void addCarStyleErr(String manufacturer, String name, String online_time,String yz) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -371,7 +375,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test //bug 5376
+    @Test //bug 5376 提示语不正确
     public void addCarStyleinNotExistModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -490,7 +494,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌车系车型 --异常
-    @Test //bug 5389
+    @Test //OK bug 5389 已解决
     public void addCarModel_err() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -722,7 +726,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("");
+            pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
 
             JSONArray pic_list2 =new JSONArray();
             pic_list2.add("");
@@ -752,11 +756,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         return new String[][]{
-                {"1234", "ONE_PIC",info.stringone, "RED_PAPER"},
-                {info.stringten, "ONE_PIC",info.stringfifty, "PREFERENTIAL"},
+                {"1234", "ONE_BIG",info.stringone, "RED_PAPER"},
+                {info.stringten, "ONE_BIG",info.stringfifty, "PREFERENTIAL"},
                 {info.string20, "ONE_LEFT",info.stringten, "BARGAIN"},
                 {info.stringten, "ONE_LEFT",info.stringlong, "WELFARE"},
-                {info.stringone, "ONE_LEFT",info.stringten, "GIFT"},
+                {info.stringsix, "ONE_LEFT",info.stringten, "GIFT"},
 
         };
     }
@@ -767,7 +771,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //@Test
+    @Test
     public void enuma() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

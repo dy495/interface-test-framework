@@ -25,6 +25,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
 
 
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"></class>
+
+
+
+
         </classes>
     </test>
 </suite>
