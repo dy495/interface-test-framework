@@ -20,7 +20,7 @@ public enum EnumAppletCode {
 
     LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", ""),
 
-    GLY("Max", "gXroMR6pr3aBzW6GAcgjvw==", ""),
+    GLY("Max", "ro6uJhVfsijLjKbx/qLlGw==", ""),
 
     WM_ONLINE("w", "nDQrQZlv4wGTNvNy7Qy78Q==", ""),
 

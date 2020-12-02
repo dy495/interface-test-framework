@@ -1801,6 +1801,20 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    /**
+     * @description:售后管理列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject afterSleCustomerManage(String page,String size){
+        String url = "/jiaochen/pc/customer-manage/after-sale-customer/page";
+        JSONObject json = new JSONObject();
+//        json.put("shopId",shopId);
+        json.put("page",page);
+        json.put("size",size);
+        return invokeApi(url, json);
+    }
+
 
     /**
      * @description:售后管理列表

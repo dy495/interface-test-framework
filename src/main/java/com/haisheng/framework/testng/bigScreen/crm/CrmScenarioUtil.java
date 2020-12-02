@@ -4670,7 +4670,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 //                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.WM_SMALL.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
-//                EnumAppletCode.GLY.getCode()
+                EnumAppletCode.GLY.getCode()
         };
     }
 
