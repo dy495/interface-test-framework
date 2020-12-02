@@ -210,7 +210,7 @@ public class FeidanMiniApiOnline {
     String anShengId = "1005";
     String anShengName = "安生【勿动】";
     String anShengPhone = "12300000002";
-    String firstAppearTime = "1587962311670";
+    String firstAppearTime = "1585792274772";
 
     String faceUrl = "witness/100000000080571721/a944403e-672d-491c-9e8a-4cd9836fe066";
 
@@ -966,9 +966,9 @@ public class FeidanMiniApiOnline {
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
             idCardPath = idCardPath.replace("/", File.separator);
-            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
             facePath = facePath.replace("/", File.separator);
 
             ImageUtil imageUtil = new ImageUtil();

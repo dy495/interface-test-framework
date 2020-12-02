@@ -335,7 +335,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/90度旋转.jpg";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/90度旋转.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -839,7 +839,7 @@ public class FeidanMiniApiSystemtestOnline {
 
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
             idCardPath = idCardPath.replace("/", File.separator);
             //String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
             //facePath = facePath.replace("/", File.separator);
