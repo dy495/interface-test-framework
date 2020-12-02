@@ -53,6 +53,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        commonConfig.produce = EnumProduce.BSJ.name();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
@@ -957,7 +958,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         if (!haveTask) {
             UserUtil.loginApplet(applet);
             int id = getTimeId(date);
-            crm.appointmentRepairCode((long) getCarId(), "Max", "13373166806",  "测试测试",  (long) id,"");
+            crm.appointmentRepairCode((long) getCarId(), "Max", "13373166806", "测试测试", (long) id, "");
             UserUtil.login(zjl);
             //预约中状态查询
             JSONArray array = crm.mainAppointmentList(1, 10).getJSONArray("list");

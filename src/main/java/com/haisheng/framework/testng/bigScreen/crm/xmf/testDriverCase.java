@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
@@ -19,6 +20,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
 
 public class testDriverCase extends TestCaseCommon implements TestCaseStd {
@@ -41,7 +43,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-
+        commonConfig.produce = EnumProduce.BSJ.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -93,7 +95,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
     public void driverEvaluate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(pp.xiaoshouZongjian,pp.adminpassword);
+            crm.login(pp.xiaoshouZongjian, pp.adminpassword);
             //接待前Guwen，接待次数 13 销售顾问，16保养 ，15维修
             int num = pf.jiedaiTimes(13, pp.xiaoshouGuwen);
             //pc评价页总数
@@ -192,6 +194,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             saveData("新建、注销试驾车，试驾车列表+-1");
         }
     }
+
     /**
      * @description :创建新客试驾审核通过,今日试驾次数+1,总计+1   ok
      * @date :2020/8/10 16:45
@@ -215,8 +218,8 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.reception_type = "FU";
             String userLoginName = object.getString("userLoginName");
 
-            String testcarStyleName=pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
-            String isdriver=crm.customerMyReceptionList("","","",10,1).getJSONArray("list").getJSONObject(0).getString("test_drive_name");
+            String testcarStyleName = pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
+            String isdriver = crm.customerMyReceptionList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getString("test_drive_name");
 
             JSONObject dataTotal2 = crm.driverTotal();
             int today_number2 = dataTotal2.getInteger("today_test_drive_total");
@@ -272,20 +275,20 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
 
             //pc客户信息
             crm.login(pp.xiaoshouZongjian, pp.adminpassword);
-            JSONObject list=crm.customerListPC(phone,1,10).getJSONArray("list").getJSONObject(0);
-            String is_test=list.getString("is_test");
-            String is_order=list.getString("is_order");
-            String is_deliver=list.getString("is_deliver");
+            JSONObject list = crm.customerListPC(phone, 1, 10).getJSONArray("list").getJSONObject(0);
+            String is_test = list.getString("is_test");
+            String is_order = list.getString("is_order");
+            String is_deliver = list.getString("is_deliver");
             //试驾
             crm.login(userLoginName, pp.adminpassword);
-            String testcarStyleName=pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
+            String testcarStyleName = pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
 
             crm.finishReception3(fr);
 
-            JSONObject listA=crm.customerListPC(phone,1,10).getJSONArray("list").getJSONObject(0);
-            String is_testA=listA.getString("is_test");
-            String is_orderA=listA.getString("is_order");
-            String is_deliverA=listA.getString("is_deliver");
+            JSONObject listA = crm.customerListPC(phone, 1, 10).getJSONArray("list").getJSONObject(0);
+            String is_testA = listA.getString("is_test");
+            String is_orderA = listA.getString("is_order");
+            String is_deliverA = listA.getString("is_deliver");
 
 
             Preconditions.checkArgument(is_testA.equals("true"), "新建试驾，pc客户信息是否试驾没显示 是");
@@ -446,6 +449,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //试驾审核页状态验证合集
+
     /**
      * @description :创建新客试驾审核通过,审批状态变更
      * @date :2020/8/10 16:45
@@ -458,28 +462,28 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             finishReceive fr = new finishReceive();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
-            fr.name ="编辑";
+            fr.name = "编辑";
             String phone = pp.customer_phone_numberO;
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
-            fr.remark=new JSONArray();
+            fr.remark = new JSONArray();
             String userLoginName = object.getString("userLoginName");
             //申请试驾
             pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 3);  //新客试驾
 
             JSONObject dataList = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0);
             String audit_status_name = dataList.getString("audit_status_name");
-            Long  id = dataList.getLong("id");
-           //审批通过
+            Long id = dataList.getLong("id");
+            //审批通过
             crm.driverAudit(id, 1);
             JSONObject dataList2 = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0);
             String audit_status_name2 = dataList2.getString("audit_status_name");
 
             crm.login(userLoginName, pp.adminpassword);
             crm.finishReception3(fr);
-            Preconditions.checkArgument(audit_status_name.equals("审核中"),"申请试驾，审核装态错误");
-            Preconditions.checkArgument(audit_status_name2.equals("已通过"),"申请试驾，审核装态错误");
+            Preconditions.checkArgument(audit_status_name.equals("审核中"), "申请试驾，审核装态错误");
+            Preconditions.checkArgument(audit_status_name2.equals("已通过"), "申请试驾，审核装态错误");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -496,19 +500,19 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             finishReceive fr = new finishReceive();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
-            fr.name ="编辑";
+            fr.name = "编辑";
             String phone = pp.customer_phone_numberO;
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
-            fr.remark=new JSONArray();
+            fr.remark = new JSONArray();
             String userLoginName = object.getString("userLoginName");
             //申请试驾
             pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 3);  //新客试驾
 
             JSONObject dataList = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0);
             String audit_status_name = dataList.getString("audit_status_name");
-            Long  id = dataList.getLong("id");
+            Long id = dataList.getLong("id");
             //审批通过
             crm.driverAudit(id, 2);
             JSONObject dataList2 = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0);
@@ -516,8 +520,8 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
 
             crm.login(userLoginName, pp.adminpassword);
             crm.finishReception3(fr);
-            Preconditions.checkArgument(audit_status_name.equals("审核中"),"申请试驾，审核装态错误");
-            Preconditions.checkArgument(audit_status_name2.equals("已拒绝"),"申请试驾，审核装态错误");
+            Preconditions.checkArgument(audit_status_name.equals("审核中"), "申请试驾，审核装态错误");
+            Preconditions.checkArgument(audit_status_name2.equals("已拒绝"), "申请试驾，审核装态错误");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -561,7 +565,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             dd.phone = pp.customer_phone_numberO;
             dd.customerName = pp.abString;   //名字超过50
             dd.checkCode = false;
-            dd.oss=crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
+            dd.oss = crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
             int code = crm.driveradd6(dd).getInteger("code");
             dd.customerName = "编辑试驾";
 
@@ -634,7 +638,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             dd.receptionId = fr.reception_id;
             dd.customer_id = fr.customer_id;
             dd.phone = pp.customer_phone_numberO;
-            dd.oss=crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
+            dd.oss = crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
             crm.driveradd6(dd);       //预约试驾
             Long driverId = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0).getLong("id");
             //试驾后，该试驾车时间
@@ -684,7 +688,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             dd.receptionId = fr.reception_id;
             dd.customer_id = fr.customer_id;
             dd.phone = pp.customer_phone_numberO;
-            dd.oss=crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
+            dd.oss = crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
             crm.driveradd6(dd);
 
             Long driverId = crm.driverSelect(1, 10).getJSONArray("list").getJSONObject(0).getLong("id");
@@ -722,19 +726,19 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.remark = new JSONArray();
             String phone = pp.customer_phone_numberE;
 
-            JSONObject driverCar=pf.cartime();
+            JSONObject driverCar = pf.cartime();
             destDriver dd = new destDriver();
 
-            dd.test_drive_car =driverCar.getLong("test_car_id");
-            dd.apply_time=driverCar.getString("apply_time");
+            dd.test_drive_car = driverCar.getLong("test_car_id");
+            dd.apply_time = driverCar.getString("apply_time");
 
             dd.receptionId = fr.reception_id;
             dd.customer_id = fr.customer_id;
             dd.customerName = "编辑试驾";
             dd.phone = phone;
             dd.checkCode = false;
-            dd.oss=crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
-            String must[]={
+            dd.oss = crm.addressDiscernment(dd.driverLicensePhoto1Url).getString("license_face_path");
+            String must[] = {
                     "address",
                     "customer_id",
                     "customer_name",
@@ -755,15 +759,15 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
 //            FileWriter fileWriter = new FileWriter(pp.textPath,true);
 //            BufferedWriter bw = new BufferedWriter(fileWriter);
 
-            for(int i=0;i<must.length;i++){
-                dd.Empty=must[i];
-                JSONObject data=crm.driveradd6(dd);
+            for (int i = 0; i < must.length; i++) {
+                dd.Empty = must[i];
+                JSONObject data = crm.driveradd6(dd);
                 int code = data.getInteger("code");
                 String message = data.getString("message");
-                String content="参数：{}"+must[i]+"!!!!!!code:{}"+code+"返回"+message+"\n";
+                String content = "参数：{}" + must[i] + "!!!!!!code:{}" + code + "返回" + message + "\n";
                 logger.info(content);
 //                bw.append(content);
-                Preconditions.checkArgument(code==1001,"试驾必填项"+must[i]+"不填"+code);
+                Preconditions.checkArgument(code == 1001, "试驾必填项" + must[i] + "不填" + code);
 
             }
 //            bw.close();
@@ -775,6 +779,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             saveData("试驾必填项校验");
         }
     }
+
     //申请试驾后，试驾时间段-3，取消+3
 //    @Test
     public void shijiaTime99() {
@@ -784,14 +789,14 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             finishReceive fr = new finishReceive();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
-            fr.name ="编辑";
+            fr.name = "编辑";
             String phone = pp.customer_phone_numberO;
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "BB";
             String userLoginName = object.getString("userLoginName");
             //申请试驾
-            for(int i=0;i<70;i++) {
+            for (int i = 0; i < 70; i++) {
                 pf.creatDriver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, phone, 1);  //新客试驾
             }
             crm.finishReception3(fr);
