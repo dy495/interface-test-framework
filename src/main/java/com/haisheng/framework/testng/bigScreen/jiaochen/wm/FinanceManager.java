@@ -1,7 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -12,9 +17,11 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-public class SystemConfig extends TestCaseCommon implements TestCaseStd {
+public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
+    BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
+    private static final EnumAccount marketing = EnumAccount.MARKETING;
 
     @BeforeClass
     @Override
@@ -32,7 +39,7 @@ public class SystemConfig extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
+        commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -46,18 +53,22 @@ public class SystemConfig extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        util.login(marketing);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
-    @Test
-    public void shopManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
+    @Test(description = "卡券申请--卡券审核通过")
+    public void voucherApply_system_1() {
 
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        }
+    }
+
+    @Test
+    public void voucherApply() {
+        IScene scene = ApplyPage.builder().build();
+        int applyTotal = jc.invokeApi(scene).getInteger("total");
+        int newApplyTotal = jc.invokeApi(scene).getInteger("total");
+        Preconditions.checkArgument(newApplyTotal == applyTotal + 1, "创建卡券前卡券审核列表数量为：" + applyTotal + " 创建卡券后数量为：" + newApplyTotal);
     }
 }

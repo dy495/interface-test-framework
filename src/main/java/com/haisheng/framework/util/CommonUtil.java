@@ -118,7 +118,7 @@ public class CommonUtil {
      *
      * @param s s
      */
-    public static void logger(String s) {
+    public static <T> void logger(T s) {
         log("[" + s + "]" + "跑完");
     }
 

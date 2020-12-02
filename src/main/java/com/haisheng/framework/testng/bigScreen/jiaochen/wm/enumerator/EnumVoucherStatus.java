@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.sale;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator;
 
 import lombok.Getter;
 

@@ -4,6 +4,8 @@ import lombok.Getter;
 
 /**
  * 项目名称
+ * 统一管理
+ * 不分项目
  *
  * @author wangmin
  * @date 2020/7/24 15:07

@@ -1659,9 +1659,9 @@ public class FeidanMiniApiSTDaily {
             long time = System.currentTimeMillis();
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
             idCardPath = idCardPath.replace("/", File.separator);
-            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
             facePath = facePath.replace("/", File.separator);
 
             ImageUtil imageUtil = new ImageUtil();

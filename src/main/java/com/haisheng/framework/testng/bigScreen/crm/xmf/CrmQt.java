@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -41,8 +42,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-
-
+        commonConfig.produce = EnumProduce.BSJ.name();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -184,7 +184,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
-            if(select_date.equals("")&&list.size()==0){
+            if (select_date.equals("") && list.size() == 0) {
                 throw new Exception("到访记录为空");
             }
             for (int i = 0; i < list.size(); i++) {
@@ -199,14 +199,15 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             saveData("到访记录按到访日期查询，结果校验");
         }
     }
-   //到访记录为空提醒
+
+    //到访记录为空提醒
     @Test()
     public void visitRecodeNontull() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String select_date=dt.getHistoryDate(0);
+            String select_date = dt.getHistoryDate(0);
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
-            if(list.size()==0){
+            if (list.size() == 0) {
                 throw new Exception("到访记录为空");
             }
         } catch (AssertionError e) {
@@ -218,12 +219,12 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test()
+    //    @Test()
     public void faceListNontull() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.markcustomerList().getJSONArray("list");
-            if(list.size()==0){
+            if (list.size() == 0) {
                 throw new Exception("警告：日常人脸列表为空");
             }
         } catch (AssertionError e) {
@@ -418,7 +419,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             int total = date.size();
 
             JSONArray list = crm.markcustomerList().getJSONArray("list");
-            if(list.size()==0){
+            if (list.size() == 0) {
                 throw new Exception("前台人脸数为0，case无法执行");
             }
             String analysis_customer_id = "";
@@ -450,7 +451,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             //删除未接待离店
             int totalB = crm.nonCustomerList(time, time, "1", "100").size();
             Preconditions.checkArgument(totalA - total == num, "标记为非客后，非客列表+1");
-            Preconditions.checkArgument(totalA- totalB == num, "删除标记的非客后，非客列表-1");
+            Preconditions.checkArgument(totalA - totalB == num, "删除标记的非客后，非客列表-1");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -532,44 +533,44 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             String loginTemp2 = pf.username(sale_id2);
             crm.login(loginTemp2, pp.adminpassword);
             //变更接待前接待销售接待列表数
-            int beforeReceipt[]=pf.receiptSum();
+            int beforeReceipt[] = pf.receiptSum();
             JSONObject json = pf.creatCust();
 
             finishReceive pm = new finishReceive();
             pm.customer_id = json.getString("customerId");
             pm.reception_id = json.getString("reception_id");
             pm.belongs_sale_id = json.getString("sale_id");
-            pm.name =json.getString("name");
+            pm.name = json.getString("name");
             pm.reception_type = "FU";
             pm.phoneList = json.getJSONArray("phoneList");
 
             String loginTemp = pf.username(sale_id);
             crm.login(loginTemp, pp.adminpassword);
             //变更接待前 所属销售接待列表数
-            int beforeRcceiptBelongSale[]=pf.receiptSum();
+            int beforeRcceiptBelongSale[] = pf.receiptSum();
             //前台登录，变更接待
             crm.login(pp.qiantai, pp.qtpassword);
-            int beforeqt=crm.qtreceptionPage("","","","1","10").getInteger("today_reception_num");
+            int beforeqt = crm.qtreceptionPage("", "", "", "1", "10").getInteger("today_reception_num");
             crm.changeReceptionSale(pm.reception_id, sale_id2);
 
             crm.login(loginTemp, pp.adminpassword);          //变更接待后所属销售接待列表数
-            int afterRcceiptBelongSale[]=pf.receiptSum();
+            int afterRcceiptBelongSale[] = pf.receiptSum();
 
             crm.login(loginTemp2, pp.adminpassword);   //变更接待后 接待销售接待列表数
-            int afterRcceipt[]=pf.receiptSum();
+            int afterRcceipt[] = pf.receiptSum();
 
             //完成接待
             crm.login(pp.qiantai, pp.qtpassword);
-            int afterqt=crm.qtreceptionPage("","","","1","10").getInteger("today_reception_num");
+            int afterqt = crm.qtreceptionPage("", "", "", "1", "10").getInteger("today_reception_num");
             crm.changeReceptionSale(pm.reception_id, pm.belongs_sale_id);
 
             crm.login(loginTemp, pp.adminpassword);
 
 
             crm.finishReception3(pm);
-            Preconditions.checkArgument(beforeRcceiptBelongSale[4] - afterRcceiptBelongSale[4]  == 1, "变更接待，所属销售接待列表-1");
-            Preconditions.checkArgument(beforeRcceiptBelongSale[1] - afterRcceiptBelongSale[1]  == 1, "变更接待，所属销售今日接待数-1");
-            Preconditions.checkArgument(beforeRcceiptBelongSale[0] - afterRcceiptBelongSale[0]  == 1, "变更接待，所属销售共计接待数-1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[4] - afterRcceiptBelongSale[4] == 1, "变更接待，所属销售接待列表-1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[1] - afterRcceiptBelongSale[1] == 1, "变更接待，所属销售今日接待数-1");
+            Preconditions.checkArgument(beforeRcceiptBelongSale[0] - afterRcceiptBelongSale[0] == 1, "变更接待，所属销售共计接待数-1");
             Preconditions.checkArgument(afterRcceipt[4] - beforeReceipt[4] == 1, "变更接待，接待销售接待列表+1");
             Preconditions.checkArgument(afterRcceipt[1] - beforeReceipt[1] == 1, "变更接待，接待销售今日接待数+1");
             Preconditions.checkArgument(afterRcceipt[0] - beforeReceipt[0] == 1, "变更接待，接待销售共计接待数+1");
@@ -620,7 +621,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.remark = new JSONArray();
             pm.phoneList = PhoneList;
             pm.checkCode = false;
-            pm.belongs_sale_id=pp.belongSaleId;
+            pm.belongs_sale_id = pp.belongSaleId;
             int code = crm.finishReception3(pm).getInteger("code");
             Preconditions.checkArgument(code == 1001, "销售顾问变更了所属销售");
             pm.checkCode = true;
@@ -645,26 +646,26 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void changeReceptionNoedit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(pp.xiaoshouZongjian,pp.adminpassword);
-            JSONObject data=crm.customerSelect(1,10,"auto").getJSONArray("list").getJSONObject(0);
-            String customer_id=data.getString("customer_id");
-            String customer_phone=pf.genPhoneNum();
+            crm.login(pp.xiaoshouZongjian, pp.adminpassword);
+            JSONObject data = crm.customerSelect(1, 10, "auto").getJSONArray("list").getJSONObject(0);
+            String customer_id = data.getString("customer_id");
+            String customer_phone = pf.genPhoneNum();
 
             finishReceive pm = new finishReceive();
             pm.customer_id = customer_id;
 
             pm.name = data.getString("customer_name");
             pm.reception_type = "FU";
-            pm.phoneList = pf.phoneList(customer_phone,"");
-            pm.belongs_sale_id=pp.belongSaleId;
+            pm.phoneList = pf.phoneList(customer_phone, "");
+            pm.belongs_sale_id = pp.belongSaleId;
             crm.editCustomer(pm);
 
             crm.finishReception3(pm);
-            JSONObject after=crm.customerInfo(customer_id);
-            String belongsSaleId=after.getString("belongs_sale_id");
-            String phoneA=after.getJSONArray("phone_list").getJSONObject(0).getString("phone");
-            Preconditions.checkArgument(belongsSaleId.equals(pm.belongs_sale_id),"销售总监修改所属顾问失败");
-            Preconditions.checkArgument(phoneA.equals(customer_phone),"销售总监修改联系方式失败");
+            JSONObject after = crm.customerInfo(customer_id);
+            String belongsSaleId = after.getString("belongs_sale_id");
+            String phoneA = after.getJSONArray("phone_list").getJSONObject(0).getString("phone");
+            Preconditions.checkArgument(belongsSaleId.equals(pm.belongs_sale_id), "销售总监修改所属顾问失败");
+            Preconditions.checkArgument(phoneA.equals(customer_phone), "销售总监修改联系方式失败");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -678,7 +679,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
 
 
     @Test(description = "前台老客标记非客失败")
-    public void markab(){
+    public void markab() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.markcustomerList().getJSONArray("list");
@@ -694,11 +695,11 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
                     break;
                 }
             }
-            int code1=crm.markNocustomercode(idlist).getInteger("code");
-            Preconditions.checkArgument(code1==1001,"老客不能被标记成非客");
-        }catch (AssertionError | Exception e){
+            int code1 = crm.markNocustomercode(idlist).getInteger("code");
+            Preconditions.checkArgument(code1 == 1001, "老客不能被标记成非客");
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
+        } finally {
             saveData("前台老客标记非客失败");
         }
     }
@@ -709,7 +710,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(pp.qiantai, pp.adminpassword);
-            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            int totaol = crm.qtreceptionPage("", "", "", "1", "10").getInteger("total");
 
             JSONObject json = pf.creatCust();
 
@@ -717,17 +718,17 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             pm.customer_id = json.getString("customerId");
             pm.reception_id = json.getString("reception_id");
             pm.belongs_sale_id = json.getString("sale_id");
-            pm.name =json.getString("name");
+            pm.name = json.getString("name");
             pm.reception_type = "FU";
             pm.phoneList = json.getJSONArray("phoneList");
 
             String loginTemp = json.getString("userLoginName");
             crm.login(loginTemp, pp.adminpassword);
             crm.finishReception3(pm);
-            crm.login(pp.qiantai,pp.qtpassword);
-            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            crm.login(pp.qiantai, pp.qtpassword);
+            int totaol2 = crm.qtreceptionPage("", "", "", "1", "10").getInteger("total");
 
-            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+            Preconditions.checkArgument(totaol2 - totaol == 1, "前台分配接待列表+1");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -738,13 +739,13 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "前台分配新客含人脸接待列表+1",enabled = false)  //失败
-    public void qtFenpei(){
+    @Test(description = "前台分配新客含人脸接待列表+1", enabled = false)  //失败
+    public void qtFenpei() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            finishReceive fr=new finishReceive();
+            finishReceive fr = new finishReceive();
             crm.login(pp.qiantai, pp.adminpassword);
-            int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            int totaol = crm.qtreceptionPage("", "", "", "1", "10").getInteger("total");
 
             fr.name = "auto" + dt.getHHmm(0);
             String phone = pf.genPhoneNum();
@@ -752,10 +753,10 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
             String userLoginName = pf.username(sale_id);
 
-            JSONArray customerlist=crm.markcustomerList().getJSONArray("list");
+            JSONArray customerlist = crm.markcustomerList().getJSONArray("list");
 
-            JSONObject dd=pf.customermess(customerlist,"新客");
-            String analysis_customer_id=dd.getString("analysis_customer_id");
+            JSONObject dd = pf.customermess(customerlist, "新客");
+            String analysis_customer_id = dd.getString("analysis_customer_id");
 
             boolean isDes = true;
             JSONObject list = new JSONObject();
@@ -769,21 +770,21 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             crm.creatReception2("FIRST_VISIT", ll);
 
             //app接待分配的新客
-            JSONArray analysis_customer_id_list=new JSONArray();
-            JSONObject temp=new JSONObject();
-            temp.put("analysis_customer_id",analysis_customer_id);
+            JSONArray analysis_customer_id_list = new JSONArray();
+            JSONObject temp = new JSONObject();
+            temp.put("analysis_customer_id", analysis_customer_id);
             analysis_customer_id_list.add(temp);
 
             crm.receptionapp(analysis_customer_id_list);
-            int totaol2=crm.qtreceptionPage("","","","1","10").getInteger("total");
+            int totaol2 = crm.qtreceptionPage("", "", "", "1", "10").getInteger("total");
             crm.login(userLoginName, pp.adminpassword);
 
             JSONObject data = crm.customerMyReceptionList("", "", "", 10, 1);
             fr.reception_id = data.getJSONArray("list").getJSONObject(0).getString("id");
             fr.customer_id = data.getJSONArray("list").getJSONObject(0).getString("customer_id");
-            fr.phoneList =pf.phoneList(phone,"");
-            fr.belongs_sale_id=sale_id;
-            fr.reception_type="FU";
+            fr.phoneList = pf.phoneList(phone, "");
+            fr.belongs_sale_id = sale_id;
+            fr.reception_type = "FU";
             //face List
             JSONObject faceList = new JSONObject();
             JSONArray faceArray = new JSONArray();
@@ -792,12 +793,12 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             list.put("analysis_customer_id", analysis_customer_id);
             faceArray.add(0, faceList);
 
-            fr.face_list=faceArray;
+            fr.face_list = faceArray;
             crm.editCustomer(fr);
             crm.finishReception3(fr);
-            Preconditions.checkArgument(totaol2-totaol==1,"前台分配接待列表+1");
+            Preconditions.checkArgument(totaol2 - totaol == 1, "前台分配接待列表+1");
 
-        } catch (AssertionError |Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);
@@ -809,21 +810,21 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
     public void jiebang() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list=crm.markcustomerList().getJSONArray("list");
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
 
-            JSONObject dd=pf.customermess(list,"老客");
-            String analysis_customer_id=dd.getString("analysis_customer_id");
-            String customer_id=dd.getString("customer_id");
+            JSONObject dd = pf.customermess(list, "老客");
+            String analysis_customer_id = dd.getString("analysis_customer_id");
+            String customer_id = dd.getString("customer_id");
 
-            int num[]=pf.qtcustomer(list);   //0 新客数     //老客数
+            int num[] = pf.qtcustomer(list);   //0 新客数     //老客数
 
-            crm.jiebang(analysis_customer_id,customer_id,"NEW");
+            crm.jiebang(analysis_customer_id, customer_id, "NEW");
 
-            JSONArray listA=crm.markcustomerList().getJSONArray("list");
-            int numA[]=pf.qtcustomer(listA);
+            JSONArray listA = crm.markcustomerList().getJSONArray("list");
+            int numA[] = pf.qtcustomer(listA);
 
-            Preconditions.checkArgument(numA[0]-num[0]==1,"前台人脸解绑后，新客人脸数+1");
-            Preconditions.checkArgument(num[1]-numA[1]==1,"前台人脸解绑后，老客人脸数-1");
+            Preconditions.checkArgument(numA[0] - num[0] == 1, "前台人脸解绑后，新客人脸数+1");
+            Preconditions.checkArgument(num[1] - numA[1] == 1, "前台人脸解绑后，老客人脸数-1");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

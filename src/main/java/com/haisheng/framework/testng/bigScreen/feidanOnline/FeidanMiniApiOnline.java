@@ -11,6 +11,7 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
@@ -54,7 +55,7 @@ public class FeidanMiniApiOnline {
     public String response = "";
     public boolean FAIL = false;
     public Case aCase = new Case();
-
+    Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
@@ -210,7 +211,7 @@ public class FeidanMiniApiOnline {
     String anShengId = "1005";
     String anShengName = "安生【勿动】";
     String anShengPhone = "12300000002";
-    String firstAppearTime = "1587962311670";
+    String firstAppearTime = "1585792274772";
 
     String faceUrl = "witness/100000000080571721/a944403e-672d-491c-9e8a-4cd9836fe066";
 
@@ -966,9 +967,9 @@ public class FeidanMiniApiOnline {
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
             idCardPath = idCardPath.replace("/", File.separator);
-            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
             facePath = facePath.replace("/", File.separator);
 
             ImageUtil imageUtil = new ImageUtil();
@@ -1590,7 +1591,7 @@ public class FeidanMiniApiOnline {
     }
 
 
-    //    @Test
+       // @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -1604,8 +1605,8 @@ public class FeidanMiniApiOnline {
 
         try {
 
-            String cardId = "100000000017566055";
-            String personName = "叶问";
+            String cardId = feidan.genCardId();
+            String personName = "叶问半脸测试";
 
             String s = witnessUpload(cardId, personName);
 

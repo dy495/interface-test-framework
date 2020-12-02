@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -17,6 +18,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  *
@@ -25,6 +31,7 @@ import java.lang.reflect.Method;
 public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    long shop_id = 4116;
     String xjy4="uid_663ad653";
     int page=1;
     int size=50;
@@ -127,55 +134,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             saveData("pc门店列表中门店=app巡店中心中门店");
         }
     }
-//    /**
-//     *
-//     * ====================执行清单数=增删改之后的清单数======================
-//     * */
-//    @Test
-//    public void checkListDataComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            //获取执行清单列表的数量total
-//            int total = xd.checklistPage(page,size).getInteger("total");
-//
-//            //新增一个执行清单
-//            int startM=2;
-//            String name= dt.getHHmm(startM)+"qingqing";
-//            String desc="是青青创建的哦，为了测试用的";
-//            JSONArray  items=new JSONArray();//new一个数组
-//            JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
-//            jsonObject.put("order",0);
-//            jsonObject.put("title","我是青青第一线");
-//            jsonObject.put("comment","要怎么检查啊啊");
-//            items.add(0,jsonObject);
-//            JSONArray  shoplist=new JSONArray();
-//              shoplist.add(0,28764);
-//              xd.checkListAdd(name,desc,items,shoplist);
-//
-//            int Newtotal=xd.checklistPage(page,size).getInteger("total");
-//            int num = Newtotal - 1;
-//            Preconditions.checkArgument(total == num,"执行清单数" + total + "不等于新增后的执行清单数=" + num);
-//
-//            //删除一个执行清单
-//            JSONArray list=xd.checklistPage(page,size).getJSONArray("list");
-//            long id=list.getJSONObject(0).getInteger("id");//获取列表中的执行清单Id
-//            xd.checkListDelete(id);
-//            int NewDeletotal=xd.checklistPage(page,size).getInteger("total");
-//            int checklist=NewDeletotal;
-//            Preconditions.checkArgument(total == checklist,"执行清单数=" + total + "不等于删除后的执行清单数=" + checklist);
-//
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("执行清单数=增删改之后的清单数");
-//        }
-//    }
+
 
 
     /**
@@ -250,90 +209,6 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
-//    /**
-//     *
-//     * ====================巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数======================
-//     * */
-//    @Test
-//    public void unqualifiedItemsComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            //获取shop_id
-//            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
-//            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
-//            int shop_id = check_list.getJSONObject(0).getInteger("id");
-//            //获取巡店记录id
-//            JSONArray detailList=xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
-//            int id = detailList.getJSONObject(0).getInteger("id");
-//
-//           //获取不合格项的结果
-//            int unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
-//
-//            //获取执行清单中的不合格项数
-//            JSONArray checklists = xd.shopChecksDetail(id,shop_id).getJSONArray("check_lists");
-//            int size = checklists.size();
-//            int count= 0;
-//            for (int i = 0;i < size; i++){
-//                JSONObject jsonObject = checklists.getJSONObject(i);
-//                if (jsonObject !=null){
-//                    Integer check_result = jsonObject.getInteger("check_result");
-//                    if (check_result != null && check_result == 2){
-//                        count ++;
-//                    }
-//                }
-//            }
-//            Preconditions.checkArgument(unqualified_num == count,"巡店记录的巡店详情中的巡店结果中的不合格项数" + unqualified_num + "执行清单中的不合格项数=" + count);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数");
-//        }
-//    }
-
-//    /**
-//     *
-//     * ====================每个店铺的巡店次数=各个巡店员巡检该店铺的总数======================
-//     * */
-//    @Test
-//    public void  StoreCheckNoComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//
-//            //获取每个店铺的巡店次数
-//            //获取shop_id
-//            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
-//            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
-//            int shop_id = check_list.getJSONObject(0).getInteger("id");
-//
-//            //获取各个巡店员检查该店铺的总数
-//
-//            JSONArray list= xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
-//            int size = list.size();
-//            int count= 0;
-//            for (int i = 0;i < size; i++){
-//                JSONObject jsonObject = list.getJSONObject(i);
-//                if (jsonObject !=null){
-//                    String inspector_name = jsonObject.getString("inspector_name");
-//                    if (inspector_name != null ){
-//                        count ++;
-//                    }
-//                }
-//            }
-//            Preconditions.checkArgument(patrol_num == count,"每个店铺的巡店次数=" + patrol_num + "各个巡店员巡检该店铺的总数=" + count);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("每个店铺的巡店次数=各个巡店员巡检该店铺的总数");
-//        }
-//    }
 
     /**
      *
@@ -382,47 +257,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
-//    /**
-//     *
-//     * ====================巡店执行清单==执行清单中的总项数======================
-//     * */
-//    @Test
-//    public void  CheckListNoDataComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            //获取执行清单的id
-//            JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
-//            long id = list.getJSONObject(0).getInteger("id");
-//            JSONArray items= xd.checkListDetail(id).getJSONArray("items");
-//            String name = xd.checkListDetail(id).getString("name");
-//            //执行清单中的总项数
-//            int size5 = items.size();
-//            long shop_id = 4116;
-//            String check_type = "REMOTE";
-//            Integer reset = 1;
-//            Long task_id = null;
-//
-//            //获取巡店某个执行清单的项数
-//            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
-//            int total = 0;
-//            for(int i = 0;i < checklists.size();i++){
-//                String names = checklists.getJSONObject(i).getString("name");//遍历每一个name在下一步去做比较，如果name一样，则获取这个Name地total
-//                if (names.equals(name)){
-//                    total = checklists.getJSONObject(i).getInteger("total");
-//                }
-//            }
-//
-//            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("巡店执行清单==执行清单中的总项数");
-//        }
-//    }
+
 
     /**
      *
@@ -497,93 +332,726 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             saveData("某定检任务中的发送设置=对应巡店员的待办事项中的定检任务数");
         }
     }
+    /*********************************************************门店4.0**********************************************/
 
 
-//    /**
-//     *
-//     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
-//     * */
-//    @Test
-//    public void  ReCheckNoDataComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//           //获取待办事项列表得不合格事项
-//            Integer type = 0;
-//            Long last_id = null;
-//            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
-//            int theSize1 = thingsList.size();
-//            int count = 0;
-//            for(int i = 0;i < theSize1;i++) {
-//                JSONObject jsonObject = thingsList.getJSONObject(i);
-//                String task_type = jsonObject.getString("task_type");
-//                //这里是计算REMOTE_UNQUALIFIED 出现的次数
-//                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
-//                    count ++;
-//                }
-//            }
-//
-//            //提交不合格的巡店记录
-////            long shop_id = this.getShopId(page, size);//获取shop_id
-//            long shop_id = 28760;
-//            String check_type = "REMOTE";
-//            Integer reset = 1;
-//            Long task_id = null;
-//            String pic_data1 = this.texFile(filepath);
-//            String audit_comment = "自动化测试专用审核意见哈哈哈哈";
-//            Integer check_result = 2;
-//            long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
-//            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
-//            long list_id = 0;
-//            long item_id = 0;
-//            int checkSize= 0;
-//            for(int i = 0;i<checklists.size();i++){
-//                list_id = checklists.getJSONObject(i).getInteger("id");
-//                JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
-//                if (check_items == null){
-//                    continue;
-//                }
-//                //第二个循环遍历获取item_id
-//                for (int j = 0;j<check_items.size();j++){
-//                    JSONArray  pic_list=new JSONArray();
-//                    item_id= check_items.getJSONObject(j).getInteger("id");
-//                    JSONObject pic =xd.picUpload(1,pic_data1);
-//                    pic_list.add(pic.getString("pic_path"));
-//                    if(item_id !=0){
-//                        checkSize ++;
-//                    }
-//                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);//提交执行项的结果
-//                }
-//            }
-//
-//            String comment = "审核不通过来一波啊哈哈哈";
-//            xd.shopChecksSubmit(shop_id,patrol_id,comment);
-//
-//            //新建一个不合格的巡店记录以后，再次去获取待办事项列表
-//            JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
-//            int theSize = thingsLists.size();
-//            int count2 = 0;
-//            for(int i = 0;i < theSize;i++) {
-//                JSONObject jsonObject = thingsLists.getJSONObject(i);
-//                String task_type = jsonObject.getString("task_type");
-//                //这里是计算REMOTE_UNQUALIFIED 出现的次数
-//                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
-//                    count2 ++;
-//                }
-//            }
-//            int counts=count2 -checkSize;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
-//            int result = counts-count;
-//
-//            Preconditions.checkArgument(result==0,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
-//        }
-//    }
+
+
+    /**
+     * ====================今日巡店覆盖率==【巡店报告中心】今日巡店门店数/门店总数======================
+     */
+    @Test
+    public void today_coverage() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店报告中心列表里面报告的提交时间,
+            JSONArray reportList = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            String today= dt.getHistoryDate(0);//YYYY-MM-DD
+            int count=0;
+            for(int i=0;i<reportList.size();i++){
+                String reportTime = reportList.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                long shop_id = reportList.getJSONObject(i).getLong("shop_id");
+                ArrayList<Long> list = new ArrayList<>();
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    if( !list.contains(shop_id)){
+                        count++;
+                        list.add(shop_id);
+                    }
+                }else {
+                    break;
+                }
+            }
+            //获取该账号下巡店中心列表中的门店数量
+            int total = xd.ShopPage(page,size).getInteger("total");
+
+            //根据今日巡店报告数和权限下门店总数得到今日覆盖率
+            String today_coverage = "";
+            DecimalFormat decimalFormat = new DecimalFormat("0%");
+            today_coverage = decimalFormat.format(new BigDecimal(count).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP));
+
+            //从巡店分析巡店概况中获取今日巡店覆盖率
+            String coverage_rate = xd.xd_analysis_data().getString("today_patrol_coverage_rate");
+
+            checkArgument(coverage_rate == today_coverage, "【巡店分析】今日巡店覆盖率!=【巡店报告中心】今日巡店门店数/门店总数" + coverage_rate +"!=" +today_coverage);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】今日巡店覆盖率==【巡店报告中心】今日巡店门店数/门店总数");
+        }
+
+    }
+
+    /**
+     * ====================昨日巡店覆盖率==【巡店报告中心】昨日现有门店的巡店门店数/现有门店总数======================
+     */
+    @Test
+    public void yesterday_coverage() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店报告中心列表里面报告的提交时间,
+            JSONArray reportList = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            String today= dt.getHistoryDate(-1);//YYYY-MM-DD
+            int count=0;
+            for(int i=0;i<reportList.size();i++){
+                String reportTime = reportList.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                long shop_id = reportList.getJSONObject(i).getLong("shop_id");
+                ArrayList<Long> list = new ArrayList<>();
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    if( !list.contains(shop_id)){
+                        count++;
+                        list.add(shop_id);
+                    }
+                }else {
+                    break;
+                }
+            }
+            //获取该账号下巡店中心列表中的门店数量
+            int total = xd.ShopPage(page,size).getInteger("total");
+
+            //根据今日巡店报告数和权限下门店总数得到今日覆盖率
+            int today_coverage = count/total;
+
+            //从巡店分析巡店概况中获取昨日巡店覆盖率
+            String coverage_rate = xd.xd_analysis_data().getString("yesterday_patrol_coverage_rate");
+            int  coverage_rate1 = Integer.parseInt(coverage_rate);
+
+            checkArgument(coverage_rate1 == today_coverage, "【巡店分析】】昨日巡店覆盖率 !=【巡店报告中心】昨日现有门店的巡店门店数/现有门店总数" + coverage_rate1 +"!=" +today_coverage);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】昨日巡店覆盖率==【巡店报告中心】昨日现有门店的巡店门店数/现有门店总数");
+        }
+
+    }
+
+    /**
+     * ====================今日巡检门店的数量==【巡店报告中心】今天提交了巡检报告的门店去重数量======================
+     */
+    @Test
+    public void riskRuleAdd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店报告中心列表里面报告的提交时间,
+            JSONArray reportList = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            String today= dt.getHistoryDate(0);//YYYY-MM-DD
+            int count=0;
+            for(int i=0;i<reportList.size();i++){
+                String reportTime = reportList.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                long shop_id = reportList.getJSONObject(i).getLong("shop_id");
+                ArrayList<Long> list = new ArrayList<>();
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today) ){
+                    if(!list.contains(shop_id)){
+                        count++;
+                        list.add(shop_id);
+                    }
+
+                }else {
+                    break;
+                }
+            }
+
+            //从巡店分析巡店概况中获取今日巡店的门店数量
+            int todayStore_total = xd.xd_analysis_data().getInteger("today_patrol_shop_number");
+
+            checkArgument(todayStore_total == count, "【巡店分析】今日巡检门店的数量!=【巡店报告中心】今天提交了巡检报告的门店去重数量" + todayStore_total +"!=" +count);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】今日巡检门店的数量==【巡店报告中心】今天提交了巡检报告的门店去重数量");
+        }
+
+    }
+
+
+    /**
+     * ====================今日巡检人数==【巡店报告中心】今天巡检的账号数======================
+     */
+    @Test
+    public void today_checker() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店报告中心列表里面报告的提交时间,
+            JSONArray reportList = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            String today= dt.getHistoryDate(0);//YYYY-MM-DD
+            int count=0;
+            for(int i=0;i<reportList.size();i++){
+                String reportTime = reportList.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                //获取执行人的姓名
+                String person_name = reportList.getJSONObject(i).getString("patrol_person_name");
+                ArrayList<String> list = new ArrayList<>();
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    if(!list.contains(person_name)){
+                        count++;
+                        list.add("person_name");
+                    }
+                }else {
+                    break;
+                }
+            }
+
+            //从巡店分析巡店概况中获取今日巡店巡检人数
+            int todaychecker_total = xd.xd_analysis_data().getInteger("today_patrol_person_number");
+
+            checkArgument(todaychecker_total == count, "【巡店分析】今日巡检门店的数量!=【巡店报告中心】今天提交了巡检报告的门店去重数量" + todaychecker_total +"!=" +count);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】今日巡检人数==【巡店报告中心】今天巡检的账号数");
+        }
+
+    }
+
+    /**
+     * ====================昨日巡检人数==【巡店报告中心】昨日巡检的账号数======================
+     */
+    @Test
+    public void ystday_checker() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店报告中心列表里面报告的提交时间,
+            JSONArray reportList = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            String ystoday= dt.getHistoryDate(-1);//YYYY-MM-DD
+            int count=0;
+            for(int i=0;i<reportList.size();i++){
+                String reportTime = reportList.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                //获取执行人的姓名
+                String person_name = reportList.getJSONObject(i).getString("patrol_person_name");
+                ArrayList<String> list = new ArrayList<>();
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(ystoday)){
+                    if(!list.contains(person_name)){
+                        count++;
+                        list.add("person_name");
+                    }
+
+                }else {
+                    break;
+                }
+            }
+
+            //从巡店分析巡店概况中获取昨日巡店巡检人数
+            int yetdaychecker_total = xd.xd_analysis_data().getInteger("yesterday_patrol_person_number");
+
+            checkArgument(yetdaychecker_total == count, "【巡店分析】昨日巡检人数!=【巡店报告中心】昨日巡检的账号数" + yetdaychecker_total +"!=" +count);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】昨日巡检人数==【巡店报告中心】昨日巡检的账号数");
+        }
+
+    }
+
+    /**
+     * ====================今日巡检合格率==【巡店报告中心】今日巡店合格报告数/总提交报告数======================
+     */
+    @Test
+    public void today_qualified_rate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today= dt.getHistoryDate(0);//YYYY-MM-DD
+            int count1=0;
+            //获取巡店报告中心列表今天提交的合格报告数
+            JSONArray reportList1 = xd.xd_report_list("","","QUALIFIED","",null,page,size).getJSONArray("list");
+            for(int j=0;j<reportList1.size();j++){
+                String reportTime = reportList1.getJSONObject(j).getString("report_submit_time").substring(0, 10);
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    count1++;
+                }else {
+                    break;
+                }
+            }
+
+            //获取巡店报告中心今日提交报告的全部报告数量
+            JSONArray reportList2 = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            int count2=0;
+            for(int i=0;i<reportList2.size();i++){
+                String reportTime = reportList2.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    count2++;
+                }else {
+                    break;
+                }
+            }
+            //【巡店报告中心】今日巡店合格报告数/总提交报告数
+            int rate = count1/count2;
+            //从巡店分析巡店概况中获取今日巡店合格率
+            int qualified_rate = xd.xd_analysis_data().getInteger("today_patrol_pass_rate");
+
+            checkArgument(qualified_rate == count1/count2, "【巡店分析】今日巡检合格率!=【巡店报告中心】今日巡店合格报告数/总提交报告数" + qualified_rate +"!=" +rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】今日巡检合格率==【巡店报告中心】今日巡店合格报告数/总提交报告数");
+        }
+
+    }
+
+    /**
+     * ====================昨日巡检合格率==【巡店报告中心】昨日巡店合格报告数/昨日总提交报告数======================
+     */
+    @Test
+    public void ystday_qualified_rate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String yesterday= dt.getHistoryDate(-1);//YYYY-MM-DD
+            int count1=0;
+            //获取巡店报告中心列表昨天提交的合格报告数
+            JSONArray reportList1 = xd.xd_report_list("","","QUALIFIED","",null,page,size).getJSONArray("list");
+            for(int j=0;j<reportList1.size();j++){
+                String reportTime = reportList1.getJSONObject(j).getString("report_submit_time").substring(0, 10);
+
+                //获取列表报告的提交时间，看是否为昨天提交的报告
+                if(reportTime.equals(yesterday)){
+                    count1++;
+                }else {
+                    break;
+                }
+            }
+
+            //获取巡店报告中心昨日提交报告的全部报告数量
+            JSONArray reportList2 = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
+            int count2=0;
+            for(int i=0;i<reportList2.size();i++){
+                String reportTime = reportList2.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+                //获取列表报告的提交时间，看是否为昨天提交的报告
+                if(reportTime.equals(yesterday)){
+                    count2++;
+                }else {
+                    break;
+                }
+            }
+            //【巡店报告中心】昨日巡店合格报告数/总提交报告数
+            int rate = count1/count2;
+            //从巡店分析巡店概况中获取昨日巡店合格率
+            int qualified_rate = xd.xd_analysis_data().getInteger("yesterday_patrol_pass_rate");
+
+            checkArgument(qualified_rate == rate, "【巡店分析】昨日巡检合格率!=【巡店报告中心】昨日巡店合格报告数/昨日总提交报告数" + qualified_rate +"!=" +rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】昨日巡检合格率==【巡店报告中心】昨日巡店合格报告数/昨日总提交报告数");
+        }
+
+    }
+
+    /**
+     * ====================今日待整改项数==【巡店报告中心】条件为：今天，不合格；待处理的不合格项数======================
+     */
+    @Test
+    public void today_fix_wait() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today= dt.getHistoryDate(0);//YYYY-MM-DD
+            int count1=0;
+            int id = 0;
+            int unqualified_num =0;
+            int count2=0;
+            //获取巡店报告中心列表今天提交的合格报告数
+            JSONArray reportList1 = xd.xd_report_list("","","UNQUALIFIED","PENDING",null,page,size).getJSONArray("list");
+            for(int i=0;i<reportList1.size();i++){
+                String reportTime = reportList1.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+
+                //获取列表报告的提交时间，看是否为今天提交的报告
+                if(reportTime.equals(today)){
+                    id = reportList1.getJSONObject(i).getInteger("id");
+                    //获取今天每个不合格待处理的不合格项数
+                    unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
+                    count2 += unqualified_num;
+                }else {
+                    break;
+                }
+            }
+            //从巡店分析巡店概况中获取今日待整改项
+            int fix_wait = xd.xd_analysis_data().getInteger("today_need_rectific_number");
+             checkArgument(fix_wait == count2, "【巡店分析】今日待整改项数!=【巡店报告中心】条件为：今天，不合格；待处理的不合格项数" + fix_wait +"!=" +count2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】今日待整改项数==【巡店报告中心】条件为：今天，不合格；待处理的不合格项数");
+        }
+
+    }
+
+    /**
+     * ====================昨天待整改数>=【巡店报告中心】条件为：昨天，不合格；待处理的不合格项数======================
+     */
+    @Test
+    public void yesterday_fix_wait() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today= dt.getHistoryDate(-1);//YYYY-MM-DD
+            int count1=0;
+            int id = 0;
+            int unqualified_num =0;
+            int count2=0;
+            //获取巡店报告中心列表昨天提交的不合格报告数
+            JSONArray reportList1 = xd.xd_report_list("","","UNQUALIFIED","PENDING",null,page,size).getJSONArray("list");
+            for(int i=0;i<reportList1.size();i++){
+                String reportTime = reportList1.getJSONObject(i).getString("report_submit_time").substring(0, 10);
+
+                //获取列表报告的提交时间，看是否为昨天提交的报告
+                if(reportTime.equals(today)){
+                    id = reportList1.getJSONObject(i).getInteger("id");
+                    //获取今天每个不合格待处理的不合格项数
+                    unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
+                    count2 += unqualified_num;
+                }else {
+                    break;
+                }
+            }
+            //从巡店分析巡店概况中获取昨日待整改项
+            int fix_wait = xd.xd_analysis_data().getInteger("yesterday_need_rectific_numbe");
+            checkArgument(fix_wait == count2, "【巡店分析】昨天待整改数!=【巡店报告中心】条件为：昨天，不合格；待处理的不合格项数" + fix_wait +"!=" +count2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】昨天待整改数>=【巡店报告中心】条件为：昨天，不合格；待处理的不合格项数");
+        }
+
+    }
+
+    /**
+     * ====================【巡店分析】中最近7/14/30/60天的数据>=0======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void selectTimeData(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            boolean resulit = false;
+            String own_shop_number= xd.xd_analysis_indeicators(cycle_type,"","").getString("own_shop_number");
+            String total_patrol_number= xd.xd_analysis_indeicators(cycle_type,"","").getString("total_patrol_number");
+            String total_patrol_avg_time= xd.xd_analysis_indeicators(cycle_type,"","").getString("total_patrol_avg_time");
+            if(own_shop_number !=null &&total_patrol_number!=null && total_patrol_avg_time!=null){
+                resulit = true;
+            }
+            checkArgument( resulit = true, "【巡店分析】中选择最近7/14/30/60天的【巡店核心指标数据】有异常" + "权限门店数量:"+own_shop_number  +"巡店报告数量:"+total_patrol_number +"平均巡店时长:"+total_patrol_avg_time);
+
+            JSONArray uncheck_list = xd.xd_analysis_uncheckTotal(cycle_type,"","").getJSONArray("trend_list");
+            for(int i=0;i<5;i++){
+                String unqualified_number = uncheck_list.getJSONObject(i).getString("unqualified_number");
+                String abscissa = uncheck_list.getJSONObject(i).getString("abscissa");
+                checkArgument( resulit = true, "【巡店分析】中选择最近7/14/30/60天的【巡店不合格项趋势】有异常" + "日期为:"+ abscissa +"不合格项数为:"+unqualified_number );
+            }
+
+            //获取问题分析中两个数组的值
+            JSONArray uncheckRate_list = xd.xd_analysis_question(cycle_type,"","").getJSONArray("unqualified_rate_list");
+            JSONArray unqualified_shop_rank = xd.xd_analysis_question(cycle_type,"","").getJSONArray("unqualified_shop_rank");
+            checkArgument( uncheckRate_list.size() !=0 && unqualified_shop_rank.size() !=0, "【巡店分析】中选择最近7/14/30/60天的【问题分析】有异常");
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】中选择自然日;选择自然月;最近7/14/30/60天的数据>=0");
+        }
+
+    }
+
+
+
+    /**
+     * ====================【巡店分析】权限门店数量==【巡店中心】列表该账号下的门店数量======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void timeDiffData(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            boolean resulit = false;
+            String own_shop_number= xd.xd_analysis_indeicators(cycle_type,"","").getString("own_shop_number");
+            int own_shop_number1 = Integer.valueOf(own_shop_number);
+
+            //获取该账号下巡店中心列表中的门店数量
+            int total = xd.ShopPage(page,size).getInteger("total");
+
+
+           checkArgument( own_shop_number1 == total, "" + "权限门店数量:"+own_shop_number  +"!= 巡店报告数量:"+total);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】权限门店数量==【巡店中心】列表该账号下的门店数量");
+        }
+
+    }
+
+    /**
+     * ====================【巡店分析】巡店整体覆盖率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void all_coverage(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+             JSONArray list = xd.ShopPage(page,size).getJSONArray("list");
+             int count = 0;
+             for(int i=0;i<list.size();i++){
+                Integer patrol_num = list.getJSONObject(i).getInteger("patrol_num");
+                if(patrol_num != 0 && patrol_num != null ){
+                    count++;
+                }
+             }
+
+            //获取该账号下巡店中心列表中的门店数量
+            int total = xd.ShopPage(page,size).getInteger("total");
+
+             //根据计算公式得到巡店整体覆盖率
+            String coverage_rate = "";
+            DecimalFormat decimalFormat = new DecimalFormat("0%");
+            coverage_rate = decimalFormat.format(new BigDecimal(count).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP));
+
+             //获取巡店分析中核心指标中的巡店整体覆盖率
+            String patrol_coverage_rate= xd.xd_analysis_indeicators(cycle_type,"","").getString("patrol_coverage_rate");
+
+
+
+            checkArgument( patrol_coverage_rate == coverage_rate, "" + "【巡店分析】巡店整体覆盖率:"+patrol_coverage_rate  +"!= 【巡店中心】下巡店门店的总数量/权限下门店总数＊100%:"+coverage_rate);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】巡店整体覆盖率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%");
+        }
+
+    }
+
+    /**
+     * ====================【巡店分析】报告合格率==【巡店报告中心】合格报告总数/累积报告数量＊100%======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void qualt_rate(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取巡店分析中核心指标中的巡店报告合格率
+            String patrol_coverage_rate= xd.xd_analysis_indeicators(cycle_type,"","").getString("total_patrol_pass_rate");
+
+            //获取巡店报告中心列表提交的合格报告数
+            int qualt_totals = xd.xd_report_list("","","QUALIFIED","",null,page,size).getInteger("total");
+
+            //获取巡店报告中心列表提交的所有报告数
+            int all_totals = xd.xd_report_list("","","","",null,page,size).getInteger("total");
+
+            //根据计算公式:合格报告总数/累积报告数量＊100%得到巡店报告合格率
+            String qualtfied_rate = "";
+            DecimalFormat decimalFormat = new DecimalFormat("0%");
+            qualtfied_rate = decimalFormat.format(new BigDecimal(qualt_totals).divide(new BigDecimal(all_totals),2,BigDecimal.ROUND_HALF_UP));
+
+
+            checkArgument( patrol_coverage_rate == qualtfied_rate, "" + "【巡店分析】报告合格率:"+patrol_coverage_rate  +"!= 【巡店报告中心】合格报告总数/累积报告数量＊100%:"+qualtfied_rate);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】报告合格率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%");
+        }
+
+    }
+
+    /**
+     * ====================【巡店分析】环状图中的不合格率相加==100%======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void unqualt_rate_sum(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从问题分析获取不合格项占比的前五和其他的比例
+            JSONArray unquali_rateList = xd.xd_analysis_question(cycle_type,"","").getJSONArray("xd_analysis_question");
+            int rate_sum = 0;
+            for(int i=0;i<unquali_rateList.size();i++){
+                 Integer unqualified_rate = unquali_rateList.getJSONObject(i).getInteger("unqualified_rate");
+                 if(unqualified_rate != null){
+                     rate_sum += unqualified_rate;
+                 }
+            }
+
+            checkArgument( rate_sum == 100, "" + "【巡店分析】报环状图中的不合格率相加:"+rate_sum  +"!= 100");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】报告合格率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%");
+        }
+
+    }
+
+    /**
+     * ====================【巡店分析】问题分析中的不合格项门店排名中的门店数量<=5======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void unquali_store_num(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从问题分析获取不合格项占比的前五的门店
+            JSONArray unqualified_shop_rank = xd.xd_analysis_question(cycle_type,"","").getJSONArray("unqualified_shop_rank");
+
+            checkArgument( unqualified_shop_rank.size() <= 5, "" + "【巡店分析】问题分析中的不合格项门店排名中的门店数量<=5");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】问题分析中的不合格项门店排名中的门店数量<=5");
+        }
+
+    }
+
+
+    /**
+     * ====================【巡店报告中心】报告提交时间==【巡店中心】中提交巡检报告的时间======================
+     */
+    @Test
+    public void report_detail_data() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从巡店报告中心列表第一个的数据和巡店中心的同一数据进行筛选
+            JSONArray list = xd.xd_report_list("","","","",1,page,size).getJSONArray("list");
+            Long shop_id = list.getJSONObject(0).getLong("shop_id");
+            String shop_name = list.getJSONObject(0).getString("shop_name");
+            String report_submit_time = list.getJSONObject(0).getString("report_submit_time");
+
+            //从巡店详情中获取上述门店的列表第一个报告
+            JSONArray store_list = xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+            String check_time = store_list.getJSONObject(0).getString("check_time");
+
+            checkArgument( report_submit_time.equals(check_time), "" + "【巡店报告中心】报告提交时间:"+report_submit_time+"!=【巡店中心】中提交巡检报告的时间:"+check_time);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店报告中心】报告提交时间==【巡店中心】中提交巡检报告的时间");
+        }
+
+    }
+
+    /**
+     * ====================【巡店报告中心】巡店者，巡检门店==【巡店中心】提交报告的账号人员和巡检的门店======================
+     */
+    @Test
+    public void report_other_data() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从巡店报告中心列表第一个的数据和巡店中心的同一数据进行筛选
+            JSONArray list = xd.xd_report_list("","","","",1,page,size).getJSONArray("list");
+            Long shop_id = list.getJSONObject(0).getLong("shop_id");
+            String person_name = list.getJSONObject(0).getString("patrol_person_name");
+            String submit_time = list.getJSONObject(0).getString("report_submit_time");
+
+            //从巡店详情中获取上述门店的列表第一个报告
+            JSONArray store_list = xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+            String check_time = store_list.getJSONObject(0).getString("check_time");
+            String check_name = store_list.getJSONObject(0).getString("patrol_person_name");
+            Long shop_id1 = store_list.getJSONObject(0).getLong("shop_id");
+
+            checkArgument( check_name.equals(person_name) && shop_id.equals(shop_id1),   "【巡店报告中心】巡店者，巡检门店!=【巡店中心】提交报告的账号人员和巡检的门店");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店报告中心】巡店者，巡检门店==【巡店中心】提交报告的账号人员和巡检的门店");
+        }
+
+    }
+
+    /**
+     * ====================【巡店报告中心】执行项不合格率==当次巡检报告中不合格项/总执行项======================
+     */
+    @Test
+    public void report_unquRate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从巡店报告中心列表执行项不合格率
+            JSONArray list = xd.xd_report_list("","","","",1,page,size).getJSONArray("list");
+            for(int i=0;i<10;i++){
+              int  item_unqu_rate = list.getJSONObject(i).getInteger("item_unqualified_rate");
+              int id = list.getJSONObject(i).getInteger("id");
+              Long shop_id = list.getJSONObject(i).getLong("shop_id");
+                JSONArray check_lists = xd.shopChecksDetail(id ,shop_id).getJSONArray("check_lists");
+                Integer unqualified_num = xd.shopChecksDetail(id ,shop_id).getInteger("unqualified_num");
+                int unqua_rate = unqualified_num/check_lists.size();
+                checkArgument( item_unqu_rate==unqua_rate,   "【巡店报告中心】执行项不合格率;"+item_unqu_rate+" !=【巡店报告中心】当次巡检报告中不合格项/总执行项"+ unqua_rate);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店报告中心】执行项不合格率==当次巡检报告中不合格项/总执行项");
+        }
+
+    }
+
+
     //获取shop_id
     public long getShopId (int page, int size) throws Exception {
         JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");

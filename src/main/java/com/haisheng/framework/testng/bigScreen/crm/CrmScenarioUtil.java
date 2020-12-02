@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
@@ -18,7 +18,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StatusCode;
-import jdk.nashorn.internal.scripts.JS;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -2977,7 +2976,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumShopId.PORSCHE_SHOP.getShopId());
+        object.put("shop_id", EnumShopId.PORSCHE_DAILY.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);
@@ -4667,8 +4666,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return new String[]{
                 EnumAppletCode.XMF.getCode(),
 //                EnumAppletCode.BB.getCode(),
-//                EnumAppletCode.WM.getCode(),
-//                EnumAppletCode.WM_SMALL.getCode(),
+                EnumAppletCode.WM.getCode(),
+                EnumAppletCode.WM_SMALL.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
                 EnumAppletCode.GLY.getCode()
         };

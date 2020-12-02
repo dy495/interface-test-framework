@@ -4,6 +4,8 @@ import lombok.Getter;
 
 /**
  * shop_id
+ * 不分项目
+ * 统一管理
  *
  * @author wangmin
  * @date 2020/7/24 15:24
@@ -12,16 +14,23 @@ public enum EnumShopId {
     /**
      * 保时捷shop_id
      */
-    PORSCHE_SHOP("22728"),
+    PORSCHE_DAILY("22728"),
     /**
      * 赢识线上shop_id
      */
-    WIN_SENSE_SHOP_ONLINE("12928"),
+    WINSENSE_PORSCHE_ONLINE("12928"),
 
     /**
      * 保时捷线上
      */
-    PORSCHE_SHOP_ONLINE("12732");
+    PORSCHE_ONLINE("12732"),
+
+    /**
+     * 轿辰日常
+     */
+    JIAOCHEN_DAILY("-1"),
+    ;
+
 
     EnumShopId(String shopId) {
         this.shopId = shopId;
