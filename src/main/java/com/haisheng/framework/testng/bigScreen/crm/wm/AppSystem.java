@@ -64,7 +64,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }

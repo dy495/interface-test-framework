@@ -199,6 +199,7 @@ public class TestCaseCommon {
 
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
@@ -225,6 +226,7 @@ public class TestCaseCommon {
             logger.printImportant(JSON.toJSONString(apiRequest));
             logger.printImportant(JSON.toJSONString(apiResponse));
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
         return apiResponse;
@@ -252,6 +254,7 @@ public class TestCaseCommon {
                 throw new Exception(msg);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
@@ -268,6 +271,7 @@ public class TestCaseCommon {
                 throw new Exception(msg);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }

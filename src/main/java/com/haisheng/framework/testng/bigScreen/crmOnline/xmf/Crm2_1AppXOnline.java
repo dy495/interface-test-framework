@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;

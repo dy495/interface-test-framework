@@ -3,10 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
@@ -23,7 +24,7 @@ import java.util.List;
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.getAddress();
-    private static final String shopId = "-1";
+    private static final String shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
 
     /**
      * 单例
@@ -64,6 +65,20 @@ public class ScenarioUtil extends TestCaseCommon {
         logger.info("applet authorization is:{}", authorization);
     }
 
+    //pc门店列表
+    public JSONObject pcShopList() {
+        String path = "/jiaochen/pc/login-user/shop-list";
+        JSONObject object = new JSONObject();
+        return invokeApi(path, object);
+    }
+
+    //pc主体列表
+    public JSONObject pcSubjectList() {
+        String path = "/jiaochen/pc/use-range/subject-list";
+        JSONObject object = new JSONObject();
+        return invokeApi(path, object);
+    }
+
     //pc修改密码
     public JSONObject pcModifyPassword(String oldPassword, String newPassword) {
         String path = "/jiaochen/pc/modifyPassword";
@@ -87,13 +102,6 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(path, object, false);
     }
 
-    //pc门店列表
-    public JSONObject pcShopList() {
-        String path = "/jiaochen/pc/shop-list";
-        JSONObject object = new JSONObject();
-        return invokeApi(path, object);
-    }
-
     //pc通用枚举接口
     public JSONObject pcEnuMap() {
         String path = "/jiaochen/pc/enum-map";
@@ -109,11 +117,12 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //图片上传
-    public JSONObject pcFileUpload(String pic, Boolean isPermanent) {
+    public JSONObject pcFileUpload(String pic, Boolean isPermanent, Double ratio) {
         String path = "/jiaochen/pc/file/upload";
         JSONObject object = new JSONObject();
         object.put("pic", pic);
         object.put("is_permanent", isPermanent);
+        object.put("ratio", ratio);
         return invokeApi(path, object);
     }
 
@@ -865,41 +874,19 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
-     /**
-      * @description :pc接待管理查询  ---xmf
-      * @date :2020/11/24 15:13
-      **/
-    public JSONObject receptionManage(String shop_id,String page,String size,String parm,String result) {
-        String url = "/jiaochen/pc/reception-manage/page";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",shop_id);
-        json1.put("page",page);
-        json1.put("size",size);
-        if(parm!=null||!parm.equals("")){
-            json1.put(parm,result);
-        }
-
-        return invokeApi(url, json1);
-    }
     /**
      * @description :pc接待管理查询  ---xmf
      * @date :2020/11/24 15:13
      **/
-    public JSONObject receptionManageC(SelectReception sr) {
+    public JSONObject receptionManage(String shop_id, String page, String size, String parm, String result) {
         String url = "/jiaochen/pc/reception-manage/page";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",sr.shop_id);
-        json1.put("page",sr.page);
-        json1.put("size",sr.size);
-        json1.put("plate_number",sr.plate_number);
-        json1.put("reception_sale_id",sr.reception_sale_id);
-        json1.put("reception_date",sr.reception_date);
-        json1.put("customer_name",sr.customer_name);
-        json1.put("reception_status",sr.reception_status);
-        json1.put("finish_date",sr.finish_date);
-        json1.put("customer_phone",sr.customer_phone);
-        json1.put("reception_type",sr.reception_type);
-        json1.put("shop_id",sr.shop_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
+        json1.put("page", page);
+        json1.put("size", size);
+        if (parm != null || !parm.equals("")) {
+            json1.put(parm, result);
+        }
 
         return invokeApi(url, json1);
     }
@@ -908,17 +895,40 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :pc接待管理查询  ---xmf
      * @date :2020/11/24 15:13
      **/
-    public JSONObject receptionManage(String shop_id,String page,String size,String parm,String result,String parm2,String result2) {
+    public JSONObject receptionManageC(SelectReception sr) {
         String url = "/jiaochen/pc/reception-manage/page";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",shop_id);
-        json1.put("page",page);
-        json1.put("size",size);
-        if(parm!=null||!parm.equals("")){
-            json1.put(parm,result);
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", sr.shop_id);
+        json1.put("page", sr.page);
+        json1.put("size", sr.size);
+        json1.put("plate_number", sr.plate_number);
+        json1.put("reception_sale_id", sr.reception_sale_id);
+        json1.put("reception_date", sr.reception_date);
+        json1.put("customer_name", sr.customer_name);
+        json1.put("reception_status", sr.reception_status);
+        json1.put("finish_date", sr.finish_date);
+        json1.put("customer_phone", sr.customer_phone);
+        json1.put("reception_type", sr.reception_type);
+        json1.put("shop_id", sr.shop_id);
+
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :pc接待管理查询  ---xmf
+     * @date :2020/11/24 15:13
+     **/
+    public JSONObject receptionManage(String shop_id, String page, String size, String parm, String result, String parm2, String result2) {
+        String url = "/jiaochen/pc/reception-manage/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
+        json1.put("page", page);
+        json1.put("size", size);
+        if (parm != null || !parm.equals("")) {
+            json1.put(parm, result);
         }
-        if(parm2!=null||!parm2.equals("")){
-            json1.put(parm2,result2);
+        if (parm2 != null || !parm2.equals("")) {
+            json1.put(parm2, result2);
         }
 
         return invokeApi(url, json1);
@@ -930,24 +940,26 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appTask() {
         String url = "/jiaochen/m-app/home-page/today-task";
-        JSONObject json=new JSONObject();
+        JSONObject json = new JSONObject();
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :app今日数据Xmf
      * @date :2020/11/24 15:21
      **/
 
-    public JSONObject apptodayDate(String type,Integer last_value,Integer size) {
+    public JSONObject apptodayDate(String type, Integer last_value, Integer size) {
         String url = "/jiaochen/m-app/home-page/today-data";
-        JSONObject json=new JSONObject();
-        json.put("type",type);
-        json.put("last_value",last_value);
-        json.put("size",size);
+        JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("last_value", last_value);
+        json.put("size", size);
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :   卡券核销Xmf
      * @date :2020/11/24 15:24
@@ -955,10 +967,10 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject verification(String card_number, Boolean checkCode) {
         String url = "/jiaochen/m-app/voucher/verification";
-        JSONObject json=new JSONObject();
-        json.put("card_number",card_number);
+        JSONObject json = new JSONObject();
+        json.put("card_number", card_number);
 
-        return invokeApi(url, json,checkCode);
+        return invokeApi(url, json, checkCode);
     }
 
     /**
@@ -968,33 +980,35 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject waitTask() {
         String url = "/jiaochen/m-app/home-page/waiting-task/num";
-        JSONObject json=new JSONObject();
+        JSONObject json = new JSONObject();
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :预约任务页Xmf
      * @date :2020/11/24 15:30
      **/
 
-    public JSONObject appointmentPage(Integer last_value,Integer size) {
+    public JSONObject appointmentPage(Integer last_value, Integer size) {
         String url = "/jiaochen/m-app/task/appointment/page";
-        JSONObject json=new JSONObject();
-        json.put("last_value",last_value);
-        json.put("size",size);
+        JSONObject json = new JSONObject();
+        json.put("last_value", last_value);
+        json.put("size", size);
 
         return invokeApi(url, json);
     }
-  /**
-   * @description :取消/确定预约Xmf
-   * @date :2020/11/24 15:30
-   **/
 
-    public JSONObject appointmentHandle(Long id,String type) {
+    /**
+     * @description :取消/确定预约Xmf
+     * @date :2020/11/24 15:30
+     **/
+
+    public JSONObject appointmentHandle(Long id, String type) {
         String url = "/jiaochen/m-app/task/appointment/handle";
-        JSONObject json=new JSONObject();
-        json.put("id",id);
-        json.put("type",type);
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("type", type);
 
         return invokeApi(url, json);
     }
@@ -1004,14 +1018,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:26
      **/
 
-    public JSONObject appreceptionPage(Integer last_value,Integer size) {
+    public JSONObject appreceptionPage(Integer last_value, Integer size) {
         String url = "/jiaochen/m-app/task/reception/page";
-        JSONObject json=new JSONObject();
-        json.put("last_value",last_value);
-        json.put("size",size);
+        JSONObject json = new JSONObject();
+        json.put("last_value", last_value);
+        json.put("size", size);
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :输入车牌，确认接待Xmf
      * @date :2020/11/24 19:27
@@ -1019,19 +1034,20 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appReceptionAdmit(String plate_number) {
         String url = "/jiaochen/m-app/task/reception/admit";
-        JSONObject json=new JSONObject();
-        json.put("plate_number",plate_number);
+        JSONObject json = new JSONObject();
+        json.put("plate_number", plate_number);
 
         return invokeApi(url, json);
     }
 
     public JSONObject appReceptionAdmitcode(String plate_number) {
         String url = "/jiaochen/m-app/task/reception/admit";
-        JSONObject json=new JSONObject();
-        json.put("plate_number",plate_number);
+        JSONObject json = new JSONObject();
+        json.put("plate_number", plate_number);
 
-        return invokeApi(url, json,false);
+        return invokeApi(url, json, false);
     }
+
     /**
      * @description :app开始接待xmf
      * @date :2020/11/24 19:28
@@ -1039,14 +1055,15 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject StartReception(appStartReception sr) {
         String url = "/jiaochen/m-app/task/reception/start-reception";
-        JSONObject json=new JSONObject();
-        json.put("id",sr.id);
-        json.put("is_new",sr.is_new);
-        json.put("customer_name",sr.customer_name);
-        json.put("customer_phone",sr.customer_phone);
+        JSONObject json = new JSONObject();
+        json.put("id", sr.id);
+        json.put("is_new", sr.is_new);
+        json.put("customer_name", sr.customer_name);
+        json.put("customer_phone", sr.customer_phone);
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :完成接待Xmf
      * @date :2020/11/24 19:31
@@ -1054,11 +1071,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject finishReception(Long id) {
         String url = "/jiaochen/m-app/task/reception/finish-reception";
-        JSONObject json=new JSONObject();
-        json.put("id",id);
+        JSONObject json = new JSONObject();
+        json.put("id", id);
 
         return invokeApi(url, json);
     }
+
     /**
      * @description :取消接待Xmf
      * @date :2020/11/24 19:32
@@ -1066,8 +1084,8 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject cancleReception(Long id) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
-        JSONObject json=new JSONObject();
-        json.put("id",id);
+        JSONObject json = new JSONObject();
+        json.put("id", id);
 
         return invokeApi(url, json);
     }
@@ -1078,13 +1096,13 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appletAppointment(appletAppointment pm) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",pm.shop_id);
-        json1.put("staff_id",pm.staff_id);
-        json1.put("time_id",pm.time_id);
-        json1.put("car_id",pm.car_id);
-        json1.put("appointment_name",pm.appointment_name);
-        json1.put("appointment_phone",pm.appointment_phone);
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", pm.shop_id);
+        json1.put("staff_id", pm.staff_id);
+        json1.put("time_id", pm.time_id);
+        json1.put("car_id", pm.car_id);
+        json1.put("appointment_name", pm.appointment_name);
+        json1.put("appointment_phone", pm.appointment_phone);
 
         return invokeApi(url, json1);
     }
@@ -1095,10 +1113,11 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appletShopInfo() {
         String url = "/jiaochen/applet/shop-info";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :banner xmf
      * @date :2020/11/28 12:14
@@ -1106,17 +1125,18 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletbanner() {
         String url = "/jiaochen/applet/banner";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :文章列表xmf
      * @date :2020/11/28 12:14
      **/
     public JSONObject appletArticleList() {
         String url = "/jiaochen/applet/article/list";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
@@ -1127,8 +1147,8 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appletArticleDetile(String id) {
         String url = "/jiaochen/applet/article/detail";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
         return invokeApi(url, json1);
     }
 
@@ -1138,8 +1158,8 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appletArticlevoucher(String id) {
         String url = "/jiaochen/applet/article/voucher/list";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
         return invokeApi(url, json1);
     }
 
@@ -1147,26 +1167,27 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :文章发放卡券列表 xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletvoucherReceive(String article_id,String voucher_id) {
+    public JSONObject appletvoucherReceive(String article_id, String voucher_id) {
         String url = "/jiaochen/applet/granted/article/voucher/receive";
-        JSONObject json1=new JSONObject();
-        json1.put("article_id",article_id);
-        json1.put("voucher_id",voucher_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("article_id", article_id);
+        json1.put("voucher_id", voucher_id);
         return invokeApi(url, json1);
     }
+
     /**
      * @description :活动报名xmf
      * @date :2020/11/28 12:20
      **/
     public JSONObject appletactivityRegister(appletActivityRegister pm) {
         String url = "/jiaochen/applet/granted/article/activity/register";
-        JSONObject json1=new JSONObject();
-        json1.put("id",pm.id);
-        json1.put("name",pm.name);
-        json1.put("num",pm.num);
-        json1.put("phone",pm.phone);
-        json1.put("car_style",pm.car_style);
-        json1.put("other_car_style",pm.other_car_style);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", pm.id);
+        json1.put("name", pm.name);
+        json1.put("num", pm.num);
+        json1.put("phone", pm.phone);
+        json1.put("car_style", pm.car_style);
+        json1.put("other_car_style", pm.other_car_style);
 
         return invokeApi(url, json1);
     }
@@ -1175,34 +1196,36 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :新增车辆xmf
      * @date :2020/11/28 12:29
      **/
-    public JSONObject appletAddCar(String plate_number,String model_id) {
+    public JSONObject appletAddCar(String plate_number, String model_id) {
         String url = "/jiaochen/applet/granted/car/create";
-        JSONObject json1=new JSONObject();
-        json1.put("plate_number",plate_number);
-        json1.put("model_id",model_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("plate_number", plate_number);
+        json1.put("model_id", model_id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :新增车辆xmf
      * @date :2020/11/28 12:29
      **/
-    public JSONObject appletAddCarcode(String plate_number,String model_id) {
+    public JSONObject appletAddCarcode(String plate_number, String model_id) {
         String url = "/jiaochen/applet/granted/car/create";
-        JSONObject json1=new JSONObject();
-        json1.put("plate_number",plate_number);
-        json1.put("model_id",model_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("plate_number", plate_number);
+        json1.put("model_id", model_id);
 
-        return invokeApi(url, json1,false);
+        return invokeApi(url, json1, false);
     }
-  /**
-   * @description :我的车辆
-   * @date :2020/11/28 12:44
-   **/
+
+    /**
+     * @description :我的车辆
+     * @date :2020/11/28 12:44
+     **/
     public JSONObject appletMyCar(String style_id) {
         String url = "/jiaochen/applet/granted/car/create";
-        JSONObject json1=new JSONObject();
-        json1.put("style_id",style_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("style_id", style_id);
 
         return invokeApi(url, json1);
     }
@@ -1212,12 +1235,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/28 12:45
      **/
 
-    public JSONObject appletMyAppointment(String last_value,String type,String size) {
+    public JSONObject appletMyAppointment(String last_value, String type, String size) {
         String url = "/jiaochen/applet/granted/car/create";
-        JSONObject json1=new JSONObject();
-        json1.put("last_value",last_value);
-        json1.put("type",type);
-        json1.put("size",size);
+        JSONObject json1 = new JSONObject();
+        json1.put("last_value", last_value);
+        json1.put("type", type);
+        json1.put("size", size);
 
         return invokeApi(url, json1);
     }
@@ -1229,11 +1252,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletCancleAppointment(String id) {
         String url = "/jiaochen/applet/granted/appointment/maintain/cancel";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :删除预约记录XMF
      * @date :2020/11/28 12:45
@@ -1241,23 +1265,24 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletmaintainDelete(String id) {
         String url = "/jiaochen/applet/granted/appointment/maintain/delete";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
 
     //888888
+
     /**
      * @description :我的活动报名XMF
      * @date :2020/11/28 12:45
      **/
 
-    public JSONObject appletMyActually(String last_value,String size) {
+    public JSONObject appletMyActually(String last_value, String size) {
         String url = "/jiaochen/applet/granted/appointment/activity/list";
-        JSONObject json1=new JSONObject();
-        json1.put("last_value",last_value);
-        json1.put("size",size);
+        JSONObject json1 = new JSONObject();
+        json1.put("last_value", last_value);
+        json1.put("size", size);
 
         return invokeApi(url, json1);
     }
@@ -1269,11 +1294,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletactivityCancel(String id) {
         String url = "/jiaochen/applet/granted/appointment/activity/cancel";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :删除预约记录XMF
      * @date :2020/11/28 12:45
@@ -1281,11 +1307,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletactivityDelete(String id) {
         String url = "/jiaochen/applet/granted/appointment/activity/delete";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :预约评价项 XMF
      * @date :2020/11/28 12:45
@@ -1293,31 +1320,33 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appletevaluateItems(String id) {
         String url = "/jiaochen/applet/granted/appointment/evaluate/items";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :我的消息XMF
      * @date :2020/11/28 12:45
      **/
-    public JSONObject appletmessageList(String last_value,String size) {
+    public JSONObject appletmessageList(String last_value, String size) {
         String url = "/jiaochen/applet/granted/message/list";
-        JSONObject json1=new JSONObject();
-        json1.put("last_value",last_value);
-        json1.put("size",size);
+        JSONObject json1 = new JSONObject();
+        json1.put("last_value", last_value);
+        json1.put("size", size);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :我的消息详情 XMF
      * @date :2020/11/28 12:45
      **/
     public JSONObject appletmessageDetail(String id) {
         String url = "/jiaochen/applet/granted/message/detail";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
@@ -1326,43 +1355,46 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :编辑车辆xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarEdit(String id,String plate_number,String model_id) {
+    public JSONObject appletCarEdit(String id, String plate_number, String model_id) {
         String url = "/jiaochen/applet/granted/car/edit";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
-        json1.put("plate_number",plate_number);
-        json1.put("model_id",model_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
+        json1.put("plate_number", plate_number);
+        json1.put("model_id", model_id);
 
-        return invokeApi(url, json1,false);
+        return invokeApi(url, json1, false);
     }
+
     /**
      * @description :删除车辆xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletCarDelst(String id) {
         String url = "/jiaochen/applet/granted/car/delete";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :品牌列表 xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletBrandList() {
         String url = "/jiaochen/applet/brand/list";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :车系列表 xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletCarStyleList() {
         String url = "/jiaochen/applet/style/list";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
@@ -1371,31 +1403,33 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :车型列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarModelList(String brand_id,String style_id) {
+    public JSONObject appletCarModelList(String brand_id, String style_id) {
         String url = "/jiaochen/applet/model/list";
-        JSONObject json1=new JSONObject();
-        json1.put("brand_id",brand_id);
-        json1.put("style_id",style_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("brand_id", brand_id);
+        json1.put("style_id", style_id);
         return invokeApi(url, json1);
     }
     //00
+
     /**
      * @description :车型列表 xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletName() {
         String url = "/jiaochen/applet/name";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :车型列表 xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletplateNumberProvinceList() {
         String url = "/jiaochen/applet/plate-number-province-list";
-        JSONObject json1=new JSONObject();
+        JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
     }
@@ -1404,22 +1438,23 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :保养门店列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainShopList(String car_id,String coordinate) {
+    public JSONObject appletmaintainShopList(String car_id, String coordinate) {
         String url = "/jiaochen/applet/granted/maintain/shop/list";
-        JSONObject json1=new JSONObject();
-        json1.put("car_id",car_id);
-        json1.put("coordinate",coordinate);
+        JSONObject json1 = new JSONObject();
+        json1.put("car_id", car_id);
+        json1.put("coordinate", coordinate);
 
         return invokeApi(url, json1);
     }
+
     /**
      * @description :服务顾问列表 xmf
      * @date :2020/11/28 12:58
      **/
     public JSONObject appletStaffList(String shop_id) {
         String url = "/jiaochen/applet/granted/maintain/staff/list";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",shop_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
 
         return invokeApi(url, json1);
     }
@@ -1430,13 +1465,11 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject appletmaintainTimeList(String shop_id) {
         String url = "/jiaochen/applet/granted/maintain/time/list";
-        JSONObject json1=new JSONObject();
-        json1.put("shop_id",shop_id);
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
 
         return invokeApi(url, json1);
     }
-
-
 
 
     //将账户使用次数为0的角色删除
@@ -1489,8 +1522,6 @@ public class ScenarioUtil extends TestCaseCommon {
                 "苏BJ123456",//9位
         };
     }
-
-
 
 
     /**
@@ -1751,14 +1782,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject preSleCustomerManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject preSleCustomerManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1768,17 +1799,17 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject preSleCustomerManage(PreSleCustomerVariable variable){
+    public JSONObject preSleCustomerManage(PreSleCustomerVariable variable) {
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("customer_name",variable.customer_name);
-        json.put("customer_phone",variable.customer_phone);
-        json.put("create_date",variable.create_date);
-        json.put("sale_name",variable.sale_name);
-        json.put("customer_type",variable.customer_type);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("customer_name", variable.customer_name);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("create_date", variable.create_date);
+        json.put("sale_name", variable.sale_name);
+        json.put("customer_type", variable.customer_type);
 
         return invokeApi(url, json);
     }
@@ -1789,14 +1820,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject afterSleCustomerManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject afterSleCustomerManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/customer-manage/after-sale-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1807,16 +1838,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject afterSleCustomerManage(AfterSleCustomerVariable variable){
+    public JSONObject afterSleCustomerManage(AfterSleCustomerVariable variable) {
         String url = "/jiaochen/pc/customer-manage/after-sale-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("vehicle_chassis_code",variable.vehicle_chassis_code);
-        json.put("create_date",variable.create_date);
-        json.put("customer_name",variable.customer_name);
-        json.put("customer_phone",variable.customer_phone);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("vehicle_chassis_code", variable.vehicle_chassis_code);
+        json.put("create_date", variable.create_date);
+        json.put("customer_name", variable.customer_name);
+        json.put("customer_phone", variable.customer_phone);
 
         return invokeApi(url, json);
     }
@@ -1826,14 +1857,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject weChatSleCustomerManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject weChatSleCustomerManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/customer-manage/wechat-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1842,15 +1873,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description:小程序客户管理列表
      * @time: 2020-11-25
      */
-    public JSONObject weChatSleCustomerManage(weChatSleCustomerVariable variable){
+    public JSONObject weChatSleCustomerManage(weChatSleCustomerVariable variable) {
         String url = "/jiaochen/pc/customer-manage/wechat-customer/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("create_date",variable.create_date);
-        json.put("active_type",variable.active_type);
-        json.put("customer_phone",variable.customer_phone);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("create_date", variable.create_date);
+        json.put("active_type", variable.active_type);
+        json.put("customer_phone", variable.customer_phone);
 
         return invokeApi(url, json);
     }
@@ -1860,14 +1891,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject appointmentRecordManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject appointmentRecordManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1877,20 +1908,20 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject appointmentRecordManage(appointmentRecordVariable variable){
+    public JSONObject appointmentRecordManage(appointmentRecordVariable variable) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("plate_number",variable.plate_number);
-        json.put("customer_manager",variable.customer_manager);
-        json.put("shop_id",variable.shop_id);
-        json.put("customer_name",variable.customer_name);
-        json.put("appointment_status",variable.appointment_status);
-        json.put("customer_phone",variable.customer_phone);
-        json.put("is_overtime",variable.is_overtime);
-        json.put("confirm_time",variable.confirm_time);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("plate_number", variable.plate_number);
+        json.put("customer_manager", variable.customer_manager);
+        json.put("shop_id", variable.shop_id);
+        json.put("customer_name", variable.customer_name);
+        json.put("appointment_status", variable.appointment_status);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("is_overtime", variable.is_overtime);
+        json.put("confirm_time", variable.confirm_time);
 
         return invokeApi(url, json);
     }
@@ -1900,14 +1931,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject maintainFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject maintainFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/manage/maintain/car-model/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1917,16 +1948,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject maintainFilterManage(maintainVariable variable){
+    public JSONObject maintainFilterManage(maintainVariable variable) {
         String url = "/jiaochen/pc/manage/maintain/car-model/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("brand_name",variable.brand_name);
-        json.put("manufacturer",variable.manufacturer);
-        json.put("car_model",variable.car_model);
-        json.put("year",variable.year);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("brand_name", variable.brand_name);
+        json.put("manufacturer", variable.manufacturer);
+        json.put("car_model", variable.car_model);
+        json.put("year", variable.year);
 
         return invokeApi(url, json);
     }
@@ -1936,32 +1967,33 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject voucherFormFilterManage(voucherFormVariable variable){
+    public JSONObject voucherFormFilterManage(voucherFormVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("subject_name",variable.subject_name);
-        json.put("voucher_name",variable.voucher_name);
-        json.put("creator",variable.creator);
-        json.put("is_diff",variable.is_diff);
+        json.put("shopId", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("subject_name", variable.subject_name);
+        json.put("voucher_name", variable.voucher_name);
+        json.put("creator", variable.creator);
+        json.put("is_diff", variable.is_diff);
 
         return invokeApi(url, json);
     }
+
     /**
      * @description:卡券管理
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject voucherFormFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject voucherFormFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1972,14 +2004,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject sendRecordFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject sendRecordFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher-manage/send-record";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -1989,16 +2021,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject sendRecordFilterManage(sendRecordVariable variable){
+    public JSONObject sendRecordFilterManage(sendRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/send-record";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("end_time",variable.end_time);
-        json.put("voucher_name",variable.voucher_name);
-        json.put("sender",variable.sender);
-        json.put("start_time",variable.start_time);
+        json.put("shopId", shopId);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("end_time", variable.end_time);
+        json.put("voucher_name", variable.voucher_name);
+        json.put("sender", variable.sender);
+        json.put("start_time", variable.start_time);
 
 
         return invokeApi(url, json);
@@ -2009,14 +2041,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject verificationReordFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject verificationReordFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2026,15 +2058,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject verificationReordFilterManage(verificationRecordVariable variable){
+    public JSONObject verificationReordFilterManage(verificationRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
-        json.put("voucher_name",variable.voucher_name);
-        json.put("sender",variable.sender)  ;
-        json.put("start_time",variable.start_time) ;
-        json.put("end_time",variable.start_time);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
+        json.put("voucher_name", variable.voucher_name);
+        json.put("sender", variable.sender);
+        json.put("start_time", variable.start_time);
+        json.put("end_time", variable.start_time);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
 
         return invokeApi(url, json);
     }
@@ -2044,14 +2076,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject verificationPeopleFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject verificationPeopleFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher-manage/verification-people";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2061,14 +2093,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject verificationPeopleFilterManage(verificationPeopleVariable variable){
+    public JSONObject verificationPeopleFilterManage(verificationPeopleVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-people";
         JSONObject json = new JSONObject();
-        json.put("verification_person",variable.verification_person);
-        json.put("verification_phone",variable.verification_phone);
-        json.put("verification_code",variable.verification_code);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
+        json.put("verification_person", variable.verification_person);
+        json.put("verification_phone", variable.verification_phone);
+        json.put("verification_code", variable.verification_code);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
         return invokeApi(url, json);
     }
 
@@ -2077,14 +2109,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject packageFormFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject packageFormFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/package-manage/package-form/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2094,17 +2126,17 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject packageFormFilterManage(packageFormVariable variable){
+    public JSONObject packageFormFilterManage(packageFormVariable variable) {
         String url = "/jiaochen/pc/package-manage/package-form/page";
         JSONObject json = new JSONObject();
-        json.put("package_status",variable.package_status);
-        json.put("package_name",variable.package_name);
-        json.put("creator",variable.creator);
-        json.put("start_time",variable.start_time);
-        json.put("end_time",variable.end_time);
-        json.put("shop_name",variable.shop_name);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
+        json.put("package_status", variable.package_status);
+        json.put("package_name", variable.package_name);
+        json.put("creator", variable.creator);
+        json.put("start_time", variable.start_time);
+        json.put("end_time", variable.end_time);
+        json.put("shop_name", variable.shop_name);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
         return invokeApi(url, json);
     }
 
@@ -2114,14 +2146,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject buyPackageRecordFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject buyPackageRecordFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/packsge-manage/buy-package-record";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2131,16 +2163,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject buyPackageRecordFilterManage(buyPackageVariable variable){
+    public JSONObject buyPackageRecordFilterManage(buyPackageVariable variable) {
         String url = "/jiaochen/pc/packsge-manage/buy-package-record";
         JSONObject json = new JSONObject();
-        json.put("package_name",variable.package_name);
-        json.put("sender",variable.sender);
-        json.put("start_time",variable.start_time);
-        json.put("end_time",variable.end_time);
-        json.put("send_type",variable.send_type);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
+        json.put("package_name", variable.package_name);
+        json.put("sender", variable.sender);
+        json.put("start_time", variable.start_time);
+        json.put("end_time", variable.end_time);
+        json.put("send_type", variable.send_type);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
         return invokeApi(url, json);
     }
 
@@ -2149,14 +2181,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject messageFormFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject messageFormFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/message-manage/message-form/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2166,17 +2198,17 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject messageFormFilterManage(messageFormVariable variable){
+    public JSONObject messageFormFilterManage(messageFormVariable variable) {
         String url = "/jiaochen/pc/message-manage/message-form/page";
         JSONObject json = new JSONObject();
-        json.put("message_type",variable.message_type);
-        json.put("send_account",variable.send_account);
-        json.put("start_time",variable.start_time);
-        json.put("end_time",variable.end_time);
-        json.put("customer_name",variable.customer_name);
-        json.put("shop_id",variable.shop_id);
-        json.put("page",variable.page);
-        json.put("size",variable.size);
+        json.put("message_type", variable.message_type);
+        json.put("send_account", variable.send_account);
+        json.put("start_time", variable.start_time);
+        json.put("end_time", variable.end_time);
+        json.put("customer_name", variable.customer_name);
+        json.put("shop_id", variable.shop_id);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
         return invokeApi(url, json);
     }
 
@@ -2185,14 +2217,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject articleFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject articleFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/operation/article/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2202,16 +2234,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject articleFilterManage(articleVariable variable){
+    public JSONObject articleFilterManage(articleVariable variable) {
         String url = "/jiaochen/pc/operation/article/page";
         JSONObject json = new JSONObject();
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("title",variable.title);
-        json.put("start_date",variable.start_date);
-        json.put("end_date",variable.end_date);
-        json.put("register_start_date",variable.register_start_date);
-        json.put("register_end_date",variable.register_end_date);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("title", variable.title);
+        json.put("start_date", variable.start_date);
+        json.put("end_date", variable.end_date);
+        json.put("register_start_date", variable.register_start_date);
+        json.put("register_end_date", variable.register_end_date);
         return invokeApi(url, json);
     }
 
@@ -2220,32 +2252,33 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject registerListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject registerListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/operation/register/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
+
     /**
      * @description:报名列表
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject registerListFilterManage(registerListVariable variable){
+    public JSONObject registerListFilterManage(registerListVariable variable) {
         String url = "/jiaochen/pc/operation/register/page";
         JSONObject json = new JSONObject();
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("title",variable.title);
-        json.put("start_date",variable.start_date);
-        json.put("end_date",variable.end_date);
-        json.put("register_start_date",variable.register_start_date);
-        json.put("register_end_date",variable.register_end_date);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("title", variable.title);
+        json.put("start_date", variable.start_date);
+        json.put("end_date", variable.end_date);
+        json.put("register_start_date", variable.register_start_date);
+        json.put("register_end_date", variable.register_end_date);
         return invokeApi(url, json);
     }
 
@@ -2254,34 +2287,34 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject approvalListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject approvalListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/operation/approval/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
+
     /**
      * @description:活动审批
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject approvalListFilterManage(approvalListVariable variable){
+    public JSONObject approvalListFilterManage(approvalListVariable variable) {
         String url = "/jiaochen/pc/operation/approval/page";
         JSONObject json = new JSONObject();
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("article_id",variable.article_id);
-        json.put("customer_name",variable.customer_name);
-        json.put("phone",variable.phone);
-        json.put("status",variable.status);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("article_id", variable.article_id);
+        json.put("customer_name", variable.customer_name);
+        json.put("phone", variable.phone);
+        json.put("status", variable.status);
         return invokeApi(url, json);
     }
-
 
 
     /**
@@ -2289,14 +2322,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject applyListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject applyListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher/apply/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2306,19 +2339,19 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject applyListFilterManage(applyListVariable variable){
+    public JSONObject applyListFilterManage(applyListVariable variable) {
         String url = "/jiaochen/pc/voucher/apply/page";
         JSONObject json = new JSONObject();
-        json.put("page",variable.page);
-        json.put("size",variable.size);
-        json.put("name",variable.name);
-        json.put("send_time",variable.send_time);
-        json.put("apply_name",variable.apply_time);
-        json.put("status",variable.status);
-        json.put("apply_group",variable.apply_group);
-        json.put("cost_center",variable.cost_center);
-        json.put("apply_time",variable.apply_time);
-        json.put("apply_item",variable.send_time);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("name", variable.name);
+        json.put("send_time", variable.send_time);
+        json.put("apply_name", variable.apply_time);
+        json.put("status", variable.status);
+        json.put("apply_group", variable.apply_group);
+        json.put("cost_center", variable.cost_center);
+        json.put("apply_time", variable.apply_time);
+        json.put("apply_item", variable.send_time);
         return invokeApi(url, json);
     }
 
@@ -2327,14 +2360,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject shopListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject shopListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/shop/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2344,13 +2377,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject shopListFilterManage(String shopId, String page, String size,String name){
+    public JSONObject shopListFilterManage(String shopId, String page, String size, String name) {
         String url = "/jiaochen/pc/shop/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
 
         return invokeApi(url, json);
     }
@@ -2360,14 +2393,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject brandListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject brandListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/brand/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2377,13 +2410,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject brandListFilterManage(String shopId,String page,String size,String name){
+    public JSONObject brandListFilterManage(String shopId, String page, String size, String name) {
         String url = "/jiaochen/pc/brand/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
         return invokeApi(url, json);
     }
 
@@ -2392,14 +2425,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carStyleListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject carStyleListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/brand/car-style/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2409,13 +2442,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carStyleListFilterManage(String shopId,String page,String size,String name){
+    public JSONObject carStyleListFilterManage(String shopId, String page, String size, String name) {
         String url = "/jiaochen/pc/brand/car-style/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
         return invokeApi(url, json);
     }
 
@@ -2424,14 +2457,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carModelListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject carModelListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/brand/car-style/car-model/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2441,15 +2474,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carModelListFilterManage(String shopId,String page,String size,String name,String year,String status){
+    public JSONObject carModelListFilterManage(String shopId, String page, String size, String name, String year, String status) {
         String url = "/jiaochen/pc/brand/car-style/car-model/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
-        json.put("year",year);
-        json.put("status",status);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("year", year);
+        json.put("status", status);
 
         return invokeApi(url, json);
     }
@@ -2459,14 +2492,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject roleListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject roleListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/role/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2476,13 +2509,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject roleListFilterManage(String shopId,String page,String size,String name){
+    public JSONObject roleListFilterManage(String shopId, String page, String size, String name) {
         String url = "/jiaochen/pc/role/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
         return invokeApi(url, json);
     }
 
@@ -2491,14 +2524,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject staffListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject staffListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/staff/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2508,13 +2541,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject staffListFilterManage(String shopId,String page,String size,String role_name){
+    public JSONObject staffListFilterManage(String shopId, String page, String size, String role_name) {
         String url = "/jiaochen/pc/staff/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("role_name",role_name);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("role_name", role_name);
         return invokeApi(url, json);
     }
 
@@ -2523,14 +2556,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject importListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject importListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/record/import/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2540,15 +2573,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject importListFilterManage(String shopId,String page,String size,String type,String user,String import_date){
+    public JSONObject importListFilterManage(String shopId, String page, String size, String type, String user, String import_date) {
         String url = "/jiaochen/pc/record/import/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("type",type);
-        json.put("user",user);
-        json.put("import_date",import_date);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("type", type);
+        json.put("user", user);
+        json.put("import_date", import_date);
 
         return invokeApi(url, json);
     }
@@ -2558,14 +2591,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject exportListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject exportListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/record/export/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2575,15 +2608,15 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject exportListFilterManage(String shopId,String page,String size,String type,String user,String export_time){
+    public JSONObject exportListFilterManage(String shopId, String page, String size, String type, String user, String export_time) {
         String url = "/jiaochen/pc/record/export/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("type",type);
-        json.put("user",user);
-        json.put("export_time",export_time);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("type", type);
+        json.put("user", user);
+        json.put("export_time", export_time);
 
         return invokeApi(url, json);
     }
@@ -2593,14 +2626,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject pushMsgListFilterManage(String shopId,String page,String size,String pram,String result){
+    public JSONObject pushMsgListFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/record/push-msg/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        if(pram!=null||!pram.equals("")){
-            json.put(pram,result);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null || !pram.equals("")) {
+            json.put(pram, result);
         }
         return invokeApi(url, json);
     }
@@ -2610,14 +2643,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject pushMsgListFilterManage1(String shopId,String page,String size,String customer_type,String push_date){
+    public JSONObject pushMsgListFilterManage1(String shopId, String page, String size, String customer_type, String push_date) {
         String url = "/jiaochen/pc/record/push-msg/page";
         JSONObject json = new JSONObject();
-        json.put("shopId",shopId);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("customer_type",customer_type);
-        json.put("push_date",push_date);
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_type", customer_type);
+        json.put("push_date", push_date);
 
         return invokeApi(url, json);
     }
@@ -2667,8 +2700,8 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject addShopNotChk(String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
-                              String sale_tel, String service_tel, double longitude, double latitude,
-                              String appointment_status, String washing_status) throws Exception { // 预约状态：ENABLE（开启） DISABLE（关闭）
+                                    String sale_tel, String service_tel, double longitude, double latitude,
+                                    String appointment_status, String washing_status) throws Exception { // 预约状态：ENABLE（开启） DISABLE（关闭）
         String url = "/jiaochen/pc/shop/add";
         JSONObject json = new JSONObject();
         json.put("avatar_path", avatar_path);
@@ -2694,9 +2727,9 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-25
      */
 
-    public JSONObject editShop(Long id ,String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
-                              String sale_tel, String service_tel, double longitude, double latitude,
-                              String appointment_status, String washing_status) { // 预约状态：ENABLE（开启） DISABLE（关闭）
+    public JSONObject editShop(Long id, String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
+                               String sale_tel, String service_tel, double longitude, double latitude,
+                               String appointment_status, String washing_status) { // 预约状态：ENABLE（开启） DISABLE（关闭）
         String url = "/jiaochen/pc/shop/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -2752,7 +2785,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-28
      */
 
-    public JSONObject articlePage(Integer page, Integer size, String start_date , String end_date,String register_start_date,String register_end_date) {
+    public JSONObject articlePage(Integer page, Integer size, String start_date, String end_date, String register_start_date, String register_end_date) {
         String url = "/jiaochen/pc/operation/article/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -2771,10 +2804,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-28
      */
 
-    public JSONObject addArticle(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
-                                  String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
-                                  String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
-                                  String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) {
+    public JSONObject addArticle(String title, String pic_type, JSONArray pic_list, String content, String label, String content_type,
+                                 String start_date, String end_date, String register_start_date, String register_end_date, Integer total_quota,
+                                 String address, Boolean is_can_maintain, Boolean is_voucher, JSONArray voucher_list, String voucher_receive_type,
+                                 String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) {
         String url = "/jiaochen/pc/operation/article/add";
         JSONObject json = new JSONObject();
         json.put("title", title);
@@ -2800,10 +2833,10 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject addArticleNotChk(String title , String pic_type,JSONArray pic_list,String content, String label,String content_type,
-                                  String start_date,String end_date, String register_start_date, String register_end_date,Integer total_quota,
-                                  String address, Boolean is_can_maintain, Boolean is_voucher,JSONArray voucher_list, String voucher_receive_type,
-                                  String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) throws Exception {
+    public JSONObject addArticleNotChk(String title, String pic_type, JSONArray pic_list, String content, String label, String content_type,
+                                       String start_date, String end_date, String register_start_date, String register_end_date, Integer total_quota,
+                                       String address, Boolean is_can_maintain, Boolean is_voucher, JSONArray voucher_list, String voucher_receive_type,
+                                       String voucher_start_date, String voucher_end_date, Integer voucher_get_use_days) throws Exception {
         String url = "/jiaochen/pc/operation/article/add";
         JSONObject json = new JSONObject();
         json.put("title", title);
@@ -2889,8 +2922,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:内容运营-活动开启/关闭
-     * * @author: lxq
+     * @description:内容运营-活动开启/关闭 * @author: lxq
      * @time: 2020-11-28
      */
 
@@ -2903,19 +2935,18 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:小程序-预约保养
-     * * @author: gly
+     * @description:小程序-预约保养 * @author: gly
      * @time: 2020-11-30
      */
 
-    public JSONObject appointmentMaintain(Long shop_id,String staff_id,long time_id,long car_id,String appointment_name,String appointment_phone) {
+    public JSONObject appointmentMaintain(Long shop_id, String staff_id, long time_id, long car_id, String appointment_name, String appointment_phone) {
         String url = "/jiaochen/applet/granted/maintain/appointment";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
         json.put("staff_id", staff_id);
         json.put("time_id", time_id);
         json.put("car_id", car_id);
-        json.put("appointment_name", appointment_name	);
+        json.put("appointment_name", appointment_name);
         json.put("appointment_phone", appointment_phone);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
@@ -2936,15 +2967,6 @@ public class ScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
-
-
-
-
-
-
-
-
 
 
 }

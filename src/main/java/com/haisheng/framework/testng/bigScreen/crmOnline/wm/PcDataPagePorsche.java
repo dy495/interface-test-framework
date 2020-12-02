@@ -28,7 +28,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zj = EnumAccount.ZJ_ONLINE_PORSCHE;
-    private static final String shopId = EnumShopId.PORSCHE_SHOP_ONLINE.getShopId();
+    private static final String shopId = EnumShopId.PORSCHE_ONLINE.getShopId();
 
     @BeforeClass
     @Override

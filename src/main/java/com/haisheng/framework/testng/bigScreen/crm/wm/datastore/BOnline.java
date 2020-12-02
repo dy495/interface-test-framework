@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BOnline extends TestCaseCommon implements TestCaseStd {
-    private static final String shopId = EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId();
+    private static final String shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final int day = -1;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();

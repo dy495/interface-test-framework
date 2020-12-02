@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
@@ -2953,7 +2953,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumShopId.WIN_SENSE_SHOP_ONLINE.getShopId());
+        object.put("shop_id", EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);

@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

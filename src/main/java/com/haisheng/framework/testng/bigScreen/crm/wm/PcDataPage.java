@@ -41,7 +41,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+    private static final String shopId = EnumShopId.PORSCHE_DAILY.getShopId();
     private static final int size = 100;
     private int s;
     private int v;
@@ -61,7 +61,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
         UserUtil.login(zjl);

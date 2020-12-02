@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class B extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+    private static final String shopId = EnumShopId.PORSCHE_DAILY.getShopId();
     private static final int day = -1;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();

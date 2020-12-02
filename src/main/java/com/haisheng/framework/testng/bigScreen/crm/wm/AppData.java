@@ -6,10 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerLevel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumReceptionType;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -56,7 +53,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }

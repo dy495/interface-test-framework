@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config;
+package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer;
 
 import lombok.Getter;
 
@@ -8,9 +8,9 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "ECuDrIFOE4fol+4FCT+9gQ==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    WM("w", "mvc+oq2YJNx2kvNdoo+iFg==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    WM_SMALL("纯牛奶", "LWDrq4RF598MRAqaY1HfAQ==", ""),
+    WM_SMALL("纯牛奶", "wq1v/03v0bNq45HAK1X1Vw==", ""),
 
     XMF("@@@", "1xLEom38wwHN2wVmoADPWg==", ""),
 

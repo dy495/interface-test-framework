@@ -6,7 +6,8 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.sale.EnumVoucherStatus;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVoucherStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
@@ -17,20 +18,19 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
+    private static final EnumAccount marketing = EnumAccount.MARKETING;
 
     @BeforeClass
     @Override
@@ -48,7 +48,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.PORSCHE_SHOP.getShopId();
+        commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -62,6 +62,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
+        util.login(marketing);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -72,39 +73,20 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取列表数据
-            VoucherFormPage.VoucherFormPageBuilder scene = VoucherFormPage.builder();
-            int total = jc.invokeApi(scene.build()).getInteger("total");
-            IScene applyScene = ApplyPage.builder().build();
-            int applyTotal = jc.invokeApi(applyScene).getInteger("total");
+            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
             //创建卡券
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/卡券图.jpg";
-            String picture = new ImageUtil().getImageBinary(path);
-            String voucherDescription = "商家大促销";
-            String voucherName = util.getVoucherName();
-            IScene createScene = Create.builder().voucherPic(picture).voucherName(voucherName).voucherDescription(voucherDescription)
-                    .stock(10000).cost(10000).shopType(1).shopIds(new ArrayList<>()).selfVerification(true).subjectType("").subjectId(1L).build();
-            jc.invokeApi(createScene);
-            //获取列表数据
-            int newTotal = jc.invokeApi(scene.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            int issueInventory = 0;
-            int cost = 0;
-            for (int i = 1; i < s; i++) {
-                scene.page(i).size(size);
-                JSONArray array = jc.invokeApi(scene.build()).getJSONArray("list");
-                for (int j = 0; j < array.size(); j++) {
-                    if (array.getJSONObject(j).getString("voucher_name").equals(voucherName)) {
-                        issueInventory = array.getJSONObject(j).getInteger("issue_inventory");
-                        cost = array.getJSONObject(j).getInteger("cost");
-                    }
-                }
-            }
-            int newApplyTotal = jc.invokeApi(applyScene).getInteger("total");
-            Preconditions.checkArgument(newApplyTotal == applyTotal + 1, "");
-            Preconditions.checkArgument(newTotal == total + 1, "");
-            Preconditions.checkArgument(issueInventory == 10000, "");
-            Preconditions.checkArgument(cost == 100000, "");
-        } catch (Exception e) {
+            String voucherName = util.createVoucher(1000L);
+            //创建后此卡券
+            int newTotal = jc.invokeApi(builder.build()).getInteger("total");
+            Preconditions.checkArgument(newTotal == total + 1, "创建卡券前卡券列表数量为：" + total + " 创建卡券后数量为：" + newTotal);
+            builder.voucherName(voucherName);
+            JSONObject data = jc.invokeApi(builder.build());
+            int issueInventory = CommonUtil.getIntField(data, 0, "issue_inventory");
+            Preconditions.checkArgument(issueInventory == 1000, "创建卡券时数量为1000，创建完成后列表展示发行库存为：" + issueInventory);
+            int cost = CommonUtil.getIntField(data, 0, "cost");
+            Preconditions.checkArgument(cost == 1000 * 50, "创建卡券时数量为:" + 1000 * 50 + "，创建完成后列表展示成本为：" + issueInventory);
+        } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("卡券表单--新建卡券--列表数+1&发行库存=创建时填写数量&成本=创建时填写的成本");
@@ -136,7 +118,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            Preconditions.checkArgument(invalidTime != null && invalidTime.equals(date), "");
+            Preconditions.checkArgument(invalidTime != null && invalidTime.equals(date), "作废时间：" + invalidTime + " 当前时间：" + date);
             Preconditions.checkArgument(invalidAccount != null && invalidAccount.equals(""), "");
             Preconditions.checkArgument(invalidStatusName.equals(EnumVoucherStatus.INVALID.getName()), "");
         } catch (Exception | AssertionError e) {
@@ -510,7 +492,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
             Long total = jc.invokeApi(builder.build()).getLong("total");
             //创建一种卡券
-            util.createVoucher();
+            util.createVoucher(1000L);
             //创建卡券后卡券审核页列表数
             Long newTotal = jc.invokeApi(builder.build()).getLong("total");
             Preconditions.checkArgument(newTotal == total + 1, "");
@@ -530,7 +512,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
             Long total = jc.invokeApi(builder.build()).getLong("total");
             //增发一种卡券
-            util.createVoucher();
+            util.createVoucher(1000L);
             //增发卡券后卡券审核页列表数
             Long newTotal = jc.invokeApi(builder.build()).getLong("total");
             Preconditions.checkArgument(newTotal == total + 1, "");
@@ -560,7 +542,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //创建卡券
-            util.createVoucher();
+            util.createVoucher(1000L);
             long listTotal = jc.pcVoucherList().getLong("total");
             Preconditions.checkArgument(listTotal != 0, "");
             Preconditions.checkArgument(listTotal == listSize + 1, "");

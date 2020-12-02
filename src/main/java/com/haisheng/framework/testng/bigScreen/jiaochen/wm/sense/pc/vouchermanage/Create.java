@@ -14,8 +14,8 @@ public class Create extends BaseScene {
     private final String voucherPic;
     private final String voucherName;
     private final String voucherDescription;
-    private final Integer stock;
-    private final Integer cost;
+    private final Long stock;
+    private final Long cost;
     private final Integer shopType;
     private final List<Long> shopIds;
     private final Boolean selfVerification;
