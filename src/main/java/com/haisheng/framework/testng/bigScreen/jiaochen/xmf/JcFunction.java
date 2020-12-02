@@ -130,4 +130,20 @@ public class JcFunction {
         return num;
     }
 
+    public int[] getPage(int total){
+        int page[]=new int[2];
+        if(total==0){
+            page[0]=1;
+            page[1]=0;
+        }else if(total%10==0){
+            page[0]=total/10;
+            page[1]=10;
+        }else{
+            page[0]=total/10+1;
+            page[1]=total%10-1;
+        }
+        System.out.println(page[0]+"index:"+page[1]);
+        return page;
+    }
+
 }

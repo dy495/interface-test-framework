@@ -57,7 +57,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        //crm.login(sh_name1, sh_pwd1);
+//        crm.login(sh_name1, sh_pwd1);
 
     }
 
