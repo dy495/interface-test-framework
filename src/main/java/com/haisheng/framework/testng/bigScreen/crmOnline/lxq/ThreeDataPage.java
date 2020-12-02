@@ -116,7 +116,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-线上-赢识 lxq");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-保时捷 赢识线上 吕雪晴");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

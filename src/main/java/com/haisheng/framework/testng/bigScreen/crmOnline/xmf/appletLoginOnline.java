@@ -1,4 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
+
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -33,7 +34,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer="https://servicewechat.com/wxbd41de85739a00c7/";
+        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/";
 
 
         //replace backend gateway url
@@ -43,7 +44,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 线上");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-保时捷 赢识线上 夏明风");
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -84,7 +85,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
             crm.appletLoginToken(token);
             String customer_namea = "@@@A";
             String customer_phone_numbera = "15037286014";
-            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1,81).getLong("appointment_id");
+            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1, 81).getLong("appointment_id");
             crm.cancle(appoint_id);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

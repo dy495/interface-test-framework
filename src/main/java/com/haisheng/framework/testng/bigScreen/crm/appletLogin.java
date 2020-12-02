@@ -44,7 +44,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-保时捷 日常");
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
