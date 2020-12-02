@@ -1681,18 +1681,16 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject respon=jc.articleFilterManage(shopId,"1","10","","");
-            if(respon.getJSONArray("list").size()>0){
-                int pages=respon.getInteger("pages");
-                String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
-                for(int page=1;page<=pages;page++){
-                    JSONArray list=jc.articleFilterManage(shopId,String.valueOf(page),"10",pram,result).getJSONArray("list");
-                    for(int i=0;i<10;i++){
-                        String Flag=list.getJSONObject(i).getString(output);
-                        Preconditions.checkArgument(Flag.contains(result), "文章表单按"+result+"查询，结果错误"+Flag);
-                    }
+            String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
+
+            JSONObject tt=jc.articleFilterManage(shopId,"1","10",pram,result);
+            int pages=tt.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=tt.getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String Flag=list.getJSONObject(i).getString(output);
+                    Preconditions.checkArgument(Flag.contains(result), "文章表单按"+result+"查询，结果错误"+Flag);
                 }
-            }else{
-                Preconditions.checkArgument(respon.getJSONArray("list").size()==0, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());

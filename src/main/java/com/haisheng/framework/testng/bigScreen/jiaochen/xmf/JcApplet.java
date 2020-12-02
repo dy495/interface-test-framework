@@ -66,6 +66,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.referer="https://servicewechat.com/wx4071a91527930b48/";
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -105,9 +106,9 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String plate_number = "蒙JKIO123";
-
-            int count = pf.carListNumber(pp.carStyleId);
             String car_idBefore = pf.appletAddCar(plate_number);
+            int count = pf.carListNumber(pp.carStyleId);
+//            String car_idBefore = pf.appletAddCar(plate_number);
 
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
             int aftercount = listB.size();
