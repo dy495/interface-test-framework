@@ -997,37 +997,37 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    /**
-//     * ====================风控事项的处理（订单处理备注的字数）======================
-//     */
-//    @Test
-//    public void trace_dealMark() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-//        try {
-//            JSONArray list = md.cashier_riskPage(shop_id_01, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-//            long id = list.getJSONObject(0).getInteger("id");
-//            String order = list.getJSONObject(0).getString("order_id");
-//
-//            //将待处理的风控事件处理成正常
-//            JSONObject res = md.cashier_riskEventHandle(id, 1, remark);
-//            checkArgument(res.getString("message").equals("成功"), "风控事项的处理，备注填写为500字，创建失败");
-//
-//            //将待处理的风控事件处理成正常
-//            JSONObject res1 = md.cashier_riskEventHandle(id, 1, remarks);
-//            checkArgument(res1.getString("message").equals("备注不能超过500字"), "风控事项的处理，备注填写为501字，创建成功");
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("风控事项的处理（订单处理备注的字数）");
-//        }
-//
-//    }
+    /**
+     * ====================风控事项的处理（订单处理备注的字数）======================
+     */
+    @Test
+    public void trace_dealMark() {
+        logger.logCaseStart(caseResult.getCaseName());
+        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        try {
+            JSONArray list = md.cashier_riskPage(shop_id_01, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+            String order = list.getJSONObject(0).getString("order_id");
+
+            //将待处理的风控事件处理成正常
+            JSONObject res = md.cashier_riskEventHandle(id, 1, remark);
+            checkArgument(res.getString("message").equals("成功"), "风控事项的处理，备注填写为500字，创建失败");
+
+            //将待处理的风控事件处理成正常
+            JSONObject res1 = md.cashier_riskEventHandle(id, 1, remarks);
+            checkArgument(res1.getString("message").equals("备注不能超过500字"), "风控事项的处理，备注填写为501字，创建成功");
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("风控事项的处理（订单处理备注的字数）");
+        }
+
+    }
 
     /**
      * ====================风控规则列表筛选（单一查询）======================
@@ -1396,6 +1396,9 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+
+
 
 
 }

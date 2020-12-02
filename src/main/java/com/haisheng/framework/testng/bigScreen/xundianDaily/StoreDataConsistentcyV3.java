@@ -905,8 +905,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-
-
             Integer customer_uv = 0;
             Integer omni_uv = 0;
             Integer paid_uv = 0;
@@ -923,7 +921,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
 
             }
-
 
             String shop_type = "";
             String shop_name = "";
@@ -968,6 +965,1322 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         } finally {
 
             saveData("累计顾客总人数==所有门店顾客之和|累计全渠道会员总人数==所有门店全渠道会员之和|累计付费会员总人数==所有门店付费会员之和");
+        }
+
+    }
+
+
+
+
+///---------------------------------------------------------------4.0门店会员中新增趋势中的数据一致性---------------------------------------------------------------------------
+
+    /**
+     * ====================全部店-昨日新增顾客==全部店-新增客户趋势图中昨天的顾客数======================
+     */
+    @Test
+    public void member_both_cust() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //从新增顾客占比模块中取到昨日新增顾客人数
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客数
+            int customer= 0;
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                     customer = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+
+            Preconditions.checkArgument((new_uv == customer), "全部店昨日新增顾客" + new_uv + "!=全部店新增客户趋势图中昨天的顾客数=" + customer);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店-昨日新增客户==全部店-新增客户趋势图中昨天的客户数");
+        }
+
+    }
+
+    /**
+     * ====================全部店-昨日新增全渠道会员==全部店-新增客户趋势图中昨天的全渠道会员数======================
+     */
+    @Test
+    public void member_both_omni() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //从新增顾客占比模块中取到昨日新增全渠道会员人数
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+            //获取客户趋势图中昨日新增的全渠道会员
+            int omni_channel= 0;
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    omni_channel = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+            Preconditions.checkArgument((new_uv == omni_channel), "全部店昨日新增全渠道会员" + new_uv + "!=全部店新增客户趋势图中昨天的全渠道会员数=" + omni_channel);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店-昨日新增全渠道会员==全部店-新增客户趋势图中昨天的全渠道会员数");
+        }
+
+    }
+    /**
+     * ====================全部店-昨日新增付费会员==全部店-新增客户趋势图中昨天的付费会员数======================
+     */
+    @Test
+    public void member_both_paid() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比模块中取到昨日新增付费会员人数
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+            //获取客户趋势图中昨日新增的付费会员
+            int paid= 0;
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    paid = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            Preconditions.checkArgument((new_uv == paid), "全部店昨日新增付费会员" + new_uv + "!=全部店新增客户趋势图中昨天的付费会员数=" + paid);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店-昨日新增付费会员==全部店-新增客户趋势图中昨天的付费会员数");
+        }
+
+    }
+
+
+    /**
+     * ====================单店昨日新增顾客==单店新增客户趋势图中昨天的顾客数======================
+     */
+    @Test
+    public void member_single_cust() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //从新增顾客占比模块中取到昨日新增顾客人数
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                     new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+
+
+            //获取客户趋势图中昨日新增的顾客数
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                  int customer = list.getJSONObject(i1).getInteger("customer");
+                  Preconditions.checkArgument((new_uv == customer), "单店昨日新增顾客" + new_uv + "!=单店新增客户趋势图中昨天的顾客数=" + customer);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("昨日新增客户==新增客户趋势图中昨天的客户数");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日新增全渠道会员==单店新增客户趋势图中昨天的全渠道会员数======================
+     */
+    @Test
+    public void member_single_omni() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //从新增顾客占比模块中取到昨日新增全渠道会员人数
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    int omni_channel = list.getJSONObject(i1).getInteger("omni_channel");
+                    Preconditions.checkArgument((new_uv == omni_channel), "单店昨日新增全渠道会员" + new_uv + "!=单店新增客户趋势图中昨天的全渠道会员数=" + omni_channel);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日新增全渠道会员==单店新增客户趋势图中昨天的全渠道会员数");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日新增付费会员==单店新增客户趋势图中昨天的付费会员数======================
+     */
+    @Test
+    public void member_single_paid() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //从新增顾客占比模块中取到昨日新增全渠道会员人数
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            int new_uv = 0;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    new_uv = data_list.getJSONObject(i).getInteger("new_uv");
+                }
+            }
+
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    int paid = list.getJSONObject(i1).getInteger("paid");
+                    Preconditions.checkArgument((new_uv == paid), "单店昨日新增全渠道会员" + new_uv + "!=单店新增客户趋势图中昨天的全渠道会员数=" + paid);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日新增付费会员==单店新增客户趋势图中昨天的付费会员数");
+        }
+
+    }
+
+//---------------------------------------------------------------周同比区域------------------------------------------------------------------------
+    /**
+     * ====================全部店-昨日周同比==全部店-昨天新增的客户值-全部店【新增客户趋势】上周昨天新增的顾客值/全部店上周昨天新增的客户值======================
+     */
+    @Test
+    public void wenkOnWeek_cust_both() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得周同比
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.member_newCount_pic("RECENT_FOURTEEN").getJSONArray("list");
+            int customer1 = 0;
+            int customer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    customer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+            //获取客户趋势图中一周前新增的顾客人数
+            for(int i2 =0;i2<count;i2++){
+                if( i2 == count-8){
+                    customer2 = list.getJSONObject(i2).getInteger("customer");
+                }
+            }
+            String ss=  CommonUtil.getPercent(customer1-customer2,customer2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "全部店昨日周同比" + new_uv_yoy + "!=昨天周x新增的客户值-【新增客户趋势】上周昨天新增的顾客值/上周昨天新增的客户值=" + week_on_week);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店昨日周同比==昨天新增的客户值-【新增客户趋势】上周昨天新增的顾客值/上周昨天新增的客户值");
+        }
+
+    }
+
+
+    /**
+     * ====================全部店-昨日周同比==全部店-昨天新增的全渠道会员值-全部店【新增客户趋势】上周昨天新增的全渠道会员值/全部店上周昨天新增的全渠道会员值======================
+     */
+    @Test
+    public void wenkOnWeek_omni_both() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取全渠道会员部分得周同比
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.member_newCount_pic("RECENT_FOURTEEN").getJSONArray("list");
+            int omni_channel1 = 0;
+            int omni_channel2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    omni_channel1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+            //获取客户趋势图中一周前新增的全渠道会员人数
+            for(int i2 =0;i2<count;i2++){
+                if( i2 == count-8){
+                    omni_channel2 = list.getJSONObject(i2).getInteger("omni_channel");
+                }
+            }
+            String ss=  CommonUtil.getPercent(omni_channel1-omni_channel2,omni_channel2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "全部店-昨日周同比" + new_uv_yoy + "!=昨天周x新增的全渠道会员值-【新增客户趋势】上周昨天新增的全渠道会员值/上周昨天新增的全渠道会员值=" + week_on_week);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店-昨日周同比==昨天新增的全渠道会员值-【新增客户趋势】上周昨天新增的全渠道会员值/上周昨天新增的全渠道会员值");
+        }
+
+    }
+
+    /**
+     * ====================全部店-昨日周同比==全部店-昨天新增的付费会员值-全部店【新增客户趋势】上周昨天新增的付费会员值/全部店上周昨天新增的付费会员值======================
+     */
+    @Test
+    public void wenkOnWeek_paid_both() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取付费会员部分得周同比
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费会员人数
+            JSONArray list = md.member_newCount_pic("RECENT_FOURTEEN").getJSONArray("list");
+            int paid1 = 0;
+            int paid2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    paid1 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            //获取客户趋势图中一周前新增的付费会员人数
+            for(int i2 =0;i2<count;i2++){
+                if( i2 == count-8){
+                    paid2 = list.getJSONObject(i2).getInteger("paid");
+                }
+            }
+            String ss=  CommonUtil.getPercent(paid1-paid2,paid2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "全部店-昨日周同比" + new_uv_yoy + "!=昨天周x新增的付费会员值-【新增客户趋势】上周昨天新增的付费会员值/上周昨天新增的付费会员值=" + week_on_week);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("全部店-昨日周同比==昨天新增的付费会员值-【新增客户趋势】上周昨天新增的付费会员值/上周昨天新增的付费会员值");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日周同比==昨天新增的客户值-【新增客户趋势】上周昨天新增的顾客值/上周昨天新增的客户值======================
+     */
+    @Test
+    public void wenkOnWeek_cust() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得周同比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int customer1 = 0;
+            int customer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    customer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+            //获取客户趋势图中一周前新增的顾客人数
+            for(int i2 =0;i2<count;i2++){
+                if( i2 == count-8){
+                    customer2 = list.getJSONObject(i2).getInteger("customer");
+                }
+            }
+
+            String ss=  CommonUtil.getPercent(customer1-customer2,customer2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "单店昨日周同比" + new_uv_yoy + "!=昨天周x新增的客户值-【新增客户趋势】上周昨天新增的顾客值/上周昨天新增的客户值=" + week_on_week);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日周同比==昨天新增的客户值-【新增客户趋势】上周昨天新增的顾客值/上周昨天新增的客户值");
+        }
+
+    }
+
+
+    /**
+     * ====================单店昨日周同比==昨天新增的全渠道会员值-【新增客户趋势】上周昨天新增的全渠道会员值/上周昨天新增的全渠道会员值======================
+     */
+    @Test
+    public void wenkOnWeek_omni() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得周同比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int omni_channel1 = 0;
+            int omni_channel2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    omni_channel1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+                //获取客户趋势图中一周前新增的顾客人数
+                if( i1 == count-8){
+                    omni_channel2 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+
+            String ss=  CommonUtil.getPercent(omni_channel1-omni_channel2,omni_channel2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "单店昨日周同比" + new_uv_yoy + "!=昨天新增的全渠道会员值-【新增客户趋势】上周昨天新增的全渠道会员值/上周昨天新增的全渠道会员值=" + week_on_week);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日周同比==昨天新增的全渠道会员值-【新增客户趋势】上周昨天新增的全渠道会员值/上周昨天新增的全渠道会员值");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日周同比==昨天新增的付费会员值-【新增客户趋势】上周的昨天新增的付费会员值/上周的昨天新增的付费会员值======================
+     */
+    @Test
+    public void wenkOnWeek_paid() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得周同比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    new_uv_yoy = data_list.getJSONObject(i).getString("new_uv_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int paid1 = 0;
+            int paid2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    paid1 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            //获取客户趋势图中一周前新增的付费人数
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-8){
+                    paid2 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            String ss=  CommonUtil.getPercent(paid1-paid2,paid2,4);
+            String week_on_week =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_yoy.equals(week_on_week)), "单店昨日周同比" + new_uv_yoy + "!=昨天周x新增的付费会员值-【新增客户趋势】上周周x新增的付费会员值/上周周x新增的付费会员值=" + week_on_week);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日周同比==周1新增的付费会员值-【新增客户趋势】上周1新增的付费会员值/上周1新增的付费会员值");
+        }
+
+    }
+
+
+
+//--------------------------------------------------日环比区域---------------------------------------------------------
+    /**
+     * ====================所有店昨日日环比==昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值======================
+     */
+    @Test
+    public void dayOnday_cust_both() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得日环比
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            String new_uv_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    new_uv_ring = data_list.getJSONObject(i).getString("new_uv_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.member_newCount_pic("RECENT_FOURTEEN").getJSONArray("list");
+            int customer1 = 0;
+            int customer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    customer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+                if( i1 == count-2){
+                    customer2 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+
+            String ss=  CommonUtil.getPercent(customer1-customer2,customer2,4);
+            String day_on_day =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "所有店昨日日环比" + new_uv_ring + "!=昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值：" + day_on_day);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("所有店昨日日环比==昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值");
+        }
+
+    }
+
+    /**
+     * ====================所有店昨日日环比==昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值======================
+     */
+    @Test
+    public void dayOnday_omni_both() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得日环比
+            JSONArray data_list = md.member_newCount_data().getJSONArray("list");
+            String new_uv_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv_ring = data_list.getJSONObject(i).getString("new_uv_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.member_newCount_pic("RECENT_FOURTEEN").getJSONArray("list");
+            int omni_channel1 = 0;
+            int omni_channel2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    omni_channel1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+                if( i1 == count-2){
+                    omni_channel2 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+
+            String ss=  CommonUtil.getPercent(omni_channel1-omni_channel2,omni_channel2,4);
+            String day_on_day =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "所有店昨日日环比" + new_uv_ring + "!=昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值：" + day_on_day);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("所有店昨日日环比==昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日日环比==昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值======================
+     */
+    @Test
+    public void dayOnday_cust() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得日环比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    new_uv_ring = data_list.getJSONObject(i).getString("new_uv_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int custmer1 = 0;
+            int custmer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    custmer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+                if( i1 == count-2){
+                    custmer2 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+
+           String ss=  CommonUtil.getPercent(custmer1-custmer2,custmer2,4);
+           String day_on_day =  ss.replace("%","");
+
+
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店昨日日环比" + new_uv_ring + "!=昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值：" + day_on_day);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日日环比==昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值");
+        }
+
+    }
+
+
+
+    /**
+     * ====================单店昨日日环比==昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值======================
+     */
+    @Test
+    public void dayOnday_omni() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得日环比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    new_uv_ring = data_list.getJSONObject(i).getString("new_uv_ring");
+                }
+            }
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int omni_channel1 = 0;
+            int omni_channel2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    omni_channel1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+                if( i1 == count-2){
+                    omni_channel2 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+            String ss=  CommonUtil.getPercent(omni_channel1-omni_channel2,omni_channel2,4);
+            String day_on_day =  ss.replace("%","");
+
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店昨日日环比" + new_uv_ring + "!=昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值：" + day_on_day);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日新增全渠道会员的日环比==昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值");
+        }
+
+    }
+
+
+    /**
+     * ====================单店昨日日环比==昨天新增的付费会员值-【新增客户趋势】前天新增的付费会员值/前天新增的付费会员值======================
+     */
+    @Test
+    public void dayOnday_Paid() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得日环比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String new_uv_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    new_uv_ring = data_list.getJSONObject(i).getString("new_uv_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int paid1 = 0;
+            int paid2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++){
+                if( i1 == count-1){
+                    paid1 = list.getJSONObject(i1).getInteger("paid");
+                }
+                if( i1 == count-2){
+                    paid2 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            String ss=  CommonUtil.getPercent(paid1-paid2,paid2,4);
+            String day_on_day =  ss.replace("%","");
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店昨日日环比" + new_uv_ring + "!=昨天新增的付费会员值-【新增客户趋势】前天新增的付费会员值/前天新增的付费会员值：" + day_on_day);
+//
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日新增付费会员的日环比==昨天新增的付费会员值-【新增客户趋势】前天新增的付费会员值/前天新增的付费会员值");
+        }
+
+    }
+
+
+    /**
+     * ====================单店昨日顾客占比==昨天顾客数量/昨日到店客群总数＊100%======================
+     */
+    @Test
+    public void customer_rate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得顾客占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    transform = data_list.getJSONObject(i).getString("transform");
+                }
+            }
+
+
+            //获取客户趋势图中昨日新增的客户人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int customer = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    customer = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            int uv = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            String ss=  CommonUtil.getPercent(customer,uv,4);
+            String cust_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform.equals(cust_rate)), "单店昨日客户占比" + transform + "!=昨天顾客数量/昨日到店客群总数＊100%：" + cust_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日客户占比==昨天顾客数量/昨日到店客群总数＊100%");
+        }
+
+    }
+
+    /**
+     * ====================单店昨日全渠道会员占比==昨日新增全渠道会员数量/当日到店客群总数＊100%======================
+     */
+    @Test
+    public void omni_rate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得顾客占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform = null;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    transform = data_list.getJSONObject(i).getString("transform");
+                }
+            }
+
+
+            //获取客户趋势图中昨日新增的全渠道人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int omni_channel = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    omni_channel = list.getJSONObject(i1).getInteger("omni_channel") ;
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            int uv = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            String ss=  CommonUtil.getPercent(omni_channel,uv,4);
+            String omni_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform.equals(omni_rate)), "单店昨日客户占比" + transform + "!=昨天顾客数量/昨日到店客群总数＊100%：" + omni_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店昨日全渠道会员占比==昨天新增全渠道会员数量/当日到店客群总数＊100%");
+        }
+
+    }
+
+
+    /**
+     * ====================单店昨日付费会员占比==昨日新增付费会员数量/当日到店客群总数＊100%======================
+     */
+    @Test
+    public void paid_rate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得顾客占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            Integer transform = null;
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    transform = data_list.getJSONObject(i).getInteger("transform");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int paid = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    paid = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            int uv = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+
+            if(paid !=0 && uv !=0){
+                String  paid_rate ="";
+                DecimalFormat decimalFormat = new DecimalFormat("0%");
+                paid_rate = decimalFormat.format(new BigDecimal(paid).divide(new BigDecimal(uv),2,BigDecimal.ROUND_HALF_UP));
+
+                Preconditions.checkArgument((transform.equals(paid_rate)), "单店昨日客户占比" + transform + "!=昨天顾客数量/昨日到店客群总数＊100%：" + paid_rate);
+            }
+            else {
+                return;
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店付费会员占比==昨天新增付费会员数量/当日到店客群总数＊100%");
+        }
+
+    }
+
+    /**
+     * ====================单店周同比==昨日的顾客占比-上周昨日的顾客占比/上周昨日的顾客占比======================
+     */
+    @Test
+    public void rate_cust() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得顾客占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    transform_yoy = data_list.getJSONObject(i).getString("transform_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            float customer1 = 0;
+            float customer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    customer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+                if (i1 == count - 8) {
+                    customer2 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            float uv1 = 0;
+            float uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 8) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的顾客占比
+            float A = customer1/uv1 *100;
+            //上周昨天的顾客占比
+            float B = customer2/uv2 *100;
+
+
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String cust_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_yoy.equals(cust_rate)), "单店昨日顾客占比" + transform_yoy + "!=昨日的顾客占比-上周昨日的顾客占比/上周昨日的顾客占比：" + cust_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店顾客占比周同比==昨日的顾客占比-上周昨日的顾客占比/上周昨日的顾客占比");
+        }
+
+    }
+
+    /**
+     * ====================单店周同比==昨日的全渠道会员占比-上周昨日的全渠道会员占比/上周昨日的全渠道会员占比======================
+     */
+    @Test
+    public void rate_omni() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    transform_yoy = data_list.getJSONObject(i).getString("transform_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            float omni1 = 0;
+            float omni2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    omni1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+                if (i1 == count - 8) {
+                    omni2 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            float uv1 = 0;
+            float uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 8) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的全渠道会员占比
+            float A = omni1/uv1 *100;
+            //上周昨天的全渠道会员占比
+            float B = omni2/uv2 *100;
+
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String omni_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_yoy.equals(omni_rate)), "单店昨日全渠道会员占比" + transform_yoy + "!=上周昨日的全渠道会员占比-上周昨日的全渠道会员占比/上周昨日的全渠道会员占比：" + omni_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店全渠道会员占比周同比==上周昨日的全渠道会员占比-上周昨日的全渠道会员占比/上周昨日的全渠道会员占比");
+        }
+
+    }
+
+    /**
+     * ====================单店周同比==周1的付费会员占比-上周1的付费会员占比/上周1的全渠道会员占比======================
+     */
+    @Test
+    public void rate_paid() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_yoy = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    transform_yoy = data_list.getJSONObject(i).getString("transform_yoy");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            int paid1 = 0;
+            int paid2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    paid1 = list.getJSONObject(i1).getInteger("paid");
+                }
+                if (i1 == count - 8) {
+                    paid2 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            int uv1 = 0;
+            int uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 8) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的付费会员占比
+            int A = paid1/uv1;
+            //上周昨天的付费会员占比
+            int B = paid2/uv2;
+
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String paid_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_yoy.equals(paid_rate)), "单店昨日付费会员占比周同比" + transform_yoy + "!=周1的付费会员占比-上周1的付费会员占比/上周1的付费会员占比：" + paid_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店顾客占比周同比==周1的付费会员占比-上周1的付费会员占比/上周1的付费会员占比");
+        }
+
+    }
+
+
+    /**
+     * ====================单店顾客占比日环比==昨日的顾客占比-前天的顾客占比/前天的顾客占比======================
+     */
+    @Test
+    public void cust_rate_day() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取顾客部分得顾客占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("CUSTOMER")){
+                    transform_ring = data_list.getJSONObject(i).getString("transform_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的顾客人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            float customer1 = 0;
+            float customer2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    customer1 = list.getJSONObject(i1).getInteger("customer");
+                }
+                if (i1 == count - 2) {
+                    customer2 = list.getJSONObject(i1).getInteger("customer");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            float uv1 = 0;
+            float uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 2) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的顾客占比
+            float A = customer1/uv1  ;
+            //上周昨天的顾客占比
+            float B = customer2/uv2 ;
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String cust_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店顾客占比日环比==昨日的顾客占比-前天的顾客占比/前天的顾客占比");
+        }
+
+    }
+
+    /**
+     * ====================单店全渠道会员占比日环比==昨日的全渠道会员占比-前天的全渠道会员占比/前天的全渠道会员占比======================
+     */
+    @Test
+    public void omni_rate_day() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("OMNI_CHANNEL")){
+                    transform_ring = data_list.getJSONObject(i).getString("transform_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的全渠道会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            float omni_channel1 = 0;
+            float omni_channel2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    omni_channel1 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+                if (i1 == count - 2) {
+                    omni_channel2 = list.getJSONObject(i1).getInteger("omni_channel");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            float uv1 = 0;
+            float uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 2) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的全渠道会员占比
+            float A = omni_channel1/uv1 *100;
+            //上周昨天的全渠道会员占比
+            float B = omni_channel2/uv2 *100;
+
+
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String omni_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_ring.equals(omni_rate)), "单店昨日全渠道会员占比日环比" + transform_ring + "!=昨日的全渠道会员占比-前天日的全渠道会员占比/前天的全渠道会员占比：" + omni_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店全渠道会员占比日环比==昨日的全渠道会员占比-前天的全渠道会员占比/前天的全渠道会员占比");
+        }
+
+    }
+
+    /**
+     * ====================单店付费会员占比日环比==昨日的付费会员占比-前天的付费会员占比/前天的付费会员占比======================
+     */
+    @Test
+    public void paid_rate_day() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从新增顾客占比部分获取付费会员部分得付费会员占比
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
+            String transform_ring = "";
+            for(int i=0;i<data_list.size();i++){
+                String customer_type = data_list.getJSONObject(i).getString("customer_type");
+                if(customer_type.equals("PAID")){
+                    transform_ring = data_list.getJSONObject(i).getString("transform_ring");
+                }
+            }
+
+            //获取客户趋势图中昨日新增的付费会员人数
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
+            float paid1 = 0;
+            float paid2 = 0;
+            int count = list.size();
+            for(int i1 =0;i1<count;i1++) {
+                if (i1 == count - 1) {
+                    paid1 = list.getJSONObject(i1).getInteger("paid");
+                }
+                if (i1 == count - 2) {
+                    paid2 = list.getJSONObject(i1).getInteger("paid");
+                }
+            }
+            //获取历史客流中昨日的到店客流总数
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            float uv1 = 0;
+            float uv2 = 0;
+            int count1 = trend_list.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 2) {
+                    uv2 = trend_list.getJSONObject(i).getInteger("uv");
+                }
+            }
+            //昨天的付费会员占比
+            float A = paid1/uv1 *100;
+            //上周昨天的付费会员占比
+            float B = paid2/uv2 *100;
+
+
+            String ss=  CommonUtil.getPercent(A-B,B,4);
+            String paid_rate =  ss.replace("%","");
+            Preconditions.checkArgument((transform_ring.equals(paid_rate)), "单店昨日付费会员占比日环比" + transform_ring + "!=昨日的付费会员占比-前天的付费会员占比/上周昨日的付费会员占比：" + paid_rate);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("单店付费会员占比日环比==昨日的付费会员占比-前天的付费会员占比/前天的付费会员占比");
         }
 
     }
@@ -1030,7 +2343,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================累计顾客的总数(单店)==前天的累计客户+今天新增的（顾客+全渠道会员+付费会员）之和======================
      */
-    @Test
+   // @Test
     public void shop_memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
@@ -1164,7 +2477,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================uv与pv之间的比例要保持在1：4的范围间========================
      */
-    @Test
+   // @Test
     public void uvWithPvScrole() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
@@ -1233,7 +2546,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================客户详情累计交易的次数==留痕事件中门店下单的次数|||累计到店的数据==留痕事件中进店次数+门店下单的次数========================
      */
-    @Test
+    //@Test
     public void custInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
@@ -1597,7 +2910,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
      */
-    @Test
+   // @Test
     public void arrival_time() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
@@ -1673,595 +2986,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
 
 
-//这些一致性需要进行操作，不可用在线上客户的账户下去验证-----------------------------------------------------------------------3.0版本新增的数据一致性---------------------------------------------------
 
-    /**
-     * ====================账户管理中的一致性========================
-     */
-    @Test
-    public void accountInfoData() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
-            List<String> r_dList = new ArrayList<String>();
-            r_dList.add("296");
 
-            List<String> shop_list = new ArrayList<String>();
-            shop_list.add("4116");
 
-            Integer status = 1;
-            String type = "EMAIL";
-            //用EMAIL新增一个账号
-            JSONObject res = md.organizationAccountAdd(name, email, "", r_dList, status, shop_list, type);
-            Integer code = res.getInteger("code");
-
-
-            //从列表获取刚刚新增的账户的account
-            JSONArray accountList = md.organizationAccountPage(name, "", email, "", "", "", page, size).getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("account");
-
-            //新增账号以后，再查询列表
-            Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
-            int result = total1 - total;
-            Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
-
-
-            //编辑账号的名称，是否与列表该账号的一致
-            String reName = "qingqing测编辑";
-            md.organizationAccountEdit(account, reName, email, "", r_dList, status, shop_list, type);
-            JSONArray accountsList = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
-            String name_1 = accountsList.getJSONObject(accountsList.size() - 1).getString("name");
-            Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
-
-
-            //删除账号以后，再查询列表
-            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
-            Integer total2 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
-            int result1 = total1 - total2;
-            Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
-        }
-
-    }
-
-    /**
-     * ====================账户管理中的一致性========================
-     */
-    @Test
-    public void accountInfoData_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
-
-            List<String> r_dList = new ArrayList<String>();
-            r_dList.add("296");
-
-            List<String> shop_list = new ArrayList<String>();
-            shop_list.add("4116");
-
-
-            JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
-            String today = dt.getHHmm(0);
-            String account = "";
-            String old_phone = "";
-            String create_time = "";
-            for (int i = 1; i < list.size(); i++) {
-                create_time = list.getJSONObject(list.size() - 1).getString("create_time");
-                if (!create_time.equals(today)) {
-                    account = list.getJSONObject(list.size() - 1).getString("account");
-                    old_phone = list.getJSONObject(list.size() - 1).getString("phone");
-                    break;
-                }
-            }
-
-            if (old_phone != "" && old_phone !=null) {
-                //编辑账号的名称，权限
-                String reName = "qingqing在测编辑";
-                md.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
-                //获取列表该账号
-                JSONArray accountList = md.organizationAccountPage("", "", "", old_phone, "", "", page, size).getJSONArray("list");
-                String create_time_1 = "";
-                String phone_1 = accountList.getJSONObject(0).getString("phone");//获取通过手机号搜索到的账号的手机号
-                if (phone_1.equals(old_phone)) {
-                    create_time_1 = accountList.getJSONObject(0).getString("create_time");
-
-                }
-                Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
-                //编辑完以后获取列表的数量，是否有增多或者减少
-                Integer total1 = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
-                Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
-
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
-        }
-
-    }
-
-    /**
-     * ====================账户管理中的一致性（使用账号数量==账号列表中的数量）========================
-     */
-    @Test
-    public void accountInfoData_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            JSONArray list = md.organizationRolePage("", page, size).getJSONArray("list");
-            boolean result = false;
-            for (int i = 1; i < list.size(); i++) {
-                String role_name = list.getJSONObject(i).getString("role_name");
-                JSONArray list1 = md.organizationRolePage(role_name, page, size).getJSONArray("list");
-                int account_num = list1.getJSONObject(0).getInteger("account_number");
-
-                Integer Total = md.organizationAccountPage("", "", "", "", role_name, "", page, size).getInteger("total");
-                if (account_num == Total) {
-                    result = true;
-                }
-                Preconditions.checkArgument(result = true, "角色名为:" + role_name + "的使用账户数量：" + account_num + "！=【账户列表】中该角色的账户数量：" + Total);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("角色的使用账号数量==账号列表中该角色的数量");
-        }
-
-    }
-
-    /**
-     * ====================收银风控的数据一致性(累计的风险事件==【收银风控事件】待处理+已处理+已过期)========================
-     */
-    @Test
-    public void cashierDataInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                //获取列表门店的累计风险事件
-                int risk_total = list.getJSONObject(i).getInteger("risk_total");
-                //获取该门店的shop_id
-                long shop_id = list.getJSONObject(i).getInteger("id");
-                //获取待处理的数量
-                String current_state = "PENDING";
-                int pend_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
-
-                //获取已处理的数量
-                String current_state1 = "PROCESSED";
-                int processe_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state1, page, size).getInteger("total");
-
-                //获取已过期的数量
-                String current_state2 = "EXPIRED";
-                int expired_total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state2, page, size).getInteger("total");
-
-                int result = pend_total + processe_total + expired_total;
-                Preconditions.checkArgument(result == risk_total, "累计风险事件：" + risk_total + "!=待处理：" + pend_total + "+已处理：" + processe_total + "+已过期：" + expired_total + "之和：" + result);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("累计的风险事件==【收银风控事件】待处理+已处理+已过期");
-        }
-
-    }
-
-    /**
-     * ====================收银风控的数据一致性（正常事件==【收银风控事件】列表页处理结果为正常的数量）========================
-     */
-    @Test
-    public void cashierDataInfo1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int normal_num = list.getJSONObject(i).getInteger("normal_total");
-                long shop_id = list.getJSONObject(i).getInteger("id");
-                //获取收银风控事件列表的正常事件的数量
-                String handle_result = "NORMAL";
-                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getInteger("total");
-                Preconditions.checkArgument(normal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + normal_num + "!=【收银风控事件】中该门店正常事件的数量：" + total);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("正常事件==【收银风控事件】列表页处理结果为正常的数量");
-        }
-
-    }
-
-    /**
-     * ====================收银风控的数据一致性（异常事件==【收银风控事件】列表页处理结果为异常的数量）========================
-     */
-    @Test
-    public void cashierDataInfo2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
-        try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int abnormal_num = list.getJSONObject(i).getInteger("abnormal_total");
-                long shop_id = list.getJSONObject(i).getInteger("id");
-                //获取收银风控事件列表的异常事件的数量
-                String handle_result = "ABNORMAL";
-                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getInteger("total");
-                Preconditions.checkArgument(abnormal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + abnormal_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("异常事件==【收银风控事件】列表页处理结果为异常的数量");
-        }
-
-    }
-
-    /**
-     * ====================收银风控的数据一致性（待处理事件==【收银风控事件】列表页中当前状态为待处理的事件）========================
-     */
-    @Test
-    public void cashierDataInfo3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int pending_num = list.getJSONObject(i).getInteger("pending_risks_total");
-                long shop_id = list.getJSONObject(i).getInteger("id");
-                //获取收银风控事件列表的待处理事件的数量
-                String current_state = "PENDING";
-                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
-                Preconditions.checkArgument(pending_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + pending_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("待处理事件==【收银风控事件】列表页中当前状态为待处理的事件");
-        }
-
-    }
-
-    /**
-     * ====================收银风控的数据一致性（正常事件+异常事件==【收银风控事件】列表页的当前状态为已处理的数量）========================
-     */
-    @Test
-    public void cashierDataInfo4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                //获取处理结果为正常和异常的数量
-                int normal_num = list.getJSONObject(i).getInteger("normal_total");
-                int abnormal_num = list.getJSONObject(i).getInteger("abnormal_total");
-                int result = normal_num + abnormal_num;
-                long shop_id = list.getJSONObject(i).getInteger("id");
-                //获取收银风控事件列表的当前状态为已处理的数量
-                String current_state = "PROCESSED";
-                int total = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getInteger("total");
-                Preconditions.checkArgument(result == total, "收银风控列表门店ID：" + shop_id_01 + "处理结果为正常+处理结果为异常的和：" + result + "！=【收银风控事件】中该门店已处理事件的数量：" + total);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("正常事件+异常事件==【收银风控事件】列表页的当前状态为已处理的数量");
-        }
-
-    }
-
-//    /**
-//     * ====================收银追溯的数据一致性（小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间）========================
-//     */
-//    @Test
-//    public void orderDataInfo() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            //获取收银风控事件列表的小票总数量
-//            JSONArray list1 = response.getJSONArray("list");
-//            String order_id1 = list1.getJSONObject(0).getString("order_id");
-//            String order_time1 = list1.getJSONObject(0).getString("order_date");
-//            JSONObject response = md.cashier_riskPage(shop_id_01, "", order_id1, "", "", "", "", page, size);
-//
-//            JSONObject res = md.cashier_traceBack(shop_id_01, "", "", page, size);
-//            JSONArray list = res.getJSONArray("list");
-//
-//            //获取收银追溯页面的第一个小票单号
-//            String order_id = list.getJSONObject(0).getString("order_id");
-//            Long order_time = list.getJSONObject(0).getLong("order_time");
-//            String order_time_02 = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", order_time);
-//
-//
-//            Preconditions.checkArgument(order_time_02.equals(order_time1), "【收银追溯】中列表门店ID：" + shop_id_01 + "小票：" + order_id + "的下单时间" + order_time_02 + "!==【收银风控事件】中小票号" + order_id + "的时间" + order_time1);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("小票数量<=【收银风控事件】中的小票数量||【收银追溯】页的A小票号的时间==【收银风控时间】中A小票号的时间");
-//        }
-//    }
-
-//    /**
-//     * ====================收银风控事件的数据一致性（待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
-//     */
-//    @Test
-//    public void ruleDeal_DataInfo() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //获取收银追溯列表第一个门店的门第ID和门店名称，累计正常事件，和待处理事件
-//            JSONArray dataList = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-//            long shop_id = dataList.getJSONObject(0).getInteger("shop_id");
-//            String shop_name = dataList.getJSONObject(0).getString("shop_name");
-//            int normal_total = dataList.getJSONObject(0).getInteger("normal_total");
-//            int pending_total = dataList.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total = dataList.getJSONObject(0).getInteger("risk_total");
-//
-//
-//            //获取待处理风险事件ID
-//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-//            long id = list.getJSONObject(0).getInteger("id");
-//
-//            String order = list.getJSONObject(0).getString("order_id");
-//
-//
-//            //将待处理的风控事件处理成正常
-//            md.cashier_riskEventHandle(id, 1, "人工处理订单无异常");
-//            //获取处理完以后的累计正常事件和待处理事项
-//            JSONArray list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
-//            int normal_total1 = list1.getJSONObject(0).getInteger("normal_total");
-//            int pending_total1 = list1.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total1 = dataList.getJSONObject(0).getInteger("risk_total");
-//
-//            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表正常事件-处理前正常事件！=1");
-//            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表待处理没有-1");
-//            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成正常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("待处理进行处理为正常,【收银风控】列表正常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
-//        }
-//    }
-
-//    /**
-//     * ====================收银风控事件的数据一致性（待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
-//     */
-//    @Test
-//    public void ruleDeal_DataInf1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //获取收银追溯列表第一个门店的门第ID和门店名称，累计异常事件，和待处理事件
-//            JSONArray data_list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-//            long shop_id = data_list.getJSONObject(0).getInteger("shop_id");
-//            String shop_name = data_list.getJSONObject(0).getString("shop_name");
-//            int normal_total = data_list.getJSONObject(0).getInteger("normal_total");
-//            int pending_total = data_list.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total = data_list.getJSONObject(0).getInteger("risk_total");
-//
-//
-//            //获取待处理风险事件ID和order_id
-//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-//            long id = list.getJSONObject(0).getInteger("id");
-//            String order = list.getJSONObject(0).getString("order_id");
-//
-//
-//            //将待处理的风控事件处理成异常
-//            md.cashier_riskEventHandle(id, 0, "该客户有刷单造假的嫌疑，请注意");
-//            //获取处理完以后的累计异常事件和待处理事项
-//            JSONArray data_list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
-//            int normal_total1 = data_list1.getJSONObject(0).getInteger("normal_total");
-//            int pending_total1 = data_list1.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total1 = data_list1.getJSONObject(0).getInteger("risk_total");
-//
-//            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表异常事件-处理前异常事件！=1");
-//            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
-//            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
-//        }
-//    }
-
-    /**
-     * ====================收银风控事件的数据一致性（涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空）========================
-     */
-    @Test
-    public void orderInfoData() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.cashier_riskPage(shop_id_01, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String order_id = list.getJSONObject(i).getString("order_id");
-                String response_time = list.getJSONObject(i).getString("response_time");
-                String handler = list.getJSONObject(i).getString("handler");
-                String remarks = list.getJSONObject(i).getString("remarks");
-                String handle_result = list.getJSONObject(i).getString("handle_result");
-                Preconditions.checkArgument(response_time.isEmpty(), "待处理的事件：" + order_id + "的响应时间不为空");
-                Preconditions.checkArgument(handler.isEmpty(), "待处理的事件：" + order_id + "的处理人不为空");
-                Preconditions.checkArgument(remarks.isEmpty(), "待处理的事件：" + order_id + "的备注不为空");
-                Preconditions.checkArgument(handle_result.isEmpty(), "待处理的事件：" + order_id + "的处理结果不为空");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空");
-        }
-
-    }
-
-    /**
-     * ====================风控规则的数据一致性（新增一个规则==更新者为新增该风控规则的人员;列表风险规则+1;）========================
-     */
-    @Test
-    public void creatRuleInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int total = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
-
-            //新建一个风控规则rule中的参数再调试时要进行修改
-            String name = "QA_test01";
-            JSONObject para = new JSONObject();
-            para.put("DAY_RANGE", 10);
-            para.put("ORDER_QUANTITY_UPPER_LIMIT", 5);
-
-            JSONObject rule = new JSONObject();
-            rule.put("type", "CASHIER");
-            rule.put("item", "RISK_SINGLE_MEMBER_ORDER_QUANTITY");
-            rule.put("parameters", para);
-
-            String shop_type = "NORMAL";
-
-            int id = md.riskRuleAdd(name, shop_type, rule).getJSONObject("data").getInteger("id");
-            int total1 = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
-            Preconditions.checkArgument(total1 - total == 1, "新增一个规则以后，新增前后风控规则列表总数相差不为1，新增前：" + total + "新增后：" + total1);
-
-            //删除刚刚新建的这个风控规则
-            md.risk_controlDelete(id);
-            int total2 = md.risk_controlPage("", "", "", null, page, size).getInteger("total");
-            Preconditions.checkArgument(total1 - total2 == 1, "删除一个规则以后，删除前后列表的总数相差不为1，删除前：" + total1 + "删除后：" + total2);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("风控规则的数据一致性（新增一个规则，列表+1/删除一个规则，列表-1）");
-        }
-
-    }
-
-    /**
-     * ====================风控告警列表的数据一致性（最新告警时间>=首次告警时间）========================
-     */
-    @Test
-    public void ruleSwitch() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.alarm_page("", "", "", page, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String first_alarm_time = list.getJSONObject(i).getString("first_alarm_time");
-                String last_alarm_time = list.getJSONObject(i).getString("last_alarm_time");
-                boolean result = new DateTimeUtil().timeDiff(first_alarm_time, last_alarm_time, "yyyy-MM-dd HH:mm:ss") >= 0;
-//                System.err.println(result);
-                Preconditions.checkArgument(result = true, "最新告警时间<首次告警时间，首次告警时间：" + first_alarm_time + "最新告警时间" + last_alarm_time);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("风控告警列表的数据一致性（最新告警时间>=首次告警时间）");
-        }
-
-    }
-
-
-    /**
-     * ====================风控告警规则的数据一致性（新增一个风控告警规则，列表+1；删除一个规则，列表-1；）========================
-     */
-    @Test
-    public void risk_ruleDataInfo() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            int total = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
-            //新增一个沉默时间为10分钟的告警
-            String name = "q_test01";
-            String type = "CASHIER";
-
-            //风控告警规则的ID
-            JSONArray rule_id = new JSONArray();
-            rule_id.add(57);
-            //告警接收者按照选择角色的ID
-            JSONArray accept_id = new JSONArray();
-            accept_id.add(3);
-
-            String start_time = "08:00";
-            String end_time = "16:00";
-            String silent_time = "6400000";
-
-            md.alarm_ruleAdd(name, type, rule_id, accept_id, start_time, end_time, silent_time);
-            int total1 = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
-            Preconditions.checkArgument(total1 - total == 1, "新增一个风控告警规则以后，新增前后风控规则列表总数相差不为1，新增前：" + total + "新增后：" + total1);
-
-
-            //在列表查找这个新增成功的规则
-            JSONArray list = md.alarm_rulePage(name, type, "", null, page, size).getJSONArray("list");
-            String name2 = list.getJSONObject(0).getString("name");
-            int id = list.getJSONObject(0).getInteger("id");
-            checkArgument(name2.equals(name), "新增风控告警规则，在列表找不到");
-
-            //删除刚刚新增的风控告警规则
-            md.alarm_ruleDelete(id);
-            int total2 = md.alarm_rulePage("", "", "", null, page, size).getInteger("total");
-            Preconditions.checkArgument(total1 - total2 == 1, "删除一个风控规则以后，删除前后列表的总数相差不为1，删除前：" + total1 + "删除后：" + total2);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("风控告警规则的数据一致性（新增一个规则，列表+1/删除一个规则，列表-1）");
-        }
-
-    }
 }
 
