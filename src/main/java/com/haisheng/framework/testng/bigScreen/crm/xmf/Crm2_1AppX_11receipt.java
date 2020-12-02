@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -44,7 +45,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-
+        commonConfig.produce = EnumProduce.BSJ.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -112,6 +113,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
             saveData("创建新客完成接待");
         }
     }
+
     @Test(description = "23点接待客户无手机号")
     public void testdeliverNophone() {
         logger.logCaseStart(caseResult.getCaseName());

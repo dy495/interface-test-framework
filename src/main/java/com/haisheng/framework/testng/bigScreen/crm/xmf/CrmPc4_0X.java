@@ -2,10 +2,11 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -23,9 +24,9 @@ import java.lang.reflect.Method;
 public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
-    PackFunction pf=new PackFunction();
-    FileUtil file=new FileUtil();
+    PublicParm pp = new PublicParm();
+    PackFunction pf = new PackFunction();
+    FileUtil file = new FileUtil();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -41,7 +42,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-
+        commonConfig.produce = EnumProduce.BSJ.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -63,7 +64,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(pp.zongjingli,pp.adminpassword);
+        crm.login(pp.zongjingli, pp.adminpassword);
     }
 
     @AfterClass
@@ -74,7 +75,6 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: get a fresh case ds to save case result, such as result/response
-     *
      */
     @BeforeMethod
     @Override
@@ -83,32 +83,33 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     /**
      * @description :新建车型车系，pc对应列表+-1
      * @date :2020/9/10 18:10
      **/
 
     @Test
-    public void addCarStyle(){
+    public void addCarStyle() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            long total1=crm.carStyleList(1,10).getLong("total");
-            String carStylename="车系";
-            JSONObject data=crm.addCarStyle(carStylename);
-            long id=data.getLong("id");
-            JSONObject style=crm.carStyleList();
-            long total2=style.getLong("total");
+        try {
+            long total1 = crm.carStyleList(1, 10).getLong("total");
+            String carStylename = "车系";
+            JSONObject data = crm.addCarStyle(carStylename);
+            long id = data.getLong("id");
+            JSONObject style = crm.carStyleList();
+            long total2 = style.getLong("total");
             //新建车型
-            long modelTotal1=crm.carmodelList(id,1,10).getLong("total");
-            crm.addCarmodel(id,"车型");
-            long modelTotal2=crm.carmodelList(id,1,10).getLong("total");
+            long modelTotal1 = crm.carmodelList(id, 1, 10).getLong("total");
+            crm.addCarmodel(id, "车型");
+            long modelTotal2 = crm.carmodelList(id, 1, 10).getLong("total");
             //禁用新建车系
-            crm.carStyleEffect(id,false);
-            Preconditions.checkArgument(total2-total1==1,"新建车系，车系列表+1");
-            Preconditions.checkArgument(modelTotal2-modelTotal1==1,"新建车系，车系列表+1");
-        }catch (AssertionError |Exception e){
+            crm.carStyleEffect(id, false);
+            Preconditions.checkArgument(total2 - total1 == 1, "新建车系，车系列表+1");
+            Preconditions.checkArgument(modelTotal2 - modelTotal1 == 1, "新建车系，车系列表+1");
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
+        } finally {
             saveData("新建车系，车系列表数+1");
         }
     }
@@ -119,28 +120,28 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
      **/
 
     @Test
-    public void CarStyleEffect(){
+    public void CarStyleEffect() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //禁用某车型
-            JSONObject data=crm.carStyleList(1,10);
-            long id=data.getJSONArray("list").getJSONObject(0).getLong("car_style_id");
-            crm.carStyleEffect(id,true);
+            JSONObject data = crm.carStyleList(1, 10);
+            long id = data.getJSONArray("list").getJSONObject(0).getLong("car_style_id");
+            crm.carStyleEffect(id, true);
 
             //小程序原车系数
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int total=crm.carStyleList().getJSONArray("list").size();
-            crm.login(pp.zongjingli,pp.adminpassword);
-            crm.carStyleEffect(id,false);
+            int total = crm.carStyleList().getJSONArray("list").size();
+            crm.login(pp.zongjingli, pp.adminpassword);
+            crm.carStyleEffect(id, false);
 
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int total2=crm.carStyleList().getJSONArray("list").size();
-            Preconditions.checkArgument(total-total2==1,"禁用车系，小程序车系列表没-1");
+            int total2 = crm.carStyleList().getJSONArray("list").size();
+            Preconditions.checkArgument(total - total2 == 1, "禁用车系，小程序车系列表没-1");
 
-        }catch (AssertionError |Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
-            crm.login(pp.zongjingli,pp.adminpassword);
+        } finally {
+            crm.login(pp.zongjingli, pp.adminpassword);
             saveData("禁用车系，小程序车系列表-1");
         }
     }
@@ -151,29 +152,29 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
      **/
 
     @Test
-    public void CarModelEffect(){
+    public void CarModelEffect() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            long car_style=1L;  //TODO:车系id赋定值
+        try {
+            long car_style = 1L;  //TODO:车系id赋定值
             //禁用某车型
-            JSONObject data=crm.carmodelList(car_style,1,10);
-            long id=data.getJSONArray("list").getJSONObject(0).getLong("car_model_id");
-            crm.carmodelEffect(id,true);
+            JSONObject data = crm.carmodelList(car_style, 1, 10);
+            long id = data.getJSONArray("list").getJSONObject(0).getLong("car_model_id");
+            crm.carmodelEffect(id, true);
 
             //小程序原车系数
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int total=crm.carModelList(car_style).getJSONArray("list").size();
-            crm.login(pp.zongjingli,pp.adminpassword);
-            crm.carmodelEffect(id,false);
+            int total = crm.carModelList(car_style).getJSONArray("list").size();
+            crm.login(pp.zongjingli, pp.adminpassword);
+            crm.carmodelEffect(id, false);
 
             crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-            int total2=crm.carModelList(car_style).getJSONArray("list").size();
-            Preconditions.checkArgument(total-total2==1,"禁用车型，小程序车型列表没-1");
+            int total2 = crm.carModelList(car_style).getJSONArray("list").size();
+            Preconditions.checkArgument(total - total2 == 1, "禁用车型，小程序车型列表没-1");
 
-        }catch (AssertionError |Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
-            crm.login(pp.zongjingli,pp.adminpassword);
+        } finally {
+            crm.login(pp.zongjingli, pp.adminpassword);
             saveData("禁用车型，小程序车型列表-1");
         }
     }

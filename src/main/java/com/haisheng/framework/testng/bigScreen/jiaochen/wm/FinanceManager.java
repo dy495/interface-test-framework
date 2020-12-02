@@ -59,6 +59,11 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    @Test(description = "卡券申请--卡券审核通过")
+    public void voucherApply_system_1() {
+
+    }
+
     @Test
     public void voucherApply() {
         IScene scene = ApplyPage.builder().build();
