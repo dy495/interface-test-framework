@@ -1262,74 +1262,74 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-//    /**
-//     *
-//     * ====================百果园线上实时客流监控======================
-//     * */
-//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-//    public void  surveDataReal(long shop_id){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
-//            int today_pv =0;
-//            for(int i=0;i<list.size();i++){
-//                Integer count =list.getJSONObject(i).getInteger("today_pv");
-//                if(count != null ){
-//                    today_pv += count;
+    /**
+     *
+     * ====================百果园线上实时客流监控======================
+     * */
+    //@Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void  surveDataReal(long shop_id){
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
+            int today_pv =0;
+            for(int i=0;i<list.size();i++){
+                Integer count =list.getJSONObject(i).getInteger("today_pv");
+                if(count != null ){
+                    today_pv += count;
+                }
+//                if(today_pv<=50){
+//                    list.getJSONObject(i).getInteger("today_pv");
 //                }
-////                if(today_pv<=50){
-////                    list.getJSONObject(i).getInteger("today_pv");
-////                }
-//
-//            }
-//            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("监控百果园今日实时人次是否异常，小于800高于50为正常");
-//        }
-//
-//    }
+
+            }
+            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"百果园实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("监控百果园今日实时人次是否异常，小于800高于50为正常");
+        }
+
+    }
 
 
-//    /**
-//     *
-//     * ====================uv与pv之间的比例要保持在1：4的范围间========================
-//     * */
-//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-//    public void uvWithPvScrole(long shop_id) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            //获取今日实时得到访人数uv
-//            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
-//            Integer uv = iPvlist.getJSONObject(1).getInteger("value");
-//            Integer pv = iPvlist.getJSONObject(0).getInteger("value");
-//            int scrole = 0;
-//            if(pv !=0 && uv!=0){
-//                 scrole =pv/uv ;
-//            }else{
-//                uv = uv+1;
-//                pv = pv+1;
-//                scrole= pv/uv;
-//            }
-//            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv +"。报错门店的shopId="+shop_id);
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
-//        }
-//
-//    }
+    /**
+     *
+     * ====================uv与pv之间的比例要保持在1：4的范围间========================
+     * */
+    //@Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void uvWithPvScrole(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //获取今日实时得到访人数uv
+            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
+            Integer uv = iPvlist.getJSONObject(1).getInteger("value");
+            Integer pv = iPvlist.getJSONObject(0).getInteger("value");
+            int scrole = 0;
+            if(pv !=0 && uv!=0){
+                 scrole =pv/uv ;
+            }else{
+                uv = uv+1;
+                pv = pv+1;
+                scrole= pv/uv;
+            }
+            Preconditions.checkArgument(( scrole <= 4),"uv=" + uv + "远远小于pv，不在1：4的范围间 pv=" + pv +"。报错门店的shopId="+shop_id);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
+        }
+
+    }
     /**
      //     *
      //     * ====================百果园线上昨日客流监控======================
@@ -1657,51 +1657,51 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-//    /**
-//     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
-//     */
-//    //(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-//    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-//    public void arrival_time(long shop_id) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack = false;
-//        try {
-//            JSONObject response = md.memberTotalListV3(shop_id,page,50);
-//            JSONArray list = response.getJSONArray("list");
-//            String last_time = "";
-//            String customer_id = "";
-//            String time = "";
-//            for(int i=0;i<list.size();i++){
-//                last_time = list.getJSONObject(i).getString("latest_arrival_time");
-//                customer_id = list.getJSONObject(i).getString("customer_id");
-//                JSONObject res = md.memberDetail(shop_id,customer_id,page,10);
-//                JSONArray detailList = res.getJSONArray("list");
-//                int total = res.getInteger("total");
-//
-//                if(total!=0) {
-//
-//                    time = detailList.getJSONObject(0).getString("time");
-//                    Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
-//
-//                }
-//                else {
-//                    Preconditions.checkArgument(total!=0, "客户ID："+customer_id+"该客户的留痕事件为空，列表最新留痕时间为："+last_time+"。报错门店的shopId=" + shop_id );
-//                }
-//
-//            }
-//
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
-//        }
-//
-//    }
+    /**
+     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
+     */
+    //(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    //@Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void arrival_time(long shop_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            JSONObject response = md.memberTotalListV3(shop_id,page,50);
+            JSONArray list = response.getJSONArray("list");
+            String last_time = "";
+            String customer_id = "";
+            String time = "";
+            for(int i=0;i<list.size();i++){
+                last_time = list.getJSONObject(i).getString("latest_arrival_time");
+                customer_id = list.getJSONObject(i).getString("customer_id");
+                JSONObject res = md.memberDetail(shop_id,customer_id,page,10);
+                JSONArray detailList = res.getJSONArray("list");
+                int total = res.getInteger("total");
+
+                if(total!=0) {
+
+                    time = detailList.getJSONObject(0).getString("time");
+                    Preconditions.checkArgument((last_time.equals(time)), "客户ID：" + customer_id + "。列表最新留痕时间为：" + last_time + "。该客户详情中的最新留痕时间为：" + time + "。报错门店的shopId=" + shop_id);
+
+                }
+                else {
+                    Preconditions.checkArgument(total!=0, "客户ID："+customer_id+"该客户的留痕事件为空，列表最新留痕时间为："+last_time+"。报错门店的shopId=" + shop_id );
+                }
+
+            }
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
+        }
+
+    }
 
 
 

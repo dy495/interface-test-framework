@@ -11,6 +11,7 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
@@ -54,7 +55,7 @@ public class FeidanMiniApiOnline {
     public String response = "";
     public boolean FAIL = false;
     public Case aCase = new Case();
-
+    Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
@@ -1590,7 +1591,7 @@ public class FeidanMiniApiOnline {
     }
 
 
-    //    @Test
+       // @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -1604,8 +1605,8 @@ public class FeidanMiniApiOnline {
 
         try {
 
-            String cardId = "100000000017566055";
-            String personName = "叶问";
+            String cardId = feidan.genCardId();
+            String personName = "叶问半脸测试";
 
             String s = witnessUpload(cardId, personName);
 

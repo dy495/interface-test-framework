@@ -557,9 +557,31 @@ public class StoreScenarioUtil extends TestCaseCommon {
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
-
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * @description:8.5.3.1 门店会员列表（20201121修改接口字段）(门店6.0修改)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberVisitListV31(long shop_id, String member_type, Integer gender, String customer_id,String member_id, Integer page, Integer size) throws Exception {
+        String url = "/patrol/member/total/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"member_type\" :\"" + member_type + "\",\n" +
+                        "\"gender\" :" + gender + ",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"member_id\" :\"" + member_id + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + ",\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description:8.5.4 通过隐私提醒，获得头像数据
@@ -653,7 +675,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:8.5.8 门店列表-云中客门店客户详情
+     * @description:8.5.8  会员详情查看（2020-11-21）(门店6.0修改)
      * @author: qingqing
      * @time:
      */
@@ -665,6 +687,113 @@ public class StoreScenarioUtil extends TestCaseCommon {
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description:8.5.9 门店列表-云中客企业下所有门店会员新增趋势（20200813修改url）
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject memberNew_count(long shop_id, String cycle_type, String month) throws Exception {
+        String url = "/patrol/history/shop/member/new/count";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.5.10 门店列表-云中客新增顾客-转化率模块(2020-11-21) (门店6.0新增)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject member_newCount_data() throws Exception {
+        String url = "/patrol/new_member/all/conversion";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.5.11 新增顾客-趋势图(2020-11-21) (门店6.0新增)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject member_newCount_pic(String cycle_type) throws Exception {
+        String url = "/patrol/new_member/all/trend";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.5.12 新增顾客-门店详情-转化率模块(2020-11-21) (门店6.0新增)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject single_newCount_data(long shop_id) throws Exception {
+        String url = "/patrol/new_member/shop/conversion";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:8.5.13 新增顾客-门店详情-首页趋势图(2020-11-21) (门店6.0新增)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject single_newCount_pic(long shop_id,String cycle_type) throws Exception {
+        String url = "/patrol/new_member/shop/trend";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.5.14 新增顾客-门店详情-客户列表(2020-11-21) (门店6.0新增)
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject single_newCount_custPage(long shop_id) throws Exception {
+        String url = "/patrol/new_member/shop/customer/list";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1617,6 +1746,61 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+           /**
+             * ***********************************************二十三、云巡店----图片中心************************************************
+             */
+    /**
+     * @description:23.1 图片留痕方式类型
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject pictureType() throws Exception {
+        String url = "/patrol/shop/remark/picture/type";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:23.2 图片中心列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject picturePage(String patrol_type,String start_time,String end_time,String shop_name,Integer is_abnormal,Integer page,Integer size) throws Exception {
+        String url = "/patrol/shop/remark/picture/page";
+        String json =
+                "{" ;
+                   if (patrol_type != "") {
+                      json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
+                   }
+                   if (start_time != "") {
+                      json = json + "\"start_time\" :\"" + start_time + "\",\n";
+                   }
+                   if (end_time != "") {
+                      json = json + "\"end_time\" :\"" + end_time + "\",\n";
+                   }
+                   if (shop_name != "") {
+                      json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+                   }
+                   if (is_abnormal != null) {
+                       json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
+                   }
+                   json = json +
+                    "\"page\" :" + page + ",\n" +
+                    "\"size\" :" + size + "\n" +
+
+                 "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * -------------------------------门店1.0APP-----------------------------------------------------------------------------------------------
