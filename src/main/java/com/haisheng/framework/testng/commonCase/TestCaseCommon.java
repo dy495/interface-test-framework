@@ -345,8 +345,6 @@ public class TestCaseCommon {
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
             appendFailReason(e.toString());
-        } finally {
-            saveData(path);
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
