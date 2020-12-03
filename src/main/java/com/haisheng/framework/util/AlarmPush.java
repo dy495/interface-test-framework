@@ -569,6 +569,42 @@ public class AlarmPush {
     }
 
     /**
+     * @param ip 新的ip
+     */
+    public void ipChangeAlarm(String ip) {
+
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.ONLINE_ALARM_SUMMARY;
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "线上每日报警简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+        String env = "";
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+
+        msg +=  "\n\n>##### 报警失败：出口ip变动导致连接阿里云数据库超时，请更新出口ip白名单";
+        msg += "\n\n>##### 新的出口ip：" + ip;
+        msg += "\n\n>请 *@18210113587、@15898182672* 关注";
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13436941018 吕雪晴
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //18672733045 高凯
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //15084928847 黄青青
+        String[] atArray = {"18210113587", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
+
+    }
+
+
+    /**
      * @param alarmList 推送内容集合列表
      */
     public void onlineAlarmSummary(List<AlarmSummaryUnit> alarmList) {
