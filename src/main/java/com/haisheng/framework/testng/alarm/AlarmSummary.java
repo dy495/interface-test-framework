@@ -32,7 +32,7 @@ public class AlarmSummary {
         List<Config> configList = qaDbUtil.selectOnlineAlarmSummary();
         List<AlarmSummaryUnit> alarmSummaryUnitList = constructAlarmList(configList);
         if (alarmSummaryUnitList.size() > 0) {
-            //失败才推送
+            //无结果不推送
             AlarmPush alarmPush = new AlarmPush();
             alarmPush.onlineAlarmSummary(alarmSummaryUnitList);
         }
@@ -69,8 +69,8 @@ public class AlarmSummary {
             int passNum = Integer.parseInt(config.getPassTotal());
             int failNum = totalNum - passNum;
 
-            if (failNum > 0) {
-                //失败才推送
+            if (failNum >= 0) {
+                //失败才推送 -> 修改为：失败也推送，2020.12.03
                 List<String> passRate = new ArrayList<>();
                 passRate.add(StringUtil.calAccuracyString(passNum, totalNum));
                 passRate.add(String.valueOf(failNum));
