@@ -414,12 +414,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //核销码异常验证
+    //核销码异常验证  ok
     @Test(description = "app核销码异常验证", dataProvider = "HEXIAONUM")
     public void Jc_ApphexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.verification(num, false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"异常核销码，返回不是1001，code:"+code);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -427,13 +428,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //车牌号异常验证
+    //车牌号异常验证  ok
     @Test(description = "app接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
     public void Jc_AppReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.appReceptionAdmitcode(plate).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "异常车牌号依然成功");
+            Preconditions.checkArgument(code == 1001, "异常车牌号依然成功");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

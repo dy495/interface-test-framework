@@ -17,6 +17,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -67,7 +69,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = "-1";
+        commonConfig.referer="https://servicewechat.com/wx4071a91527930b48/";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -129,7 +132,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_ArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletArticleList();
+            JSONObject data = jc.appletArticleList("20",null);
             String jsonpath = "$.list[*].id&&$.list[*].label&&$.list[*].label_name&&$.list[*].title&&$.list[*].pic_type&&$.list[*].pic_list&&$.list[*].timestamp&&$.list[*].time_str";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
@@ -145,7 +148,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appletShopInfo();
-            String jsonpath = "$.id&&$.name&&$.address&&$.tel&&$.coordinate&&$.distance";
+            String jsonpath = "$.id&&$.name&&$.address&&$.tel";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {
@@ -204,7 +207,11 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_appletMaintainShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletmaintainShopList(pp.car_id, pp.coordinate);
+            List coor=new ArrayList();
+            coor.add(116.29845);
+            coor.add(39.95933);
+
+            JSONObject data = jc.appletmaintainShopList(pp.car_id,coor);
             String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
             jpu.spiltString(data.toJSONString(), jsonpath);
 

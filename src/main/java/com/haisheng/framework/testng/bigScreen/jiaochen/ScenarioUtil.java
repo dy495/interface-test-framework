@@ -572,24 +572,20 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) {
-        String url = "/patrol/organization/account/edit";
+        String url = "/jiaochen/pc/staff/edit";
         String json =
                 "{" +
-                        "\"account\" :\"" + account + "\",\n" +
+                        "\"id\" :\"" + account + "\",\n" +
                         "\"name\" :\"" + name + "\",\n";
-        if (email != "") {
-            json = json + "\"email\" :\"" + email + "\",\n";
-        }
-        ;
+
         if (phone != "") {
             json = json + "\"phone\" :\"" + phone + "\",\n";
         }
         ;
         json = json +
 
-                "\"role_id_list\" :" + role_id_list + ",\n" +
+                "\"role_list\" :" + role_id_list + ",\n" +
                 "\"shop_list\" :" + shop_list + ",\n" +
-                "\"type\" :\"" + type + "\"\n" +
                 "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -615,10 +611,10 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountDelete(String account) {
-        String url = "/jiaochen/pc/role/delete";
+        String url = "/jiaochen/pc/staff/delete";
         String json =
                 "{" +
-                        "\"\" :\"" + account + "\"\n" +
+                        "\"id\" :\"" + account + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1138,10 +1134,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :文章列表xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletArticleList() {
+    public JSONObject appletArticleList(String size,String last_value) {
         String url = "/jiaochen/applet/article/list";
         JSONObject json1 = new JSONObject();
-
+        json1.put("size",size);
+        json1.put("last_value",last_value);
         return invokeApi(url, json1);
     }
 
@@ -1227,10 +1224,9 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/28 12:44
      **/
     public JSONObject appletMyCar(String style_id) {
-        String url = "/jiaochen/applet/granted/car/create";
+        String url = "/jiaochen/applet/granted/car/list";
         JSONObject json1 = new JSONObject();
-        json1.put("style_id", style_id);
-
+//        json1.put("style_id", style_id);
         return invokeApi(url, json1);
     }
 
@@ -1442,7 +1438,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :保养门店列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainShopList(String car_id, String coordinate) {
+    public JSONObject appletmaintainShopList(String car_id, List coordinate) {
         String url = "/jiaochen/applet/granted/maintain/shop/list";
         JSONObject json1 = new JSONObject();
         json1.put("car_id", car_id);
