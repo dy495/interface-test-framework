@@ -7,10 +7,17 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerLis
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import org.apache.commons.lang.ArrayUtils;
 
+import java.util.Random;
+
 public class JcFunction {
     ScenarioUtil jc=new ScenarioUtil();
     PublicParm pp=new PublicParm();
+    Random random=new Random();
+    public String genPhoneNum() {
+        String num = "177" + (random.nextInt(89999999) + 10000000);
 
+        return num;
+    }
     //app开始接待，并返回接待id
     public Long startReception(String carPlate) throws Exception{
         appStartReception sr=new appStartReception();
