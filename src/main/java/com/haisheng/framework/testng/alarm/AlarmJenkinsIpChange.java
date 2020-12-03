@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class AlarmJenkinsIpChange {
 
-    private final String DEBUG = System.getProperty("DEBUG", "false");
+    private final String DEBUG = System.getProperty("DEBUG", "true");
     private final String IP = System.getProperty("IP", "");
 
 
