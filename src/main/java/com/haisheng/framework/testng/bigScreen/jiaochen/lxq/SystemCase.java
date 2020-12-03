@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -50,7 +51,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "轿辰 日常 lxq");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -375,7 +376,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test //bug 5376 已解决
+    @Test //bug 5376 提示语不正确
     public void addCarStyleinNotExistModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -409,7 +410,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌车系车型 --正常
-    @Test(dataProvider = "CAR_MODEL") //ok bug 5578 已解决
+    @Test(dataProvider = "CAR_MODEL") //ok
     public void addCarModel(String name, String year, String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -721,187 +722,51 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //新建文章
     @Test(dataProvider = "ARTICLE") //ok
-    public void addArticle(String title, String pic_type,  String content, String label,String type) {
+    public void addArticle(String title, String pic_type,  String content, String label) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/ec77919d-b204-4397-96a5-df841f3c1f4b");
+            pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
 
             JSONArray pic_list2 =new JSONArray();
-            pic_list2.add("general_temp/5d6e7a40-7086-4540-984d-d21bcd0e217c");
-            pic_list2.add("general_temp/5d6e7a40-7086-4540-984d-d21bcd0e217c");
-            pic_list2.add("general_temp/5d6e7a40-7086-4540-984d-d21bcd0e217c");
-            if (type.equals("one")){
-                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list1,content,label,"ARTICEL",null,null,null,
-                        null,null,null,null,null,null,
-                        null,null,null,null);
-                int code = obj.getInteger("code");
-                Long id = obj.getJSONObject("data").getLong("id");
-                //关闭文章
-                jc.changeArticleStatus(id);
-
-
-                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
-            }
-
-            if (type.equals("three")){
-                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list2,content,label,"ARTICEL",null,null,null,
-                        null,null,null,null,null,null,
-                        null,null,null,null);
-                int code = obj.getInteger("code");
-                Long id = obj.getJSONObject("data").getLong("id");
-                //关闭文章
-                jc.changeArticleStatus(id);
-
-
-                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
-            }
-
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【内容运营】，新建文章1张/3张图");
-        }
-    }
-    @DataProvider(name = "ARTICLE")
-    public  Object[] article() {
-
-
-        return new String[][]{
-                {"大图1234", "ONE_BIG",info.stringone, "RED_PAPER","one"},
-                {info.stringten, "ONE_BIG",info.stringfifty, "PREFERENTIAL","one"},
-                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN","one"},
-                {info.stringten, "ONE_LEFT",info.stringlong, "WELFARE","one"},
-                {info.stringsix, "ONE_LEFT",info.stringten, "GIFT","one"},
-                {info.stringsix, "THREE",info.stringten, "GIFT","three"},
-
-        };
-    }
-
-
-    //新建文章异常
-    @Test(dataProvider = "ARTICLEERR") //OK
-    public void addArticle21(String title, String pic_type,  String content, String label,String type) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/ec77919d-b204-4397-96a5-df841f3c1f4b");
+            pic_list2.add("");
+            pic_list2.add("");
+            pic_list2.add("");
             JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list1,content,label,"ARTICEL",null,null,null,
                     null,null,null,null,null,null,
                     null,null,null,null);
             int code = obj.getInteger("code");
-
-            Preconditions.checkArgument(code==1001,"期待1001，实际"+ code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【内容运营】，新建文章标题21字/3字");
-        }
-    }
-    @DataProvider(name = "ARTICLEERR")
-    public  Object[] articleerr() {
-
-
-        return new String[][]{
-
-                {info.string20+"1", "ONE_LEFT",info.stringten, "BARGAIN","one"},
-                {"123", "ONE_LEFT",info.stringten, "BARGAIN","one"},
-        };
-    }
-
-    //新建活动 正常
-    @Test(dataProvider = "ACTVIVITY") //ok
-    public void addActivity(String title, String pic_type,  String content, String label,String people,String address) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/ec77919d-b204-4397-96a5-df841f3c1f4b");
-
-
-             JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list1,content,label,"ACTIVITY",dt.getHistoryDate(0),dt.getHistoryDate(100),
-                     dt.getHistoryDate(0),dt.getHistoryDate(100),Integer.valueOf(people),address,true,null,null,
-                     null,null,null,null);
-             int code = obj.getInteger("code");
-             Long id = obj.getJSONObject("data").getLong("id");
-             //关闭活动
+            Long id = obj.getJSONObject("data").getLong("id");
+            //关闭文章
             jc.changeArticleStatus(id);
+
+
             Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
 
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【内容运营】，新建活动");
+            saveData("PC【内容运营】，新建文章1张图");
         }
     }
-    @DataProvider(name = "ACTVIVITY")
-    public  Object[] activity() {
+    @DataProvider(name = "ARTICLE") //要补充
+    public  Object[] article() {
+
+
         return new String[][]{
-                {"大图1234", "ONE_BIG",info.stringone, "RED_PAPER","1",info.stringone},
-                {info.stringten, "ONE_BIG",info.stringfifty, "PREFERENTIAL","500",info.stringfifty},
-                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN","20",info.stringsix},
-                {info.stringten, "ONE_LEFT",info.stringlong, "WELFARE","100000000",info.stringten},
-                {info.stringsix, "ONE_LEFT",info.stringten, "GIFT","99999999",info.stringten},
-                {info.stringsix, "THREE",info.stringten, "GIFT","300",info.stringten},
+                {"1234", "ONE_BIG",info.stringone, "RED_PAPER"},
+                {info.stringten, "ONE_BIG",info.stringfifty, "PREFERENTIAL"},
+                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN"},
+                {info.stringten, "ONE_LEFT",info.stringlong, "WELFARE"},
+                {info.stringsix, "ONE_LEFT",info.stringten, "GIFT"},
 
         };
     }
 
-
-    //新建活动 异常
-    @Test(dataProvider = "ACTVIVITYERR") //ok
-    public void addActivityerr(String title, String pic_type,  String content, String label,String people,String address,String message,String begin,String end) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/ec77919d-b204-4397-96a5-df841f3c1f4b");
-
-
-            JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list1,content,label,"ACTIVITY",begin,end,
-                    begin,end,Integer.valueOf(people),address,true,null,null,
-                    null,null,null,null);
-            int code = obj.getInteger("code");
-
-            Preconditions.checkArgument(code==1001,message+"期待1001，实际"+ code);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【内容运营】，新建活动");
-        }
-    }
-    @DataProvider(name = "ACTVIVITYERR")
-    public  Object[] activityerr() {
-        return new String[][]{
-
-                {info.string20+"1", "ONE_LEFT",info.stringten, "BARGAIN","1",info.stringone,"活动标题21字",dt.getHistoryDate(0),dt.getHistoryDate(100)},
-                {"123", "ONE_LEFT",info.stringten, "BARGAIN","500",info.stringfifty,"活动标题4字",dt.getHistoryDate(0),dt.getHistoryDate(100)},
-                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN","100000001",info.stringsix,"活动人数100000001",dt.getHistoryDate(0),dt.getHistoryDate(100)},
-                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN","100000000",info.stringfifty1,"地址51字",dt.getHistoryDate(0),dt.getHistoryDate(100)},
-                {info.string20, "ONE_LEFT",info.stringten, "BARGAIN","100000000",info.stringsix,"活动/报名时间在过去",dt.getHistoryDate(-10),dt.getHistoryDate(-1)},
-
-        };
-    }
-
-
-
-
+    //新建活动
 
 
 

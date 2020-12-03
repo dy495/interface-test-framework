@@ -3,12 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.AppCustomerCreateScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -18,8 +15,6 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
-import org.apache.commons.lang.ArrayUtils;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -56,7 +51,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
 
 
         //replace backend gateway url
@@ -66,9 +61,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
-        //replace ding push conf
+        //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
@@ -100,7 +95,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
 
 
     @Test(description = "今日任务数==今日数据各列数据之和")
@@ -172,7 +166,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //pc登录  预约记录页该顾问今日数据
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10").customer_manager(pp.name)
                     .create_date(dt.getHistoryDate(0)).build();
@@ -189,7 +183,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.appLogin(pp.gwphone,pp.gwpassword);
+            jc.appLogin(pp.gwphone, pp.gwpassword);
             saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
         }
     }
@@ -251,24 +245,24 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc登录
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             //接待前，接待任务列表总数
             int total = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             //app登录 开始接待
-            jc.appLogin(pp.gwphone,pp.gwpassword);
+            jc.appLogin(pp.gwphone, pp.gwpassword);
             Long id = pf.startReception(pp.carplate);
 
             //pc登录
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             int totalA = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             //完成接待
-            jc.appLogin(pp.gwphone,pp.gwpassword);
+            jc.appLogin(pp.gwphone, pp.gwpassword);
             jc.finishReception(id);
 
             //pc登录
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             int totalC = jc.receptionManage(pp.shopId, "1", "10", "", "").getInteger("total");
 
             Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
@@ -277,7 +271,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.appLogin(pp.gwphone,pp.gwpassword);   //最后app登录
+            jc.appLogin(pp.gwphone, pp.gwpassword);   //最后app登录
             saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
         }
     }
@@ -392,7 +386,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //小程序预约
             jc.appletAppointment(pm);
 
-            jc.appLogin(pp.gwphone,pp.gwpassword);
+            jc.appLogin(pp.gwphone, pp.gwpassword);
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
@@ -406,6 +400,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-小程序预约,app任务列表+1，今日任务数+1");
         }
     }
+
     @DataProvider(name = "HEXIAONUM")
     public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
         return new String[]{
@@ -418,12 +413,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                 "234567890123asd&**",//含字符
         };
     }
+
     //核销码异常验证
-    @Test(description = "app核销码异常验证",dataProvider = "HEXIAONUM")
+    @Test(description = "app核销码异常验证", dataProvider = "HEXIAONUM")
     public void Jc_ApphexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-           int code= jc.verification(num,false).getInteger("code");
+            int code = jc.verification(num, false).getInteger("code");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -432,19 +428,18 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     //车牌号异常验证
-    @Test(description = "app接待车牌号验证",dataProvider = "PLATE",dataProviderClass = ScenarioUtil.class)
+    @Test(description = "app接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
     public void Jc_AppReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int code=jc.appReceptionAdmitcode(plate).getInteger("code");
-            Preconditions.checkArgument(code==1000,"异常车牌号依然成功");
+            int code = jc.appReceptionAdmitcode(plate).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "异常车牌号依然成功");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app接待车牌号验证");
         }
     }
-
 
 
 }

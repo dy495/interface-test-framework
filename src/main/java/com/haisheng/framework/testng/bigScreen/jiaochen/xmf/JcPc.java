@@ -3,12 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -56,7 +54,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
 
 
         //replace backend gateway url
@@ -66,7 +64,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -144,10 +142,10 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             String description = "自动化测试给店长用的角色";
             JSONArray moduleId = pp.roleList;
             //新增一个角色
-            JSONObject res = jc.organizationRoleAdd(name, description, moduleId,true);
-            int total=jc.roleListFilterManage("","1","10","","").getInteger("total");
-            int page[]=pf.getPage(total);
-            String id=jc.roleListFilterManage("",""+page[0],"10","","").getJSONArray("list").getJSONObject(page[1]).getString("id");
+            JSONObject res = jc.organizationRoleAdd(name, description, moduleId, true);
+            int total = jc.roleListFilterManage("", "1", "10", "", "").getInteger("total");
+            int page[] = pf.getPage(total);
+            String id = jc.roleListFilterManage("", "" + page[0], "10", "", "").getJSONArray("list").getJSONObject(page[1]).getString("id");
             //编辑角色
             String name1 = "AUTOtest在编辑";
             Integer code1 = jc.organizationRoleEdit(Long.parseLong(id), name1, description, moduleId).getInteger("code");
@@ -177,28 +175,29 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色(名称校验)======================
      */
     @DataProvider(name = "ROLENAME")
-    public static Object[][] rolename(){
+    public static Object[][] rolename() {
         return new String[][]{
                 {"这是一个二十字的角色名称是的是的是的", "角色名称为20个字，创建失败"},
                 {"这是一个二十字的角色名称AABB1111", "角色名称为中文+字母+数字，创建失败"},
                 {"这是一个二十字的角色名称AABB11.。", "角色名称为中文+字母+数字+字符，创建失败"},
         };
     }
+
     @Test(dataProvider = "ROLENAME")  //ok
-    public void Jc_role_add_work2(String name,String mess) {
+    public void Jc_role_add_work2(String name, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = pp.roleList;
-            int totalB=jc.roleListFilterManage("","1","10","","").getInteger("total");
+            int totalB = jc.roleListFilterManage("", "1", "10", "", "").getInteger("total");
 
             String description = "自动化测试给店长自动化用的角色";
             JSONObject res = jc.organizationRoleAdd(name, description, moduleId);
             checkArgument(res.getInteger("code") == 1000, mess);
-            int total=jc.roleListFilterManage("","1","10","","").getInteger("total");
-            int page[]=pf.getPage(total);
-            String id=jc.roleListFilterManage("",""+page[0],"10","","").getJSONArray("list").getJSONObject(page[1]).getString("id");
-           jc.organizationidRoleDelete(id);
-           Preconditions.checkArgument(total-totalB==1,"新增角色列表没+1");
+            int total = jc.roleListFilterManage("", "1", "10", "", "").getInteger("total");
+            int page[] = pf.getPage(total);
+            String id = jc.roleListFilterManage("", "" + page[0], "10", "", "").getJSONArray("list").getJSONObject(page[1]).getString("id");
+            jc.organizationidRoleDelete(id);
+            Preconditions.checkArgument(total - totalB == 1, "新增角色列表没+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -206,15 +205,17 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-新增角色(名称校验)-正常");
         }
     }
+
     @DataProvider(name = "ROLENAMEAB")
-    public static Object[][] rolenameab(){
+    public static Object[][] rolenameab() {
         return new String[][]{
 //                {"这是一个二十一字的角色名称是的是的是的是的", "角色名称需要在1-20个字内","角色名称需要在1-20个字内"},
-                {"别删-仅卡劵申请tab", "新增角色失败当前角色名称已存在！请勿重复添加","重复的角色名称，创建成功"},
+                {"别删-仅卡劵申请tab", "新增角色失败当前角色名称已存在！请勿重复添加", "重复的角色名称，创建成功"},
         };
     }
+
     @Test(dataProvider = "ROLENAMEAB")  //ok
-    public void Jc_role_add_workAb(String name,String res,String mess) {
+    public void Jc_role_add_workAb(String name, String res, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = pp.roleList;
@@ -224,7 +225,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             checkArgument(res3.getString("message").equals(res), mess);
 
 
-        } catch (AssertionError |Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("轿辰-新增角色(名称异常校验)");
@@ -280,7 +281,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 //    @Test(description = "新增1个账号，列表+1；删除1个账号，列表-1；修改账号名称后与列表是否一致")
     public void Jc_accountInfoData() {
         try {
-            Integer total = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total = jc.organizationAccountPage("", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
             r_dList.add("417");
@@ -291,14 +292,14 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             JSONObject res = jc.organizationAccountAdd(name, phone, r_dList, shop_list);
 
             //从列表获取刚刚新增的账户的account
-            JSONObject accountPage=jc.organizationAccountPage(name,  1, 10);
-            int page=(accountPage.getInteger("total"))/10+1;
+            JSONObject accountPage = jc.organizationAccountPage(name, 1, 10);
+            int page = (accountPage.getInteger("total")) / 10 + 1;
 
-            JSONArray accountList =jc.organizationAccountPage(name,  page, 10).getJSONArray("list");
+            JSONArray accountList = jc.organizationAccountPage(name, page, 10).getJSONArray("list");
             String account = accountList.getJSONObject(accountList.size()).getString("id");
 
             //新增账号以后，再查询列表
-            Integer total1 = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total1 = jc.organizationAccountPage("", page, size).getInteger("total");
             int result = total1 - total;
             Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
 
@@ -314,7 +315,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //删除账号以后，再查询列表
             Integer code1 = jc.organizationAccountDelete(account).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
-            Integer total2 = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total2 = jc.organizationAccountPage("", page, size).getInteger("total");
             int result1 = total1 - total2;
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
 
@@ -337,7 +338,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            Integer total = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total = jc.organizationAccountPage("", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
             r_dList.add("4");
@@ -347,7 +348,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             shop_list.add("4116");
 
 
-            JSONArray list = jc.organizationAccountPage("",  page, size).getJSONArray("list");
+            JSONArray list = jc.organizationAccountPage("", page, size).getJSONArray("list");
             String today = dt.getHHmm(0);
             String account = "";
             String old_phone = "";
@@ -375,7 +376,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 }
                 Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
                 //编辑完以后获取列表的数量，是否有增多或者减少
-                Integer total1 = jc.organizationAccountPage("",  page, size).getInteger("total");
+                Integer total1 = jc.organizationAccountPage("", page, size).getInteger("total");
                 Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
 
             }
@@ -389,31 +390,31 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     }
 
-     //禁用账户登录失败，开启登录成功
+    //禁用账户登录失败，开启登录成功
 //    @Test
     public void Jc_accountStart() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray data=jc.roleListFilterManage("","1","100","","").getJSONArray("list");
-            String id="";
-            for(int i=1;i<data.size();i++){
-                String status=data.getJSONObject(i).getString("status");
-                if (status.equals("ENABLE")){
-                    id=data.getJSONObject(i).getString("id");
+            JSONArray data = jc.roleListFilterManage("", "1", "100", "", "").getJSONArray("list");
+            String id = "";
+            for (int i = 1; i < data.size(); i++) {
+                String status = data.getJSONObject(i).getString("status");
+                if (status.equals("ENABLE")) {
+                    id = data.getJSONObject(i).getString("id");
                     break;
                 }
             }
-            JSONArray list=jc.pcRoleList().getJSONArray("list");
-            int total=list.size();
+            JSONArray list = jc.pcRoleList().getJSONArray("list");
+            int total = list.size();
             //禁用开启按钮
             jc.organizationRoleButtom(id, "DISABLE");
-            int totalA=jc.pcRoleList().getJSONArray("list").size();
+            int totalA = jc.pcRoleList().getJSONArray("list").size();
 
             jc.organizationRoleButtom(id, "ENABLE");
-            int totalB=jc.pcRoleList().getJSONArray("list").size();
+            int totalB = jc.pcRoleList().getJSONArray("list").size();
 
-            Preconditions.checkArgument(total-totalA==1,"禁用角色列表-1");
-            Preconditions.checkArgument(totalB-total==0,"启用角色列表+1");
+            Preconditions.checkArgument(total - totalA == 1, "禁用角色列表-1");
+            Preconditions.checkArgument(totalB - total == 0, "启用角色列表+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -423,24 +424,25 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     }
 
     //查询案例
+
     /**
      * @description :接待管理查询   ---for  liya
      * @date :2020/8/3 12:48
      **/
 //    @Test(dataProvider = "SELECT_PARM", dataProviderClass = ScenarioUtil.class)
-    public void Jc_receptionSelect(String parm,String output) {
+    public void Jc_receptionSelect(String parm, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String shopId="-1";
-            JSONObject data = jc.afterSleCustomerManage(shopId,"1", "10","","");
+            String shopId = "-1";
+            JSONObject data = jc.afterSleCustomerManage(shopId, "1", "10", "", "");
 
 //            JSONObject data = jc.brandListFilterManage1("", "1","10","","");
 
             String Expetresult = data.getJSONArray("list").getJSONObject(0).getString(parm);
-            JSONArray list = jc.receptionManage(shopId, "1","10", parm,Expetresult).getJSONArray("list");
+            JSONArray list = jc.receptionManage(shopId, "1", "10", parm, Expetresult).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String SelectResult = list.getJSONObject(i).getString(output);
-                Preconditions.checkArgument((Expetresult.equals(SelectResult)), "接待管理按"+parm+"查询，结果错误"+SelectResult);
+                Preconditions.checkArgument((Expetresult.equals(SelectResult)), "接待管理按" + parm + "查询，结果错误" + SelectResult);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -449,52 +451,51 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test()
-    public void Jc_selectAppointmentRecodeFilter(){
+    //    @Test()
+    public void Jc_selectAppointmentRecodeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Object[][] ss = Constant.receptionManageFilter_pram();
-            SelectReception sr=new SelectReception();
-            JSONArray res=jc.receptionManage(pp.shopId,"1","10","","").getJSONArray("list");
-            JSONObject data=res.getJSONObject(0);
+            SelectReception sr = new SelectReception();
+            JSONArray res = jc.receptionManage(pp.shopId, "1", "10", "", "").getJSONArray("list");
+            JSONObject data = res.getJSONObject(0);
 
-            sr.plate_number=data.getString(ss[0][1].toString());
+            sr.plate_number = data.getString(ss[0][1].toString());
 
-            sr.reception_sale_id=data.getString(ss[1][1].toString());
-            sr.reception_date=data.getString(ss[2][1].toString());
+            sr.reception_sale_id = data.getString(ss[1][1].toString());
+            sr.reception_date = data.getString(ss[2][1].toString());
 
-            JSONObject result=jc.receptionManageC(sr);
+            JSONObject result = jc.receptionManageC(sr);
 
-            Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number),"");
+            Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number), "");
 
-        }catch(AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
+        } finally {
             saveData("轿辰-接待管理列表查询全填，结果校验");
         }
     }
 
-//    @Test(dataProvider = "SELECT_PreSleCustomerManageFilter",dataProviderClass = Constant.class)
-    public void preSleCustomerManageOneFilter(String pram,String output){
+    //    @Test(dataProvider = "SELECT_PreSleCustomerManageFilter",dataProviderClass = Constant.class)
+    public void preSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            JSONObject respon=jc.preSleCustomerManage("","1","10","","");
-            int pages=respon.getInteger("pages");
-            String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
-            for(int page=1;page<=pages;page++){
-                JSONArray list=jc.preSleCustomerManage("",String.valueOf(page),"10",pram,result).getJSONArray("list");
-                for(int i=0;i<10;i++){
-                    String Flag=list.getJSONObject(i).getString(output);
-                    Preconditions.checkArgument(Flag.contains(result), "销售管理按"+result+"查询，结果错误"+Flag);
+        try {
+            JSONObject respon = jc.preSleCustomerManage("", "1", "10", "", "");
+            int pages = respon.getInteger("pages");
+            String result = respon.getJSONArray("list").getJSONObject(0).getString(pram);
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.preSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                for (int i = 0; i < 10; i++) {
+                    String Flag = list.getJSONObject(i).getString(output);
+                    Preconditions.checkArgument(Flag.contains(result), "销售管理按" + result + "查询，结果错误" + Flag);
                 }
             }
-        }catch(AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
+        } finally {
             saveData("销售客户查询单项查询，结果校验");
         }
     }
-
 
 
 }

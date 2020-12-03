@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -23,11 +24,10 @@ import java.lang.reflect.Method;
 public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new  jiaoChenInfo();
+    jiaoChenInfo info = new jiaoChenInfo();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     *
      */
     @BeforeClass
     @Override
@@ -50,7 +50,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "轿辰 日常 lxq");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -63,7 +63,6 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
 
-
     }
 
     @AfterClass
@@ -74,7 +73,6 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: get a fresh case ds to save case result, such as result/response
-     *
      */
     @BeforeMethod
     @Override
@@ -83,8 +81,6 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
-
 
 
 }

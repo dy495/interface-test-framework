@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -48,17 +48,17 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
 
 
-        //replace backend gateway url
+        //replace backend gaturl
         //commonConfig.gateway = "";
 
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -109,6 +109,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-app个人中心，小程序码返回结果不为空");
         }
     }
+
     @Test
     public void Jc_bannerList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -123,6 +124,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-applet首页-banner返回不为空");
         }
     }
+
     @Test
     public void Jc_ArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -137,6 +139,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-applet首页-文章列表返回为空警告");
         }
     }
+
     @Test
     public void Jc_shopList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -151,6 +154,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-applet首页-门店信息返回不为空");
         }
     }
+
     @Test
     public void Jc_bandList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -165,6 +169,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-applet品牌列表返回不为空");
         }
     }
+
     @Test
     public void Jc_appletName() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -199,7 +204,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_appletMaintainShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletmaintainShopList(pp.car_id,pp.coordinate);
+            JSONObject data = jc.appletmaintainShopList(pp.car_id, pp.coordinate);
             String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
