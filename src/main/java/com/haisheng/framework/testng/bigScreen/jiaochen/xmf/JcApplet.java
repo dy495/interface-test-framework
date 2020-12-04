@@ -102,16 +102,16 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加车辆，车牌8位，数量+1
+     * @description :添加车辆，车牌8位，数量+1 ok
      * @date :2020/7/10 18:03
      **/
     @Test()
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int count = pf.carListNumber(pp.carStyleId);
             String plate_number = "蒙JKIO123";
             String car_idBefore = pf.appletAddCar(plate_number);
-            int count = pf.carListNumber(pp.carStyleId);
 
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
             int aftercount = listB.size();
@@ -126,12 +126,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("添加车辆，applet我的车辆列表加1");
+//            saveData("添加车辆，applet我的车辆列表加1");
         }
     }
 
     /**
-     * @description :添加车辆，车牌7位
+     * @description :添加车辆，车牌7位 ok
      * @date :2020/7/10 18:03
      **/
     @Test()
@@ -161,18 +161,19 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加重复车牌失败
+     * @description :添加重复车牌失败ok
      * @date :2020/7/10 18:03
      **/
     @Test(priority = 2)
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
+//            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
             String plate_number = pp.carplate;
-            jc.appletAddCar(pp.carModelId ,plate_number).getLong("code");
-            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
-            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
+            Long code=jc.appletAddCarcode(plate_number,pp.carModelId ).getLong("code");
+            Preconditions.checkArgument(code==1001,"重复车牌仍成功");
+//            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
+//            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -216,7 +217,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车牌号数量
+     * @description :车牌号数量 ok
      * @date :2020/8/24 19:54
      **/
     @Test

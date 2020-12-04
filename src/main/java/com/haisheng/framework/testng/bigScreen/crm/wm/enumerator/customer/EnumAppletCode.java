@@ -14,7 +14,7 @@ public enum EnumAppletCode {
 
     XMF("@@@", "1xLEom38wwHN2wVmoADPWg==", ""),
 
-    XMFONLINE("@@@", "PSksMGG/ny2DQZr8U/2NDA==", ""),
+    XMFONLINE("@@@", "zagLk0XwiZZo9+f36Yx9Lw==", ""),
 
     BB("北北", "DJi5GeKsEMIMe3H4XEeqmw==", ""),    //请勿使用
 
