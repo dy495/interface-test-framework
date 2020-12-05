@@ -12,6 +12,9 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
+/**
+ * 系统配置测试用例
+ */
 public class SystemConfig extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     private static final Integer size = 100;

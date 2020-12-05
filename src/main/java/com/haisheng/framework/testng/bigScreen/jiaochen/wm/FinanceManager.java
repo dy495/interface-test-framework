@@ -17,6 +17,9 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
+/**
+ * 财务管理测试用例
+ */
 public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     BusinessUtil util = new BusinessUtil();

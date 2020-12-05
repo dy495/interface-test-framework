@@ -25,6 +25,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 业务管理测试用例
+ */
 public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     private static final Integer size = 100;
@@ -41,7 +44,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT,EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId

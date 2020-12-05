@@ -8,6 +8,8 @@ import lombok.Getter;
 public enum EnumAccount {
 
     MARKETING("15321527989", "000000", "营销管理", "daily"),
+
+    ADMINISTRATOR("15711300001", "000000", "系统管理员", "daily"),
     ;
 
     EnumAccount(String phone, String password, String name, String environment) {

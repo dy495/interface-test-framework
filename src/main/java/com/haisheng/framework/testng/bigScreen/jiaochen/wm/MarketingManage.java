@@ -8,7 +8,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumSubject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVoucherStatus;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.CreatePackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
@@ -28,11 +31,15 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+/**
+ * 营销管理模块测试用例
+ */
 public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
     private static final EnumAccount marketing = EnumAccount.MARKETING;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
 
     @BeforeClass
     @Override
@@ -72,9 +79,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "卡券表单--新建卡券--卡券名称异常")
     public void voucherManage_system_1() {
-        String[] strings = {EnumContent.B.getContent(), "1", null, ""};
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
             for (String name : strings) {
                 Long stock = 1000L;
                 IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
@@ -82,11 +89,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(name)) {
-                    Preconditions.checkArgument(message.equals("卡券名称不能为空"), "卡券名称为：" + name + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("卡券名称长度应为2～20个字"), "卡券名称为：" + name + "创建成功");
-                }
+                String err = StringUtils.isEmpty(name) ? "卡券名称不能为空" : "卡券名称长度应为2～20个字";
+                Preconditions.checkArgument(message.equals(err), "卡券名称为：" + name + "创建成功");
                 CommonUtil.logger(name);
             }
         } catch (Exception | AssertionError e) {
@@ -98,9 +102,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "卡券表单--新建卡券--卡券说明异常")
     public void voucherManage_system_2() {
-        String[] strings = {null, "", EnumContent.C.getContent()};
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] strings = {null, "", EnumContent.C.getContent()};
             for (String desc : strings) {
                 Long stock = 1000L;
                 IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.getVoucherName()).subjectType(util.getSubjectType())
@@ -108,11 +112,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(desc)) {
-                    Preconditions.checkArgument(message.equals("卡券说明不能为空"), "卡券说明为：" + desc + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("卡券描述不能超过200个字"), "卡券说明为：" + desc + "创建成功");
-                }
+                String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过200个字";
+                Preconditions.checkArgument(message.equals(err), "卡券说明为：" + desc + "创建成功");
                 CommonUtil.logger(desc);
             }
         } catch (Exception | AssertionError e) {
@@ -124,9 +125,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "卡券表单--新建卡券--主体类型异常")
     public void voucherManage_system_3() {
-        String[] strings = {"全部权限", null, ""};
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] strings = {"全部权限", null, ""};
             for (String subjectType : strings) {
                 Long stock = 1000L;
                 IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.getVoucherName()).subjectType(subjectType)
@@ -144,7 +145,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--新建卡券--主体类型选择门店，店面id异常")
+    @Test(description = "卡券表单--新建卡券--主体详情异常")
     public void voucherManage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -158,7 +159,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("卡券表单--新建卡券--主体类型下店面id为空");
+            saveData("卡券表单--新建卡券--主体详情异常");
         }
     }
 
@@ -173,13 +174,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(stock)) {
-                    Preconditions.checkArgument(message.equals("库存不能为空"), "卡券库存为：" + stock + "创建成功");
-                } else if (stock > 1000000000L) {
-                    Preconditions.checkArgument(message.equals("请求入参类型不正确"), "卡券库存为：" + stock + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("卡券库存范围应在0 ～ 100000000张"), "卡券库存为：" + stock + "创建成功");
-                }
+                String err = StringUtils.isEmpty(stock) ? "库存不能为空" : stock > 1000000000L ? "请求入参类型不正确" : "卡券库存范围应在0 ～ 100000000张";
+                Preconditions.checkArgument(message.equals(err), "卡券库存为：" + stock + "创建成功");
                 CommonUtil.logger(stock);
             }
         } catch (Exception | AssertionError e) {
@@ -201,11 +197,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .shopType(shopType).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(shopType)) {
-                    Preconditions.checkArgument(message.equals("业务类型不能为空"), "业务类型为：" + shopType + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("业务类型不存在"), "业务类型为：" + shopType + "创建成功");
-                }
+                String err = StringUtils.isEmpty(shopType) ? "业务类型不能为空" : "业务类型不存在";
+                Preconditions.checkArgument(message.equals(err), "业务类型为：" + shopType + "创建成功");
                 CommonUtil.logger(shopType);
             }
         } catch (Exception | AssertionError e) {
@@ -217,7 +210,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "卡券表单--新建卡券--成本异常情况")
     public void voucherManage_system_7() {
-        Double[] strings = {null, (double) -1, (double) 1000000000, 100000000.11};
+        Double[] strings = {null, (double) -1, (double) 1000000000, 100000000.11, 99999.999};
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long stock = 1000L;
@@ -227,11 +220,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(cost)) {
-                    Preconditions.checkArgument(message.equals("成本不能为空"), "成本为：" + cost + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("卡券成本金额范围应在0 ～ 100000000元"), "成本为：" + cost + "创建成功");
-                }
+                String err = StringUtils.isEmpty(cost) ? "成本不能为空" : "卡券成本金额范围应在0 ～ 100000000元";
+                Preconditions.checkArgument(message.equals(err), "成本为：" + cost + "创建成功");
                 CommonUtil.logger(cost);
             }
         } catch (Exception | AssertionError e) {
@@ -277,7 +267,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             JSONObject data = jc.invokeApi(builder.build());
             int issueInventory = CommonUtil.getIntField(data, 0, "issue_inventory");
             Preconditions.checkArgument(issueInventory == stock, "创建卡券时数量为1000，创建完成后列表展示发行库存为：" + issueInventory);
-            int cost = CommonUtil.getIntField(data, 0, "cost");
+            Double cost = data.getJSONArray("list").getJSONObject(0).getDouble("cost");
             Preconditions.checkArgument(cost == (double) 50, "创建卡券时成本为:" + (double) 50 + "，创建完成后列表展示成本为：" + cost);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -291,8 +281,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-            //作废卡券
-            String voucherName = util.invalidVoucher();
+            //创建卡券
+            String voucherName = util.createVoucher(1000L);
+            //作废此卡券
+            util.invalidVoucher(voucherName);
             IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
             JSONObject response = jc.invokeApi(scene);
             String invalidTime = CommonUtil.getStrField(response, 0, "create_time");
@@ -308,38 +300,39 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--增发卡券--审批通过前，增发库存=增发库存")
+    @Test(description = "卡券表单--增发卡券--审批通过前，增发库存不变，剩余客库存不变")
     public void voucherManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //增发前剩余库存和增发库存
+            int surplusInventory = 0;
             int additionalInventory = 0;
             String voucherName = null;
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
-            IScene applyScene = ApplyPage.builder().build();
-            int applyTotal = jc.invokeApi(applyScene).getInteger("total");
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
-            int id = 0;
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
                 for (int j = 0; j < array.size(); j++) {
-                    if (array.getJSONObject(j).getBoolean("if_can_invalid")) {
-                        id = array.getJSONObject(j).getInteger("id");
-                        voucherName = array.getJSONObject(j).getString("voucher_name");
+                    if (array.getJSONObject(j).getString("audit_status_name").equals("已通过")
+                            && !array.getJSONObject(j).getString("invalid_status_name").equals("已作废")) {
+                        surplusInventory = array.getJSONObject(j).getInteger("surplus_inventory");
                         additionalInventory = array.getJSONObject(j).getInteger("additional_inventory");
+                        voucherName = array.getJSONObject(j).getString("voucher_name");
                         break;
                     }
                 }
             }
             //增发
-            jc.pcAddVoucher((long) id, 20);
-            //增发后校验
-            int newApplyTotal = jc.invokeApi(applyScene).getInteger("total");
-            Preconditions.checkArgument(newApplyTotal == applyTotal + 1, "");
-            IScene voucherScene = builder.voucherName(voucherName).build();
-            int newAdditionalInventory = CommonUtil.getIntField(jc.invokeApi(voucherScene), 0, "additional_inventory");
-            CommonUtil.valueView(additionalInventory, newAdditionalInventory);
-            Preconditions.checkArgument(additionalInventory == newAdditionalInventory, "");
+            util.addVoucher(voucherName, 10);
+            //增发后数据
+            builder.voucherName(voucherName);
+            JSONObject response = jc.invokeApi(builder.build());
+            int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory");
+            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
+            Preconditions.checkArgument(newSurplusInventory == surplusInventory, "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
+            Preconditions.checkArgument(newAdditionalInventory == additionalInventory, "增发前增发库存：" + additionalInventory + "增发后增发库存：" + newAdditionalInventory);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -347,42 +340,41 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--增发卡券--审批通过后，增发库存=增发库存+增发数量")
+    @Test(description = "卡券表单--增发卡券--审批通过后，新增发库存=原增发库存+增发数量，新剩余库存=原剩余库存+增发数量")
     public void voucherManage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //增发前剩余库存和增发库存
+            int surplusInventory = 0;
+            int additionalInventory = 0;
+            String voucherName = null;
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
-            int id = 0;
-            //增发库存
-            int additionalInventory = 0;
-            //剩余库存
-            int surplusInventory = 0;
-            String voucherName = null;
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
                 for (int j = 0; j < array.size(); j++) {
-                    if (array.getJSONObject(j).getBoolean("if_can_invalid")) {
-                        id = array.getJSONObject(j).getInteger("id");
-                        voucherName = array.getJSONObject(j).getString("voucher_name");
-                        additionalInventory = array.getJSONObject(j).getInteger("additional_inventory");
+                    if (array.getJSONObject(j).getString("audit_status_name").equals("已通过")
+                            && !array.getJSONObject(j).getString("invalid_status_name").equals("已作废")) {
                         surplusInventory = array.getJSONObject(j).getInteger("surplus_inventory");
+                        additionalInventory = array.getJSONObject(j).getInteger("additional_inventory");
+                        voucherName = array.getJSONObject(j).getString("voucher_name");
                         break;
                     }
                 }
             }
             //增发
-            jc.pcAddVoucher((long) id, 20);
+            util.addVoucher(voucherName, 10);
             //审批通过
-            JSONObject applyResponse = jc.invokeApi(ApplyPage.builder().name(voucherName).build());
-            int applyId = CommonUtil.getIntField(applyResponse, 0, "id");
-            jc.pcApplyApproval((long) applyId, "1");
-            JSONObject response = jc.invokeApi(builder.voucherName(voucherName).build());
-            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            util.applyVoucher(voucherName, "1");
+            //审批后数据
+            builder.voucherName(voucherName);
+            JSONObject response = jc.invokeApi(builder.build());
             int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory");
-            Preconditions.checkArgument(newAdditionalInventory == additionalInventory + 20, "");
-            Preconditions.checkArgument(newSurplusInventory == surplusInventory + 20, "");
+            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
+            Preconditions.checkArgument(newSurplusInventory == surplusInventory + 10, "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
+            Preconditions.checkArgument(newAdditionalInventory == additionalInventory + 10, "增发前增发库存：" + additionalInventory + "增发后增发库存：" + newAdditionalInventory);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -394,34 +386,37 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //增发前剩余库存和增发库存
+            int surplusInventory = 0;
+            int additionalInventory = 0;
+            String voucherName = null;
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
-            int id = 0;
-            //增发库存
-            int additionalInventory = 0;
-            //剩余库存
-            String voucherName = null;
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
                 for (int j = 0; j < array.size(); j++) {
-                    if (array.getJSONObject(j).getBoolean("if_can_invalid")) {
-                        id = array.getJSONObject(j).getInteger("id");
-                        voucherName = array.getJSONObject(j).getString("voucher_name");
+                    if (array.getJSONObject(j).getString("audit_status_name").equals("已通过")
+                            && !array.getJSONObject(j).getString("invalid_status_name").equals("已作废")) {
+                        surplusInventory = array.getJSONObject(j).getInteger("surplus_inventory");
                         additionalInventory = array.getJSONObject(j).getInteger("additional_inventory");
+                        voucherName = array.getJSONObject(j).getString("voucher_name");
                         break;
                     }
                 }
             }
             //增发
-            jc.pcAddVoucher((long) id, 20);
+            util.addVoucher(voucherName, 10);
             //审批不通过
-            JSONObject applyResponse = jc.invokeApi(ApplyPage.builder().name(voucherName).build());
-            int applyId = CommonUtil.getIntField(applyResponse, 0, "id");
-            jc.pcApplyApproval((long) applyId, "0");
-            JSONObject response = jc.invokeApi(builder.voucherName(voucherName).build());
+            util.applyVoucher(voucherName, "2");
+            //审批后数据
+            builder.voucherName(voucherName);
+            JSONObject response = jc.invokeApi(builder.build());
+            int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory");
             int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
-            Preconditions.checkArgument(newAdditionalInventory == additionalInventory, "");
+            CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
+            Preconditions.checkArgument(newSurplusInventory == surplusInventory, "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
+            Preconditions.checkArgument(newAdditionalInventory == additionalInventory, "增发前增发库存：" + additionalInventory + "增发后增发库存：" + newAdditionalInventory);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -800,17 +795,14 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_38() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {"11111111111", "1337316680", "133731668062"};
+            String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
             for (String phone : strings) {
                 IScene scene = CreateVerificationPeople.builder().verificationPersonName("郭丽雅")
                         .verificationPersonPhone(phone).status(1).type(0).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                if (StringUtils.isEmpty(phone)) {
-                    Preconditions.checkArgument(message.equals("核销人员电话不能为空"), "手机号格式为：" + phone + "创建成功");
-                } else {
-                    Preconditions.checkArgument(message.equals("手机号格式不正确"), "手机号格式为：" + phone + "创建成功");
-                }
+                String err = "手机号格式不正确";
+                Preconditions.checkArgument(message.equals(err), "手机号格式为：" + phone + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(phone);
             }
         } catch (Exception | AssertionError e) {
@@ -830,7 +822,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         .verificationPersonPhone(phone).status(1).type(0).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                Preconditions.checkArgument(message.equals("手机号已存在"), "手机号格式为：" + phone + "创建成功");
+                String err = "手机号已存在";
+                Preconditions.checkArgument(message.equals(err), "手机号格式为：" + phone + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -838,7 +831,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             saveData("核销人员--创建财务核销,电话存在");
         }
     }
-
 
     @Test(description = "核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1")
     public void voucherManage_data_30() {
@@ -861,4 +853,202 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Test(description = "套餐管理--创建套餐，套餐名称异常")
+    public void packageManager_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
+            for (String name : strings) {
+                IScene scene = CreatePackage.builder().packageName(name).validity("30").packageDescription(util.getDesc())
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(name) ? "套餐名称不能为空" : "套餐名称输入应大于2字小于20字";
+                Preconditions.checkArgument(message.equals(err), "套餐名称为：" + name + CommonUtil.errMessage(err, message));
+                CommonUtil.logger(name);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，套餐名称异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，套餐说明异常")
+    public void packageManager_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, "", EnumContent.C.getContent()};
+            for (String desc : strings) {
+                IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30").packageDescription(desc)
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(desc) ? "套餐说明不能为空" : "套餐说明不能超过200字";
+                Preconditions.checkArgument(message.equals(err), "套餐说明为：" + desc + CommonUtil.errMessage(err, message));
+                CommonUtil.logger(desc);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，套餐说明异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，有效天数异常")
+    public void packageManager_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, "", "2001", "0"};
+            for (String validity : strings) {
+                IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity(validity)
+                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(validity) ? "套餐有效期不能为空" : "有效期请小于2000天";
+                Preconditions.checkArgument(message.equals(err), "有效期为：" + validity + CommonUtil.errMessage(err, message));
+                CommonUtil.logger(validity);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，套餐说明异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，主体类型异常")
+    public void packageManager_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {"全部权限", null, ""};
+            for (String subjectType : strings) {
+                IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(subjectType)
+                        .subjectId(util.getSubjectId(subjectType)).voucherList(util.getVoucherList())
+                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = "主体类型不存在";
+                Preconditions.checkArgument(message.equals(err), "有效期为：" + subjectType + CommonUtil.errMessage(err, message));
+                CommonUtil.logger(subjectType);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，主体详情异常")
+    public void packageManager_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .voucherList(util.getVoucherList())
+                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "主体详情不能为空";
+            Preconditions.checkArgument(message.equals(err), "主体详情为：" + null + CommonUtil.errMessage(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，主体详情异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，包含卡券为空")
+    public void packageManager_system_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType()))
+                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "所选卡券不能为空";
+            Preconditions.checkArgument(message.equals(err), "包含卡券为：" + null + CommonUtil.errMessage(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，包含卡券为空");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，套餐价格异常")
+    public void packageManager_system_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Double[] longs = {null, 100000000.01};
+            for (Double packagePrice : longs) {
+                IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                        .packagePrice(packagePrice).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(packagePrice) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
+                Preconditions.checkArgument(message.equals(err), "有效期为：" + packagePrice + CommonUtil.errMessage(err, message));
+                CommonUtil.logger(packagePrice);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，套餐价格异常");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，选择门店为空")
+    public void packageManager_system_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                    .packagePrice(5000.00).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "套餐适用门店列表不能为空";
+            Preconditions.checkArgument(message.equals(err), "有效期为：" + null + CommonUtil.errMessage(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，选择门店为空");
+        }
+    }
+
+    @Test(description = "套餐管理--创建套餐，选择各个主体创建套餐，套餐列表每次均+1")
+    public void packageManager_system_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //登录管理员
+            util.login(administrator);
+            for (EnumSubject subject : EnumSubject.values()) {
+                //创建套餐前列表数量
+                IScene scene = PackageFormPage.builder().build();
+                int total = jc.invokeApi(scene).getInteger("total");
+                //创建套餐
+                String subjectType = subject.name();
+                Long subjectId = util.getSubjectId(subjectType);
+                IScene scene1 = CreatePackage.builder().packageName(util.getPackageName()).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(subjectType)
+                        .subjectId(subjectId).voucherList(util.getVoucherList())
+                        .packagePrice(5000.00).shopIds(util.getShopIds()).build();
+                jc.invokeApi(scene1);
+                //创建套餐后列表数量
+                int newTotal = jc.invokeApi(scene).getInteger("total");
+                Preconditions.checkArgument(newTotal == total + 1, "创建套餐前列表数量：" + total + " 创建套餐后列表数量：" + newTotal);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--创建套餐，选择各个主体创建套餐，套餐列表每次均+1");
+        }
+    }
 }
