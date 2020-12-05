@@ -179,7 +179,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"2020100009\",\n" +
+                    "        \"user_id\": \"202010000155\",\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +

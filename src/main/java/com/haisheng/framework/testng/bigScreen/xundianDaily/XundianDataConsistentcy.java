@@ -1077,4 +1077,47 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
         return (long) check_list.getJSONObject(0).getInteger("id");
     }
+
+    /**
+     * ====================test======================
+     */
+    @Test
+    public void getnum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从巡店报告中心列表执行项不合格率
+            JSONArray list = xd.xd_report_list("","","","",0,page,size).getJSONArray("list");
+            int count1 = 0;
+            int count2 = 0;
+            int count3 = 0;
+            for(int i=0;i<list.size();i++){
+                String shop_name = list.getJSONObject(i).getString("shop_name");
+                if(shop_name.equals("AI-Test(门店订单录像)")){
+                    int id = list.getJSONObject(i).getInteger("id");
+                    Long shop_id = list.getJSONObject(i).getLong("shop_id");
+                    //通过报告id和门店id去详情页拿到不合格的项数
+                    int qualified_num = xd.shopChecksDetail(id ,shop_id).getInteger("qualified_num");
+                    int inappropriate_num =  xd.shopChecksDetail(id ,shop_id).getInteger("inappropriate_num");
+                    int unqualified_num = xd.shopChecksDetail(id ,shop_id).getInteger("unqualified_num");
+                    count1 += qualified_num;
+                    count2 += inappropriate_num;
+                    count3 += unqualified_num;
+
+                }
+            }
+            //ai_TEST门店的执行项整体合格率
+            int totals = count1+count2+count3;
+            String A=  CommonUtil.getPercent(count1,totals,4);
+            System.out.print(A);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店报告中心】执行项不合格率==当次巡检报告中不合格项/总执行项");
+        }
+
+    }
 }
