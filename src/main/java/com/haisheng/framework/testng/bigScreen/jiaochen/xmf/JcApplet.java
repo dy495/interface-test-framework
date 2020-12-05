@@ -21,6 +21,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -375,6 +377,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void pcappointmentSumPass() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+//            String date=dt.getHistoryDate(0);
+            String date = "2020-12-04";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//24小时制
+            long time = simpleDateFormat.parse(date).getTime();
+            System.out.println(time);
+//            System.out.println(dt.getHistoryDateTimestamp(0));
             //活动报名前
             Long[] aid = {};
             Long activity_id = aid[1];

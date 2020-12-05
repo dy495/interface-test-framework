@@ -209,7 +209,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ROLENAMEAB")
     public static Object[][] rolenameab(){
         return new String[][]{
-//                {"这是一个二十一字的角色名称是的是的是的是的", "角色名称需要在1-20个字内","角色名称需要在1-20个字内"},
+                {"这是一个二十一字的角色名称是的是的是的是的", "角色名称需要在1-20个字内","角色名称需要在1-20个字内"},
                 {"别删-仅卡劵申请tab", "新增角色失败当前角色名称已存在！请勿重复添加","重复的角色名称，创建成功"},
         };
     }
