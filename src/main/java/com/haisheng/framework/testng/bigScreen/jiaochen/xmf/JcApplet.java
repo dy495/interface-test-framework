@@ -21,6 +21,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -70,11 +72,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.referer="https://servicewechat.com/wx4071a91527930b48/";
+
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -101,17 +104,16 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加车辆，车牌8位，数量+1
+     * @description :添加车辆，车牌8位，数量+1 ok
      * @date :2020/7/10 18:03
      **/
     @Test()
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int count = pf.carListNumber(pp.carStyleId);
             String plate_number = "蒙JKIO123";
             String car_idBefore = pf.appletAddCar(plate_number);
-            int count = pf.carListNumber(pp.carStyleId);
-//            String car_idBefore = pf.appletAddCar(plate_number);
 
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
             int aftercount = listB.size();
@@ -126,12 +128,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("添加车辆，applet我的车辆列表加1");
+//            saveData("添加车辆，applet我的车辆列表加1");
         }
     }
 
     /**
-     * @description :添加车辆，车牌7位
+     * @description :添加车辆，车牌7位 ok
      * @date :2020/7/10 18:03
      **/
     @Test()
@@ -161,18 +163,19 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :添加重复车牌失败
+     * @description :添加重复车牌失败ok
      * @date :2020/7/10 18:03
      **/
     @Test(priority = 2)
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
+//            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
             String plate_number = pp.carplate;
-            jc.appletAddCar(pp.carModelId ,plate_number).getLong("code");
-            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
-            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
+            Long code=jc.appletAddCarcode(plate_number,pp.carModelId ).getLong("code");
+            Preconditions.checkArgument(code==1001,"重复车牌仍成功");
+//            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
+//            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -216,7 +219,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车牌号数量
+     * @description :车牌号数量 ok
      * @date :2020/8/24 19:54
      **/
     @Test
@@ -374,6 +377,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void pcappointmentSumPass() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+//            String date=dt.getHistoryDate(0);
+            String date = "2020-12-04";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//24小时制
+            long time = simpleDateFormat.parse(date).getTime();
+            System.out.println(time);
+//            System.out.println(dt.getHistoryDateTimestamp(0));
             //活动报名前
             Long[] aid = {};
             Long activity_id = aid[1];

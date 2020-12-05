@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 预约管理 -> 预约记录
+ * 套餐管理 -> 套餐表单
  */
 @Builder
 public class PackageFormPage extends BaseScene {
@@ -15,8 +15,10 @@ public class PackageFormPage extends BaseScene {
     private final String startTime;
     private final String endTime;
     private final String shopName;
-    private final Integer page;
-    private final Integer size;
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {

@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
@@ -17,17 +19,10 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-/**
- * @description :线上23点接待客户交车
- * @date :2020/11/2 16:14
- **/
-
-
-public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCaseStd {
+public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParmOnline pp = new PublicParmOnline();
-    PackFunctionOnline pf = new PackFunctionOnline();
+
 
 
     /**
@@ -62,11 +57,11 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOline();
+        commonConfig.shopId = "12732";
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
+        crm.login("hellenan","e10adc3949ba59abbe56e057f20f883e");
 
 
     }
@@ -87,48 +82,68 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-    @Test(description = "23点接待客户，购车交车，有手机号完成接待")
-    public void testdeliver() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
-            fr.name = json.getString("name");
-            fr.reception_id = json.getString("reception_id");
-            fr.customer_id = json.getString("customerId");
-            fr.belongs_sale_id = json.getString("sale_id");
-            fr.phoneList = json.getJSONArray("phoneList");
-            fr.reception_type = "FU";
-            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), fr.name, dt.getHistoryDate(0), true);
-            crm.finishReception3(fr);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("创建新客完成接待");
-        }
-    }
-    @Test(description = "23点接待客户无手机号")
-    public void testdeliverNophone() {
+    /**
+     * @description :展厅接待按名字查询，结果校验  ok
+     * @date :2020/8/3 12:48
+     **/
+    @Test
+    public void qtztSelect() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
-            fr.name = json.getString("name");
-            fr.reception_id = json.getString("reception_id");
-            fr.customer_id = json.getString("customerId");
-            fr.belongs_sale_id = json.getString("sale_id");
-            fr.reception_type = "FU";
-            crm.finishReception3(fr);
+            String data=dt.getHistoryDate(0);
+            JSONArray data2 = crm.qtreceptionPage("", data, data, "1", "10").getJSONArray("list");
+           if(data2.size()==0){
+               throw new Exception("warm:接待管理今日接待数据为空");
+           }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("创建新客完成接待");
+            saveData("展厅接待数据监控");
         }
     }
+
+        /**
+     * @description :到访记录按时间查询 ok
+     * @date :2020/8/3 12:48
+     **/
+    @Test()
+    public void visitRecodeSelectTime() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String select_date=dt.getHistoryDate(0);
+            JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
+            if(select_date.equals("")&&list.size()==0){
+                throw new Exception("到访记录为空");
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("到访记录监控");
+        }
+    }
+
+    @Test(description = "线上人脸为空警告")
+    public void faceListNontull() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = crm.markcustomerList().getJSONArray("list");
+            if(list.size()==0){
+                throw new Exception("警告：线上人脸列表为空");
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("检查前台人脸列表是否为空");
+        }
+    }
+
+
 
 }

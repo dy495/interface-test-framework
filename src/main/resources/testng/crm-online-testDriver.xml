@@ -10,6 +10,7 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.testDriverCaseOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnlineWarm"></class>
         </classes>
     </test>
 </suite>

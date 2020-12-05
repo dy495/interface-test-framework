@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
@@ -14,11 +15,11 @@ public class CreatePackage extends BaseScene {
     private final String packageName;
     private final String validity;
     private final String packageDescription;
-    private final String voucherList;
-    private final Integer packagePrice;
+    private final JSONArray voucherList;
+    private final Double packagePrice;
     private final List<Long> shopIds;
     private final String subjectType;
-    private final String subjectId;
+    private final Long subjectId;
     private final Boolean status;
 
     @Override

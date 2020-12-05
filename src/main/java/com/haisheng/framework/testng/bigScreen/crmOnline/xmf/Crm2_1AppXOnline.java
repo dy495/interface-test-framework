@@ -53,7 +53,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/";
+        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;;
 
 
         //replace backend gateway url
@@ -66,8 +66,8 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
