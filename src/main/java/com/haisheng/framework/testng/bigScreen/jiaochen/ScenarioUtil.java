@@ -1809,7 +1809,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", variable.size);
         json.put("customer_name", variable.customer_name);
         json.put("customer_phone", variable.customer_phone);
-        json.put("create_date", variable.create_date);
+       // json.put("create_date", variable.create_date);
         json.put("sale_name", variable.sale_name);
         json.put("customer_type", variable.customer_type);
 
@@ -1861,9 +1861,9 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("vehicle_chassis_code", variable.vehicle_chassis_code);
-        json.put("create_date", variable.create_date);
-        json.put("customer_name", variable.customer_name);
-        json.put("customer_phone", variable.customer_phone);
+        json.put("start_order_date", variable.start_order_date);
+        json.put("repair_customer_name", variable.repair_customer_name);
+        json.put("repair_customer_phone", variable.repair_customer_phone);
 
         return invokeApi(url, json);
     }
@@ -1938,6 +1938,8 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("customer_phone", variable.customer_phone);
         json.put("is_overtime", variable.is_overtime);
         json.put("confirm_time", variable.confirm_time);
+        json.put("appointment_date", variable.appointment_date);
+        json.put("create_date", variable.create_date);
 
         return invokeApi(url, json);
     }
@@ -1990,9 +1992,10 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("subject_name", variable.subject_name);
-        json.put("voucher_name", variable.voucher_name);
+        json.put("voucher_status", variable.voucher_status);
         json.put("creator", variable.creator);
         json.put("is_diff", variable.is_diff);
+        json.put("is_self_verification", variable.is_self_verification);
 
         return invokeApi(url, json);
     }
@@ -2163,7 +2166,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject buyPackageRecordFilterManage(String shopId, String page, String size, String pram, String result) {
-        String url = "/jiaochen/pc/packsge-manage/buy-package-record";
+        String url = "//jiaochen/pc/package-manage/buy-package-record";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
@@ -2303,11 +2306,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject approvalListFilterManage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject approvalListFilterManage(String shopId, String page, String size,int id, String pram, String result) {
         String url = "/jiaochen/pc/operation/approval/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
+        json.put("article_id", id);
         json.put("size", size);
         if (pram != null || !pram.equals("")) {
             json.put(pram, result);
