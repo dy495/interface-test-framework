@@ -1116,7 +1116,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             appendFailReason(e.toString());
         } finally {
 
-            saveData("【巡店报告中心】执行项不合格率==当次巡检报告中不合格项/总执行项");
+            saveData("test");
         }
 
     }

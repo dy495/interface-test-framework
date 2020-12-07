@@ -1684,7 +1684,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String ss=  CommonUtil.getPercent(omni_channel1-omni_channel2,omni_channel2,4);
             String day_on_day =  ss.replace("%","");
 
-            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店\"+shop_id+\"昨日日环比" + new_uv_ring + "!=昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值：" + day_on_day);
+            Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店"+shop_id+"昨日日环比" + new_uv_ring + "!=昨天新增的全渠道会员值-【新增客户趋势】前天新增的全渠道会员值/前天新增的全渠道会员值：" + day_on_day);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
