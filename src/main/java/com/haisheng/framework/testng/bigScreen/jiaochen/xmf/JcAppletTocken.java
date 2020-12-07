@@ -104,7 +104,7 @@ public class JcAppletTocken extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                "qJs+e1BfI3Gy2xGVvbjf+w==",   //xmf
+                "VnETJ7mPJXIidJv9alQ25g==",   //xmf
         };
     }
     @Test(dataProvider = "APPLET_TOKENS")

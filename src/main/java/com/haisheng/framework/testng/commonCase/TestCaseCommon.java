@@ -430,7 +430,9 @@ public class TestCaseCommon {
     public String getProscheShopOline() {
         return "12928";
     }
-
+    public String getJcRefer() {
+        return "https://servicewechat.com/wx4071a91527930b48/";
+    }
 
     public String getXundianShop() {
         return "4116";
