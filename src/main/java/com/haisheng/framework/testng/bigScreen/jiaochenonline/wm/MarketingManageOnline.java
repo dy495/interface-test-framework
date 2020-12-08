@@ -90,7 +90,8 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
                 String err = StringUtils.isEmpty(name) ? "卡券名称不能为空" : "卡券名称长度应为2～20个字";
-                Preconditions.checkArgument(message.equals(err), "卡券名称为：" + name + "创建成功");
+                Preconditions.checkArgument(message.equals(err),
+                        "卡券名称为：" + name + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(name);
             }
         } catch (Exception | AssertionError e) {
@@ -113,7 +114,8 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
                 String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过200个字";
-                Preconditions.checkArgument(message.equals(err), "卡券说明为：" + desc + "创建成功");
+                Preconditions.checkArgument(message.equals(err),
+                        "卡券说明为：" + desc + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(desc);
             }
         } catch (Exception | AssertionError e) {
@@ -135,7 +137,9 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                         .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
-                Preconditions.checkArgument(message.equals("主体类型不存在"), "主体类型为：" + subjectType + "创建成功");
+                String err = "主体类型不存在";
+                Preconditions.checkArgument(message.equals(err),
+                        "主体类型为：" + subjectType + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(subjectType);
             }
         } catch (Exception | AssertionError e) {
@@ -155,7 +159,9 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                     .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
             String message = jc.invokeApi(scene, false).getString("message");
             CommonUtil.valueView(message);
-            Preconditions.checkArgument(message.equals("主体详情不能为空"), "主体详情为：" + null + "创建成功");
+            String err = "主体详情不能为空";
+            Preconditions.checkArgument(message.equals(err),
+                    "主体详情为：" + null + CommonUtil.errMessage(err, message));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -175,7 +181,8 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
                 String err = StringUtils.isEmpty(stock) ? "库存不能为空" : stock > 1000000000L ? "请求入参类型不正确" : "卡券库存范围应在0 ～ 100000000张";
-                Preconditions.checkArgument(message.equals(err), "卡券库存为：" + stock + "创建成功");
+                Preconditions.checkArgument(message.equals(err),
+                        "卡券库存为：" + stock + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(stock);
             }
         } catch (Exception | AssertionError e) {
@@ -198,7 +205,8 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
                 String err = StringUtils.isEmpty(shopType) ? "业务类型不能为空" : "业务类型不存在";
-                Preconditions.checkArgument(message.equals(err), "业务类型为：" + shopType + "创建成功");
+                Preconditions.checkArgument(message.equals(err),
+                        "业务类型为：" + shopType + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(shopType);
             }
         } catch (Exception | AssertionError e) {
@@ -210,7 +218,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
 
     @Test(description = "卡券表单--新建卡券--成本异常情况")
     public void voucherManage_system_7() {
-        Double[] doubles = {null, (double) -1, (double) 1000000000, 100000000.11, 99999.999};
+        Double[] doubles = {null, (double) -1, (double) 1000000000, 100000000.11};
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long stock = 1000L;
@@ -221,7 +229,8 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 String message = jc.invokeApi(scene, false).getString("message");
                 CommonUtil.valueView(message);
                 String err = StringUtils.isEmpty(cost) ? "成本不能为空" : "卡券成本金额范围应在0 ～ 100000000元";
-                Preconditions.checkArgument(message.equals(err), "成本为：" + cost + "创建成功");
+                Preconditions.checkArgument(message.equals(err),
+                        "成本为：" + cost + CommonUtil.errMessage(err, message));
                 CommonUtil.logger(cost);
             }
         } catch (Exception | AssertionError e) {
@@ -242,7 +251,9 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                     .shopType(0).selfVerification(true).build();
             String message = jc.invokeApi(scene, false).getString("message");
             CommonUtil.valueView(message);
-            Preconditions.checkArgument(message.equals("卡券适用门店列表不能为空"), "卡券适用门店列表为：" + null + "创建成功");
+            String err = "卡券适用门店列表不能为空";
+            Preconditions.checkArgument(message.equals(err),
+                    "卡券适用门店列表为：" + null + CommonUtil.errMessage(err, message));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
