@@ -352,7 +352,7 @@ public class CommonUtil {
 
     @NotNull
     @Contract(pure = true)
-    public static String errMessage(String expect, String actual) {
+    public static <T> String errMessage(T expect, T actual) {
         return " 预期结果：" + expect + " 实际结果：" + actual;
     }
 

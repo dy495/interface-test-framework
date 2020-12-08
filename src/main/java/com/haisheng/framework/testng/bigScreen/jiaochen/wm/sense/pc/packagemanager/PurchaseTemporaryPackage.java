@@ -1,10 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
-
-import java.util.List;
 
 /**
  * 套餐管理 -> 购买临时套餐
@@ -14,15 +13,15 @@ public class PurchaseTemporaryPackage extends BaseScene {
     private final String customerPhone;
     private final String customerName;
     private final Long customerId;
-    private final List<Long> voucherList;
+    private final JSONArray voucherList;
     private final String carType;
     private final String plateNumber;
     private final Integer selectNumber;
     private final Integer price;
-    private final Integer expiryDate;
+    private final String expiryDate;
     private final String remark;
-    private final Integer extendedInsuranceYear;
-    private final Integer extendedInsuranceCopies;
+    private final String extendedInsuranceYear;
+    private final String extendedInsuranceCopies;
     private final Integer type;
     private final String subjectType;
     private final Long subjectId;
