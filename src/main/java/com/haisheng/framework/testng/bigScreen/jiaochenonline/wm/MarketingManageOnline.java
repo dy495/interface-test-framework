@@ -48,16 +48,16 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+        commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -763,7 +763,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
-    @Test(description = "卡券表单--创建一张卡券后，【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）")
+    @Test(description = "卡券表单--【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）")
     public void voucherManage_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -789,7 +789,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("卡券表单--创建一张卡券后，【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）");
+            saveData("卡券表单--【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）");
         }
     }
 
@@ -1188,6 +1188,40 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
+    @Test(description = "套餐管理--【购买套餐】下拉选择列表数=套餐列表数（未关闭&未过期）")
+    public void packageManager_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String format = "yyyy-MM-dd HH:mm";
+            String k = DateTimeUtil.addDayFormat(new Date(), 0);
+            long timeNow = Long.parseLong(DateTimeUtil.dateToStamp(k + " 00:00", format));
+            util.login(administrator);
+            JSONArray list = jc.pcPackageList().getJSONArray("list");
+            PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            int listSize = 0;
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                for (int j = 0; j < array.size(); j++) {
+                    //有效期
+                    int validity = array.getJSONObject(j).getInteger("validity");
+                    String createTime = array.getJSONObject(j).getString("create_time");
+                    long timeValidity = Long.parseLong(DateTimeUtil.dateToStamp(createTime, format)) + validity * 24 * 60 * 60 * 1000L;
+                    if (array.getJSONObject(j).getBoolean("status") && timeValidity >= timeNow) {
+                        listSize++;
+                    }
+                }
+            }
+            CommonUtil.valueView(list.size(), listSize);
+            Preconditions.checkArgument(list.size() == listSize,
+                    "套餐列表数：" + listSize + "下拉选择列表：" + list.size());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--【购买套餐】下拉选择列表数=套餐列表数（未关闭&未过期）");
+        }
+    }
 
     @Test(description = "消息管理--推送消息含有一张卡券，推送成功后，【卡券表单页】该卡券累计发出+1")
     public void messageManager_data_1() {

@@ -17,6 +17,8 @@ public enum EnumTestProduce {
     CRM_ONLINE_PORSCHE("汽车-保时捷 保时捷线上 "),
 
     JIAOCHEN_DAILY("汽车-轿辰 日常 "),
+
+    JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 "),
     ;
 
     EnumTestProduce(String name) {

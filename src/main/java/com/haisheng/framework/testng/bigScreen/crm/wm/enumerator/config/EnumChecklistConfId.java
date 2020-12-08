@@ -18,14 +18,10 @@ public enum EnumChecklistConfId {
      * CRM_线上
      */
     DB_SERVICE_ID_CRM_ONLINE_SERVICE(26),
-
-    /**
-     * 轿辰日常
-     */
-    DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE(27),
     ;
 
-    EnumChecklistConfId(int id) {
+    EnumChecklistConfId(
+            int id) {
         this.id = id;
     }
 
