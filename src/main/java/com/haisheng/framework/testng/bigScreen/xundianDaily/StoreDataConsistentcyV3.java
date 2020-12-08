@@ -3037,7 +3037,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String member_id = "";
             JSONArray list1 = md.memberTotalListV3(shop_id, page, 50).getJSONArray("list");
             for (int j = 0; j < list1.size(); j++) {
-
                 customer_id = list1.getJSONObject(j).getString("customer_id");
                 member_type = list1.getJSONObject(j).getString("member_type");
                 if (member_type.equals("OMNI_CHANNEL")) {

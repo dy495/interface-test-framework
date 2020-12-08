@@ -1008,7 +1008,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从巡店报告中心列表第一个的数据和巡店中心的同一数据进行筛选
-            JSONArray list = xd.xd_report_list("","","","",1,page,size).getJSONArray("list");
+            JSONArray list = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
             Long shop_id = list.getJSONObject(0).getLong("shop_id");
             String person_name = list.getJSONObject(0).getString("patrol_person_name");
             String submit_time = list.getJSONObject(0).getString("report_submit_time");
