@@ -35,9 +35,6 @@ public class StoreOtherData extends TestCaseCommon implements TestCaseStd {
     String month = "";
     long shop_id = 4116;
     long shop_id_01 = 43072l;
-    String district_code = "";
-    //    String shop_type = "[\"NORMAL\"]";
-    String shop_type = "[]";
     Integer page = 1;
     Integer size = 50;
 

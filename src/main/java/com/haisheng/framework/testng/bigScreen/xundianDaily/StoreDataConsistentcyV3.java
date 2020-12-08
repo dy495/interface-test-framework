@@ -33,7 +33,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
-    long shop_id = 4116;
+    long shop_id = 4116 ;
     long shop_id_01 = 43072l;
     String district_code = "";
     //    String shop_type = "[\"NORMAL\"]";
@@ -41,13 +41,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     Integer page = 1;
     Integer size = 50;
 
-    String name = "是青青的";
-    String email = "1667009257@qq.com";
-    String phone = "15084928847";
-
-
-    Integer status = 1;
-    String type = "PHONE";
 
 
     /**
@@ -1783,7 +1776,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     uv1 = trend_list1.getJSONObject(i).getInteger("uv");
                 }
             }
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             int count2 = trend_list2.size();
             for (int i = 0; i < count2; i++) {
                 if (i == count2 - 1) {
@@ -2076,7 +2069,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数(43072)
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             double uv3 = 0;
             double uv4 = 0;
             int count3 = trend_list2.size();
@@ -2160,7 +2153,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数(43072)
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             double uv3 = 0;
             double uv4 = 0;
             int count3 = trend_list2.size();
@@ -2243,7 +2236,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //昨天的顾客占比
-            double A = customer1/uv1 *100;
+            double A = 0;
+            if(customer1 ==0 &&uv1 ==0){
+                A = 0;
+            }else {
+                A = customer1/uv1 *100;
+            }
+
             //上周昨天的顾客占比
             double B = customer2/uv2 *100;
 
@@ -2435,7 +2434,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数(43072)
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             double uv3 = 0;
             double uv4 = 0;
             int count3 = trend_list2.size();
@@ -2516,7 +2515,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数(43072)
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             double uv3 = 0;
             double uv4 = 0;
             int count3 = trend_list2.size();
@@ -2884,7 +2883,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         try {
 
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) 43072l).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id_01).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
@@ -2893,7 +2892,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             }
 
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, 43072l).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             int pv = 0;
             int count1 = trend_list.size();
             for (int i = 0; i < count1; i++) {

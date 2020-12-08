@@ -754,9 +754,9 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             boolean resulit = false;
-            String own_shop_number= xd.xd_analysis_indeicators(cycle_type,"","").getString("own_shop_number");
-            String total_patrol_number= xd.xd_analysis_indeicators(cycle_type,"","").getString("total_patrol_number");
-            String total_patrol_avg_time= xd.xd_analysis_indeicators(cycle_type,"","").getString("total_patrol_avg_time");
+            String own_shop_number= xd.xd_analysis_indeicators(cycle_type,"").getString("own_shop_number");
+            String total_patrol_number= xd.xd_analysis_indeicators(cycle_type,"").getString("total_patrol_number");
+            String total_patrol_avg_time= xd.xd_analysis_indeicators(cycle_type,"").getString("total_patrol_avg_time");
             if(own_shop_number !=null &&total_patrol_number!=null && total_patrol_avg_time!=null){
                 resulit = true;
             }
@@ -794,7 +794,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     public void timeDiffData() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject patrol_coverage = xd.xd_analysis_indeicators(cycle_type,"","").getJSONObject("patrol_coverage");
+            JSONObject patrol_coverage = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("patrol_coverage");
             String own_shop_number= patrol_coverage.getString("own_shop_number");
             int own_shop_number1 = Integer.valueOf(own_shop_number);
 
@@ -840,7 +840,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
           //  String coverage_rate =  ss.replace("%","");
 
              //获取巡店分析中核心指标中的巡店整体覆盖率
-            JSONObject patrol_coverage = xd.xd_analysis_indeicators(cycle_type,"","").getJSONObject("patrol_coverage");
+            JSONObject patrol_coverage = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("patrol_coverage");
             String patrol_coverage_rate_str= patrol_coverage.getString("patrol_coverage_rate_str");
 
             checkArgument( patrol_coverage_rate_str.equals(coverage_rate) , "" + "【巡店分析】巡店整体覆盖率:"+patrol_coverage_rate_str  +"!= 【巡店中心】下巡店门店的总数量/权限下门店总数＊100%:"+coverage_rate);
@@ -863,7 +863,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取巡店分析中核心指标中的巡店报告合格率
-            JSONObject total_patrol_qualified = xd.xd_analysis_indeicators(cycle_type,"","").getJSONObject("total_patrol_qualified");
+            JSONObject total_patrol_qualified = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("total_patrol_qualified");
             String total_patrol_qualified_rate_str= total_patrol_qualified.getString("total_patrol_qualified_rate_str");
 
             //获取巡店报告中心列表提交的合格报告数
@@ -914,6 +914,36 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         } finally {
 
             saveData("【巡店分析】环状图中的不合格率相加==100%");
+        }
+
+    }
+    /**
+     * ====================【巡店分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数======================
+     */
+    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    public void unqual_sum_info(String cycle_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //从问题分析获取不合格项占比的前五和其他的比例
+            JSONArray unquali_rateList = xd.xd_analysis_question(cycle_type,"").getJSONArray("unqualified_rate_list");
+            int uq_sum = 0;
+            for(int i=0;i<unquali_rateList.size();i++){
+                int unqualified_number = unquali_rateList.getJSONObject(i).getInteger("unqualified_number");
+                if(unqualified_number != 0 ){
+                    uq_sum += unqualified_number;
+                }
+            }
+            JSONObject uq_obj = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("total_patrol_unqualified");
+            int unqualified_number = uq_obj.getInteger("total_patrol_unqualified_number");
+
+            checkArgument( uq_sum ==unqualified_number, "" + "【巡店分析】报环状图中的不合格项相加:"+uq_sum  +"!= 【巡店核心指标】中的总不合格项"+unqualified_number);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【巡店分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数");
         }
 
     }
@@ -1048,7 +1078,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取巡店核心指标中的不合格项数
-             JSONObject  obj = xd.xd_analysis_indeicators(cycle_type,"","").getJSONObject("total_patrol_unqualified");
+             JSONObject  obj = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("total_patrol_unqualified");
              int unqualified_num =obj.getInteger("total_patrol_unqualified_number");
 
              JSONArray trend_list = xd.xd_analysis_uncheckTotal(cycle_type,"").getJSONArray("trend_list");
