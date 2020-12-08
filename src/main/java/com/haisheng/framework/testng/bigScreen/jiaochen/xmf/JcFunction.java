@@ -21,10 +21,10 @@ public class JcFunction {
     //app开始接待，并返回接待id
     public Long startReception(String carPlate) throws Exception{
         appStartReception sr=new appStartReception();
-        JSONObject data=jc.appReceptionAdmit(carPlate);
+        JSONObject data=jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
 
-        sr.id=data.getString("id");
-        sr.plate_number=data.getString("plate_number");
+        sr.id=data.getString("customer_id");
+        sr.plate_number=carPlate;
         sr.customer_name=data.getString("customer_name");
         sr.customer_phone=data.getString("customer_phone");
         //开始接待
@@ -151,6 +151,20 @@ public class JcFunction {
         }
         System.out.println(page[0]+"index:"+page[1]);
         return page;
+    }
+
+    //获取预约时段id
+    public Long getTimeId(Long shop_id,Long car_id,String data){
+        JSONArray list=jc.appletmaintainTimeList(shop_id,car_id,data).getJSONArray("list");
+        Long id=0L;
+        for(int i=0;i<list.size();i++){
+            String is_full=list.getJSONObject(i).getString("is_full");
+            if(is_full.equals("True")){
+                id=list.getJSONObject(i).getLong("id");
+                break;
+            }
+        }
+        return id;
     }
 
 }
