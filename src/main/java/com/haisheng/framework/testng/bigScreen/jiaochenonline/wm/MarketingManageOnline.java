@@ -13,8 +13,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
-    BusinessUtil util = new BusinessUtil();
+    BusinessUtilOnline util = new BusinessUtilOnline();
     private static final Integer size = 100;
     private static final EnumAccount marketing = EnumAccount.MARKETING;
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
