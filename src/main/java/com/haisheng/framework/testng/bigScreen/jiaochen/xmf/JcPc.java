@@ -3,12 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -239,7 +236,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Test(description = "新增1个账号，列表+1；删除1个账号，列表-1；修改账号名称后与列表是否一致")    //ok
     public void Jc_accountInfoData() {
         try {
-            Integer total = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total = jc.pcStaffPage("",  page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
             r_dList.add("417");
@@ -250,11 +247,11 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //用EMAIL新增一个账号
             JSONObject res = jc.organizationAccountAdd(name, phone, r_dList, shop_list);
 
-            JSONArray accountList =jc.organizationAccountPage(name,  1, 10).getJSONArray("list");
+            JSONArray accountList =jc.pcStaffPage(name,  1, 10).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("id");
 
             //新增账号以后，再查询列表
-            Integer total1 = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total1 = jc.pcStaffPage("",  page, size).getInteger("total");
             int result = total1 - total;
             Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
 
@@ -262,7 +259,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //编辑账号的名称，是否与列表该账号的一致
             String reName = "自动化测编辑";
             jc.organizationAccountEdit(account, reName, email, phone, r_dList, status, shop_list, type);
-            JSONArray accountsList = jc.organizationAccountPage(reName, page, size).getJSONArray("list");
+            JSONArray accountsList = jc.pcStaffPage(reName, page, size).getJSONArray("list");
             String name_1 = accountsList.getJSONObject(0).getString("name");
             Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
 
@@ -270,7 +267,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //删除账号以后，再查询列表
             Integer code1 = jc.organizationAccountDelete(account).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
-            Integer total2 = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total2 = jc.pcStaffPage("",  page, size).getInteger("total");
             int result1 = total1 - total2;
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);
 
@@ -293,7 +290,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            Integer total = jc.organizationAccountPage("",  page, size).getInteger("total");
+            Integer total = jc.pcStaffPage("",  page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
             r_dList.add("4");
@@ -303,7 +300,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             shop_list.add("4116");
 
 
-            JSONArray list = jc.organizationAccountPage("",  page, size).getJSONArray("list");
+            JSONArray list = jc.pcStaffPage("",  page, size).getJSONArray("list");
             String today = dt.getHHmm(0);
             String account = "";
             String old_phone = "";
@@ -322,7 +319,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 String reName = "自动化在测编辑";
                 jc.organizationAccountEdit(account, reName, "", old_phone, r_dList, status, shop_list, type);
                 //获取列表该账号
-                JSONArray accountList = jc.organizationAccountPage("", page, size).getJSONArray("list");
+                JSONArray accountList = jc.pcStaffPage("", page, size).getJSONArray("list");
                 String create_time_1 = "";
                 String phone_1 = accountList.getJSONObject(0).getString("phone");//获取通过手机号搜索到的账号的手机号
                 if (phone_1.equals(old_phone)) {
@@ -331,7 +328,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 }
                 Preconditions.checkArgument(create_time_1.equals(create_time), "编辑昨天" + create_time + "的创建的账号" + old_phone + "列表该账号的创建时间变成了最新编辑的时间" + create_time_1);
                 //编辑完以后获取列表的数量，是否有增多或者减少
-                Integer total1 = jc.organizationAccountPage("",  page, size).getInteger("total");
+                Integer total1 = jc.pcStaffPage("",  page, size).getInteger("total");
                 Preconditions.checkArgument(total == total1, "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
 
             }
