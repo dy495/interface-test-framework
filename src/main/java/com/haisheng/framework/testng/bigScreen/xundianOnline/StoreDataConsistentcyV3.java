@@ -980,27 +980,29 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+
             for (int i = 0; i < trend_list.size(); i++) {
-                if (customer_uv == null || omni_uv_today == null || paid_uv_today == null) {
-                    customer_uv = 0;
-                }
+
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
-                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
-
-
                 }
 
                 //获取前天的累计顾客总数
-                if(i - trend_list.size() == -2){
+                if (i - trend_list.size() == -2) {
                     customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
             }
             int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
@@ -1041,26 +1043,31 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv_total = 0;
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = md.historyShopMemberV3(shop_id,cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
-                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
-
-
                 }
 
                 //获取前天的累计顾客总数
-                if(i - trend_list.size() == -2){
+                if (i - trend_list.size() == -2) {
                     customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
             }
             int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
@@ -1759,5 +1766,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 //        }
 //
 //    }
+
 
 }

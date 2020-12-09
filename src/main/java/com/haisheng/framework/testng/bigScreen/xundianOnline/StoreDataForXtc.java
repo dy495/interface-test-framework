@@ -823,32 +823,34 @@ public class StoreDataForXtc extends TestCaseCommon implements TestCaseStd {
             Integer omni_uv_total = 0;
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
-            JSONArray trend_list = md.historyShopMemberV3(shop_id_t,cycle_type, month).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
-                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
-
-
                 }
 
                 //获取前天的累计顾客总数
-                if(i - trend_list.size() == -2){
+                if (i - trend_list.size() == -2) {
                     customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
             }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
+            }
             int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
-
-
-
 
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id_t);
             Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+昨天新增的（全渠道会员）之和=" + qa_omni_uv +"。报错门店shop_id="+shop_id_t);
