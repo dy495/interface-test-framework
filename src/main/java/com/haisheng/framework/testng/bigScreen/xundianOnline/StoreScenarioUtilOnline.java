@@ -324,7 +324,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         }else {
             JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             int count3 = trend_list2.size();
-            for (int i = 0; i < count1; i++) {
+            for (int i = 0; i < count3; i++) {
                 if (i == count3 - 1) {
                     uv3 = trend_list2.getJSONObject(i).getInteger("uv");
                 }

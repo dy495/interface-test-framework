@@ -2517,8 +2517,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================累计顾客的总数(单店)==前天的累计客户+今天新增的（顾客+全渠道会员+付费会员）之和======================
      */
-    @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void shop_memberTotalCount(long shop_id) {
+    @Test
+    public void shop_memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
@@ -2724,9 +2724,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void custInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
         try {
-//            customer_id
             //根据门店id获取customer_id
             JSONObject response = md.memberTotalListV3(shop_id, page, size);
             int total = response.getInteger("total");
@@ -2744,20 +2742,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             for (int j = 0; j < list1.size(); j++) {
                 customer_id = list1.getJSONObject(j).getString("customer_id");
                 member_type = list1.getJSONObject(j).getString("member_type");
-                if (member_type.equals("OMNI_CHANNEL")) {
-                    member_id = list1.getJSONObject(j).getString("member_id");
-                    if (member_id == null) {
-                        member_id = "";
-                    }
-                    Preconditions.checkArgument(!StringUtils.isEmpty(member_id), "人物ID为：" + customer_id + "的全渠道会员的会员ID为空" + member_id + "。  报错门店的shopId=" + shop_id);
-                } else if (member_type.equals("CUSTOMER")) {
-                    member_id = list1.getJSONObject(j).getString("member_id");
-                    if (member_id == null) {
-                        member_id = "";
-                    } else {
-                        Preconditions.checkArgument(StringUtils.isEmpty(member_id), "人物ID为：" + customer_id + "的会员ID不为空，会员ID为：" + member_id + "。  报错门店的shopId=" + shop_id);
-                    }
-                }
 
                 total_sum = md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
                 if (total_sum == null) {

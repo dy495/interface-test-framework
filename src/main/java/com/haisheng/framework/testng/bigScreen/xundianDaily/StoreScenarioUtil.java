@@ -298,24 +298,32 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     //获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)
     public Map<String, Double> getday_count_all(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
-        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
         double uv1 = 0;
         double uv2 = 0;
-        int count1 = trend_list1.size();
-        for (int i = 0; i < count1; i++) {
-            if (i == count1 - 1) {
-                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
-            }
-            if (i == count1 - 2) {
-                uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+
+        if(shop_id ==null){
+            uv1 = 0;
+            uv2 = 0;
+        }
+       else {
+            JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            int count1 = trend_list1.size();
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+                }
+                if (i == count1 - 2) {
+                    uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+                }
             }
         }
+
 
         JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
         double uv3 = 0;
         double uv4 = 0;
         int count3 = trend_list2.size();
-        for (int i = 0; i < count1; i++) {
+        for (int i = 0; i < count3; i++) {
             if (i == count3 - 1) {
                 uv3 = trend_list2.getJSONObject(i).getInteger("uv");
             }
