@@ -870,10 +870,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 
             int id = storeList.getJSONObject(0).getInteger("id");
-
-
-
-
             Preconditions.checkArgument((check = true),"门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）不等于实时客流中的门店基本信息");
 
 
@@ -896,8 +892,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-
-
             Integer customer_uv = 0;
             Integer omni_uv = 0;
             Integer paid_uv = 0;
@@ -914,8 +908,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
 
             }
-
-
             String shop_type = "";
             String shop_name="";
             String shop_manager="";

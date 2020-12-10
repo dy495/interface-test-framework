@@ -28,7 +28,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static StoreScenarioUtil getInstance() {
 
         if (null == instance) {
-            synchronized (StoreScenarioUtil.class) {
+            synchronized (StorePackage.class) {
                 if (null == instance) {
                     //这里
                     instance = new StoreScenarioUtil();
@@ -206,179 +206,207 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 "[\"statu\"]"
         };
     }
-    //将账户使用次数为0的角色删除
-    public void deleteRole() throws Exception {
-        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
-        for(int i=0;i<role_list.size();i++){
-            int account_number = role_list.getJSONObject(i).getInteger("account_number");
-            if(account_number==0){
-                Long role_id = role_list.getJSONObject(i).getLong("role_id");
-                organizationRoleDelete(role_id);
-            }
 
-        }
-    }
-
-    //获取客户趋势图中昨日新增的客户人数(所有店)
-    public int  getYesNew_count(String type,String cycle_type) throws Exception {
-        JSONArray list = member_newCount_pic(cycle_type).getJSONArray("list");
-        int num = 0;
-        int count = list.size();
-        for(int i1 =0;i1<count;i1++) {
-            if (i1 == count - 1) {
-                num = list.getJSONObject(i1).getInteger(type);
-            }
-        }
-        return num;
-    }
-    //获取客户趋势图中昨日新增的客户人数(单店)
-    public int  getYesNew_count_single(String type,Long shop_id_01,String cycle_type) throws Exception {
-        JSONArray list = single_newCount_pic(shop_id_01,cycle_type).getJSONArray("list");
-        int num = 0;
-        int count = list.size();
-        for(int i1 =0;i1<count;i1++) {
-            if (i1 == count - 1) {
-                num = list.getJSONObject(i1).getInteger(type);
-            }
-        }
-        return num;
-    }
-
-    //从新增顾客占比部分获取顾客部分得顾客占比(所有店)
-    public String getTransformData(String type,String data_type ) throws Exception {
-        JSONArray data_list = member_newCount_data().getJSONArray("list");
-        String transform = "";
-        for(int i=0;i<data_list.size();i++){
-            String customer_type = data_list.getJSONObject(i).getString("customer_type");
-            if(customer_type.equals(type)){
-                transform = data_list.getJSONObject(i).getString(data_type);
-            }
-        }
-        return transform;
-    }
-
-    //从新增顾客占比部分获取顾客部分得顾客占比(单店)
-    public String  getTransform_single(String type,Long shop_id_01,String data_type) throws Exception {
-        JSONArray data_list = single_newCount_data(shop_id_01).getJSONArray("list");
-        String transform = "";
-        for(int i=0;i<data_list.size();i++){
-            String customer_type = data_list.getJSONObject(i).getString("customer_type");
-            if(customer_type.equals(type)){
-                transform = data_list.getJSONObject(i).getString(data_type);
-            }
-        }
-        return transform;
-    }
-    //获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)
-    public int getday_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
-        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
-        int uv1 = 0;
-        int uv2 = 0;
-        int count1 = trend_list1.size();
-        for (int i = 0; i < count1; i++) {
-            if (i == count1 - 1) {
-                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
-            }
-        }
-        if(shop_id == null){
-            uv2 =0;
-        }else {
-            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-            int count2 = trend_list2.size();
-            for (int i = 0; i < count2; i++) {
-                if (i == count2 - 1) {
-                    uv2 = trend_list2.getJSONObject(i).getInteger("uv");
-                }
-            }
-        }
-
-        int uvs = uv1 +uv2;
-        return uvs;
-    }
-
-    //获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)
-    public Map<String, Double> getday_count_all(String cycle_type, String month, Long shop_id_01, Long shop_id) throws Exception {
-        double uv1 = 0;
-        double uv2 = 0;
-        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
-            int count1 = trend_list1.size();
-            for (int i = 0; i < count1; i++) {
-                if (i == count1 - 1) {
-                    uv1 = trend_list1.getJSONObject(i).getInteger("uv");
-                }
-                if (i == count1 - 2) {
-                    uv2 = trend_list1.getJSONObject(i).getInteger("uv");
-                }
-            }
-        double uv3 = 0;
-        double uv4 = 0;
-        if(shop_id ==null){
-            uv3 = 0;
-            uv4 = 0;
-        }else{
-            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-            int count3 = trend_list2.size();
-            for (int i = 0; i < count3; i++) {
-                if (i == count3 - 1) {
-                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
-                }
-                if (i == count3 - 2) {
-                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
-                }
-            }
-        }
-
-        Map<String, Double> result = new HashMap<>();
-        result.put("uv1", uv1);
-        result.put("uv2", uv2);
-        result.put("uv3", uv3);
-        result.put("uv4", uv4);
-        return result;
-    }
-
-
-
-    //获取历史客流中昨日的到店客流总数(所有店给周同比)
-    public Map<String, Double> getweek_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
-        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
-        double uv1 = 0;
-        double uv2 = 0;
-        int count1 = trend_list1.size();
-        for (int i = 0; i < count1; i++) {
-            if (i == count1 - 1) {
-                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
-            }
-            if (i == count1 - 8) {
-                uv2 = trend_list1.getJSONObject(i).getInteger("uv");
-            }
-        }
-        double uv3 = 0;
-        double uv4 = 0;
-        if(shop_id == null){
-             uv3 = 0;
-             uv4 = 0;
-        }else {
-            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-
-            int count3 = trend_list2.size();
-            for (int i = 0; i < count1; i++) {
-                if (i == count3 - 1) {
-                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
-                }
-                if (i == count3 - 8) {
-                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
-                }
-            }
-        }
-
-        Map<String, Double> result = new HashMap<>();
-        result.put("uv1", uv1);
-        result.put("uv2", uv2);
-        result.put("uv3", uv3);
-        result.put("uv4", uv4);
-        return result;
-
-    }
+//    //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员，获取前天的累计顾客总数
+//    public  Map<String, Integer> getAllCustomer(Long shop_id,String cycle_type,String month) throws Exception {
+//        JSONArray trend_list = historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+//        Integer customer_uv= 0;
+//        Integer omni_uv_total = 0;
+//        Integer customer_uv_01 = 0;
+//        Integer omni_uv_total_01 = 0;
+//        for (int i = 0; i < trend_list.size(); i++) {
+//            //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
+//            if (i - trend_list.size() == -1) {
+//                customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+//                omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+//            }
+//            //获取前天的累计顾客总数
+//            if (i - trend_list.size() == -2) {
+//                customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+//                omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+//            }
+//        }
+//        Map<String, Integer> result = new HashMap<>();
+//        result.put("customer_uv", customer_uv);
+//        result.put("omni_uv_total", omni_uv_total);
+//        result.put("customer_uv_01", customer_uv_01);
+//        result.put("omni_uv_total_01", omni_uv_total_01);
+//        return result;
+//    }
+//
+//    //将账户使用次数为0的角色删除
+//    public void deleteRole() throws Exception {
+//        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
+//        for(int i=0;i<role_list.size();i++){
+//            int account_number = role_list.getJSONObject(i).getInteger("account_number");
+//            if(account_number==0){
+//                Long role_id = role_list.getJSONObject(i).getLong("role_id");
+//                organizationRoleDelete(role_id);
+//            }
+//
+//        }
+//    }
+//
+//    //获取客户趋势图中昨日新增的客户人数(所有店)
+//    public int  getYesNew_count(String type,String cycle_type) throws Exception {
+//        JSONArray list = member_newCount_pic(cycle_type).getJSONArray("list");
+//        int num = 0;
+//        int count = list.size();
+//        for(int i1 =0;i1<count;i1++) {
+//            if (i1 == count - 1) {
+//                num = list.getJSONObject(i1).getInteger(type);
+//            }
+//        }
+//        return num;
+//    }
+//    //获取客户趋势图中昨日新增的客户人数(单店)
+//    public int  getYesNew_count_single(String type,Long shop_id_01,String cycle_type) throws Exception {
+//        JSONArray list = single_newCount_pic(shop_id_01,cycle_type).getJSONArray("list");
+//        int num = 0;
+//        int count = list.size();
+//        for(int i1 =0;i1<count;i1++) {
+//            if (i1 == count - 1) {
+//                num = list.getJSONObject(i1).getInteger(type);
+//            }
+//        }
+//        return num;
+//    }
+//
+//    //从新增顾客占比部分获取顾客部分得顾客占比(所有店)
+//    public String getTransformData(String type,String data_type ) throws Exception {
+//        JSONArray data_list = member_newCount_data().getJSONArray("list");
+//        String transform = "";
+//        for(int i=0;i<data_list.size();i++){
+//            String customer_type = data_list.getJSONObject(i).getString("customer_type");
+//            if(customer_type.equals(type)){
+//                transform = data_list.getJSONObject(i).getString(data_type);
+//            }
+//        }
+//        return transform;
+//    }
+//
+//    //从新增顾客占比部分获取顾客部分得顾客占比(单店)
+//    public String  getTransform_single(String type,Long shop_id_01,String data_type) throws Exception {
+//        JSONArray data_list = single_newCount_data(shop_id_01).getJSONArray("list");
+//        String transform = "";
+//        for(int i=0;i<data_list.size();i++){
+//            String customer_type = data_list.getJSONObject(i).getString("customer_type");
+//            if(customer_type.equals(type)){
+//                transform = data_list.getJSONObject(i).getString(data_type);
+//            }
+//        }
+//        return transform;
+//    }
+//    //获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)
+//    public int getday_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//        int uv1 = 0;
+//        int uv2 = 0;
+//        int count1 = trend_list1.size();
+//        for (int i = 0; i < count1; i++) {
+//            if (i == count1 - 1) {
+//                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//        }
+//        if(shop_id == null){
+//            uv2 =0;
+//        }else {
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            int count2 = trend_list2.size();
+//            for (int i = 0; i < count2; i++) {
+//                if (i == count2 - 1) {
+//                    uv2 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        int uvs = uv1 +uv2;
+//        return uvs;
+//    }
+//
+//    //获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)
+//    public Map<String, Double> getday_count_all(String cycle_type, String month, Long shop_id_01, Long shop_id) throws Exception {
+//        double uv1 = 0;
+//        double uv2 = 0;
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//            int count1 = trend_list1.size();
+//            for (int i = 0; i < count1; i++) {
+//                if (i == count1 - 1) {
+//                    uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count1 - 2) {
+//                    uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        double uv3 = 0;
+//        double uv4 = 0;
+//        if(shop_id ==null){
+//            uv3 = 0;
+//            uv4 = 0;
+//        }else{
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            int count3 = trend_list2.size();
+//            for (int i = 0; i < count3; i++) {
+//                if (i == count3 - 1) {
+//                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count3 - 2) {
+//                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        Map<String, Double> result = new HashMap<>();
+//        result.put("uv1", uv1);
+//        result.put("uv2", uv2);
+//        result.put("uv3", uv3);
+//        result.put("uv4", uv4);
+//        return result;
+//    }
+//
+//
+//
+//    //获取历史客流中昨日的到店客流总数(所有店给周同比)
+//    public Map<String, Double> getweek_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//        double uv1 = 0;
+//        double uv2 = 0;
+//        int count1 = trend_list1.size();
+//        for (int i = 0; i < count1; i++) {
+//            if (i == count1 - 1) {
+//                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//            if (i == count1 - 8) {
+//                uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//        }
+//        double uv3 = 0;
+//        double uv4 = 0;
+//        if(shop_id == null){
+//             uv3 = 0;
+//             uv4 = 0;
+//        }else {
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//
+//            int count3 = trend_list2.size();
+//            for (int i = 0; i < count1; i++) {
+//                if (i == count3 - 1) {
+//                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count3 - 8) {
+//                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        Map<String, Double> result = new HashMap<>();
+//        result.put("uv1", uv1);
+//        result.put("uv2", uv2);
+//        result.put("uv3", uv3);
+//        result.put("uv4", uv4);
+//        return result;
+//
+//    }
 
 //    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/

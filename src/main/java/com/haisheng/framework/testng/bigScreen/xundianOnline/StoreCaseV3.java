@@ -9,7 +9,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StorePackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -635,7 +635,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================设备管理摄像头的筛选======================
      */
-    @Test(dataProvider = "STATUS", dataProviderClass = StoreScenarioUtil.class)
+    @Test(dataProvider = "STATUS", dataProviderClass = StorePackage.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
