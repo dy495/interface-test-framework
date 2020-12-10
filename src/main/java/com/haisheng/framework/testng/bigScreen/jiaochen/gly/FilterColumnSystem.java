@@ -20,6 +20,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.*;
+
 public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
 //    JsonPathUtil jpu = new JsonPathUtil();
@@ -1601,6 +1603,8 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
 //            saveData("消息表单单项查询，结果校验");
         }
     }
+
+
 
     /**
      * @description :消息表单-筛选栏填写全部参数查询
