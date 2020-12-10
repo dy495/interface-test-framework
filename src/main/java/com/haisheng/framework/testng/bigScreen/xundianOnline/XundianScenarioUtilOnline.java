@@ -1205,5 +1205,123 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         };
     }
 
+    /**
+     * ***********************************************二十六、巡店分析(2020-11-21)************************************************
+     */
 
+
+    /**
+     * @description:1. 巡店概况
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_analysis_data() throws Exception {
+        String url = "/patrol/patrol-analysis-data/overview";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:2. 巡店核心指标
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_analysis_indeicators(String cycle_type,String month) throws Exception {
+        String url = "/patrol/patrol-analysis-data/core-indicators";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:3. 巡店不合格项趋势
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_analysis_uncheckTotal(String cycle_type,String month) throws Exception {
+        String url = "/patrol/patrol-analysis-data/unqualified-check-total";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:4. 问题分析
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_analysis_question(String cycle_type,String month) throws Exception {
+        String url = "/patrol/patrol-analysis-data/problem";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5. 异常图片
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_analysis_pictrue(String cycle_type,String month,String day) throws Exception {
+        String url = "/patrol/patrol-analysis-data/abnormal-picture";
+        String json =
+                "{" +
+                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
+                        "\"month\" :\"" + month + "\",\n" +
+                        "\"day\" :\"" + day + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * ***********************************************二十七、巡店报告中心（2020-11-21）************************************************
+     */
+
+    /**
+     * @description:1. 巡店报告中心列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject xd_report_list(String patrol_person,String shop_name,String report_status,String deal_status,Integer sort_event_type_order,Integer page,Integer size) throws Exception {
+        String url = "/patrol/patrol-report/report-list";
+        String json =
+                "{" +
+                        "\"patrol_person\" :\"" + patrol_person + "\",\n" +
+                        "\"shop_name\" :\"" + shop_name + "\",\n" +
+                        "\"report_status\" :\"" + report_status + "\",\n" +
+                        "\"deal_status\" :\"" + deal_status + "\",\n" +
+                        "\"sort_event_type_order\" :" + sort_event_type_order + ",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 }

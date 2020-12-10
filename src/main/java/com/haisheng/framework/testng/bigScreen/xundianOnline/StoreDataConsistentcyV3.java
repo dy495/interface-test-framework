@@ -1004,7 +1004,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today ;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
 
@@ -1069,11 +1069,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today ;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
-
-
-
 
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id);
             Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+昨天新增的（全渠道会员）之和=" + qa_omni_uv +"。报错门店shop_id="+shop_id);

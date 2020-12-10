@@ -2200,7 +2200,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数()
-            Map<String, Double> uv = md.getday_count_all(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = md.getday_count_all(cycle_type,month, shop_id_01,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             double uv3 =uv.get("uv3");
@@ -2312,7 +2312,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = md.getday_count_all(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = md.getday_count_all(cycle_type,month, shop_id_01,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
 
@@ -2328,7 +2328,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             String ss=  CommonUtil.getPercent(A1-B1,B1,4);
             String cust_rate =  ss.replace("%","");
-            Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店"+shop_id+"昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
+            Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店"+shop_id_01+"昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -2365,7 +2365,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = md.getday_count_all(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = md.getday_count_all(cycle_type,month, shop_id_01,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             //昨天的全渠道会员占比
@@ -2424,7 +2424,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = md.getday_count_all(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = md.getday_count_all(cycle_type,month, shop_id_01,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             //昨天的付费会员占比
@@ -2494,7 +2494,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
 
@@ -2557,7 +2557,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
 

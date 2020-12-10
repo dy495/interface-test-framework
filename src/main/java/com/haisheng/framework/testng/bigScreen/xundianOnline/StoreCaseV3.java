@@ -3258,7 +3258,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void member_single_omni() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
@@ -3298,7 +3297,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void member_single_paid() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");

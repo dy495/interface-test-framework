@@ -779,7 +779,7 @@ public class StoreDataForDZY extends TestCaseCommon implements TestCaseStd {
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv);
@@ -841,7 +841,7 @@ public class StoreDataForDZY extends TestCaseCommon implements TestCaseStd {
                     paid_uv_today = list.getJSONObject(j).getInteger("paid");
                 }
             }
-            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today;
             int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
 
             Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id);
