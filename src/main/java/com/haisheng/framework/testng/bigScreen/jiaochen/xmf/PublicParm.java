@@ -5,7 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 public class PublicParm {
     public int roleId=1;
     public String shopId="-1";   //门店Id
-    public String reception_sale_id="";
+    public String shopIdZ="46012";   //门店Id
+    public String reception_sale_id="xx";
     public String name="";
 
     public String shichang="";
@@ -22,6 +23,14 @@ public class PublicParm {
 
     public String gwphone="15711300001"; //单个店的客户的数据   //登录账号
     public String gwpassword="000000"; //单个店的客户的数据  登录密码
+
+    public String jdgw="13412010080";  //xx ,属于中关村店
+    public String jdgwpassword="000000"; //单个店的客户的数据  登录密码
+    public String jdgwName="xx"; //单个店的客户的数据  登录密码
+
+    public String dzphone="13412010085";   //中关村店长
+    public String dzcode="000000";
+
 
     public String appletTocken="qJs+e1BfI3Gy2xGVvbjf+w==";
     public String coordinate="[116.29845,39.95933]}";  //经纬度

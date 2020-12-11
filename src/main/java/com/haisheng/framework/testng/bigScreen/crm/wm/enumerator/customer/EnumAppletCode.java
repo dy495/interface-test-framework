@@ -8,19 +8,19 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "xy/3I2lM9XakCZf5Tq25/Q==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    WM("w", "sTX7wElD360Z3s1nI9X0gg==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    WM_SMALL("纯牛奶", "ywD6Prb20jlkseIcFPOgIg==", ""),
+    WM_SMALL("纯牛奶", "9QlqCkNRczEKYyrl8Iz5xg==", ""),
 
-    XMF("@@@", "0idEYciy1ElrIYhWIu8RAw==", ""),
+    XMF("@@@", "SwKzoo8aH3HfvzJx1iIqsQ==", ""),
 
-    XMFONLINE("@@@", "zagLk0XwiZZo9+f36Yx9Lw==", ""),
+    XMFONLINE("@@@", "aM6oYGul72g1w3F4I2BoFg==", ""),
 
     BB("北北", "DJi5GeKsEMIMe3H4XEeqmw==", ""),    //请勿使用
 
     LXQ("泡芙", "sTyWUt/pmhwGAV1sf0YWrQ==", ""),
 
-    GLY("Max", "Lfe5SQFCys/nSI7L31PVBg==", ""),
+    GLY("Max", "NPxEqaVY8MZz0J/GXaHRmA==", ""),
 
     WM_ONLINE("w", "nDQrQZlv4wGTNvNy7Qy78Q==", ""),
 
