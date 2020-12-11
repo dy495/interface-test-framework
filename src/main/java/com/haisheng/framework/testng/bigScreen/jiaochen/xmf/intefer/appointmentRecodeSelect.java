@@ -21,6 +21,10 @@ public class appointmentRecodeSelect extends BaseScene {
     private final String is_overtime;
     private final String page;
     private final String size;
+    private final String appointment_end;
+    private final String appointment_start;
+    private final String create_end;
+    private final String create_start;
 
     @Override
     public JSONObject getJSONObject() {
@@ -29,10 +33,14 @@ public class appointmentRecodeSelect extends BaseScene {
         json1.put("plate_number",plate_number);
         json1.put("customer_manager",customer_manager);
         json1.put("appointment_date",appointment_date);
+        json1.put("appointment_end",appointment_end);
+        json1.put("appointment_start",appointment_start);
         json1.put("shop_id",shop_id);
         json1.put("customer_name",customer_name);
         json1.put("appointment_status",appointment_status);
         json1.put("create_date",create_date);
+        json1.put("create_end",create_end);
+        json1.put("create_start",create_start);
         json1.put("confirm_time",confirm_time);
         json1.put("customer_phone",customer_phone);
         json1.put("is_overtime",is_overtime);

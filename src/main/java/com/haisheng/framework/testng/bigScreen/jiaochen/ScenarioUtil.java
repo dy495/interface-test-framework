@@ -908,8 +908,9 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("page", sr.page);
         json1.put("size", sr.size);
         json1.put("plate_number", sr.plate_number);
-        json1.put("reception_sale_id", sr.reception_sale_id);
-        json1.put("reception_date", sr.reception_date);
+        json1.put("reception_sale_name", sr.reception_sale_name);
+        json1.put("reception_end", sr.reception_end);
+        json1.put("reception_start", sr.reception_start);
         json1.put("customer_name", sr.customer_name);
         json1.put("reception_status", sr.reception_status);
         json1.put("finish_date", sr.finish_date);
