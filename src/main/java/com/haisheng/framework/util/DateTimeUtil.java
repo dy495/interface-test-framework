@@ -31,6 +31,12 @@ public class DateTimeUtil {
         return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
     }
 
+    public String getHistoryDate1(int num_days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, num_days);
+        return new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime());
+    }
+
     public Long getHistoryDateTimestamp(int num_days) {
         Calendar cal = Calendar.getInstance();
 
