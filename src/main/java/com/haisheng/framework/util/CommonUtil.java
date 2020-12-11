@@ -223,37 +223,6 @@ public class CommonUtil {
     }
 
     /**
-     * @param birthday 生日
-     * @return 几零后
-     */
-    public static String getAge(String birthday) {
-        if (StringUtils.isEmpty(birthday)) {
-            return null;
-        }
-        String s = birthday.substring(2, 3);
-        StringBuilder str = new StringBuilder();
-        str.append(s).append("0后");
-        if (s.equals("5")) {
-            str.append("+");
-        }
-        return str.toString();
-    }
-
-    /**
-     * 获取性别
-     *
-     * @param idNumber 身份证号
-     * @return 男/女
-     */
-    public static String getGender(String idNumber) {
-        if (StringUtils.isEmpty(idNumber)) {
-            return null;
-        }
-        String str = idNumber.substring(16, 17);
-        return Integer.parseInt(str) % 2 == 0 ? "女性" : "男性";
-    }
-
-    /**
      * 获取页面跳转页数
      * 当接口每页只能传入pageSize时，获取接口的访问次数来得到list.size()
      *

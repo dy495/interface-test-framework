@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("w", "xy/3I2lM9XakCZf5Tq25/Q==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    WM("w", "rrWamcwSlS5ODQv6m5jJsw==", "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
     WM_SMALL("纯牛奶", "ywD6Prb20jlkseIcFPOgIg==", ""),
 

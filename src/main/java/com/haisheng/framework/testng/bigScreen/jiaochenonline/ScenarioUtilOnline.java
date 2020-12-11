@@ -1853,7 +1853,6 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     }
 
 
-
     /**
      * @description:小程序客户管理列表
      * @author: gly

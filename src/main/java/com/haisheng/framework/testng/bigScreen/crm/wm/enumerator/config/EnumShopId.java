@@ -31,7 +31,7 @@ public enum EnumShopId {
     JIAOCHEN_DAILY("-1"),
 
 
-    JIAOCHEN_ONLINE(""),
+    JIAOCHEN_ONLINE("-1"),
     ;
 
 

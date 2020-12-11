@@ -20,6 +20,9 @@ public class AppointmentConfig extends BaseScene {
     private final Integer voucherEffectiveDays;
     private final Long points;
 
+
+
+
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
@@ -42,8 +45,4 @@ public class AppointmentConfig extends BaseScene {
         return "/jiaochen/pc/manage/appointment/config";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

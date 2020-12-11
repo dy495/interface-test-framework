@@ -1470,7 +1470,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :可预约时段列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainTimeList(Long shop_id,Long car_id,String day) {
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day) {
         String url = "/jiaochen/applet/granted/maintain/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", shop_id);
@@ -1816,7 +1816,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", variable.size);
         json.put("customer_name", variable.customer_name);
         json.put("customer_phone", variable.customer_phone);
-       // json.put("create_date", variable.create_date);
+        // json.put("create_date", variable.create_date);
         json.put("sale_name", variable.sale_name);
         json.put("customer_type", variable.customer_type);
 
@@ -2313,7 +2313,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject approvalListFilterManage(String shopId, String page, String size,int id, String pram, String result) {
+    public JSONObject approvalListFilterManage(String shopId, String page, String size, int id, String pram, String result) {
         String url = "/jiaochen/pc/operation/approval/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);

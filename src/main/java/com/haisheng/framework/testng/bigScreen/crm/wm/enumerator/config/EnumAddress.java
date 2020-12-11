@@ -28,7 +28,7 @@ public enum EnumAddress {
     /**
      * 轿辰线上
      */
-    JIAOCHEN_ONLINE("http://nb.jiaochenclub.cn"),
+    JIAOCHEN_ONLINE("http://nb.jiaochenclub.com/"),
     ;
 
     EnumAddress(String address) {

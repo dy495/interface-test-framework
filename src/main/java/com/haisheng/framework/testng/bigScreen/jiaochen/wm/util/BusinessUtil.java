@@ -3,34 +3,41 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumStatus;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.CreatePackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.ShopAdd;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 业务场景工具
  */
 public class BusinessUtil {
+    public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
     ScenarioUtil jc = ScenarioUtil.getInstance();
+    ScenarioUtilOnline jcOnline = ScenarioUtilOnline.getInstance();
     private static final int size = 100;
 
     /**
@@ -39,9 +46,15 @@ public class BusinessUtil {
      * @param account 账号
      */
     public void login(EnumAccount account) {
-        if (account.getEnvironment().equals("daily")) {
+        if (account.isDaily()) {
             jc.pcLogin(account.getPhone(), account.getPassword());
+        } else {
+            jcOnline.pcLogin(account.getPhone(), account.getPassword());
         }
+    }
+
+    public void loginApplet(EnumAppletCode appletCode) {
+        jc.appletLoginToken(appletCode.getCode());
     }
 
     /**
@@ -73,7 +86,7 @@ public class BusinessUtil {
         if (StringUtils.isEmpty(stock)) {
             return null;
         }
-        return stock == 0 ? (double) 10 : (double) 50;
+        return stock == 0 ? 10.05 : 50.05;
     }
 
     /**
@@ -174,7 +187,7 @@ public class BusinessUtil {
      * @param id 卡券id
      * @return 卡券名
      */
-    public String createVoucherName(long id) {
+    public String getVoucherName(long id) throws Exception {
         VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
@@ -186,7 +199,7 @@ public class BusinessUtil {
                 }
             }
         }
-        return EnumStatus.FALSE.name();
+        throw new Exception("卡券id：" + id + "不存在");
     }
 
     /**
@@ -309,28 +322,6 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取卡券名称
-     *
-     * @param voucherId 卡券id
-     * @return 卡券名称
-     */
-    public String getVoucherName(long voucherId) {
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
-        int total = jc.invokeApi(builder.build()).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
-        for (int i = 1; i < s; i++) {
-            builder.page(i).size(size);
-            JSONArray array = jc.invokeApi(builder.build()).getJSONArray("list");
-            for (int j = 0; j < array.size(); j++) {
-                if (array.getJSONObject(j).getLong("id").equals(voucherId)) {
-                    return array.getJSONObject(j).getString("voucher_name");
-                }
-            }
-        }
-        return EnumStatus.FALSE.getStatus();
-    }
-
-    /**
      * 获套餐id
      *
      * @return 套餐id
@@ -345,7 +336,7 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取报名
+     * 获取套餐名
      *
      * @param packageId 套餐id
      * @return 套餐名
@@ -475,28 +466,77 @@ public class BusinessUtil {
 
     /**
      * 发消息
+     *
+     * @return 发出去的卡券id
      */
-    public void pushMessage() {
-        String beginDate = DateTimeUtil.getFormat(new Date());
-        String endDate = DateTimeUtil.addDayFormat(new Date(), 10);
-        List<String> telList = new ArrayList<>();
-        telList.add("");
+    public Long pushMessage() {
+        List<String> phoneList = new ArrayList<>();
+        phoneList.add(EnumAccount.MARKETING.getPhone());
         List<Long> voucherList = new ArrayList<>();
-        voucherList.add(1L);
-        IScene scene = PushMessage.builder().pushTarget("SHOP_CUSTOMER").telList(telList).messageName("测试消息")
-                .messageContent("bababab").type(0).voucherOrPackageList(voucherList)
-                .beginUseTime(beginDate).endUseTime(endDate).sendTime(30L).build();
-        jc.invokeApi(scene);
+        long voucherId = getVoucherList().getJSONObject(0).getLong("voucher_id");
+        voucherList.add(voucherId);
+        //消息发送一张卡券
+        IScene sendMesScene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+                .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true).build();
+        jc.invokeApi(sendMesScene);
+        return voucherId;
     }
 
     /**
-     * 添加门店
+     * 获取核销码
+     *
+     * @param verificationIdentity 核销员身份
+     * @return 核销码
      */
-    public void shopAdd() {
-        List<Long> list = new ArrayList<>();
-        IScene scene = ShopAdd.builder().avatarPath("").simpleName("").name("").brandList(list).districtCode("")
-                .address("").saleTel("").serviceTel("").longitude(2.2).latitude(2.2).appointmentStatus("ENABLE")
-                .washingStatus("ENABLE").build();
-        jc.invokeApi(scene);
+    public String getVerificationCode(String verificationIdentity) {
+        VerificationPeople.VerificationPeopleBuilder builder = VerificationPeople.builder();
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            builder.page(i).size(size);
+            JSONArray list = jc.invokeApi(builder.build()).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                if (list.getJSONObject(j).getBoolean("verification_status")
+                        && list.getJSONObject(j).getString("verification_identity").equals(verificationIdentity)) {
+                    return list.getJSONObject(j).getString("verification_code");
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取小程序卡券编号
+     *
+     * @return 卡券编号
+     */
+    public long getVoucherId(String voucherName) {
+        Integer id = null;
+        Integer status = null;
+        JSONArray list;
+        AtomicReference<Long> newId = new AtomicReference<>();
+        AtomicBoolean sign = new AtomicBoolean(false);
+        do {
+            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            JSONObject lastValue = jc.invokeApi(builder.build()).getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            list = jc.invokeApi(builder.build()).getJSONArray("list");
+            list.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                String name = jsonObject.getString("title");
+                String statusName = jsonObject.getString("status_name");
+                if (voucherName.equals(name) && !statusName.equals("已过期") || !statusName.equals("已使用")) {
+                    sign.set(true);
+                    newId.set(jsonObject.getLong("id"));
+                }
+            });
+            logger.info("id:{},status:{}", id, status);
+            if (sign.get()) {
+                return newId.get();
+            }
+        } while (list.size() == 20);
+        return newId.get();
     }
 }
