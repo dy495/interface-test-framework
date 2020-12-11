@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,24 +11,24 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StorePackage extends TestCaseCommon {
+public class StorePackageOnline extends TestCaseCommon {
 
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
 
-    private static volatile StorePackage instance = null;
-    private StorePackage() {
+    private static volatile StorePackageOnline instance = null;
+    private StorePackageOnline() {
     }
 
-    public static StorePackage getInstance() {
+    public static StorePackageOnline getInstance() {
 
         if (null == instance) {
-            synchronized (StorePackage.class) {
+            synchronized (StorePackageOnline.class) {
                 if (null == instance) {
                     //这里
-                    instance = new StorePackage();
+                    instance = new StorePackageOnline();
                 }
             }
         }
@@ -39,8 +39,8 @@ public class StorePackage extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = "http://123.57.148.247";
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    public String IpPort = "http://inspect.store.winsenseos.com";
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
 
     /**
      * @description:登录
@@ -374,7 +374,7 @@ public class StorePackage extends TestCaseCommon {
     }
     //获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)
     public int getday_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
-        JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+        JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
         int uv1 = 0;
         int uv2 = 0;
         int count1 = trend_list1.size();
@@ -383,10 +383,10 @@ public class StorePackage extends TestCaseCommon {
                 uv1 = trend_list1.getJSONObject(i).getInteger("uv");
             }
         }
-        if(shop_id == null){
+        if(shop_id_01 == null){
             uv2 =0;
         }else {
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             int count2 = trend_list2.size();
             for (int i = 0; i < count2; i++) {
                 if (i == count2 - 1) {
@@ -533,7 +533,7 @@ public class StorePackage extends TestCaseCommon {
 
     //获取历史客流中昨日的到店客流总数(所有店给周同比)
     public Map<String, Double> getweek_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
-        JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+        JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
         double uv1 = 0;
         double uv2 = 0;
         int count1 = trend_list1.size();
@@ -547,12 +547,11 @@ public class StorePackage extends TestCaseCommon {
         }
         double uv3 = 0;
         double uv4 = 0;
-        if(shop_id == null){
+        if(shop_id_01 == null){
             uv3 = 0;
             uv4 = 0;
         }else {
-            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-
+            JSONArray trend_list2 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
             int count3 = trend_list2.size();
             for (int i = 0; i < count1; i++) {
                 if (i == count3 - 1) {
