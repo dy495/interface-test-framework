@@ -18,7 +18,7 @@ import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.Random;
+import java.util.*;
 
 public class JcApp extends TestCaseCommon implements TestCaseStd {
 
@@ -52,6 +52,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
+        commonConfig.referer=getJcRefer();
 
 
         //replace backend gateway url
@@ -70,7 +71,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = "-1";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -111,20 +112,26 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Integer receptioncountZ = 0;  //接待
             Integer receptioncountM = 0;
             //今日数据
-            JSONArray todaydate = jc.apptodayDate(type, null, 10).getJSONArray("list");
+            JSONArray todaydate = jc.apptodayDate(type, null, 100).getJSONArray("list");
 
             for (int i = 0; i < todaydate.size(); i++) {
                 JSONObject list_data = todaydate.getJSONObject(i);
                 //待处理预约数和
                 String pending_appointment = list_data.getString("pending_appointment");
-                String[] appointment = pending_appointment.split("/");
-                appointmentcountZ += Integer.valueOf(appointment[0]);
-                appointmentcountM += Integer.valueOf(appointment[1]);
+                if(!pending_appointment.contains("-")){
+                    String[] appointment = pending_appointment.split("/");
+                    appointmentcountZ += Integer.valueOf(appointment[0]);
+                    appointmentcountM += Integer.valueOf(appointment[1]);
+                }
+
                 //接待
                 String pending_reception = list_data.getString("pending_reception");
-                String[] reception = pending_reception.split("/");
-                receptioncountZ += Integer.parseInt(reception[0]);
-                receptioncountZ += Integer.parseInt(reception[1]);
+                if(!pending_reception.contains("-")){
+                    String[] reception = pending_reception.split("/");
+                    receptioncountZ += Integer.parseInt(reception[0]);
+                    receptioncountM += Integer.parseInt(reception[1]);
+                    System.out.println(receptioncountM+":"+receptioncountM);
+                }
             }
             Preconditions.checkArgument(tasknum[0] == appointmentcountZ, "今日任务未处理预约数:" + tasknum[0] + "!=今日数据处理数据和" + appointmentcountZ);
             Preconditions.checkArgument(tasknum[1] == appointmentcountM, "今日任务总预约数:" + tasknum[1] + "!=今日数据处理数据和" + appointmentcountM);
@@ -145,8 +152,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //app今日任务数
             int tasknum[] = pf.appTask();
 
-            int appointmentTotal = jc.appointmentPage(null, 10).getInteger("total");
-            int receptionTotal = jc.appreceptionPage(null, 10).getInteger("total");
+            int appointmentTotal = jc.appointmentPage(null, 100).getInteger("total");
+            int receptionTotal = jc.appreceptionPage(null, 100).getInteger("total");
 
             Preconditions.checkArgument(tasknum[0] == appointmentTotal, "今日任务待处理预约数" + tasknum[0] + "!=[任务-预约]列表数" + appointmentTotal);
             Preconditions.checkArgument(tasknum[2] == receptionTotal, "今日任务待处理接待数" + tasknum[2] + "!=[任务-接待]列表数" + receptionTotal);
@@ -204,7 +211,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             jc.finishReception(id);
             int totalC = jc.appreceptionPage(null, 10).getInteger("total");
 
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
+//            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
             Preconditions.checkArgument(totalA - totalC == 1, "完成接待后接待列表未-1,接待前：" + totalA + "，接待后：" + totalA);
 
         } catch (AssertionError | Exception e) {
@@ -380,16 +387,24 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             JSONObject data = jc.appointmentPage(null, 10);
             int total = data.getInteger("total");
             int tasknum[] = pf.appTask();
-            appletAppointment pm = new appletAppointment();
 
             jc.appletLoginToken(pp.appletTocken);
             //小程序预约
-            jc.appletAppointment(pm);
+            appletAppointment pm = new appletAppointment();
+            pm.car_id=63217L;
+            pm.appointment_name="自动夏";
+            pm.shop_id=46190L;
+            pm.staff_id="uid_f9342ae2";
+            pm.time_id=pf.getTimeId(pm.car_id,pm.shop_id,dt.getHistoryDate(1));
+
+            Long appointmentId=jc.appletAppointment(pm).getLong("id");
 
             jc.appLogin(pp.gwphone, pp.gwpassword);
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
+            jc.appletLoginToken(pp.appletTocken);
+            jc.appletCancleAppointment(appointmentId);
             Preconditions.checkArgument(totalA - total == 1, "小程序预约 列表未+1,前：" + total + "，后：" + totalA);
             Preconditions.checkArgument(tasknumA[0] - tasknumA[0] == 1, "确认预约后今日任务(分子)未+1,前：" + tasknum[0] + "，后：" + tasknumA[0]);
             Preconditions.checkArgument(tasknumA[1] - tasknum[1] == 1, "确认预约后今日任务（分母）未+1,前：" + tasknum[1] + "，后：" + tasknumA[1]);
@@ -439,6 +454,43 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("app接待车牌号验证");
+        }
+    }
+   /**
+    * @description :消息记录查询
+    * @date :2020/12/10 21:08
+    **/
+
+    @Test()
+    public void messageFormOneFilter2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray result=jc.enummap().getJSONArray("PUSH_REASON_TYPE");
+
+            Map<String, String> map = new HashMap<String,String>();
+            for(int i=0;i<result.size();i++){
+                String tt=result.getJSONObject(i).getString("key");
+                String vv=result.getJSONObject(i).getString("value");
+                map.put(tt,vv);
+            }
+            Set<String> keySet = map.keySet();
+            Iterator<String > t=keySet.iterator();
+            while (t.hasNext()){
+                String key=t.next();
+                System.out.println("key:"+key);
+                JSONArray respon1=jc.pushMsgListFilterManage("-1","1","10","message_type",key).getJSONArray("list");
+                String temp=map.get(key);
+                for(int j=0;j<respon1.size();j++){
+                    String resultA=respon1.getJSONObject(j).getString("message_type_name");
+                    Preconditions.checkArgument(resultA.equals(temp),resultA+":"+temp);
+                    System.out.println("start:"+key+"___---------------------result:"+temp);
+                }
+            }
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息表单单项查询，结果校验");
         }
     }
 

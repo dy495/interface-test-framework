@@ -630,7 +630,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
      *
      * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
      * */
-    @Test
+  //  @Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;

@@ -35,6 +35,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    StorePackage mds = StorePackage.getInstance();
     String districtCode = "";
     String shopManager = "";
     int page = 1;
@@ -434,7 +435,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
             //将账户使用次数为0的角色删除
-            md.deleteRole();
+            mds.deleteRole();
 
 
         } catch (AssertionError e) {
@@ -478,7 +479,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONObject res3 = md.organizationRoleAdd("auto名字4", "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
             checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
 
-            md.deleteRole();
+            mds.deleteRole();
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -670,7 +671,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================设备管理摄像头的筛选======================
      */
-    @Test(dataProvider = "STATUS", dataProviderClass = StoreScenarioUtil.class)
+    @Test(dataProvider = "STATUS", dataProviderClass = StorePackage.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
 
