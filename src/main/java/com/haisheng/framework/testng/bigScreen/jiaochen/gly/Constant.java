@@ -253,7 +253,7 @@ public class Constant {
     @DataProvider(name = "SELECT_approvalListFilter")
     public static Object[][] approvalListFilter_pram(){
         return new String[][]{
-                {"customer_name", "user_account_name"},
+                {"customer_name", "participant_name"},
                 {"phone", "phone"},
                 {"status", "status_name"},
         };
@@ -269,11 +269,10 @@ public class Constant {
         return new String[][]{
                 {"name", "name"},
                 {"apply_name", "apply_name"},
-                {"status", "status"},
-                {"end_time", "end_time"},
-                {"start_time", "start_time"},
+                {"status", "status_name"},
+//                {"end_time", "end_time"},
+//                {"start_time", "start_time"},
                 {"apply_group", "apply_group"},
-                {"apply_item", "apply_item"},
         };
     }
 
@@ -322,7 +321,6 @@ public class Constant {
         return new String[][]{
                 {"name", "name"},
                 {"year", "year"},
-                {"status", "status"}
         };
     }
 
@@ -334,7 +332,7 @@ public class Constant {
     @DataProvider(name = "SELECT_roleListFilter")
     public static Object[][] roleListFilter_pram(){
         return new String[][]{
-                {"role_name", "name"},
+                {"name", "name"},
         };
     }
 
@@ -358,9 +356,9 @@ public class Constant {
     @DataProvider(name = "SELECT_importListFilter")
     public static Object[][] importListFilter_pram(){
         return new String[][]{
-                {"type", "type_name"},
+                {"type", "type"},
                 {"user", "user_name"},
-                {"import_date", "import_time"}
+//                {"import_date", "import_time"}
         };
     }
 
@@ -387,7 +385,8 @@ public class Constant {
     public static Object[][] pushMsgListFilter_pram(){
         return new String[][]{
                 {"customer_type", "customer_type"},
-                {"push_date", "start_time"}
+                {"message_type", "message_type"},
+//                {"push_date", "start_time"}
         };
     }
 

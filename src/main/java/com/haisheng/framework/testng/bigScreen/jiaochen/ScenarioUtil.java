@@ -2468,12 +2468,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carStyleListFilterManage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject carStyleListFilterManage(String shopId, String page, String size,String brand_id, String pram, String result) {
         String url = "/jiaochen/pc/brand/car-style/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
+        json.put("brand_id", brand_id);
         if (pram != null || !pram.equals("")) {
             json.put(pram, result);
         }
@@ -2485,13 +2486,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carStyleListFilterManage(String shopId, String page, String size, String name) {
+    public JSONObject carStyleListFilterManage(String shopId, String page, String size, String name,String brand_id) {
         String url = "/jiaochen/pc/brand/car-style/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
+        json.put("brand_id", brand_id);
         return invokeApi(url, json);
     }
 
@@ -2500,12 +2502,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carModelListFilterManage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject carModelListFilterManage(String shopId, String page, String size,String brand_id, String style_id, String pram, String result) {
         String url = "/jiaochen/pc/brand/car-style/car-model/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
         if (pram != null || !pram.equals("")) {
             json.put(pram, result);
         }
@@ -2517,7 +2521,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject carModelListFilterManage(String shopId, String page, String size, String name, String year, String status) {
+    public JSONObject carModelListFilterManage1(String shopId, String page, String size,String name, String year,String brand_id, String style_id) {
         String url = "/jiaochen/pc/brand/car-style/car-model/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
@@ -2525,8 +2529,8 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         json.put("name", name);
         json.put("year", year);
-        json.put("status", status);
-
+        json.put("brand_id", brand_id);
+        json.put("style_id", style_id);
         return invokeApi(url, json);
     }
 

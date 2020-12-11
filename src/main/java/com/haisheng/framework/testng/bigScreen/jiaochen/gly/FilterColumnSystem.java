@@ -1891,7 +1891,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :报名审批列表-筛选栏单项查询---不通,状态转化不对,姓名搜索也不对,问题呀
+     * @description :报名审批列表-筛选栏单项查询---不通,状态转化不对
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_approvalListFilter",dataProviderClass = Constant.class)
@@ -1905,7 +1905,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
                 String result=respon.getJSONArray("list").getJSONObject(0).getString(output);
                 for(int page=1;page<=pages;page++){
                     JSONArray list=jc.approvalListFilterManage(shopId,String.valueOf(page),"10",id,pram,result).getJSONArray("list");
-                    for(int i=0;i<10;i++){
+                    for(int i=0;i<list.size();i++){
                         String Flag=list.getJSONObject(i).getString(output);
                         System.out.println(pram+" 报名审批按"+result+"查询，结果错误"+Flag);
                         Preconditions.checkArgument(Flag.contains(result), "报名审批按"+result+"查询，结果错误"+Flag);
@@ -2010,7 +2010,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :卡券申请-筛选栏单项查询
+     * @description :卡券申请-筛选栏单项查询--申请门店和项目状态不一致呀--后续需要转化一下
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_applyListFilter",dataProviderClass = Constant.class)
@@ -2302,10 +2302,11 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     public void carStyleListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject respon=jc.carStyleListFilterManage(shopId,"1","10","","");
+            String id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject respon=jc.carStyleListFilterManage(shopId,"1","10",id,"","");
             if(respon.getJSONArray("list").size()>0){
                 String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
-                JSONObject respon1=jc.carStyleListFilterManage(shopId,"1","10",pram,result);
+                JSONObject respon1=jc.carStyleListFilterManage(shopId,"1","10",id,pram,result);
                 JSONArray list=respon1.getJSONArray("list");
                 int pages=respon1.getInteger("pages");
                 for(int page=1;page<=pages;page++){
@@ -2334,13 +2335,14 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.carStyleListFilter_pram();
-            JSONArray res=jc.carStyleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            String id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray res=jc.carStyleListFilterManage(shopId,"1",id,"10","","").getJSONArray("list");
             if(res.size()>0){
                 JSONObject data=res.getJSONObject(0);
                 String name=data.getString(flag[0][1].toString());
 
                 //全部筛选之后的结果
-                JSONObject result=jc.carStyleListFilterManage(shopId,"1","10",name).getJSONArray("list").getJSONObject(0);
+                JSONObject result=jc.carStyleListFilterManage(shopId,"1","10","",id).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))),"参数全部输入的查询的"+result.getString(flag[0][1].toString()+"与列表信息的第一行的"+name+"不一致"));
             }else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
@@ -2361,7 +2363,8 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     public void carStyleListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            jc.carStyleListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            String id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            jc.carStyleListFilterManage(shopId,"1","10",id,"","").getJSONArray("list");
 
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
@@ -2374,14 +2377,16 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
      * @description :车型列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_brandListFilter",dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_carModelListFilter",dataProviderClass = Constant.class)
     public void carModelListOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject respon=jc.carModelListFilterManage(shopId,"1","10","","");
+            String brand_id=jc.brandListFilterManage(shopId,"1","10","").getJSONArray("list").getJSONObject(0).getString("id");
+            String style_id=jc.carStyleListFilterManage(shopId,"1","10","",brand_id).getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject respon=jc.carModelListFilterManage1(shopId,"1","10","","",brand_id,style_id);
             if(respon.getJSONArray("list").size()>0){
-                String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
-                JSONObject respon1=jc.carModelListFilterManage(shopId,"1","10",pram,result);
+                String result=respon.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject respon1=jc.carModelListFilterManage(shopId,"1","10",brand_id,style_id,pram,result);
                 JSONArray list=respon1.getJSONArray("list");
                 int pages=respon1.getInteger("pages");
                 for(int page=1;page<=pages;page++){
@@ -2411,18 +2416,18 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.carModelListFilter_pram();
-            JSONArray res=jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            String brand_id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            String style_id=jc.carStyleListFilterManage(shopId,"1","10","",brand_id).getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject res=jc.carModelListFilterManage1(shopId,"1","10","","",brand_id,style_id);
             if(res.size()>0){
-                JSONObject data=res.getJSONObject(0);
+                JSONObject data=res.getJSONObject(String.valueOf(0));
                 String name=data.getString(flag[0][1].toString());
                 String year=data.getString(flag[1][1].toString());
-                String status=data.getString(flag[2][1].toString());
 
                 //全部筛选之后的结果
-                JSONObject result=jc.carModelListFilterManage(shopId,"1","10",name,year,status).getJSONArray("list").getJSONObject(0);
+                JSONObject result=jc.carModelListFilterManage1(shopId,"1","10",name,year,brand_id,style_id).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name),"参数全部输入的查询的"+name+"与列表信息的第一行的"+result.getString(flag[0][1].toString()+"不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(year),"参数全部输入的查询的"+year+"与列表信息的第一行的"+result.getString(flag[1][1].toString()+"不一致"));
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(status),"参数全部输入的查询的"+status+"与列表信息的第一行的"+result.getString(flag[2][1].toString()+"不一致"));
 
             }else{
                 Preconditions.checkArgument(res.size()==0, "接待列表系统错误,请联系开发人员");
@@ -2435,7 +2440,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :车型列表-筛选栏填写多项参数查询
+     * @description :车型列表-筛选栏填写多项参数查询--------.getJSONObject(String.valueOf(0))
      * @date :2020/11/28
      **/
     @Test()
@@ -2443,15 +2448,17 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             Object[][] flag = Constant.carModelListFilter_pram();
-            JSONArray res=jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
+            String brand_id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            String style_id=jc.carStyleListFilterManage(shopId,"1","10","",brand_id).getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject res=jc.carModelListFilterManage1(shopId,"1","10","","",brand_id,style_id);
             if(res.size()>0){
-                JSONObject data=res.getJSONObject(0);
+                JSONObject data=res.getJSONObject(String.valueOf(0));
                 String name=data.getString(flag[0][1].toString());
                 String year=data.getString(flag[1][1].toString());
 //            String status=data.getString(flag[2][1].toString());
 
                 //全部筛选之后的结果
-                JSONArray result=jc.carModelListFilterManage(shopId,"1","10",name,year).getJSONArray("list");
+                JSONArray result=jc.carModelListFilterManage(shopId,"1","10",name,year,brand_id,style_id).getJSONArray("list");
                 for(int i=0;i<result.size();i++){
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[0][1])).contains(name),"参数全部输入的查询的"+name+"与列表信息的第"+i+"行的"+result.getJSONObject(i).getString(flag[0][1].toString()+"不一致"));
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[1][1])).contains(year),"参数全部输入的查询的"+year+"与列表信息的第"+i+"行的"+result.getJSONObject(i).getString(flag[1][1].toString()+"不一致"));
@@ -2475,8 +2482,9 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
     public void carModelListEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            jc.carModelListFilterManage(shopId,"1","10","","").getJSONArray("list");
-
+            String brand_id=jc.brandListFilterManage(shopId,"1","10","","").getJSONArray("list").getJSONObject(0).getString("id");
+            String style_id=jc.carStyleListFilterManage(shopId,"1","10",brand_id,"","").getJSONArray("list").getJSONObject(0).getString("brand_id");
+            jc.carModelListFilterManage1(shopId,"1","10","","",brand_id,style_id).getJSONArray("list");
         }catch(AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally{
@@ -2494,7 +2502,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject respon=jc.roleListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
-                String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
+                String result=respon.getJSONArray("list").getJSONObject(0).getString(output);
                 JSONObject respon1=jc.roleListFilterManage(shopId,"1","10",pram,result);
                 JSONArray list=respon1.getJSONArray("list");
                 int pages=respon1.getInteger("pages");
@@ -2648,7 +2656,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
-                String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
+                String result=respon.getJSONArray("list").getJSONObject(0).getString(output);
                 JSONObject respon1=jc.importListFilterManage(shopId,"1","10",pram,result);
                 JSONArray list=respon1.getJSONArray("list");
                 int pages=respon1.getInteger("pages");
@@ -2876,7 +2884,7 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
         try{
             JSONObject respon=jc.pushMsgListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
-                String result=respon.getJSONArray("list").getJSONObject(0).getString(pram);
+                String result=respon.getJSONArray("list").getJSONObject(0).getString(output);
                 JSONObject respon1=jc.pushMsgListFilterManage(shopId,"1","10",pram,result);
                 JSONArray list=respon1.getJSONArray("list");
                 int pages=respon1.getInteger("pages");
@@ -3003,15 +3011,4 @@ public class FilterColumnSystem extends TestCaseCommon implements TestCaseStd {
             saveData("小程序预约保养.取消保养,确认保养,数据一致性比较");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 }
