@@ -32,7 +32,7 @@ public class JcFunction {
         //取接待列表id
         JSONObject dd=jc.appreceptionPage(null,10).getJSONArray("list").getJSONObject(0);
         long receptionID=dd.getLong("id");
-        long plate_number=dd.getLong("plate_number");
+        String plate_number=dd.getString("plate_number");
         if(!carPlate.equals(plate_number)){
             throw new Exception("获取接待id失败");
         }
@@ -159,7 +159,7 @@ public class JcFunction {
         Long id=0L;
         for(int i=0;i<list.size();i++){
             String is_full=list.getJSONObject(i).getString("is_full");
-            if(is_full.equals("True")){
+            if(is_full.equals("false")){
                 id=list.getJSONObject(i).getLong("id");
                 break;
             }

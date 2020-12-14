@@ -16,6 +16,9 @@ public class PublicParm {
     public String car_id="63217";    //小程序车id
     public String carplate="浙QWER123";      //编辑小程序车牌号
 
+    //预约使用车辆
+    public Long car_idA=63213L;
+
     public String carStyleId="";
     public String carStyleName="";
 
@@ -32,7 +35,7 @@ public class PublicParm {
     public String dzcode="000000";
 
 
-    public String appletTocken="qJs+e1BfI3Gy2xGVvbjf+w==";
+    public String appletTocken="VnETJ7mPJXIidJv9alQ25g==";
     public String coordinate="[116.29845,39.95933]}";  //经纬度
 
     public JSONArray roleList=getRoleList();
@@ -42,6 +45,10 @@ public class PublicParm {
         moduleId2.add(136);
         moduleId2.add(137);
         return moduleId2;
+    }
+
+    public  String getAppletTocken(){
+        return "VnETJ7mPJXIidJv9alQ25g==";
     }
 
 

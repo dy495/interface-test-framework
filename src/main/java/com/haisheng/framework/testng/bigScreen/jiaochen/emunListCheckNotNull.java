@@ -33,8 +33,6 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
 
 
     /**

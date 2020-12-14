@@ -91,7 +91,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+//            saveData("小程序每4小时登陆一次，防止失效");
         }
     }
 }

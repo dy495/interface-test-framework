@@ -28,7 +28,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"></class>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"></class>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"></class>
 
 
 
