@@ -110,7 +110,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void realTimeTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //获取今日实时得到访人数uv
             JSONArray iPvlist = md.realTimeShopTotalV3((long) 43072l).getJSONArray("list");
@@ -145,7 +145,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void passByTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //获取过点客群总人次&总人数
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -219,7 +219,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void enterTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
@@ -247,7 +247,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void interestTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
@@ -275,7 +275,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dealTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
@@ -303,7 +303,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void enterInterPass() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
@@ -337,7 +337,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test()
     public void mpvTotals() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //获取到店趋势数据
             int pvValues = mds.getArriveCust(cycle_type, month, shop_id);
@@ -364,7 +364,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test()
     public void mpvTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //获取交易客群总人次
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -420,7 +420,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void attractRate() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //获取过店客群总人次
             JSONObject res = md.historyShopConversionV3(shop_id, cycle_type, month);
@@ -473,7 +473,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void averageFlowTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             int values = 0;
             int values1 = 0;//值不为Null的个数，求平均值时用
@@ -511,7 +511,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void manSexScale() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //过店客群的各个年龄段的男性比例累计和
             double count = 0;
@@ -653,7 +653,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_both_cust() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //从新增顾客占比模块中取到昨日新增顾客人数
             JSONArray data_list = md.member_newCount_data().getJSONArray("list");
@@ -680,7 +680,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_both_omni() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.member_newCount_data().getJSONArray("list");
@@ -732,7 +732,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_cust() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //从新增顾客模块中取到昨日新增顾客人数
             JSONArray data_list = md.single_newCount_data(shop_id_01).getJSONArray("list");
@@ -759,7 +759,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_omni() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.single_newCount_data(shop_id_01).getJSONArray("list");
@@ -786,7 +786,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_paid() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
@@ -1475,15 +1475,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             //昨天的顾客占比
             double A = 0;
-            if(customer1 ==0 || uv1 ==0){
+            if( uv1 ==0){
                 A = 0;
             }else {
-                A = customer1/uv1 *100;
+                A = customer1 / uv1 * 100;
             }
 
             //上周昨天的顾客占比
-            double B = customer2/uv2 *100;
-
+            double  B = 0;
+            if(uv2 == 0 ){
+                B = 0;
+            }else {
+                B = customer2 / uv2 * 100;
+            }
 
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String cust_rate =  ss.replace("%","");
@@ -1531,15 +1535,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             double A = 0;
             //昨天的全渠道会员占比
-            if(uv1 == 0|| omni1 == 0){
+            if(uv1 == 0){
                  A = 0;
             }else {
-                A = omni1/uv1 *100;
+                A = omni1 / uv1 * 100;
             }
 
             //上周昨天的全渠道会员占比
-            double B = omni2/uv2 *100;
-
+            double B = 0;
+            if(uv1 == 0){
+                B = 0;
+            }else {
+                B = omni2 / uv2 * 100;
+            }
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String omni_rate =  ss.replace("%","");
             Preconditions.checkArgument((transform_yoy.equals(omni_rate)), "单店昨日全渠道会员占比[周同比]" + transform_yoy + "!=上周昨日的全渠道会员占比-上周昨日的全渠道会员占比/上周昨日的全渠道会员占比：" + omni_rate);
@@ -1584,10 +1592,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             double uv2 =uv.get("uv2");
 
             //昨天的付费会员占比
-            double A = paid1/uv1;
+            double  A = 0;
+            if(uv1 == 0 ){
+                A = 0;
+            }else {
+                A = paid1 / uv1;
+            }
             //上周昨天的付费会员占比
-            double B = paid2/uv2;
-
+            double  B = 0;
+            if(uv2 == 0 ){
+                B = 0;
+            }else {
+                B = paid2 / uv2;
+            }
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String paid_rate =  ss.replace("%","");
             Preconditions.checkArgument((transform_yoy.equals(paid_rate)), "单店昨日付费会员占比周同比" + transform_yoy + "!=周1的付费会员占比-上周1的付费会员占比/上周1的付费会员占比：" + paid_rate);
@@ -1887,7 +1904,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
 
             Integer customer_uv = 0;
@@ -2154,7 +2171,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForMo() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             String cycle_type = "";
             String month = "2020-08";
@@ -2244,7 +2261,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForF() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
+        
         try {
             String cycle_type = "RECENT_FOURTEEN";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2289,7 +2306,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForT() {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_THIRTY";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2405,9 +2421,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-
-
-
 
 
 

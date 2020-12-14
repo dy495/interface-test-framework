@@ -75,7 +75,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
-        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
+        commonConfig.pushRd = new String[]{ "15084928847"};
 
 
         //set shop id
@@ -189,7 +189,7 @@ public class XundianCase extends TestCaseCommon implements TestCaseStd {
             String valid_end = dt.getHistoryDate(startM);
             ;
             JSONArray shoplist = new JSONArray();
-            shoplist.add(0, 28760);
+            shoplist.add(0, 43072);
             JSONObject res = xd.scheduleCheckAdd(names, cycle, jal, send_time, valid_start, valid_end, test, shoplist);
             int code_add = res.getInteger("code");
 
