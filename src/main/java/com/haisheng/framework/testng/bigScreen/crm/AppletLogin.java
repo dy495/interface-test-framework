@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  * @date :  2020/05/30
  */
 
-public class appletLogin extends TestCaseCommon implements TestCaseStd {
+public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 

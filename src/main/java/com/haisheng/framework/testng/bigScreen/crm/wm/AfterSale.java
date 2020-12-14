@@ -945,7 +945,6 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("售后--活动任务--可填写报名的活动当前时间<活动结束时间");
         }
-
     }
 
     @Test(description = "售后--活动任务--活动信息与运营中心发布文章时信息一致")
@@ -968,7 +967,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             JSONObject object = crm.artilceView(id);
             Preconditions.checkArgument(articleContent.equals(object.getString("article_content")), articleTitle + " 活动内容不一致");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--活动任务--活动信息与运营中心发布文章时信息一致");
         }
@@ -1040,13 +1039,12 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().build();
-            int total = crm.invokeApi(scene).getInteger("total");
+            ReceptionAfterCustomerListScene.ReceptionAfterCustomerListSceneBuilder builder = ReceptionAfterCustomerListScene.builder();
+            int total = crm.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             String customerPhoneNumber = null;
             for (int i = 1; i < s; i++) {
-                IScene scene1 = ReceptionAfterCustomerListScene.builder().page(i).size(size).build();
-                JSONArray list = crm.invokeApi(scene1).getJSONArray("list");
+                JSONArray list = crm.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     if (!StringUtils.isEmpty(list.getJSONObject(j).getString("customer_phone_number"))) {
                         customerPhoneNumber = list.getJSONObject(j).getString("customer_phone_number");
@@ -1056,15 +1054,16 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
             if (customerPhoneNumber != null) {
-                String findParam = customerPhoneNumber.substring(0, 3);
+                String findParam = customerPhoneNumber.substring(0, 5);
                 CommonUtil.valueView(findParam);
-                IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
-                int x = CommonUtil.getTurningPage(crm.invokeApi(scene1).getInteger("total"), size);
+                builder.searchCondition(findParam).build();
+                int x = CommonUtil.getTurningPage(crm.invokeApi(builder.build()).getInteger("total"), size);
                 for (int i = 1; i < x; i++) {
-                    IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(size).build();
-                    JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
+                    builder.searchCondition(findParam).page(i).size(size);
+                    JSONArray list1 = crm.invokeApi(builder.build()).getJSONArray("list");
                     for (int j = 0; j < list1.size(); j++) {
                         String resultPlateNumber = list1.getJSONObject(j).getString("customer_phone_number");
+                        CommonUtil.valueView(resultPlateNumber);
                         Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按电话号查询失败,搜索参数为：" + findParam);
                     }
                 }

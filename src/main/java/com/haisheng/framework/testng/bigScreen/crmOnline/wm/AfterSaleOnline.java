@@ -244,7 +244,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--我的接待--总经理本月接待售后车辆>=各个顾问本月x接待售后车辆之和")
+    @Test(description = "售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和")
     public void afterSale_reception_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
