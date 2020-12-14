@@ -1469,10 +1469,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :可预约时段列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainTimeList(String shop_id) {
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day) {
         String url = "/jiaochen/applet/granted/maintain/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", shop_id);
+        json1.put("car_id", car_id);
+        json1.put("day", day);
 
         return invokeApi(url, json1);
     }

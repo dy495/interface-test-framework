@@ -100,7 +100,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             jc.appLogin(pp.gwphone, pp.gwpassword);
             JSONObject data = jc.apperCOde();
-            String jsonpath = "$.er_code_url1";
+            String jsonpath = "$.er_code_url";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {

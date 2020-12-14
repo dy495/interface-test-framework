@@ -1,20 +1,19 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -22,25 +21,15 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class JcApplet extends TestCaseCommon implements TestCaseStd {
+public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = new ScenarioUtil();
+    ScenarioUtilOnline jc = new ScenarioUtilOnline();
 
-    DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
-    public int page = 1;
-    public int size = 50;
-    public String name = "";
-    public String email = "";
-    public String phone = "";
+    PublicParmOnline pp = new PublicParmOnline();
+    JcFunctionOnline pf = new JcFunctionOnline();
 
 
     /**
@@ -55,7 +44,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
 
 
@@ -71,7 +60,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer="https://servicewechat.com/wx4071a91527930b48/";
+        commonConfig.referer=getJcRefer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -170,6 +159,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appletLoginToken(pp.appletTocken);
 //            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
             String plate_number = pp.carplate;
             Long code=jc.appletAddCarcode(plate_number,pp.carModelId ).getLong("code");
@@ -243,7 +233,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :编辑车辆，异常车牌验证
      * @date :2020/10/10 16:00
      **/
-    @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
+    @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtilOnline.class)
     public void editplateab(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -277,7 +267,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :新增车辆，异常车牌验证
      * @date :2020/10/10 16:00
      **/
-    @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
+    @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtilOnline.class)
     public void plateabnormal(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
