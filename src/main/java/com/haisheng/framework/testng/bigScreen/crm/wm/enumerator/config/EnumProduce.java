@@ -8,7 +8,7 @@ public enum EnumProduce {
 
     JC("轿辰"),
 
-    XX("xx"),
+    YT("运通"),
     ;
 
     EnumProduce(String name) {

@@ -83,14 +83,9 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.appletLoginToken(token);
-            String customer_name = "lxq自动化";
-            String customer_namea = "@@@";
-            String customer_phone_number = "13400000000";
-            String customer_phone_numbera = "15037286014";
-            String date = dt.getHistoryDate(0);
-            String appointment_time = "23:00";
-            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1, 36).getLong("appointment_id");
-            // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
+            String customer_name = "@@@";
+            String customer_phone_number = "15037286014";
+            Long appoint_id = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, "2022-01-01", 1, 36).getLong("appointment_id");
             crm.cancle(appoint_id);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

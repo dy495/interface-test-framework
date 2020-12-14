@@ -3,11 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumStatus;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
@@ -54,7 +54,7 @@ public class BusinessUtil {
     }
 
     public void loginApplet(EnumAppletCode appletCode) {
-        jc.appletLoginToken(appletCode.getCode());
+        jc.appletLoginToken(appletCode.getToken());
     }
 
     /**
@@ -511,7 +511,7 @@ public class BusinessUtil {
      *
      * @return 卡券编号
      */
-    public long getVoucherId(String voucherName) {
+    public long getVoucherId(String voucherName) throws Exception {
         Integer id = null;
         Integer status = null;
         JSONArray list;
@@ -527,7 +527,7 @@ public class BusinessUtil {
                 JSONObject jsonObject = (JSONObject) e;
                 String name = jsonObject.getString("title");
                 String statusName = jsonObject.getString("status_name");
-                if (voucherName.equals(name) && !statusName.equals("已过期") || !statusName.equals("已使用")) {
+                if (voucherName.equals(name) && !statusName.equals("已过期") && !statusName.equals("已使用")) {
                     sign.set(true);
                     newId.set(jsonObject.getLong("id"));
                 }
@@ -537,6 +537,6 @@ public class BusinessUtil {
                 return newId.get();
             }
         } while (list.size() == 20);
-        return newId.get();
+        throw new Exception("无此卡券");
     }
 }

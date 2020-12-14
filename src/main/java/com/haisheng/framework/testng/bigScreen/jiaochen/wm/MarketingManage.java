@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
@@ -595,6 +594,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                     voucherName + "被核销后" + CommonUtil.errMessage(cumulativeUse + 1, newCumulativeUse));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
+        } finally {
+            saveData("卡券表单--此卡券每核销一张，累计使用+1");
         }
     }
 
@@ -1293,12 +1294,5 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("消息管理--推送消息含有一张卡券，推送成功后，【卡券表单页】该卡券累计发出+1");
         }
-    }
-
-    @Test
-    public void test() {
-        util.loginApplet(EnumAppletCode.WM);
-        Long id = util.getVoucherId("4只小鹿");
-        System.err.println(id);
     }
 }
