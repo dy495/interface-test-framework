@@ -1063,7 +1063,7 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject StartReception(appStartReception sr) {
         String url = "/jiaochen/m-app/task/reception/start-reception";
         JSONObject json = new JSONObject();
-        json.put("id", sr.id);
+        json.put("customer_id", sr.id);
         json.put("is_new", sr.is_new);
         json.put("customer_name", sr.customer_name);
         json.put("customer_phone", sr.customer_phone);
@@ -1077,10 +1077,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:31
      **/
 
-    public JSONObject finishReception(Long id) {
+    public JSONObject finishReception(Long id,String shop_id) {
         String url = "/jiaochen/m-app/task/reception/finish-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
+        json.put("shop_id", shop_id);
 
         return invokeApi(url, json);
     }
@@ -1090,10 +1091,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:32
      **/
 
-    public JSONObject cancleReception(Long id) {
+    public JSONObject cancleReception(Long id,String shopId) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
+        json.put("shop_id", shopId);
 
         return invokeApi(url, json);
     }
@@ -1103,14 +1105,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/25 17:01
      **/
     public JSONObject appletAppointment(appletAppointment pm) {
-        String url = "/jiaochen/m-app/task/reception/cancel-reception";
+        String url = "/jiaochen/applet/granted/maintain/appointment";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", pm.shop_id);
         json1.put("staff_id", pm.staff_id);
         json1.put("time_id", pm.time_id);
         json1.put("car_id", pm.car_id);
-        json1.put("name", pm.appointment_name);
-        json1.put("phone", pm.appointment_phone);
+        json1.put("appointment_name", pm.appointment_name);
+        json1.put("appointment_phone", pm.appointment_phone);
 
         return invokeApi(url, json1);
     }
@@ -1258,10 +1260,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/28 12:45
      **/
 
-    public JSONObject appletCancleAppointment(Long id) {
+    public JSONObject appletCancleAppointment(Long id,String shopId) {
         String url = "/jiaochen/applet/granted/appointment/maintain/cancel";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);
+        json1.put("shop_id", shopId);
 
         return invokeApi(url, json1);
     }

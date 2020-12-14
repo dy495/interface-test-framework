@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,9 +6,9 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -22,23 +22,16 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class JcApp extends TestCaseCommon implements TestCaseStd {
+public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
+    PublicParmOnline pp = new PublicParmOnline();
+    JcFunctionOnline pf = new JcFunctionOnline();
     public int page = 1;
     public int size = 50;
-    public String name = "";
-    public String email = "";
-    public String phone = "";
 
-    Integer status = 1;
-    String type = "PHONE";
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -52,7 +45,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer=getJcRefer();
 
@@ -102,11 +95,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ACOUNT")
     public static Object[] acount() {
         return new String[][]{
-                {"13412010056","000000","全部-集团"},
-                {"13412010055","000000","全部-区域"},
-                {"13412010054","000000","全部-品牌"},
-                {"13412010043","000000","别删-吕13412010043"},
-                {"13412010089","000000","xx"},
+                {"15711200001","000000","全部-集团"},
+                {"15037286014","000000","全部-区域"},
+                {"15037286014","000000","店长"},
         };
     }
     @Test(description = "今日任务数==今日数据各列数据之和",dataProvider = "ACOUNT")  //ok

@@ -1,17 +1,19 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Random;
 
-public class JcFunction {
-    ScenarioUtil jc=new ScenarioUtil();
-    PublicParm pp=new PublicParm();
+public class JcFunctionOnline {
+    ScenarioUtilOnline jc=new ScenarioUtilOnline();
+    PublicParmOnline pp=new PublicParmOnline();
     Random random=new Random();
     public String genPhoneNum() {
         String num = "177" + (random.nextInt(89999999) + 10000000);

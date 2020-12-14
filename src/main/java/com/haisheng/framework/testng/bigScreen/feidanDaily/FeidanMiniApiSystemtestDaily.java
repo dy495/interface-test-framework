@@ -2174,6 +2174,70 @@ public class FeidanMiniApiSystemtestDaily {
 
 
 
+    // --- V3.1.2 新增接口 2020.12.14
+
+    //角色列表分页
+    public JSONObject rolePage(Integer page, Integer size, String rolename) throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("role_name", rolename);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //权限树
+    public JSONObject authTree() throws Exception {
+        String url = "/risk/auth/tree";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建角色
+    public JSONObject roleAdd(String name, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject roleAddNotchk(String name, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //角色状态变更
+    public JSONObject roleStatusChange(Integer id, String status) throws Exception {
+        String url = "/risk/role/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色详情
+    public JSONObject roleDetail(Long id) throws Exception {
+        String url = "/risk/role/detail";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
+
+
 
     public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
@@ -2271,6 +2335,9 @@ public class FeidanMiniApiSystemtestDaily {
    // public static void main(String[] args) throws ParseException {// ---不用理我！
 
     //}
+
+
+
 
 
 }

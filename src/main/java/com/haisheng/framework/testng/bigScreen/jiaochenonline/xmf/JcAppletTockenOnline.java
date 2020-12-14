@@ -1,26 +1,26 @@
-package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.FileUtil;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
-/**
- * @author : yu
- * @date :  2020/05/30
- */
+public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd {
 
-public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
+    ScenarioUtil jc = new ScenarioUtil();
 
-    CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -31,11 +31,11 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
 
+
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = "https://servicewechat.com/wx0cf070e8eed63e90/";
 
 
         //replace backend gateway url
@@ -45,20 +45,22 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.referer=getJcRefer();
+
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOline();
+        commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
 
-        logger.debug("crm: " + crm);
-//        crm.login(sh_name1, sh_pwd1);
+        logger.debug("jc: " + jc);
+
 
     }
 
@@ -79,19 +81,23 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(dataProvider = "APPLET_TOKENS", dataProviderClass = CrmScenarioUtilOnlineX.class)
+    //小程序token
+    @DataProvider(name = "APPLET_TOKENS")
+    public static Object[] appletTokens() {
+        return new String[]{
+                "jROudlJNRgLHQ0UH8ESIdg==",   //xmf
+        };
+    }
+    @Test(dataProvider = "APPLET_TOKENS")
     public void applet4hour(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLoginToken(token);
-            String customer_namea = "@@@A";
-            String customer_phone_numbera = "15037286014";
-            Long appoint_id = crm.appointmentTestDrive("MALE", customer_namea, customer_phone_numbera, "2022-01-01", 1, 81).getLong("appointment_id");
-            crm.cancle(appoint_id);
+            jc.appletLoginToken(token);
+            JSONObject data = jc.appletbanner();
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
 //            saveData("小程序每4小时登陆一次，防止失效");
         }
     }
-}
+   }

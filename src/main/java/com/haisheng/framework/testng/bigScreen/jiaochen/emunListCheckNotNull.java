@@ -33,8 +33,6 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
 
 
     /**
@@ -102,7 +100,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             jc.appLogin(pp.gwphone, pp.gwpassword);
             JSONObject data = jc.apperCOde();
-            String jsonpath = "$.er_code_url1";
+            String jsonpath = "$.er_code_url";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {

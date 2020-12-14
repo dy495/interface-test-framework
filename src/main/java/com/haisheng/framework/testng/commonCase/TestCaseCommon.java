@@ -431,7 +431,7 @@ public class TestCaseCommon {
         return "12928";
     }
     public String getJcRefer() {
-        return "https://servicewechat.com/wx4071a91527930b48/";
+        return "https://servicewechat.com/wxbd41de85739a00c7/";
     }
 
     public String getXundianShop() {

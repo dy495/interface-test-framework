@@ -165,6 +165,7 @@ public class FeidanHuaShengOnline {
                 "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png",
                 "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng2.jpg"
         };
+
     }
     @Test
     public void devChk(){
@@ -423,7 +424,8 @@ public class FeidanHuaShengOnline {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP);
-
+            msg = msg.replace("java.lang.Exception: ", "异常：");
+            msg = msg.replace("java.lang.IllegalArgumentException:", "异常：");
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
         }
