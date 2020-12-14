@@ -1268,7 +1268,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(validity == 30, "创建套餐时有效期：30" + "创建成功后列表展示有效期：" + validity);
                 int voucherNumber = CommonUtil.getIntField(object, 0, "voucher_number");
                 Preconditions.checkArgument(voucherNumber == 10, "创建套餐时套餐内包含卡券数：10" + "创建成功后列表展示卡券数量：" + voucherNumber);
-
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
