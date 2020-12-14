@@ -26,10 +26,10 @@ public class DingWebhook {
     //日常回归-货架
     public static String COMMODITY_SHELF_GRP = "https://oapi.dingtalk.com/robot/send?access_token=225c6810c977c616c9c4c112e9205b7f3f7204392c4388a05ff708cbe9e4a6ee";
 
-    //日常回归-算法聚类&PV/UV准确率
+    //线上巡检-PV&UV流量监控
     public static String PV_UV_ACCURACY_GRP = "https://oapi.dingtalk.com/robot/send?access_token=0837493692d7a7e41f6da3fda6ed8e42f8015210b1fad450a415afbcbc7b5907";
 
-    //线上巡检-PV&UV流量监控
+    //日常回归-算法聚类&PV/UV准确率
     public static String DAILY_PV_UV_ACCURACY_GRP = "https://oapi.dingtalk.com/robot/send?access_token=6f964c9d8415010e246613f77ec13a2983f4e7958be38f68d3a1f93bfabc5028";
 
     //日常回归-云端算法

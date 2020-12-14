@@ -441,7 +441,7 @@ public class FeidanHuaShengPvUvOnline {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.DAILY_PV_UV_ACCURACY_GRP);
+            alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
 
             msg = msg.replace("java.lang.Exception: ", "异常：");
             msg = msg.replace("java.lang.IllegalArgumentException:", "异常：");
@@ -455,7 +455,7 @@ public class FeidanHuaShengPvUvOnline {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.DAILY_PV_UV_ACCURACY_GRP);
+            alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
