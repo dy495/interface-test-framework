@@ -8,11 +8,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerification;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.CreatePackage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 营销管理模块测试用例
@@ -583,7 +582,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int cumulativeUse = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_use");
             //核销
             util.loginApplet(EnumAppletCode.WM);
-            long id = util.getVoucherId(voucherName);
+            long id = util.getVoucherListId(voucherName);
             IScene scene1 = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
             jc.invokeApi(scene1);
             util.login(administrator);
@@ -664,12 +663,45 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--累计发出=【发卡记录】中按该卡券名称搜索结果的列表数")
+    @Test(description = "卡券表单--固定套餐购买一个套餐（此套餐内包含此卡券一张）剩余库存-1")
     public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String phone = marketing.getPhone();
+            String subjectType = util.getSubjectType();
+            //获取累计发出
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            long voucherId = util.getPackageContainVoucher(packageId).get(0);
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
+            int cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(phone)
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(phone))
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                    .extendedInsuranceCopies(10).type(0).build();
+            jc.invokeApi(purchaseFixedPackageScene);
+            //确认支付
+            util.makeSureBuyPackage("凯迪拉克无限套餐");
+            //购买后累计发出
+            long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
+            CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery);
+            Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1,
+                    voucherName + "累计发出数：" + CommonUtil.errMessage(cumulativeDelivery + 1, newCumulativeDelivery));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--固定套餐购买一个套餐（此套餐内包含此卡券一张）累计发出+1，套餐购买数量+1");
+        }
+    }
+
+    @Test(description = "卡券表单--累计发出=【发卡记录】中按该卡券名称搜索结果的列表数")
+    public void voucherManage_data_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
             String format = "yyyy-MM-dd HH:mm";
-            String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), format);
+            String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -30), format);
             long time = Long.parseLong(DateTimeUtil.dateToStamp(date, format));
             util.login(administrator);
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -701,7 +733,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--累计使用=【核销记录】中按该卡券名称搜索结果的列表数")
-    public void voucherManage_data_14() {
+    public void voucherManage_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String format = "yyyy-MM-dd HH:mm";
@@ -737,7 +769,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--增发库存=【卡券审核】该卡券申请记录中通过的增发总数")
-    public void voucherManage_data_15() {
+    public void voucherManage_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
@@ -774,7 +806,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--创建一种卡券，【卡券审核】列表+1")
-    public void voucherManage_data_16() {
+    public void voucherManage_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //创建卡券前卡券审核页列表数
@@ -794,7 +826,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "卡券表单--每增发一次卡券，【卡券审核】列表+1")
-    public void voucherManage_data_17() {
+    public void voucherManage_data_18() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //增发卡券前卡券审核页列表数
@@ -829,8 +861,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--创建一张卡券后，【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）")
-    public void voucherManage_data_18() {
+    @Test(description = "卡券表单--【创建套餐】下拉选择列表数=卡券列表数（未作废）")
+    public void voucherManage_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             util.login(administrator);
@@ -856,6 +888,36 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("卡券表单--创建一张卡券后，【创建套餐】下拉选择列表数=卡券列表数（未作废&剩余库存！=0）");
+        }
+    }
+
+    @Test(description = "卡券表单--每转移一张卡券，发卡记录列表数量+0")
+    public void voucherManage_data_20() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            //发出一张卡券
+            long voucherId = util.pushMessage();
+            String voucherName = util.getVoucherName(voucherId);
+            //发卡记录列表数
+            IScene scene = SendRecord.builder().build();
+            int total = jc.invokeApi(scene).getInteger("total");
+            //转移一张卡券
+            util.loginApplet(EnumAppletCode.WM);
+            long id = util.getVoucherListId(voucherName);
+            util.login(administrator);
+            List<Long> list = new ArrayList<>();
+            list.add(id);
+            IScene scene1 = Transfer.builder().transferPhone(marketing.getPhone())
+                    .receivePhone("13373166806").voucherIds(list).build();
+            jc.invokeApi(scene1);
+            int newTotal = jc.invokeApi(scene).getInteger("total");
+            CommonUtil.valueView(total, newTotal);
+            Preconditions.checkArgument(newTotal == total, "转移卡券前发卡记录列表数：" + total + "转移卡券后发卡记录列表数：" + newTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--每转移一张卡券，发卡记录列表数量+0");
         }
     }
 
@@ -996,7 +1058,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，套餐名称异常")
+    @Test(description = "套餐表单--创建套餐，套餐名称异常")
     public void packageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1015,11 +1077,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，套餐名称异常");
+            saveData("套餐表单--创建套餐，套餐名称异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，套餐说明异常")
+    @Test(description = "套餐表单--创建套餐，套餐说明异常")
     public void packageManager_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1038,11 +1100,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，套餐说明异常");
+            saveData("套餐表单--创建套餐，套餐说明异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，有效天数异常")
+    @Test(description = "套餐表单--创建套餐，有效天数异常")
     public void packageManager_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1062,11 +1124,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，套餐说明异常");
+            saveData("套餐表单--创建套餐，套餐说明异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，主体类型异常")
+    @Test(description = "套餐表单--创建套餐，主体类型异常")
     public void packageManager_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1086,11 +1148,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，主体类型异常");
+            saveData("套餐表单--创建套餐，主体类型异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，主体详情异常")
+    @Test(description = "套餐表单--创建套餐，主体详情异常")
     public void packageManager_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1106,11 +1168,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，主体详情异常");
+            saveData("套餐表单--创建套餐，主体详情异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，包含卡券为空")
+    @Test(description = "套餐表单--创建套餐，包含卡券为空")
     public void packageManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1126,11 +1188,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，包含卡券为空");
+            saveData("套餐表单--创建套餐，包含卡券为空");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，套餐价格异常")
+    @Test(description = "套餐表单--创建套餐，套餐价格异常")
     public void packageManager_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1150,11 +1212,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，套餐价格异常");
+            saveData("套餐表单--创建套餐，套餐价格异常");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，选择门店为空")
+    @Test(description = "套餐表单--创建套餐，选择门店为空")
     public void packageManager_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1170,12 +1232,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，选择门店为空");
+            saveData("套餐表单--创建套餐，选择门店为空");
         }
     }
 
-    @Test(description = "套餐管理--创建套餐，选择各个主体创建套餐，套餐列表每次均+1")
-    public void packageManager_system_9() {
+    @Test(description = "套餐表单--创建套餐，选择各个主体创建套餐，套餐列表每次均+1")
+    public void packageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //登录管理员
@@ -1185,42 +1247,45 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 IScene scene = PackageFormPage.builder().build();
                 int total = jc.invokeApi(scene).getInteger("total");
                 //创建套餐
+                String packageName = util.createPackageName();
                 String subjectType = subject.name();
                 Long subjectId = util.getSubjectId(subjectType);
-                IScene scene1 = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                IScene scene1 = CreatePackage.builder().packageName(packageName).validity("30")
                         .packageDescription(util.getDesc()).subjectType(subjectType)
                         .subjectId(subjectId).voucherList(util.getVoucherList())
-                        .packagePrice(5000.00).shopIds(util.getShopIds()).build();
+                        .packagePrice(5000.99).shopIds(util.getShopIds()).build();
                 jc.invokeApi(scene1);
                 //创建套餐后列表数量
                 int newTotal = jc.invokeApi(scene).getInteger("total");
                 Preconditions.checkArgument(newTotal == total + 1,
                         "创建套餐前列表数量：" + total + " 创建套餐后列表数量：" + newTotal);
+                //列表内容校验
+                IScene scene2 = PackageFormPage.builder().packageName(packageName).build();
+                JSONObject object = jc.invokeApi(scene2);
+                String packagePrice = CommonUtil.getStrField(object, 0, "package_price");
+                Preconditions.checkArgument(packagePrice.equals("5000.99"), "创建套餐时套餐价格：5000.99" + "创建成功后列表展示套餐价格：" + packagePrice);
+                int validity = CommonUtil.getIntField(object, 0, "validity");
+                Preconditions.checkArgument(validity == 30, "创建套餐时有效期：30" + "创建成功后列表展示有效期：" + validity);
+                int voucherNumber = CommonUtil.getIntField(object, 0, "voucher_number");
+                Preconditions.checkArgument(voucherNumber == 10, "创建套餐时套餐内包含卡券数：10" + "创建成功后列表展示卡券数量：" + voucherNumber);
+
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，选择各个主体创建套餐，套餐列表每次均+1");
+            saveData("套餐表单--创建套餐，选择各个主体创建套餐，套餐列表每次均+1");
         }
     }
 
-    @Test(description = "套餐管理--购买一个固定套餐，该套餐售出+1")
-    public void packageManager_data_1() {
+    @Test(description = "套餐表单--购买一个固定套餐，该套餐售出+1")
+    public void packageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String phone = marketing.getPhone();
-            String subjectType = util.getSubjectType();
             //获取售出套数
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
             IScene scene = PackageFormPage.builder().packageName("凯迪拉克无限套餐").build();
             int soldNumber = CommonUtil.getIntField(jc.invokeApi(scene), 0, "sold_number");
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(phone)
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(phone))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-                    .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                    .extendedInsuranceCopies(10).type(1).build();
-            jc.invokeApi(purchaseFixedPackageScene);
+            util.buyFixedPackage(1);
             //确认支付
             util.makeSureBuyPackage("凯迪拉克无限套餐");
             //购买后售出套数
@@ -1231,38 +1296,327 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--购买一个固定套餐，该套餐售出+1");
+            saveData("套餐表单--购买一个固定套餐，该套餐售出+1");
         }
     }
 
-    @Test(description = "套餐管理--赠送一个固定套餐，该套餐赠送+1")
-    public void packageManager_data_2() {
+    @Test(description = "套餐表单--赠送一个固定套餐，该套餐赠送+1")
+    public void packageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String phone = marketing.getPhone();
-            String subjectType = util.getSubjectType();
             //获取售出套数
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
             IScene scene = PackageFormPage.builder().packageName("凯迪拉克无限套餐").build();
             int giveNumber = CommonUtil.getIntField(jc.invokeApi(scene), 0, "give_number");
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(phone)
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(phone))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-                    .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                    .extendedInsuranceCopies(10).type(0).build();
-            jc.invokeApi(purchaseFixedPackageScene);
+            util.buyFixedPackage(0);
             //确认支付
             util.makeSureBuyPackage("凯迪拉克无限套餐");
             //购买后售出套数
             long newGiveNumber = CommonUtil.getIntField(jc.invokeApi(scene), 0, "give_number");
             CommonUtil.valueView(giveNumber, newGiveNumber);
             Preconditions.checkArgument(newGiveNumber == giveNumber + 1,
-                    "凯迪拉克无限套餐" + "赠送：" + CommonUtil.errMessage(giveNumber + 1, newGiveNumber));
+                    "凯迪拉克无限套餐赠送：" + CommonUtil.errMessage(giveNumber + 1, newGiveNumber));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--赠送一个固定套餐，该套餐赠送+1");
+            saveData("套餐表单--赠送一个固定套餐，该套餐赠送+1");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐--【小程序客户】列表的手机号，均可查询到姓名")
+    public void packageManager_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            WechatCustomerPage.WechatCustomerPageBuilder builder = WechatCustomerPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String customerPhone = jsonObject.getString("customer_phone");
+                    String customerName = jsonObject.getString("customer_name");
+                    String name = jc.pcSearchCustomer(customerPhone).getString("customer_name");
+                    CommonUtil.valueView(customerName, name);
+                    Preconditions.checkArgument(customerName.equals(name),
+                            customerPhone + "在小程序客户的名称为：" + customerName + "购买套餐时展示的名称为：" + name);
+                    CommonUtil.logger(customerPhone);
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐--【小程序客户】列表的手机号，均可查询到姓名");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐--套餐价格=所选套餐的列表展示价格")
+    public void packageManager_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            JSONArray array = jc.pcPackageList().getJSONArray("list");
+            array.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                String packageName = jsonObject.getString("package_name");
+                String price = jsonObject.getString("price");
+                IScene scene = PackageFormPage.builder().packageName(packageName).build();
+                String listPrice = CommonUtil.getStrField(jc.invokeApi(scene), 0, "price");
+                CommonUtil.valueView(price, listPrice);
+                Preconditions.checkArgument(listPrice.equals(price), "购买套餐时套餐价格为：" + price + "此套餐列表展示套餐价格为：" + listPrice);
+                CommonUtil.logger(packageName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐--套餐价格=所选套餐的列表展示价格");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐--下拉可选择的套餐数量=套餐表单列表数（未取消&未过期）")
+    public void packageManager_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            int arraySize = jc.pcPackageList().getJSONArray("list").size();
+            PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder().packageStatus(true);
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            AtomicInteger sum = new AtomicInteger();
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                array.forEach(e -> {
+                    String format = "yyyy-MM-dd HH:mm";
+                    String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") + " 00:00";
+                    JSONObject object = (JSONObject) e;
+                    String createTime = object.getString("create_time");
+                    int validity = object.getInteger("validity");
+                    long todayUnix = Long.parseLong(DateTimeUtil.dateToStamp(today, format));
+                    long unix = Long.parseLong(DateTimeUtil.dateToStamp(createTime, format)) + (long) validity * 24 * 60 * 60 * 1000;
+                    if (unix >= todayUnix) {
+                        sum.getAndIncrement();
+                    }
+                    CommonUtil.logger(createTime);
+                });
+            }
+            CommonUtil.valueView(arraySize, sum);
+            Preconditions.checkArgument(arraySize == sum.get(), "下拉可选择的套餐数量为：" + arraySize + "套餐表单列表数（未取消&未过期）为：" + sum.get());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐--下拉可选择的套餐数量=套餐表单列表数（未取消）");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐--临时套餐购买/赠送一张此卡券，【发卡记录】列表+1")
+    public void packageManager_data_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发卡记录列表数
+            int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            //购买临时套餐
+            util.buyTemporaryPackage(1);
+            //确认支付
+            util.makeSureBuyPackage("临时套餐");
+            //购买后发卡记录
+            int newSendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            CommonUtil.valueView(sendRecordTotal, newSendRecordTotal);
+            Preconditions.checkArgument(newSendRecordTotal == sendRecordTotal + 1,
+                    "购买套餐前发卡记录列表数为：" + sendRecordTotal + "购买套餐后发卡记录列表数为：" + newSendRecordTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐--临时套餐购买/赠送一张此卡券，【发卡记录】列表+1");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐--固定套餐购买/赠送一个套餐（此套餐内包含此卡券一张），【发卡记录】列表+1")
+    public void packageManager_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发卡记录列表数
+            int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            // 购买固定套餐
+            util.buyFixedPackage(1);
+            //确认支付
+            util.makeSureBuyPackage("凯迪拉克无限套餐");
+            int newSendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            CommonUtil.valueView(sendRecordTotal, newSendRecordTotal);
+            Preconditions.checkArgument(newSendRecordTotal == sendRecordTotal + 1,
+                    "购买套餐前发卡记录列表数为：" + sendRecordTotal + "购买套餐后发卡记录列表数为：" + newSendRecordTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐--固定套餐购买/赠送一个套餐（此套餐内包含此卡券一张），【发卡记录】列表+1");
+        }
+    }
+
+    @Test(description = "套餐表单--套餐购买记录--套餐表单购买/赠送一次套餐，列表+1&渠道=线下")
+    public void packageManager_data_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //套餐购买记录列表数
+            int buyPackageRecordTotal = jc.invokeApi(BuyPackageRecord.builder().build()).getInteger("total");
+            // 购买固定套餐
+            util.buyFixedPackage(1);
+            // 确认支付
+            util.makeSureBuyPackage("凯迪拉克无限套餐");
+            JSONObject response = jc.invokeApi(BuyPackageRecord.builder().build());
+            int newBuyPackageRecordTotal = response.getInteger("total");
+            String sendChannelName = CommonUtil.getStrField(jc.invokeApi(BuyPackageRecord.builder().packageName("凯迪拉克无限套餐").build()), 0, "send_channel_name");
+            Preconditions.checkArgument(sendChannelName.equals("线下"), "购买套餐后发出渠道为：" + sendChannelName);
+            CommonUtil.valueView(buyPackageRecordTotal, newBuyPackageRecordTotal);
+            Preconditions.checkArgument(newBuyPackageRecordTotal == buyPackageRecordTotal + 1,
+                    "购买套餐前套餐购买记录列表数为：" + buyPackageRecordTotal + "购买套餐后套餐购买记录列表数为：" + newBuyPackageRecordTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--套餐购买记录--套餐表单购买/赠送一次套餐，列表+1&渠道=线下");
+        }
+    }
+
+    @Test(description = "套餐表单--套餐购买记录--某一赠送类型套餐的列表数=【套餐表单】中此套餐的赠送数量")
+    public void packageManager_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            String format = "yyyy-MM-dd HH:mm";
+            String startTime = "2020-12-09";
+            String endTime = DateTimeUtil.getFormat(new Date());
+            PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder().startTime(startTime).endTime(endTime);
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                builder.page(i).size(size);
+                JSONArray array = jc.invokeApi(builder.build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String packageName = jsonObject.getString("package_name");
+                    int giveNumber = jsonObject.getInteger("give_number");
+                    long createTime = Long.parseLong(DateTimeUtil.dateToStamp(jsonObject.getString("create_time"), format));
+                    BuyPackageRecord.BuyPackageRecordBuilder builder1 = BuyPackageRecord.builder().packageName(packageName)
+                            .startTime(startTime).endTime(endTime).sendType(0);
+                    int buyPackageRecordTotal = jc.invokeApi(builder1.build()).getInteger("total");
+                    int x = CommonUtil.getTurningPage(buyPackageRecordTotal, size);
+                    AtomicInteger sum = new AtomicInteger();
+                    for (int j = 1; j < x; j++) {
+                        JSONArray array1 = jc.invokeApi(builder1.page(j).size(size).build()).getJSONArray("list");
+                        array1.forEach(b -> {
+                            JSONObject object = (JSONObject) b;
+                            long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(object.getString("send_time"), format));
+                            if (sendTime > createTime) {
+                                sum.getAndIncrement();
+                            }
+                        });
+                    }
+                    CommonUtil.valueView(giveNumber, sum.get());
+                    Preconditions.checkArgument(giveNumber >= sum.get(),
+                            packageName + "累计赠送：" + giveNumber + " 套餐购买记录中赠送数量：" + sum.get());
+                    CommonUtil.logger(packageName);
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--套餐购买记录--某一赠送类型套餐的列表数=【套餐表单】中此套餐的赠送数量");
+        }
+    }
+
+    @Test(description = "套餐表单--套餐购买记录--某一售出类型套餐的列表数=【套餐表单】中此套餐的售出数量")
+    public void packageManager_data_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.login(administrator);
+            String format = "yyyy-MM-dd HH:mm";
+            String startTime = "2020-12-09";
+            String endTime = DateTimeUtil.getFormat(new Date());
+            PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder().startTime(startTime).endTime(endTime);
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                builder.page(i).size(size);
+                JSONArray array = jc.invokeApi(builder.build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String packageName = jsonObject.getString("package_name");
+                    int soldNumber = jsonObject.getInteger("sold_number");
+                    long createTime = Long.parseLong(DateTimeUtil.dateToStamp(jsonObject.getString("create_time"), format));
+                    BuyPackageRecord.BuyPackageRecordBuilder builder1 = BuyPackageRecord.builder().packageName(packageName)
+                            .sendType(1).startTime(startTime).endTime(endTime);
+                    int buyPackageRecordTotal = jc.invokeApi(builder1.build()).getInteger("total");
+                    int x = CommonUtil.getTurningPage(buyPackageRecordTotal, size);
+                    AtomicInteger sum = new AtomicInteger();
+                    for (int j = 1; j < x; j++) {
+                        JSONArray array1 = jc.invokeApi(builder1.page(j).size(size).build()).getJSONArray("list");
+                        array1.forEach(b -> {
+                            JSONObject object = (JSONObject) b;
+                            long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(object.getString("send_time"), format));
+                            if (sendTime >= createTime) {
+                                sum.getAndIncrement();
+                            }
+                        });
+                    }
+                    CommonUtil.valueView(soldNumber, sum.get());
+                    Preconditions.checkArgument(soldNumber == sum.get(),
+                            packageName + "累计售出：" + soldNumber + " 套餐购买记录中购买数量：" + sum.get());
+                    CommonUtil.logger(packageName);
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--套餐购买记录--某一售出类型套餐的列表数=【套餐表单】中此套餐的售出数量");
+        }
+    }
+
+    @Test(description = "套餐表单--套餐购买记录--购买临时套餐确认支付后，购买客户对应的小程序【我的卡券】+1，【我的套餐】+0")
+    public void packageManager_data_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.loginApplet(EnumAppletCode.WM);
+            int voucherNumber = util.getVoucherListSize();
+            int packageNumber = util.getPackageListSize();
+            util.login(marketing);
+            //购买临时套餐
+            util.buyTemporaryPackage(1);
+            //确认支付
+            util.makeSureBuyPackage("临时套餐");
+            util.loginApplet(EnumAppletCode.WM);
+            int newVoucherNumber = util.getVoucherListSize();
+            int newPackageNumber = util.getPackageListSize();
+            CommonUtil.valueView(voucherNumber, newVoucherNumber, packageNumber, newPackageNumber);
+            Preconditions.checkArgument(newVoucherNumber == voucherNumber + 1, "购买套餐前我的卡券列表数：" + voucherNumber + "购买套餐后我的卡券列表数：" + newVoucherNumber);
+            Preconditions.checkArgument(newPackageNumber == packageNumber, "购买套餐前我的套餐列表数：" + packageNumber + "购买套餐后我的套餐列表数：" + newPackageNumber);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--套餐购买记录--某一售出类型套餐的列表数=【套餐表单】中此套餐的售出数量");
+        }
+    }
+
+    @Test(description = "套餐表单--套餐购买记录--购买固定套餐时包含1张卡券，确认支付后，购买客户对应的小程序【我的套餐】+1，【我的卡券】+0")
+    public void packageManager_data_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            util.loginApplet(EnumAppletCode.WM);
+            int voucherNumber = util.getVoucherListSize();
+            int packageNumber = util.getPackageListSize();
+            util.login(marketing);
+            //购买固定套餐
+            util.buyFixedPackage(1);
+            //确认支付
+            util.makeSureBuyPackage("凯迪拉克无限套餐");
+            util.loginApplet(EnumAppletCode.WM);
+            int newVoucherNumber = util.getVoucherListSize();
+            int newPackageNumber = util.getPackageListSize();
+            CommonUtil.valueView(voucherNumber, newVoucherNumber, packageNumber, newPackageNumber);
+            Preconditions.checkArgument(newVoucherNumber == voucherNumber, "购买套餐前我的卡券列表数：" + voucherNumber + "购买套餐后我的卡券列表数：" + newVoucherNumber);
+            Preconditions.checkArgument(newPackageNumber == packageNumber + 1, "购买套餐前我的套餐列表数：" + packageNumber + "购买套餐后我的套餐列表数：" + newPackageNumber);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--套餐购买记录--购买固定套餐时包含1张卡券，确认支付后，购买客户对应的小程序【我的套餐】+1，【我的卡券】+0");
         }
     }
 
@@ -1295,4 +1649,5 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             saveData("消息管理--推送消息含有一张卡券，推送成功后，【卡券表单页】该卡券累计发出+1");
         }
     }
+
 }

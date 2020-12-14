@@ -9,7 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class PackageFormPage extends BaseScene {
-    private final String packageStatus;
+    private final Boolean packageStatus;
     private final String packageName;
     private final String creator;
     private final String startTime;
