@@ -18,7 +18,7 @@ public enum EnumJobName {
 
     CRM_DAY_DATA_STORE("crm-day-data-store"),
 
-    JIAOCHEN_DAILY_TEST("jiaochen-daily-test"),
+    JIAOCHEN_DAILY_TEST("jiaochen-daily-t"),
     ;
 
     EnumJobName(String jobName) {

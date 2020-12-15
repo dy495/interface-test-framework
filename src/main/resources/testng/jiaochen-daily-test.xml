@@ -10,11 +10,11 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.MarketingManage"/>
 
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
 
         </classes>
     </test>
