@@ -2233,6 +2233,135 @@ public class FeidanMiniApiSystemtestDaily {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    //角色编辑
+    public JSONObject roleEdit(Long id, String name, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色删除
+    public JSONObject roleDelete(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号列表分页
+    public JSONObject accountPage(int page, int size, String name, String phone, String email, String rolename, String shopname) throws Exception {
+        String url = "/risk/account/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_name", rolename);
+        json.put("shop_name", shopname);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色列表
+    public JSONObject roleList() throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建账号
+    public JSONObject accountAdd(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+        String url = "/risk/account/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("type", type);
+        json.put("role_list", role_list);
+        json.put("gender", gender);
+        json.put("plate_number", plate_number);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject accountAddNotChk(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+        String url = "/risk/account/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("type", type);
+        json.put("role_list", role_list);
+        json.put("gender", gender);
+        json.put("plate_number", plate_number);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //编辑账号
+    public JSONObject accountEdit(String id, String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("type", type);
+        json.put("role_list", role_list);
+        json.put("gender", gender);
+        json.put("plate_number", plate_number);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号状态变更
+    public JSONObject accountStatus(String id, String status) throws Exception {
+        String url = "/risk/account/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //修改密码
+    public JSONObject passwdChg(String newp, String oldp) throws Exception {
+        String url = "/risk/account/change-password";
+        JSONObject json = new JSONObject();
+        json.put("new_password", newp);
+        json.put("old_password", oldp);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号删除
+    public JSONObject accountDelete(String id) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //渠道列表
+    public JSONObject shopchannel(JSONArray shoplist) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("shop_list", shoplist);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
 
 
 
