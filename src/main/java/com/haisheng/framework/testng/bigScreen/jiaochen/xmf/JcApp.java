@@ -61,7 +61,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jiaochen-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
@@ -110,7 +110,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         };
     }
     @Test(description = "今日任务数==今日数据各列数据之和",dataProvider = "ACOUNT")  //ok
-    public void Jc_taskEquelDate(String name,String code,String names) {
+    public void taskEquelDate(String name,String code,String names) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin(name,code);
