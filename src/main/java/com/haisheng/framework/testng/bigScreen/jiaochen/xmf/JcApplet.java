@@ -31,16 +31,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
 
-    DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
-    public int page = 1;
-    public int size = 50;
-    public String name = "";
-    public String email = "";
-    public String phone = "";
 
 
     /**

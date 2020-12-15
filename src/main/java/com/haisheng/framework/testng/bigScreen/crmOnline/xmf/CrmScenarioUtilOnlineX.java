@@ -4592,7 +4592,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     public static Object[] appletTokens() {
         return new String[]{
                 "cw4sTi87+ZWGuDqdsfZXSA==", //EnumAppletCode.XMFONLINE.getCode(),
-//                EnumAppletCode.BB.getCode(),
+                EnumAppletCode.BB.getCode(),
 //                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.LXQ.getCode(),
 //                EnumAppletCode.GLY.getCode()
