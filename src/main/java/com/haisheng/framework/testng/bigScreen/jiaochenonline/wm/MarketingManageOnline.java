@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerification;
@@ -43,7 +44,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
     private static final Integer size = 100;
     private static final EnumAccount marketing = EnumAccount.MARKETING_ONLINE;
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_ONLINE;
-    private static final EnumAppletCode appletUser = EnumAppletCode.WM_ONLINE;
+    private static final EnumAppletToken appletUser = EnumAppletToken.JC_WM_ONLINE;
 
     @BeforeClass
     @Override
@@ -55,7 +56,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFER.getRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getRefer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);

@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 
 public class LoginUtil {
@@ -22,11 +22,11 @@ public class LoginUtil {
         }
     }
 
-    public void loginApplet(EnumAppletCode appletCode) {
-        if (appletCode.isDaily()) {
-            jcDaily.appletLoginToken(appletCode.getToken());
+    public void loginApplet(EnumAppletToken appletToken) {
+        if (appletToken.isDaily()) {
+            jcDaily.appletLoginToken(appletToken.getToken());
         } else {
-            jcOnline.appletLoginToken(appletCode.getToken());
+            jcOnline.appletLoginToken(appletToken.getToken());
         }
     }
 }

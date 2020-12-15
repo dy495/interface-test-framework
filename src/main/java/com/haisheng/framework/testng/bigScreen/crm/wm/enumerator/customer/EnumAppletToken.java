@@ -26,7 +26,7 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumProduce.JC.name(), "Bjqq43gwyVsmUWYOi+AW5w==", "", true),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "", "", false);
+    JC_WM_ONLINE(EnumProduce.JC.name(), "FzYbYDjtpl1OaSUnw8YjsA==", "", false);
 
     EnumAppletToken(String produce, String token, String wechatName, boolean isDaily) {
         this.produce = produce;

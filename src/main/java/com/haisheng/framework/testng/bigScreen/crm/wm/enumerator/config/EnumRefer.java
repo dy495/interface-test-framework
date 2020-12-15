@@ -4,7 +4,10 @@ import lombok.Getter;
 
 public enum EnumRefer {
 
-    JIAOCHEN_REFER("https://servicewechat.com/wx4071a91527930b48/0/page-frame.html");
+    JIAOCHEN_REFER_DAILY("https://servicewechat.com/wx4071a91527930b48/0/page-frame.html"),
+
+    JIAOCHEN_REFER_ONLINE("https://servicewechat.com/wxbd41de85739a00c7/24/page-frame.html"),
+    ;
 
     EnumRefer(String refer) {
         this.refer = refer;

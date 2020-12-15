@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
@@ -118,6 +119,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getRefer();
             jc.appletLoginToken(token);
             new BusinessUtil().getVoucherListSize();
         } catch (Exception | AssertionError e) {
@@ -133,6 +135,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            commonConfig.referer = EnumRefer.JIAOCHEN_REFER_ONLINE.getRefer();
             jcOnline.appletLoginToken(token);
             new BusinessUtilOnline().getVoucherListSize();
         } catch (Exception | AssertionError e) {
