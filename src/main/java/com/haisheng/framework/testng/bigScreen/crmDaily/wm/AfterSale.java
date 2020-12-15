@@ -91,7 +91,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(monthReceptionCar, monthRepairedCar, todayReceptionCar, todayRepairedCar);
             Preconditions.checkArgument(monthReceptionCar >= todayReceptionCar && monthRepairedCar >= todayRepairedCar, "本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆异常");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--本月接待售后车辆>=今日接待售后车辆&&本月完成维修车辆>=今日完成维修车辆");
         }
@@ -117,7 +117,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayReceptionCar, set.size());
             Preconditions.checkArgument(todayReceptionCar == set.size(), zjl.getUsername() + "今日接待售后车辆数：" + todayReceptionCar + "列表数：" + set.size());
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--今日接待售后车辆=今天筛选，列表数车牌去重");
         }
