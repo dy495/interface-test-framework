@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -58,7 +60,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-
+        commonConfig.produce= EnumProduce.JC.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -413,6 +415,24 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } finally {
             jc.appletLoginToken(pp.appletTocken);
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
+        }
+    }
+
+    /**
+     * @description :修改个人信息
+     * @date :2020/12/15 17:58
+     **/
+    @Test
+    public void appletCustomer(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            appletInfoEdit er=new appletInfoEdit();
+
+            jc.appletUserInfoEdit(er);
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally {
+            saveData("修改个人信息异常");
         }
     }
 

@@ -1075,10 +1075,11 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @date :2020/11/24 19:31
      **/
 
-    public JSONObject finishReception(Long id) {
+    public JSONObject finishReception(Long id,String shop_id) {
         String url = "/jiaochen/m-app/task/reception/finish-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
+        json.put("shop_id", shop_id);
 
         return invokeApi(url, json);
     }
@@ -1088,10 +1089,11 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @date :2020/11/24 19:32
      **/
 
-    public JSONObject cancleReception(Long id) {
+    public JSONObject cancleReception(Long id,String shopId) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
+        json.put("shop_id", shopId);
 
         return invokeApi(url, json);
     }
@@ -2989,5 +2991,32 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject enummap() {
+        String url = "/jiaochen/pc/enum-map";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    @DataProvider(name = "ERR_PHONE")
+    public static Object[] errPhone() {
+        return new String[]{
+                "1231234123",
+                "aaaaaaaaaaa",
+                "汉字汉字",
+                "10：10",
+                "!@#$%^&*()_+{}:",
+                "123a123好*123",
+                "1         1",
+                "123123412345"
+        };
+    }
+
+    //pc接待管理 -> 开始接待
+    public JSONObject pcManageReception(String plate_number,boolean checkCode) {
+        String path = "/jiaochen/pc/reception-manage/reception";
+        JSONObject object = new JSONObject();
+        object.put("plate_number", plate_number);
+        return invokeApi(path, object,checkCode);
+    }
 
 }

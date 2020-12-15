@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -24,7 +25,7 @@ import java.util.*;
 
 public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = new ScenarioUtil();
+    ScenarioUtilOnline jc = new ScenarioUtilOnline();
 
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();

@@ -8,10 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShop
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
@@ -144,6 +141,14 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         return invokeApi(path, object);
+    }
+
+    //pc接待管理 -> 开始接待
+    public JSONObject pcManageReception(String plate_number,boolean checkCode) {
+        String path = "/jiaochen/pc/reception-manage/reception";
+        JSONObject object = new JSONObject();
+        object.put("plate_number", plate_number);
+        return invokeApi(path, object,checkCode);
     }
 
     //pc接待管理 -> 完成接待
@@ -3028,5 +3033,29 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    @DataProvider(name = "ERR_PHONE")
+    public static Object[] errPhone() {
+        return new String[]{
+                "1231234123",
+                "aaaaaaaaaaa",
+                "汉字汉字",
+                "10：10",
+                "!@#$%^&*()_+{}:",
+                "123a123好*123",
+                "1         1",
+                "123123412345"
+        };
+    }
+
+    public JSONObject appletUserInfoEdit(appletInfoEdit er) {
+        String url = "/jiaochen/applet/granted/user-info/edit";
+        JSONObject json1=new JSONObject();
+        json1.put("name",er.name);
+        json1.put("contact",er.contact);
+        json1.put("gender",er.gender);
+        json1.put("birthday",er.birthday);
+        json1.put("shipping_address",er.shipping_address);
+        return invokeApi(url,json1,er.checkcode);
+    }
 
 }

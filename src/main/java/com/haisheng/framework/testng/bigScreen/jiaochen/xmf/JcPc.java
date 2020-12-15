@@ -99,6 +99,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+
+
     //创建复合权限角色
 //    @Test(dataProvider = "LIMITID", dataProviderClass = ScenarioUtil.class)
     public void Jc_createRole(int a[]) {
@@ -448,6 +450,25 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("销售客户查询单项查询，结果校验");
         }
     }
+
+    /**
+     * @description :开始接待接口车牌号异常验证
+     * @date :2020/12/15 17:47
+     **/
+    @Test(description = "pc接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
+    public void Jc_pcReceiptAb(String plate) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = jc.pcManageReception(plate,false).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "异常车牌号依然成功");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc接待车牌号验证");
+        }
+    }
+
+
 
 
 

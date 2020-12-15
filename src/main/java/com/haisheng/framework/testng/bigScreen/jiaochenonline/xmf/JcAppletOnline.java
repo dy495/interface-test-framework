@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
@@ -403,5 +404,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
         }
     }
+
 
    }

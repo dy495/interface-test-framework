@@ -26,8 +26,10 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumProduce.JC.name(), "Bjqq43gwyVsmUWYOi+AW5w==", "", true),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "FzYbYDjtpl1OaSUnw8YjsA==", "", false);
+    JC_WM_ONLINE(EnumProduce.JC.name(), "FzYbYDjtpl1OaSUnw8YjsA==", "", false),
 
+    JC_XMF_DAILY(EnumProduce.JC.name(), "3QQYlO1DtjV5mwp2hP/cwg==", "", false),
+    JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false),;
     EnumAppletToken(String produce, String token, String wechatName, boolean isDaily) {
         this.produce = produce;
         this.token = token;

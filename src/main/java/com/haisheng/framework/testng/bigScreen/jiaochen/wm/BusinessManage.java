@@ -99,7 +99,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--开始接待，列表数+1,【首页-今日任务-接待】分子，分母+1,【首页-今日任务-接待】分子，分母+1");
+//            saveData("接待管理--开始接待，列表数+1,【首页-今日任务-接待】分子，分母+1,【首页-今日任务-接待】分子，分母+1");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletCode;
 
 public class PublicParmOnline {
@@ -36,7 +37,7 @@ public class PublicParmOnline {
     public String dzcode="000000";
 
 
-    public String appletTocken= EnumAppletCode.XMF_ONLINE.getToken();
+    public String appletTocken= EnumAppletToken.JC_XMF_ONLINE.getToken();
     public String coordinate="[116.29845,39.95933]}";  //经纬度
 
     public JSONArray roleList=getRoleList();

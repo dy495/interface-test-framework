@@ -39,6 +39,27 @@ public class JcFunction {
         return receptionID;
     }
 
+    //app开始接待，并返回接待id
+    public Long pcstartReception(String carPlate) throws Exception{
+        appStartReception sr=new appStartReception();
+        JSONObject data=jc.pcManageReception(carPlate,true).getJSONArray("customers").getJSONObject(0);
+
+        sr.id=data.getString("customer_id");
+        sr.plate_number=carPlate;
+        sr.customer_name=data.getString("customer_name");
+        sr.customer_phone=data.getString("customer_phone");
+        //开始接待
+//        jc.pcStartReception(sr);
+        //取接待列表id
+        JSONObject dd=jc.appreceptionPage(null,10).getJSONArray("list").getJSONObject(0);
+        long receptionID=dd.getLong("id");
+        String plate_number=dd.getString("plate_number");
+        if(!carPlate.equals(plate_number)){
+            throw new Exception("获取接待id失败");
+        }
+        return receptionID;
+    }
+
     //app今日任务数据
     public int [] appTask(){
         JSONObject data = jc.appTask();
