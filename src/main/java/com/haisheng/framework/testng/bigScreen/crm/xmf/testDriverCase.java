@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -106,7 +106,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
 
 
             //小程序评价
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 //            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
             int score = 4;
             JSONObject ll = new JSONObject();

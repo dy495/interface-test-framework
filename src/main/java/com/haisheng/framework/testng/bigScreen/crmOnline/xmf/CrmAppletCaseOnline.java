@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -106,7 +106,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 
     }
 
@@ -159,7 +159,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void driver_dateConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type, car_model);
             //预约试驾成功后，页面显示数据
             Long appointment_id = data.getLong("appointment_id");
@@ -211,7 +211,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject appListA = crm.appointmentlist();
             String apptotalListA = appListA.getString("total");
             //2.预约试驾
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, appointment_date, car_type, car_model);
             Long appoint_id = data.getLong("appointment_id");
 
@@ -252,7 +252,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 //            String service_status_nameapp = appdataList.getString("service_status_name");
 //            String phone_appointmentapp = appdataList.getString("phone_appointment");
             String customer_phone_numberapp = appdataList.getString("customer_phone_number");
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             crm.cancle(appoint_id);
             checkArgument((Long.parseLong(total) - Long.parseLong(totalA)) == 1, "预约试驾成功后，pc预约试驾条数没有+1");
             checkArgument(customer_namepc.equals(customer_name), "pc预约试驾客户名异常");
@@ -282,7 +282,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("预约试驾成功后，pc和app预约试驾信息校验");
         }
     }
@@ -383,7 +383,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 //            crm.myCarDelete("62022");
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
@@ -420,7 +420,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void myCarEven() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
             int count;
@@ -471,7 +471,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             //预约记录，接待状态
             String service_status_name = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getString("service_status_name");
             //取消预约
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             crm.cancle(appoint_id);
 
             crm.login(adminname, adminpassword);
@@ -481,7 +481,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("小程序取消预约，pc预约记录，接待状态预约中变更已取消");
         }
     }
@@ -501,7 +501,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             logger.info("---------------------活动id:--------------{}", activity_id);
             String other_brand = "奥迪";
             String customer_num = "2";
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 
             JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
             //报名提交后
@@ -532,7 +532,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("预约活动，小程序页面间数据一致性");
 
         }
@@ -583,7 +583,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject dataA = crm.activityList(1, 10, activity_id);
             String total = dataA.getString("total");
             //活动报名
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String other_brand = "奥迪";
             String customer_num = "2";
             String time = dt.getHistoryDate(1);
@@ -626,7 +626,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("applet活动报名,pc报名客户+1");
 
         }
@@ -651,7 +651,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             //参加活动，报名人数统计
             String other_brand = "奥迪";
             String customer_num = "2";
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
 
             JSONObject data = crm.appartilceDetail(article_id, positions);
@@ -677,7 +677,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
         }
     }
@@ -699,7 +699,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
             Long article_id = aid[0];
             //参加活动，报名人数统计
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String other_brand = "奥迪";
             String customer_num = "2";
             JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
@@ -727,7 +727,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("取消预约/活动/，我的预约消息状态改变为已取消");
 
         }
@@ -746,7 +746,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long[] aid;  //创建活动方法
             aid = pf.createAArcile_id(valid_start, simulation_num);
             Long article_id = aid[0];
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data = crm.appartilceDetail(article_id, positions);
             Integer registered_numA = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数
@@ -760,7 +760,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("pc新建活动，applet报名人数=假定基数+报名人数");
 
         }
@@ -779,7 +779,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long[] aid = pf.createAArcile_id(vailtime, "9");
             Long activity_id = aid[1];
             Long arcile_id = aid[0];
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             Integer registered_num = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");
             String other_brand = "奥迪";
             String customer_num = "2";
@@ -793,7 +793,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             //String customer_id=pcdata.getJSONArray("list").getJSONObject(0).getString("customer_id");
             //customer_idF=customer_id;
             //crm.chackActivity(1,appointment_id);  //pc 审核通过
-            // crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            // crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             Integer registered_numA = crm.appartilceDetail(arcile_id, positions).getInteger("registered_num");  //文章详情
             checkArgument((registered_numA - registered_num) == parseInt(customer_num), "报名活动人数写2，报名活动页报名人数未加2");
             crm.login(adminname, adminpassword);
@@ -804,7 +804,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("报名活动，小程序报名人数+1");
 
         }
@@ -825,7 +825,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long arcile_id = aid[0];
             String other_brand = "奥迪";
             String customer_num = "2";
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 
             JSONObject data = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
             String appointment_id = data.getString("appointment_id");
@@ -852,7 +852,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变");
 
 
@@ -872,7 +872,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long arcile_id = aid[0];
             String other_brand = "奥迪";
             String customer_num = "2";
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 
             crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
             crm.login(adminname, adminpassword);
@@ -886,7 +886,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long[] aid2 = pf.createAArcile_id(dt.getHistoryDate(0), "9");
             Long activity_id2 = aid2[1];
             Long arcile_id2 = aid2[0];
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             int code = crm.joinActivityCode(Long.toString(activity_id2), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model).getInteger("code");
             crm.login(pp.zongjingli, pp.adminpassword);
             //移除黑名单
@@ -900,7 +900,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("黑名单用户不能报名活动");
 
         }
@@ -925,7 +925,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("applet看车和pc商品管理车辆列表数量一致");
         }
     }
@@ -948,20 +948,20 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             //预约
             sleep(3);
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             Long id2 = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), car_type, car_model).getLong("appointment_id");
 
             crm.login(pp.zongjingli, pp.adminpassword);
             int num2 = crm.appointmentpage(1, 10).getJSONArray("list").getJSONObject(0).getInteger("order_number");
 
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             crm.cancle(id);
             crm.cancle(id2);
             checkArgument((num2 - num) == 1, "预约试驾pc预约次数没+1");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("预约试驾pc预约次数+1");
         }
     }
@@ -1011,7 +1011,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             //参加活动，报名人数统计
             String other_brand = "奥迪";
             String customer_num = "2";
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data1 = crm.joinActivity(Long.toString(activity_id), customer_name, customer_phone_number, appointment_date, car_type, other_brand, customer_num, car_model);
             Long total2 = crm.appointmentList(0L, type, 20).getLong("total");
 
@@ -1022,7 +1022,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("预约活动，我的活动消息+1");
         }
     }
@@ -1172,7 +1172,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
             Long article_id = aid[0];
             //参加活动，报名人数统计
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String other_brand = "奥迪";
             String customer_num = "2";
             for (int i = 0; i < 3; i++) {
@@ -1193,7 +1193,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             saveData("报名取消三次后再报名失败");
         }
     }

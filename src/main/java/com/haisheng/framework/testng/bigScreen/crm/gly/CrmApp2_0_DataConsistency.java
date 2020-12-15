@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -631,7 +631,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public String[] repair(String date, Long carid, String ifreception) throws Exception {
         String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
         //小程序登陆
-        crm.appletLoginToken(EnumAppletCode.GLY.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_GLY_DAILY.getToken());
         //预约使用参数
         String appointment_time = "09:30";
         String description = "自动化故障说明" + System.currentTimeMillis();
@@ -654,7 +654,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public String[] maintain(String date, Long carid, String ifreception) throws Exception {
         String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
         //小程序登陆
-        crm.appletLoginToken(EnumAppletCode.GLY.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_GLY_DAILY.getToken());
         String appointment_time = "09:00";
         long timelist = crm.timeList("REPAIR", date).getJSONArray("list").getJSONObject(0).getLong("id");
         JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time, timelist);

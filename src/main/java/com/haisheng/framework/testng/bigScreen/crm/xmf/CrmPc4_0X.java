@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -130,12 +130,12 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             crm.carStyleEffect(id, true);
 
             //小程序原车系数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total = crm.carStyleList().getJSONArray("list").size();
             crm.login(pp.zongjingli, pp.adminpassword);
             crm.carStyleEffect(id, false);
 
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total2 = crm.carStyleList().getJSONArray("list").size();
             Preconditions.checkArgument(total - total2 == 1, "禁用车系，小程序车系列表没-1");
 
@@ -163,12 +163,12 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
             crm.carmodelEffect(id, true);
 
             //小程序原车系数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total = crm.carModelList(car_style).getJSONArray("list").size();
             crm.login(pp.zongjingli, pp.adminpassword);
             crm.carmodelEffect(id, false);
 
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total2 = crm.carModelList(car_style).getJSONArray("list").size();
             Preconditions.checkArgument(total - total2 == 1, "禁用车型，小程序车型列表没-1");
 

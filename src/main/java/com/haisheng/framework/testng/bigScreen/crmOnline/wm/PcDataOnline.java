@@ -425,7 +425,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             int appointmentMend = 0;
             int appointmentMaintain = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletCode.WM.getWeChatId())) {
+                if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletToken.BSJ_WM_DAILY.getWechatId())) {
                     appointmentTestDriver = list.getJSONObject(i).getInteger("appointment_test_driver");
                     appointmentMaintain = list.getJSONObject(i).getInteger("appointment_maintain");
                     appointmentMend = list.getJSONObject(i).getInteger("appointment_mend");

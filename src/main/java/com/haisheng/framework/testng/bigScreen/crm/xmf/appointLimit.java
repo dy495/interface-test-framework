@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -81,8 +81,8 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("crm: " + crm);
 //        crm.login(adminname, adminpassword);
-//        crm.appletLoginToken(EnumAppletCode.XMF.getCode());
-        crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
+        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 
     }
 
@@ -112,7 +112,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public String[] maintainP(String date, Long carid, String ifreception) throws Exception {
         String[] a = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
         //小程序登陆
-        crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 
         String appointment_time = "09:00";
         long timelist = pf.appointmentTimeList("MAINTAIN", 1, date);
@@ -206,7 +206,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             String apptotalListA = appListA.getString("total");
 
             //2.预约试驾
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 
             String appointment_time = "09:00";
             long timelist = pf.appointmentTimeListO("MAINTAIN", appointment_date).getLong("time_id");
@@ -283,7 +283,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             saveData("预约保养成功后，pc和app预约试驾信息校验");
         }
     }
@@ -353,7 +353,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
             JSONObject appListA = crm.repairAppointmentlist();
             String apptotalListA = appListA.getString("total");
             //2.预约试驾
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 
             String description = "故障说明";
             JSONObject dd = pf.appointmentTimeListO("MAINTAIN", appointment_date);
@@ -398,7 +398,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
 //            String service_status_nameapp = appdataList.getString("service_status_name");
 //            String phone_appointmentapp = appdataList.getString("phone_appointment");
 //            Long appoint_id=data.getLong("appointment_id");
-//            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+//            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 //            crm.cancle(appoint_id);
 
             checkArgument(customer_namepc.equals(customer_name), "pc预约试驾客户名异常");
@@ -475,7 +475,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
                 }
             }
             checkArgument((num2 - num) == 1, "接待完成，接待次数没+1");
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 //            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
             int score = 4;
             JSONObject ll = new JSONObject();
@@ -519,7 +519,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String appointment_date = dt.getHistoryDate(3);
-            crm.appletLoginToken(EnumAppletCode.WM.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_WM_DAILY.getToken());
             String type = "MAINTAIN";
             String appointment_time = "11:00";
             int i = 0;     //预约时段下标
