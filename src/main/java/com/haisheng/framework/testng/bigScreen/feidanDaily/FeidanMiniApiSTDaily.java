@@ -29,7 +29,7 @@ public class FeidanMiniApiSTDaily {
     public String response = "";
     public boolean FAIL = false;
     public Case aCase = new Case();
-
+    String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
@@ -1130,7 +1130,7 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/newCustomerFile";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/newCustomerFile";
             dirPath = dirPath.replace("/", File.separator);
             File file = new File(dirPath);
             File[] files = file.listFiles();
@@ -1247,10 +1247,7 @@ public class FeidanMiniApiSTDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
-
-            String imagePath = dirPath + "/" + "Cris.jpg";
+            String imagePath = dirPath + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = feidan.uploadImage(imagePath, "shopStaff");
             String phoneNum = feidan.genPhoneNum();
@@ -1311,9 +1308,8 @@ public class FeidanMiniApiSTDaily {
             feidan.checkAdviserList(staffName, phoneNum, false);
 
 //            编辑
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String imagePath = dirPath + "/" + "Cris.jpg";
+            String imagePath = dirPath + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = feidan.uploadImage(imagePath, "shopStaff");
 
@@ -1447,9 +1443,9 @@ public class FeidanMiniApiSTDaily {
             feidan.checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, false);
 
 //            编辑
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String imagePath = dirPath + "/" + "Cris.jpg";
+
+            String imagePath = dirPath + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = feidan.uploadImage(imagePath, "channelStaff");
 
@@ -1672,7 +1668,7 @@ public class FeidanMiniApiSTDaily {
 //            faceBinary = stringUtil.trimStr(faceBinary);
 
 
-            String faceBinary =readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/facce");
+            String faceBinary = readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/facce");
             String ocrPicUpload = feidan.ocrPicUpload(token, readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"), readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"));
             feidan.checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
@@ -1737,13 +1733,13 @@ public class FeidanMiniApiSTDaily {
         String lineTxt = null;
         try {
             File file = new File(filePath);
-            if(file.isFile() && file.exists()) {
+            if (file.isFile() && file.exists()) {
                 InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
                 BufferedReader br = new BufferedReader(isr);
 
                 while ((lineTxt = br.readLine()) != null) {
 //                    System.out.println(lineTxt);
-                    return  lineTxt;
+                    return lineTxt;
                 }
                 br.close();
             } else {
@@ -1753,7 +1749,7 @@ public class FeidanMiniApiSTDaily {
         } catch (Exception e) {
             System.out.println("文件读取错误!");
         }
-        return  lineTxt;
+        return lineTxt;
     }
 
     @Test(dataProvider = "ORDER_LIST_CHECK")

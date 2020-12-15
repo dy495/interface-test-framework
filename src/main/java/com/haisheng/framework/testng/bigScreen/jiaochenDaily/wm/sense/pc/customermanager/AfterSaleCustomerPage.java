@@ -1,0 +1,37 @@
+package com.haisheng.framework.testng.bigScreen.jiaochenDaily.wm.sense.pc.customermanager;
+
+import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crmDaily.wm.scene.BaseScene;
+import lombok.Builder;
+
+/**
+ * 客户管理 -> 售后客户列表
+ */
+@Builder
+public class AfterSaleCustomerPage extends BaseScene {
+    private final String customerName;
+    private final String customerPhone;
+    private final String createDate;
+    private final String vehicleChassisCode;
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
+
+    @Override
+    public JSONObject getJSONObject() {
+        JSONObject object = new JSONObject();
+        object.put("customer_name", customerName);
+        object.put("customer_phone", customerPhone);
+        object.put("create_date", createDate);
+        object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("page", page);
+        object.put("size", size);
+        return object;
+    }
+
+    @Override
+    public String getPath() {
+        return "/jiaochen/pc/customer-manage/after-sale-customer/page";
+    }
+}

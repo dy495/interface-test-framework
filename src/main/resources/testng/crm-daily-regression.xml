@@ -9,29 +9,28 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
 
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.lxq.CrmCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.lxq.CrmSystemCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.CrmAppletCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.CrmPcTwoSystemCase"></class>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.CrmQt"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.AppSystem"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.PcSystem"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.AppData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.PcData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.PcDataPage"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.wm.AfterSale"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.wm.MarketingManage"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.Crm2_1AppX"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.gly.CrmApp2_0_DataConsistency"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.gly.Crm_AfterSale"></class>
 
 
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"></class>
-
-
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.lxq.SystemCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.emunListCheckNotNull"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.JcPc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.JcApp"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.JcApplet"></class>
 
 
         </classes>

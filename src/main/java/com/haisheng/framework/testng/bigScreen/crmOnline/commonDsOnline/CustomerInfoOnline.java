@@ -31,8 +31,8 @@ public class CustomerInfoOnline {
 
     //交车照片
     public final FileUtil fileUtil = new FileUtil();
-    public final String picurl = fileUtil.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg");
-    public final String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg";
+    public final String picurl = fileUtil.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/crmDaily/multimedia/dailyImages/2019-10-22_1.jpg");
+    public final String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/crmDaily/multimedia/dailyImages/2019-10-22_1.jpg";
 
 
 }

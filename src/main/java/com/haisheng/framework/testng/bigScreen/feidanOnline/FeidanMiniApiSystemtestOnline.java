@@ -51,6 +51,7 @@ import java.util.Random;
 
 public class FeidanMiniApiSystemtestOnline {
     StringUtil stringUtil = new StringUtil();
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -138,7 +139,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/李婷婷.jpg";
+            String path = filePath + "李婷婷.jpg";
             System.out.println(imageUpload(path).getJSONObject("data"));
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
@@ -171,7 +172,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png";
+            String path = filePath + "猫.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -202,12 +203,12 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt";
+            String path = filePath + "人脸搜索.txt";
             JSONObject response = imageUpload(path);
             System.out.println(response);
             String message = response.getString("message");
             int code = response.getInteger("code");
-            Preconditions.checkArgument(code == 1001, "状态码不正确，期待1001，实际"+ code);
+            Preconditions.checkArgument(code == 1001, "状态码不正确，期待1001，实际" + code);
             Preconditions.checkArgument(message.equals("请上传png/jpg格式的图片"), "未提示：请上传png/jpg格式的图片");
 
         } catch (AssertionError e) {
@@ -232,7 +233,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png";
+            String path = filePath + "分辨率较低.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -265,7 +266,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png";
+            String path = filePath + "风景.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -301,7 +302,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/单人遮挡.png";
+            String path = filePath + "单人遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -338,7 +339,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         String caseName = ciCaseName;
         try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/90度旋转.png";
+            String path = filePath + "90度旋转.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -373,7 +374,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多张人脸不遮挡.png";
+            String path = filePath + "多张人脸不遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -382,7 +383,7 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(trace);
             int code = trace.getInteger("code");
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际"+ code); //判断状态码是否成功
+            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际" + code); //判断状态码是否成功
 //            if (list.size() == 0) {
 //                String message = trace.getString("message");
 //                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
@@ -411,7 +412,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多人脸仅一位不遮挡.png";
+            String path = filePath + "多人脸仅一位不遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -420,7 +421,7 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(trace);
             int code = trace.getInteger("code");
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际"+ code); //判断状态码是否成功
+            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际" + code); //判断状态码是否成功
 //            if (list.size() == 0) {
 //                String message = trace.getString("message");
 //                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
@@ -2167,7 +2168,7 @@ public class FeidanMiniApiSystemtestOnline {
     public String getIpPort() {
         return "http://store.winsenseos.com";
     }
-    
+
 
     public void initHttpConfig() {
         HttpClient client;

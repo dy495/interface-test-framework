@@ -8,8 +8,8 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.MenjinSoftwareSystemDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.MenjinDataConsistencyDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.menjinDaily.MenjinSoftwareSystemDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.menjinDaily.MenjinDataConsistencyDaily"></class>
 
 
 

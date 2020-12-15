@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.YuexiuRecognitionRatioDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.yuexiuDaily.YuexiuRecognitionRatioDaily"></class>
         </classes>
     </test>
 

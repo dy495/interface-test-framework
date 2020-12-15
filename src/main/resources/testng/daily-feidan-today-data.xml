@@ -9,7 +9,7 @@
     <test name="online-monitor" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiToday24BDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmStatistics"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.lxq.CrmStatistics"></class>
         </classes>
     </test>
 </suite>

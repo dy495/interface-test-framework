@@ -1674,9 +1674,9 @@ public class Feidan {
 
     public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
 
-        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.txt";
+        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.txt";
         txtPath = txtPath.replace("/", File.separator);
-        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.pdf";
         pdfPath = pdfPath.replace("/", File.separator);
 
         String pdfUrl = reportCreate(orderId).getString("file_url");
@@ -1915,7 +1915,7 @@ public class Feidan {
 
     public void downLoadPdf(String pdfUrl) throws IOException {
 
-        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.pdf";
 
         URL url = new URL(pdfUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
