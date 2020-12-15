@@ -2,8 +2,8 @@ package com.haisheng.framework.testng.bigScreen.crm.commonDs;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
@@ -24,7 +24,7 @@ public class PackFunction {
         return num;
     }
 
-    public String getname(JSONArray userlist,String sale_id){
+    public String getname(JSONArray userlist, String sale_id) {
         String userLoginName = "";
         for (int i = 0; i < userlist.size(); i++) {
             JSONObject obj = userlist.getJSONObject(i);
@@ -35,13 +35,14 @@ public class PackFunction {
         }
         return userLoginName;
     }
+
     public String username(String sale_id) throws Exception {
         String userLoginName = "";
         JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
-        userLoginName=getname(userlist,sale_id);
-        if(userLoginName.equals("")){
+        userLoginName = getname(userlist, sale_id);
+        if (userLoginName.equals("")) {
             JSONArray userlist2 = crm.userPage(2, 100).getJSONArray("list");
-            userLoginName=getname(userlist2,sale_id);
+            userLoginName = getname(userlist2, sale_id);
         }
         return userLoginName;
     }
@@ -235,7 +236,7 @@ public class PackFunction {
         Long customer_id = data.getLong("customer_id");
         String belongs_sale_id = data.getString("belongs_sale_id");
         String userLoginName = username(belongs_sale_id);
-        if(customer_id!=null) {
+        if (customer_id != null) {
             crm.receptionOld(customer_id, "AGAIN_VISIT");
             //销售登陆，获取当前接待id
             crm.login(userLoginName, pp.adminpassword);
@@ -248,7 +249,7 @@ public class PackFunction {
                 customerId = dataC.getJSONObject(i).getLong("customer_id");
                 receiptId = dataC.getJSONObject(i).getLong("id");
                 String customer_phone = dataC.getJSONObject(i).getString("customer_phone");
-                if (customer_phone.equals(phone)){
+                if (customer_phone.equals(phone)) {
                     break;
                 }
             }
@@ -260,19 +261,20 @@ public class PackFunction {
             jsonCO.put("sale_id", belongs_sale_id);
             jsonCO.put("reception_id", receiptId);
             jsonCO.put("phoneList", PhoneList);
-        }else {
-            jsonCO=creatCust2(phone);
+        } else {
+            jsonCO = creatCust2(phone);
         }
         return jsonCO;
     }
+
     //获取试驾车系名
-    public String getdrivercarStyleName(Long carId){
-        String CarStyleName="";
-        JSONArray list=crm.driverCarList().getJSONArray("list");
-        for(int i=0;i<list.size();i++){
-            CarStyleName=list.getJSONObject(i).getString("car_style_name");
-            Long id=list.getJSONObject(i).getLong("test_car_id");
-            if(id.equals(carId)){
+    public String getdrivercarStyleName(Long carId) {
+        String CarStyleName = "";
+        JSONArray list = crm.driverCarList().getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            CarStyleName = list.getJSONObject(i).getString("car_style_name");
+            Long id = list.getJSONObject(i).getLong("test_car_id");
+            if (id.equals(carId)) {
                 break;
             }
         }
@@ -325,7 +327,7 @@ public class PackFunction {
 
     //老客试驾完成接待---for评价
     public Long driverEva() throws Exception {
-        crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
         JSONObject data = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), pp.car_type, pp.car_model);
         //预约试驾成功后，页面显示数据
         Long appointment_id = data.getLong("appointment_id");
@@ -527,54 +529,54 @@ public class PackFunction {
     }
 
     //创建用户返回用户id
-    public String createUserId(String userName,int roleId)throws Exception{
-        crm.login(pp.zongjingli,pp.superpassword);
+    public String createUserId(String userName, int roleId) throws Exception {
+        crm.login(pp.zongjingli, pp.superpassword);
         //创建销售/顾问
-        String phone=genPhoneNum();
+        String phone = genPhoneNum();
 
 
-        JSONObject data1=crm.userPage(1,100);
-        int total=data1.getInteger("total");
+        JSONObject data1 = crm.userPage(1, 100);
+        int total = data1.getInteger("total");
         JSONArray list;
-        if(total==200){
-           throw new Exception("用户数量已达上线，case运行终止");
+        if (total == 200) {
+            throw new Exception("用户数量已达上线，case运行终止");
+        } else if (total < 100) {
+            crm.addUser(userName, userName, phone, pp.adminpassword, roleId, "", "");
+            list = crm.userPage(1, 100).getJSONArray("list");
+        } else {
+            crm.addUser(userName, userName, phone, pp.adminpassword, roleId, "", "");
+            list = crm.userPage(2, 100).getJSONArray("list");
         }
-        else if(total<100){
-            crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
-            list = crm.userPage(1,100).getJSONArray("list");
-        }else{
-            crm.addUser(userName,userName, phone,pp.adminpassword,roleId,"","");
-            list=crm.userPage(2,100).getJSONArray("list");
-        }
-        String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+        String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
         return userid;
     }
 
     //返回前台人脸数
-    public int [] qtcustomer(JSONArray list){
-        int num[]=new int [2];
-        for(int i=0;i<list.size();i++){
-            String customer_identity_name=list.getJSONObject(i).getString("customer_identity_name");
-            if(customer_identity_name.equals("新客")){
+    public int[] qtcustomer(JSONArray list) {
+        int num[] = new int[2];
+        for (int i = 0; i < list.size(); i++) {
+            String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
+            if (customer_identity_name.equals("新客")) {
                 num[0]++;
-            }else {
-                num[1]++;}
+            } else {
+                num[1]++;
+            }
         }
         return num;
     }
 
     //返回人脸列表客户信息
-    public JSONObject customermess(JSONArray list,String type){
-        JSONObject date=new JSONObject();
-        String analysis_customer_id="";
-        String customer_id="";
-        for(int i=0;i<list.size();i++) {
+    public JSONObject customermess(JSONArray list, String type) {
+        JSONObject date = new JSONObject();
+        String analysis_customer_id = "";
+        String customer_id = "";
+        for (int i = 0; i < list.size(); i++) {
             String customer_identity_name = list.getJSONObject(i).getString("customer_identity_name");
             if (customer_identity_name.equals(type)) {
-                analysis_customer_id=list.getJSONObject(i).getString("analysis_customer_id");
-                customer_id=list.getJSONObject(i).getString("customer_id");
-                date.put("analysis_customer_id",analysis_customer_id);
-                date.put("customer_id",customer_id);
+                analysis_customer_id = list.getJSONObject(i).getString("analysis_customer_id");
+                customer_id = list.getJSONObject(i).getString("customer_id");
+                date.put("analysis_customer_id", analysis_customer_id);
+                date.put("customer_id", customer_id);
                 break;
             }
         }

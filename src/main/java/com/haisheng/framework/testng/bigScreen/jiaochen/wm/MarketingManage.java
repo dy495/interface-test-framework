@@ -607,27 +607,26 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            login.login(administrator);
             JSONArray voucherList = util.getVoucherList(1);
             String voucherName = voucherList.getJSONObject(0).getString("voucher_name");
             IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
             long cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //购买临时套餐
             String platNumber = util.getPlatNumber(marketing.getPhone());
-            if (!platNumber.equals(EnumStatus.FALSE.getStatus())) {
-                IScene temporaryScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                jc.invokeApi(temporaryScene);
-                //确认支付
-                util.makeSureBuyPackage("临时套餐");
-                //购买后累计发出
-                long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
-                CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery);
-                Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1,
-                        voucherName + "累计发出数：" + CommonUtil.errMessage(cumulativeDelivery + 1, newCumulativeDelivery));
-            }
+            IScene temporaryScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
+                    .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
+                    .extendedInsuranceCopies("1").type(1).build();
+            jc.invokeApi(temporaryScene);
+            //确认支付
+            util.makeSureBuyPackage("临时套餐");
+            //购买后累计发出
+            long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
+            CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery);
+            Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1,
+                    voucherName + "累计发出数：" + CommonUtil.errMessage(cumulativeDelivery + 1, newCumulativeDelivery));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

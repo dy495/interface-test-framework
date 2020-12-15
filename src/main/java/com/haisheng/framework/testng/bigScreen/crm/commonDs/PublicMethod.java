@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -284,7 +285,7 @@ public class PublicMethod {
      */
     public void appointment(EnumAppointmentType type, String date) {
         EnumCarModel carModel = EnumCarModel.PANAMERA;
-        UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
         String carId = String.valueOf(getCarId());
         int id = getTimeId(type.getType(), date);
         IScene scene;

@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
@@ -664,7 +665,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //取消试驾
-            UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);
@@ -1553,7 +1554,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
      * @return 时间id
      */
     private Integer getTimeId(String date) {
-        UserUtil.loginApplet(EnumAppletCode.WM_SMALL);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
         JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {
@@ -1567,7 +1568,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
      * 获取车辆id
      */
     private Integer getCarId() {
-        UserUtil.loginApplet(EnumAppletCode.XMF);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_XMF_DAILY);
         JSONArray list = crm.myCarList().getJSONArray("list");
         if (!list.isEmpty()) {
             return list.getJSONObject(0).getInteger("my_car_id");

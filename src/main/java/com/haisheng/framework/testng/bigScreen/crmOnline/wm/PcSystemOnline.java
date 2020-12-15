@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -399,7 +399,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前可见消息
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -409,7 +409,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后不可见消息
-            UserUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_ONLINE);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -443,7 +443,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前不可见消息
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -453,7 +453,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后可见消息
-            UserUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_ONLINE);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -487,7 +487,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             int id = response.getInteger("id");
             sleep(80);
             //登陆小程序-售前可见消息
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 if (list.getJSONObject(i).getString("title").equals(title)
@@ -497,7 +497,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //登陆小程序-售后可见消息
-            UserUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_ONLINE);
             JSONArray list1 = crm.wechatMessageList("", 20).getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 if (list1.getJSONObject(i).getString("title").equals(title)
@@ -547,7 +547,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -578,7 +578,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -609,7 +609,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response = crm.messageAdd("", "", "", sendDate, title, content, appointmentType, "", "PRE_SALES", "AFTER_SALES");
             int messageId = response.getInteger("id");
             sleep(80);
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONArray list = crm.wechatMessageList("", 20).getJSONArray("list");
             int id = 0;
             for (int i = 0; i < list.size(); i++) {

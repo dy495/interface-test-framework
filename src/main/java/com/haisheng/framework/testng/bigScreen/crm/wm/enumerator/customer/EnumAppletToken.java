@@ -20,16 +20,18 @@ public enum EnumAppletToken {
 
     BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cw4sTi87+ZWGuDqdsfZXSA==", "@@@", false),
 
-    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "nDQrQZlv4wGTNvNy7Qy78Q==", "w", false),
+    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "TIMWRzr8Z90Z1irPhNtklQ==", "w", false),
 
-    BAJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "e7KgTxVJJTGokmjSk2exQA==", "纯牛奶", false),
+    BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "dtp9Ydtr21uRLuK4+H7XgQ==", "纯牛奶", false),
 
     JC_WM_DAILY(EnumProduce.JC.name(), "Bjqq43gwyVsmUWYOi+AW5w==", "", true),
 
     JC_WM_ONLINE(EnumProduce.JC.name(), "FzYbYDjtpl1OaSUnw8YjsA==", "", false),
 
     JC_XMF_DAILY(EnumProduce.JC.name(), "3QQYlO1DtjV5mwp2hP/cwg==", "", false),
-    JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false),;
+    JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false),
+    ;
+
     EnumAppletToken(String produce, String token, String wechatName, boolean isDaily) {
         this.produce = produce;
         this.token = token;

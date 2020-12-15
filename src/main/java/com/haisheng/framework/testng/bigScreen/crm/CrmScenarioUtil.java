@@ -4659,18 +4659,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
-    //小程序token
-    @DataProvider(name = "APPLET_TOKENS")
-    public static Object[] appletTokens() {
-        return new String[]{
-                EnumAppletCode.XMF.getCode(),
-                EnumAppletCode.WM.getCode(),
-//                EnumAppletCode.WM_SMALL.getCode(),
-                EnumAppletCode.GLY.getCode()
-        };
-    }
-
-
     @DataProvider(name = "car")
     public static Object[] car() {
         return new String[]{

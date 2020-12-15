@@ -93,13 +93,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void bsj_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.PORSCHE_ONLINE.getShopId();
+            commonConfig.shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
+            commonConfig.referer = EnumRefer.PORSCHE_REFERER_ONLINE.getRefer();
             String date = DateTimeUtil.addDayFormat(new Date(), 100);
             String customerName = "自动化";
             String customerPhoneNumber = "15037296015";
             IScene scene = AppointmentTestDriverScene.builder().customerGender("MALE").customerName(customerName)
-                    .customerPhoneNumber(customerPhoneNumber).appointmentDate(date).carModel(36).carStyle(1).build();
+                    .customerPhoneNumber(customerPhoneNumber).appointmentDate(date).carModel(81).carStyle(1).build();
             crmOnline.appletLoginToken(token);
             JSONObject response = crmOnline.invokeApi(scene, false);
             int code = response.getInteger("code");
@@ -159,7 +160,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] bsj_appletTokens_online() {
         return new String[]{
                 EnumAppletToken.BSJ_WM_ONLINE.getToken(),
-                EnumAppletToken.BAJ_WM_SMALL_ONLINE.getToken(),
+                EnumAppletToken.BSJ_WM_SMALL_ONLINE.getToken(),
                 EnumAppletToken.BSJ_XMF_ONLINE.getToken(),
         };
     }

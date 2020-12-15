@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -224,7 +225,7 @@ public class PublicMethodOnline {
      */
     public void appointment(EnumAppointmentType type, String date) {
         EnumCarModel carModel = EnumCarModel.PANAMERA;
-        UserUtil.loginApplet(EnumAppletCode.WM_ONLINE);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
         int id = getTimeId(type.getType(), date);
         IScene scene;
         switch (type) {
