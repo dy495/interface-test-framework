@@ -1819,7 +1819,6 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("customer_phone", variable.customer_phone);
         json.put("create_date", variable.create_date);
         json.put("sale_name", variable.sale_name);
-        json.put("customer_type", variable.customer_type);
 
         return invokeApi(url, json);
     }
@@ -1884,8 +1883,8 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("shopId", variable.shop_id);
         json.put("page", variable.page);
         json.put("size", variable.size);
-        json.put("create_date", variable.create_date);
-        json.put("active_type", variable.active_type);
+        json.put("create_date", variable.end_time);
+        json.put("active_type", variable.start_time);
         json.put("customer_phone", variable.customer_phone);
 
         return invokeApi(url, json);
@@ -1923,10 +1922,9 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("customer_manager", variable.customer_manager);
         json.put("shop_id", variable.shop_id);
         json.put("customer_name", variable.customer_name);
-        json.put("appointment_status", variable.appointment_status);
+        json.put("appointment_status", variable.confirm_status);
         json.put("customer_phone", variable.customer_phone);
         json.put("is_overtime", variable.is_overtime);
-        json.put("confirm_time", variable.confirm_time);
 
         return invokeApi(url, json);
     }
@@ -2173,8 +2171,8 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("package_name", variable.package_name);
         json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-        json.put("end_time", variable.end_time);
+//        json.put("start_time", variable.start_time);
+//        json.put("end_time", variable.end_time);
         json.put("send_type", variable.send_type);
         json.put("page", variable.page);
         json.put("size", variable.size);
@@ -2351,11 +2349,10 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("size", variable.size);
         json.put("name", variable.name);
         json.put("send_time", variable.send_time);
-        json.put("apply_name", variable.apply_time);
+        json.put("start_time", variable.start_time);
         json.put("status", variable.status);
         json.put("apply_group", variable.apply_group);
-        json.put("cost_center", variable.cost_center);
-        json.put("apply_time", variable.apply_time);
+        json.put("end_time", variable.end_time);
         json.put("apply_item", variable.send_time);
         return invokeApi(url, json);
     }
