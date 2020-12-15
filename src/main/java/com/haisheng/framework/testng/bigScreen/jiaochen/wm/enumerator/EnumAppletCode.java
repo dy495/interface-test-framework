@@ -8,8 +8,11 @@ import lombok.Getter;
 public enum EnumAppletCode {
 
     WM("Y10XjV7RMJjhjHdbCGH9WA==", true),
+    XMF("3QQYlO1DtjV5mwp2hP/cwg==", true),
 
-    WM_ONLINE("", false);
+    WM_ONLINE("", true),
+    XMF_ONLINE("zu+0zdqBw70D0R9WQK9C+A==", false);
+
 
 
     EnumAppletCode(String token, boolean isDaily) {

@@ -3,8 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -19,7 +21,7 @@ import java.util.Random;
 
 public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = new ScenarioUtil();
+    ScenarioUtilOnline jc = new ScenarioUtilOnline();
 
 
     /**
@@ -85,7 +87,7 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                "jROudlJNRgLHQ0UH8ESIdg==",   //xmf
+                EnumAppletCode.XMF_ONLINE.getToken(),   //xmf
         };
     }
     @Test(dataProvider = "APPLET_TOKENS")
