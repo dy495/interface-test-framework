@@ -8,10 +8,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.customer.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumShopId;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -3593,13 +3593,13 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     /**
      * @param comment             回访记录
-     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.sale.EnumFailureCause}
+     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailureCause}
      * @param failureCauseRemark  战败备注
      * @param ifSystemRecommend   是否系统推荐
      * @param nextReturnVisitDate 下次回访日期
-     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.customer.EnumCarModel}
+     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel}
      * @param preBuyCarTime       预计购车时间
-     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.sale.EnumReturnVisitResult}
+     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult}
      * @param taskId              任务id
      * @param returnVisitPic      回访图片
      */
@@ -4588,12 +4588,11 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
     @DataProvider(name = "NO_FACE")
     public static Object[] noFace() {
-        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
         return new String[]{
-                filePath + "猫.png",
-                filePath + "分辨率较低.png",
-                filePath + "人脸搜索.txt",
-                filePath + "风景.png"
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png"
         };
     }
 

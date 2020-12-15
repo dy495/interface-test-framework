@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumShopId;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
@@ -167,7 +167,7 @@ public class CrmAPPOnline extends TestCaseCommon implements TestCaseStd {
             Long recordid = crm.returnVisitRecordAfterSalePage(1, 1, "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             //添加回访
-            String return_visit_pic = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/menjinDaily/MenjinImages/分辨率较低.png");
+            String return_visit_pic = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png");
             String next_return_visit_time = dt.getHistoryDate(1);
             for (int i = 1; i < 25; i++) {
                 String comment = dt.getHistoryDate(0) + "1Z！@#自动化回访" + i;

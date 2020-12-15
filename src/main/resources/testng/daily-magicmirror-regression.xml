@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.menjinDaily.MagicMirrorApiDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.MagicMirrorApiDaily"></class>
         </classes>
     </test>
 

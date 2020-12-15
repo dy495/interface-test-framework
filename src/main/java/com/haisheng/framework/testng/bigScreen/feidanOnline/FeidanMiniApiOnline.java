@@ -62,7 +62,7 @@ public class FeidanMiniApiOnline {
     public QADbUtil qaDbUtil = new QADbUtil();
     public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
-    String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
+
     public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
 
     public String DEBUG = System.getProperty("DEBUG", "true");
@@ -841,7 +841,7 @@ public class FeidanMiniApiOnline {
 
         try {
 
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/newCustomerFile";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/newCustomerFile";
             dirPath = dirPath.replace("/", File.separator);
             File file = new File(dirPath);
             File[] files = file.listFiles();
@@ -1018,13 +1018,13 @@ public class FeidanMiniApiOnline {
         String lineTxt = null;
         try {
             File file = new File(filePath);
-            if (file.isFile() && file.exists()) {
+            if(file.isFile() && file.exists()) {
                 InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
                 BufferedReader br = new BufferedReader(isr);
 
                 while ((lineTxt = br.readLine()) != null) {
 //                    System.out.println(lineTxt);
-                    return lineTxt;
+                    return  lineTxt;
                 }
                 br.close();
             } else {
@@ -1034,7 +1034,7 @@ public class FeidanMiniApiOnline {
         } catch (Exception e) {
             System.out.println("文件读取错误!");
         }
-        return lineTxt;
+        return  lineTxt;
     }
 
     @Test(dataProvider = "BAD_CHANNEL_STAFF")
@@ -1108,8 +1108,9 @@ public class FeidanMiniApiOnline {
 
         try {
 
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String imagePath = dirPath + "Cris.jpg";
+            String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = uploadImage(imagePath, "shopStaff");
             String phoneNum = genPhoneNum();
@@ -1170,8 +1171,9 @@ public class FeidanMiniApiOnline {
             checkAdviserList(staffName, phoneNum, false);
 
 //            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String imagePath = dirPath + "Cris.jpg";
+            String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = uploadImage(imagePath, "shopStaff");
 
@@ -1219,8 +1221,9 @@ public class FeidanMiniApiOnline {
             checkChannelStaffList(protectChannelIdStr, staffName, phoneNum, false);
 
 //            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String imagePath = dirPath + "Cris.jpg";
+            String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = uploadImage(imagePath, "channelStaff");
 
@@ -1615,7 +1618,7 @@ public class FeidanMiniApiOnline {
     }
 
 
-    // @Test
+       // @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -1757,9 +1760,9 @@ public class FeidanMiniApiOnline {
 
     public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
 
-        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.txt";
+        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.txt";
         txtPath = txtPath.replace("/", File.separator);
-        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.pdf";
+        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
         pdfPath = pdfPath.replace("/", File.separator);
 
         String pdfUrl = reportCreate(orderId).getString("file_url");
@@ -2145,7 +2148,7 @@ public class FeidanMiniApiOnline {
 
     public void downLoadPdf(String pdfUrl) throws IOException {
 
-        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/checkOrderFile/riskReport.pdf";
+        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
 
         URL url = new URL(pdfUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

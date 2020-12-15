@@ -53,7 +53,6 @@ public class FeidanMiniApiSystemtestDaily {
     //    -------------------------------------------------数据一致性验证-------------------------------------------------------------
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
-    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -143,7 +142,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            String path = filePath + "李婷婷.jpg";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/李婷婷.jpg";
             System.out.println(imageUpload(path).getJSONObject("data"));
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
@@ -176,7 +175,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         String caseName = ciCaseName;
         try {
-            String path = filePath + "猫.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -207,7 +206,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         String caseName = ciCaseName;
         try {
-            String path = filePath + "人脸搜索.txt";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt";
             JSONObject response = imageUpload(path);
             System.out.println(response);
             String message = response.getString("message");
@@ -236,7 +235,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         String caseName = ciCaseName;
         try {
-            String path = filePath + "分辨率较低.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -268,7 +267,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         String caseName = ciCaseName;
         try {
-            String path = filePath + "风景.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -303,7 +302,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            String path = filePath + "单人遮挡.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/单人遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -339,7 +338,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         String caseName = ciCaseName;
         try {
-            String path = filePath + "90度旋转.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/90度旋转.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
             String face = faceTraces(face_url_tmp);
@@ -373,7 +372,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            String path = filePath + "多张人脸不遮挡.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多张人脸不遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -411,7 +410,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            String path = filePath + "多人脸仅一位不遮挡.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多人脸仅一位不遮挡.png";
             JSONObject response = imageUpload(path).getJSONObject("data");
             System.out.println(response);
             String face_url_tmp = response.getString("face_url_tmp");
@@ -441,6 +440,7 @@ public class FeidanMiniApiSystemtestDaily {
     //---------------- 人脸搜索页面 end ---------------------
 
 
+
 //---------------- 活动页面 start -------------------------
 
     /**
@@ -452,7 +452,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "BRAND", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","BRAND","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -496,7 +496,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "CELEBRATION", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","CELEBRATION","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -540,7 +540,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "OTHER", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","OTHER","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -584,7 +584,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "PROMOTION", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","PROMOTION","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -628,7 +628,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "VIP", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","VIP","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -672,17 +672,17 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    String before_name = single.getString("activity_name").substring(0, 1);
+                    String before_name = single.getString("activity_name").substring(0,1);
                     int total2 = activityList(before_name, "", "", 1, 1).getInteger("total");//包含字符串的总活动数
-                    if (total2 > 0) {
+                    if (total2 > 0){
                         JSONArray list2 = activityList(before_name, "", "", 1, total2).getJSONArray("list");
-                        for (int k = 0; k < list2.size(); k++) {
+                        for (int k = 0; k < list2.size(); k ++){
                             JSONObject single2 = list2.getJSONObject(k);
                             Preconditions.checkArgument(single2.getString("activity_name").contains(before_name), "活动名称根据[" + before_name + "]进行筛选时，结果中包含活动: " + single2.getString("activity_name"));
                         }
@@ -709,18 +709,18 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
                     String name = single.getString("activity_name");
-                    String after_name = name.substring(name.length() - 1, name.length());
+                    String after_name = name.substring(name.length()-1,name.length());
                     int total2 = activityList(after_name, "", "", 1, 1).getInteger("total");//包含字符串的总活动数
-                    if (total2 > 0) {
+                    if (total2 > 0){
                         JSONArray list2 = activityList(after_name, "", "", 1, total2).getJSONArray("list");
-                        for (int k = 0; k < list2.size(); k++) {
+                        for (int k = 0; k < list2.size(); k ++){
                             JSONObject single2 = list2.getJSONObject(k);
                             Preconditions.checkArgument(single2.getString("activity_name").contains(after_name), "活动名称根据[" + after_name + "]进行筛选时，结果中包含活动: " + single2.getString("activity_name"));
                         }
@@ -747,7 +747,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
@@ -787,7 +787,7 @@ public class FeidanMiniApiSystemtestDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
+            int total = activityList("","","",1,1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
@@ -801,7 +801,7 @@ public class FeidanMiniApiSystemtestDaily {
                             JSONObject single2 = list2.getJSONObject(k);
                             String start = single2.getString("start_date");
                             String end = single2.getString("end_date");
-                            Preconditions.checkArgument(belongCalendar(strToDate(startdate), strToDate(start), strToDate(end)), "活动时间根据[" + startdate + "]进行筛选时，结果中包含活动: " + single.getString("activity_name"));
+                            Preconditions.checkArgument(belongCalendar(strToDate(startdate),strToDate(start),strToDate(end)), "活动时间根据[" + startdate + "]进行筛选时，结果中包含活动: " + single.getString("activity_name"));
                         }
                     }
 
@@ -817,6 +817,7 @@ public class FeidanMiniApiSystemtestDaily {
             saveData(aCase, ciCaseName, caseName, "校验：活动分析页面，验证根据[活动日期]进行筛选的结果准确\n");
         }
     }
+
 
 
 //---------------- 活动页面 end -------------------------
@@ -850,7 +851,7 @@ public class FeidanMiniApiSystemtestDaily {
             ImageUtil imageUtil = new ImageUtil();
             String imageBinary = imageUtil.getImageBinary(idCardPath);
             imageBinary = stringUtil.trimStr(imageBinary);
-            // String faceBinary = imageUtil.getImageBinary(facePath);
+           // String faceBinary = imageUtil.getImageBinary(facePath);
             //faceBinary = stringUtil.trimStr(faceBinary);
 
             //String ocrPicUpload = feidan.ocrPicUpload(token, imageBinary, faceBinary);
@@ -858,8 +859,8 @@ public class FeidanMiniApiSystemtestDaily {
             int returncode = ocrPicUpload.getInteger("code");
             String message = ocrPicUpload.getString("message");
             System.out.println(ocrPicUpload);
-            Preconditions.checkArgument(returncode == 1001, "实际状态码：" + returncode);
-            Preconditions.checkArgument(message.equals("人脸照片不可为空"), "实际提示语：" + message);
+            Preconditions.checkArgument(returncode==1001,"实际状态码：" + returncode);
+            Preconditions.checkArgument(message.equals("人脸照片不可为空"),"实际提示语：" + message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -897,7 +898,7 @@ public class FeidanMiniApiSystemtestDaily {
             String today = formatter.format(date);
 
             //获取渠道列表
-            JSONObject single = channelList(1, 1).getJSONArray("list").getJSONObject(0);
+            JSONObject single = channelList(1,1).getJSONArray("list").getJSONObject(0);
             String single_channel_name = single.getString("channel_name");
             String single_rule_name = single.getString("rule_name");
             String owner_principal = single.getString("owner_principal");
@@ -905,12 +906,14 @@ public class FeidanMiniApiSystemtestDaily {
             String total_customers = single.getString("total_customers");
             Long register_time = single.getLong("register_time"); //注册时间
             String showdate = getDateToString(register_time);
-            Preconditions.checkArgument(single_channel_name.equals(channelname), "新建时渠道名称为[" + channelname + "], 展示为[" + single_channel_name + "]");
-            Preconditions.checkArgument(single_rule_name.equals("默认规则"), "新建时规则名称为[默认规则], 展示为[" + single_rule_name + "]");
-            Preconditions.checkArgument(owner_principal.equals(channelname), "新建时主理人为[" + channelname + "], 展示为[" + owner_principal + "]");
-            Preconditions.checkArgument(single_phone.equals(phone), "新建时主理人手机号为[" + phone + "], 展示为[" + single_phone + "]");
-            Preconditions.checkArgument(showdate.equals(today), "新建时日期为[" + today + "], 展示为[" + showdate + "]");
-            Preconditions.checkArgument(total_customers.equals("0"), "累计报备顾客期待为0，实际为" + total_customers);
+            Preconditions.checkArgument(single_channel_name.equals(channelname),"新建时渠道名称为["+ channelname + "], 展示为[" + single_channel_name + "]");
+            Preconditions.checkArgument(single_rule_name.equals("默认规则"),"新建时规则名称为[默认规则], 展示为[" + single_rule_name + "]");
+            Preconditions.checkArgument(owner_principal.equals(channelname),"新建时主理人为["+ channelname + "], 展示为[" + owner_principal + "]");
+            Preconditions.checkArgument(single_phone.equals(phone),"新建时主理人手机号为["+ phone + "], 展示为[" + single_phone + "]");
+            Preconditions.checkArgument(showdate.equals(today),"新建时日期为["+ today + "], 展示为[" + showdate + "]");
+            Preconditions.checkArgument(total_customers.equals("0"),"累计报备顾客期待为0，实际为"+ total_customers);
+
+
 
 
         } catch (AssertionError e) {
@@ -937,11 +940,11 @@ public class FeidanMiniApiSystemtestDaily {
         desc = desc + "\n期待状态码1001；期待提示顾客姓名不允许输入特殊字符\n";
 
         try {
-            JSONObject res = customerListnotcheck(1, 10, "!@#$%^&*()_+<>:{}");
+            JSONObject res = customerListnotcheck(1,10,"!@#$%^&*()_+<>:{}");
             String code = res.getString("code");
             String message = res.getString("message");
-            Preconditions.checkArgument(code.equals("1001"), "实际状态码：" + code);
-            Preconditions.checkArgument(message.equals("顾客姓名不允许输入特殊字符"), "实际提示语：" + message);
+            Preconditions.checkArgument(code.equals("1001"),"实际状态码：" + code);
+            Preconditions.checkArgument(message.equals("顾客姓名不允许输入特殊字符"),"实际提示语：" + message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -957,25 +960,25 @@ public class FeidanMiniApiSystemtestDaily {
 
     //设备列表
     @Test
-    public void devChk() {
+    public void devChk(){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
         try {
-            JSONObject obj = deviceList(1, 50);
+            JSONObject obj  = deviceList(1,50);
             int total = obj.getInteger("total");
             String name = "";
             String device_id = "";
             String status_name = "";
             JSONArray list = obj.getJSONArray("list");
-            for (int i = 0; i < total; i++) {
+            for (int i = 0; i < total;i++){
                 JSONObject newobj = list.getJSONObject(i);
                 name = newobj.getString("name");
                 device_id = newobj.getString("device_id");
                 status_name = newobj.getString("status_name");
-                Preconditions.checkArgument(status_name.equals("运行中"), "" + name + ", 设备id " + device_id + status_name);
+                Preconditions.checkArgument(status_name.equals("运行中"),"" + name + ", 设备id "+ device_id + status_name);
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1114,7 +1117,7 @@ public class FeidanMiniApiSystemtestDaily {
 
 
     /**
-     * 设备列表
+     *设备列表
      */
     public JSONObject deviceList(int page, int size) throws Exception {
         String url = "/risk/device/page";
@@ -1493,6 +1496,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
+
     /**
      * 今日全场累计客流
      */
@@ -1592,22 +1596,22 @@ public class FeidanMiniApiSystemtestDaily {
     /**
      * 活动列表
      */
-    public JSONObject activityList(String activity_name, String activity_type, String activity_date, int page, int pageSize) throws Exception {
+    public JSONObject activityList(String activity_name,String activity_type, String activity_date,int page, int pageSize) throws Exception {
         String url = "/risk/manage/activity/list";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n";
-        if (!activity_name.equals("")) {
+                        "    \"shop_id\":" + getShopId() + ",\n" ;
+        if (!activity_name.equals("")){
             json = json + "\"activity_name\":\"" + activity_name + "\",\n";
         }
-        if (!activity_type.equals("")) {
+        if (!activity_type.equals("")){
             json = json + "\"activity_type\":\"" + activity_type + "\",\n";
         }
-        if (!activity_date.equals("")) {
+        if (!activity_date.equals("")){
             json = json + "\"activity_date\":\"" + activity_date + "\",\n";
         }
-        json = json + "   \"page\":" + page + ",\n" +
-                "   \"size\":" + pageSize + "\n" + "}\n";
+        json = json+ "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + "\n" +"}\n";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -1822,7 +1826,6 @@ public class FeidanMiniApiSystemtestDaily {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
     //OCR 上传图片
     public JSONObject ocrPicUpload2(String token, String idCard, String face) throws Exception {
 
@@ -1945,6 +1948,7 @@ public class FeidanMiniApiSystemtestDaily {
         Random random = new Random();
         return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
     }
+
 
 
     public ArrayList unique(ArrayList obj) { //arraylist 去重
@@ -2083,6 +2087,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
+
     //@Test//报备
     public void H5WuDong1() throws Exception {
         String customerName = "昨报备今补全3";
@@ -2166,6 +2171,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json);
     }
+
 
 
     // --- V3.1.2 新增接口 2020.12.14
@@ -2357,6 +2363,11 @@ public class FeidanMiniApiSystemtestDaily {
 
 
 
+
+
+
+
+
     public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -2434,7 +2445,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     // 字符串 转 日期
-    public static Date strToDate(String str) {
+    public static Date strToDate(String str){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -2448,11 +2459,14 @@ public class FeidanMiniApiSystemtestDaily {
         Date d = new Date(time);
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         return sf.format(d);
-    }
+        }
 
-    // public static void main(String[] args) throws ParseException {// ---不用理我！
+   // public static void main(String[] args) throws ParseException {// ---不用理我！
 
     //}
+
+
+
 
 
 }

@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

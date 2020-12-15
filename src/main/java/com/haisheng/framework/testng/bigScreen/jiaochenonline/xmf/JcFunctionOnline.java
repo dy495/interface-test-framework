@@ -1,10 +1,12 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenOnline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.jiaochenDaily.gly.Variable.registerListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.intefer.appStartReception;
-import com.haisheng.framework.testng.bigScreen.jiaochenOnline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Random;

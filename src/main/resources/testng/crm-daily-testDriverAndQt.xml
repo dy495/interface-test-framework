@@ -8,8 +8,8 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.CrmQt"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crmDaily.xmf.testDriverCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.testDriverCase"></class>
         </classes>
     </test>
 </suite>

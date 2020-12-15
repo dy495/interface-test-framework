@@ -8,12 +8,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumShopId;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.customer.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crmDaily.xmf.interfaceDemo.deliverCar;
-import com.haisheng.framework.testng.bigScreen.crmDaily.xmf.interfaceDemo.destDriver;
-import com.haisheng.framework.testng.bigScreen.crmDaily.xmf.interfaceDemo.selectTest;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.orderCarOnline;
@@ -82,7 +80,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
     }
-
     /**
      * 小程序通用登录
      *
@@ -233,11 +230,11 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id, String name, JSONArray phone_list, String reception_type) throws Exception {
+    public JSONObject finishReception2(String belongs_sale_id, Long reception_id, Long customer_id ,String name, JSONArray phone_list, String reception_type) throws Exception {
 
-        JSONArray remark = new JSONArray();
-        JSONObject re = new JSONObject();
-        re.put("remark", "online-auto_remark_12345678901234567890");
+        JSONArray remark=new JSONArray();
+        JSONObject re=new JSONObject();
+        re.put("remark","online-auto_remark_12345678901234567890");
         remark.add(re);
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
@@ -1345,7 +1342,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         return result;
     }
-
     //删除试驾
     public JSONObject driverDel(long id) throws Exception {
         String url = "/porsche/daily-work/test-drive/delete";
@@ -1467,7 +1463,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
     //新建交车 2.1修改
     public JSONObject deliverAdd(Long car_id, Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Long model, String img_file,
                                  Boolean accept_show, String sign_name_url, String vehicle_chassis_code) {
@@ -1558,7 +1553,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         return result;
     }
-
     //删除交车
     public void deliverDelete(int id) throws Exception {
         String url = "/porsche/daily-work/deliver-car/delete";
@@ -1819,7 +1813,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String res = httpPost(url, object.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
-
     /**
      * 取消预约
      *
@@ -1862,7 +1855,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
-
     //预约维修
     public JSONObject appointmentRepaircode(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, String description, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/repair";
@@ -1879,7 +1871,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
     }
-
     //预约维修
     public JSONObject appointmentRepair(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, String description, Long time_range_id) throws Exception {
         String url = "/WeChat-applet/porsche/a/appointment/repair";
@@ -2380,12 +2371,11 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
     //pc文章详情
     public JSONObject artilceDetailpc(Long id) throws Exception {
         String url = "/porsche/article/detail/" + id;
-        JSONObject json = new JSONObject();
-        json.put("id", id);
+        JSONObject json=new JSONObject();
+        json.put("id",id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3652,13 +3642,13 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     /**
      * @param comment             回访记录
-     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.sale.EnumFailureCause}
+     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumFailureCause}
      * @param failureCauseRemark  战败备注
      * @param ifSystemRecommend   是否系统推荐
      * @param nextReturnVisitDate 下次回访日期
-     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.customer.EnumCarModel}
+     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel}
      * @param preBuyCarTime       预计购车时间
-     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.sale.EnumReturnVisitResult}
+     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturnVisitResult}
      * @param taskId              任务id
      * @param returnVisitPic      回访图片
      */
@@ -4557,12 +4547,11 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     @DataProvider(name = "NO_FACE")
     public static Object[] noFace() {
-        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/";
         return new String[]{
-                filePath + "猫.png",
-                filePath + "分辨率较低.png",
-                filePath + "人脸搜索.txt",
-                filePath + "风景.png"
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png"
         };
     }
 
@@ -5080,7 +5069,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String result = httpPost(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
     //购车
     public JSONObject addOrderCar1(orderCarOnline oc) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
@@ -5126,7 +5114,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
-
     //预约·试驾车列表
     public JSONObject testDriverList() {
         String url = "/porsche/test-drive-car/management/drop-down-list";
@@ -5193,7 +5180,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         };
     }
-
     @DataProvider(name = "PLATE")
     public static Object[] plate() {
         return new String[]{
@@ -5239,7 +5225,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         object.put("size", size);
         return invokeApi(url, object);
     }
-
     //app 到访记录查询
     public JSONObject visitList(String startTime, String endTime, String page, String size) {
         String url = "/porsche/app/sale-reception/visit-list";
@@ -5254,7 +5239,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         object.put("size", size);
         return invokeApi(url, object);
     }
-
     //app 非客查询
     public JSONArray nonCustomerList(String startTime, String endTime, String page, String size) {
         String url = "/porsche/app/customer/non_customer_list";
@@ -5267,10 +5251,9 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         object.put("page", page);
         object.put("size", size);
-        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
         return JSON.parseObject(result).getJSONArray("data");
     }
-
     //app 未接待离店查询
     public JSONArray nonReceptionList(String startTime, String endTime, String page, String size) {
         String url = "/porsche/app/customer/non_reception_list";
@@ -5283,7 +5266,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         object.put("page", page);
         object.put("size", size);
-        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
         return JSON.parseObject(result).getJSONArray("data");
     }
 
@@ -5293,10 +5276,9 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("reception_id", reception_id);
         object.put("sale_id", sale_id);
-        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
         return JSON.parseObject(result).getJSONArray("data");
     }
-
     public JSONArray nonReceptionList(selectTest ss) {
         String url = "/porsche/app/customer/non_reception_list";
         JSONObject object = new JSONObject();
@@ -5308,10 +5290,9 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
         object.put("page", ss.page);
         object.put("size", ss.size);
-        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        String result = httpPostWithCheckCode(url,object.toJSONString(),IpPort);
         return JSON.parseObject(result).getJSONArray("data");
     }
-
     public JSONObject finishReception3(finishReceiveOnline pm) throws Exception {
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();

@@ -1,19 +1,22 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenOnline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crmDaily.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochenDaily.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochenDaily.xmf.intefer.appointmentRecodeSelect;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;

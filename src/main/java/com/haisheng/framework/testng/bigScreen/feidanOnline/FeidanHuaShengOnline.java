@@ -162,8 +162,8 @@ public class FeidanHuaShengOnline {
     @DataProvider(name = "PIC")
     public static Object[] pic() {
         return new String[]{
-                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/huasheng.png",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/multimedia/feidanImages/huasheng2.jpg"
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng2.jpg"
         };
 
     }

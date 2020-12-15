@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.yuexiuOnline.YuexiuRestApiOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.YuexiuRestApiOnline"></class>
         </classes>
     </test>
 

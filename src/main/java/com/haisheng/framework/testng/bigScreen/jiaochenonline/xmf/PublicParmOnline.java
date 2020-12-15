@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenOnline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 
