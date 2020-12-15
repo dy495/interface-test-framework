@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -22,6 +23,7 @@ import java.lang.reflect.Method;
  */
 public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
+    LoginUtil login = new LoginUtil();
     BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
     private static final EnumAccount marketing = EnumAccount.MARKETING;
@@ -56,7 +58,7 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.login(marketing);
+        login.login(marketing);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);

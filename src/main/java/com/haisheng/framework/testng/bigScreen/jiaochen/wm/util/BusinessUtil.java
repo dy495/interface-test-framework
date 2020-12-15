@@ -14,7 +14,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.slf4j.Logger;
@@ -32,25 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class BusinessUtil {
     public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    ScenarioUtilOnline jcOnline = ScenarioUtilOnline.getInstance();
     private static final int size = 100;
-
-    /**
-     * 账号登录
-     *
-     * @param account 账号
-     */
-    public void login(EnumAccount account) {
-        if (account.isDaily()) {
-            jc.pcLogin(account.getPhone(), account.getPassword());
-        } else {
-            jcOnline.pcLogin(account.getPhone(), account.getPassword());
-        }
-    }
-
-    public void loginApplet(EnumAppletCode appletCode) {
-        jc.appletLoginToken(appletCode.getToken());
-    }
 
     /**
      * 创建卡券
@@ -427,7 +408,6 @@ public class BusinessUtil {
      * @return 电话号
      */
     public String getDistinctPhone() {
-        login(EnumAccount.ADMINISTRATOR);
         String phone = "155" + CommonUtil.getRandom(8);
         IScene scene = VerificationPeople.builder().verificationPhone(phone).build();
         int total = jc.invokeApi(scene).getInteger("total");

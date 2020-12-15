@@ -7,15 +7,20 @@ import lombok.Getter;
  */
 public enum EnumAppletCode {
 
-    WM("Y10XjV7RMJjhjHdbCGH9WA=="),
-    ;
+    WM("Y10XjV7RMJjhjHdbCGH9WA==", true),
+
+    WM_ONLINE("", false);
 
 
-    EnumAppletCode(String token) {
+    EnumAppletCode(String token, boolean isDaily) {
         this.token = token;
+        this.isDaily = isDaily;
     }
 
     @Getter
     private final String token;
+
+    @Getter
+    private final boolean isDaily;
 
 }

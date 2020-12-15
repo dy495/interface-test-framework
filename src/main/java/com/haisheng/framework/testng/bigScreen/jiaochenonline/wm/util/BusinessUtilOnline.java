@@ -2,19 +2,13 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumStatus;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.PackageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.CreatePackage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
@@ -38,25 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class BusinessUtilOnline {
     public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
-    ScenarioUtil jcDaily = ScenarioUtil.getInstance();
     private static final int size = 100;
-
-    /**
-     * 账号登录
-     *
-     * @param account 账号
-     */
-    public void login(EnumAccount account) {
-        if (account.isDaily()) {
-            jcDaily.pcLogin(account.getPhone(), account.getPassword());
-        } else {
-            jc.pcLogin(account.getPhone(), account.getPassword());
-        }
-    }
-
-    public void loginApplet(EnumAppletCode appletCode) {
-        jc.appletLoginToken(appletCode.getCode());
-    }
 
     /**
      * 创建卡券
@@ -337,7 +313,7 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 获取报名
+     * 获取套餐名
      *
      * @param packageId 套餐id
      * @return 套餐名
@@ -354,13 +330,13 @@ public class BusinessUtilOnline {
                 }
             }
         }
-        return EnumStatus.FALSE.name();
+        return null;
     }
 
     public Long getPackageId(String packageName) {
         IScene scene = PackageFormPage.builder().packageName(packageName).build();
         JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-        return array.size() > 0 ? array.getJSONObject(0).getLong("id") : EnumStatus.FALSE.getType();
+        return array.size() > 0 ? array.getJSONObject(0).getLong("id") : null;
     }
 
     /**
@@ -386,7 +362,7 @@ public class BusinessUtilOnline {
      */
     public String getPlatNumber(String phone) {
         JSONArray array = jc.pcSearchCustomer(phone).getJSONArray("plate_list");
-        return array.size() > 0 ? array.getJSONObject(0).getString("plate_number") : EnumStatus.FALSE.name();
+        return array.size() > 0 ? array.getJSONObject(0).getString("plate_number") : null;
     }
 
     /**
@@ -461,7 +437,42 @@ public class BusinessUtilOnline {
                 }
             }
         }
-        return EnumStatus.FALSE.name();
+        return null;
+    }
+
+    /**
+     * 购买临时套餐
+     *
+     * @param type 0赠送/1购买
+     */
+    public void buyTemporaryPackage(int type) {
+        EnumAccount marketing = EnumAccount.MARKETING;
+        JSONArray voucherList = getVoucherList(1);
+        String platNumber = getPlatNumber(marketing.getPhone());
+        IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
+                .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
+                .subjectId(getSubjectId(getSubjectType())).extendedInsuranceYear("1")
+                .extendedInsuranceCopies("1").type(type).build();
+        jc.invokeApi(purchaseTemporaryPackageScene);
+    }
+
+    /**
+     * 购买固定套餐
+     *
+     * @param type 0赠送/1购买
+     */
+    public void buyFixedPackage(int type) {
+        EnumAccount marketing = EnumAccount.MARKETING;
+        String subjectType = getSubjectType();
+        long packageId = getPackageId("凯迪拉克无限套餐");
+        //购买固定套餐
+        IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(marketing.getPhone()))
+                .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                .subjectType(subjectType).subjectId(getSubjectId(subjectType)).extendedInsuranceYear(10)
+                .extendedInsuranceCopies(10).type(type).build();
+        jc.invokeApi(purchaseFixedPackageScene);
     }
 
     /**
@@ -489,7 +500,7 @@ public class BusinessUtilOnline {
      * @param verificationIdentity 核销员身份
      * @return 核销码
      */
-    public Long getVerificationCode(String verificationIdentity) {
+    public String getVerificationCode(String verificationIdentity) {
         VerificationPeople.VerificationPeopleBuilder builder = VerificationPeople.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
@@ -499,7 +510,7 @@ public class BusinessUtilOnline {
             for (int j = 0; j < list.size(); j++) {
                 if (list.getJSONObject(j).getBoolean("verification_status")
                         && list.getJSONObject(j).getString("verification_identity").equals(verificationIdentity)) {
-                    return list.getJSONObject(j).getLong("verification_code");
+                    return list.getJSONObject(j).getString("verification_code");
                 }
             }
         }
@@ -511,7 +522,7 @@ public class BusinessUtilOnline {
      *
      * @return 卡券编号
      */
-    public long getVoucherId(String voucherName) {
+    public long getVoucherListId(String voucherName) throws Exception {
         Integer id = null;
         Integer status = null;
         JSONArray list;
@@ -519,14 +530,17 @@ public class BusinessUtilOnline {
         AtomicBoolean sign = new AtomicBoolean(false);
         do {
             VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
-            JSONObject lastValue = jc.invokeApi(builder.build()).getJSONObject("last_value");
+            JSONObject response = jc.invokeApi(builder.build());
+            JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
-            list = jc.invokeApi(builder.build()).getJSONArray("list");
+            list = response.getJSONArray("list");
             list.forEach(e -> {
                 JSONObject jsonObject = (JSONObject) e;
                 String name = jsonObject.getString("title");
-                if (voucherName.equals(name)) {
+                String statusName = jsonObject.getString("status_name");
+                if (voucherName.equals(name) && !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
+                        && !statusName.equals(EnumAppletVoucherStatus.USED.getName())) {
                     sign.set(true);
                     newId.set(jsonObject.getLong("id"));
                 }
@@ -536,6 +550,47 @@ public class BusinessUtilOnline {
                 return newId.get();
             }
         } while (list.size() == 20);
-        return newId.get();
+        throw new Exception("无此卡券");
+    }
+
+    /**
+     * 获取小程序卡券数量
+     *
+     * @return 卡券数量
+     */
+    public int getVoucherListSize() {
+        Integer id = null;
+        Integer status = null;
+        JSONArray array;
+        int listSize = 0;
+        do {
+            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            JSONObject response = jc.invokeApi(builder.build());
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
+
+    /**
+     * 获取小程序套餐数量
+     *
+     * @return 套餐数量
+     */
+    public int getPackageListSize() {
+        Long lastValue = null;
+        int listSize = 0;
+        JSONArray array;
+        do {
+            PackageList.PackageListBuilder builder = PackageList.builder().lastValue(lastValue).type("type").size(20);
+            JSONObject response = jc.invokeApi(builder.build());
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
     }
 }
