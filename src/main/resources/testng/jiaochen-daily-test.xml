@@ -8,6 +8,8 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.MarketingManage"></class>
+
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"></class>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"></class>
