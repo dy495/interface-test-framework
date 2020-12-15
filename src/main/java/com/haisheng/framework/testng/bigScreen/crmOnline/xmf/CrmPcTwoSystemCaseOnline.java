@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
@@ -228,7 +227,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
             //删除活动列表-1
             String totalA=crm.articlePage(1,10,positionList1).getString("total");
-            Preconditions.checkArgument((code>1001)&&(total2.equals(total)),"展示中的活动不应该能被删除,列表总数不变");
+            Preconditions.checkArgument((code==1001)&&(total2.equals(total)),"展示中的活动不应该能被删除,列表总数不变");
             Preconditions.checkArgument(codeA==1000,"下架的活动不应该不能被删除");
             logger.info("删除前 文章列表总数：{}",total);
             logger.info("删除后 文章列表总数：{}",totalA);
