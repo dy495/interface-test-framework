@@ -4558,10 +4558,10 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     @DataProvider(name = "ROLE_IDS")
     public static Object[] role_ids() {
-        return new Integer[]{
-                407,
-                409,
-                410,
+        return new Integer[][]{
+                {407,13},  //销售顾问呢
+                {409,15},   //定损顾问
+                {410,16},   //服务顾问
 //                23,
 
         };

@@ -94,7 +94,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -936,15 +936,15 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/7/31 16:41
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void roleListCrm(Integer role_ids){
+    public void roleListCrm(Integer role_ids,Integer role_idsL){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+            JSONArray list=crm.ManageList(role_idsL).getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
                 total=0;
             }else {total=list.size();}
-            JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            JSONArray listN=crm.ManageListNoSelect(role_idsL).getJSONArray("list");
             int totalNoSelect;
             if(listN==null){
                 totalNoSelect=0;
@@ -961,8 +961,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             for(int i=0;i<listC.size();i++){
                 int role_idC=listC.getJSONObject(i).getInteger("role_id");
                 String user_id=listC.getJSONObject(i).getString("user_id");
-                logger.info("------user_id:{}------",user_id);
-                if(role_idC==role_ids){
+                if(role_idC==role_ids||role_idC==role_idsL){
                     crmRoleTotal=crmRoleTotal+1;
                 }
             }
