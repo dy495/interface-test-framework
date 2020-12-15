@@ -1,17 +1,27 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
+import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.haisheng.framework.util.DateTimeUtil;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * @author : yu
@@ -19,46 +29,24 @@ import java.lang.reflect.Method;
  */
 
 public class AppletLogin extends TestCaseCommon implements TestCaseStd {
-
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    CrmScenarioUtilOnline crmOnline = CrmScenarioUtilOnline.getInstance();
+    ScenarioUtil jc = ScenarioUtil.getInstance();
+    ScenarioUtilOnline jcOnline = ScenarioUtilOnline.getInstance();
+    CommonConfig commonConfig = new CommonConfig();
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
-
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "lxq";
-        commonConfig.produce = EnumProduce.BSJ.name();
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-保时捷 日常");
-
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-
         //set shop id
-        commonConfig.shopId = getProscheShop();
         beforeClassInit(commonConfig);
-
-        logger.debug("crm: " + crm);
-//        crm.login(sh_name1, sh_pwd1);
-
     }
 
     @AfterClass
@@ -67,9 +55,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
-    /**
-     * @description: get a fresh case ds to save case result, such as result/response
-     */
+
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
@@ -78,19 +64,114 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(dataProvider = "APPLET_TOKENS", dataProviderClass = CrmScenarioUtil.class)
-    public void applet4hour(String token) {
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    public void bsj_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+            String date = DateTimeUtil.addDayFormat(new Date(), 100);
+            String customerName = "自动化";
+            String customerPhoneNumber = "15037296015";
+            IScene scene = AppointmentTestDriverScene.builder().customerGender("MALE").customerName(customerName)
+                    .customerPhoneNumber(customerPhoneNumber).appointmentDate(date).carModel(36).carStyle(1).build();
             crm.appletLoginToken(token);
-            String customer_name = "@@@";
-            String customer_phone_number = "15037286014";
-            Long appoint_id = crm.appointmentTestDrive("MALE", customer_name, customer_phone_number, "2022-01-01", 1, 36).getLong("appointment_id");
-            crm.cancle(appoint_id);
+            JSONObject response = crm.invokeApi(scene, false);
+            int code = response.getInteger("code");
+            Preconditions.checkArgument(code == 1000, token + " " + response.getString("msg"));
+            Long appointId = response.getJSONObject("data").getLong("appointment_id");
+            crm.cancle(appointId);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序每4小时登陆一次，防止失效");
         }
+    }
+
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    public void bsj_applet_online(String token) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            commonConfig.shopId = EnumShopId.PORSCHE_ONLINE.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
+            String date = DateTimeUtil.addDayFormat(new Date(), 100);
+            String customerName = "自动化";
+            String customerPhoneNumber = "15037296015";
+            IScene scene = AppointmentTestDriverScene.builder().customerGender("MALE").customerName(customerName)
+                    .customerPhoneNumber(customerPhoneNumber).appointmentDate(date).carModel(36).carStyle(1).build();
+            crmOnline.appletLoginToken(token);
+            JSONObject response = crmOnline.invokeApi(scene, false);
+            int code = response.getInteger("code");
+            Preconditions.checkArgument(code == 1000, token + " " + response.getString("msg"));
+            Long appointId = response.getJSONObject("data").getLong("appointment_id");
+            crmOnline.cancle(appointId);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序每4小时登陆一次，防止失效");
+        }
+    }
+
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    public void jc_applet_daily(String token) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            jc.appletLoginToken(token);
+            new BusinessUtil().getVoucherListSize();
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序每4小时登陆一次，防止失效");
+        }
+    }
+
+    @Test(dataProvider = "JC_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    public void jc_applet_online(String token) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            jcOnline.appletLoginToken(token);
+            new BusinessUtilOnline().getVoucherListSize();
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序每4小时登陆一次，防止失效");
+        }
+    }
+
+    @DataProvider(name = "BSJ_APPLET_TOKENS_DAILY")
+    public static Object[] bsj_appletTokens_daily() {
+        return new String[]{
+                EnumAppletToken.BSJ_WM_DAILY.getToken(),
+                EnumAppletToken.BSJ_WM_SMALL_DAILY.getToken(),
+                EnumAppletToken.BSJ_XMF_DAILY.getToken(),
+                EnumAppletToken.BSJ_GLY_DAILY.getToken(),
+        };
+    }
+
+    @DataProvider(name = "BSJ_APPLET_TOKENS_ONLINE")
+    public static Object[] bsj_appletTokens_online() {
+        return new String[]{
+                EnumAppletToken.BSJ_WM_ONLINE.getToken(),
+                EnumAppletToken.BAJ_WM_SMALL_ONLINE.getToken(),
+                EnumAppletToken.BSJ_XMF_ONLINE.getToken(),
+        };
+    }
+
+    @DataProvider(name = "JC_APPLET_TOKENS_DAILY")
+    public static Object[] jc_appletTokens_daily() {
+        return new String[]{
+                EnumAppletToken.JC_WM_DAILY.getToken(),
+        };
+    }
+
+    @DataProvider(name = "JC_APPLET_TOKENS_ONLINE")
+    public static Object[] jc_appletTokens_online() {
+        return new String[]{
+                EnumAppletToken.JC_WM_ONLINE.getToken(),
+        };
     }
 }

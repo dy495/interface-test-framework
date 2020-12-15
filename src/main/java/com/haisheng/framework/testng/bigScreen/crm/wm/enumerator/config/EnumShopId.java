@@ -30,7 +30,9 @@ public enum EnumShopId {
      */
     JIAOCHEN_DAILY("-1"),
 
-
+    /**
+     * 轿辰线上
+     */
     JIAOCHEN_ONLINE("-1"),
     ;
 

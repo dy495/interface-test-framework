@@ -1946,11 +1946,10 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
     //取消预约
-    public JSONObject cancle(Long appointment_id) throws Exception {
+    public JSONObject cancle(Long appointment_id) {
         String url = "/WeChat-applet/porsche/a/appointment/cancel/" + appointment_id;
-        String json = "";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
     }
 
     //添加车辆
