@@ -1,18 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -23,10 +18,10 @@ import java.lang.reflect.Method;
  * @date :  2020/11/24
  */
 
-public class SystemCase extends TestCaseCommon implements TestCaseStd {
+public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new  jiaoChenInfo();
+    ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
+    jiaoChenInfoOnline info = new jiaoChenInfoOnline();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -35,34 +30,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-
-
-        //replace checklist app id and conf id
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
-
         commonConfig.produce = EnumProduce.JC.name();
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
-
-        //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getRefer();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
+        logger.debug("jc: " + jc);
 
     }
 
@@ -83,7 +67,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
 
-        jc.pcLogin("15711300001","000000");
+        jc.pcLogin("15711200001","000000");
     }
 
 
@@ -93,7 +77,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌--正常
-    @Test //ok
+    @Test
     public void addBrand_name1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -115,7 +99,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test //ok
+    @Test
     public void addBrand_name10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -137,7 +121,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test //ok
+    @Test
     public void editBrand_name() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -172,7 +156,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌--异常
-    @Test //ok bug5364 已解决
+    @Test
     public void addBrand_nameerr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -192,16 +176,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //品牌车系--正常
 
-    @Test(dataProvider = "CAR_STYLE") // OK bug5362 已解决
+    @Test(dataProvider = "CAR_STYLE")
     public void addCarStyle(String manufacturer, String name, String online_time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = jc.addCarStyleNotChk(info.BrandID, manufacturer,  name,  online_time).getInteger("code");
+            int code = jc.addCarStyleNotChk(info.BrandIDOnline, manufacturer,  name,  online_time).getInteger("code");
             Preconditions.checkArgument(code==1000,"创建车系：生产商 "+ manufacturer + ", 车系 "+ name + ", 上线日期"+ online_time +"状态码"+code);
 
             //删除品牌车系
-            Long id = jc.carStylePage(1,1,info.BrandID,"").getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = jc.carStylePage(1,1,info.BrandIDOnline,"").getJSONArray("list").getJSONObject(0).getLong("id");
             jc.delCarStyle(id);
 
         } catch (AssertionError e) {
@@ -213,7 +197,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test //ok bug 5369 已修复
+    @Test
     public void editCarStyle() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -222,16 +206,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String manufacturer = "旧生产商";
             String name= "旧车系";
             String online_time= dt.getHistoryDate(0);
-            jc.addCarStyle(info.BrandID, manufacturer,  name,  online_time);
+            jc.addCarStyle(info.BrandIDOnline, manufacturer,  name,  online_time);
             //获取车系id
-            Long id = jc.carStylePage(1,1,info.BrandID,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = jc.carStylePage(1,1,info.BrandIDOnline,name).getJSONArray("list").getJSONObject(0).getLong("id");
             //修改车系
             String manufacturer1 = "新生产商";
             String name1 = "新车系";
             String online_time1= dt.getHistoryDate(-2);
-            jc.editCarStyle(id,info.BrandID,manufacturer1,name1,online_time1);
+            jc.editCarStyle(id,info.BrandIDOnline,manufacturer1,name1,online_time1);
             //查看修改结果
-            JSONObject obj = jc.carStylePage(1,30,info.BrandID,"").getJSONArray("list").getJSONObject(0);
+            JSONObject obj = jc.carStylePage(1,30,info.BrandIDOnline,"").getJSONArray("list").getJSONObject(0);
             String search_manufacturer1 = obj.getString("manufacturer");
             String search_name1 = obj.getString("name");
             String search_online_time1= obj.getString("online_time");
@@ -253,7 +237,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //ok
+    @Test
     public void addOneCarStyleinTwoModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -299,11 +283,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌车系--异常
-    @Test(dataProvider = "CAR_STYLEERR") // OK bug 5371 已解决
+    @Test(dataProvider = "CAR_STYLEERR")
     public void addCarStyleErr(String manufacturer, String name, String online_time,String yz) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject obj = jc.addCarStyleNotChk(info.BrandID, manufacturer,  name,  online_time);
+            JSONObject obj = jc.addCarStyleNotChk(info.BrandIDOnline, manufacturer,  name,  online_time);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
             Preconditions.checkArgument(code==1001,yz + "期待状态码1001，实际"+code+",提示语："+ message);
@@ -326,7 +310,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test //ok
+    @Test
     public void addTwoCarStyleinOneModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -360,7 +344,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test //bug 5376 提示语不正确
+    @Test
     public void addCarStyleinNotExistModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -394,16 +378,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌车系车型 --正常
-    @Test(dataProvider = "CAR_MODEL") //ok
+    @Test(dataProvider = "CAR_MODEL")
     public void addCarModel(String name, String year, String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = jc.addCarModelNotChk(info.BrandID, info.CarStyleID,  name,year,  status).getInteger("code");
+            int code = jc.addCarModelNotChk(info.BrandIDOnline, info.CarStyleIDOnline,  name,year,  status).getInteger("code");
             Preconditions.checkArgument(code==1000,"创建车系：车型名称 "+ name + ", 年款 "+ year + ", 预约状态"+ status +"状态码"+code);
 
             //删除品牌车系
-            Long id = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,name,"","").getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,name,"","").getJSONArray("list").getJSONObject(0).getLong("id");
             jc.delCarModel(id);
 
         } catch (AssertionError e) {
@@ -433,22 +417,22 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String name1 = "旧车型名称"+System.currentTimeMillis();
             String year1= "2000年";
             String status1 = "ENABLE";
-            jc.addCarModel(info.BrandID, info.CarStyleID,  name1,year1,  status1);
+            jc.addCarModel(info.BrandIDOnline, info.CarStyleIDOnline,  name1,year1,  status1);
             //获取车系id
-            int size = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,name1,"","").getInteger("total");
-            Long id = jc.carModelPage(1,size,info.BrandID, info.CarStyleID,name1,"","").getJSONArray("list").getJSONObject(size-1).getLong("id");
+            int size = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,name1,"","").getInteger("total");
+            Long id = jc.carModelPage(1,size,info.BrandIDOnline, info.CarStyleIDOnline,name1,"","").getJSONArray("list").getJSONObject(size-1).getLong("id");
             System.out.println(id+"---------");
             //修改车型
             String name2 = "新车型名称"+System.currentTimeMillis();
             String year2= "2020年";
             String status2 = "DISABLE";
-            jc.editCarModel(id,info.BrandID, info.CarStyleID,  name2,year2,  status2);
+            jc.editCarModel(id,info.BrandIDOnline, info.CarStyleIDOnline,  name2,year2,  status2);
             //查看修改结果
             String search_name2 = "";
             String search_year2 = "";
             String search_status2 = "";
-            int size1 = jc.carModelPage(1,1,info.BrandID,info.CarStyleID,"","","").getInteger("total");
-            JSONArray arr = jc.carModelPage(1,size1,info.BrandID,info.CarStyleID,"","","").getJSONArray("list");
+            int size1 = jc.carModelPage(1,1,info.BrandIDOnline,info.CarStyleIDOnline,"","","").getInteger("total");
+            JSONArray arr = jc.carModelPage(1,size1,info.BrandIDOnline,info.CarStyleIDOnline,"","","").getJSONArray("list");
             for (int i = size1-1 ; i >0; i--){
                 JSONObject obj = arr.getJSONObject(i);
                 System.out.println(obj +"-----------------");
@@ -479,14 +463,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //品牌车系车型 --异常
-    @Test //OK bug 5389 已解决
+    @Test
     public void addCarModel_err() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String year = "1998年";
             String status = "ENABLE";
-            JSONObject obj = jc.addCarModelNotChk(info.BrandID, info.CarStyleID,  info.stringfifty1,year,  status);
+            JSONObject obj = jc.addCarModelNotChk(info.BrandIDOnline, info.CarStyleIDOnline,  info.stringfifty1,year,  status);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"， 提示语："+message);
@@ -507,7 +491,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             String year = "123456";
             String status = "ENABLE";
-            JSONObject obj = jc.addCarModelNotChk(info.BrandID, info.CarStyleID,  info.stringsix,year,  status);
+            JSONObject obj = jc.addCarModelNotChk(info.BrandIDOnline, info.CarStyleIDOnline,  info.stringsix,year,  status);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+code+"， 提示语："+message);
@@ -595,13 +579,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //门店管理--正常
+    @Ignore //创建太多门店 注视掉
     @Test(dataProvider = "SHOP")
     public void addshop(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
                         String longitude, String latitude, String appointment_status,String washing_status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
+            arr.add(info.BrandIDOnline);
             int code = jc.addShopNotChk(info.logo,simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
                     Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
             Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
@@ -628,7 +613,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test //ok
+    @Ignore //创建太多门店 注视掉
+    @Test
     public void addshop_rephone() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -637,7 +623,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String service_tel = info.phone;
 
             JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
+            arr.add(info.BrandIDOnline);
 
             jc.addShop(info.logo,info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
                     129.8439,42.96805, "DISABLE","DISABLE");
@@ -661,7 +647,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
+            arr.add(info.BrandIDOnline);
             int code = jc.addShopNotChk(info.logo,simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
                     Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
             Preconditions.checkArgument(code==1001,a+"期待状态码1001，实际"+ code);
@@ -695,7 +681,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test //ok
+    @Test
     public void addshoperr1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -727,7 +713,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //新建文章
-    @Test(dataProvider = "ARTICLE") //ok
+    @Test(dataProvider = "ARTICLE")
     public void addArticle(String title, String pic_type,  String content, String label) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -1,10 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 
-public class jiaoChenInfo {
+public class jiaoChenInfoOnline {
     DateTimeUtil dt = new DateTimeUtil();
-    ScenarioUtil jc = ScenarioUtil.getInstance();
+    ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     public final String logo = "general_temp/16de43e8-e98f-44d2-a005-62cab62b26ef";//120*120 品牌logo
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)(Math.random()*100000));//字符串长度10
@@ -16,9 +17,6 @@ public class jiaoChenInfo {
     public final String  district_code= "222402";
     public final String phone = "1380110"+Integer.toString((int)(Math.random()*10000));//手机号
 
-    //日常
-    public final long BrandID = 16L;//自动化用的品牌id
-    public final long CarStyleID = 50L;//自动化用的品牌车系id
     //线上
     public final long BrandIDOnline = 33L;//自动化用的品牌id
     public final long CarStyleIDOnline = 830L;//自动化用的品牌车系id
