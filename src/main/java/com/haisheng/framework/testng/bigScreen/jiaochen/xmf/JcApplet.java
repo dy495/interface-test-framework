@@ -426,9 +426,16 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void appletCustomer(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //修改用户信息
             appletInfoEdit er=new appletInfoEdit();
-
+            er.birthday="1996-02-19";
+            er.checkcode=true;
+            er.name="@@@";
+            er.contact="15037286013";
+            er.shipping_address="中关村soho"+dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
+            //查看用户详情
+
         }catch (AssertionError | Exception e){
             appendFailReason(e.toString());
         }finally {

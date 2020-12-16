@@ -108,6 +108,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("crm: " + crm);
         crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 
+
     }
 
     @AfterClass

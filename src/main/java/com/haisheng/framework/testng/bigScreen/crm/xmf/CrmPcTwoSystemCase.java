@@ -2241,12 +2241,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //     @Test(description = "删除用户管理中多余用户数据")
+//         @Test(description = "删除用户管理中多余用户数据")
     public void deleteuser() {
         try {
             crm.login(baoshijie, adminpassword);
 //              for(int j=0;j<5;j++) {
-            JSONArray list = crm.userPage(9, 10).getJSONArray("list");
+            JSONArray list = crm.userPage(1, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
                 crm.userDel(userid);

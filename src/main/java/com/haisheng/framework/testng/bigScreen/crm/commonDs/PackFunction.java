@@ -534,7 +534,6 @@ public class PackFunction {
         //创建销售/顾问
         String phone = genPhoneNum();
 
-
         JSONObject data1 = crm.userPage(1, 100);
         int total = data1.getInteger("total");
         JSONArray list;
@@ -545,7 +544,6 @@ public class PackFunction {
             crm.addUser(userName, userName, phone, pp.adminpassword, roleId, "", "");
             list = crm.userPage(1, 100).getJSONArray("list");
         }
-        //String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
         String userid = list.getJSONObject(0).getString("user_id"); //获取用户id 倒叙 所以是第一个
         return userid;
     }

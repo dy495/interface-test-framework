@@ -739,7 +739,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/7/19 19:06
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void peopelmange(Integer role_ids){
+    public void peopelmange(Integer role_ids,Integer a){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //删除排版销售前，排班人数
@@ -789,7 +789,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/8/31 17:39
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void addGuwen(Integer role_ids){
+    public void addGuwen(Integer role_ids,Integer dd){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
@@ -799,7 +799,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=role_ids; //销售顾问
-            String passwd="123456";
+            String passwd="ys123456";
 
             StringBuilder phone = new StringBuilder("1");
             for (int i = 0; i < 10;i++){
@@ -820,7 +820,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
                 list=crm.userPage(2,100).getJSONArray("list");
             }
             crm.login(pp.zongjingli,pp.adminpassword);
-            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             JSONArray listA=crm.ManageListNoSelect(role_ids).getJSONArray("list");
             int numA=listA.size();
 
@@ -849,7 +849,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             crm.login(baoshijie,pp.superpassword);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
-            int roleId=13; //销售顾问
+            int roleId=407; //销售顾问
             String passwd="ys123456";
 
             StringBuilder phone = new StringBuilder("1");
@@ -870,7 +870,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             }else{
                 list=crm.userPage(2,100).getJSONArray("list");
             }
-            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             //加人到小池子
             crm.login(adminname,adminpassword);
             crm.ManageAdd(roleId,userid);

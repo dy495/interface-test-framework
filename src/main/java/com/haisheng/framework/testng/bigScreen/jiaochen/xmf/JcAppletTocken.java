@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -97,7 +98,7 @@ public class JcAppletTocken extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                "VnETJ7mPJXIidJv9alQ25g==",   //xmf
+                EnumAppletToken.JC_XMF_DAILY.getToken(),   //xmf
         };
     }
     @Test(dataProvider = "APPLET_TOKENS")
@@ -109,7 +110,7 @@ public class JcAppletTocken extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+//            saveData("小程序每4小时登陆一次，防止失效");
         }
     }
    }
