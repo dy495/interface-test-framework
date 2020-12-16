@@ -1415,6 +1415,186 @@ public class FeidanMiniApiSystemtestDaily {
      *  角色管理--新建角色
      */
 
+    @Test(dataProvider = "ROLE_ADD")
+    public void roleAdd(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("");
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"状态码期待1000，实际"+code);
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色\n");
+        }
+    }
+    @DataProvider(name = "ROLE_ADD")
+    public  Object[] roleAdd() {
+        return new String[][]{
+                {"a","1","角色名称和说明1个字"},
+                {"123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊","角色名称10个字，角色说明50个字"},
+                {"123QWa!@#啊123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#","角色名称20个字，角色说明49个字"},
+                {"123QW","123QWa!@#啊123QWa!@#啊","角色名称5个字，角色说明20个字"},
+
+        };
+    }
+
+    @Test(dataProvider = "ROLE_ADDERR")
+    public void roleAddErr(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("");
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色\n");
+        }
+    }
+    @DataProvider(name = "ROLE_ADDERR")
+    public  Object[] roleAddErr() {
+        return new String[][]{
+                {"123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊啊","角色名称10个字，角色说明51个字"},
+                {"123QWa!@#啊123QWa!@#啊1","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#","角色名称21个字，角色说明49个字"},
+
+        };
+    }
+
+    @Test
+    public void roleAddRe(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("");
+            String name="重复名字";
+            String desc="重复说明";
+            roleAdd(name,desc,arr);
+
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：使用已存在的角色名新建角色\n");
+        }
+    }
+
+    @Test(dataProvider = "ROLE_ADDERR")
+    public void roleEditErr(String name1, String desc1, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("");
+            String name="新建名字";
+            String desc="新建说明";
+            roleAdd(name,desc,arr);
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            int code = roleEditNotChk(id,name1,desc1,arr).getInteger("code");
+            Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑角色\n");
+        }
+    }
+
+    @Test
+    public void roleDelInUse(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            Long roleid = creatRole();
+            //使用角色新建账号
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑角色\n");
+        }
+    }
+
+
+
+
+
+    //新建角色
+    public Long creatRole() throws Exception {
+        JSONArray arr = new JSONArray();
+        arr.add("");
+        String name="角色"+System.currentTimeMillis();
+        String desc="说明"+System.currentTimeMillis();
+        roleAdd(name,desc,arr);
+        Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+        return id;
+    }
+
+    //新建账号
+    public String creatAccount (Long id) throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        String type ="EMAIL";
+        String gender="MALE";
+        JSONArray rolelist =  new JSONArray();
+        rolelist.add(id);
+        //新建
+        accountAdd(name,null,email,type,rolelist,gender,null);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
 
 
 
@@ -2640,20 +2820,22 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     //新建角色
-    public JSONObject roleAdd(String name, JSONArray authlist) throws Exception {
+    public JSONObject roleAdd(String name, String description, JSONArray authlist) throws Exception {
         String url = "/risk/role/add";
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("authlist", authlist);
+        json.put("description", description);
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject roleAddNotchk(String name, JSONArray authlist) throws Exception {
+    public JSONObject roleAddNotchk(String name, String description, JSONArray authlist) throws Exception {
         String url = "/risk/role/add";
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("authlist", authlist);
+        json.put("description", description);
         String result = httpPostUrl(url, json.toJSONString());
         return JSON.parseObject(result);
     }
@@ -2678,14 +2860,25 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     //角色编辑
-    public JSONObject roleEdit(Long id, String name, JSONArray authlist) throws Exception {
+    public JSONObject roleEdit(Long id, String name, String description, JSONArray authlist) throws Exception {
         String url = "/risk/role/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
         json.put("auth_list", authlist);
+        json.put("description", description);
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject roleEditNotChk(Long id, String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        json.put("description", description);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
     }
 
     //角色删除
