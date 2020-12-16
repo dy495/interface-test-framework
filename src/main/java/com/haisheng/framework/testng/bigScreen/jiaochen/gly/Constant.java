@@ -32,7 +32,6 @@ public class Constant {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"customer_phone", "customer_phone"},
-                {"create_date","create_date"},
                 {"sale_name","sale_name"},
         };
     }
@@ -60,8 +59,6 @@ public class Constant {
     @DataProvider(name = "SELECT_weChatSleCustomerManageFilter")
     public static Object[][] weChatSleCustomerManage_pram() {
         return new String[][]{
-                {"end_time", "end_time"},
-                {"start_time","start_time"},
                 {"customer_phone","customer_phone"},
         };
     }
