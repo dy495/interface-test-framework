@@ -4588,10 +4588,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
     @DataProvider(name = "ROLE_ID")
     public static Object[] role() {
         return new String[]{
-                "13",
-                "11",
-                "12",
-                "14"
+                "13",// 销售顾问
+                "23", // dcc销售顾问
+                "11", //销售总监
+                //"12",
+                "14", //前台
+                "16", //服务顾问
+                "15", //定损顾问
+                "20", //市场总监
+                "18", //服务总监
+                //"10", //总经理
+
         };
     }
 

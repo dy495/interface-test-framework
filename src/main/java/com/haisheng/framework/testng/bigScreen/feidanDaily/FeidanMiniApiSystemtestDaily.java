@@ -31,10 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.File;
 import java.text.ParseException;
@@ -991,6 +988,436 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+
+    /**
+     * @date: 2020.12.15
+     *  账号管理--搜索
+     */
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch1(String name){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,name,"","","","");
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("name").contains(name),"根据"+name+"进行搜索，结果包含"+obj.getString("name"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据账号名称搜索\n");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch2(String email){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,"","",email,"","");
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("email").contains(email),"搜索"+email+"，结果包含"+obj.getString("email"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆邮箱搜索\n");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch3(String phone){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,"",phone,"","","");
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("phone").contains(phone),"搜索"+phone+"，结果包含"+obj.getString("phone"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆手机号搜索\n");
+        }
+    }
+
+    @Test
+    public void accountSearch4(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String rolename = roleList().getJSONArray("list").getJSONObject(0).getString("name");
+            JSONObject dataaobj = accountPage(1,50,"","","",rolename,"");
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONArray rolelist1 = dataaobj.getJSONArray("list").getJSONObject(i).getJSONArray("role_list");
+                    int listsize = rolelist1.size();
+                    for (int j = 0 ; j < listsize;j++ ){
+                        String rolename_search = rolelist1.getJSONObject(j).getString("role_name");
+                        Preconditions.checkArgument(rolename_search.equals(rolename),"搜索"+rolename+"，结果包含"+rolename_search);
+                    }
+
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据角色搜索\n");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch5(String phone){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,phone,phone,"","","");
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("phone").contains(phone) && obj.getString("name").contains(phone),
+                            "搜索姓名和手机号为"+phone+"，结果包含手机号"+obj.getString("phone")+"姓名为"+obj.getString("name"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆手机号和名称搜索\n");
+        }
+    }
+
+
+    @DataProvider(name = "SEARCH")
+    public  Object[] search() {
+        return new String[]{
+                "1",
+                "@",
+                "qqq",
+                "自测"
+        };
+    }
+
+    /**
+     * @date: 2020.12.15
+     *  账号管理--新建账号
+     */
+    @Test(dataProvider = "ACC_ADD")
+    public void accountadd(String name,String email,String type , String gender,String mes){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            int code = accountAddNotChk(name,null,email,type,rolelist,gender,null).getInteger("code");
+            Preconditions.checkArgument(code==1000,mes+"期待1000，实际"+code);
+
+            //删除账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号\n");
+        }
+    }
+    @DataProvider(name = "ACC_ADD")
+    public  Object[] accountAdd() {
+        return new String[][]{
+                {"a",System.currentTimeMillis()+"@qq.com","EMAIL","MALE","姓名1个字"},
+                {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com","EMAIL","MALE","姓名10个字"},
+                {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn","EMAIL","MALE","姓名20个字"},
+                //{"name"+System.currentTimeMillis(),System.currentTimeMillis()+"@outlook.com","EMAIL","FEMALE","姓名一个字"},
+                {"zhd"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-@qq.com","EMAIL","MALE","邮箱100个字"},
+
+        };
+    }
+
+    @Test(dataProvider = "ACC_ADDERR")
+    public void accountaddErr(String name,String phone , String email,String type , String gender,String mes){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            int code = accountAddNotChk(name,phone,email,type,rolelist,gender,null).getInteger("code");
+            Preconditions.checkArgument(code==1001,mes+"期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号异常参数\n");
+        }
+    }
+    @DataProvider(name = "ACC_ADDERR")
+    public  Object[] accountAddErr() {
+        return new String[][]{
+                {"123Aa啊！@啊1123Aa啊！@啊11","",System.currentTimeMillis()+"@yahoo.cn","EMAIL","MALE","姓名21个字"},
+                {"zdh","1234567890",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号10位"},
+                {"zdh","123456789012",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号12位"},
+                {"zdh","啊啊啊啊啊！@啊啊啊啊",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号11位汉字"},
+                {"zdh","12345678Aazs",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号12位英文"},
+                {"zdh"+Integer.toString((int)(Math.random()*100)),"","111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-1@qq.com","EMAIL","MALE","邮箱101个字"},
+
+        };
+    }
+
+    @Test
+    public void accountEdit(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String type ="EMAIL";
+            String gender="MALE";
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            //新建
+            accountAdd(name,null,email,type,rolelist,gender,null);
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+
+            //编辑
+            String name1= "new"+System.currentTimeMillis();
+            String phone="13412150001";
+            String type1 ="PHONE";
+            String gender1="MALE";
+            JSONArray rolelist1 =  new JSONArray();
+            rolelist1.add("");
+            accountEdit(id,name1,phone,null,type1,rolelist1,gender1,null);
+
+            String name2= "";
+            String phone2="";
+            String email2= "";
+
+            //根据id查询，结果是编辑后的账号
+            JSONArray array = accountPage(1,100,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getString("id").equals(id)){
+                    name2 = obj.getString("name");
+                    phone2 = obj.getString("phone");
+                    email2 = obj.getString("email");
+                }
+            }
+
+            Preconditions.checkArgument(name2.equals(name1),"姓名修改为"+name1+" , 实际为"+ name2);
+            Preconditions.checkArgument(phone2.equals(phone),"手机号修改为"+phone+" , 实际为"+ phone2);
+            Preconditions.checkArgument(email2.equals(""),"邮箱修改为空 , 实际为"+ email2);
+
+            //删除账号
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑账号修改登陆方式\n");
+        }
+    }
+
+    @Test
+    public void NotExistAccountLogin(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String type ="EMAIL";
+            String gender="MALE";
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            accountAdd(name,null,email,type,rolelist,gender,null);
+
+            //删除账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+            //使用该账号登陆
+            int code = loginPC(email,"").getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除账号后使用该账号登陆失败\n");
+        }
+    }
+
+    @Test
+    public void AccountDelAndAdd(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String type ="EMAIL";
+            String gender="MALE";
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            accountAdd(name,null,email,type,rolelist,gender,null);
+
+            //删除账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+            //使用新建
+            int code = accountAddNotChk(name,null,email,type,rolelist,gender,null).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+
+            //删除账号
+            String id2 = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id2);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除账号后使用相同信息新建\n");
+        }
+    }
+
+    @Test
+    public void AccountDisableAndLogin(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String type ="EMAIL";
+            String gender="MALE";
+            JSONArray rolelist =  new JSONArray();
+            rolelist.add("");
+            accountAdd(name,null,email,type,rolelist,gender,null);
+
+            //禁用账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountStatus(id,"DISABLE");
+
+            //登陆
+            int code = loginPC(email,"").getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+            //启用账号
+            accountStatus(id,"ENABLE");
+
+            //登陆
+            int code2 = loginPC(email,"").getInteger("code");
+            Preconditions.checkArgument(code2==1000,"状态码期待1000，实际"+code);
+
+            //删除账号
+            accountDelete(id);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：禁用账号后登陆失败，启用后登陆成功\n");
+        }
+    }
+
+    /**
+     * @date: 2020.12.16
+     *  角色管理--新建角色
+     */
+
+
+
+
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -1842,6 +2269,23 @@ public class FeidanMiniApiSystemtestDaily {
         String res = httpPostUrl(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
+
+    public JSONObject loginPC(String username, String passwd) throws Exception {
+
+        String url = "/risk-login";
+
+        String json =
+                "{\n" +
+                        "\"username\":\"" + username + "\"," +
+                        "\"passwd\":\"" + passwd + "\"" +
+                        "}";
+
+        String res = httpPostUrl(url, json);
+
+        return JSON.parseObject(res);
 
 
     }

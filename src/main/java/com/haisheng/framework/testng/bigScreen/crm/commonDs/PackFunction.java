@@ -540,14 +540,13 @@ public class PackFunction {
         JSONArray list;
         if (total == 200) {
             throw new Exception("用户数量已达上线，case运行终止");
-        } else if (total < 100) {
+        }
+        else {
             crm.addUser(userName, userName, phone, pp.adminpassword, roleId, "", "");
             list = crm.userPage(1, 100).getJSONArray("list");
-        } else {
-            crm.addUser(userName, userName, phone, pp.adminpassword, roleId, "", "");
-            list = crm.userPage(2, 100).getJSONArray("list");
         }
-        String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
+        //String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
+        String userid = list.getJSONObject(0).getString("user_id"); //获取用户id 倒叙 所以是第一个
         return userid;
     }
 
