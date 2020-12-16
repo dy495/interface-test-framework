@@ -135,7 +135,7 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券申请--发出数量（首发）=【卡券表单】发行库存数量")
+    @Test(description = "卡券申请--成本单价=【卡券表单】成本")
     public void voucherApply_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -170,7 +170,7 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("卡券申请--发出数量（首发）=【卡券表单】发行库存数量");
+            saveData("卡券申请--成本单价=【卡券表单】成本");
         }
     }
 
