@@ -7,10 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;

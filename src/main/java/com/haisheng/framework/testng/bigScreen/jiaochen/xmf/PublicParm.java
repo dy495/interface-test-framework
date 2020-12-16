@@ -9,6 +9,7 @@ public class PublicParm {
     public String shopIdZ="46012";   //门店Id
     public String reception_sale_id="xx";
     public String name="";
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/intefer/jcBase64.txt";
 
     public String shichang="";
     public String shichangPassword="";
@@ -38,6 +39,7 @@ public class PublicParm {
 
     public String appletTocken= EnumAppletToken.JC_XMF_DAILY.getToken();
     public String coordinate="[116.29845,39.95933]}";  //经纬度
+    public Long voucherId=81L;  //经纬度
 
     public JSONArray roleList=getRoleList();
 
@@ -48,9 +50,6 @@ public class PublicParm {
         return moduleId2;
     }
 
-    public  String getAppletTocken(){
-        return "VnETJ7mPJXIidJv9alQ25g==";
-    }
 
 
 

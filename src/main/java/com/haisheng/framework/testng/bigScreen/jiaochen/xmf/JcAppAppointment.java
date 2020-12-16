@@ -3,23 +3,19 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
 
 public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
 
@@ -44,6 +40,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer=getJcRefer();
+        commonConfig.produce = EnumProduce.JC.name();
 
 
         //replace backend gateway url
@@ -100,7 +97,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE")
-    public void Jc_agreeCancleAppointment(String type) {
+    public void agreeCancleAppointment(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appointmentPage(null, 10);
@@ -131,7 +128,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "小程序预约,app任务列表+1，今日任务数+1")
-    public void Jc_AppletAppointment() {
+    public void AppletAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appointmentPage(null, 10);
@@ -166,5 +163,8 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
+    /**
+     * @description :预约，取消。删除记录
+     * @date :2020/12/16 20:04
+     **/
 }

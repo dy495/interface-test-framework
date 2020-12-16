@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Random;
@@ -13,6 +16,8 @@ public class JcFunction {
     ScenarioUtil jc=new ScenarioUtil();
     PublicParm pp=new PublicParm();
     Random random=new Random();
+    DateTimeUtil dt=new DateTimeUtil();
+    FileUtil file = new FileUtil();
     public String genPhoneNum() {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
@@ -186,6 +191,58 @@ public class JcFunction {
             }
         }
         return id;
+    }
+
+    //创建活动
+    public Long creteArticle(JSONArray voucher_list,String voucher_receive_type){
+        String article_bg_pic=file.texFile(pp.filepath);
+        String path=jc.pcFileUpload(article_bg_pic,true,1.5).getString("pic_path");
+        JSONArray picList=new JSONArray();
+        picList.add(path);
+
+        pccreateActile er=new pccreateActile();
+        er.title="1234"+dt.getHHmm(0);
+        er.pic_type="ONE_BIG";
+//        er.content="\"<p>890089008900890089008900</p><div class=\"media-wrap image-wrap\"><img src=\"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/business-porsche/dev/general_temp/fac4bd9d-f898-4f97-8926-73812bd20667?Expires=4730163216&OSSAccessKeyId=LTAI4G4xNBGMWuAV9dBwkZya&Signature=hInQW6TDZijOmenWksfDC%2BPUOR8%3D\"/></div><p></p>";
+        er.content="\"<p>890089008900890089008900</p>";
+        er.label="SELL_WELL";
+        er.content_type="ACTIVITY";
+        er.total_quota="90";
+        er.register_start_date=dt.getHistoryDate(0);
+        er.register_end_date=dt.getHistoryDate(0);
+        er.start_date=dt.getHistoryDate(0);
+        er.end_date=dt.getHistoryDate(0);
+        er.address="海淀区中关村soho";
+        er.is_can_maintain=true;
+        er.is_voucher=true;
+        er.voucher_list=voucher_list;
+        er.voucher_receive_type=voucher_receive_type;  //"ARTICLE_BUTTON"  页面领取  //SIGN_UP   报名成功后领取
+        er.voucher_get_use_days="365";
+        er.pic_list=picList;
+        Long id=jc.pccreateActile(er).getLong("id");
+        return  id;
+    }
+    /**
+     * @description :获取卡券列表中总数
+     * @date :2020/12/16 17:18
+     **/
+
+    public Integer getVoucherTotal(){
+        JSONObject data=jc.appletVoucherList(null,"GENERAL",20);
+        JSONObject lastValue=data.getJSONObject("last_value");
+        JSONArray list=data.getJSONArray("list");
+        int size=list.size();
+        Integer count=size;   //计数器
+        int i=0;
+        while(size!=0){
+            JSONObject temp = jc.appletVoucherList(lastValue,"GENERAL",20);
+            lastValue=temp.getJSONObject("last_value");
+            list=temp.getJSONArray("list");
+            size=list.size();
+            count=count+size;
+            i=i+1;
+        }
+        return count;
     }
 
 }

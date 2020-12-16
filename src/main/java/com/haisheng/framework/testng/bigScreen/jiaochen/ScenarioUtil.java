@@ -443,7 +443,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //小程序我的卡券
-    public JSONObject appletVoucherList(Long lastValue, String type, Integer size) {
+    public JSONObject appletVoucherList(JSONObject lastValue, String type, Integer size) {
         String url = "/jiaochen/applet/granted/voucher/list";
         JSONObject object = new JSONObject();
         object.put("last_value", lastValue);
@@ -1180,7 +1180,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :文章发放卡券列表 xmf
+     * @description :活动领卡券 xmf
      * @date :2020/11/28 12:14
      **/
     public JSONObject appletvoucherReceive(String article_id, String voucher_id) {
@@ -1806,7 +1806,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -1843,7 +1843,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -1893,7 +1893,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -1927,7 +1927,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -1969,7 +1969,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2026,7 +2026,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2044,7 +2044,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2081,7 +2081,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2116,7 +2116,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2149,7 +2149,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2186,7 +2186,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2221,7 +2221,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2257,7 +2257,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2292,7 +2292,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2324,11 +2324,11 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject approvalListFilterManage(String shopId, String page, String size, int id, String pram, String result) {
         String url = "/jiaochen/pc/operation/approval/page";
         JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
+//        json.put("shopId", shopId);
         json.put("page", page);
         json.put("article_id", id);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if ((pram!= null)){
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2364,7 +2364,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2401,7 +2401,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2451,7 +2451,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", Integer.valueOf(page));
         json.put("size", Integer.valueOf(size));
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2485,7 +2485,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", page);
         json.put("size", size);
         json.put("brand_id", brand_id);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2520,7 +2520,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         json.put("brand_id", brand_id);
         json.put("style_id", style_id);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2555,7 +2555,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2587,7 +2587,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2619,7 +2619,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2654,7 +2654,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -2689,7 +2689,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        if (pram != null || !pram.equals("")) {
+        if (pram != null) {
             json.put(pram, result);
         }
         return invokeApi(url, json);
@@ -3046,6 +3046,10 @@ public class ScenarioUtil extends TestCaseCommon {
                 "123123412345"
         };
     }
+    /**
+     * @description :编辑用户详情
+     * @date :2020/12/16 16:09
+     **/
 
     public JSONObject appletUserInfoEdit(appletInfoEdit er) {
         String url = "/jiaochen/applet/granted/user-info/edit";
@@ -3057,5 +3061,54 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("shipping_address",er.shipping_address);
         return invokeApi(url,json1,er.checkcode);
     }
+    /**
+     * @description :用户详情
+     * @date :2020/12/16 16:09
+     **/
+
+    public JSONObject appletUserInfoDetail() {
+        String url = "/jiaochen/applet/granted/user-info/detail";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :创建活动
+     * @date :2020/12/16 16:10
+     **/
+
+    public JSONObject pccreateActile(pccreateActile er){
+        String url = "/jiaochen/pc/operation/article/add";
+        JSONObject json1=new JSONObject();
+        json1.put("title",er.title);
+        json1.put("pic_type",er.pic_type);
+        json1.put("pic_list",er.pic_list);
+        json1.put("content",er.content);
+        json1.put("label",er.label);
+        json1.put("content_type",er.content_type);
+        json1.put("total_quota",er.total_quota);
+        json1.put("register_start_date",er.register_start_date);
+        json1.put("register_end_date",er.register_end_date);
+        json1.put("start_date",er.start_date);
+        json1.put("end_date",er.end_date);
+        json1.put("address",er.address);
+        json1.put("is_can_maintain",er.is_can_maintain);
+        json1.put("is_voucher",er.is_voucher);
+        json1.put("voucher_list",er.voucher_list);
+        json1.put("voucher_receive_type",er.voucher_receive_type);
+        json1.put("voucher_get_use_days",er.voucher_get_use_days);
+        return invokeApi(url,json1,er.checkcode);
+    }
+    /**
+     * @description :卡券列表
+     * @date :2020/12/16 16:12
+     **/
+
+    public JSONObject appletvoucherList() {
+        String url = "/jiaochen/applet/granted/article/voucher/list";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+
+
 
 }

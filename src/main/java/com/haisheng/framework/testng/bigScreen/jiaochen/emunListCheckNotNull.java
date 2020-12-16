@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -20,7 +19,6 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @description :校验单接口列表返回值各项不为空 xmf
@@ -69,7 +67,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 
         //set shop id
         commonConfig.shopId = "-1";
-        commonConfig.referer="https://servicewechat.com/wx4071a91527930b48/";
+        commonConfig.referer=getJcRefer();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

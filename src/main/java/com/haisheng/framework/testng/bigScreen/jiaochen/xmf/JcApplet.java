@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -25,7 +26,6 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -60,7 +60,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce= EnumProduce.JC.name();
+        commonConfig.produce = EnumProduce.JC.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -423,23 +423,134 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/15 17:58
      **/
     @Test
-    public void appletCustomer(){
+    public void appletCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //修改用户信息
-            appletInfoEdit er=new appletInfoEdit();
-            er.birthday="1996-02-19";
-            er.checkcode=true;
-            er.name="@@@";
-            er.contact="15037286013";
-            er.shipping_address="中关村soho"+dt.getHHmm(0);
+            appletInfoEdit er = new appletInfoEdit();
+            er.birthday = "1996-02-19";
+            er.gender="FEMALE";
+            er.name = "@@@";
+            er.contact = "15037286013";
+            er.shipping_address = "中关村soho" + dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
-            //查看用户详情
+            JSONObject data = jc.appletUserInfoDetail();      //查看用户详情
+            Preconditions.checkArgument(data.getString("birthday").equals(er.birthday));
+            Preconditions.checkArgument(data.getString("gender").equals(er.gender));
+            Preconditions.checkArgument(data.getString("name").equals(er.name));
+            Preconditions.checkArgument(data.getString("shipping_address").equals(er.shipping_address));
 
-        }catch (AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
-            saveData("修改个人信息异常");
+        } finally {
+            saveData("修改个人信息正常常");
+        }
+    }
+
+//    @Test(description = "异常",dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)
+    public void appletCustomer2(String contact) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //修改用户信息
+            appletInfoEdit er = new appletInfoEdit();
+            er.birthday = "1996-02-19";
+            er.gender="FEMALE";
+            er.name = "@@@";
+            er.contact = contact;
+            er.checkcode=false;
+            er.shipping_address = "中关村soho" + dt.getHHmm(0);
+            int code=jc.appletUserInfoEdit(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"applet-修改个人信息手机号异常");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("修改个人信息正常常");
+        }
+    }
+
+    //报名领卡券 卡券选择通用不限量的固定id ok
+    @Test()
+    public void activity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer voucherTotal=pf.getVoucherTotal();  //卡券数量
+//           Long total=jc.appletVoucherList(null,"GENERAL",20).getLong("total");
+            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
+            JSONArray voucherList=new JSONArray();
+//            Long voucherId=jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
+            voucherList.add(pp.voucherId);   //
+            Long id=pf.creteArticle(voucherList,"ARTICLE_BUTTON");
+
+            jc.appletLoginToken(pp.appletTocken);
+            jc.appletvoucherReceive(id.toString(),pp.voucherId.toString());   //领卡券
+            Integer voucherTotalB=pf.getVoucherTotal();      //查卡券数
+            Preconditions.checkArgument(voucherTotalB-voucherTotal==1,"活动领取卡券后，卡券数量未加1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建活动，领卡券");
+        }
+    }
+
+
+    //报名领卡券报名通过即发券 卡券选择通用不限量的固定id  ok
+    @Test()
+    public void activity2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer voucherTotal=pf.getVoucherTotal();  //卡券数量
+//           Long total=jc.appletVoucherList(null,"GENERAL",20).getLong("total");
+            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
+            JSONArray voucherList=new JSONArray();
+//            Long voucherId=jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
+            voucherList.add(pp.voucherId);   //
+            Long id=pf.creteArticle(voucherList,"SIGN_UP");       //创建活动
+
+            jc.appletLoginToken(pp.appletTocken);
+            //报名
+//            Long id=3921L;
+
+            appletActivityRegister ar=new appletActivityRegister();
+            ar.id=id.toString();
+            ar.name="@@@";
+            ar.num=1;
+            ar.phone="15037286013";
+            jc.appletactivityRegister(ar);
+            //pc--审批通过
+            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
+            String passId=jc.approvalListFilterManage(null,"1","10",id.intValue(),null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray json=new JSONArray();
+            json.add(passId);
+            jc.approvalArticle(json,"APPROVAL_CONFIRM");    //审批通过
+
+            jc.appletLoginToken(pp.appletTocken);
+            Integer voucherTotalB=pf.getVoucherTotal();      //查卡券数
+            Preconditions.checkArgument(voucherTotalB-voucherTotal==1,"活动领取卡券后，卡券数量未加1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建活动，领卡券");
+        }
+    }
+
+    /**
+     * @description :首页文章10个
+     * @date :2020/12/16 19:47
+     **/
+    @Test()
+    public void appletArticleList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list=jc.appletArticleList("10",null).getJSONArray("list");
+            Preconditions.checkArgument(list.size()<=10,"首页文章超过了10");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小程序活动首页最多10个");
         }
     }
 
