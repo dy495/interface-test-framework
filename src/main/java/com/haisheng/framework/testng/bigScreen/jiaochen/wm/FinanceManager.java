@@ -41,7 +41,6 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
