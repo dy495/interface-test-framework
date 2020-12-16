@@ -4586,7 +4586,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ROLE_ID")
-    public static Object[] role() {
+    public static Object[] role_daily() {
         return new String[]{
                 "13",// 销售顾问
                 "23", // dcc销售顾问
@@ -4598,6 +4598,22 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "20", //市场总监
                 "18", //服务总监
                 //"10", //总经理
+
+        };
+    }
+
+    @DataProvider(name = "ROLE_ID_ONLINE")
+    public static Object[] role_online() {
+        return new String[]{
+                "407",// 销售顾问
+                "413", // dcc销售顾问
+                "405", //销售总监
+                "408", //前台
+                "410", //服务顾问
+                "409", //定损顾问
+                "412", //市场总监
+                "411", //服务总监
+                "404", //总经理
 
         };
     }

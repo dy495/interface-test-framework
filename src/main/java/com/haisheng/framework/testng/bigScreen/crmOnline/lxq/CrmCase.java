@@ -616,7 +616,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(dataProvider = "ROLE_ID", dataProviderClass = CrmScenarioUtil.class)
+    @Test(dataProvider = "ROLE_ID_ONLINE", dataProviderClass = CrmScenarioUtil.class)
     public void delUserDiffRole(String role) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -633,33 +633,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int roleId = Integer.parseInt(role);
             //添加账号
             crm.addUser(userName, userLoginName, phone, passwd, roleId);
-            int a = 0;
-            int total = crm.userPage(1, 1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(i, 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)) {
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)) {
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
+            String userid = crm.userPage(1, 50).getJSONArray("list").getJSONObject(0).getString("user_id");
 
             //删除账号
             int code = crm.userDelNotChk(userid).getInteger("code");
