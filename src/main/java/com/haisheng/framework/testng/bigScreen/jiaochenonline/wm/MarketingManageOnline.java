@@ -56,7 +56,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
@@ -612,21 +612,19 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             long cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //购买临时套餐
             String platNumber = util.getPlatNumber(marketing.getPhone());
-            if (!platNumber.equals(EnumStatus.FALSE.getStatus())) {
-                IScene temporaryScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                jc.invokeApi(temporaryScene);
-                //确认支付
-                util.makeSureBuyPackage("临时套餐");
-                //购买后累计发出
-                long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
-                CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery);
-                Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1,
-                        voucherName + "累计发出数：" + CommonUtil.errMessage(cumulativeDelivery + 1, newCumulativeDelivery));
-            }
+            IScene temporaryScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
+                    .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
+                    .extendedInsuranceCopies("1").type(1).build();
+            jc.invokeApi(temporaryScene);
+            //确认支付
+            util.makeSureBuyPackage("临时套餐");
+            //购买后累计发出
+            long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
+            CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery);
+            Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1,
+                    voucherName + "累计发出数：" + CommonUtil.errMessage(cumulativeDelivery + 1, newCumulativeDelivery));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1020,18 +1018,16 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             int total = jc.invokeApi(scene).getInteger("total");
             login.login(administrator);
             String phone = util.getStaffPhone();
-            if (!phone.equals(EnumStatus.FALSE.name())) {
-                CommonUtil.valueView(phone);
-                login.login(marketing);
-                //创建核销人员
-                IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
-                        .verificationPersonPhone(phone).type(0).status(1).build();
-                jc.invokeApi(scene1);
-                //创建核销人员后数据
-                int newTotal = jc.invokeApi(scene).getInteger("total");
-                Preconditions.checkArgument(newTotal == total + 1,
-                        "列表数：" + CommonUtil.errMessage(total + 1, newTotal));
-            }
+            CommonUtil.valueView(phone);
+            login.login(marketing);
+            //创建核销人员
+            IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
+                    .verificationPersonPhone(phone).type(0).status(1).build();
+            jc.invokeApi(scene1);
+            //创建核销人员后数据
+            int newTotal = jc.invokeApi(scene).getInteger("total");
+            Preconditions.checkArgument(newTotal == total + 1,
+                    "列表数：" + CommonUtil.errMessage(total + 1, newTotal));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

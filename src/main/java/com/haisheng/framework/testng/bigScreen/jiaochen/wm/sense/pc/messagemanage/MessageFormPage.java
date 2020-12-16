@@ -15,8 +15,10 @@ public class MessageFormPage extends BaseScene {
     private final Long endTime;
     private final String customerName;
     private final Long shopId;
-    private final Integer page;
-    private final Integer size;
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -35,10 +37,5 @@ public class MessageFormPage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/message-manage/message-form/page";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

@@ -1359,7 +1359,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :我的消息详情 XMF
      * @date :2020/11/28 12:45
      **/
-    public JSONObject appletmessageDetail(String id) {
+    public JSONObject appletMessageDetail(String id) {
         String url = "/jiaochen/applet/granted/message/detail";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);

@@ -11,11 +11,11 @@ public enum EnumRefer {
     JIAOCHEN_REFER_ONLINE("https://servicewechat.com/wxbd41de85739a00c7/24/page-frame.html"),
     ;
 
-    EnumRefer(String refer) {
-        this.refer = refer;
+    EnumRefer(String referer) {
+        this.referer = referer;
     }
 
     @Getter
-    private final String refer;
+    private final String referer;
 
 }
