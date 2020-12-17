@@ -122,7 +122,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
-            commonConfig.referer = EnumRefer.JIAOCHEN_REFER_DAILY.getReferer();
+            commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
             jc.appletLoginToken(token);
             new BusinessUtil().getVoucherListSize();
         } catch (Exception | AssertionError e) {
@@ -138,7 +138,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
-            commonConfig.referer = EnumRefer.JIAOCHEN_REFER_ONLINE.getReferer();
+            commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
             jcOnline.appletLoginToken(token);
             new BusinessUtilOnline().getVoucherListSize();
         } catch (Exception | AssertionError e) {

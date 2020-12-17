@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
@@ -59,7 +60,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer=getJcRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -161,8 +162,8 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
 //            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
             String plate_number = pp.carplate;
-            Long code=jc.appletAddCarcode(plate_number,pp.carModelId ).getLong("code");
-            Preconditions.checkArgument(code==1001,"重复车牌仍成功");
+            Long code = jc.appletAddCarcode(plate_number, pp.carModelId).getLong("code");
+            Preconditions.checkArgument(code == 1001, "重复车牌仍成功");
 //            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
 //            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
@@ -183,17 +184,17 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
-            int count=pf.carListNumber(pp.carStyleId);
+            int count = pf.carListNumber(pp.carStyleId);
             int limit = 5 - count;
-            JSONArray carId=new JSONArray();
+            JSONArray carId = new JSONArray();
             for (int i = 0; i < limit; i++) {
                 String plate_number;
                 plate_number = "豫GBBA3" + i;
-                String car_id=pf.appletAddCar( plate_number);
+                String car_id = pf.appletAddCar(plate_number);
                 carId.add(car_id);
             }
             String plate_number = "豫GBBA11";
-            Long code = jc.appletAddCarcode( plate_number,pp.carModelId).getLong("code");
+            Long code = jc.appletAddCarcode(plate_number, pp.carModelId).getLong("code");
             checkArgument(code == 1001, "我的车辆上限5辆车");
 
             for (int j = 0; j < carId.size(); j++) {
@@ -244,6 +245,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             saveData("车辆，车牌号异常验证");
         }
     }
+
     /**
      * @description :编辑车辆
      * @date :2020/10/10 16:00
@@ -270,7 +272,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     public void plateabnormal(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.appletAddCarcode( plate, pp.carModelId);
+            JSONObject data = jc.appletAddCarcode(plate, pp.carModelId);
             Long code = data.getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
@@ -295,24 +297,24 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             //活动报名前
             Long[] aid = {};
             Long activity_id = aid[1];
-            jc.pcLogin(pp.shichang,pp.shichangPassword);
-            int num[]=pf.jsonActivityNUm(activity_id.toString());
-            appletActivityRegister ar=new appletActivityRegister();
+            jc.pcLogin(pp.shichang, pp.shichangPassword);
+            int num[] = pf.jsonActivityNUm(activity_id.toString());
+            appletActivityRegister ar = new appletActivityRegister();
 
             jc.appletLoginToken(pp.appletTocken);
             JSONObject data = jc.appletactivityRegister(ar);
             String appointment_id = data.getString("appointment_id");
 
             //活动报名后
-            jc.pcLogin(pp.shichang,pp.shichangPassword);
-            int numA[]=pf.jsonActivityNUm(activity_id.toString());
+            jc.pcLogin(pp.shichang, pp.shichangPassword);
+            int numA[] = pf.jsonActivityNUm(activity_id.toString());
 
             jc.appletLoginToken(pp.appletTocken);
             jc.appletactivityCancel(appointment_id);  //取消活动报名
             //TODO:
-            checkArgument(numA[1]-num[1]==0, "小程序活动报名，pc报名总数变了");
-            checkArgument(numA[2]-num[2]==1, "小程序活动报名，pc已报名客户未+1");
-            checkArgument(numA[3]-num[3]==0, "小程序活动报名，未审批 pc已入选变了");
+            checkArgument(numA[1] - num[1] == 0, "小程序活动报名，pc报名总数变了");
+            checkArgument(numA[2] - num[2] == 1, "小程序活动报名，pc已报名客户未+1");
+            checkArgument(numA[3] - num[3] == 0, "小程序活动报名，未审批 pc已入选变了");
 
 
         } catch (AssertionError | Exception e) {
@@ -336,18 +338,18 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             Long[] aid = {};
             Long activity_id = aid[1];
 
-            int num[]=pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar=new appletActivityRegister();
+            int num[] = pf.appletActivityDetail(activity_id.toString());
+            appletActivityRegister ar = new appletActivityRegister();
             //活动报名
             JSONObject data = jc.appletactivityRegister(ar);
             String appointment_id = data.getString("appointment_id");
 
             //活动报名后
-            int numA[]=pf.appletActivityDetail(activity_id.toString());
+            int numA[] = pf.appletActivityDetail(activity_id.toString());
             jc.appletactivityCancel(appointment_id);      //取消活动报名
-            checkArgument(numA[0]-num[0]==1, "小程序活动报名，小程序文章全部名额未+0");
-            checkArgument(numA[1]-num[1]==1, "小程序活动报名，小程序文章已报名名额未+1");
-            checkArgument(numA[2]-num[2]==1, "小程序活动报名，小程序文章报名名单未+1");
+            checkArgument(numA[0] - num[0] == 1, "小程序活动报名，小程序文章全部名额未+0");
+            checkArgument(numA[1] - num[1] == 1, "小程序活动报名，小程序文章已报名名额未+1");
+            checkArgument(numA[2] - num[2] == 1, "小程序活动报名，小程序文章报名名单未+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -376,24 +378,24 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             Long[] aid = {};
             Long activity_id = aid[1];
 
-            int num[]=pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar=new appletActivityRegister();
+            int num[] = pf.appletActivityDetail(activity_id.toString());
+            appletActivityRegister ar = new appletActivityRegister();
             //活动报名
             jc.appletactivityRegister(ar);
 
-            jc.pcLogin(pp.shichang,pp.shichangPassword);
-            registerListVariable sv=new registerListVariable();
-            JSONObject ll=jc.registerListFilterManage(sv);
+            jc.pcLogin(pp.shichang, pp.shichangPassword);
+            registerListVariable sv = new registerListVariable();
+            JSONObject ll = jc.registerListFilterManage(sv);
             String appointment_id = ll.getJSONArray("list").getJSONObject(0).getString("id");
-            JSONArray passItem=new JSONArray();
+            JSONArray passItem = new JSONArray();
             passItem.add(appointment_id);    //审批取得id与预约id是否一致？？ TODO:
             //审批
-            jc.approvalArticle(passItem,"APPROVAL_CONFIRM(");
+            jc.approvalArticle(passItem, "APPROVAL_CONFIRM(");
             //活动报名审批后
             jc.appletLoginToken(pp.appletTocken);
-            int numA[]=pf.appletActivityDetail(activity_id.toString());
+            int numA[] = pf.appletActivityDetail(activity_id.toString());
 
-            checkArgument(numA[0]-num[0]==1, "小程序活动报名，pc报名客户未+1");
+            checkArgument(numA[0] - num[0] == 1, "小程序活动报名，pc报名客户未+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -404,4 +406,4 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 
-   }
+}

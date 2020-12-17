@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -67,7 +68,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 
         //set shop id
         commonConfig.shopId = "-1";
-        commonConfig.referer=getJcRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -129,7 +130,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_ArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletArticleList("20",null);
+            JSONObject data = jc.appletArticleList("20", null);
             String jsonpath = "$.list[*].id&&$.list[*].label&&$.list[*].label_name&&$.list[*].title&&$.list[*].pic_type&&$.list[*].pic_list&&$.list[*].timestamp&&$.list[*].time_str";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
@@ -204,11 +205,11 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void Jc_appletMaintainShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List coor=new ArrayList();
+            List coor = new ArrayList();
             coor.add(116.29845);
             coor.add(39.95933);
 
-            JSONObject data = jc.appletmaintainShopList(pp.car_id,coor);
+            JSONObject data = jc.appletmaintainShopList(pp.car_id, coor);
             String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
             jpu.spiltString(data.toJSONString(), jsonpath);
 

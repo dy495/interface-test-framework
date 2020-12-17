@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
@@ -39,7 +40,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer=getJcRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
         commonConfig.produce = EnumProduce.JC.name();
 
 
@@ -85,7 +86,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-          //****************************预约系列*************************
+    //****************************预约系列*************************
 
     @DataProvider(name = "TYPE")
     public static Object[] type() {
@@ -138,20 +139,20 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
             //小程序预约
             appletAppointment pm = new appletAppointment();
-            pm.car_id=pp.car_idA;
-            pm.appointment_name="自动夏";
-            pm.shop_id=Long.parseLong(pp.shopIdZ);
-            pm.staff_id="uid_f9342ae2";
-            pm.time_id=pf.getTimeId(pm.shop_id,pm.car_id,dt.getHistoryDate(0));
+            pm.car_id = pp.car_idA;
+            pm.appointment_name = "自动夏";
+            pm.shop_id = Long.parseLong(pp.shopIdZ);
+            pm.staff_id = "uid_f9342ae2";
+            pm.time_id = pf.getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(0));
 
-            Long appointmentId=jc.appletAppointment(pm).getLong("id");
+            Long appointmentId = jc.appletAppointment(pm).getLong("id");
 
             jc.appLogin(pp.gwphone, pp.gwpassword);
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
             jc.appletLoginToken(pp.appletTocken);
-            jc.appletCancleAppointment(appointmentId,pp.shopIdZ);
+            jc.appletCancleAppointment(appointmentId, pp.shopIdZ);
             Preconditions.checkArgument(totalA - total == 1, "小程序预约 列表未+1,前：" + total + "，后：" + totalA);
             Preconditions.checkArgument(tasknumA[0] - tasknum[0] == 1, "确认预约后今日任务(分子)未+1,前：" + tasknum[0] + "，后：" + tasknumA[0]);
             Preconditions.checkArgument(tasknumA[1] - tasknum[1] == 1, "确认预约后今日任务（分母）未+1,前：" + tasknum[1] + "，后：" + tasknumA[1]);

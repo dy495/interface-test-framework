@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -49,7 +50,7 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer=getJcRefer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -87,6 +88,7 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
                 EnumAppletToken.JC_XMF_ONLINE.getToken(),   //xmf
         };
     }
+
     @Test(dataProvider = "APPLET_TOKENS")
     public void applet4hour(String token) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -99,4 +101,4 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
             saveData("小程序每4小时登陆一次，防止失效");
         }
     }
-   }
+}
