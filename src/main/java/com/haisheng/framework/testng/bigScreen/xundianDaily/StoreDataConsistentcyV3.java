@@ -2002,7 +2002,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
-    @Test
+   // @Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2033,7 +2033,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
-
 
 
     /**
@@ -2422,7 +2421,33 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
+    /**
+     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
+     */
+    @Test
+    public void todayTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取昨天日各个时间段内到访得人次且相加
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
+            int count = 0;
+            for (int i = 0; i < eTlist.size(); i++) {
+                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("today_pv");
+                yesterdayPv = yesterdayPv != null ? yesterdayPv : 0;
+                count += yesterdayPv;
+            }
 
+           // Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + shop_id);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("实时客流中，今日到访各个时段的pv之和");
+        }
+
+    }
 
 }
 

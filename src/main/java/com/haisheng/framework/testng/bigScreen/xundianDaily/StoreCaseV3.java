@@ -951,7 +951,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理======================
      */
-    @Test
+   // @Test
     public void trace_dealWith() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -997,7 +997,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理（订单处理备注的字数）======================
      */
-    @Test
+   // @Test
     public void trace_dealMark() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
