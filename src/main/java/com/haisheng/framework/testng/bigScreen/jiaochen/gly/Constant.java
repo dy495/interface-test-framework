@@ -180,7 +180,7 @@ public class Constant {
     public static Object[][] buyPackageRecordFilter_pram(){
         return new String[][]{
                 {"package_name", "package_name"},
-                {"send_type", "send_number"},
+                {"send_type", "pay_type_name"},
                 {"sender","package_belongs"}
 
         };
