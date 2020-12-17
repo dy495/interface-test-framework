@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
@@ -48,6 +49,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+//        commonConfig.referer=getJcReferdaily();
 
 
         //replace backend gateway url
@@ -313,6 +315,22 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "app接待车牌号7位，汉字+字母")
+    public void Jc_reception2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id = pf.startReception(pp.carplate7);
+
+            jc.finishReception(id,pp.shopIdZ);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待车牌号7位，汉字+字母");
+        }
+    }
+
     @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")
     public void Jc_receptionTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -548,5 +566,108 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "登录登出验证")
+    public void apploginNor(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.appLogin2(pp.jdgw,pp.jdgwpassword,true);
+            jc.appLoginout();
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("登录登出校验");
+        }
+    }
 
+    /**
+     * @description :登录异常
+     * @date :2020/12/17 11:45
+     **/
+    @Test(dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)
+    public void apploginAb(String phone){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            int code=jc.appLogin2(phone,"000000",false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"登录异常手机号");
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("登录手机号异常校验");
+        }
+    }
+    @Test(dataProvider = "CODE",dataProviderClass = DataAbnormal.class)
+    public void apploginAb2(String code){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            int code1=jc.appLogin2(pp.jdgw,code,false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"登录异常手机号");
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("登录验证码异常校验");
+        }
+    }
+
+    /**
+     * @description :核销----需要小程序有源源不断的卡券
+     * @date :2020/12/17 14:58
+     **/
+    @Test()
+    public void write(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //取卡券码
+//            jc.appletLoginToken(EnumAppletToken.JC_WM_DAILY.getToken());
+            jc.appletLoginToken(pp.appletTocken);
+            JSONArray list = jc.appletVoucherList(null,"GENERAL",20).getJSONArray("list");
+            String voucher_code="123";
+            String voucher_name="123";
+            for(int i=0;i<list.size();i++){
+                JSONObject data=list.getJSONObject(i);
+                String isLimitCar=data.getString("is_limit_car");
+                String status_name=data.getString("status_name");
+                if(!isLimitCar.equals("FALSE")&&(status_name.equals("快过期")||status_name.equals("快过期"))){
+                    voucher_code=data.getString("voucher_code");
+                    voucher_name=data.getString("title");
+                    break;
+                }
+            }
+            if(voucher_code.equals("123")){
+                throw new Exception("小程序卡券不足，需领取卡券");
+            }
+            //pc
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            int  messagePctotal=jc.pushMsgListFilterManage("-1","1","10",null,null).getInteger("total");
+            int verificationReordPctotal=jc.verificationReordFilterManage("-1","1","10",null,null).getInteger("total");
+
+            //核销记录总数
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            int total=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
+            //核销
+            jc.verification(voucher_code, true);
+            int totalA=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
+            //小程序消息最新一条信息校验
+            jc.appletLoginToken(pp.appletTocken);
+            JSONObject message=jc.appletMessageList(null,20).getJSONArray("list").getJSONObject(0);
+            String messageName=message.getString("content");
+//            String messageTime=message.getString("content");
+
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            int  messagePctotalA=jc.pushMsgListFilterManage("-1","1","10",null,null).getInteger("total");
+            int verificationReordPctotalA=jc.verificationReordFilterManage("-1","1","10",null,null).getInteger("total");
+
+
+            Preconditions.checkArgument(messagePctotalA-messagePctotal==1,"核销后pc消息总数没-1");
+            Preconditions.checkArgument(verificationReordPctotalA-verificationReordPctotal==1,"核销后pc核销记录记录总数没-1");
+            Preconditions.checkArgument(totalA-total==1,"核销后记录总数没-1");
+            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_name+"】已被核销，请立即查看"));
+
+
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            saveData("app核销记录数据一致校验");
+        }
+    }
 }

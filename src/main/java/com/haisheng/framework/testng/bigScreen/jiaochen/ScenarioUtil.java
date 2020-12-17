@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
@@ -55,6 +56,22 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("phone", username);
         object.put("verification_code", password);
         httpPost(path, object, IpPort);
+    }
+
+    //app登录
+    public JSONObject appLogin2(String username, String password, Boolean checkCode) {
+        String path = "/jiaochen/login-m-app";
+        JSONObject object = new JSONObject();
+        object.put("phone", username);
+        object.put("verification_code", password);
+        return invokeApi(path,object,checkCode);
+    }
+
+    //app登录
+    public void appLoginout() {
+        String path = "/jiaochen/m-app/login-user/logout";
+        JSONObject object = new JSONObject();
+        httpPostWithCheckCode(path, object.toJSONString(), IpPort);
     }
 
     public void appletLoginToken(String token) {
@@ -3315,6 +3332,9 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("gender",er.gender);
         json1.put("birthday",er.birthday);
         json1.put("shipping_address",er.shipping_address);
+        if(er.parmkey!=null){
+            json1.put(er.parmkey,er.parmvalue);
+        }
         return invokeApi(url,json1,er.checkcode);
     }
     /**
@@ -3365,6 +3385,27 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+    //app-核销记录
+    public JSONObject appWriteOffRecordsPage(String type,String size,String last_value) {
+        String url = "/jiaochen/m-app/personal-center/write-off-records/page";
+        JSONObject json1=new JSONObject();
+        json1.put("type",type);
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :小程序预约记录
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject appletAppointmentList(String type,String size,String last_value) {
+        String url = "/jiaochen/applet/granted/appointment/list";
+        JSONObject json1=new JSONObject();
+        json1.put("type",type);
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+        return invokeApi(url,json1);
+    }
 
 
 }

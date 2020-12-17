@@ -29,7 +29,7 @@ import java.util.List;
 
 public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = ScenarioUtil.getInstance();
+    ScenarioUtil jc = new ScenarioUtil();
     JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -69,6 +69,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //set shop id
         commonConfig.shopId = "-1";
         commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+//        commonConfig.referer=getJcReferdaily();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -110,7 +111,22 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("轿辰-app个人中心，小程序码返回结果不为空");
         }
     }
+    @Test(description = "核销记录")
+    public void appWrite() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            JSONObject data = jc.appWriteOffRecordsPage("ALL","10",null);
+            String jsonpath = "$.list[*].card_name&&$.list[*].card_number&&$.list[*].id&&$.list[*].user_name&&$.list[*].write_off_time&&$.total";
+            jpu.spiltString(data.toJSONString(), jsonpath);
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.appletLoginToken(pp.appletTocken);
+            saveData("核销记录返回值非空校验");
+        }
+    }
     @Test
     public void Jc_bannerList() {
         logger.logCaseStart(caseResult.getCaseName());

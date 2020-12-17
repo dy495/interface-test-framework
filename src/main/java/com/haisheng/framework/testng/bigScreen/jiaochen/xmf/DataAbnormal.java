@@ -30,4 +30,19 @@ public class DataAbnormal {
         };
     }
 
+    @DataProvider(name = "CODE")
+    public static Object[] code() {
+        return new String[]{
+                "123123",
+                "00000",
+                "aaaaaa",
+                "汉字汉字",
+                "10：10",
+                "!@#$%^&*()_+{}:",
+                "123a123好*123",
+                "1    1",
+                "0000000"
+        };
+    }
+
 }

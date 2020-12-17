@@ -60,7 +60,11 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+
         commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+
+//        commonConfig.referer=getJcReferOnline();
+
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};

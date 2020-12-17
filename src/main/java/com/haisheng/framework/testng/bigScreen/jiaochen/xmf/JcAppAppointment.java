@@ -41,6 +41,8 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+//        commonConfig.referer=getJcReferdaily();
+
         commonConfig.produce = EnumProduce.JC.name();
 
 
@@ -97,7 +99,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE")
+    @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE",priority = 2)
     public void agreeCancleAppointment(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -128,7 +130,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "小程序预约,app任务列表+1，今日任务数+1")
+    @Test(description = "小程序预约,app任务列表+1，今日任务数+1",priority = 1)
     public void AppletAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -152,7 +154,6 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             int tasknumA[] = pf.appTask();
 
             jc.appletLoginToken(pp.appletTocken);
-            jc.appletCancleAppointment(appointmentId, pp.shopIdZ);
             Preconditions.checkArgument(totalA - total == 1, "小程序预约 列表未+1,前：" + total + "，后：" + totalA);
             Preconditions.checkArgument(tasknumA[0] - tasknum[0] == 1, "确认预约后今日任务(分子)未+1,前：" + tasknum[0] + "，后：" + tasknumA[0]);
             Preconditions.checkArgument(tasknumA[1] - tasknum[1] == 1, "确认预约后今日任务（分母）未+1,前：" + tasknum[1] + "，后：" + tasknumA[1]);
@@ -165,7 +166,38 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :预约，取消。删除记录
+     * @description :预约，取消。删除记录  //预约今天后第四天  ok
      * @date :2020/12/16 20:04
      **/
+    @Test
+    public void appointmentRecoder(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            jc.appletLoginToken(pp.appletTocken);
+            int total=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+            //预约
+            appletAppointment pm = new appletAppointment();
+            pm.car_id=pp.car_idA;
+            pm.appointment_name="自动夏";
+            pm.shop_id=Long.parseLong(pp.shopIdZ);
+            pm.staff_id="uid_f9342ae2";
+            pm.time_id=pf.getTimeId(pm.shop_id,pm.car_id,dt.getHistoryDate(4));
+            Long appointmentId=jc.appletAppointment(pm).getLong("id");
+            int totalA=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+
+            //取消预约
+            jc.appletCancleAppointment(appointmentId,pp.shopIdZ);
+            //删除预约记录
+            jc.appletmaintainDelete(appointmentId.toString());
+            int totalC=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+
+            Preconditions.checkArgument(totalA-total==1,"预约后，预约记录未+1");
+            Preconditions.checkArgument(totalA-totalC==1,"删除预约记录，预约记录未+1");
+
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }finally {
+            saveData("预约，取消。删除记录,数据一致性变化");
+        }
+    }
 }

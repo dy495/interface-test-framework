@@ -25,6 +25,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 
@@ -161,7 +162,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("添加车辆7位车牌，applet我的车辆列表加1");
+//            saveData("添加车辆7位车牌，applet我的车辆列表加1");
         }
     }
 
@@ -468,7 +469,31 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("修改个人信息正常常");
         }
     }
+//    @Test(description = "异常")
+    public void appletCustomer3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //修改用户信息
+            appletInfoEdit er = new appletInfoEdit();
+            er.birthday = "1996-02-19";
+            er.gender="FEMALE";
+            er.name = "@@@";
+            er.contact = "15037286013";
+            er.checkcode=false;
+            er.shipping_address="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十中关";
+            int code=jc.appletUserInfoEdit(er).getInteger("code");
+            er.shipping_address="中关村soho";
+            er.name="一二三四五六七八九十一二";
+            int code2=jc.appletUserInfoEdit(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"applet-修改个人信息地址长度异常验证");
+            Preconditions.checkArgument(code2==1001,"applet-修改个人信息名称长度异常验证");
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("修改个人信息异常验证");
+        }
+    }
     //报名领卡券 卡券选择通用不限量的固定id ok
     @Test()
     public void activity() {
@@ -493,8 +518,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("创建活动，领卡券");
         }
     }
-
-
+    
     //报名领卡券报名通过即发券 卡券选择通用不限量的固定id  ok
     @Test()
     public void activity2() {

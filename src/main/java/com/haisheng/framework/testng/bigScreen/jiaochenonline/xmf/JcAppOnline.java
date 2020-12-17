@@ -48,6 +48,9 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
 
+//        commonConfig.referer=getJcReferOnline();
+
+
 
         //replace backend gateway url
         //commonConfig.gateway = "";
