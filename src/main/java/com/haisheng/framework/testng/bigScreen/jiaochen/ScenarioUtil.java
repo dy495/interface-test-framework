@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
@@ -3405,6 +3404,33 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("size",size);
         json1.put("last_value",last_value);
         return invokeApi(url,json1);
+    }
+
+    /**
+     * @description:PC 系统配置-角色管理
+     * * @author: lxq
+     * @time: 2020-12-17
+     */
+
+    //新建角色
+    public JSONObject roleAdd(String name, JSONArray auth_list ) {
+        String url = "/jiaochen/pc/role/add";
+        String json =
+                "{\n" +
+                        "\"name\":\"" + name + "\"," +
+                        "\"auth_list\":" + auth_list +
+                        "}";
+        String result = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //删除角色
+    public JSONObject roleDel(long id) {
+        String url = "/jiaochen/pc/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
     }
 
 
