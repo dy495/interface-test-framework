@@ -39,20 +39,17 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-        //checklist相关配置
+        //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.produce = EnumProduce.JC.name();
-
-        //replace jenkins job name
+       //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
-        //replace ding push conf
+        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-
-        //set shop id
+        //放入shopId
         commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
