@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -44,6 +45,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //set shop id
@@ -66,7 +68,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
-    public void bsj_applet_daily(String token) {
+    public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
@@ -85,12 +87,12 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+            saveData("BSJ_小程序每4小时登陆一次，防止失效");
         }
     }
 
     @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
-    public void bsj_applet_online(String token) {
+    public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
@@ -110,12 +112,12 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+            saveData("BSJ_小程序每4小时登陆一次，防止失效");
         }
     }
 
     @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
-    public void jc_applet_daily(String token) {
+    public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
@@ -126,12 +128,12 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+            saveData("JC_小程序每4小时登陆一次，防止失效");
         }
     }
 
     @Test(dataProvider = "JC_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
-    public void jc_applet_online(String token) {
+    public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
@@ -142,7 +144,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+            saveData("JC_小程序每4小时登陆一次，防止失效");
         }
     }
 
