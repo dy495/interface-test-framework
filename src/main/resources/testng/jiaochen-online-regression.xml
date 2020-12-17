@@ -10,6 +10,7 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppletOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.FilterColumnSystemOnline"></class>
         </classes>
     </test>
 </suite>
