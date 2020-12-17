@@ -12,7 +12,7 @@ import lombok.Getter;
 public enum EnumAppletToken {
     BSJ_WM_DAILY(EnumProduce.BSJ.name(), "gtrOgq5Rxy2fF79cR+s7xw==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "S6yhfjH4cUtWbNqGRmGp4Q==", "纯牛奶", true, ""),
+    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "secrarR6b4DrZ/7lkmB4LQ==", "纯牛奶", true, ""),
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "SwKzoo8aH3HfvzJx1iIqsQ==", "@@@", true, ""),
 

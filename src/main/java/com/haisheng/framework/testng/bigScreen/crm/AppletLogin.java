@@ -136,7 +136,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+            commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
             commonConfig.referer = EnumRefer.JIAOCHEN_REFER_ONLINE.getReferer();
             jcOnline.appletLoginToken(token);
