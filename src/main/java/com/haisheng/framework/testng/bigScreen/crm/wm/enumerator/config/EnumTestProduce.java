@@ -19,6 +19,8 @@ public enum EnumTestProduce {
     JIAOCHEN_DAILY("汽车-轿辰 日常 "),
 
     JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 "),
+
+    MENDIAN_DAILY("门店 日常"),
     ;
 
     EnumTestProduce(String name) {

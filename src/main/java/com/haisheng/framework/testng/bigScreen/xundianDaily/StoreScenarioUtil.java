@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import jdk.nashorn.internal.scripts.JS;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
@@ -22,6 +24,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
 
     private static volatile StoreScenarioUtil instance = null;
+
     private StoreScenarioUtil() {
     }
 
@@ -72,7 +75,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
 
@@ -85,7 +87,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         Long timestamp = System.currentTimeMillis();
         String non = "2e4b56c4-ac4c-4778-aa12-81657f5feb44";
-
 
 
         System.out.println(timestamp);
@@ -757,7 +758,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberVisitListV31(long shop_id, String member_type, Integer gender, String customer_id,String member_id, Integer page, Integer size) throws Exception {
+    public JSONObject memberVisitListV31(long shop_id, String member_type, Integer gender, String customer_id, String member_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/total/list";
         String json =
                 "{" +
@@ -866,7 +867,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:8.5.8  会员详情查看（2020-11-21）(门店6.0修改)
+     * @description:8.5.8 会员详情查看（2020-11-21）(门店6.0修改)
      * @author: qingqing
      * @time:
      */
@@ -884,7 +885,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -961,7 +961,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject single_newCount_pic(long shop_id,String cycle_type) throws Exception {
+    public JSONObject single_newCount_pic(long shop_id, String cycle_type) throws Exception {
         String url = "/patrol/new_member/shop/trend";
         String json =
                 "{" +
@@ -1539,29 +1539,29 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/cashier/risk-event/page";
         String json =
                 "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" ;
-                      if(event_name !=""){
-                       json = json+   "\"event_name\" :\"" + event_name + "\",\n";
-                      }
-                     if(order_id !=""){
-                       json = json+   "\"order_id\" :\"" + order_id + "\",\n";
-                      }
-                     if(order_date !=""){
-                       json = json+   "\"order_date\" :\"" + order_date + "\",\n";
-                      }
-                     if(member_name !=""){
-                       json = json+   "\"member_name\" :\"" + member_name + "\",\n";
-                      }
-                     if(handle_result !=""){
-                       json = json+   "\"handle_result\" :\"" + handle_result + "\",\n";
-                      }
-                     if(current_state !=""){
-                       json = json+   "\"current_state\" :\"" + current_state + "\",\n";
-                      }
-                    json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                        "\"shop_id\" :" + shop_id + ",\n";
+        if (event_name != "") {
+            json = json + "\"event_name\" :\"" + event_name + "\",\n";
+        }
+        if (order_id != "") {
+            json = json + "\"order_id\" :\"" + order_id + "\",\n";
+        }
+        if (order_date != "") {
+            json = json + "\"order_date\" :\"" + order_date + "\",\n";
+        }
+        if (member_name != "") {
+            json = json + "\"member_name\" :\"" + member_name + "\",\n";
+        }
+        if (handle_result != "") {
+            json = json + "\"handle_result\" :\"" + handle_result + "\",\n";
+        }
+        if (current_state != "") {
+            json = json + "\"current_state\" :\"" + current_state + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1939,9 +1939,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-           /**
-             * ***********************************************二十三、云巡店----图片中心************************************************
-             */
+    /**
+     * ***********************************************二十三、云巡店----图片中心************************************************
+     */
     /**
      * @description:23.1 图片留痕方式类型
      * @author: qingqing
@@ -1962,30 +1962,30 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject picturePage(String patrol_type,String start_time,String end_time,String shop_name,Integer is_abnormal,Integer page,Integer size) throws Exception {
+    public JSONObject picturePage(String patrol_type, String start_time, String end_time, String shop_name, Integer is_abnormal, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/remark/picture/page";
         String json =
-                "{" ;
-                   if (patrol_type != "") {
-                      json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
-                   }
-                   if (start_time != "") {
-                      json = json + "\"start_time\" :\"" + start_time + "\",\n";
-                   }
-                   if (end_time != "") {
-                      json = json + "\"end_time\" :\"" + end_time + "\",\n";
-                   }
-                   if (shop_name != "") {
-                      json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
-                   }
-                   if (is_abnormal != null) {
-                       json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
-                   }
-                   json = json +
-                    "\"page\" :" + page + ",\n" +
-                    "\"size\" :" + size + "\n" +
+                "{";
+        if (patrol_type != "") {
+            json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
+        }
+        if (start_time != "") {
+            json = json + "\"start_time\" :\"" + start_time + "\",\n";
+        }
+        if (end_time != "") {
+            json = json + "\"end_time\" :\"" + end_time + "\",\n";
+        }
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (is_abnormal != null) {
+            json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
 
-                 "} ";
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1995,7 +1995,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     /**
      * -------------------------------门店1.0APP-----------------------------------------------------------------------------------------------
-    */
+     */
 
 
     /**
@@ -2003,7 +2003,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject typeSearch( Integer page, Integer size) throws Exception {
+    public JSONObject typeSearch(Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/shop-type-list";
         String json =
                 "{} ";
@@ -2018,7 +2018,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject longSee_list( Integer page, Integer size) throws Exception {
+    public JSONObject longSee_list(Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/often-shop-list";
         String json =
                 "{} ";
@@ -2048,7 +2048,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopName_Search(String district_code ,JSONArray shop_type ,String shop_name,Integer page, Integer size) throws Exception {
+    public JSONObject shopName_Search(String district_code, JSONArray shop_type, String shop_name, Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/shop-search";
         String json =
                 "{" +
@@ -2067,7 +2067,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_shopDetail(String shop_id ) throws Exception {
+    public JSONObject app_shopDetail(String shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/shop-detail";
         String json =
                 "{" +
@@ -2110,7 +2110,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
     /**
      * @description:3.1 巡店中心
      * @author: qingqing
@@ -2131,7 +2130,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( long shop_id) throws Exception {
+    public JSONObject app_deviceList(long shop_id) throws Exception {
         String url = "/store/m-app/auth/patrol/device-list";
         String json =
                 "{" +
@@ -2142,12 +2141,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:3.2 巡店-直播流
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( long shop_id,String device_id) throws Exception {
+    public JSONObject app_deviceList(long shop_id, String device_id) throws Exception {
         String url = "/store/m-app/auth/patrol/device-live";
         String json =
                 "{" +
@@ -2161,15 +2161,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
-
     /**----------------------------------------------------------------------四. 账号相关---------------------------**/
     /**
      * @description:1.1 获取登录验证码
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( String phone) throws Exception {
+    public JSONObject app_deviceList(String phone) throws Exception {
         String url = "/store/m-app/login-verification-code";
         String json =
                 "{" +
@@ -2186,7 +2184,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_login( String phone,String verification_code) throws Exception {
+    public JSONObject app_login(String phone, String verification_code) throws Exception {
         String url = "/store/m-app/login";
         String json =
                 "{" +
@@ -2216,12 +2214,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     //--------------------------------------五. 数据统计相关---------------------------
+
     /**
      * @description:5.3 门店详情-实时客流-用户画像
      * @author: qingqing
      * @time:
      */
-    public JSONObject real_userInfo( long shop_id) throws Exception {
+    public JSONObject real_userInfo(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/real-hour/age-gender/distribution";
         String json =
                 "{" +
@@ -2233,29 +2232,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    /**
-     * @description:5.4 门店详情-实时客流-趋势图
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject real_pv_uv( long shop_id) throws Exception {
-        String url = "/store/m-app/auth/shop/real-hour/pv-uv";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
     /**
      * @description:5.5 门店详情-历史客流-用户画像
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_userInfo( long shop_id) throws Exception {
+    public JSONObject history_userInfo(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/history/age-gender/distribution";
         String json =
                 "{" +
@@ -2266,12 +2249,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:5.6 门店详情-历史客流-到店趋势图
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_pv_uv( long shop_id) throws Exception {
+    public JSONObject history_pv_uv(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/history/age-gender/distribution";
         String json =
                 "{" +
@@ -2288,7 +2272,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_conversion( long shop_id,String date,String cecle_type) throws Exception {
+    public JSONObject history_conversion(long shop_id, String date, String cecle_type) throws Exception {
         String url = "/store/m-app/auth/shop/history/conversion";
         String json =
                 "{" +
@@ -2302,7 +2286,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+//------------------------------------------------------------------------------------------------------------------
 
+    public JSONObject invokeApi(IScene scene) {
+        return invokeApi(scene, true);
+    }
+
+    public JSONObject invokeApi(IScene scene, boolean checkCode) {
+        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+    }
+
+    private JSONObject invokeApi(String path, JSONObject requestBody) {
+        return invokeApi(path, requestBody, true);
+    }
 }
 
 
