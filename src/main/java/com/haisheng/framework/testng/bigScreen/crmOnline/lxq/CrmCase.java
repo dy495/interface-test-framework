@@ -1016,8 +1016,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             crm.login(cstm.dcc, cstm.pwd);
 
             String name = getCarName();
-            String phone = "139000" + (int) ((Math.random() * 9 + 1) * 10000);
-            String phone1 = "139001" + (int) ((Math.random() * 9 + 1) * 10000);
+            String phone = "139100" + (int) ((Math.random() * 9 + 1) * 10000);
+            String phone1 = "139101" + (int) ((Math.random() * 9 + 1) * 10000);
             String car7 = getPlateNum();
             String car8 = getPlateNum() + "1";
 

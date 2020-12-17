@@ -4825,7 +4825,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("test_car_id", id);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
+        return JSON.parseObject(result);
     }
 
     //试驾车列表
