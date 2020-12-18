@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -53,10 +52,10 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "Jjiaochen-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -160,7 +159,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @description :添加重复车牌失败ok
      * @date :2020/7/10 18:03
      **/
-    @Test(priority = 2)
+    @Test()
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -184,7 +183,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @description :【我的】添加车辆，10辆边界
      * @date :2020/7/27 19:43
      **/
-    @Test(priority = 2)
+    @Test()
     public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -247,7 +246,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("车辆，车牌号异常验证");
+//            saveData("车辆，车牌号异常验证");
         }
     }
 
@@ -255,7 +254,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @description :编辑车辆
      * @date :2020/10/10 16:00
      **/
-    @Test(priority = 1)
+    @Test()
     public void editplate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -295,7 +294,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @description :活动报名 pc报名人数变化
      * @date :2020/7/12 11:48
      **/
-//    @Test(priority = 5)
+//    @Test()
     public void activityConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -335,7 +334,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @description :活动报名；未审核 applet文章详情，报名人数+1
      * @date :2020/7/21 15:29
      **/
-//    @Test(priority = 5)
+//    @Test()
     public void pcappointmentSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -369,7 +368,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/11/30 17:23
      **/
 
-//    @Test(priority = 5)
+//    @Test()
     public void pcappointmentSumPass() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
