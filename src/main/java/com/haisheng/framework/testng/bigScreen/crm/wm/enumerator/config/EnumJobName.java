@@ -20,6 +20,8 @@ public enum EnumJobName {
 
     JIAOCHEN_DAILY_TEST("jiaochen-daily-test"),
 
+    JIAOCHEN_ONLINE_TEST("jiaochen-online-test"),
+
     XUNDIAN_DAILY_TEST("xundian-daily-test"),
     ;
 
