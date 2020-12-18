@@ -25,7 +25,6 @@ public class CommonConfig {
     //使用是请替换JOB_NAME为自己的jenkins-job名
     public String checklistCiCmd = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/" + JOB_NAME + "/buildWithParameters?case_name=";
     public String checklistQaOwner = "于海生";
-    public String produce;
     //钉钉推送信息
     public String dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
     public String[] pushRd = {"18513118484", //杨航
@@ -35,11 +34,9 @@ public class CommonConfig {
             "case：" + CASE_NAME + "\n\n" +
             "验证：" + CASE_DESC +
             " \n\n" + CASE_FAIL;
-    //门店id
-    public String shopId="-1";
-    //default case name
+    //配置信息
+    public String shopId;
     public String caseName = "login";
-
-    //
-    public String referer = "https://servicewechat.com/wx5102264595be8c23/";
+    public String referer;
+    public String produce;
 }

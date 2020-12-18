@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class FilterColumnSystemOnline extends TestCaseCommon implements TestCaseStd {
-          ScenarioUtilOnline jc = new ScenarioUtilOnline();
+    ScenarioUtilOnline jc = new ScenarioUtilOnline();
     //    JsonPathUtil jpu = new JsonPathUtil();
     public String shopId = "-1";
 
@@ -45,7 +45,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
@@ -60,6 +60,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void clean() {
         afterClassClean();
     }
+
     /**
      * @description: get a fresh case ds to save case result, such as result/response
      */
@@ -69,7 +70,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("15711200001","000000");
+        jc.pcLogin("15711200001", "000000");
     }
 
 
@@ -87,14 +88,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.receptionManage("", String.valueOf(1), "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.receptionManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.receptionManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String flag = list.getJSONObject(i).getString(output);
 //                      list.forEach(e -> {
 //                      JSONObject jsonObject = (JSONObject) e;
 //                        String flag = jsonObject.getString(output);
                         Preconditions.checkArgument(flag.contains(result), "接待管理按" + result + "查询，结果错误" + flag);
-                    };
+                    }
+                    ;
                 }
             } else {
                 Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
@@ -115,18 +117,19 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAppointmentRecodeTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.receptionTimeManage("","1","10",startTime,endTime,startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.receptionTimeManage("", "1", "10", startTime, endTime, startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.receptionTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.receptionTimeManage("", String.valueOf(page), "10", startTime, endTime, startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String receptionDate = list.getJSONObject(i).getString("reception_date");
                     String finishTime = list.getJSONObject(i).getString("finish_time");
-                    Preconditions.checkArgument(receptionDate.compareTo(startTime)>=0&&receptionDate.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的接待时间为："+receptionDate);
-                    Preconditions.checkArgument(finishTime.compareTo(startTime)>=0&&finishTime.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的完成时间为："+finishTime);
-                };
+                    Preconditions.checkArgument(receptionDate.compareTo(startTime) >= 0 && receptionDate.compareTo(endTime) <= 0, "接待管理开始时间：" + startTime + " 结束时间：" + endTime + " 列表中的接待时间为：" + receptionDate);
+                    Preconditions.checkArgument(finishTime.compareTo(startTime) >= 0 && finishTime.compareTo(endTime) <= 0, "接待管理开始时间：" + startTime + " 结束时间：" + endTime + " 列表中的完成时间为：" + finishTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -317,16 +320,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void preSleCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
-            JSONObject respon=jc.preSleCustomerTimeManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-10);
+            String endTime = dt.getHistoryDate(10);
+            JSONObject respon = jc.preSleCustomerTimeManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.preSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.preSleCustomerTimeManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String createDate = list.getJSONObject(i).getString("create_date");
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "销售客户创建开始时间："+startTime+" 结束时间："+endTime+" 列表中的创建时间为："+createDate);
-                };
+                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "销售客户创建开始时间：" + startTime + " 结束时间：" + endTime + " 列表中的创建时间为：" + createDate);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -346,8 +350,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             Object[][] flag = Constant.preSleCustomerManage_pram();
             PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
+            String startTime = dt.getHistoryDate(-10);
+            String endTime = dt.getHistoryDate(10);
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.customer_name = data.getString(flag[0][1].toString());
@@ -361,7 +365,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(variable.sale_name), "参数全部输入的查询的" + variable.sale_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString("create_date").compareTo(startTime)>=0&&result.getString("create_date").compareTo(endTime)<=0, "销售客户创建开始时间："+startTime+" 结束时间："+endTime+" 列表中的创建时间为："+result.getString("create_date"));
+                Preconditions.checkArgument(result.getString("create_date").compareTo(startTime) >= 0 && result.getString("create_date").compareTo(endTime) <= 0, "销售客户创建开始时间：" + startTime + " 结束时间：" + endTime + " 列表中的创建时间为：" + result.getString("create_date"));
 
             } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
@@ -465,18 +469,19 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAfterSleCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
-            JSONObject respon=jc.afterSleCustomerTimeManage("","1","10",startTime,endTime,startTime,endTime);
+            String startTime = dt.getHistoryDate(-10);
+            String endTime = dt.getHistoryDate(10);
+            JSONObject respon = jc.afterSleCustomerTimeManage("", "1", "10", startTime, endTime, startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page), "10", startTime, endTime, startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String orderDate = list.getJSONObject(i).getString("start_order_date");
                     String importDate = list.getJSONObject(i).getString("import_date");
-                    Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
-                    Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
-                };
+                    Preconditions.checkArgument(orderDate.compareTo(startTime) >= 0 && orderDate.compareTo(endTime) <= 0, "订单开始时间：" + startTime + " 订单结束时间：" + endTime + " 列表中的开单时间为：" + orderDate);
+                    Preconditions.checkArgument(importDate.compareTo(startTime) >= 0 && importDate.compareTo(endTime) <= 0, "创建开始时间：" + startTime + " 创建结束时间：" + endTime + " 列表中的导入时间为：" + importDate);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -502,7 +507,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.repair_customer_name = data.getString(flag[1][1].toString());
                 variable.repair_customer_phone = data.getString(flag[2][1].toString());
                 variable.size = "10";
-                variable.page="1";
+                variable.page = "1";
                 variable.shop_id = "-1";
                 //全部筛选之后的结果
                 JSONObject result = jc.afterSleCustomerManage(variable).getJSONArray("list").getJSONObject(1);
@@ -609,16 +614,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void weChatSleCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
-            JSONObject respon=jc.weChatSleCustomerTimeManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-10);
+            String endTime = dt.getHistoryDate(10);
+            JSONObject respon = jc.weChatSleCustomerTimeManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.weChatSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.weChatSleCustomerTimeManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String createDate = list.getJSONObject(i).getString("create_date");
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "小程序客户注册开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的注册时间为："+createDate);
-                };
+                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "小程序客户注册开始时间：" + startTime + " 注册结束时间：" + endTime + " 列表中的注册时间为：" + createDate);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -738,7 +744,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String Flag=list.getJSONObject(i).getString(output);
+                            String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
                         }
                     }
@@ -762,20 +768,21 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void appointmentRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
-            JSONObject respon=jc.appointmentRecordTimeManage("","1","10",startTime,endTime,startTime,endTime,startTime,endTime);
+            String startTime = dt.getHistoryDate(-10);
+            String endTime = dt.getHistoryDate(10);
+            JSONObject respon = jc.appointmentRecordTimeManage("", "1", "10", startTime, endTime, startTime, endTime, startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page), "10", startTime, endTime, startTime, endTime, startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String createDate = list.getJSONObject(i).getString("create_date");
                     String arriveTime = list.getJSONObject(i).getString("arrive_time");
                     String confirmTime = list.getJSONObject(i).getString("confirm_time");
-                    Preconditions.checkArgument(confirmTime.compareTo(startTime)>=0&&confirmTime.compareTo(endTime)<=0, "预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的确认时间为："+confirmTime);
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
-                    Preconditions.checkArgument(arriveTime.compareTo(startTime)>=0&&arriveTime.compareTo(endTime)<=0, "预约记录预约开始时间："+startTime+" 预约结束时间："+endTime+" 列表中的预约时间为："+arriveTime);
-                };
+                    Preconditions.checkArgument(confirmTime.compareTo(startTime) >= 0 && confirmTime.compareTo(endTime) <= 0, "预约记录确认开始时间：" + startTime + " 确认结束时间：" + endTime + " 列表中的确认时间为：" + confirmTime);
+                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "预约记录创建开始时间：" + startTime + " 注册结束时间：" + endTime + " 列表中的创建时间为：" + createDate);
+                    Preconditions.checkArgument(arriveTime.compareTo(startTime) >= 0 && arriveTime.compareTo(endTime) <= 0, "预约记录预约开始时间：" + startTime + " 预约结束时间：" + endTime + " 列表中的预约时间为：" + arriveTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -901,7 +908,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.maintainFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.maintainFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.maintainFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "保养配置按" + result + "查询，结果错误" + Flag);
@@ -1024,7 +1031,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.voucherFormFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.voucherFormFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.voucherFormFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "卡券管理管理按" + result + "查询，结果错误" + Flag);
@@ -1146,7 +1153,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.sendRecordFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.sendRecordFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.sendRecordFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         System.out.println("----------" + "发卡记录管理按" + result + "查询，结果错误" + Flag);
@@ -1172,16 +1179,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void sendRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.sendRecordFilterTimeManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.sendRecordFilterTimeManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.sendRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.sendRecordFilterTimeManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String sendTime = list.getJSONObject(i).getString("send_time");
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "发卡开始时间："+startTime+" 发卡结束时间："+endTime+" 列表中发放时间为："+sendTime);
-                };
+                    Preconditions.checkArgument(sendTime.compareTo(startTime) >= 0 && sendTime.compareTo(endTime) <= 0, "发卡开始时间：" + startTime + " 发卡结束时间：" + endTime + " 列表中发放时间为：" + sendTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1287,7 +1295,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.verificationReordFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.verificationReordFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
@@ -1312,16 +1320,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void verificationRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.verificationReordTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.verificationReordTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.verificationReordTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.verificationReordTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String verificationTime = list.getJSONObject(i).getString("verification_time");
-                    Preconditions.checkArgument(verificationTime.compareTo(startTime)>=0&&verificationTime.compareTo(endTime)<=0, "核销开始时间："+startTime+" 核销结束时间："+endTime+" 列表中核销时间为："+verificationTime);
-                };
+                    Preconditions.checkArgument(verificationTime.compareTo(startTime) >= 0 && verificationTime.compareTo(endTime) <= 0, "核销开始时间：" + startTime + " 核销结束时间：" + endTime + " 列表中核销时间为：" + verificationTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1423,7 +1432,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.verificationPeopleFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.verificationPeopleFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.verificationPeopleFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
@@ -1540,7 +1549,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.packageFormFilterManage("", "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.packageFormFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.packageFormFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "套餐表单管理按" + result + "查询，结果错误" + Flag);
@@ -1564,16 +1573,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void packageFormTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.packageFormTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.packageFormTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.packageFormTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.packageFormTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String createTime = list.getJSONObject(i).getString("create_time");
-                    Preconditions.checkArgument(createTime.compareTo(startTime)>=0&&createTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中创建时间为："+createTime);
-                };
+                    Preconditions.checkArgument(createTime.compareTo(startTime) >= 0 && createTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + " 列表中创建时间为：" + createTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1605,8 +1615,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.package_name), "参数全部输入的查询的" + variable.package_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.creator), "参数全部输入的查询的" + variable.creator + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.package_status), "参数全部输入的查询的" + variable.package_status + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-            }
-            else{
+            } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
@@ -1678,23 +1687,23 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONObject respon = jc.buyPackageRecordFilterManage("", "1", "10", "", "");
             if (respon.getJSONArray("list").size() > 0) {
                 String result = respon.getJSONArray("list").getJSONObject(0).getString(output);
-                if(pram.equals("send_type")){
-                    int sendType=result.equals("售出")?1:0;
+                if (pram.equals("send_type")) {
+                    int sendType = result.equals("售出") ? 1 : 0;
                     JSONObject respon1 = jc.buyPackageRecordFilterManage("", "1", "10", pram, String.valueOf(sendType));
                     int pages = respon1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.buyPackageRecordFilterManage("", String.valueOf(page),"10", pram, String.valueOf(sendType)).getJSONArray("list");
+                        JSONArray list = jc.buyPackageRecordFilterManage("", String.valueOf(page), "10", pram, String.valueOf(sendType)).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("套餐购买管理按" + result + "查询结果" + Flag);
                             Preconditions.checkArgument(Flag.contains(result), "套餐购买管理按" + result + "查询结果" + Flag);
                         }
                     }
-                }else{
+                } else {
                     JSONObject respon1 = jc.buyPackageRecordFilterManage("", "1", "10", pram, result);
                     int pages = respon1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.buyPackageRecordFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.buyPackageRecordFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("套餐购买管理按" + result + "查询结果" + Flag);
@@ -1720,16 +1729,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void buyPackageRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.buyPackageRecordFilterTimeManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.buyPackageRecordFilterTimeManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.buyPackageRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.buyPackageRecordFilterTimeManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String sendTime = list.getJSONObject(i).getString("send_time");
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中时间发出为："+sendTime);
-                };
+                    Preconditions.checkArgument(sendTime.compareTo(startTime) >= 0 && sendTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + " 列表中时间发出为：" + sendTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1837,7 +1847,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String sendAccount = messageFormCustomerTurnMethod("MESSAGE_TYPE_LIST", sendAccountRespon);
             if (pram.equals("message_type")) {
                 JSONObject respon1 = jc.messageFormFilterManage("", "1", "10", pram, sendAccount);
-                if (respon1.getJSONArray("list").size() > 0 && sendAccountRespon != null){
+                if (respon1.getJSONArray("list").size() > 0 && sendAccountRespon != null) {
                     int pages = respon1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.messageFormFilterManage("", String.valueOf(page), "10", pram, sendAccount).getJSONArray("list");
@@ -1850,18 +1860,18 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     Preconditions.checkArgument(respon1.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
                 }
 
-            }else{
+            } else {
                 JSONObject respon1 = jc.messageFormFilterManage("", "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
-                if (respon1.getJSONArray("list").size() > 0 && result != null){
+                if (respon1.getJSONArray("list").size() > 0 && result != null) {
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.messageFormFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.messageFormFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "消息表单管理按" + result + "查询结果" + Flag);
                         }
                     }
-                }else if (result != null) {
+                } else if (result != null) {
                     Preconditions.checkArgument(respon1.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
                 }
             }
@@ -1880,16 +1890,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void messageFormTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-2);
-            String endTime=  dt.getHistoryDate(2);
-            JSONObject respon=jc.messageFormTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-2);
+            String endTime = dt.getHistoryDate(2);
+            JSONObject respon = jc.messageFormTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.messageFormTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.messageFormTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String pushTime = list.getJSONObject(i).getString("push_time");
-                    Preconditions.checkArgument(pushTime.compareTo(startTime)>=0&&pushTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 推送时间为："+pushTime);
-                };
+                    Preconditions.checkArgument(pushTime.compareTo(startTime) >= 0 && pushTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + " 推送时间为：" + pushTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1995,7 +2006,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONObject tt = jc.articleFilterManage(shopId, "1", "10", pram, result);
             int pages = tt.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.articleFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                JSONArray list = jc.articleFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String Flag = list.getJSONObject(i).getString(output);
                     Preconditions.checkArgument(Flag.contains(result), "文章表单按" + result + "查询，结果错误" + Flag);
@@ -2016,21 +2027,22 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void articleTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.articleTimeFilterManage("","1","10",startTime,endTime,startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.articleTimeFilterManage("", "1", "10", startTime, endTime, startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.articleTimeFilterManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.articleTimeFilterManage("", String.valueOf(page), "10", startTime, endTime, startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String startDate = list.getJSONObject(i).getString("start_date");
                     String endDate = list.getJSONObject(i).getString("end_date");
                     String registerEndDate = list.getJSONObject(i).getString("register_end_date");
                     String registerStartDate = list.getJSONObject(i).getString("register_start_date");
-                    Preconditions.checkArgument(startDate.compareTo(startTime)>=0&&endDate.compareTo(endTime)<=0&&endDate.compareTo(startTime)>=0&&startDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+endDate);
-                    Preconditions.checkArgument(registerStartDate.compareTo(startTime)>=0&&registerEndDate.compareTo(endTime)<=0&&registerEndDate.compareTo(startTime)>=0&&registerStartDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+registerEndDate);
+                    Preconditions.checkArgument(startDate.compareTo(startTime) >= 0 && endDate.compareTo(endTime) <= 0 && endDate.compareTo(startTime) >= 0 && startDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的开始时间:" + startDate + "列表中的结束时间:" + endDate);
+                    Preconditions.checkArgument(registerStartDate.compareTo(startTime) >= 0 && registerEndDate.compareTo(endTime) <= 0 && registerEndDate.compareTo(startTime) >= 0 && registerStartDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的开始时间:" + startDate + "列表中的结束时间:" + registerEndDate);
 
-                };
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2101,7 +2113,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.registerListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.registerListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.registerListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "报名列表按" + result + "查询，结果错误" + Flag);
@@ -2126,21 +2138,22 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void registerListTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.registerListTimeFilterManage("","1","10",startTime,endTime,startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.registerListTimeFilterManage("", "1", "10", startTime, endTime, startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.registerListTimeFilterManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.registerListTimeFilterManage("", String.valueOf(page), "10", startTime, endTime, startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String startDate = list.getJSONObject(i).getString("start_date");
                     String endDate = list.getJSONObject(i).getString("end_date");
                     String registerEndDate = list.getJSONObject(i).getString("register_end_date");
                     String registerStartDate = list.getJSONObject(i).getString("register_start_date");
-                    Preconditions.checkArgument(startDate.compareTo(startTime)>=0&&endDate.compareTo(endTime)<=0&&endDate.compareTo(startTime)>=0&&startDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+endDate);
-                    Preconditions.checkArgument(registerStartDate.compareTo(startTime)>=0&&registerEndDate.compareTo(endTime)<=0&&registerEndDate.compareTo(startTime)>=0&&registerStartDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+registerEndDate);
+                    Preconditions.checkArgument(startDate.compareTo(startTime) >= 0 && endDate.compareTo(endTime) <= 0 && endDate.compareTo(startTime) >= 0 && startDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的开始时间:" + startDate + "列表中的结束时间:" + endDate);
+                    Preconditions.checkArgument(registerStartDate.compareTo(startTime) >= 0 && registerEndDate.compareTo(endTime) <= 0 && registerEndDate.compareTo(startTime) >= 0 && registerStartDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的开始时间:" + startDate + "列表中的结束时间:" + registerEndDate);
 
-                };
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2379,7 +2392,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     JSONObject respon2 = jc.applyListFilterManage(shopId, "1", "10", pram, statusName);
                     int pages = respon2.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.applyListFilterManage("", String.valueOf(page),"10", pram, statusName).getJSONArray("list");
+                        JSONArray list = jc.applyListFilterManage("", String.valueOf(page), "10", pram, statusName).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "卡券申请按" + result + "查询，结果错误" + Flag);
@@ -2389,7 +2402,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     JSONObject respon1 = jc.applyListFilterManage(shopId, "1", "10", pram, result);
                     int pages = respon1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.applyListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.applyListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "卡券申请按" + result + "查询，结果错误" + Flag);
@@ -2414,16 +2427,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void applyListTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.applyListTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-5);
+            String endTime = dt.getHistoryDate(5);
+            JSONObject respon = jc.applyListTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.applyListTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.applyListTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String applyTime = list.getJSONObject(i).getString("apply_time");
-                    Preconditions.checkArgument(applyTime.compareTo(startTime)>=0&&applyTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的申请时间:"+applyTime);
-                };
+                    Preconditions.checkArgument(applyTime.compareTo(startTime) >= 0 && applyTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的申请时间:" + applyTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2431,6 +2445,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             saveData("报名列表时间的筛选，结果校验");
         }
     }
+
     /**
      * @description :卡券申请-筛选栏填写全部参数查询
      * @date :2020/11/27
@@ -2536,7 +2551,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.shopListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.shopListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.shopListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "门店列表按" + result + "查询，结果错误" + Flag);
@@ -2611,7 +2626,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.brandListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.brandListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.brandListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "品牌列表按" + result + "查询，结果错误" + Flag);
@@ -2717,7 +2732,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.carStyleListFilterManage(shopId, "1", "10", id, pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.carStyleListFilterManage("", String.valueOf(page),"10", id, pram, result).getJSONArray("list");
+                    JSONArray list = jc.carStyleListFilterManage("", String.valueOf(page), "10", id, pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "车系列表按" + result + "查询，结果错误" + Flag);
@@ -2767,9 +2782,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.carModelListFilterManage(shopId, "1", "10", brand_id, style_id, pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.carModelListFilterManage("", String.valueOf(page),"10", brand_id, style_id,pram, result).getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++)
-                    {
+                    JSONArray list = jc.carModelListFilterManage("", String.valueOf(page), "10", brand_id, style_id, pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "车型列表按" + result + "查询，结果错误" + Flag);
                     }
@@ -2797,7 +2811,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String brand_id = jc.brandListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getString("id");
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
-            JSONArray list=res.getJSONArray("list");
+            JSONArray list = res.getJSONArray("list");
             if (list.size() > 0) {
                 JSONObject data = res.getJSONArray("list").getJSONObject(0);
                 String name = data.getString(flag[0][1].toString());
@@ -2807,7 +2821,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(year), "参数全部输入的查询的" + year + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(list.size()== 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(list.size() == 0, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2828,7 +2842,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String brand_id = jc.brandListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getString("id");
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
-            JSONArray list=res.getJSONArray("list");
+            JSONArray list = res.getJSONArray("list");
             if (list.size() > 0) {
                 JSONObject data = res.getJSONArray("list").getJSONObject(0);
                 String name = data.getString(flag[0][1].toString());
@@ -2877,7 +2891,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.roleListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.roleListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.roleListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "角色列表按" + result + "查询，结果错误" + Flag);
@@ -2926,7 +2940,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.staffListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.staffListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
@@ -2974,7 +2988,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.importListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.importListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.importListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "导入记录按" + result + "查询，结果错误" + Flag);
@@ -2998,16 +3012,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void importListTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-2);
-            String endTime=  dt.getHistoryDate(2);
-            JSONObject respon=jc.importListTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-2);
+            String endTime = dt.getHistoryDate(2);
+            JSONObject respon = jc.importListTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.importListTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.importListTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String importTime = list.getJSONObject(i).getString("import_time");
-                    Preconditions.checkArgument(importTime.compareTo(startTime)>=0&&importTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的导入时间:"+importTime);
-                };
+                    Preconditions.checkArgument(importTime.compareTo(startTime) >= 0 && importTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的导入时间:" + importTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3108,7 +3123,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject respon1 = jc.exportListFilterManage(shopId, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.exportListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.exportListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "导出记录按" + result + "查询，结果错误" + Flag);
@@ -3230,16 +3245,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void messageFormMessageTypeTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-2);
-            String endTime=  dt.getHistoryDate(2);
-            JSONObject respon=jc.pushMsgListTimeFilterManage("","1","10",startTime,endTime);
+            String startTime = dt.getHistoryDate(-2);
+            String endTime = dt.getHistoryDate(2);
+            JSONObject respon = jc.pushMsgListTimeFilterManage("", "1", "10", startTime, endTime);
             int pages = respon.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.pushMsgListTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.pushMsgListTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String sendTime = list.getJSONObject(i).getString("send_time");
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的推送时间:"+sendTime);
-                };
+                    Preconditions.checkArgument(sendTime.compareTo(startTime) >= 0 && sendTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的推送时间:" + sendTime);
+                }
+                ;
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
