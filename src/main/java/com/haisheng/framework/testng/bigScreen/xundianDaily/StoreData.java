@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
