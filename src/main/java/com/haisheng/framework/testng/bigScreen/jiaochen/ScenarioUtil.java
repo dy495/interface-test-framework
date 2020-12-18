@@ -1945,8 +1945,8 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("vehicle_chassis_code", variable.vehicle_chassis_code);
-        json.put("repair_customer_name", variable.repair_customer_name);
-        json.put("repair_customer_phone", variable.repair_customer_phone);
+        json.put("customer_name", variable.customer_name);
+        json.put("customer_phone", variable.customer_phone);
         json.put("create_end_time", variable.create_end_time);
         json.put("create_start_time", variable.create_start_time);
         json.put("order_end_time", variable.order_end_time);
