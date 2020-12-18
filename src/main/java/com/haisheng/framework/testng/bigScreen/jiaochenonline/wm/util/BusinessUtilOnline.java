@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MessageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.PackageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
@@ -16,12 +17,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -476,21 +479,24 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 发消息
+     * 消息推送
      *
+     * @param immediately 是否立即发送
      * @return 发出去的卡券id
      */
-    public Long pushMessage() {
+    public Long pushMessage(boolean immediately) {
         List<String> phoneList = new ArrayList<>();
-        phoneList.add(EnumAccount.MARKETING.getPhone());
         List<Long> voucherList = new ArrayList<>();
+        phoneList.add(EnumAccount.MARKETING.getPhone());
         long voucherId = getVoucherList().getJSONObject(0).getLong("voucher_id");
         voucherList.add(voucherId);
-        //消息发送一张卡券
-        IScene sendMesScene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-                .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true).build();
-        jc.invokeApi(sendMesScene);
+                .type(0).voucherOrPackageList(voucherList).useDays(10);
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 60), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        jc.invokeApi(builder.build());
         return voucherId;
     }
 
@@ -554,6 +560,42 @@ public class BusinessUtilOnline {
     }
 
     /**
+     * 获取可用卡券id
+     *
+     * @return 卡券id
+     */
+    public JSONObject getVoucherListId() throws Exception {
+        Integer id = null;
+        Integer status = null;
+        JSONArray list;
+        AtomicBoolean sign = new AtomicBoolean(false);
+        JSONObject object = new JSONObject();
+        do {
+            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            JSONObject response = jc.invokeApi(builder.build());
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            list = response.getJSONArray("list");
+            list.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                String statusName = jsonObject.getString("status_name");
+                if (!statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
+                        && !statusName.equals(EnumAppletVoucherStatus.USED.getName())) {
+                    sign.set(true);
+                    object.put("id", jsonObject.getLong("id"));
+                    object.put("voucherName", jsonObject.getString("title"));
+                }
+            });
+            logger.info("id:{},status:{}", id, status);
+            if (sign.get()) {
+                return object;
+            }
+        } while (list.size() == 20);
+        throw new Exception("无可用卡券");
+    }
+
+    /**
      * 获取小程序卡券数量
      *
      * @return 卡券数量
@@ -586,6 +628,25 @@ public class BusinessUtilOnline {
         JSONArray array;
         do {
             PackageList.PackageListBuilder builder = PackageList.builder().lastValue(lastValue).type("type").size(20);
+            JSONObject response = jc.invokeApi(builder.build());
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
+
+    /**
+     * 我的消息列表数
+     *
+     * @return 消息数量
+     */
+    public int getMessageListSize() {
+        Long lastValue = null;
+        int listSize = 0;
+        JSONArray array;
+        do {
+            MessageList.MessageListBuilder builder = MessageList.builder().lastValue(lastValue).size(20);
             JSONObject response = jc.invokeApi(builder.build());
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
