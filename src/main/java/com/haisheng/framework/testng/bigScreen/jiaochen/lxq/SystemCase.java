@@ -764,20 +764,70 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
     @DataProvider(name = "ARTICLE") //要补充
     public  Object[] article() {
-
-
         return new String[][]{
                 {"1234", "ONE_BIG",info.stringone, "RED_PAPER"},
                 {info.stringten, "ONE_BIG",info.stringfifty, "PREFERENTIAL"},
                 {info.string20, "ONE_LEFT",info.stringten, "BARGAIN"},
                 {info.stringten, "ONE_LEFT",info.stringlong, "WELFARE"},
-                {info.stringsix, "ONE_LEFT",info.stringten, "GIFT"},
+                {info.stringsix, "ONE_LEFT",info.stringlong, "GIFT"},
 
         };
     }
 
     //新建活动
+    @Test(dataProvider = "ACTIVITY")
+    public void addActivity(String title, String pic_type,  String content, String label,String start,String end,String quota,String address,String maintain,String voucher,String type, String day) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
 
+
+            JSONArray pic_list2 =new JSONArray();
+            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
+            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
+            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
+            JSONArray vou_list =new JSONArray();
+            vou_list.add(jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getInteger("id"));
+
+            if (day.equals(0)){
+                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list2,content,label,"ACTIVITY",start,end,start,
+                        end,Integer.valueOf(quota),address,Boolean.valueOf(maintain),Boolean.valueOf(voucher),vou_list,
+                        type,start,end,null);
+                int code = obj.getInteger("code");
+                Long id = obj.getJSONObject("data").getLong("id");
+                //关闭活动
+                jc.changeArticleStatus(id);
+                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
+            }
+            else {
+                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list2,content,label,"ACTIVITY",start,end,start,
+                        end,Integer.valueOf(quota),address,Boolean.valueOf(maintain),Boolean.valueOf(voucher),vou_list,
+                        type,null,null,Integer.valueOf(day));
+                int code = obj.getInteger("code");
+                Long id = obj.getJSONObject("data").getLong("id");
+                //关闭活动
+                jc.changeArticleStatus(id);
+                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【内容运营】，新建活动3张图");
+        }
+    }
+    @DataProvider(name = "ACTIVITY")
+    public  Object[] activity() {
+        return new String[][]{
+                {"1234", "THREE",info.stringone, "RED_PAPER",dt.getHistoryDate(0),dt.getHistoryDate(100),"1","啊","false","true","SIGN_UP","0"},
+                {info.stringten, "THREE",info.stringfifty, "PREFERENTIAL",dt.getHistoryDate(0),dt.getHistoryDate(110),"100",info.stringfifty,"true","true","SIGN_UP","1"},
+                {info.string20, "THREE",info.stringten, "BARGAIN",dt.getHistoryDate(0),dt.getHistoryDate(365),"100000000",info.stringsix,"true","true","SIGN_UP","2000"},
+                {info.stringten, "THREE",info.stringlong, "WELFARE",dt.getHistoryDate(0),dt.getHistoryDate(364),"999",info.stringten,"false","true","ARTICLE_BUTTON","1000"},
+                {info.stringsix, "THREE",info.stringlong, "GIFT",dt.getHistoryDate(0),dt.getHistoryDate(62),"10000",info.stringfifty,"false","true","ARTICLE_BUTTON","50"}
+        };
+    }
 
 
 
@@ -859,7 +909,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {info.taocannoauth_id,info.taocannoauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
                 {info.taocanauth_id,info.taocanauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
                 {info.nxauth_id,info.nxauth_list,"13412010067","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
-
 
         };
     }
