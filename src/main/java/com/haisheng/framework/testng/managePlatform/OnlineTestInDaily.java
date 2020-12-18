@@ -113,6 +113,10 @@ public class OnlineTestInDaily {
                 subjectIdNew = getSubjectIdByName(listSubject, subjectName);
                 //更新shop id
                 dailyManagePlatformUnit.nodeId = subjectIdNew;
+                logger.info("new shop id: " + subjectIdNew);
+            } else {
+                dailyManagePlatformUnit.nodeId = subjectIdNew;
+                logger.info("using already existed shop id: " + subjectIdNew);
             }
 
 //            配置服务
@@ -179,6 +183,7 @@ public class OnlineTestInDaily {
                     continue;
                 }
 
+                logger.info("Found online layout " + layoutIdOld + ", getting information");
                 String name = singleLayout.getString("name");
                 String description = singleLayout.getString("description");
                 String floorId = singleLayout.getString("floor_id");
@@ -187,10 +192,15 @@ public class OnlineTestInDaily {
 //                3、创建平面
                 String s = setToDaily.listLayout(subjectIdNew);
                 String layoutIdNew = getLayoutIdByName(s, name);
+                logger.info("starting create new layout " + layoutIdNew);
                 String layoutPic = "";
                 if ("".equals(layoutIdNew)) {
                     String addLayout = setToDaily.addLayout(name, description, subjectIdNew, floorId, StatusCode.SUCCESS);
                     layoutIdNew = getLayoutId(addLayout);
+                    logger.info("done！ create new layout " + layoutIdNew);
+                } else {
+                    //平面已存在
+                    logger.info("layout " + layoutIdNew + " already existed, not create again.");
                 }
 
                 layoutPic = setToDaily.uploadLayoutPic(layoutPicOssOld);
@@ -223,11 +233,12 @@ public class OnlineTestInDaily {
                         Thread.sleep(5*60*1000);
 
                         setToDaily.stopDevice(deviceId);
-
+                        logger.info("start to bind new device " + deviceId + " to layout " + layoutIdNew);
                         setToDaily.addLayoutDevice(layoutIdNew, deviceId);
                     }
 
                     if (singleLayoutDevice.getBooleanValue("mapping") == true) {
+                        logger.info("getting mapping information");
 //                    获取映射详情
                         String layoutMapping = getFromOnline.getLayoutMapping(deviceIdOnline, layoutIdOld);
                         JSONObject data = JSON.parseObject(layoutMapping).getJSONObject("data");
@@ -238,6 +249,7 @@ public class OnlineTestInDaily {
                         JSONObject layout_mapping = data.getJSONObject("layout_mapping");
 
 //                    映射
+                        logger.info("start mapping");
                         setToDaily.analysisMatrix(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
                         setToDaily.layoutMapping(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
                     }
@@ -279,6 +291,7 @@ public class OnlineTestInDaily {
                 }
 
 //                4.1 新建区域
+                logger.info("creating region");
                 String regionIdNew = "";
                 if ("STORE".equals(regionType)) {
                     String listRegion1 = setToDaily.listRegion(subjectIdNew);
@@ -296,6 +309,7 @@ public class OnlineTestInDaily {
                 }
 
 //                4.2 更新区域（区域详情）
+                logger.info("updating region");
                 setToDaily.updateRegion(regionIdNew, region_location);
 
 //                4.3 区域设备
@@ -315,6 +329,7 @@ public class OnlineTestInDaily {
                         String deviceId = getDeviceIdByName(s1, name);
 
 //                    绑定区域设备
+                        logger.info("binding device");
                         setToDaily.addRegionDevice(regionIdNew, deviceId);
                     }
                     break;
@@ -343,6 +358,7 @@ public class OnlineTestInDaily {
 
                     String entranceIdNew = getEntranceIdByName(entranceListNew, entranceName);
 //                    新建出入口
+                    logger.info("creating entrance");
                     if ("".equals(entranceIdNew)) {
                         String addEntrance = setToDaily.addEntrance(entranceName, entranceType, regionIdNew, use_line, both_dir, is_stair);
 
