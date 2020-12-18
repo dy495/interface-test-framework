@@ -8,7 +8,7 @@ import lombok.Builder;
  * 门店详情-实时客流-用户画像
  */
 @Builder
-public class AgeGenderDistribution extends BaseScene {
+public class RealHourAgeGenderDistribution extends BaseScene {
     private final String shopId;
 
     @Override

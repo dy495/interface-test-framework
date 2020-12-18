@@ -9,10 +9,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShop
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumAppPageType;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumCycleType;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.app.*;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc.HistoryDayTrendPvUv;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc.PassengerFlow;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc.RealTimeShopPvUv;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -22,6 +21,7 @@ import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +49,6 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
-
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getName());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
@@ -275,7 +273,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         try {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> {
-                IScene scene = AgeGenderDistribution.builder().shopId(shopId).build();
+                IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "gender", "gender_ratio");
                 CommonUtil.valueView(percent);
                 Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
@@ -293,7 +291,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         try {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> {
-                IScene scene = AgeGenderDistribution.builder().shopId(shopId).build();
+                IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "age", "age_ratio");
                 CommonUtil.valueView(percent);
                 Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
@@ -310,7 +308,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         //todo
     }
 
-    @Test(description = "今日到访人数<=今日各时刻中人数之和")
+    @Test(description = "今日到访人数<=今日各时刻中人次之和")
     public void passengerFlow_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -319,8 +317,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
                 //今日到访人数
-                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv"))
-                        .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
                 //今日各时刻中人数之和
                 int sumValue = getTypeSum(scene1, "pv");
@@ -330,11 +327,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("今日到访人数<=今日各时刻中人数之和");
+            saveData("今日到访人数<=今日各时刻中人次之和");
         }
     }
 
-    @Test(description = "今日到访人次==今日各时段中人次之和")
+    @Test(description = "今日到访人次==今日各时段中人数之和")
     public void passengerFlow_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -343,8 +340,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
                 //今日到访人次
-                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv"))
-                        .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 //今日各时段中人次之和
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
                 int sumValue = getTypeSum(scene1, "uv");
@@ -354,15 +350,173 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("今日到访人次==今日各时段中人次之和");
+            saveData("今日到访人次==今日各时段中人数之和");
         }
     }
 
-    @Test(description = "昨日到访人数<=昨日各时段中人数之和")
+    @Test(description = "昨日到访人次==昨日各时段中人次之和")
     public void passengerFlow_data_6() {
         //todo
     }
 
+    @Test(description = "昨日到访人次==昨日各时段中人次之和")
+    public void passengerFlow_data_7() {
+        //todo
+    }
+
+    @Test(description = "app昨日到访人数==app历史客流中截止日期得人数")
+    public void passengerFlow_data_8() {
+        //todo
+    }
+
+    @Test(description = "app昨日到访人数==pc历史客流中截止日期得人数")
+    public void passengerFlow_data_9() {
+        //todo
+    }
+
+    @Test(description = "app昨日到访人次==app历史客流中截止日期得人次")
+    public void passengerFlow_data_10() {
+        //todo
+    }
+
+    @Test(description = "app昨日到访人次==pc历史客流中截止日期得人次")
+    public void passengerFlow_data_11() {
+        //todo
+    }
+
+    @Test(description = "app今日到访人数==pc【实时客流】今日到访人数")
+    public void passengerFlow_data_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> {
+                //app今日到访
+                IScene scene = RealHourTotal.builder().shopId(shopId).build();
+                JSONArray list = md.invokeApi(scene).getJSONArray("list");
+                Integer appUv = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
+                IScene scene1 = RealTimeShopTotal.builder().shopId(shopId).build();
+                JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
+                Integer pcUv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
+                CommonUtil.valueView(appUv, pcUv);
+                Preconditions.checkArgument(appUv.equals(pcUv), "");
+                CommonUtil.logger(shopId);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("app今日到访人数==pc【实时客流】今日到访人数");
+        }
+    }
+
+    @Test(description = "app今日到访人次==pc【实时客流】今日到访人次")
+    public void passengerFlow_data_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> {
+                //app今日到访
+                IScene scene = RealHourTotal.builder().shopId(shopId).build();
+                JSONArray list = md.invokeApi(scene).getJSONArray("list");
+                Integer appPv = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
+                IScene scene1 = RealTimeShopTotal.builder().shopId(shopId).build();
+                JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
+                Integer pcPv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
+                CommonUtil.valueView(appPv, pcPv);
+                Preconditions.checkArgument(appPv.equals(pcPv), "");
+                CommonUtil.logger(shopId);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("app今日到访人数==pc【实时客流】今日到访人数");
+        }
+    }
+
+    @Test(description = "app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和")
+    public void passengerFlow_data_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> {
+                IScene scene = HistoryPvUv.builder().day(date).shopId(shopId).build();
+                int appUvSum = getTypeSum(scene, "uv");
+                IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
+                int pcUvSum = getTypeSum(scene1, "yesterday_uv");
+                CommonUtil.valueView(appUvSum, pcUvSum);
+                Preconditions.checkArgument(appUvSum == pcUvSum, "");
+                CommonUtil.logger(shopId);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和");
+        }
+    }
+
+    @Test(description = "app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和")
+    public void passengerFlow_data_15() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> {
+                IScene scene = HistoryPvUv.builder().day(date).shopId(shopId).build();
+                int appPvSum = getTypeSum(scene, "pv");
+                IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
+                int pcPvSum = getTypeSum(scene1, "yesterday_pv");
+                CommonUtil.valueView(appPvSum, pcPvSum);
+                Preconditions.checkArgument(appPvSum == pcPvSum, "");
+                CommonUtil.logger(shopId);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和");
+        }
+    }
+
+    @Test(description = "最近7天、14天、30天、60天女性占比+男性占比==100%")
+    public void passengerFlow_data_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+                List<String> shopIds = getAppShopIds();
+                shopIds.forEach(shopId -> {
+                    IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    double percent = getTypeSum(scene, "gender", "gender_ratio");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                });
+                CommonUtil.logger(enumCycleType.name());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("最近7天、14天、30天、60天女性占比+男性占比==100%");
+        }
+    }
+
+    @Test(description = "最近7天、14天、30天、60年龄段占比相加==100%")
+    public void passengerFlow_data_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+                List<String> shopIds = getAppShopIds();
+                shopIds.forEach(shopId -> {
+                    IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    double percent = getTypeSum(scene, "age", "age_ratio");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                });
+                CommonUtil.logger(enumCycleType.name());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("最近7天、14天、30天、60年龄段占比相加==100%");
+        }
+    }
 
     /**
      * 获取shopIds
@@ -376,14 +530,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = md.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            array.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                shopIds.add(String.valueOf(jsonObject.getInteger("id")));
-            });
+            shopIds.addAll(array.stream().map(e -> (JSONObject) e).map(jsonObject -> String.valueOf(jsonObject.getInteger("id"))).collect(Collectors.toList()));
         }
+        log.info("shopIds is:{}", shopIds);
         return shopIds;
     }
-
 
     /**
      * 获取shopIds
@@ -399,11 +550,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
             JSONObject response = md.invokeApi(scene);
             lastValue = response.getInteger("last_value");
             list = response.getJSONArray("list");
-            list.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                String shopId = String.valueOf(jsonObject.getJSONObject("result").getInteger("shop_id"));
-                shopIds.add(shopId);
-            });
+            shopIds.addAll(list.stream().map(e -> (JSONObject) e).map(jsonObject -> String.valueOf(jsonObject.getJSONObject("result").getInteger("shop_id"))).collect(Collectors.toList()));
             log.info("shopIds is:{}", shopIds);
         } while (list.size() == 20);
         return shopIds;
@@ -413,27 +560,49 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
      * 获取某个类型数据总和
      *
      * @param scene 某一接口
-     * @param type  某个类型
-     * @return 和值
+     * @param type  某个字段
+     * @return 和值(int)
      */
     public int getTypeSum(IScene scene, String type) {
         JSONArray list = md.invokeApi(scene).getJSONArray("list");
         return list.stream().map(e -> (JSONObject) e).mapToInt(jsonObject -> jsonObject.getInteger(type) == null ? 0 : jsonObject.getInteger(type)).sum();
     }
 
-    public double getTypeSum(IScene scene, String key, String type) {
-        AtomicReference<Double> percent = new AtomicReference<>((double) 0);
-        JSONArray age = md.invokeApi(scene).getJSONArray(key);
-        if (!age.isEmpty()) {
-            age.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                String ageRatio = jsonObject.getString(type);
-                String result = ageRatio.replace(ageRatio.substring(ageRatio.length() - 1), "");
-                double num = Double.parseDouble(result);
-                percent.updateAndGet(v -> v + num);
-            });
-        }
-        return percent.get();
+    /**
+     * 获取某个类型数据总和
+     *
+     * @param jsonArray 某个jsonArray
+     * @param type      某个字段
+     * @return 和值(double)
+     */
+    public double getTypeSum(JSONArray jsonArray, String type) {
+        return jsonArray.isEmpty() ? 0 : jsonArray.stream().map(e -> (JSONObject) e).map(jsonObject -> percentToDouble(jsonObject.getString(type)))
+                .collect(Collectors.toList()).stream().mapToDouble(e -> e).sum();
     }
 
+    /**
+     * 获取某个类型数据总和
+     *
+     * @param scene 某一接口
+     * @param key   某个jsonArray
+     * @param type  某个字段
+     * @return 和值(double)
+     */
+    public double getTypeSum(IScene scene, String key, String type) {
+        JSONArray list = md.invokeApi(scene).getJSONArray(key);
+        return list.isEmpty() ? 0 : list.stream().map(e -> (JSONObject) e).map(jsonObject -> percentToDouble(jsonObject.getString(type) == null ? "0%" : jsonObject.getString(type)))
+                .collect(Collectors.toList()).stream().mapToDouble(e -> e).sum();
+    }
+
+    /**
+     * 百分比转double
+     *
+     * @param percent 百分比
+     * @return 值(double)
+     */
+    private double percentToDouble(String percent) {
+        String per = StringUtils.isEmpty(percent) || !percent.contains("%") ? "0%" : percent;
+        String result = per.replace(per.substring(per.length() - 1), "");
+        return Double.parseDouble(result);
+    }
 }
