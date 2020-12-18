@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -132,6 +133,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+
             JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0);
             int yesterdayPv = total.getJSONObject("total_number").getInteger("yesterday_pv");
             JSONArray trendList = total.getJSONArray("trend_list");
@@ -267,7 +269,7 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "女性占比+男性占比==100%")
+    @Test(description = "实时客流--女性占比+男性占比==100%")
     public void passengerFlow_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -281,11 +283,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("女性占比+男性占比==100%");
+            saveData("实时客流--女性占比+男性占比==100%");
         }
     }
 
-    @Test(description = "年龄段占比相加==100%")
+    @Test(description = "实时客流--年龄段占比相加==100%")
     public void passengerFlow_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -299,16 +301,16 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("女性占比+男性占比==100%");
+            saveData("实时客流--女性占比+男性占比==100%");
         }
     }
 
-    @Test(description = "会员占比+非会员占比==100%")
+    @Test(description = "实时客流--会员占比+非会员占比==100%")
     public void passengerFlow_data_3() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "今日到访人数<=今日各时刻中人次之和")
+    @Test(description = "实时客流--今日到访人数<=今日各时刻中人次之和")
     public void passengerFlow_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -327,11 +329,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("今日到访人数<=今日各时刻中人次之和");
+            saveData("实时客流--今日到访人数<=今日各时刻中人次之和");
         }
     }
 
-    @Test(description = "今日到访人次==今日各时段中人数之和")
+    @Test(description = "实时客流--今日到访人次==今日各时段中人数之和")
     public void passengerFlow_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -350,41 +352,41 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("今日到访人次==今日各时段中人数之和");
+            saveData("实时客流--今日到访人次==今日各时段中人数之和");
         }
     }
 
-    @Test(description = "昨日到访人次==昨日各时段中人次之和")
+    @Test(description = "实时客流--昨日到访人次==昨日各时段中人次之和")
     public void passengerFlow_data_6() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "昨日到访人次==昨日各时段中人次之和")
+    @Test(description = "实时客流--昨日到访人次==昨日各时段中人次之和")
     public void passengerFlow_data_7() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "app昨日到访人数==app历史客流中截止日期得人数")
+    @Test(description = "实时客流--app昨日到访人数==app历史客流中截止日期得人数")
     public void passengerFlow_data_8() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "app昨日到访人数==pc历史客流中截止日期得人数")
+    @Test(description = "实时客流--app昨日到访人数==pc历史客流中截止日期得人数")
     public void passengerFlow_data_9() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "app昨日到访人次==app历史客流中截止日期得人次")
+    @Test(description = "实时客流--app昨日到访人次==app历史客流中截止日期得人次")
     public void passengerFlow_data_10() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "app昨日到访人次==pc历史客流中截止日期得人次")
+    @Test(description = "实时客流--app昨日到访人次==pc历史客流中截止日期得人次")
     public void passengerFlow_data_11() {
-        //todo
+        //todo 请黄青青补充完整
     }
 
-    @Test(description = "app今日到访人数==pc【实时客流】今日到访人数")
+    @Test(description = "实时客流--app今日到访人数==pc【实时客流】今日到访人数")
     public void passengerFlow_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -404,11 +406,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app今日到访人数==pc【实时客流】今日到访人数");
+            saveData("实时客流--app今日到访人数==pc【实时客流】今日到访人数");
         }
     }
 
-    @Test(description = "app今日到访人次==pc【实时客流】今日到访人次")
+    @Test(description = "实时客流--app今日到访人次==pc【实时客流】今日到访人次")
     public void passengerFlow_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -428,11 +430,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app今日到访人数==pc【实时客流】今日到访人数");
+            saveData("实时客流--app今日到访人数==pc【实时客流】今日到访人数");
         }
     }
 
-    @Test(description = "app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和")
+    @Test(description = "实时客流--app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和")
     public void passengerFlow_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -450,11 +452,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和");
+            saveData("实时客流--app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和");
         }
     }
 
-    @Test(description = "app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和")
+    @Test(description = "实时客流--app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和")
     public void passengerFlow_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -472,11 +474,11 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和");
+            saveData("实时客流--app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和");
         }
     }
 
-    @Test(description = "最近7天、14天、30天、60天女性占比+男性占比==100%")
+    @Test(description = "历史客流--最近7天、14天、30天、60天女性占比+男性占比==100%")
     public void passengerFlow_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -487,17 +489,18 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
                     double percent = getTypeSum(scene, "gender", "gender_ratio");
                     CommonUtil.valueView(percent);
                     Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                    CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("最近7天、14天、30天、60天女性占比+男性占比==100%");
+            saveData("历史客流--最近7天、14天、30天、60天女性占比+男性占比==100%");
         }
     }
 
-    @Test(description = "最近7天、14天、30天、60年龄段占比相加==100%")
+    @Test(description = "历史客流--最近7天、14天、30天、60年龄段占比相加==100%")
     public void passengerFlow_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -508,14 +511,263 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
                     double percent = getTypeSum(scene, "age", "age_ratio");
                     CommonUtil.valueView(percent);
                     Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                    CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("最近7天、14天、30天、60年龄段占比相加==100%");
+            saveData("历史客流--最近7天、14天、30天、60年龄段占比相加==100%");
         }
+    }
+
+    @Test(description = "历史客流--会员占比+非会员占比==100%")
+    public void passengerFlow_data_18() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--到店人次的和==客群漏斗中的到店人次")
+    public void passengerFlow_data_19() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--到店人数的和>=客群漏斗中的到店人数")
+    public void passengerFlow_data_20() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--日均客流==人数相加/天数")
+    public void passengerFlow_data_21() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--自然日--女性占比+男性占比==100%")
+    public void passengerFlow_data_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> dayList = getDayList();
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> dayList.forEach(day -> {
+                IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
+                double percent = getTypeSum(scene, "gender", "gender_ratio");
+                CommonUtil.valueView(percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                CommonUtil.logger(shopId + day);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--自然日女性占比+男性占比==100%");
+        }
+    }
+
+    @Test(description = "历史客流--自然日--年龄段占比相加==100%")
+    public void passengerFlow_data_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> dayList = getDayList();
+            List<String> shopIds = getAppShopIds();
+            shopIds.forEach(shopId -> dayList.forEach(day -> {
+                IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
+                double percent = getTypeSum(scene, "age", "age_ratio");
+                CommonUtil.valueView(percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                CommonUtil.logger(shopId + day);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--自然日--年龄段占比相加==100%");
+        }
+    }
+
+    @Test(description = "历史客流--自然月--女性占比+男性占比==100%")
+    public void passengerFlow_data_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getAppShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
+                double percent = getTypeSum(scene, "gender", "gender_ratio");
+                CommonUtil.valueView(percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                CommonUtil.logger(shopId + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--自然月--女性占比+男性占比==100%");
+        }
+    }
+
+    @Test(description = "历史客流--自然月--年龄段占比相加==100%")
+    public void passengerFlow_data_25() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getAppShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
+                double percent = getTypeSum(scene, "age", "age_ratio");
+                CommonUtil.valueView(percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                CommonUtil.logger(shopId + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--自然月--年龄段占比相加==100%");
+        }
+    }
+
+    @Test(description = "历史客流--吸引率==兴趣客群/过店客群")
+    public void passengerFlow_data_26() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--进店率==进店客群/兴趣客群")
+    public void passengerFlow_data_27() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--转化率==交易客群/进店客群")
+    public void passengerFlow_data_28() {
+        //todo 请黄青青补充完整
+    }
+
+    @Test(description = "历史客流--选择同一时间段，男性别占比==pc客群漏斗中男女性别占比")
+    public void passengerFlow_data_29() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getPcShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
+                JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
+                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("男性"))
+                        .map(s -> s.getString("gender_ratio")).collect(Collectors.toList()).get(0);
+                double appPercent = percentToDouble(appGenderRatio);
+                IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("deal").getJSONArray("list");
+                double pcPercent = getTypeSum(list, "male_percent");
+                CommonUtil.valueView(appPercent, pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, "");
+                CommonUtil.logger(shopId + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，男性别占比==pc客群漏斗中男女性别占比");
+        }
+    }
+
+    @Test(description = "历史客流--选择同一时间段，女性别占比==pc客群漏斗中男女性别占比")
+    public void passengerFlow_data_30() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getPcShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
+                JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
+                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("女性"))
+                        .map(s -> s.getString("gender_ratio")).collect(Collectors.toList()).get(0);
+                double appPercent = percentToDouble(appGenderRatio);
+                IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("deal").getJSONArray("list");
+                double pcPercent = getTypeSum(list, "female_percent");
+                CommonUtil.valueView(appPercent, pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, "");
+                CommonUtil.logger(shopId + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，女性别占比==pc客群漏斗中男女性别占比");
+        }
+    }
+
+    @Test(description = "历史客流--选择同一时间段，年龄段占比==pc客群漏斗中年龄段占比")
+    public void passengerFlow_data_31() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getPcShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
+                JSONArray gender = md.invokeApi(appScene).getJSONArray("age");
+                List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e)
+                        .map(s -> percentToDouble(s.getString("gender_ratio"))).collect(Collectors.toList());
+                IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("interest").getJSONArray("list");
+                List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent")))
+                        .collect(Collectors.toList());
+                CommonUtil.valueView(pcPercentList);
+                CommonUtil.valueView(appPercentList, pcPercentList);
+                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "");
+                CommonUtil.logger(shopId + " " + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，年龄段占比==pc客群漏斗中年龄段占比");
+        }
+    }
+
+    @Test(description = "历史客流--选择同一时间段，app转化率&吸引率&进店率==pc【客群漏斗】的转化率&吸引率&进店率")
+    public void passengerFlow_data_32() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<String> shopIds = getPcShopIds();
+            List<String> monthList = getMonthList();
+            shopIds.forEach(shopId -> monthList.forEach(month -> {
+                IScene appScene = HistoryConversion.builder().month(month).shopId(shopId).build();
+                JSONObject appData = md.invokeApi(appScene);
+                String appTransactionPercentage = appData.getString("transaction_percentage");
+                String appEnterPercentage = appData.getString("enter_percentage");
+                String appInterestPercentage = appData.getString("interest_percentage");
+                CommonUtil.valueView(appTransactionPercentage, appEnterPercentage, appInterestPercentage);
+                IScene pcScene = HistoryShopConversion.builder().shopId(shopId).month(month).build();
+                JSONObject pcData = md.invokeApi(pcScene);
+                String pcTransactionPercentage = pcData.getString("transaction_percentage");
+                String pceEnterPercentage = pcData.getString("enter_percentage");
+                String pcInterestPercentage = pcData.getString("interest_percentage");
+                CommonUtil.valueView(pcTransactionPercentage, pceEnterPercentage, pcInterestPercentage);
+                Preconditions.checkArgument(appEnterPercentage.equals(pceEnterPercentage), "");
+                Preconditions.checkArgument(appInterestPercentage.equals(pcInterestPercentage), "");
+                Preconditions.checkArgument(appTransactionPercentage.equals(pcTransactionPercentage), "");
+                CommonUtil.logger(shopId + " " + month);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，app转化率&吸引率&进店率==pc【客群漏斗】的转化率&吸引率&进店率");
+        }
+    }
+
+    public List<String> getMonthList() {
+        String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
+        String year = date.substring(0, 4);
+        String month = date.substring(5, 7);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            int y = Integer.parseInt(month) - i;
+            String newDate = y > 9 ? year + "-" + y : year + "-0" + y;
+            list.add(newDate);
+
+        }
+        return list;
+    }
+
+    public List<String> getDayList() {
+        List<String> list = new ArrayList<>();
+        for (int i = 1; i < 50; i++) {
+            String date = DateTimeUtil.addDayFormat(new Date(), -i);
+            list.add(date);
+        }
+        return list;
     }
 
     /**

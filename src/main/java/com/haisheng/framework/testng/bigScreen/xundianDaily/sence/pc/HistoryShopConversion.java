@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class HistoryShopAgeGenderDistribution extends BaseScene {
+public class HistoryShopConversion extends BaseScene {
     private final String shopId;
     private final String cycleType;
     private final String month;
@@ -21,6 +21,6 @@ public class HistoryShopAgeGenderDistribution extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/history/shop/age-gender/distribution";
+        return "/patrol/history/shop/conversion";
     }
 }
