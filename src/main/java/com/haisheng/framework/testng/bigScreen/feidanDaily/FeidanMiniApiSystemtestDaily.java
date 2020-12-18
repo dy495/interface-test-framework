@@ -2916,30 +2916,44 @@ public class FeidanMiniApiSystemtestDaily {
     //新建账号
     public JSONObject accountAdd(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
         String url = "/risk/account/add";
-        JSONObject json = new JSONObject();
-        json.put("name", name);
-        json.put("phone", phone);
-        json.put("email", email);
-        json.put("type", type);
-        json.put("role_list", role_list);
-        json.put("gender", gender);
-        json.put("plate_number", plate_number);
-        String result = httpPostWithCheckCode(url, json.toJSONString());
-        return JSON.parseObject(result).getJSONObject("data");
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+                        "    \"type\":\"" + type + "\"," +
+                        "    \"role_list\":" + role_list + "," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"plate_number\":\"" + plate_number + "\"" +
+
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONObject accountAddNotChk(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
         String url = "/risk/account/add";
-        JSONObject json = new JSONObject();
-        json.put("name", name);
-        json.put("phone", phone);
-        json.put("email", email);
-        json.put("type", type);
-        json.put("role_list", role_list);
-        json.put("gender", gender);
-        json.put("plate_number", plate_number);
-        String result = httpPostUrl(url, json.toJSONString());
-        return JSON.parseObject(result);
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+                        "    \"type\":\"" + type + "\"," +
+                        "    \"role_list\":" + role_list + "," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"plate_number\":\"" + plate_number + "\"" +
+
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     //编辑账号
