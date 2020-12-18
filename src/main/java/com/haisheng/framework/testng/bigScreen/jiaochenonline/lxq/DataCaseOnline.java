@@ -1,18 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -23,50 +18,38 @@ import java.lang.reflect.Method;
 
 /**
  * @author : lxq
- * @date :  2020/12/18
+ * @date :  2020/11/24
  */
 
-public class DataCase extends TestCaseCommon implements TestCaseStd {
+public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new jiaoChenInfo();
+    ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
+    jiaoChenInfoOnline info = new jiaoChenInfoOnline();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+     *
      */
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-
-
-        //replace checklist app id and conf id
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
-
         commonConfig.produce = EnumProduce.JC.name();
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
-
-        //replace ding push conf
-        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
+        //替换钉钉推送
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        //放入shopId
+        commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
-
-
+        logger.debug("jc: " + jc);
 
     }
 
@@ -78,6 +61,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: get a fresh case ds to save case result, such as result/response
+     *
      */
     @BeforeMethod
     @Override
@@ -85,66 +69,11 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("15711300001","000000");
+
+        jc.pcLogin("15711200001","000000");
     }
 
 
-
-
-    @Test
-    public void addshop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            String simple_name="简称"+Integer.toString((int)(Math.random()*100000));
-            String name="全称"+System.currentTimeMillis();
-            String district_code="222402";
-            String address="修改前的地址";
-            String sale_tel="13400000001";
-            String service_tel="13499999990";
-            String longitude="129.8439";
-            String latitude="42.96805";
-            String appointment_status="DISABLE";
-            String washing_status="DISABLE";
-
-            JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
-
-            //获取门店列表数
-            int bef = jc.shopPage(1,1,"").getInteger("total");
-            jc.addShop(info.logo,simple_name,name,arr,district_code,address,sale_tel,service_tel,Double.valueOf(longitude),
-                    Double.valueOf(latitude),appointment_status,washing_status);
-            int after = jc.shopPage(1,1,"").getInteger("total");
-            JSONObject obj = jc.shopPage(1,1,name).getJSONArray("list").getJSONObject(0);
-            String simple_name1=obj.getString("simple_name");
-            String name1=obj.getString("name");
-            String district_code1=obj.getString("district_code");
-            String address1=obj.getString("address");
-            String sale_tel1=obj.getString("sale_tel");
-            String service_tel1=obj.getString("service_tel");
-            String longitude1=obj.getString("longitude");
-            String latitude1=obj.getString("latitude");
-
-            int num = after - bef;
-            Preconditions.checkArgument(num==1,"创建门店，门店列表增加了"+num);
-            Preconditions.checkArgument(simple_name.equals(simple_name1),"门店简称，创建时="+simple_name+",列表中="+simple_name1);
-            Preconditions.checkArgument(name.equals(name1),"门店全称，创建时="+name+",列表中="+name1);
-            Preconditions.checkArgument(district_code.equals(district_code1),"门店所属城市，创建时="+district_code+",列表中="+district_code1);
-            Preconditions.checkArgument(address.equals(address1),"门店详细地址，创建时="+address+",列表中="+address1);
-            Preconditions.checkArgument(sale_tel.equals(sale_tel1),"门店销售电话，创建时="+sale_tel+",列表中="+sale_tel1);
-            Preconditions.checkArgument(service_tel.equals(service_tel1),"门店售后电话，创建时="+service_tel+",列表中="+service_tel1);
-            Preconditions.checkArgument(longitude.equals(longitude1),"门店纬度，创建时="+longitude+",列表中="+longitude1);
-            Preconditions.checkArgument(latitude.equals(latitude1),"门店经度，创建时="+latitude+",列表中="+latitude1);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店, 列表数量+1，与新建时信息一致");
-        }
-    }
 
     @Test
     public void editshop() {
@@ -152,7 +81,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             String simple_name="简称"+Integer.toString((int)(Math.random()*100000));
-            String name="自动化用的门店-不要改";
+            String name="QA测试门店全称";
             String district_code="222402";
             String address="地址"+System.currentTimeMillis();
             String sale_tel="1380000"+Integer.toString((int)((Math.random()*9+1)*1000));
@@ -163,13 +92,13 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
             String washing_status="DISABLE";
 
             JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
+            arr.add(info.BrandIDOnline);
 
             //修改前获取门店列表数
             int bef = jc.shopPage(1,1,"").getInteger("total");
 
             //每次修改固定shop
-            jc.editShop(47007L,info.logo,simple_name,name,arr,district_code,address,sale_tel,service_tel,Double.valueOf(longitude),
+            jc.editShop(20709L,info.logo,simple_name,name,arr,district_code,address,sale_tel,service_tel,Double.valueOf(longitude),
                     Double.valueOf(latitude),appointment_status,washing_status);
             int after = jc.shopPage(1,1,"").getInteger("total");
             int num = after - bef;
@@ -207,6 +136,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【门店管理】，修改门店, 列表数量+0，与修改后信息一致");
         }
     }
+
 
     @Test
     public void addDelBrandChkNum() {
@@ -247,29 +177,29 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int bef = jc.carStylePage(1,1,info.BrandID,"").getInteger("total");
+            int bef = jc.carStylePage(1,1,info.BrandIDOnline,"").getInteger("total");
             //创建车系
             String manufacturer = "旧生产商";
             String name= "旧车系";
             String online_time= dt.getHistoryDate(0);
-            jc.addCarStyle(info.BrandID, manufacturer,  name,  online_time);
+            jc.addCarStyle(info.BrandIDOnline, manufacturer,  name,  online_time);
 
             //获取车系id
-            Long id = jc.carStylePage(1,1,info.BrandID,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = jc.carStylePage(1,1,info.BrandIDOnline,name).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            int afteradd = jc.carStylePage(1,1,info.BrandID,"").getInteger("total");
+            int afteradd = jc.carStylePage(1,1,info.BrandIDOnline,"").getInteger("total");
 
             //修改车系
             String manufacturer1 = "新生产商";
             String name1 = "新车系";
             String online_time1= dt.getHistoryDate(-2);
-            jc.editCarStyle(id,info.BrandID,manufacturer1,name1,online_time1);
+            jc.editCarStyle(id,info.BrandIDOnline,manufacturer1,name1,online_time1);
 
-            int afteredit = jc.carStylePage(1,1,info.BrandID,"").getInteger("total");
+            int afteredit = jc.carStylePage(1,1,info.BrandIDOnline,"").getInteger("total");
 
             //删除品牌车系
             jc.delCarStyle(id);
-            int afterdel = jc.carStylePage(1,1,info.BrandID,"").getInteger("total");
+            int afterdel = jc.carStylePage(1,1,info.BrandIDOnline,"").getInteger("total");
 
             int add = afteradd - bef; //1
             int del = afteradd - afterdel; //1
@@ -291,28 +221,28 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int bef = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,"","","").getInteger("total");
+            int bef = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,"","","").getInteger("total");
             //创建车型
             String name1 = "旧车型名称"+System.currentTimeMillis();
             String year1= "2000年";
             String status1 = "ENABLE";
-            jc.addCarModel(info.BrandID, info.CarStyleID,  name1,year1,  status1);
+            jc.addCarModel(info.BrandIDOnline, info.CarStyleIDOnline,  name1,year1,  status1);
             //获取车系id
-            int size = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,name1,"","").getInteger("total");
-            Long id = jc.carModelPage(1,size,info.BrandID, info.CarStyleID,name1,"","").getJSONArray("list").getJSONObject(size-1).getLong("id");
+            int size = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,name1,"","").getInteger("total");
+            Long id = jc.carModelPage(1,size,info.BrandIDOnline, info.CarStyleIDOnline,name1,"","").getJSONArray("list").getJSONObject(size-1).getLong("id");
 
-            int afteradd = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,"","","").getInteger("total");
+            int afteradd = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,"","","").getInteger("total");
 
             //修改车型
             String name2 = "新车型名称"+System.currentTimeMillis();
             String year2= "2020年";
             String status2 = "DISABLE";
-            jc.editCarModel(id,info.BrandID, info.CarStyleID,  name2,year2,  status2);
-            int afteredit = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,"","","").getInteger("total");
+            jc.editCarModel(id,info.BrandIDOnline, info.CarStyleIDOnline,  name2,year2,  status2);
+            int afteredit = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,"","","").getInteger("total");
 
             //删除品牌车系车型
             jc.delCarModel(id);
-            int afterdel = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,"","","").getInteger("total");
+            int afterdel = jc.carModelPage(1,1,info.BrandIDOnline, info.CarStyleIDOnline,"","","").getInteger("total");
             int add = afteradd - bef; //1
             int del = afteradd - afterdel; //1
             Preconditions.checkArgument(add==1,"新建后，列表增加"+add);
@@ -327,15 +257,5 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【品牌管理】，创建车型，列表数+1；删除车型，列表数-1；编辑车型，列表数+0");
         }
     }
-
-
-
-
-
-    @Test
-    public void a(){
-
-    }
-
 
 }
