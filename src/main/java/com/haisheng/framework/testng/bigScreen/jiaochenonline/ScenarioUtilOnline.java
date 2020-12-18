@@ -1410,10 +1410,10 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :车系列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarStyleList() {
+    public JSONObject appletCarStyleList(Long brand_id) {
         String url = "/jiaochen/applet/style/list";
         JSONObject json1 = new JSONObject();
-
+        json1.put("brand_id",brand_id);
         return invokeApi(url, json1);
     }
 

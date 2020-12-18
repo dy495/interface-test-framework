@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -30,6 +32,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     jiaoChenInfo info = new jiaoChenInfo();
+    PublicParm pp = new PublicParm();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -59,6 +62,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -328,13 +332,136 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void addDelBrandChkApplet() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
 
 
+            jc.appletLoginToken(pp.appletTocken);
+            int bef = jc.appletBrandList().getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            jc.addBrand(info.stringone,info.logo);
+            Long id = jc.brandPage(1,10,"","").getJSONArray("list").getJSONObject(0).getLong("id");
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afteradd = jc.appletBrandList().getJSONArray("list").size();
+            //删除品牌
+            jc.pcLogin("15711300001","000000");
+            jc.delBrand(id);
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afterdel = jc.appletBrandList().getJSONArray("list").size();
+
+
+            jc.pcLogin("15711300001","000000");
+            int add = afteradd - bef;//1
+            int del = afteradd - afterdel;//1
+            Preconditions.checkArgument(add==1,"创建后列表增加"+add);
+            Preconditions.checkArgument(del==1,"删除后列表减少"+add);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建品牌，小程序列表+1；删除品牌，小程序列表-1");
+        }
+
+    }
+
+    @Test
+    public void addDelCarStyleChkApplet() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appletLoginToken(pp.appletTocken);
+            int bef = jc.appletCarStyleList(info.BrandID).getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            //创建车系
+            String manufacturer = "旧生产商";
+            String name= "旧车系";
+            String online_time= dt.getHistoryDate(0);
+            jc.addCarStyle(info.BrandID, manufacturer,  name,  online_time);
+            //获取车系id
+            Long id = jc.carStylePage(1,1,info.BrandID,name).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afteradd = jc.appletCarStyleList(info.BrandID).getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            //删除品牌车系
+            jc.delCarStyle(id);
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afterdel = jc.appletCarStyleList(info.BrandID).getJSONArray("list").size();
+
+
+            jc.pcLogin("15711300001","000000");
+            int add = afteradd - bef; //1
+            int del = afteradd - afterdel; //1
+            Preconditions.checkArgument(add==1,"新建后，列表增加"+add);
+
+            Preconditions.checkArgument(del==1,"删除后，列表减少"+del);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，新建车系，小程序列表+1；删除车系，小程序列表-1");
+        }
+    }
+
+    @Test
+    public void addDelCarModelChkApplet() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appletLoginToken(pp.appletTocken);
+            int bef = jc.appletCarModelList(info.BrandID,info.CarStyleID).getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            //创建车型
+            String name1 = "旧车型名称"+System.currentTimeMillis();
+            String year1= "2000年";
+            String status1 = "ENABLE";
+            jc.addCarModel(info.BrandID, info.CarStyleID,  name1,year1,  status1);
+            //获取车系id
+            int size = jc.carModelPage(1,1,info.BrandID, info.CarStyleID,name1,"","").getInteger("total");
+            Long id = jc.carModelPage(1,size,info.BrandID, info.CarStyleID,name1,"","").getJSONArray("list").getJSONObject(size-1).getLong("id");
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afteradd = jc.appletCarModelList(info.BrandID,info.CarStyleID).getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            //删除品牌车系车型
+            jc.delCarModel(id);
+
+            jc.appletLoginToken(pp.appletTocken);
+            int afterdel = jc.appletCarModelList(info.BrandID,info.CarStyleID).getJSONArray("list").size();
+
+            jc.pcLogin("15711300001","000000");
+            int add = afteradd - bef; //1
+            int del = afteradd - afterdel; //1
+            Preconditions.checkArgument(add==1,"新建后，列表增加"+add);
+
+            Preconditions.checkArgument(del==1,"删除后，列表减少"+del);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型，小程序列表数+1；删除车型，小程序列表数-1");
+        }
+    }
 
 
     @Test
     public void a(){
-
+        jc.appletLoginToken(pp.appletTocken);
+        jc.appletCarModelList(info.BrandID,info.CarStyleID);
     }
 
 

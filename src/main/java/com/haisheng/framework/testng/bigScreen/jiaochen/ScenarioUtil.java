@@ -1426,10 +1426,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :车系列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarStyleList() {
+    public JSONObject appletCarStyleList(Long brand_id) {
         String url = "/jiaochen/applet/style/list";
         JSONObject json1 = new JSONObject();
-
+        json1.put("brand_id",brand_id);
         return invokeApi(url, json1);
     }
 
@@ -1437,7 +1437,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :车型列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarModelList(String brand_id, String style_id) {
+    public JSONObject appletCarModelList(Long brand_id, Long style_id) {
         String url = "/jiaochen/applet/model/list";
         JSONObject json1 = new JSONObject();
         json1.put("brand_id", brand_id);
