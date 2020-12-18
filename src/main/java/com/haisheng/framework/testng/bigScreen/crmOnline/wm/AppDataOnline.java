@@ -472,7 +472,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        String salePhone = "15321527989";
+        String salePhone = "13654973499";
         //查询公海数量
         try {
             //先删除15321527989顾问的账号
@@ -480,7 +480,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //公海客户数量
             int total = crm.publicCustomerList("", "", size, 1).getInteger("total");
             //添加销售
-            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 13, "", "");
+            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 407, "", "");
             //创建
             String customerPhone = method.getDistinctPhone();
             UserUtil.login(newXs);

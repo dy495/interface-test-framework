@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -30,11 +29,12 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+/**
+ * 有问题处请@wangmin
+ */
 public class StoreData extends TestCaseCommon implements TestCaseStd {
     public static final Logger log = LoggerFactory.getLogger(StoreData.class);
     public static final int size = 100;
@@ -318,18 +318,14 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
             shopIds.forEach(shopId -> {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
-                AtomicInteger value = new AtomicInteger();
-                list.forEach(e -> {
-                    JSONObject jsonObject = (JSONObject) e;
-                    if (jsonObject.getString("type").equals("pv")) {
-                        value.set(jsonObject.getInteger("value"));
-                    }
-                });
-
+                //今日到访人数
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv"))
+                        .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
+                //今日各时刻中人数之和
                 int sumValue = getTypeSum(scene1, "pv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value.get() <= sumValue, "");
+                Preconditions.checkArgument(value <= sumValue, "");
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -346,17 +342,14 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
             shopIds.forEach(shopId -> {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
-                AtomicInteger value = new AtomicInteger();
-                list.forEach(e -> {
-                    JSONObject jsonObject = (JSONObject) e;
-                    if (jsonObject.getString("type").equals("uv")) {
-                        value.set(jsonObject.getInteger("value"));
-                    }
-                });
+                //今日到访人次
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv"))
+                        .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
+                //今日各时段中人次之和
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
                 int sumValue = getTypeSum(scene1, "uv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value.get() == sumValue, "");
+                Preconditions.checkArgument(value == sumValue, "");
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -367,34 +360,8 @@ public class StoreData extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "昨日到访人数<=昨日各时段中人数之和")
     public void passengerFlow_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            List<String> shopIds = getAppShopIds();
-            shopIds.forEach(shopId -> {
-                IScene scene = RealHourTotal.builder().shopId(shopId).build();
-                JSONArray list = md.invokeApi(scene).getJSONArray("list");
-                AtomicInteger value = new AtomicInteger();
-                list.forEach(e -> {
-                    JSONObject jsonObject = (JSONObject) e;
-                    if (jsonObject.getString("type").equals("uv")) {
-                        value.set(jsonObject.getInteger("value"));
-                    }
-                });
-                IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
-                int sumValue = getTypeSum(scene1, "uv");
-                CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value.get() == sumValue, "");
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("今日到访人次==今日各时段中人次之和");
-        }
+        //todo
     }
-
-
-
-
 
 
     /**
