@@ -6,9 +6,7 @@ public class appointmentRecordVariable {
     public String appointment_date;
     public String shop_id;
     public String customer_name;
-    public String appointment_status;
-    public String create_date;
-    public String confirm_time;
+    public String confirm_status;
     public String customer_phone;
     public String is_overtime;
     public String page;

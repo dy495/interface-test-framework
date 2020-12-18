@@ -447,7 +447,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String userid = pf.createUserId(userLoginName, roleId);
             String phone2 = pf.genPhoneNum();
             //重复添加
-            int code = crm.addUserNotChk(userName, userLoginName, phone2, "123456", roleId).getInteger("code");
+            int code = crm.addUserNotChk(userName, userLoginName, phone2, cstm.pwd, roleId).getInteger("code");
             //删除账号
             crm.userDel(userid);
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
@@ -476,15 +476,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list;
             if (total == 200) {
                 throw new Exception("用户数量已达上线，case运行终止");
-            } else if (total < 100) {
-                crm.addUser(userName, userName, phone, "123456", roleId, "", "");
-                list = data.getJSONArray("list");
-            } else {
-                crm.addUser(userName, userName, phone, "123456", roleId, "", "");
-                list = crm.userPage(2, 100).getJSONArray("list");
+            } else{
+                crm.addUser(userName, userName, phone, cstm.pwd, roleId, "", "");
+                list = crm.userPage(1, 100).getJSONArray("list");
             }
-            String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
-            String passwd = "123456";
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
+            String passwd = cstm.pwd;
             //重复添加
             int code = crm.addUserNotChk(userName + "1", userLoginName + "1", phone, passwd + "1", roleId).getInteger("code");
             //删除账号
@@ -544,7 +541,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             }
             //创建201个账户
             String phone201 = pf.genPhoneNum();
-            int code = crm.addUserNotChk("201个账户", "201个账户", phone201, "123456", roleId).getInteger("code");
+            int code = crm.addUserNotChk("201个账户", "201个账户", phone201, cstm.pwd, roleId).getInteger("code");
             for (String userid : ll) {
                 crm.userDel(userid);
             }
@@ -560,7 +557,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
+    @Ignore //与下面的case重复
     @Test(dataProvider = "ROLE_ID", dataProviderClass = CrmScenarioUtil.class)
     public void delUserDiffRole(String role) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -578,40 +575,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int roleId = Integer.parseInt(role);
             //添加账号
             crm.addUser(userName, userLoginName, phone, passwd, roleId, "", "");
-            int a = 0;
-            int total = crm.userPage(1, 1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(i, 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)) {
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)) {
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
+
+            String userid = crm.userPage(1, 50).getJSONArray("list").getJSONObject(0).getString("user_id");
+
 
             //删除账号
             int code = crm.userDelNotChk(userid).getInteger("code");
             Preconditions.checkArgument(code == 1000, "删除失败，状态码" + code);
-            //总经理登陆
-            String message = crm.tryLogin(userLoginName, cstm.pwd).getString("message");
-            Preconditions.checkArgument(message.equals("用户名或密码错误"), "提示语为：" + message);
+
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -640,33 +611,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int roleId = Integer.parseInt(role);
             //添加账号
             crm.addUser(userName, userLoginName, phone, passwd, roleId, "", "");
-            int a = 0;
-            int total = crm.userPage(1, 1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(i, 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)) {
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)) {
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
+
+            String userid = crm.userPage(1, 50).getJSONArray("list").getJSONObject(0).getString("user_id");
 
             //删除账号
             crm.userDel(userid);
@@ -706,33 +652,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int roleId = 13; //销售顾问
             //添加账号
             crm.addUser(userName, userLoginName, phone, passwd, roleId, "", "");
-            int a = 0;
-            int total = crm.userPage(1, 1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)) {
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)) {
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
+            String userid = crm.userPage(1, 50).getJSONArray("list").getJSONObject(0).getString("user_id");
+
             int code = crm.tryLogin(userLoginName, passwd).getInteger("code");
             Preconditions.checkArgument(code == 1000, "登陆失败");
 
@@ -767,33 +688,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             int roleId = 13; //销售顾问
             //添加账号
             crm.addUser(userName, userLoginName, phone, passwd, roleId, "", "");
-            int a = 0;
-            int total = crm.userPage(1, 1).getInteger("total");
-            String userid = "";
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("user_login_name").equals(userLoginName)) {
-                            userid = single.getString("user_id"); //获取用户id
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.userPage(1, 50).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_login_name").equals(userLoginName)) {
-                        userid = single.getString("user_id"); //获取用户id
-                    }
-                }
-            }
+            String userid = crm.userPage(1, 50).getJSONArray("list").getJSONObject(0).getString("user_id");
+
             int code = crm.tryLogin(userLoginName, passwd + "1").getInteger("code");
             Preconditions.checkArgument(code != 1000, "登陆成功");
 
@@ -1271,8 +1167,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String name = "自动化";
             String phone = "139000" + (int) ((Math.random() * 9 + 1) * 10000);
             String phone1 = "139001" + (int) ((Math.random() * 9 + 1) * 10000);
-            String car7 = "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100);
-            String car8 = "苏ZDH" + (int) ((Math.random() * 9 + 1) * 1000);
+            String car7 = "辽ZDH" + (int) ((Math.random() * 9 + 1) * 100);
+            String car8 = "辽ZDH" + (int) ((Math.random() * 9 + 1) * 1000);
 
 
             crm.dccCreate(name, phone, car7);
@@ -1283,7 +1179,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "苏ZDH" + (int) ((Math.random() * 9 + 1) * 100);
+            String car = "辽ZDH" + (int) ((Math.random() * 9 + 1) * 100);
             String carid = "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000);
             //新增
             crm.login(cstm.xszj, cstm.pwd);

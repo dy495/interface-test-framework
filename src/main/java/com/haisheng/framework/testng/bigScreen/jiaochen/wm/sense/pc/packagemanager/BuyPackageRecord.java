@@ -11,8 +11,8 @@ import lombok.Builder;
 public class BuyPackageRecord extends BaseScene {
     private final String packageName;
     private final String sender;
-    private final Long startTime;
-    private final Integer endTime;
+    private final String startTime;
+    private final String endTime;
     private final Integer sendType;
     @Builder.Default
     private final Integer page = 1;
@@ -34,6 +34,6 @@ public class BuyPackageRecord extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/packsge-manage/buy-package-record";
+        return "/jiaochen/pc/package-manage/buy-package-record";
     }
 }

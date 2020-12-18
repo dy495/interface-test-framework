@@ -1240,13 +1240,12 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_indeicators(String cycle_type,String month,String day) throws Exception {
+    public JSONObject xd_analysis_indeicators(String cycle_type,String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/core-indicators";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"day\" :\"" + day + "\"\n" +
+                        "\"month\" :\"" + month + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1259,13 +1258,12 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_uncheckTotal(String cycle_type,String month,String day) throws Exception {
+    public JSONObject xd_analysis_uncheckTotal(String cycle_type,String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/unqualified-check-total";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"day\" :\"" + day + "\"\n" +
+                        "\"month\" :\"" + month + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1278,13 +1276,12 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_question(String cycle_type,String month,String day) throws Exception {
+    public JSONObject xd_analysis_question(String cycle_type,String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/problem";
         String json =
                 "{" +
                         "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"day\" :\"" + day + "\"\n" +
+                        "\"month\" :\"" + month + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);

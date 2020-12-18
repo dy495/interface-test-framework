@@ -1,27 +1,35 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
+/**
+ * 财务管理测试用例
+ */
 public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    BusinessUtil util = new BusinessUtil();
+    LoginUtil user = new LoginUtil();
     private static final Integer size = 100;
     private static final EnumAccount marketing = EnumAccount.MARKETING;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
 
     @BeforeClass
     @Override
@@ -30,11 +38,11 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
@@ -53,22 +61,117 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.login(marketing);
+        user.login(marketing);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "卡券申请--卡券审核通过")
-    public void voucherApply_system_1() {
-
+    @Test(description = "卡券申请--成本累计=发出数量*成本单价")
+    public void voucherApply_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String voucherName = jsonObject.getString("name");
+                    double price = jsonObject.getDouble("price");
+                    double totalPrice = jsonObject.getDouble("total_price");
+                    int num = jsonObject.getInteger("num");
+                    CommonUtil.valueView(price, num, totalPrice);
+                    Preconditions.checkArgument(totalPrice == price * num,
+                            voucherName + "成本累计:" + totalPrice + " 发出数量*成本单价：" + price * num);
+                    CommonUtil.logger(voucherName);
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券申请--成本累计=发出数量*成本单价");
+        }
     }
 
-    @Test
-    public void voucherApply() {
-        IScene scene = ApplyPage.builder().build();
-        int applyTotal = jc.invokeApi(scene).getInteger("total");
-        int newApplyTotal = jc.invokeApi(scene).getInteger("total");
-        Preconditions.checkArgument(newApplyTotal == applyTotal + 1, "创建卡券前卡券审核列表数量为：" + applyTotal + " 创建卡券后数量为：" + newApplyTotal);
+    @Test(description = "卡券申请--发出数量（首发）=【卡券表单】发行库存数量")
+    public void voucherApply_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.login(administrator);
+            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String voucherName = jsonObject.getString("voucher_name");
+                    Integer issueInventory = jsonObject.getInteger("issue_inventory");
+                    ApplyPage.ApplyPageBuilder builder1 = ApplyPage.builder().name(voucherName);
+                    int total1 = jc.invokeApi(builder1.build()).getInteger("total");
+                    int s1 = CommonUtil.getTurningPage(total1, size);
+                    for (int j = 1; j < s1; j++) {
+                        JSONArray array1 = jc.invokeApi(builder1.page(j).size(size).build()).getJSONArray("list");
+                        array1.forEach(x -> {
+                            JSONObject jsonObject1 = (JSONObject) x;
+                            if (jsonObject1.getString("apply_type_name").equals("首发")
+                                    && jsonObject1.getString("name").equals(voucherName)) {
+                                Integer num = jsonObject1.getInteger("num") == 0 ? null : jsonObject1.getInteger("num");
+                                CommonUtil.valueView(num, issueInventory);
+                                Preconditions.checkArgument(Objects.equals(num, issueInventory),
+                                        voucherName + "发出数量（首发）：" + num + "【卡券表单】发行库存数量：" + issueInventory);
+                                CommonUtil.logger(voucherName);
+                            }
+                        });
+                    }
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券申请--发出数量（首发）=【卡券表单】发行库存数量");
+        }
     }
+
+    @Test(description = "卡券申请--成本单价=【卡券表单】成本")
+    public void voucherApply_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.login(administrator);
+            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                array.forEach(e -> {
+                    JSONObject jsonObject = (JSONObject) e;
+                    String voucherName = jsonObject.getString("voucher_name");
+                    double cost = jsonObject.getDouble("cost");
+                    ApplyPage.ApplyPageBuilder builder1 = ApplyPage.builder().name(voucherName);
+                    int total1 = jc.invokeApi(builder1.build()).getInteger("total");
+                    int s1 = CommonUtil.getTurningPage(total1, size);
+                    for (int j = 1; j < s1; j++) {
+                        JSONArray array1 = jc.invokeApi(builder1.page(j).size(size).build()).getJSONArray("list");
+                        array1.forEach(x -> {
+                            JSONObject jsonObject1 = (JSONObject) x;
+                            if (jsonObject1.getString("name").equals(voucherName)) {
+                                double price = jsonObject1.getDouble("price");
+                                CommonUtil.valueView(cost, price);
+                                Preconditions.checkArgument(Objects.equals(cost, price),
+                                        voucherName + "成本单价：" + price + "【卡券表单】成本：" + cost);
+                                CommonUtil.logger(voucherName);
+                            }
+                        });
+                    }
+                });
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券申请--成本单价=【卡券表单】成本");
+        }
+    }
+
 }

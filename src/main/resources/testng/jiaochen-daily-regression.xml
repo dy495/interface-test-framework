@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
+
+
+    <listeners>
+        <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+    </listeners>
+
+    <test name="daily-rgn" preserve-order="true">
+        <classes>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.MarketingManage"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.FinanceManager"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
+
+        </classes>
+    </test>
+</suite>
+
+
+

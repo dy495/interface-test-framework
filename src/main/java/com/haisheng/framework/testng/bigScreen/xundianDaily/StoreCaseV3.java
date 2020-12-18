@@ -35,6 +35,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    StorePackage mds = StorePackage.getInstance();
     String districtCode = "";
     String shopManager = "";
     int page = 1;
@@ -64,10 +65,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
-//        //replace backend gateway url
-//        //commonConfig.gateway = "";
-//
-//        //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
@@ -179,7 +176,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"2020100009\",\n" +
+                    "        \"user_id\": \"202010000990\",\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
@@ -434,7 +431,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
             //将账户使用次数为0的角色删除
-            md.deleteRole();
+            mds.deleteRole();
 
 
         } catch (AssertionError e) {
@@ -478,7 +475,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONObject res3 = md.organizationRoleAdd("auto名字4", "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
             checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
 
-            md.deleteRole();
+            mds.deleteRole();
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -670,7 +667,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================设备管理摄像头的筛选======================
      */
-    @Test(dataProvider = "STATUS", dataProviderClass = StoreScenarioUtil.class)
+    @Test(dataProvider = "STATUS", dataProviderClass = StorePackage.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -954,7 +951,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理======================
      */
-    @Test
+   // @Test
     public void trace_dealWith() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -1000,7 +997,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理（订单处理备注的字数）======================
      */
-    @Test
+   // @Test
     public void trace_dealMark() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");

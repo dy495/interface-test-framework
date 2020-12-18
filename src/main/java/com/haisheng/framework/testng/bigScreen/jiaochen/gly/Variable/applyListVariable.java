@@ -8,7 +8,6 @@ public class applyListVariable {
     public String apply_name;
     public String status;
     public String apply_group;
-    public String cost_center;
-    public String apply_time;
-    public String apply_item;
+    public String start_time;
+    public String end_time;
 }

@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.orderCar;
@@ -111,7 +111,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         try {
             //pc评价页总数
             String type = "MSG";
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total = crm.messageList(20, type).getInteger("total");
             finishReceive fr = new finishReceive();
             //预约接待完成
@@ -126,7 +126,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             fr.remark = new JSONArray();
             crm.finishReception3(fr);
 
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONArray messagePage = crm.messageList(10, type).getJSONArray("list");
             Long id = messagePage.getJSONObject(0).getLong("id");
             String title = messagePage.getJSONObject(0).getString("title");
@@ -136,7 +136,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
 
             int totalB = crm.messageList(100, type).getInteger("total");
             //小程序评价
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 //            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
             int score = 4;
             JSONObject ll = new JSONObject();
@@ -784,7 +784,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), "新车授权", dt.getHistoryDate(0), true);
             crm.finishReception3(fr);
             //小程序登录，查看最新交车
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONObject data = crm.carOwnernew();
             String customer_nameN = data.getString("customer_name");
             String car_model = data.getString("car_model_name");
@@ -814,7 +814,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //applet登录，记录原始列表数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONArray list = crm.carOwner().getJSONArray("list");
             int total;
             if (list == null || list.size() == 0) {
@@ -834,7 +834,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.finishReception3(fr);
 
             //小程序登录，查看交车
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONArray listA = crm.carOwner().getJSONArray("list");
             int totalA;
             if (listA == null || listA.size() == 0) {
@@ -860,7 +860,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //applet登录，记录原始列表数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONArray list = crm.carOwner().getJSONArray("list");
             int total;
             if (list == null || list.size() == 0) {
@@ -880,7 +880,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             crm.finishReception3(fr);
 
             //小程序登录，查看交车
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             JSONArray listA = crm.carOwner().getJSONArray("list");
             int totalA;
             if (listA == null || listA.size() == 0) {
@@ -1801,7 +1801,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序查看我的消息数
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total = crm.messageList(20, "").getInteger("total");
             JSONObject object = pf.creatCustOld(pp.customer_phone_number);
             finishReceive fr = new finishReceive();
@@ -1818,7 +1818,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
             //发送出门条
             crm.goout(fr.customer_id, fr.plate_number_two);
 
-            crm.appletLoginToken(EnumAppletCode.XMF.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
             int total2 = crm.messageList(20, "").getInteger("total");
             Preconditions.checkArgument(total2 - total == 2, "发送出门条消息，小程序消息没有+2（评价消息和出门条）");
 

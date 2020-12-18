@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
@@ -43,7 +43,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/";
+        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -105,7 +105,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
 
 
             //小程序评价
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
 //            SERVICE_QUALITY|PROCESS|PROFESSIONAL|EXPERIENCE
             int score = 4;
             JSONObject ll = new JSONObject();

@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.AppCustomerCreateScene;
@@ -418,7 +415,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             int testDriverTotal = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100).getInteger("total");
             int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
             int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");
@@ -428,7 +425,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             int appointmentMend = 0;
             int appointmentMaintain = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletCode.WM.getWeChatId())) {
+                if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletToken.BSJ_WM_DAILY.getWechatId())) {
                     appointmentTestDriver = list.getJSONObject(i).getInteger("appointment_test_driver");
                     appointmentMaintain = list.getJSONObject(i).getInteger("appointment_maintain");
                     appointmentMend = list.getJSONObject(i).getInteger("appointment_mend");

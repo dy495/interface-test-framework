@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -98,9 +98,9 @@ public class CommonUtil {
      * @param w 警告
      */
     public static void warning(String w) {
-        System.err.println("=================================================================================");
-        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + w + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        System.err.println("=================================================================================");
+        System.err.println();
+        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + w + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.err.println();
     }
 
     /**
@@ -223,37 +223,6 @@ public class CommonUtil {
     }
 
     /**
-     * @param birthday 生日
-     * @return 几零后
-     */
-    public static String getAge(String birthday) {
-        if (StringUtils.isEmpty(birthday)) {
-            return null;
-        }
-        String s = birthday.substring(2, 3);
-        StringBuilder str = new StringBuilder();
-        str.append(s).append("0后");
-        if (s.equals("5")) {
-            str.append("+");
-        }
-        return str.toString();
-    }
-
-    /**
-     * 获取性别
-     *
-     * @param idNumber 身份证号
-     * @return 男/女
-     */
-    public static String getGender(String idNumber) {
-        if (StringUtils.isEmpty(idNumber)) {
-            return null;
-        }
-        String str = idNumber.substring(16, 17);
-        return Integer.parseInt(str) % 2 == 0 ? "女性" : "男性";
-    }
-
-    /**
      * 获取页面跳转页数
      * 当接口每页只能传入pageSize时，获取接口的访问次数来得到list.size()
      *
@@ -350,38 +319,10 @@ public class CommonUtil {
         return false;
     }
 
-    /**
-     * 获取路径中的最后的部分，及最后的文件夹名或者文件名
-     *
-     * @param path 绝对路径或者相对路径
-     * @return String 文件夹名或者文件名，路径为空则返回null
-     */
-    public static String getLastName(String path) {
-        if (!StringUtils.isEmpty(path)) {
-            String[] strs = path.split(String.format("/|\\%s", System.getProperty("file.separator")));
-            int length = strs.length;
-            if (length > 0) {
-                return strs[length - 1];
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取资源文件在当前项目下的绝对路径
-     *
-     * @param relativePath 资源的相对路径
-     * @return String 资源的绝对路径
-     */
-    public static String getResourcePath(String relativePath) {
-        String str = FileUtil.class.getClassLoader().getResource(relativePath).getPath();
-        String path = null;
-        try {
-            path = URLDecoder.decode(str, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return path;
+    @NotNull
+    @Contract(pure = true)
+    public static <T> String errMessage(T expect, T actual) {
+        return " 预期结果：" + expect + " 实际结果：" + actual;
     }
 
     /**

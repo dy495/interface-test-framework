@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
@@ -1836,11 +1835,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //取消预约
-    public JSONObject cancle(Long appointment_id) throws Exception {
+    public JSONObject cancle(Long appointment_id) {
         String url = "/WeChat-applet/porsche/a/appointment/cancel/" + appointment_id;
-        String json = "";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
     }
 
     //添加车辆
@@ -4588,12 +4586,35 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     @DataProvider(name = "ROLE_ID")
-    public static Object[] role() {
+    public static Object[] role_daily() {
         return new String[]{
-                "13",
-                "11",
-                "12",
-                "14"
+                "13",// 销售顾问
+                "23", // dcc销售顾问
+                "11", //销售总监
+                //"12",
+                "14", //前台
+                "16", //服务顾问
+                "15", //定损顾问
+                "20", //市场总监
+                "18", //服务总监
+                //"10", //总经理
+
+        };
+    }
+
+    @DataProvider(name = "ROLE_ID_ONLINE")
+    public static Object[] role_online() {
+        return new String[]{
+                "407",// 销售顾问
+                "413", // dcc销售顾问
+                "405", //销售总监
+                "408", //前台
+                "410", //服务顾问
+                "409", //定损顾问
+                "412", //市场总监
+                "411", //服务总监
+                "404", //总经理
+
         };
     }
 
@@ -4659,20 +4680,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 {"article_content", "文章内容不能为空"},
         };
     }
-
-    //小程序token
-    @DataProvider(name = "APPLET_TOKENS")
-    public static Object[] appletTokens() {
-        return new String[]{
-                EnumAppletCode.XMF.getCode(),
-//                EnumAppletCode.BB.getCode(),
-                EnumAppletCode.WM.getCode(),
-                EnumAppletCode.WM_SMALL.getCode(),
-//                EnumAppletCode.LXQ.getCode(),
-                EnumAppletCode.GLY.getCode()
-        };
-    }
-
 
     @DataProvider(name = "car")
     public static Object[] car() {

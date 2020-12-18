@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -36,7 +36,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    EnumAppletCode applet = EnumAppletCode.GLY;
+    EnumAppletToken applet = EnumAppletToken.BSJ_GLY_DAILY;
     private static final double travelMileage = 1000;
     String[] customerNameArr = {"1111111111111111", "^%&%$##@#$$%^&&*8"};
     String[] customerPhoneNumberArr = {"11111111111", "1337316600", "133731668066", "哈哈哈哈哈哈哈哈哈哈就", "GHBNBVHHkjl", "%^%$#@#$%&^&"};
@@ -115,13 +115,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .plateNumber(plateNumber)
                             .travelMileage(travelMileage)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("车主名称长度在1-15字之间"), "车主姓名为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "车主名称长度在1-15字之间";
+                    Preconditions.checkArgument(message.equals(err), "车主姓名为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户姓异常");
         }
@@ -162,12 +162,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .plateNumber(plateNumber)
                             .travelMileage(travelMileage)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("联系方式1必须为11位手机号"), "车主电话为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "联系方式1必须为11位手机号";
+                    Preconditions.checkArgument(message.equals(err), "车主电话为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话--异常");
         }
@@ -213,12 +214,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .travelMileage(travelMileage)
                         .remarks(remarks)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("备注在10-200字之间"), "备注200字以上保存成功");
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "备注在10-200字之间";
+                Preconditions.checkArgument(message.equals(err), "备注为：" + remark + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-备201个字");
         }
@@ -260,13 +261,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .plateNumber(plateNumber)
                             .travelMileage(s)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("行驶里程数字错误"), "行驶里程为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "行驶里程数字错误";
+                    Preconditions.checkArgument(message.equals(err), "行驶里程为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程");
         }
@@ -309,13 +310,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .travelMileage(travelMileage)
                             .customerSecondaryPhone(s)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("联系方式2必须为11位手机号"), "车主电话2为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "联系方式2必须为11位手机号";
+                    Preconditions.checkArgument(message.equals(err), "车主电话2为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话2异常");
         }
@@ -357,13 +358,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .travelMileage(travelMileage)
                             .customerSecondaryPhone(customerPhoneNumber)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("预约电话2必须为11位手机号"), "预约电话2为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "预约电话2必须为11位手机号";
+                    Preconditions.checkArgument(message.equals(err), "预约电话2为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常");
         }
@@ -408,13 +409,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .firstContactPhone("15623456666")
                             .firstContactRelation(0)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("联系人1姓名长度在1-10字之间"), "联系人1姓名为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "联系人1姓名长度在1-10字之间";
+                    Preconditions.checkArgument(message.equals(err), "联系人1姓名为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人1姓名异常");
         }
@@ -459,13 +460,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .secondContactPhone("15623456666")
                             .secondContactRelation(0)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("联系人2姓名长度在1-10字之间"), "联系人2姓名：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "联系人2姓名长度在1-10字之间";
+                    Preconditions.checkArgument(message.equals(err), "联系人2姓名：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-联系人2姓名异常--提示语有问题，填写手机号，提示手机号不能为空");
         }
@@ -508,13 +509,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .travelMileage(travelMileage)
                             .secondPlateNumber(s)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("车牌号码只允许文字+数字+大写字母")
-                            || object.getString("message").equals("请输入7-8位车牌号码位数"), " 异常车牌号：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = (s.length() == 7 || s.length() == 8) ? "车牌号码只允许文字+数字+大写字母" : "请输入7-8位车牌号码位数";
+                    Preconditions.checkArgument(message.equals(err), " 异常车牌号：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-陪同车牌2异常");
         }
@@ -557,13 +558,13 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .travelMileage(travelMileage)
                             .estimateRepairDays(s)
                             .build();
-                    JSONObject object = crm.invokeApi(scene, false);
-                    Preconditions.checkArgument(object.getString("message").equals("维修天数必须在1～365天之间"), "维修天数为：" + s + "保存成功");
+                    String message = crm.invokeApi(scene, false).getString("message");
+                    String err = "维修天数必须在1～365天之间";
+                    Preconditions.checkArgument(message.equals(err), "维修天数为：" + s + CommonUtil.errMessage(err, message));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常");
         }
@@ -602,11 +603,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("客户姓名不允许为空"), object.getString("message"));
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "客户姓名不允许为空";
+                Preconditions.checkArgument(message.equals(err), "客户名称为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户名称不填写");
         }
@@ -645,11 +647,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("车主电话1不允许为空"), object.getString("message") + " 错误提示描述不正确");
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "车主电话1不允许为空";
+                Preconditions.checkArgument(message.equals(err), "车主电话1为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话1不填写");
         }
@@ -688,11 +691,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("预约名称不允许为空"), object.getString("message"));
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "预约名称不允许为空";
+                Preconditions.checkArgument(message.equals(err), "预约名称为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写");
         }
@@ -731,11 +735,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("预约电话不允许为空"), object.getString("message"));
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "预约电话不允许为空";
+                Preconditions.checkArgument(message.equals(err), "预约电话为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写");
         }
@@ -774,11 +779,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .maintainType(maintainType)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("车牌号1不允许为空"), " 车牌号1不允许为空");
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "车牌号1不允许为空";
+                Preconditions.checkArgument(message.equals(err), "车牌号1为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车牌号1不填写");
         }
@@ -818,11 +824,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .maintainType(maintainType)
                         .build();
-                JSONObject object = crm.invokeApi(scene.getPath(), scene.getJSONObject(), false);
-                Preconditions.checkArgument(object.getString("message").equals("行驶里程不允许为空"), object.getString("message"));
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "行驶里程不允许为空";
+                Preconditions.checkArgument(message.equals(err), "行驶里程为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写");
         }
@@ -867,7 +874,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object.getString("message").equals(""), " ");
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-所属保养顾问不填写");
         }
@@ -906,11 +913,12 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .plateNumber(plateNumber)
                         .travelMileage(travelMileage)
                         .build();
-                JSONObject object = crm.invokeApi(scene, false);
-                Preconditions.checkArgument(object.getString("message").equals("客户来源不允许为空"), object.getString("message"));
+                String message = crm.invokeApi(scene, false).getString("message");
+                String err = "客户来源不允许为空";
+                Preconditions.checkArgument(message.equals(err), "客户来源为：" + null + CommonUtil.errMessage(err, message));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-客户来源不填写");
         }

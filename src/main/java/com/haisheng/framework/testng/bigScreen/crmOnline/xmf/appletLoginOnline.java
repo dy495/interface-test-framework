@@ -35,7 +35,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/";
+        commonConfig.referer = "https://servicewechat.com/wx0cf070e8eed63e90/";
 
 
         //replace backend gateway url
@@ -58,7 +58,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        //crm.login(sh_name1, sh_pwd1);
+//        crm.login(sh_name1, sh_pwd1);
 
     }
 
@@ -91,7 +91,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序每4小时登陆一次，防止失效");
+//            saveData("小程序每4小时登陆一次，防止失效");
         }
     }
 }

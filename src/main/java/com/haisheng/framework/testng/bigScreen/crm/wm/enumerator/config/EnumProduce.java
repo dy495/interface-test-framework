@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config;
 
+import lombok.Getter;
+
 /**
  * 产品枚举
  */
@@ -8,11 +10,14 @@ public enum EnumProduce {
 
     JC("轿辰"),
 
-    XX("xx"),
+    YT("运通"),
     ;
 
     EnumProduce(String name) {
-
+        this.name = name;
     }
+
+    @Getter
+    private final String name;
 
 }

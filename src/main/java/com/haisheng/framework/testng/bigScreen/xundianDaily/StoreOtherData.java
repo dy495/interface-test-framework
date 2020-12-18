@@ -8,18 +8,13 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 ;import static com.google.common.base.Preconditions.checkArgument;
 
@@ -35,9 +30,6 @@ public class StoreOtherData extends TestCaseCommon implements TestCaseStd {
     String month = "";
     long shop_id = 4116;
     long shop_id_01 = 43072l;
-    String district_code = "";
-    //    String shop_type = "[\"NORMAL\"]";
-    String shop_type = "[]";
     Integer page = 1;
     Integer size = 50;
 
@@ -196,7 +188,7 @@ public class StoreOtherData extends TestCaseCommon implements TestCaseStd {
             String old_phone = "";
             String create_time = "";
             for (int i = 1; i < list.size(); i++) {
-                create_time = list.getJSONObject(list.size() - 1).getString("create_time");
+                create_time = list.getJSONObject(0).getString("create_time");
                 if (!create_time.equals(today)) {
                     account = list.getJSONObject(0).getString("account");
                     old_phone = list.getJSONObject(0).getString("phone");
@@ -505,49 +497,49 @@ public class StoreOtherData extends TestCaseCommon implements TestCaseStd {
 //        }
 //    }
 
-//    /**
-//     * ====================收银风控事件的数据一致性（待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
-//     */
-//    @Test
-//    public void ruleDeal_DataInf1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //获取收银追溯列表第一个门店的门第ID和门店名称，累计异常事件，和待处理事件
-//            JSONArray data_list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
-//            long shop_id = data_list.getJSONObject(0).getInteger("shop_id");
-//            String shop_name = data_list.getJSONObject(0).getString("shop_name");
-//            int normal_total = data_list.getJSONObject(0).getInteger("normal_total");
-//            int pending_total = data_list.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total = data_list.getJSONObject(0).getInteger("risk_total");
-//
-//
-//            //获取待处理风险事件ID和order_id
-//            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "PENDING", "", page, size).getJSONArray("list");
-//            long id = list.getJSONObject(0).getInteger("id");
-//            String order = list.getJSONObject(0).getString("order_id");
-//
-//
-//            //将待处理的风控事件处理成异常
-//            md.cashier_riskEventHandle(id, 0, "该客户有刷单造假的嫌疑，请注意");
-//            //获取处理完以后的累计异常事件和待处理事项
-//            JSONArray data_list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
-//            int normal_total1 = data_list1.getJSONObject(0).getInteger("normal_total");
-//            int pending_total1 = data_list1.getJSONObject(0).getInteger("pending_risks_total");
-//            int risk_total1 = data_list1.getJSONObject(0).getInteger("risk_total");
-//
-//            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表异常事件-处理前异常事件！=1");
-//            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
-//            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
-//        }
-//    }
+    /**
+     * ====================收银风控事件的数据一致性（待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变）========================
+     */
+   // @Test
+    public void ruleDeal_DataInf1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取收银追溯列表第一个门店的门第ID和门店名称，累计异常事件，和待处理事件
+            JSONArray data_list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            long shop_id = data_list.getJSONObject(0).getInteger("shop_id");
+            String shop_name = data_list.getJSONObject(0).getString("shop_name");
+            int normal_total = data_list.getJSONObject(0).getInteger("normal_total");
+            int pending_total = data_list.getJSONObject(0).getInteger("pending_risks_total");
+            int risk_total = data_list.getJSONObject(0).getInteger("risk_total");
+
+
+            //获取待处理风险事件ID和order_id
+            JSONArray list = md.cashier_riskPage(shop_id, "", "", "", "", "", "PENDING", page, size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+            String order = list.getJSONObject(0).getString("order_id");
+
+
+            //将待处理的风控事件处理成异常
+            md.cashier_riskEventHandle(id, 0, "该客户有刷单造假的嫌疑，请注意");
+            //获取处理完以后的累计异常事件和待处理事项
+            JSONArray data_list1 = md.cashier_page(shop_name, "", "", "", null, page, size).getJSONArray("list");
+            int normal_total1 = data_list1.getJSONObject(0).getInteger("normal_total");
+            int pending_total1 = data_list1.getJSONObject(0).getInteger("pending_risks_total");
+            int risk_total1 = data_list1.getJSONObject(0).getInteger("risk_total");
+
+            Preconditions.checkArgument(normal_total - normal_total1 == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表异常事件-处理前异常事件！=1");
+            Preconditions.checkArgument(pending_total1 - pending_total == 1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
+            Preconditions.checkArgument(risk_total1 == risk_total, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + risk_total + "处理以后：" + risk_total1);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("待处理进行处理为异常,【【收银风控】列表异常事件+1；【收银风控】列表待处理-1，累计风险数量不变");
+        }
+    }
 
     /**
      * ====================收银风控事件的数据一致性（涉当前状态为【待处理】==响应时长；处理人；处理结果；备注为空）========================

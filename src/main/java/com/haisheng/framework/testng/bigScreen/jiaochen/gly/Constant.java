@@ -13,14 +13,12 @@ public class Constant {
     public static Object[][]receptionManageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
-                {"reception_sale_id", "reception_sale_name"},
-                {"reception_date","reception_date"},
+                {"reception_sale_name", "reception_sale_name"},
                 {"customer_name","customer_name"},
-                {"reception_status","registration_status"},
-                {"finish_date","finish_time"},
+                {"reception_status","reception_status"},
                 {"customer_phone","customer_phone"},
                 {"reception_type","reception_type"},
-                {"shop_id","shop_name"},
+                {"shop_id","shop_id"},
         };
     }
 
@@ -34,9 +32,7 @@ public class Constant {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"customer_phone", "customer_phone"},
-                {"create_date","create_date"},
                 {"sale_name","sale_name"},
-                {"customer_type","owner_type_name"},
         };
     }
 
@@ -49,9 +45,9 @@ public class Constant {
     public static Object[][] afterSleCustomerManage_pram() {
         return new String[][]{
                 {"vehicle_chassis_code", "vehicle_chassis_code"},
-                {"create_date", "start_order_date"},
                 {"customer_name","repair_customer_name"},
                 {"customer_phone","repair_customer_phone"},
+
         };
     }
 
@@ -63,8 +59,6 @@ public class Constant {
     @DataProvider(name = "SELECT_weChatSleCustomerManageFilter")
     public static Object[][] weChatSleCustomerManage_pram() {
         return new String[][]{
-                {"create_date", "create_date"},
-                {"active_type", "active_type"},
                 {"customer_phone","customer_phone"},
         };
     }
@@ -79,12 +73,11 @@ public class Constant {
         return new String[][]{
                 {"plate_number", "plate_number"},
                 {"customer_manager", "customer_manager"},
-                {"shop_id", "shop_name"},
+                {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
-                {"appointment_status", "appointment_status"},
+                {"confirm_status", "appointment_status_name"},
                 {"customer_phone", "customer_phone"},
                 {"is_overtime", "is_overtime"},
-                {"confirm_time", "confirm_time"},
         };
     }
 
@@ -112,9 +105,12 @@ public class Constant {
     public static Object[][] voucherFormFilter_pram(){
         return new String[][]{
                 {"subject_name", "subject_name"},
-                {"voucher_name", "manufacturer"},
+                {"voucher_name", "voucher_name"},
                 {"creator", "creator"},
                 {"is_diff", "is_diff"},
+                {"is_self_verification","is_self_verification"},
+                {"voucher_status","invalid_status"}
+
         };
     }
 
@@ -128,7 +124,7 @@ public class Constant {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"sender", "sender"},
-                {"start_time", "send_time"},
+
         };
     }
 
@@ -142,7 +138,7 @@ public class Constant {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"sender", "sender"},
-                {"start_time", "verification_time"},
+
         };
     }
 
@@ -170,8 +166,8 @@ public class Constant {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"creator", "creator"},
-                {"start_time", "create_time"},
-                {"shop_name", "shop_name"},
+                {"package_status","status"}
+//                {"shop_name", "shop_name"},
         };
     }
 
@@ -184,8 +180,9 @@ public class Constant {
     public static Object[][] buyPackageRecordFilter_pram(){
         return new String[][]{
                 {"package_name", "package_name"},
-                {"start_time", "send_time"},
                 {"send_type", "pay_type_name"},
+                {"sender","package_belongs"}
+
         };
     }
 
@@ -197,10 +194,11 @@ public class Constant {
     @DataProvider(name = "SELECT_messageFormFilter")
     public static Object[][] messageFormFilter_pram(){
         return new String[][]{
-                {"shop_id", "shop_name"},
-                {"start_time", "push_time"},
+                {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
-                {"message_type", "message_type"}
+                {"message_type", "message_type_name"},
+                {"send_account","send_account"}
+
         };
     }
 
@@ -213,6 +211,7 @@ public class Constant {
     public static Object[][] articleFilter_pram(){
         return new String[][]{
                 {"title", "title"},
+
         };
     }
 
@@ -225,10 +224,7 @@ public class Constant {
     public static Object[][] registerListFilter_pram(){
         return new String[][]{
                 {"title", "title"},
-                {"start_date", "start_date"},
-                {"end_date", "end_date"},
-                {"register_start_date", "register_start_date"},
-                {"register_end_date", "register_end_date"},
+
         };
     }
 
@@ -240,7 +236,7 @@ public class Constant {
     @DataProvider(name = "SELECT_approvalListFilter")
     public static Object[][] approvalListFilter_pram(){
         return new String[][]{
-                {"customer_name", "customer_name"},
+                {"customer_name", "participant_name"},
                 {"phone", "phone"},
                 {"status", "status_name"},
         };
@@ -256,10 +252,9 @@ public class Constant {
         return new String[][]{
                 {"name", "name"},
                 {"apply_name", "apply_name"},
-                {"status", "status"},
-                {"apply_time", "apply_time"},
-                {"apply_group", "apply_group"},
-                {"apply_item", "apply_item"},
+                {"status", "status_name"},
+//                {"apply_group", "apply_group"},
+
         };
     }
 
@@ -284,6 +279,7 @@ public class Constant {
     public static Object[][] brandListFilter_pram(){
         return new String[][]{
                 {"name", "name"},
+                {"first_letter","first_letter"}
         };
     }
     /**
@@ -308,7 +304,6 @@ public class Constant {
         return new String[][]{
                 {"name", "name"},
                 {"year", "year"},
-                {"status", "status"}
         };
     }
 
@@ -320,7 +315,7 @@ public class Constant {
     @DataProvider(name = "SELECT_roleListFilter")
     public static Object[][] roleListFilter_pram(){
         return new String[][]{
-                {"role_name", "name"},
+                {"name", "name"},
         };
     }
 
@@ -344,9 +339,8 @@ public class Constant {
     @DataProvider(name = "SELECT_importListFilter")
     public static Object[][] importListFilter_pram(){
         return new String[][]{
-                {"type", "type_name"},
+                {"type", "type"},
                 {"user", "user_name"},
-                {"import_date", "import_time"}
         };
     }
 
@@ -373,7 +367,8 @@ public class Constant {
     public static Object[][] pushMsgListFilter_pram(){
         return new String[][]{
                 {"customer_type", "customer_type"},
-                {"push_date", "start_time"}
+                {"message_type", "message_type"},
+
         };
     }
 

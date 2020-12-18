@@ -9,7 +9,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StorePackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -635,7 +635,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================设备管理摄像头的筛选======================
      */
-    @Test(dataProvider = "STATUS", dataProviderClass = StoreScenarioUtil.class)
+    @Test(dataProvider = "STATUS", dataProviderClass = StorePackage.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -1815,19 +1815,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         try {
-//            int count = 0;
-//            //获取到店趋势数据
-//            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
-//            for (int i = 0; i < trend_list.size(); i++) {
-//                JSONObject jsonObject = trend_list.getJSONObject(i);
-//                if (jsonObject != null) {
-//                    Integer pv = jsonObject.getInteger("pv");
-//                    if (pv != null) {
-//                        count++;//不为空的数据的数量
-//                    }
-//
-//                }
-//            }
 
             //获取交易客群总人次
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -2193,15 +2180,14 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
-                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
                 }
 
                 //获取前天的累计顾客总数
@@ -2210,6 +2196,13 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
             }
             int qa_customer_uv = customer_uv_01 + customer_uv_new_today + omni_uv_today + paid_uv_today;
             int qa_omni_uv = omni_uv_total_01 + omni_uv_today;
@@ -2248,23 +2241,15 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Integer omni_uv_total_01 = 0;
             //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
             JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+
             for (int i = 0; i < trend_list.size(); i++) {
 
                 //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
                 if (i - trend_list.size() == -1) {
                     customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
                     omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
-                    customer_uv_new_today = trend_list.getJSONObject(i).getInteger("customer_uv_new_today");
-                    omni_uv_today = trend_list.getJSONObject(i).getInteger("omni_channel_uv_new_today");
-                    paid_uv_today = trend_list.getJSONObject(i).getInteger("paid_uv_new_today");
-
-//                    if (customer_uv == null && omni_uv_today == null && paid_uv_today == null && customer_uv_new_today == null && omni_uv_total == null) {
-//                        customer_uv = 0;
-//                        paid_uv_today = 0;
-//                        omni_uv_today = 0;
-//                        customer_uv_new_today = 0;
-//                        omni_uv_total = 0;
-//                    }
                 }
 
                 //获取前天的累计顾客总数
@@ -2273,6 +2258,13 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                     omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
                 }
 
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
             }
             int qa_customer_uv = customer_uv_01 + customer_uv_new_today + omni_uv_today + paid_uv_today;
             int qa_omni_uv = omni_uv_total_01 + omni_uv_today;
@@ -2335,40 +2327,11 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    /**
-//     * ====================实时客流监控======================
-//     */
-//    @Test
-//    public void surveDataReal() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//         md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
-//        try {
-//            JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
-//            int today_pv = 0;
-//            for (int i = 0; i < list.size(); i++) {
-//                Integer count = list.getJSONObject(i).getInteger("today_pv");
-//                if (count != null) {
-//                    today_pv += count;
-//                }
-//
-//            }
-//            Preconditions.checkArgument(today_pv < 800 && today_pv > 50, "实时到店人次超过800或低于了50，现在pv=" + today_pv + "需线上确认数据是否有异常" + "。报错门店的shopId=" + shop_id);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("监控今日实时人次是否异常，小于800高于50为正常");
-//        }
-//
-//    }
-
 
     /**
      * ====================uv与pv之间的比例要保持在1：4的范围间========================
      */
-    @Test
+    //@Test
     public void uvWithPvScrole() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -2437,7 +2400,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================客户详情累计交易的次数==留痕事件中门店下单的次数|||累计到店的数据==留痕事件中进店次数+门店下单的次数========================
      */
-    @Test
+    //@Test
     public void custInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -2525,35 +2488,6 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
 
             }
-//            int s = CommonUtil.pageTurning(total, 50);
-//            for (int i = 1; i < s; i++) {
-//              JSONArray list1=  md.memberTotalListV3(shop_id, i, 50).getJSONArray("list");
-//
-//                for (int j = 0; j < list1.size(); j++) {
-//                     member_type =list1.getJSONObject(j).getString("member_type");
-//                     if(member_type.equals("OMNI_CHANNEL")){
-//                         member_id = list1.getJSONObject(j).getString("member_id");
-//                     }
-//                     customer_id = list1.getJSONObject(j).getString("customer_id");
-//                    enter_total = md.memberDetail(shop_id, customer_id, page, size).getInteger("total_visit_times");//累计到店次数
-//                    total_sum = md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//获取所有留痕事件的和
-//                    deal = md.memberDetail(shop_id, customer_id, page, size).getInteger("total_deal_times");//获取累计交易的次数
-//
-//                    int t = CommonUtil.pageTurning(enter_total, 50);
-//                    for (int l = 1; l < t; l++){
-//                        JSONArray thingsList = md.memberDetail(shop_id, customer_id, l, 50).getJSONArray("list");//获取事件中门店下单的次数
-//                        face_url = md.memberDetail(shop_id, customer_id, l, 50).getString("face_url");//或者每个人物的脸部图片地址
-//                        for (int k = 0; k < thingsList.size(); k++) {
-//                            String mark = thingsList.getJSONObject(k).getString("mark");
-//                            if (mark.equals("门店下单")) {
-//                                deal_times += 1;
-//                            }
-//                        }
-//                    }
-//
-//
-//                }
-//            }
 
 
         } catch (AssertionError e) {
@@ -2801,7 +2735,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
      */
-    @Test
+   // @Test
     public void arrival_time() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -2842,39 +2776,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    /**
-     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
-     */
-    @Test
-    public void deal_thing() {
-        logger.logCaseStart(caseResult.getCaseName());
-        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
-        try {
-            JSONObject response = md.memberTotalListV3(shop_id, page, 50);
-            JSONArray list = response.getJSONArray("list");
-            String customer_id = "";
-            int total_deal_times = 0;
-            int total_visit_times = 0;
-            int allsum = 0;
-            for (int i = 0; i < list.size(); i++) {
-                customer_id = list.getJSONObject(i).getString("customer_id");
-                JSONObject res = md.memberDetail(shop_id, customer_id, page, 10);
-                total_deal_times = res.getInteger("total_deal_times");
-                total_visit_times = res.getInteger("total_visit_times");
-                allsum = total_deal_times + total_visit_times;
-            }
-            Preconditions.checkArgument(allsum != 50, "客户ID：" + customer_id + "。交易次数为：" + total_deal_times + "。该客户详情中的进店次数为：" + total_visit_times + "。报错门店的shopId=" + shop_id);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
-        }
-
-    }
 
 
 //这些一致性需要进行操作，不可用在线上客户的账户下去验证-----------------------------------------------------------------------3.0版本新增的数据一致性---------------------------------------------------
@@ -2916,7 +2818,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             String reName = "qingqing测编辑";
             md.organizationAccountEdit(account, reName, email, "", r_dList, status, shop_list, type);
             JSONArray accountsList = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
-            String name_1 = accountsList.getJSONObject(accountsList.size() - 1).getString("name");
+            String name_1 = accountsList.getJSONObject(0).getString("name");
             Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
 
 
@@ -2949,8 +2851,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             Integer total = md.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
 
             List<String> r_dList = new ArrayList<String>();
-            r_dList.add("3");
-            r_dList.add("4");
+            r_dList.add("107");
 
             List<String> shop_list = new ArrayList<String>();
             shop_list.add("14630");
@@ -2962,10 +2863,10 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
             String old_phone = "";
             String create_time = "";
             for (int i = 1; i < list.size(); i++) {
-                create_time = list.getJSONObject(list.size() - 1).getString("create_time");
+                create_time = list.getJSONObject(0).getString("create_time");
                 if (!create_time.equals(today)) {
-                    account = list.getJSONObject(list.size() - 1).getString("account");
-                    old_phone = list.getJSONObject(list.size() - 1).getString("phone");
+                    account = list.getJSONObject(0).getString("account");
+                    old_phone = list.getJSONObject(0).getString("phone");
                     break;
                 }
             }
@@ -3190,6 +3091,8 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+
 
 
 }

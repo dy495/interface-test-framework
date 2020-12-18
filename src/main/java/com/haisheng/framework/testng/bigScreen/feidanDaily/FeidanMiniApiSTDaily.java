@@ -1649,6 +1649,7 @@ public class FeidanMiniApiSTDaily {
 
             String codeB = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
+            Thread.sleep(1000);
 //        确认
             String confirmCode = feidan.confirmQrcodeNoCheckCode(codeB);
 
@@ -1659,18 +1660,20 @@ public class FeidanMiniApiSTDaily {
             long time = System.currentTimeMillis();
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
-            idCardPath = idCardPath.replace("/", File.separator);
-            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
-            facePath = facePath.replace("/", File.separator);
+//            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+//            idCardPath = idCardPath.replace("/", File.separator);
+//            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+//            facePath = facePath.replace("/", File.separator);
 
-            ImageUtil imageUtil = new ImageUtil();
-            String imageBinary = imageUtil.getImageBinary(idCardPath);
-            imageBinary = stringUtil.trimStr(imageBinary);
-            String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary = stringUtil.trimStr(faceBinary);
+//            ImageUtil imageUtil = new ImageUtil();
+//            String imageBinary = imageUtil.getImageBinary(idCardPath);
+//            imageBinary = stringUtil.trimStr(imageBinary);
+//            String faceBinary = imageUtil.getImageBinary(facePath);
+//            faceBinary = stringUtil.trimStr(faceBinary);
 
-            String ocrPicUpload = feidan.ocrPicUpload(token, imageBinary, faceBinary);
+
+            String faceBinary =readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/facce");
+            String ocrPicUpload = feidan.ocrPicUpload(token, readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"), readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"));
             feidan.checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
 //        刷新
@@ -1691,11 +1694,11 @@ public class FeidanMiniApiSTDaily {
             confirm = feidan.confirmQrcodeNoCheckCode(codeA);
             feidan.checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
 
-            JSONArray list = feidan.orderList("廖祥茹", 10).getJSONArray("list");
+            JSONArray list = feidan.orderList("吕雪晴", 10).getJSONArray("list");
             if (list.size() > 1) {
-                throw new Exception("OCR刷证后，刷证环节没有出现在原有订单中!customerName=廖祥茹");
+                throw new Exception("OCR刷证后，刷证环节没有出现在原有订单中!customerName=吕雪晴");
             } else if (list.size() == 0) {
-                throw new Exception("不存在该顾客的订单!customerName=廖祥茹");
+                throw new Exception("不存在该顾客的订单!customerName=吕雪晴");
             } else {
                 JSONObject order = list.getJSONObject(0);
                 String orderId = order.getString("order_id");
@@ -1716,7 +1719,7 @@ public class FeidanMiniApiSTDaily {
                 }
 
                 if (!isExist) {
-                    throw new Exception("OCR刷证后订单中没有该刷证环节!customerName=廖祥茹");
+                    throw new Exception("OCR刷证后订单中没有该刷证环节!customerName=吕雪晴");
                 }
             }
         } catch (AssertionError e) {
@@ -1728,6 +1731,29 @@ public class FeidanMiniApiSTDaily {
         } finally {
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
+    }
+
+    public static String readTxt(String filePath) {
+        String lineTxt = null;
+        try {
+            File file = new File(filePath);
+            if(file.isFile() && file.exists()) {
+                InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+
+                while ((lineTxt = br.readLine()) != null) {
+//                    System.out.println(lineTxt);
+                    return  lineTxt;
+                }
+                br.close();
+            } else {
+                System.out.println("文件不存在!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("文件读取错误!");
+        }
+        return  lineTxt;
     }
 
     @Test(dataProvider = "ORDER_LIST_CHECK")

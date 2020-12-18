@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -80,7 +80,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer="https://servicewechat.com/wxbd41de85739a00c7/";
+        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
 
 
         //replace backend gateway url
@@ -94,7 +94,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -386,7 +386,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //小程序登录 记录小程序首页文章列表中总数
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONArray list=crm.articleList().getJSONArray("list");
             int total;
             if (list != null && list.size() != 0) {
@@ -415,7 +415,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             //新建文章，获取id
             Long actriclereal_id=pf.createArcile(positions,article_title);
             //小程序查看文章内容
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject detail=crm.appartilceDetail(actriclereal_id,positions);
             String article_titlA=detail.getString("article_title");
             String article_contentA=detail.getString("article_content");
@@ -555,7 +555,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
     public void watchCarConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONArray list=crm.appletwatchCarList().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -568,7 +568,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             String car_type_name="Cayman"+dt.getHHmm(0);
             pf.createCar(car_type_name);
             //applet 看车列&详情
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
             int totalA;
             if(listA==null||listA.size()==0){
@@ -661,7 +661,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long activity_id=aid[1];
             Long id=aid[0];
             //活动报名
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String other_brand="奥迪pc-黑名单报名";
             String customer_num="2";
             //预约使用参数
@@ -739,7 +739,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/7/19 19:06
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void peopelmange(Integer role_ids){
+    public void peopelmange(Integer role_ids,Integer a){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //删除排版销售前，排班人数
@@ -789,7 +789,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/8/31 17:39
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void addGuwen(Integer role_ids){
+    public void addGuwen(Integer role_ids,Integer dd){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
@@ -799,7 +799,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
             int roleId=role_ids; //销售顾问
-            String passwd="123456";
+            String passwd="ys123456";
 
             StringBuilder phone = new StringBuilder("1");
             for (int i = 0; i < 10;i++){
@@ -820,7 +820,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
                 list=crm.userPage(2,100).getJSONArray("list");
             }
             crm.login(pp.zongjingli,pp.adminpassword);
-            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             JSONArray listA=crm.ManageListNoSelect(role_ids).getJSONArray("list");
             int numA=listA.size();
 
@@ -849,7 +849,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             crm.login(baoshijie,pp.superpassword);
             //创建销售/顾问
             String userName = ""+ System.currentTimeMillis();
-            int roleId=13; //销售顾问
+            int roleId=407; //销售顾问
             String passwd="ys123456";
 
             StringBuilder phone = new StringBuilder("1");
@@ -870,7 +870,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             }else{
                 list=crm.userPage(2,100).getJSONArray("list");
             }
-            String userid = list.getJSONObject(list.size()-1).getString("user_id"); //获取用户id
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             //加人到小池子
             crm.login(adminname,adminpassword);
             crm.ManageAdd(roleId,userid);
@@ -936,15 +936,15 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/7/31 16:41
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void roleListCrm(Integer role_ids){
+    public void roleListCrm(Integer role_ids,Integer role_idsL){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+            JSONArray list=crm.ManageList(role_idsL).getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
                 total=0;
             }else {total=list.size();}
-            JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+            JSONArray listN=crm.ManageListNoSelect(role_idsL).getJSONArray("list");
             int totalNoSelect;
             if(listN==null){
                 totalNoSelect=0;
@@ -961,8 +961,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             for(int i=0;i<listC.size();i++){
                 int role_idC=listC.getJSONObject(i).getInteger("role_id");
                 String user_id=listC.getJSONObject(i).getString("user_id");
-                logger.info("------user_id:{}------",user_id);
-                if(role_idC==role_ids){
+                if(role_idC==role_ids||role_idC==role_idsL){
                     crmRoleTotal=crmRoleTotal+1;
                 }
             }
@@ -1177,7 +1176,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             if(totalDeliverCar==0){
                 return;
             }
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONArray list=crm.carOwner().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -1447,7 +1446,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
     public void messageInter(String appointment_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             Long total1=crm.messageList(10,"MSG").getLong("total");
             //pc创建站内消息
             crm.login(adminname,adminpassword);
@@ -1474,7 +1473,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
 
             }
             Thread.sleep(1000*70); //60秒后，查看小程序是否收到消息
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             //我的消息页
             JSONObject data=crm.messageList(10,"MSG");
             Long total2=data.getLong("total");
@@ -1777,7 +1776,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
             Long [] aid=pf.createAArcile_id(dt.getHistoryDate(0),"8");
             Long activity_id=aid[1];
             Long id=aid[0];       //文章id
-            crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             JSONObject data = crm.appartilceDetail(id, pp.positions);
             Integer registered_num = data.getInteger("registered_num");  //文章详情
             Integer customer_max = data.getInteger("customer_max");  //剩余人数

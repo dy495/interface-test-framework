@@ -427,14 +427,20 @@ public class TestCaseCommon {
         return "22728";
     }
 
-    public String getJCShop() {
-        return "22728";
-    }
-
     public String getProscheShopOline() {
         return "12928";
     }
+    public String getBjsReferOnline() {
+        return "https://servicewechat.com/wx0cf070e8eed63e90/";
+    }
 
+    public String getJcReferOnline() {
+        return "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
+    }
+
+    public String getJcReferdaily() {
+        return "https://servicewechat.com/wx4071a91527930b48/0/page-frame.html";
+    }
 
     public String getXundianShop() {
         return "4116";

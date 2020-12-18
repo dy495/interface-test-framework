@@ -967,19 +967,23 @@ public class FeidanMiniApiOnline {
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
-            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
-            idCardPath = idCardPath.replace("/", File.separator);
-            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
-            facePath = facePath.replace("/", File.separator);
+//            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.png";
+//            idCardPath = idCardPath.replace("/", File.separator);
+//            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.png";
+//            facePath = facePath.replace("/", File.separator);
+//
+//            ImageUtil imageUtil = new ImageUtil();
+//            String imageBinary = imageUtil.getImageBinary(idCardPath);
+//            imageBinary = stringUtil.trimStr(imageBinary);
+//            String faceBinary = imageUtil.getImageBinary(facePath);
+//            faceBinary = stringUtil.trimStr(faceBinary);
+//
+//            String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
+//            checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
-            ImageUtil imageUtil = new ImageUtil();
-            String imageBinary = imageUtil.getImageBinary(idCardPath);
-            imageBinary = stringUtil.trimStr(imageBinary);
-            String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary = stringUtil.trimStr(faceBinary);
 
-            String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
-            checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
+            String ocrPicUpload = feidan.ocrPicUpload(token, readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"), readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"));
+            feidan.checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
 //        刷新
             refreshCode = refreshQrcodeNoCheckCode();
@@ -1008,6 +1012,29 @@ public class FeidanMiniApiOnline {
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
+    }
+
+    public static String readTxt(String filePath) {
+        String lineTxt = null;
+        try {
+            File file = new File(filePath);
+            if(file.isFile() && file.exists()) {
+                InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+
+                while ((lineTxt = br.readLine()) != null) {
+//                    System.out.println(lineTxt);
+                    return  lineTxt;
+                }
+                br.close();
+            } else {
+                System.out.println("文件不存在!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("文件读取错误!");
+        }
+        return  lineTxt;
     }
 
     @Test(dataProvider = "BAD_CHANNEL_STAFF")
@@ -1771,6 +1798,9 @@ public class FeidanMiniApiOnline {
 
         if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
             message += "【风控单生成日期】那一行有错误,显示的不是生成订单的时间\n\n";
+            System.out.println(currentTime);
+            System.out.println(currentTime1);
+            System.out.println(noSpaceStr);
         }
 
 //            1.2生成操作者

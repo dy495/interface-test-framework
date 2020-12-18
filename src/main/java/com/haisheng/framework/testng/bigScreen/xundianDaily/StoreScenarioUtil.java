@@ -4,13 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import jdk.nashorn.internal.scripts.JS;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -20,13 +24,14 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
 
     private static volatile StoreScenarioUtil instance = null;
+
     private StoreScenarioUtil() {
     }
 
     public static StoreScenarioUtil getInstance() {
 
         if (null == instance) {
-            synchronized (StoreScenarioUtil.class) {
+            synchronized (StorePackage.class) {
                 if (null == instance) {
                     //这里
                     instance = new StoreScenarioUtil();
@@ -70,7 +75,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
 
@@ -83,7 +87,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         Long timestamp = System.currentTimeMillis();
         String non = "2e4b56c4-ac4c-4778-aa12-81657f5feb44";
-
 
 
         System.out.println(timestamp);
@@ -204,18 +207,208 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 "[\"statu\"]"
         };
     }
-    //将账户使用次数为0的角色删除
-    public void deleteRole() throws Exception {
-        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
-        for(int i=0;i<role_list.size();i++){
-            int account_number = role_list.getJSONObject(i).getInteger("account_number");
-            if(account_number==0){
-                Long role_id = role_list.getJSONObject(i).getLong("role_id");
-                organizationRoleDelete(role_id);
-            }
 
-        }
-    }
+//    //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员，获取前天的累计顾客总数
+//    public  Map<String, Integer> getAllCustomer(Long shop_id,String cycle_type,String month) throws Exception {
+//        JSONArray trend_list = historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+//        Integer customer_uv= 0;
+//        Integer omni_uv_total = 0;
+//        Integer customer_uv_01 = 0;
+//        Integer omni_uv_total_01 = 0;
+//        for (int i = 0; i < trend_list.size(); i++) {
+//            //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
+//            if (i - trend_list.size() == -1) {
+//                customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+//                omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+//            }
+//            //获取前天的累计顾客总数
+//            if (i - trend_list.size() == -2) {
+//                customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+//                omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+//            }
+//        }
+//        Map<String, Integer> result = new HashMap<>();
+//        result.put("customer_uv", customer_uv);
+//        result.put("omni_uv_total", omni_uv_total);
+//        result.put("customer_uv_01", customer_uv_01);
+//        result.put("omni_uv_total_01", omni_uv_total_01);
+//        return result;
+//    }
+//
+//    //将账户使用次数为0的角色删除
+//    public void deleteRole() throws Exception {
+//        JSONArray role_list = organizationRolePage("",1,100).getJSONArray("list");
+//        for(int i=0;i<role_list.size();i++){
+//            int account_number = role_list.getJSONObject(i).getInteger("account_number");
+//            if(account_number==0){
+//                Long role_id = role_list.getJSONObject(i).getLong("role_id");
+//                organizationRoleDelete(role_id);
+//            }
+//
+//        }
+//    }
+//
+//    //获取客户趋势图中昨日新增的客户人数(所有店)
+//    public int  getYesNew_count(String type,String cycle_type) throws Exception {
+//        JSONArray list = member_newCount_pic(cycle_type).getJSONArray("list");
+//        int num = 0;
+//        int count = list.size();
+//        for(int i1 =0;i1<count;i1++) {
+//            if (i1 == count - 1) {
+//                num = list.getJSONObject(i1).getInteger(type);
+//            }
+//        }
+//        return num;
+//    }
+//    //获取客户趋势图中昨日新增的客户人数(单店)
+//    public int  getYesNew_count_single(String type,Long shop_id_01,String cycle_type) throws Exception {
+//        JSONArray list = single_newCount_pic(shop_id_01,cycle_type).getJSONArray("list");
+//        int num = 0;
+//        int count = list.size();
+//        for(int i1 =0;i1<count;i1++) {
+//            if (i1 == count - 1) {
+//                num = list.getJSONObject(i1).getInteger(type);
+//            }
+//        }
+//        return num;
+//    }
+//
+//    //从新增顾客占比部分获取顾客部分得顾客占比(所有店)
+//    public String getTransformData(String type,String data_type ) throws Exception {
+//        JSONArray data_list = member_newCount_data().getJSONArray("list");
+//        String transform = "";
+//        for(int i=0;i<data_list.size();i++){
+//            String customer_type = data_list.getJSONObject(i).getString("customer_type");
+//            if(customer_type.equals(type)){
+//                transform = data_list.getJSONObject(i).getString(data_type);
+//            }
+//        }
+//        return transform;
+//    }
+//
+//    //从新增顾客占比部分获取顾客部分得顾客占比(单店)
+//    public String  getTransform_single(String type,Long shop_id_01,String data_type) throws Exception {
+//        JSONArray data_list = single_newCount_data(shop_id_01).getJSONArray("list");
+//        String transform = "";
+//        for(int i=0;i<data_list.size();i++){
+//            String customer_type = data_list.getJSONObject(i).getString("customer_type");
+//            if(customer_type.equals(type)){
+//                transform = data_list.getJSONObject(i).getString(data_type);
+//            }
+//        }
+//        return transform;
+//    }
+//    //获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)
+//    public int getday_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//        int uv1 = 0;
+//        int uv2 = 0;
+//        int count1 = trend_list1.size();
+//        for (int i = 0; i < count1; i++) {
+//            if (i == count1 - 1) {
+//                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//        }
+//        if(shop_id == null){
+//            uv2 =0;
+//        }else {
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            int count2 = trend_list2.size();
+//            for (int i = 0; i < count2; i++) {
+//                if (i == count2 - 1) {
+//                    uv2 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        int uvs = uv1 +uv2;
+//        return uvs;
+//    }
+//
+//    //获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)
+//    public Map<String, Double> getday_count_all(String cycle_type, String month, Long shop_id_01, Long shop_id) throws Exception {
+//        double uv1 = 0;
+//        double uv2 = 0;
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//            int count1 = trend_list1.size();
+//            for (int i = 0; i < count1; i++) {
+//                if (i == count1 - 1) {
+//                    uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count1 - 2) {
+//                    uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        double uv3 = 0;
+//        double uv4 = 0;
+//        if(shop_id ==null){
+//            uv3 = 0;
+//            uv4 = 0;
+//        }else{
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//            int count3 = trend_list2.size();
+//            for (int i = 0; i < count3; i++) {
+//                if (i == count3 - 1) {
+//                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count3 - 2) {
+//                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        Map<String, Double> result = new HashMap<>();
+//        result.put("uv1", uv1);
+//        result.put("uv2", uv2);
+//        result.put("uv3", uv3);
+//        result.put("uv4", uv4);
+//        return result;
+//    }
+//
+//
+//
+//    //获取历史客流中昨日的到店客流总数(所有店给周同比)
+//    public Map<String, Double> getweek_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
+//        JSONArray trend_list1 = historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+//        double uv1 = 0;
+//        double uv2 = 0;
+//        int count1 = trend_list1.size();
+//        for (int i = 0; i < count1; i++) {
+//            if (i == count1 - 1) {
+//                uv1 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//            if (i == count1 - 8) {
+//                uv2 = trend_list1.getJSONObject(i).getInteger("uv");
+//            }
+//        }
+//        double uv3 = 0;
+//        double uv4 = 0;
+//        if(shop_id == null){
+//             uv3 = 0;
+//             uv4 = 0;
+//        }else {
+//            JSONArray trend_list2 = historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
+//
+//            int count3 = trend_list2.size();
+//            for (int i = 0; i < count1; i++) {
+//                if (i == count3 - 1) {
+//                    uv3 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//                if (i == count3 - 8) {
+//                    uv4 = trend_list2.getJSONObject(i).getInteger("uv");
+//                }
+//            }
+//        }
+//
+//        Map<String, Double> result = new HashMap<>();
+//        result.put("uv1", uv1);
+//        result.put("uv2", uv2);
+//        result.put("uv3", uv3);
+//        result.put("uv4", uv4);
+//        return result;
+//
+//    }
+
 //    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
 
@@ -565,7 +758,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject memberVisitListV31(long shop_id, String member_type, Integer gender, String customer_id,String member_id, Integer page, Integer size) throws Exception {
+    public JSONObject memberVisitListV31(long shop_id, String member_type, Integer gender, String customer_id, String member_id, Integer page, Integer size) throws Exception {
         String url = "/patrol/member/total/list";
         String json =
                 "{" +
@@ -606,12 +799,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject historyShopMemberCountV3(String cycle_type, String month) throws Exception {
+    public JSONObject historyShopMemberCountV3(String cycle_type) throws Exception {
         String url = "/patrol/history/shop/member/new/count";
         String json =
                 "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\"\n" +
+                        "\"cycle_type\" :\"" + cycle_type + "\"\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -675,7 +867,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:8.5.8  会员详情查看（2020-11-21）(门店6.0修改)
+     * @description:8.5.8 会员详情查看（2020-11-21）(门店6.0修改)
      * @author: qingqing
      * @time:
      */
@@ -693,7 +885,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -770,7 +961,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject single_newCount_pic(long shop_id,String cycle_type) throws Exception {
+    public JSONObject single_newCount_pic(long shop_id, String cycle_type) throws Exception {
         String url = "/patrol/new_member/shop/trend";
         String json =
                 "{" +
@@ -1348,29 +1539,29 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/risk-control/cashier/risk-event/page";
         String json =
                 "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" ;
-                      if(event_name !=""){
-                       json = json+   "\"event_name\" :\"" + event_name + "\",\n";
-                      }
-                     if(order_id !=""){
-                       json = json+   "\"order_id\" :\"" + order_id + "\",\n";
-                      }
-                     if(order_date !=""){
-                       json = json+   "\"order_date\" :\"" + order_date + "\",\n";
-                      }
-                     if(member_name !=""){
-                       json = json+   "\"member_name\" :\"" + member_name + "\",\n";
-                      }
-                     if(handle_result !=""){
-                       json = json+   "\"handle_result\" :\"" + handle_result + "\",\n";
-                      }
-                     if(current_state !=""){
-                       json = json+   "\"current_state\" :\"" + current_state + "\",\n";
-                      }
-                    json = json +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
+                        "\"shop_id\" :" + shop_id + ",\n";
+        if (event_name != "") {
+            json = json + "\"event_name\" :\"" + event_name + "\",\n";
+        }
+        if (order_id != "") {
+            json = json + "\"order_id\" :\"" + order_id + "\",\n";
+        }
+        if (order_date != "") {
+            json = json + "\"order_date\" :\"" + order_date + "\",\n";
+        }
+        if (member_name != "") {
+            json = json + "\"member_name\" :\"" + member_name + "\",\n";
+        }
+        if (handle_result != "") {
+            json = json + "\"handle_result\" :\"" + handle_result + "\",\n";
+        }
+        if (current_state != "") {
+            json = json + "\"current_state\" :\"" + current_state + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1748,9 +1939,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-           /**
-             * ***********************************************二十三、云巡店----图片中心************************************************
-             */
+    /**
+     * ***********************************************二十三、云巡店----图片中心************************************************
+     */
     /**
      * @description:23.1 图片留痕方式类型
      * @author: qingqing
@@ -1771,30 +1962,30 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject picturePage(String patrol_type,String start_time,String end_time,String shop_name,Integer is_abnormal,Integer page,Integer size) throws Exception {
+    public JSONObject picturePage(String patrol_type, String start_time, String end_time, String shop_name, Integer is_abnormal, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/remark/picture/page";
         String json =
-                "{" ;
-                   if (patrol_type != "") {
-                      json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
-                   }
-                   if (start_time != "") {
-                      json = json + "\"start_time\" :\"" + start_time + "\",\n";
-                   }
-                   if (end_time != "") {
-                      json = json + "\"end_time\" :\"" + end_time + "\",\n";
-                   }
-                   if (shop_name != "") {
-                      json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
-                   }
-                   if (is_abnormal != null) {
-                       json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
-                   }
-                   json = json +
-                    "\"page\" :" + page + ",\n" +
-                    "\"size\" :" + size + "\n" +
+                "{";
+        if (patrol_type != "") {
+            json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
+        }
+        if (start_time != "") {
+            json = json + "\"start_time\" :\"" + start_time + "\",\n";
+        }
+        if (end_time != "") {
+            json = json + "\"end_time\" :\"" + end_time + "\",\n";
+        }
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (is_abnormal != null) {
+            json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
 
-                 "} ";
+                "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -1804,7 +1995,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     /**
      * -------------------------------门店1.0APP-----------------------------------------------------------------------------------------------
-    */
+     */
 
 
     /**
@@ -1812,7 +2003,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject typeSearch( Integer page, Integer size) throws Exception {
+    public JSONObject typeSearch(Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/shop-type-list";
         String json =
                 "{} ";
@@ -1827,7 +2018,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject longSee_list( Integer page, Integer size) throws Exception {
+    public JSONObject longSee_list(Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/often-shop-list";
         String json =
                 "{} ";
@@ -1857,7 +2048,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopName_Search(String district_code ,JSONArray shop_type ,String shop_name,Integer page, Integer size) throws Exception {
+    public JSONObject shopName_Search(String district_code, JSONArray shop_type, String shop_name, Integer page, Integer size) throws Exception {
         String url = "/store/m-app/auth/shop/shop-search";
         String json =
                 "{" +
@@ -1876,7 +2067,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_shopDetail(String shop_id ) throws Exception {
+    public JSONObject app_shopDetail(String shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/shop-detail";
         String json =
                 "{" +
@@ -1919,7 +2110,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
     /**
      * @description:3.1 巡店中心
      * @author: qingqing
@@ -1940,7 +2130,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( long shop_id) throws Exception {
+    public JSONObject app_deviceList(long shop_id) throws Exception {
         String url = "/store/m-app/auth/patrol/device-list";
         String json =
                 "{" +
@@ -1951,12 +2141,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:3.2 巡店-直播流
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( long shop_id,String device_id) throws Exception {
+    public JSONObject app_deviceList(long shop_id, String device_id) throws Exception {
         String url = "/store/m-app/auth/patrol/device-live";
         String json =
                 "{" +
@@ -1970,15 +2161,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
-
     /**----------------------------------------------------------------------四. 账号相关---------------------------**/
     /**
      * @description:1.1 获取登录验证码
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_deviceList( String phone) throws Exception {
+    public JSONObject app_deviceList(String phone) throws Exception {
         String url = "/store/m-app/login-verification-code";
         String json =
                 "{" +
@@ -1995,7 +2184,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject app_login( String phone,String verification_code) throws Exception {
+    public JSONObject app_login(String phone, String verification_code) throws Exception {
         String url = "/store/m-app/login";
         String json =
                 "{" +
@@ -2025,12 +2214,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     //--------------------------------------五. 数据统计相关---------------------------
+
     /**
      * @description:5.3 门店详情-实时客流-用户画像
      * @author: qingqing
      * @time:
      */
-    public JSONObject real_userInfo( long shop_id) throws Exception {
+    public JSONObject real_userInfo(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/real-hour/age-gender/distribution";
         String json =
                 "{" +
@@ -2042,29 +2232,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    /**
-     * @description:5.4 门店详情-实时客流-趋势图
-     * @author: qingqing
-     * @time:
-     */
-    public JSONObject real_pv_uv( long shop_id) throws Exception {
-        String url = "/store/m-app/auth/shop/real-hour/pv-uv";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
     /**
      * @description:5.5 门店详情-历史客流-用户画像
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_userInfo( long shop_id) throws Exception {
+    public JSONObject history_userInfo(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/history/age-gender/distribution";
         String json =
                 "{" +
@@ -2075,12 +2249,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:5.6 门店详情-历史客流-到店趋势图
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_pv_uv( long shop_id) throws Exception {
+    public JSONObject history_pv_uv(long shop_id) throws Exception {
         String url = "/store/m-app/auth/shop/history/age-gender/distribution";
         String json =
                 "{" +
@@ -2097,7 +2272,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject history_conversion( long shop_id,String date,String cecle_type) throws Exception {
+    public JSONObject history_conversion(long shop_id, String date, String cecle_type) throws Exception {
         String url = "/store/m-app/auth/shop/history/conversion";
         String json =
                 "{" +
@@ -2111,7 +2286,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+//------------------------------------------------------------------------------------------------------------------
 
+    public JSONObject invokeApi(IScene scene) {
+        return invokeApi(scene, true);
+    }
+
+    public JSONObject invokeApi(IScene scene, boolean checkCode) {
+        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+    }
+
+    private JSONObject invokeApi(String path, JSONObject requestBody) {
+        return invokeApi(path, requestBody, true);
+    }
 }
 
 

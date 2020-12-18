@@ -36,5 +36,6 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE = 27;
 
     public static final String QA_SEP = "{qa-var-qa}";
+    public static final String APPLET_ONLINE_REFER = "https://servicewechat.com/wx0cf070e8eed63e90/";
 
 }

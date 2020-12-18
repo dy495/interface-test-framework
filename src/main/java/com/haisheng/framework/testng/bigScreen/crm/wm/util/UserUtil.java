@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
@@ -31,11 +31,11 @@ public class UserUtil {
      *
      * @param appletCode 自己的token
      */
-    public static void loginApplet(EnumAppletCode appletCode) {
-        if (appletCode == null) {
-            throw new DataException("appletCode is null");
+    public static void loginApplet(EnumAppletToken appletToken) {
+        if (appletToken == null) {
+            throw new DataException("appletToken is null");
         }
-        crm.appletLoginToken(appletCode.getCode());
+        crm.appletLoginToken(appletToken.getToken());
     }
 
 }

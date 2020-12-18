@@ -472,7 +472,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        String salePhone = "15321527989";
+        String salePhone = "13654973499";
         //查询公海数量
         try {
             //先删除15321527989顾问的账号
@@ -480,7 +480,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //公海客户数量
             int total = crm.publicCustomerList("", "", size, 1).getInteger("total");
             //添加销售
-            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 13, "", "");
+            crm.addUser(newXs.getAccount(), newXs.getAccount(), salePhone, newXs.getPassword(), 407, "", "");
             //创建
             String customerPhone = method.getDistinctPhone();
             UserUtil.login(newXs);
@@ -565,9 +565,9 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_3;
         try {
             //登录小程序
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             //预约试驾
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 1, 36);
 
             //电话预约已完成数量
@@ -618,14 +618,14 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_3;
         try {
             //更新小程序token
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             //预约试驾
             JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = response.getInteger("appointment_id");
             //已取消数量
             int cancelNum1 = getCancelNum("已取消");
             //取消试驾
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             crm.appointmentCancel(appointmentId);
             //已取消数量
             int cancelNum2 = getCancelNum("已取消");
@@ -645,7 +645,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_3;
         try {
             //更新小程序token
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONObject response = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = response.getInteger("appointment_id");
             //获取列表总数
@@ -653,7 +653,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject response1 = crm.appointmentTestDriverList("", "", "", 1, 2 << 10);
             Integer total = response1.getInteger("total");
             //取消试驾
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             crm.appointmentCancel(appointmentId);
             //获取列表总数
             UserUtil.login(xs);
@@ -681,7 +681,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //预约中数量
             int appointmentNum = getCancelNum("预约中");
             //预约试驾
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             JSONObject result = crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
             int appointmentId = result.getInteger("appointment_id");
             //列表条数
@@ -732,7 +732,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             //列表数
             int listSize = response.getJSONArray("list").size();
             //预约试驾
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             String data = DateTimeUtil.getFormat(new Date());
 
             crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), data, 1, 36);
@@ -773,9 +773,9 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             int totalNumber = response.getInteger("appointment_total_number");
             int listSize = crm.appointmentTestDriverList("", "", "", 1, 2 << 10).getJSONArray("list").size();
             //两个人预约试驾-今明两天
-            UserUtil.loginApplet(EnumAppletCode.WM);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             crm.appointmentTestDrive(customerInfo.getGender(), customerInfo.getName(), customerInfo.getPhone(), date, 1, 36);
-            UserUtil.loginApplet(EnumAppletCode.XMF);
+            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
             crm.appointmentTestDrive(customerInfo1.getGender(), customerInfo1.getName(), customerInfo1.getPhone(), date1, 1, 36);
             CommonUtil.valueView(todayNumber, totalNumber, listSize);
             UserUtil.login(zjl);

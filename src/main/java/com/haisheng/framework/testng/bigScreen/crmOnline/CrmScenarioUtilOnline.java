@@ -9,8 +9,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -1946,11 +1946,10 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     }
 
     //取消预约
-    public JSONObject cancle(Long appointment_id) throws Exception {
+    public JSONObject cancle(Long appointment_id) {
         String url = "/WeChat-applet/porsche/a/appointment/cancel/" + appointment_id;
-        String json = "";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        JSONObject object = new JSONObject();
+        return invokeApi(url, object);
     }
 
     //添加车辆
@@ -4632,11 +4631,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                EnumAppletCode.XMF.getCode(),
-                EnumAppletCode.BB.getCode(),
-//                EnumAppletCode.WM.getCode(),
-//                EnumAppletCode.LXQ.getCode(),
-//                EnumAppletCode.GLY.getCode()
+                EnumAppletToken.BSJ_XMF_ONLINE.getToken()
         };
     }
 
@@ -4830,7 +4825,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("test_car_id", id);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
+        return JSON.parseObject(result);
     }
 
     //试驾车列表

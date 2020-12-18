@@ -17,6 +17,7 @@ public class Page extends BaseScene {
     private final String finishDate;
     private final String customerPhone;
     private final Integer receptionType;
+    private final Integer receptionSaleName;
     private final Long shopId;
     @Builder.Default
     private final Integer page = 1;
@@ -28,6 +29,7 @@ public class Page extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("plate_number", plateNumber);
         object.put("reception_sale_id", receptionSaleId);
+        object.put("reception_sale_name", receptionSaleName);
         object.put("reception_date", receptionDate);
         object.put("customer_name", customerName);
         object.put("reception_status", receptionStatus);

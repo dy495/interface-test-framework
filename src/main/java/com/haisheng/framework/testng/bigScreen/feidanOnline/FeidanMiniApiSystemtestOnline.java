@@ -33,7 +33,10 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -851,7 +854,8 @@ public class FeidanMiniApiSystemtestOnline {
             //faceBinary = stringUtil.trimStr(faceBinary);
 
             //String ocrPicUpload = feidan.ocrPicUpload(token, imageBinary, faceBinary);
-            JSONObject ocrPicUpload = ocrPicUpload(token, imageBinary, "");
+//            JSONObject ocrPicUpload = ocrPicUpload(token, imageBinary, "");
+            JSONObject ocrPicUpload = ocrPicUpload(token, readTxt("src/main/java/com/haisheng/framework/testng/bigScreen/feidanOnline/idcard"), "");
             int returncode = ocrPicUpload.getInteger("code");
             String message = ocrPicUpload.getString("message");
             System.out.println(ocrPicUpload);
@@ -868,7 +872,28 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, desc);
         }
     }
+    public static String readTxt(String filePath) {
+        String lineTxt = null;
+        try {
+            File file = new File(filePath);
+            if(file.isFile() && file.exists()) {
+                InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
 
+                while ((lineTxt = br.readLine()) != null) {
+//                    System.out.println(lineTxt);
+                    return  lineTxt;
+                }
+                br.close();
+            } else {
+                System.out.println("文件不存在!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("文件读取错误!");
+        }
+        return  lineTxt;
+    }
 
     /**
      * 登记信息页搜索带特殊字符的姓名

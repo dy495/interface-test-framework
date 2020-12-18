@@ -9,6 +9,7 @@ public class createArticle {
     public static DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file = new FileUtil();
+
     public  String positions=pp.positions;
     public  String valid_start=dt.getHistoryDate(0);
     public  String valid_end=dt.getHistoryDate(4);
@@ -18,7 +19,7 @@ public class createArticle {
     public  String[] customer_property={};
     public  String article_title ="app任务报名品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
     public  Boolean is_pic_content=false;
-    public  String article_bg_pic=file.texFile(pp.filePath);;
+    public  String article_bg_pic=file.texFile(pp.filePath);
     public  String article_content= "品牌上新，优惠多多，限时4天,活动内容";
     public  String article_remarks="品牌上新，优惠多多，限时4天,备注";
     public  Boolean is_online_activity=true;

@@ -34,6 +34,7 @@ public class ApplyPage extends BaseScene {
         object.put("cost_center", costCenter);
         object.put("apply_time", applyTime);
         object.put("applyItem", applyItem);
+        object.put("size", size);
         return object;
     }
 

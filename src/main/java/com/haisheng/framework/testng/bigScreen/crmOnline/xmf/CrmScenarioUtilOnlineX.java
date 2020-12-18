@@ -9,7 +9,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
@@ -4558,11 +4557,11 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     @DataProvider(name = "ROLE_IDS")
     public static Object[] role_ids() {
-        return new Integer[]{
-                13,
-                15,
-                16,
-                23,
+        return new Integer[][]{
+                {407,13},  //销售顾问呢
+                {409,15},   //定损顾问
+                {410,16},   //服务顾问
+//                23,
 
         };
     }
@@ -4591,7 +4590,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     @DataProvider(name = "APPLET_TOKENS")
     public static Object[] appletTokens() {
         return new String[]{
-                EnumAppletCode.XMFONLINE.getCode(),
+                "cw4sTi87+ZWGuDqdsfZXSA==", //EnumAppletCode.XMFONLINE.getCode(),
 //                EnumAppletCode.BB.getCode(),
 //                EnumAppletCode.WM.getCode(),
 //                EnumAppletCode.LXQ.getCode(),

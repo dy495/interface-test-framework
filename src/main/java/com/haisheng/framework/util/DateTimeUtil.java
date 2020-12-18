@@ -31,6 +31,12 @@ public class DateTimeUtil {
         return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
     }
 
+    public String getHistoryDate1(int num_days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, num_days);
+        return new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime());
+    }
+
     public Long getHistoryDateTimestamp(int num_days) {
         Calendar cal = Calendar.getInstance();
 
@@ -488,7 +494,7 @@ public class DateTimeUtil {
         return gc.get(2) + 1;
     }
 
-    public String getHHmm(int n) throws ParseException {
+    public String getHHmm(int n) {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();

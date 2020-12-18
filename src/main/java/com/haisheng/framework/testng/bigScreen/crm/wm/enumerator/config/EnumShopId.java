@@ -29,6 +29,16 @@ public enum EnumShopId {
      * 轿辰日常
      */
     JIAOCHEN_DAILY("-1"),
+
+    /**
+     * 轿辰线上
+     */
+    JIAOCHEN_ONLINE("-1"),
+
+    /**
+     * 巡店日常
+     */
+    XUNDIAN_DAILY("4116"),
     ;
 
 

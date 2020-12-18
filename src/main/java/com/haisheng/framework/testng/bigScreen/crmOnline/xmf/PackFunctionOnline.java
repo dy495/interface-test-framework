@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletCode;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -315,7 +315,7 @@ public class PackFunctionOnline {
 
     //老客试驾完成接待---for评价
     public Long driverEva() throws Exception {
-        crm.appletLoginToken(EnumAppletCode.XMFONLINE.getCode());
+        crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
         JSONObject data = crm.appointmentTestDrive("MALE", pp.customer_name, pp.customer_phone_number, dt.getHistoryDate(0), pp.car_type, pp.car_model);
         //预约试驾成功后，页面显示数据
         Long appointment_id = data.getLong("appointment_id");
