@@ -42,6 +42,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      */
     public String IpPort = "http://inspect.store.winsenseos.com";
 
+
     //----------------------登陆--------------------
     public void login(String userName, String passwd) {
         initHttpConfig();
@@ -62,7 +63,16 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         //saveData("登陆");
     }
+    @DataProvider(name = "CYCLE_TYPE")
+    public static Object[] cycle_type() {
 
+        return new String[]{
+                "RECENT_SEVEN",
+                "RECENT_FOURTEEN",
+                "RECENT_THIRTY",
+                "RECENT_SIXTY"
+        };
+    }
     /*
     3.3新建定检任务
    */

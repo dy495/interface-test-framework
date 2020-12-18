@@ -819,8 +819,8 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     /**
      * ====================【巡店分析】巡店整体覆盖率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%======================
      */
-    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
-    public void all_coverage(String cycle_type) {
+    @Test
+    public void all_coverage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
              JSONArray list = xd.ShopPage(page,size).getJSONArray("list");
@@ -840,7 +840,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
           //  String coverage_rate =  ss.replace("%","");
 
              //获取巡店分析中核心指标中的巡店整体覆盖率
-            JSONObject patrol_coverage = xd.xd_analysis_indeicators(cycle_type,"").getJSONObject("patrol_coverage");
+            JSONObject patrol_coverage = xd.xd_analysis_indeicators("RECENT_SEVEN","").getJSONObject("patrol_coverage");
             String patrol_coverage_rate_str= patrol_coverage.getString("patrol_coverage_rate_str");
 
             checkArgument( patrol_coverage_rate_str.equals(coverage_rate) , "" + "【巡店分析】巡店整体覆盖率:"+patrol_coverage_rate_str  +"!= 【巡店中心】下巡店门店的总数量/权限下门店总数＊100%:"+coverage_rate);
@@ -858,7 +858,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     /**
      * ====================【巡店分析】报告合格率==【巡店报告中心】合格报告总数/累积报告数量＊100%======================
      */
-    @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
+    //@Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
     public void qualt_rate(String cycle_type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

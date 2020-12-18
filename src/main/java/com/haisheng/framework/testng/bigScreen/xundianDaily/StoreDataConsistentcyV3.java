@@ -1774,6 +1774,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             String ss=  CommonUtil.getPercent(A1-B1,B1,4);
             String cust_rate =  ss.replace("%","");
+
             Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店"+shop_id_01+"昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
 
         } catch (AssertionError e) {
@@ -2387,40 +2388,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
-
-    /**
-     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
-     */
-    //@Test
-    public void deal_thing() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = md.memberTotalListV3(shop_id, page, 50);
-            JSONArray list = response.getJSONArray("list");
-            String customer_id = "";
-            int total_deal_times = 0;
-            int total_visit_times = 0;
-            int allsum = 0;
-            for (int i = 0; i < list.size(); i++) {
-                customer_id = list.getJSONObject(i).getString("customer_id");
-                JSONObject res = md.memberDetail(shop_id, customer_id, page, 10);
-                total_deal_times = res.getInteger("total_deal_times");
-                total_visit_times = res.getInteger("total_visit_times");
-                allsum = total_deal_times + total_visit_times;
-            }
-            Preconditions.checkArgument(allsum != 50, "客户ID：" + customer_id + "。交易次数为：" + total_deal_times + "。该客户详情中的进店次数为：" + total_visit_times + "。报错门店的shopId=" + shop_id);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
-        }
-
-    }
-
     /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
@@ -2429,7 +2396,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id_01).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("today_pv");

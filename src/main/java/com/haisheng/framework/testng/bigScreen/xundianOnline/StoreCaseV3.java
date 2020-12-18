@@ -2288,7 +2288,7 @@ public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
-    @Test
+   // @Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");

@@ -964,12 +964,11 @@ public class StoreDataForDZY extends TestCaseCommon implements TestCaseStd {
      *
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      * */
-    @Test
+    //@Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-
 
             //获取昨天日各个时间段内到访得人次且相加
             JSONArray eTlist = md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
