@@ -1158,12 +1158,51 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
 
+
+    /**
+     * app checks submit 3.15 获取门店巡店记录列表（V1.1）
+     */
+    public JSONObject getShopChecksPage(Long shop_id, Integer check_result,Integer handle_status,String inspector_name,String inspector_id,String order_rule,Integer size,Long last_value) throws Exception {
+        String url = "/patrol/m-app/auth/shop/checks/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("check_result",check_result);
+        json.put("handle_status", handle_status);
+        json.put("inspector_name",inspector_name);
+        json.put("inspector_id",inspector_id);
+        json.put("order_rule",order_rule);
+        json.put("size",size);
+        json.put("last_value",last_value);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     public JSONObject logout() throws Exception {
         String url = "/m/patrol-logout";
         JSONObject json = new JSONObject();
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+    /**
+     * app checks submit 3.16获取门店巡店记录详情（V1.1）
+     */
+    public JSONObject getShopChecksDetail(Long id,Long shop_id,Long check_list_id,Long check_result) throws Exception {
+        String url = "/patrol/m-app/auth/shop/checks/detail";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("shop_id", shop_id);
+        json.put("check_list_id",check_list_id);
+        json.put("check_result",check_result);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+
 
 
     /**
