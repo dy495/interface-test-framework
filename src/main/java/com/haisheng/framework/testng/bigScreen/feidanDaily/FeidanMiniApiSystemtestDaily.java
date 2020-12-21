@@ -1285,7 +1285,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Test
+    @Test(dataProvider = "ACC_ADDERR")
     public void accountEditErr(String name1,String phone1 , String email1,String type1 , String gender1,String mes1){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
