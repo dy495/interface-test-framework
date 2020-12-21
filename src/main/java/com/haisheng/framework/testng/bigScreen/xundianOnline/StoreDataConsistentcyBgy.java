@@ -1179,45 +1179,45 @@ public class StoreDataConsistentcyBgy extends TestCaseCommon implements TestCase
         }
 
     }
-    /**
-     *
-     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
-     * */
-   // @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
-    public void yesterdayTotal(long shop_id) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
-            int count = 0;
-            for(int i=0;i<eTlist.size();i++){
-                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
-                yesterdayPv = yesterdayPv  != null ?  yesterdayPv : 0;
-                count += yesterdayPv;
-
-            }
-
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
-            int pv = 0;
-            int count1= trend_list.size();
-            for(int i=0;i<count1;i++){
-                if(i == count1 - 1){
-                    pv = trend_list.getJSONObject(i).getInteger("pv");
-                }
-            }
-            Preconditions.checkArgument((count == pv),"百果园实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
-        }
-
-    }
+//    /**
+//     *
+//     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
+//     * */
+//   // @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void yesterdayTotal(long shop_id) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取昨天日各个时间段内到访得人次且相加
+//            JSONArray eTlist = md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
+//            int count = 0;
+//            for(int i=0;i<eTlist.size();i++){
+//                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
+//                yesterdayPv = yesterdayPv  != null ?  yesterdayPv : 0;
+//                count += yesterdayPv;
+//
+//            }
+//
+//            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+//            int pv = 0;
+//            int count1= trend_list.size();
+//            for(int i=0;i<count1;i++){
+//                if(i == count1 - 1){
+//                    pv = trend_list.getJSONObject(i).getInteger("pv");
+//                }
+//            }
+//            Preconditions.checkArgument((count == pv),"百果园实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//
+//            saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+//        }
+//
+//    }
     /**
      *
      * ====================百果园线上实时客流监控======================

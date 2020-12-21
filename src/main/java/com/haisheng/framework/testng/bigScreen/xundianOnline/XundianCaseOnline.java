@@ -583,7 +583,7 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * 7.case1:最多5次留痕 留痕6次  ok
      */
-    @Test
+    //@Test
     public void PictureMoreFiveA(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -985,7 +985,7 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
      * @description :14.pc特有截屏留痕
      * @date :2020/6/25 16:20
      **/
-    @Test
+    //@Test
     public void problemMark(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
