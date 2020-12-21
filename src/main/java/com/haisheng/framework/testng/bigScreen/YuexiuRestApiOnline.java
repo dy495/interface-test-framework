@@ -418,7 +418,7 @@ public class YuexiuRestApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, function + "验证男女会汇总比例之和是否为100%。");
+            saveData(aCase, ciCaseName, caseName, function + "验证男女会汇总比例之和是否为100。");
         }
     }
 
@@ -4157,17 +4157,19 @@ public class YuexiuRestApiOnline {
                 }
             }
         }
+        else {
+            for (int i = 0; i < percents.length; i++) {
+                float percent = (float) nums[i] / (float) total * 100;
+                String percentStr = df.format(percent);
 
-        for (int i = 0; i < percents.length; i++) {
-            float percent = (float) nums[i] / (float) total * 100;
-            String percentStr = df.format(percent);
+                percentStr += "%";
 
-            percentStr += "%";
-
-            if (!percentStr.equals(percents[i])) {
-                throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
+                if (!percentStr.equals(percents[i])) {
+                    throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
+                }
             }
         }
+
     }
 
     private void checkAgeGenderRatio(String function, JSONObject jo) throws Exception {
@@ -4183,7 +4185,9 @@ public class YuexiuRestApiOnline {
         String femaleStr = femaleRatioStr.substring(0, femaleRatioStr.length() - 1);
 
         double femaleRatio = Double.valueOf(df.format(Double.valueOf(femaleStr)));
-
+        System.out.println(maleRatio);
+        System.out.println(femaleRatio);
+        System.out.println(maleRatio + femaleRatio);
         if ((int) (maleRatio + femaleRatio) != 100) {
             throw new Exception(function + ",男女汇总比例之和不是100%，男：" + maleRatio + ",女：" + femaleRatio);
         }
@@ -4244,19 +4248,21 @@ public class YuexiuRestApiOnline {
                 }
             }
         }
+        else {
+            for (int i = 0; i < nums.length; i++) {
+                double actual = ((double) nums[i] / (double) total) * (double) 100;
+                DecimalFormat df = new DecimalFormat("0.00");
+                String actualStr = df.format(actual);
+                double actualD = Double.valueOf(actualStr);
 
-        for (int i = 0; i < nums.length; i++) {
-            double actual = ((double) nums[i] / (double) total) * (double) 100;
-            DecimalFormat df = new DecimalFormat("0.00");
-            String actualStr = df.format(actual);
-            double actualD = Double.valueOf(actualStr);
+                String resStr = df.format(Double.parseDouble(percentageStrs[i]));
+                double resD = Double.valueOf(resStr);
 
-            String resStr = df.format(Double.parseDouble(percentageStrs[i]));
-            double resD = Double.valueOf(resStr);
-
-            if (Math.abs(actual - resD) > 0.01) {
-                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + ",期待：" + actualStr);
+                if (Math.abs(actual - resD) > 0.01) {
+                    throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + ",期待：" + actualStr);
+                }
             }
+
         }
     }
 
