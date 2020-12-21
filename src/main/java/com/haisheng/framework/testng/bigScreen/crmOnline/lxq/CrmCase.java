@@ -1110,7 +1110,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     public String getCarName() {
 
-        String name = "Name" + Integer.toString((int) (Math.random() * 100000000));
+        String name = "Name" + Integer.toString((int)((Math.random()*9+1)*1000000));
         return name;
     }
 

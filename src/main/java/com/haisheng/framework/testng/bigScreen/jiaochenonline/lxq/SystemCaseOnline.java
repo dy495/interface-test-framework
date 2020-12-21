@@ -719,7 +719,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         try {
 
             JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+            pic_list1.add("general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e");
 
             JSONArray pic_list2 =new JSONArray();
             pic_list2.add("");
@@ -766,9 +766,9 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
             JSONArray pic_list2 =new JSONArray();
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
+            pic_list2.add("general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e");
+            pic_list2.add("general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e");
+            pic_list2.add("general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e");
             JSONArray vou_list =new JSONArray();
             vou_list.add(jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getInteger("id"));
 

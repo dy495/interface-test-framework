@@ -6,7 +6,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 public class jiaoChenInfoOnline {
     DateTimeUtil dt = new DateTimeUtil();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
-    public final String logo = "general_temp/16de43e8-e98f-44d2-a005-62cab62b26ef";//120*120 品牌logo
+    public final String logo = "general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e";//120*120 品牌logo
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)(Math.random()*100000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)(Math.random()*100000));//随机字符串长度6
