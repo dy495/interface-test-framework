@@ -95,7 +95,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                      JSONObject jsonObject = (JSONObject) e;
 //                        String flag = jsonObject.getString(output);
                         Preconditions.checkArgument(flag.contains(result), "接待管理按" + result + "查询，结果错误" + flag);
-                    };
+                    }
                 }
             } else {
                 Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
@@ -162,7 +162,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 sr.size = "10";
                 //全部筛选之后的结果
                 JSONObject result = jc.receptionManageC(sr).getJSONArray("list").getJSONObject(0);
-                System.out.println("--------"+sr.reception_type);
                 Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number), "参数全部输入的查询的" + sr.plate_number + "与列表信息的第一行的" + result.getString(ss[0][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(ss[1][1].toString()).contains(sr.reception_sale_name), "参数全部输入的查询的" + result.getString(ss[1][1].toString() + "与列表信息的第一行的" + sr.reception_sale_name + "不一致"));
                 Preconditions.checkArgument(result.getString(ss[2][1].toString()).contains(sr.customer_name), "参数全部输入的查询的" + sr.customer_name + "与列表信息的第一行的" + result.getString(ss[2][1].toString() + "不一致"));
