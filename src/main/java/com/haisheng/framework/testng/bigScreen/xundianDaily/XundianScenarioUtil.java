@@ -1160,6 +1160,20 @@ public class XundianScenarioUtil extends TestCaseCommon {
 
 
     /**
+     * @author zhoutao
+     * @description 3.13 获取门店巡检员列表（V1.1）
+     */
+    public JSONObject authShopInspectors(Long shop_id)throws Exception {
+        String url = "/patrol/m-app/auth/shop/inspectors";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
      * app checks submit 3.15 获取门店巡店记录列表（V1.1）
      */
     public JSONObject getShopChecksPage(Long shop_id, Integer check_result,Integer handle_status,String inspector_name,String inspector_id,String order_rule,Integer size,Long last_value) throws Exception {
@@ -1202,7 +1216,47 @@ public class XundianScenarioUtil extends TestCaseCommon {
 
 
 
+    /**
+     * @author zhoutao
+     * @description 3.18 巡店记录处理事项下拉列表（V1.1）
+     */
+    public JSONObject handleStatusList() {
+        String url = "/patrol/m-app/auth/shop/handle_status/list";
+        String json =
+                "{}";
 
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @author zhoutao
+     * @description 3.19 巡店记录巡店结果下拉列表（V1.1）
+     */
+    public JSONObject resultTypeList() {
+        String url = "/patrol/m-app/auth/shop/result-type/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @author zhoutao
+     * @description 3.20 巡店报告详情执行项结果下拉列表（V1.1）
+     */
+    public JSONObject checkResultList() {
+        String url = "/patrol/m-app/auth/shop/check_result/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
     /**
@@ -1373,7 +1427,5 @@ public class XundianScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
 
 }
