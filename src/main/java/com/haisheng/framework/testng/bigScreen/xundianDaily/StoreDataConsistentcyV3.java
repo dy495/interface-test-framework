@@ -2413,8 +2413,6 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             saveData("实时客流中，今日到访各个时段的pv之和");
         }
-
     }
-
 }
 
