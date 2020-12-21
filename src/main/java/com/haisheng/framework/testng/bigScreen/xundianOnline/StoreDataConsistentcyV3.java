@@ -567,7 +567,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
      */
-    @Test
+    //@Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1977,7 +1977,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
-    @Test
+    //@Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
