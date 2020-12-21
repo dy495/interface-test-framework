@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,10 +8,11 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumAppPageType;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumCycleType;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.app.*;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

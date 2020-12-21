@@ -1,17 +1,17 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.sence.pc;
+package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
-import java.util.List;
-
+/**
+ * 门店详情-实时客流-总数
+ */
 @Builder
-public class ShopDetail extends BaseScene {
+public class RealHourTotal extends BaseScene {
     private final String shopId;
 
     @Override
-
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
@@ -20,6 +20,6 @@ public class ShopDetail extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/shop/detail";
+        return "/store/m-app/auth/shop/real-hour/total";
     }
 }

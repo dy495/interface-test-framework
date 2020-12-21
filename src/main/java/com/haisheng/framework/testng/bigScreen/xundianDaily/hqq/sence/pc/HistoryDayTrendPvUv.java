@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.sence.app;
+package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
@@ -8,7 +8,7 @@ import lombok.Builder;
  * 门店详情-历史客流-到店趋势图
  */
 @Builder
-public class HistoryPvUv extends BaseScene {
+public class HistoryDayTrendPvUv extends BaseScene {
     private final String shopId;
     private final String month;
     private final String day;
@@ -26,6 +26,6 @@ public class HistoryPvUv extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/store/m-app/auth/shop/history/pv-uv";
+        return "/patrol/history/shop/day/trend-pv-uv";
     }
 }
