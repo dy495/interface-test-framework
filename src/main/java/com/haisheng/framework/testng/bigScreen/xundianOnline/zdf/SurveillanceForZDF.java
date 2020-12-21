@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline.Zdf;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.zdf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

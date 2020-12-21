@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline.TestShop;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

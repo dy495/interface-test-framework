@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline.TestShop;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -19,8 +19,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline.Lnb;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,9 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -27,11 +29,11 @@ import java.util.Map;
  * @date :  2020/07/06
  */
 
-public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
+public class StoreDataForHS extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
-    long shop_id = 18176;
+    long shop_id = 4614;
     String district_code = "";
     //    String shop_type = "[\"NORMAL\"]";
     String shop_type = "[]";
@@ -72,7 +74,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("store " + md);
 
-        md.login("leinuobiao@leinuo.com","1843eee082b2956fac4920669b0dfc51");
+        md.login("heyshop@heyshop.com","225d03bb28e2fa6798cb23a5d9bfc201");
 
 
     }
@@ -117,7 +119,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                 count += todayUv;
 
             }
-            Preconditions.checkArgument(uv <= count,"雷诺表今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv <= count,"heyshop今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -125,7 +127,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表今日到访人数<=今天各个时间段内到访人数的累计");
+            saveData("heyshop今日到访人数<=今天各个时间段内到访人数的累计");
         }
 
     }
@@ -155,8 +157,8 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             int passUv = uv2 + uvIn1;
             Preconditions.checkArgument(pv1== passPv,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"+ 兴趣客群总人次"+pvIn1);
             Preconditions.checkArgument(uv1== passUv,"过店客群总人数=" + uv1 + "各个门的过店人次之和=" + uv2 +"兴趣客群总人次"+uvIn1);
-//            Preconditions.checkArgument(pv1== pv2,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"。报错门店的shopId="+shop_id_t);
-//            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"。报错门店的shopId="+shop_id_t);
+//            Preconditions.checkArgument(pv1== pv2,"过店客群总人次=" + pv1 + "各个门的过店人次之和=" + pv2 +"。报错门店的shopId="+shop_id);
+//            Preconditions.checkArgument(uv1== uv2,"过店客群总人数=" + uv1 + "各个门的过店人次之数=" + uv2 +"。报错门店的shopId="+shop_id);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -164,7 +166,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
+            saveData("heyshop过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
         }
 
     }
@@ -228,7 +230,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表进店客群总人次==各个门的进店人次之和");
+            saveData("heyshop进店客群总人次==各个门的进店人次之和");
         }
 
     }
@@ -265,7 +267,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
+            saveData("heyshop兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
         }
 
     }
@@ -293,7 +295,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表交易客群总人次==会员+非会员的交易pv之和");
+            saveData("heyshop交易客群总人次==会员+非会员的交易pv之和");
         }
 
     }
@@ -328,7 +330,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表过店客群pv>=兴趣客群pv>=进店客群pv");
+            saveData("heyshop过店客群pv>=兴趣客群pv>=进店客群pv");
         }
 
     }
@@ -373,7 +375,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_id);
+            saveData("heyshop消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_id);
 
         }
 
@@ -449,17 +451,13 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result3<=346,"兴趣客群总人次=" + value3 + "时段分布中各个时段兴趣pv累计=" + times3);
             Preconditions.checkArgument(result4<=346,"过店客群总人次=" + value4 + "时段分布中各个时段过店pv累计=" + times4);
 
-
-
-
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_id);
+            saveData("heyshop各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_id);
 
         }
 
@@ -516,7 +514,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表吸引率==兴趣客群pv/过店客群pv");
+            saveData("heyshop吸引率==兴趣客群pv/过店客群pv");
         }
     }
 
@@ -554,7 +552,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表日均客流==所选时间段内的日均客流uv");
+            saveData("heyshop日均客流==所选时间段内的日均客流uv");
         }
 
     }
@@ -622,7 +620,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
+            saveData("heyshop各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
         }
 
     }
@@ -631,7 +629,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
      *
      * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
      * */
-  //  @Test
+    @Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -649,10 +647,6 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             }
 
             int id = storeList.getJSONObject(0).getInteger("id");
-
-
-
-
             Preconditions.checkArgument((check = true),"门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）不等于实时客流中的门店基本信息");
 
 
@@ -662,7 +656,307 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）等于实时客流中的门店基本信息");
+            saveData("heyshop门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）等于实时客流中的门店基本信息");
+        }
+
+    }
+    /**
+     *
+     * ====================所选周期的顾客总人数<=所有门店各天顾客之和======================
+     * */
+    @Test
+    public void memberAllTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+
+
+            Integer customer_uv = 0;
+            Integer omni_uv = 0;
+            Integer paid_uv = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+            JSONArray trend_list = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            for(int i=0;i<trend_list.size();i++) {
+                if(i-trend_list.size()==-1){
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                    paid_uv = trend_list.getJSONObject(i).getInteger("paid_uv_total");
+                    if(customer_uv == null||omni_uv ==null ||paid_uv ==null){
+                        customer_uv = 0;
+                    }
+                }
+
+            }
+
+            String shop_type = "";
+            String shop_name="";
+            String shop_manager="";
+            String member_type="";
+            Integer member_type_order=null;
+            JSONArray member_list = md.shopPageMemberV3(district_code,shop_type,shop_name,shop_manager,member_type,member_type_order,page,size).getJSONArray("list");
+            int cust_uv = 0;
+            int channel_uv = 0;
+            int  pay_uv = 0;
+            for(int j=0;j<member_list.size();j++){
+                JSONArray memb_info = member_list.getJSONObject(j).getJSONArray("member_info");
+
+                for(int k=0;k<memb_info.size();k++){
+                    String type = memb_info.getJSONObject(k).getString("type");
+                    Integer uv = memb_info.getJSONObject(k).getInteger("uv");
+                    if(uv == null){
+                        uv = 0;
+                    }
+                    if(type.equals("CUSTOMER")){
+                        cust_uv += uv;
+                    }
+                    if(type.equals("OMNI_CHANNEL")){
+                        channel_uv += uv;
+                    }
+                    if(type.equals("PAID")){
+                        pay_uv += uv;
+                    }
+                }
+
+            }
+
+            Preconditions.checkArgument((customer_uv == cust_uv),"累计的顾客总人数" + customer_uv + "=累计的顾客之和=" + cust_uv);
+            Preconditions.checkArgument((omni_uv == channel_uv),"累计的全渠道会员总人数" + omni_uv + "=累计的30天全渠道会员之和=" + channel_uv);
+            Preconditions.checkArgument((paid_uv == pay_uv),"累计的付费总人数" + paid_uv + "=累计的付费会员之和=" + pay_uv);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("heyshop累计顾客总人数==所有门店顾客之和|累计全渠道会员总人数==所有门店全渠道会员之和|累计付费会员总人数==所有门店付费会员之和");
+        }
+
+    }
+
+
+    /**
+     * ====================累计顾客的总数（所有店）==前天的累计客户+今天新增的（顾客+全渠道会员+付费会员）之和======================
+     */
+    @Test
+    public void memberTotalCount() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+
+            Integer customer_uv = 0;
+            Integer customer_uv_new_today = 0;
+            Integer customer_uv_01 = 0;
+            Integer omni_uv_today = 0;
+            Integer paid_uv_today = 0;
+            Integer omni_uv_total = 0;
+            Integer omni_uv_total_01 = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+            JSONArray trend_list = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
+
+            for (int i = 0; i < trend_list.size(); i++) {
+
+                //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
+                if (i - trend_list.size() == -1) {
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                }
+
+                //获取前天的累计顾客总数
+                if (i - trend_list.size() == -2) {
+                    customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                }
+
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
+            }
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
+
+
+            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv);
+            Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+今天新增的（全渠道会员）之和=" + qa_omni_uv);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("heyshop（所有门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
+        }
+
+    }
+
+
+    /**
+     * ====================累计顾客的总数(单店)==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和======================
+     */
+    @Test
+    public void shop_memberTotalCount() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+
+            Integer customer_uv = 0;
+            Integer customer_uv_new_today = 0;
+            Integer customer_uv_01 = 0;
+            Integer omni_uv_today = 0;
+            Integer paid_uv_today = 0;
+            Integer omni_uv_total = 0;
+            Integer omni_uv_total_01 = 0;
+            //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+
+            JSONArray list = md.single_newCount_pic(shop_id,cycle_type).getJSONArray("list");
+
+            for (int i = 0; i < trend_list.size(); i++) {
+
+                //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员
+                if (i - trend_list.size() == -1) {
+                    customer_uv = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                }
+
+                //获取前天的累计顾客总数
+                if (i - trend_list.size() == -2) {
+                    customer_uv_01 = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                    omni_uv_total_01 = trend_list.getJSONObject(i).getInteger("omni_channel_uv_total");
+                }
+
+            }
+            for(int j=0; j < list.size();j++){
+                if (j - list.size() == -1) {
+                    customer_uv_new_today = list.getJSONObject(j).getInteger("customer");
+                    omni_uv_today = list.getJSONObject(j).getInteger("omni_channel");
+                    paid_uv_today = list.getJSONObject(j).getInteger("paid");
+                }
+            }
+            int qa_customer_uv = customer_uv_01 +customer_uv_new_today + omni_uv_today +paid_uv_today;
+            int qa_omni_uv =  omni_uv_total_01 + omni_uv_today ;
+
+
+            Preconditions.checkArgument((qa_customer_uv == customer_uv), "累计的顾客总人数" + customer_uv + "!=前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和=" + qa_customer_uv  +"。报错门店shop_id="+shop_id);
+            Preconditions.checkArgument((qa_omni_uv == omni_uv_total), "累计的全渠道总人数" + omni_uv_total + "!=前天的累计全渠道会员+昨天新增的（全渠道会员）之和=" + qa_omni_uv +"。报错门店shop_id="+shop_id);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("heyshop（单个门店）累计顾客的总数==前天的累计客户+昨天新增的（顾客+全渠道会员+付费会员）之和||累计的全渠道总人数===前天的累计全渠道会员+昨天新增的（全渠道会员）之和");
+        }
+
+    }
+
+
+    /**
+     * ====================云中客中累计不为0，事件也不能为0========================
+     */
+    @Test
+    public void custmerWithThing() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
+            int count1 = trend_list.size();
+            int customer_uv_total = 0;
+            int customer_uv_new_today = 0;
+            for (int i = 0; i < count1; i++) {
+                if (i == count1 - 1) {
+                    customer_uv_total = trend_list.getJSONObject(i).getInteger("customer_uv_total");
+                }
+            }
+            Integer total = md.memberTotalListV3(shop_id, page, size).getInteger("total");
+
+
+            Preconditions.checkArgument((customer_uv_total != 0 && total != 0), "累计顾客为：" + customer_uv_total + "事件为" + total + "。报错门店的shopId=" + shop_id);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("heyshop累计顾客与事件是否异常，有累计顾客但无事件或有事件无累计顾客");
+        }
+
+    }
+
+    /**
+     * ====================客户详情累计交易的次数==留痕事件中门店下单的次数|||累计到店的数据==留痕事件中进店次数+门店下单的次数========================
+     */
+    @Test
+    public void custInfoData() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
+        try {
+            //根据门店id获取customer_id
+            JSONObject response = md.memberTotalListV3(shop_id, page, size);
+            int total = response.getInteger("total");
+
+            JSONArray list = response.getJSONArray("list");
+            boolean listResult = false;
+            Integer enter_total = 0;
+            Integer total_sum = 0;
+            Integer deal = 0;
+            String customer_id = "";
+            String face_url = "";
+            String member_type = "";
+            String member_id = "";
+            JSONArray list1 = md.memberTotalListV3(shop_id, page, 50).getJSONArray("list");
+            for (int j = 0; j < list1.size(); j++) {
+                customer_id = list1.getJSONObject(j).getString("customer_id");
+                member_type = list1.getJSONObject(j).getString("member_type");
+
+                total_sum = md.memberDetail(shop_id, customer_id, page, size).getInteger("total");//留痕事件数量
+                if (total_sum == null) {
+                    total_sum = 0;
+                }
+
+                int t = CommonUtil.getTurningPage(total_sum, 50);
+                for (int l = 1; l < t; l++) {
+                    JSONObject res = md.memberDetail(shop_id, customer_id, l, size);
+                    JSONArray list01 = res.getJSONArray("list");
+                    enter_total = res.getInteger("total_visit_times");//累计到店天数
+                    if (enter_total == null) {
+                        enter_total = 0;
+                    }
+                    deal = res.getInteger("total_deal_times");//获取累计交易的次数
+                    if (deal == null) {
+                        deal = 0;
+                    }
+
+                    //或者每个人物的脸部图片地址
+                    face_url = res.getString("face_url");
+                    if (face_url == null) {
+                        face_url = "";
+                    }
+
+                    Preconditions.checkArgument(!StringUtils.isEmpty(face_url), "人物ID为:" + customer_id + "的半身照为空" + "。报错门店的shopId=" + shop_id);
+                    Preconditions.checkArgument(enter_total !=0 ||deal !=0 && list01.size() !=0, "累计到店天数" + enter_total +".累计交易" + deal + "留痕列表的长度" +list01.size()+ "。报错门店的shopId=" + shop_id);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("累计到店和累计交易不为0，留痕列表不能为0||门店客户的照片不能为空||全渠道会员一定有会员ID||顾客没有会员ID");
         }
 
     }
@@ -696,7 +990,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv),"雷诺表实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((count == pv),"heyshop实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -705,10 +999,42 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+            saveData("heyshop实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
         }
 
     }
+//    /**
+//     *
+//     * ====================百果园线上实时客流监控======================
+//     * */
+//    @Test(dataProvider = "SHOP_ID_T",dataProviderClass = StoreScenarioUtilOnline.class)
+//    public void  surveDataReal(long shop_id_t){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            JSONArray list = md.realTimeShopPvV3(shop_id_t).getJSONArray("list");
+//            int today_pv =0;
+//            for(int i=0;i<list.size();i++){
+//                Integer count =list.getJSONObject(i).getInteger("today_pv");
+//                if(count != null ){
+//                    today_pv += count;
+//                }
+////                if(today_pv<=50){
+////                    list.getJSONObject(i).getInteger("today_pv");
+////                }
+//
+//            }
+//            Preconditions.checkArgument(today_pv < 800 && today_pv >50 ,"小天才实时到店人次超过800或低于了50，现在pv="+today_pv+"需线上确认数据是否有异常"+"。报错门店的shopId="+shop_id_t);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("监控小天才今日实时人次是否异常，小于800高于50为正常");
+//        }
+//
+//    }
 
 
     /**
@@ -741,7 +1067,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
+            saveData("heyshop-uv与pv之间的比例要保持在1：4的范围间"+"门店shopId=");
         }
 
     }
@@ -758,7 +1084,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             String cycle_type = "";
-            String month = "2020-11";
+            String month = "2020-09";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
@@ -774,17 +1100,23 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             int pv1 = pass_by.get("pv1");
             int uv1 = pass_by.get("uv1");
 
-
+            //获取客群时段分布
+            JSONArray showList = md.historyShopHourV3(shop_id,cycle_type,month).getJSONArray("list");
+            boolean result = false;
+            if(showList != null){
+                result=true;
+            }
 
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-自然月9月的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认自然月9月的数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-自然月9月的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
+            Preconditions.checkArgument(( result = true),"客群漏斗-自然月9月的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-历史客流-选择自然月9月的数据是否正常");
+            saveData("heyshop历史客流-选择自然月9月的数据是否正常");
         }
 
     }
@@ -821,16 +1153,24 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
+
+            //客户累计趋势
+            JSONArray custList = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近7天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近7天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近7天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-历史客流-选择最近7天的数据是否正常");
+            saveData("heyshop历史客流-选择最近7天的数据是否正常");
         }
 
     }
@@ -867,20 +1207,25 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
-
+            //客户累计趋势
+            JSONArray custList = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
 
 
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近14天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近14天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近14天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
-
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-历史客流-选择最近14天的数据是否正常");
+            saveData("heyshop历史客流-选择最近14天的数据是否正常");
         }
 
     }
@@ -918,16 +1263,25 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
+            //客户累计趋势
+            JSONArray custList = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
+
+
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近30天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近30天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近30天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-历史客流-选择最近30天的数据是否正常");
+            saveData("heyshop历史客流-选择最近30天的数据是否正常");
         }
 
     }
@@ -964,9 +1318,18 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
                 result=true;
             }
 
+
+            //客户累计趋势
+            JSONArray custList = md.historyShopMemberCountV3(cycle_type).getJSONArray("trend_list");
+            boolean custRrsult = false;
+            if(custList != null){
+                custRrsult=true;
+            }
+
             Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近60天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近60天数据为0是否为正常，");
             Preconditions.checkArgument(( pv1 != 0 && uv1 != 0),"客群漏斗-最近60天的数据过店pv等于"+pv1+"过店uv"+uv1+"。报错门店的shopId="+shop_id+"请线上确认最近60天数据为0是否为正常，");
             Preconditions.checkArgument(( result = true),"客群漏斗-最近60天的客群时段分布数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
+            Preconditions.checkArgument(( custRrsult = true),"门店会员-最近60天的客户累计趋势数据为空"+"。报错门店的shopId="+shop_id+"请线上确认");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -974,32 +1337,33 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("雷诺表-选择最近60天的数据是否正常");
+            saveData("heyshop选择最近60天的数据是否正常");
         }
 
     }
     /**
      //     *
-     //     * ====================雷诺表昨日客流监控======================
+     //     * ====================heyshop昨日客流监控======================
      * */
     @Test
     public void  surveDataTrend(){
         logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
         try {
             JSONArray trend_list =  md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
             int yestPv = trend_list.getJSONObject(6).getInteger("pv");
             int yestUv = trend_list.getJSONObject(6).getInteger("uv");
             String yestDate = trend_list.getJSONObject(6).getString("date");
 
-            Preconditions.checkArgument(yestPv < 800 && yestPv >15 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了15，pv="+yestPv+"需线上确认数据是否有异常");
-            Preconditions.checkArgument(yestUv < 600 && yestUv >5 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过600或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(yestPv < 800 && yestPv >10 ,"heyshop"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了10，pv="+yestPv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(yestUv < 600 && yestUv >5 ,"heyshop"+shop_id+"昨日"+yestDate+"到店人次超过600或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("监控雷诺表昨日pv/uv是否异常");
+            saveData("监控heyshop昨日pv/uv是否异常");
         }
 
     }
