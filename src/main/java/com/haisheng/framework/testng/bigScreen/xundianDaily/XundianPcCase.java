@@ -31,7 +31,7 @@ import java.util.List;
  * @date :  2020/05/30
  */
 
-public class XundianCase extends TestCaseCommon implements TestCaseStd {
+public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     String xjy4 = "uid_663ad653";
     String test = "uid_ef6d2de5";

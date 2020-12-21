@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 /**
  * 有问题处请@wangmin
  */
-public class StoreData extends TestCaseCommon implements TestCaseStd {
-    public static final Logger log = LoggerFactory.getLogger(StoreData.class);
+public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
+    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
 

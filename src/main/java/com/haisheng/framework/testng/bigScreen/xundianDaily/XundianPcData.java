@@ -25,11 +25,7 @@ import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- *
- */
-
-public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseStd {
+public class XundianPcData extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     long shop_id = 4116;
@@ -46,10 +42,6 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         return str;
     }
 
-
-
-
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      *
@@ -59,18 +51,11 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-
-
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
-
-
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
-
-
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15084928847"};
         //13436941018 吕雪晴
@@ -82,16 +67,10 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         //18672733045 高凯
         //15898182672 华成裕
         //18810332354 刘峤
-
-
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
-
         logger.debug("xundian " + xd);
-
         xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
-
-
     }
 
     @AfterClass
@@ -884,7 +863,7 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             appendFailReason(e.toString());
         } finally {
 
-            saveData("【巡店分析】报告合格率==【巡店中心】下巡店门店的总数量/权限下门店总数＊100%");
+            saveData("【巡店分析】报告合格率==根据【巡店中心】下巡店门店的总数量/权限下门店总数＊100%的计算公式得到的报告合格率");
         }
 
     }
@@ -1150,4 +1129,6 @@ public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
 
     }
+
+
 }

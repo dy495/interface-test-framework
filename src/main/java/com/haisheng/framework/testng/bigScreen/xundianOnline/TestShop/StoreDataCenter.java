@@ -1,8 +1,10 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.TestShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StorePackageOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -28,13 +30,13 @@ import java.util.*;
  * @date :  2020/07/06
  */
 
-public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    StorePackage mds = StorePackage.getInstance();
+public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
+    StorePackageOnline mds = StorePackageOnline.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
-    long shop_id = 4116 ;
-    long shop_id_01 = 43072l;
+    long shop_id = 14630 ;
+   // long shop_id = shop_id;
     String district_code = "";
     //    String shop_type = "[\"NORMAL\"]";
     String shop_type = "[]";
@@ -55,26 +57,17 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
 
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
-        //13436941018 吕雪晴
-        //17610248107 廖祥茹
-        //15084928847 黄青青
-        //13581630214 马琨
-        //18513118484 杨航
-        //13259979249 黄鑫
-        //18672733045 高凯
-        //15898182672 华成裕
-        //18810332354 刘峤
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
 
 
         commonConfig.shopId = getXundianShop(); //要改！！！
@@ -82,7 +75,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
         logger.debug("store " + md);
 
-        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
+
 
 
     }
@@ -110,14 +104,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void realTimeTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = md.realTimeShopTotalV3((long) 43072l).getJSONArray("list");
+            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) 43072l).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
@@ -145,7 +139,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void passByTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //获取过点客群总人次&总人数
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -219,7 +213,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void enterTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
@@ -247,7 +241,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void interestTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
@@ -275,7 +269,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dealTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
@@ -303,7 +297,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void enterInterPass() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
@@ -337,7 +331,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test()
     public void mpvTotals() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //获取到店趋势数据
             int pvValues = mds.getArriveCust(cycle_type, month, shop_id);
@@ -364,7 +358,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test()
     public void mpvTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //获取交易客群总人次
             JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
@@ -420,7 +414,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void attractRate() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //获取过店客群总人次
             JSONObject res = md.historyShopConversionV3(shop_id, cycle_type, month);
@@ -473,7 +467,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void averageFlowTotal() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             int values = 0;
             int values1 = 0;//值不为Null的个数，求平均值时用
@@ -511,7 +505,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void manSexScale() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //过店客群的各个年龄段的男性比例累计和
             double count = 0;
@@ -575,7 +569,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
      */
-    @Test
+    //@Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -585,7 +579,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
             JSONArray storeList = md.patrolShopPageV3(district_code, page, size).getJSONArray("list");
-            long shop_id = 4116;
+            long shop_id = 14630l;
             JSONObject res = md.shopDetailV3(shop_id);
 
             if (storeList.contains(res)) {
@@ -619,7 +613,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer omni_uv = uvs.get("omni_uv");
             Integer paid_uv = uvs.get("paid_uv");
 
-           //获取所选周期的所有门店各天顾客之和
+            //获取所选周期的所有门店各天顾客之和
             String shop_type = "";
             String shop_name = "";
             String shop_manager = "";
@@ -653,7 +647,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_both_cust() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增顾客人数
             JSONArray data_list = md.member_newCount_data().getJSONArray("list");
@@ -680,7 +674,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_both_omni() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.member_newCount_data().getJSONArray("list");
@@ -732,14 +726,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_cust() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //从新增顾客模块中取到昨日新增顾客人数
-            JSONArray data_list = md.single_newCount_data(shop_id_01).getJSONArray("list");
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
             int new_uv = mds.getNewCount(data_list,"CUSTOMER");
 
             //获取客户趋势图中昨日新增的顾客数
-            int customer = mds.getYesNew_count_single( "customer",shop_id_01, cycle_type);
+            int customer = mds.getYesNew_count_single( "customer",shop_id, cycle_type);
             Preconditions.checkArgument((new_uv == customer), "单店昨日新增顾客" + new_uv + "!=单店新增客户趋势图中昨天的顾客数=" + customer);
 
         } catch (AssertionError e) {
@@ -759,14 +753,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_omni() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
-            JSONArray data_list = md.single_newCount_data(shop_id_01).getJSONArray("list");
+            JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
             int new_uv = mds.getNewCount(data_list,"OMNI_CHANNEL");
 
             //获取客户趋势图中昨日新增的全渠道会员人数
-            int omni_channel = mds.getYesNew_count_single( "omni_channel",shop_id_01, cycle_type);
+            int omni_channel = mds.getYesNew_count_single( "omni_channel",shop_id, cycle_type);
             Preconditions.checkArgument((new_uv == omni_channel), "单店昨日新增全渠道会员" + new_uv + "!=单店新增客户趋势图中昨天的全渠道会员数=" + omni_channel);
 
         } catch (AssertionError e) {
@@ -786,14 +780,14 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void member_single_paid() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             //从新增顾客占比模块中取到昨日新增全渠道会员人数
             JSONArray data_list = md.single_newCount_data(shop_id).getJSONArray("list");
             int new_uv = mds.getNewCount(data_list,"PAID");
 
             //获取客户趋势图中昨日新增的全渠道会员人数
-            int paid = mds.getYesNew_count_single( "paid",shop_id_01, cycle_type);
+            int paid = mds.getYesNew_count_single( "paid",shop_id, cycle_type);
             Preconditions.checkArgument((new_uv == paid), "单店昨日新增全渠道会员" + new_uv + "!=单店新增客户趋势图中昨天的全渠道会员数=" + paid);
 
         } catch (AssertionError e) {
@@ -1083,8 +1077,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int customer1 = people.get("uv1");
             int customer2 = people.get("uv2");
 
-           String ss=  CommonUtil.getPercent(customer1-customer2,customer2,4);
-           String day_on_day =  ss.replace("%","");
+            String ss=  CommonUtil.getPercent(customer1-customer2,customer2,4);
+            String day_on_day =  ss.replace("%","");
 
 
             Preconditions.checkArgument((new_uv_ring.equals(day_on_day)), "单店"+shop_id+"昨日日环比" + new_uv_ring + "!=昨天新增的客户值-【新增客户趋势】前天新增的客户值/前天新增的客户值：" + day_on_day);
@@ -1180,10 +1174,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             String transform =  mds.getTransformData("CUSTOMER","transform");
 
             //获取客户趋势图中昨日新增的客户人数
-           int customer =  mds.getYesNew_count("customer","RECENT_FOURTEEN");
+            int customer =  mds.getYesNew_count("customer","RECENT_FOURTEEN");
             //获取历史客流中昨日的到店客流总数
 
-            int uvs = mds.getday_count(cycle_type, month, shop_id,shop_id_01);
+            int uvs = mds.getday_count(cycle_type, month, shop_id,null);
 
             String ss=  CommonUtil.getPercent(customer,uvs,4);
             String cust_rate =  ss.replace("%","");
@@ -1214,7 +1208,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             int omni_channel =  mds.getYesNew_count("omni_channel","RECENT_FOURTEEN");
 
             //获取历史客流中昨日的到店客流总数
-            int uvs = mds.getday_count(cycle_type, month, shop_id,shop_id_01);
+            int uvs = mds.getday_count(cycle_type, month, shop_id,null);
 
             String ss=  CommonUtil.getPercent(omni_channel,uvs,4);
             String omni_rate =  ss.replace("%","");
@@ -1239,17 +1233,17 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取顾客部分得顾客占比
-            String transform = mds.getTransform_single("CUSTOMER",shop_id_01,"transform");
+            String transform = mds.getTransform_single("CUSTOMER",shop_id,"transform");
 
             //获取客户趋势图中昨日新增的客户人数
-            int customer = mds.getYesNew_count_single("customer",shop_id_01,"RECENT_FOURTEEN");
+            int customer = mds.getYesNew_count_single("customer",shop_id,"RECENT_FOURTEEN");
 
             //获取历史客流中昨日的到店客流总数
-            int uv = mds.getday_count(cycle_type, month, null,shop_id_01);
+            int uv = mds.getday_count(cycle_type, month, shop_id,null);
 
             String ss=  CommonUtil.getPercent(customer,uv,4);
             String cust_rate =  ss.replace("%","");
-            Preconditions.checkArgument((transform.equals(cust_rate)), "单店"+shop_id_01+"昨日客户占比" + transform + "!=昨天顾客数量/昨日到店客群总数＊100%：" + cust_rate);
+            Preconditions.checkArgument((transform.equals(cust_rate)), "单店"+shop_id+"昨日客户占比" + transform + "!=昨天顾客数量/昨日到店客群总数＊100%：" + cust_rate);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1270,17 +1264,17 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取全渠道会员得全渠道会员占比
-            String transform = mds.getTransform_single("OMNI_CHANNEL",shop_id_01,"transform");
+            String transform = mds.getTransform_single("OMNI_CHANNEL",shop_id,"transform");
 
             //获取客户趋势图中昨日新增的全渠道人数
-            int omni_channel = mds.getYesNew_count_single("omni_channel",shop_id_01,"RECENT_FOURTEEN");
+            int omni_channel = mds.getYesNew_count_single("omni_channel",shop_id,"RECENT_FOURTEEN");
 
             //获取历史客流中昨日的到店客流总数
-            int uv = mds.getday_count(cycle_type, month, null,shop_id_01);
+            int uv = mds.getday_count(cycle_type, month, shop_id,null);
 
             String ss=  CommonUtil.getPercent(omni_channel,uv,4);
             String omni_rate =  ss.replace("%","");
-            Preconditions.checkArgument((transform.equals(omni_rate)), "单店"+shop_id_01+"昨日全渠道会员占比" + transform + "!=昨天全渠道会员数量/昨日到店客群总数＊100%：" + omni_rate);
+            Preconditions.checkArgument((transform.equals(omni_rate)), "单店"+shop_id+"昨日全渠道会员占比" + transform + "!=昨天全渠道会员数量/昨日到店客群总数＊100%：" + omni_rate);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1302,13 +1296,13 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取顾客部分得顾客占比
-            String transform = mds.getTransform_single("PAID",shop_id_01,"transform");
+            String transform = mds.getTransform_single("PAID",shop_id,"transform");
 
             //获取客户趋势图中昨日新增的付费人数
-            int paid = mds.getYesNew_count_single("paid",shop_id_01,"RECENT_FOURTEEN");
+            int paid = mds.getYesNew_count_single("paid",shop_id,"RECENT_FOURTEEN");
 
             //获取历史客流中昨日的到店客流总数
-            int uv = mds.getday_count(cycle_type, month, null,shop_id_01);
+            int uv = mds.getday_count(cycle_type, month, shop_id,null);
 
             if(paid !=0 && uv !=0){
                 String  paid_rate ="";
@@ -1356,9 +1350,9 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     customer2 = list.getJSONObject(i1).getInteger("customer");
                 }
             }
-            //获取历史客流中昨日的到店客流总数(4116)
+            //获取历史客流中昨日的到店客流总数(所有店)
 
-            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,shop_id_01);
+            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             double uv3 =uv.get("uv3");
@@ -1414,7 +1408,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,shop_id_01);
+            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,shop_id);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             double uv3 =uv.get("uv3");
@@ -1453,10 +1447,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取顾客部分得顾客占比
-            String transform_yoy =  mds.getTransform_single("CUSTOMER",shop_id_01,"transform_yoy");
+            String transform_yoy =  mds.getTransform_single("CUSTOMER",shop_id,"transform_yoy");
 
             //获取客户趋势图中昨日新增的顾客人数
-            JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
             double customer1 = 0;
             double customer2 = 0;
             int count = list.size();
@@ -1469,25 +1463,21 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getweek_count(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
 
             //昨天的顾客占比
             double A = 0;
-            if( uv1 ==0){
+            if(customer1 ==0 || uv1 ==0){
                 A = 0;
             }else {
-                A = customer1 / uv1 * 100;
+                A = customer1/uv1 *100;
             }
 
             //上周昨天的顾客占比
-            double  B = 0;
-            if(uv2 == 0 ){
-                B = 0;
-            }else {
-                B = customer2 / uv2 * 100;
-            }
+            double B = customer2/uv2 *100;
+
 
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String cust_rate =  ss.replace("%","");
@@ -1512,10 +1502,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
-            String transform_yoy =  mds.getTransform_single("OMNI_CHANNEL",shop_id_01,"transform_yoy");
+            String transform_yoy =  mds.getTransform_single("OMNI_CHANNEL",shop_id,"transform_yoy");
 
             //获取客户趋势图中昨日新增的全渠道会员人数
-            JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
             double omni1 = 0;
             double omni2 = 0;
             int count = list.size();
@@ -1529,25 +1519,21 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             }
 
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getweek_count(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
 
             double A = 0;
             //昨天的全渠道会员占比
-            if(uv1 == 0){
-                 A = 0;
+            if(uv1 == 0|| omni1 == 0){
+                A = 0;
             }else {
-                A = omni1 / uv1 * 100;
+                A = omni1/uv1 *100;
             }
 
             //上周昨天的全渠道会员占比
-            double B = 0;
-            if(uv1 == 0){
-                B = 0;
-            }else {
-                B = omni2 / uv2 * 100;
-            }
+            double B = omni2/uv2 *100;
+
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String omni_rate =  ss.replace("%","");
             Preconditions.checkArgument((transform_yoy.equals(omni_rate)), "单店昨日全渠道会员占比[周同比]" + transform_yoy + "!=上周昨日的全渠道会员占比-上周昨日的全渠道会员占比/上周昨日的全渠道会员占比：" + omni_rate);
@@ -1571,7 +1557,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
-            String transform_yoy =  mds.getTransform_single("PAID",shop_id_01,"transform_yoy");
+            String transform_yoy =  mds.getTransform_single("PAID",shop_id,"transform_yoy");
 
             //获取客户趋势图中昨日新增的付费会员人数
             JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
@@ -1587,24 +1573,15 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getweek_count(cycle_type,month, null,shop_id_01);
+            Map<String, Double> uv = mds.getweek_count(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
 
             //昨天的付费会员占比
-            double  A = 0;
-            if(uv1 == 0 ){
-                A = 0;
-            }else {
-                A = paid1 / uv1;
-            }
+            double A = paid1/uv1;
             //上周昨天的付费会员占比
-            double  B = 0;
-            if(uv2 == 0 ){
-                B = 0;
-            }else {
-                B = paid2 / uv2;
-            }
+            double B = paid2/uv2;
+
             String ss=  CommonUtil.getPercent(A-B,B,4);
             String paid_rate =  ss.replace("%","");
             Preconditions.checkArgument((transform_yoy.equals(paid_rate)), "单店昨日付费会员占比周同比" + transform_yoy + "!=周1的付费会员占比-上周1的付费会员占比/上周1的付费会员占比：" + paid_rate);
@@ -1646,7 +1623,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数()
-            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id_01,4116l);
+            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             double uv3 =uv.get("uv3");
@@ -1703,7 +1680,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数()
-            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,shop_id_01);
+            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,shop_id);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             double uv3 =uv.get("uv3");
@@ -1742,10 +1719,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取顾客部分得顾客占比
-            String transform_ring =  mds.getTransform_single("CUSTOMER",shop_id_01,"transform_ring");
+            String transform_ring =  mds.getTransform_single("CUSTOMER",shop_id,"transform_ring");
 
             //获取客户趋势图中昨日新增的顾客人数
-            JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
             double customer1 = 0;
             double customer2 = 0;
             int count = list.size();
@@ -1758,7 +1735,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id_01,null);
+            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
 
@@ -1774,8 +1751,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
             String ss=  CommonUtil.getPercent(A1-B1,B1,4);
             String cust_rate =  ss.replace("%","");
-
-            Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店"+shop_id_01+"昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
+            Preconditions.checkArgument((transform_ring.equals(cust_rate)), "单店"+shop_id+"昨日顾客占比日环比" + transform_ring + "!=昨日的顾客占比-前天的顾客占比/前天的顾客占比：" + cust_rate);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1796,10 +1772,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取全渠道会员部分得全渠道会员占比
-            String transform_ring =  mds.getTransform_single("OMNI_CHANNEL",shop_id_01,"transform_ring");
+            String transform_ring =  mds.getTransform_single("OMNI_CHANNEL",shop_id,"transform_ring");
 
             //获取客户趋势图中昨日新增的全渠道会员人数
-            JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
             double omni_channel1 = 0;
             double omni_channel2 = 0;
             int count = list.size();
@@ -1812,7 +1788,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id_01,null);
+            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             //昨天的全渠道会员占比
@@ -1854,11 +1830,11 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //从新增顾客占比部分获取付费会员部分得付费会员占比
-            String transform_ring =  mds.getTransform_single("PAID",shop_id_01,"transform_ring");
+            String transform_ring =  mds.getTransform_single("PAID",shop_id,"transform_ring");
 
 
             //获取客户趋势图中昨日新增的付费会员人数
-            JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
+            JSONArray list = md.single_newCount_pic(shop_id,"RECENT_FOURTEEN").getJSONArray("list");
             double paid1 = 0;
             double paid2 = 0;
             int count = list.size();
@@ -1871,7 +1847,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 }
             }
             //获取历史客流中昨日的到店客流总数
-            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id_01,null);
+            Map<String, Double> uv = mds.getday_count_all(cycle_type,month, shop_id,null);
             double uv1 =uv.get("uv1");
             double uv2 =uv.get("uv2");
             //昨天的付费会员占比
@@ -1905,7 +1881,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void memberTotalCount() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
 
             Integer customer_uv = 0;
@@ -2003,19 +1979,19 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     /**
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      */
-   // @Test
+    //@Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id_01).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id).getJSONArray("list");
             int count = 0;
             for (int i = 0; i < eTlist.size(); i++) {
                 Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("yesterday_pv");
                 yesterdayPv = yesterdayPv != null ? yesterdayPv : 0;
                 count += yesterdayPv;
             }
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
             int pv = 0;
             int count1 = trend_list.size();
             for (int i = 0; i < count1; i++) {
@@ -2023,7 +1999,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + 43072l);
+            Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + shop_id);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -2034,6 +2010,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+
 
 
     /**
@@ -2171,7 +2148,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForMo() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             String cycle_type = "";
             String month = "2020-08";
@@ -2261,7 +2238,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForF() {
         logger.logCaseStart(caseResult.getCaseName());
-        
+        boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_FOURTEEN";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2306,6 +2283,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     @Test
     public void dataSurveillanceForT() {
         logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack = false;
         try {
             String cycle_type = "RECENT_THIRTY";
             JSONArray trend_list = md.historyShopTrendV3(cycle_type, month, shop_id).getJSONArray("trend_list");
@@ -2388,31 +2366,44 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
+
     /**
-     * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
+     * ====================门店客户列表的最新留痕时间==客户详情的最新留痕时间========================
      */
-    @Test
-    public void todayTotal() {
+    //@Test
+    public void deal_thing() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取昨天日各个时间段内到访得人次且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long) shop_id_01).getJSONArray("list");
-            int count = 0;
-            for (int i = 0; i < eTlist.size(); i++) {
-                Integer yesterdayPv = eTlist.getJSONObject(i).getInteger("today_pv");
-                yesterdayPv = yesterdayPv != null ? yesterdayPv : 0;
-                count += yesterdayPv;
+            JSONObject response = md.memberTotalListV3(shop_id, page, 50);
+            JSONArray list = response.getJSONArray("list");
+            String customer_id = "";
+            int total_deal_times = 0;
+            int total_visit_times = 0;
+            int allsum = 0;
+            for (int i = 0; i < list.size(); i++) {
+                customer_id = list.getJSONObject(i).getString("customer_id");
+                JSONObject res = md.memberDetail(shop_id, customer_id, page, 10);
+                total_deal_times = res.getInteger("total_deal_times");
+                total_visit_times = res.getInteger("total_visit_times");
+                allsum = total_deal_times + total_visit_times;
             }
+            Preconditions.checkArgument(allsum != 50, "客户ID：" + customer_id + "。交易次数为：" + total_deal_times + "。该客户详情中的进店次数为：" + total_visit_times + "。报错门店的shopId=" + shop_id);
 
-           // Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + shop_id);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("实时客流中，今日到访各个时段的pv之和");
+            saveData("门店客户列表的最新留痕时间==客户详情的最新留痕时间");
         }
+
     }
+
+
+
+
+
+
 }
 

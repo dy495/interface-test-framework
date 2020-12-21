@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.TestShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  */
 
-public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseStd {
+public class XundianPcData extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     long shop_id = 14630;

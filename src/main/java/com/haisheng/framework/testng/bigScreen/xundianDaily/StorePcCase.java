@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author : huangqingqing
  * @date :  2020/08/04
  */
-public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
+public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     StorePackage mds = StorePackage.getInstance();
     String districtCode = "";

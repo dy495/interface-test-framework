@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianOnline;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.TestShop;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -10,6 +10,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StorePackage;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,7 +43,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @date :  2020/07/06 10:00
  */
 
-public class StoreCaseV3 extends TestCaseCommon implements TestCaseStd {
+public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     Integer status = 1;
     String type = "PHONE";

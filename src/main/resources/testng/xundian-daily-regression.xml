@@ -8,12 +8,12 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianDataConsistentcy"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianPcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianPcCase"></class>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.XundianAppCase"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreCaseV3"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreOtherData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataConsistentcyV3"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StorePcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StorePcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.StoreDataCenter"></class>
         </classes>
     </test>
 </suite>

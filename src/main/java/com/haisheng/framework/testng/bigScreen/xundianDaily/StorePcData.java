@@ -24,7 +24,7 @@ import java.util.*;
  * @date :  2020/07/06
  */
 
-public class StoreOtherData extends TestCaseCommon implements TestCaseStd {
+public class StorePcData extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
