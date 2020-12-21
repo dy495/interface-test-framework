@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IDataTempDao">
+    <resultMap id="DataMap" type="com.haisheng.framework.model.bean.DataTemp">
+        <result property="id" column="id"/>
+        <result property="dataName" column="dataName" />
+        <result property="pcAppointmentRecordNum" column="pcAppointmentRecordNum" />
+    </resultMap>
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.DataTemp"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        <![CDATA[
+            insert into t_case (
+                id,
+                dataName
+            ) values (
+                #{id},
+                #{dataName},
+            ) ON DUPLICATE KEY UPDATE
+            request_data=#{id},
+
+        ]]>
+    </insert>
+<!--     查询所有-->
+    <select id="queryDataByName"
+            resultType="com.haisheng.framework.model.bean.DataTemp">
+        select
+        *
+        from
+        t_data
+        <where>
+            data_name = #{dataName}
+        </where>
+    </select>
+<!--    查询单列-->
+    <select id="queryDataOneByName"
+            resultType="java.lang.Integer">
+        select
+        ${column_name}
+        from
+        t_data
+        <where>
+            data_name = #{dataName}
+        </where>
+    </select>
+
+    <!-- update 更新指定列-->
+    <update id="updateDataNum"
+            parameterType="com.haisheng.framework.model.bean.DataTemp">
+        UPDATE t_data
+        SET
+        pcAppointmentRecordNum=#{pcAppointmentRecordNum}
+        WHERE
+        data_name = #{dataName}
+    </update>
+<!--更新全部-->
+    <update id="updateDataAll"
+            parameterType="com.haisheng.framework.model.bean.DataTemp">
+        UPDATE t_data
+        SET
+        pcAppointmentRecordNum=#{pcAppointmentRecordNum},
+        appReceiptage=#{appReceiptage},
+        appSurplusAppointment=#{appSurplusAppointment},
+        app_all_appointment=#{app_all_appointment},
+        app_surplus_reception=#{app_surplus_reception},
+        app_all_reception=#{app_all_reception},
+        appointmentId=#{appointmentId},
+        pcAppointmentNUmber=#{pcAppointmentNUmber},
+        pc_appointment_times=#{pc_appointment_times}
+        WHERE
+        data_name = #{dataName}
+    </update>
+</mapper>

@@ -331,4 +331,37 @@ public class QADbUtil {
 
         return dao.queryDailyConfigSummary();
     }
+
+
+    public DataTemp selsetDataTemp(String dataName) {
+        getNewSqlSession();
+        IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
+
+        return dao.queryDataByName(dataName);
+    }
+    public Integer selsetDataTempOne(String column_name,String dataName) {
+        getNewSqlSession();
+        IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
+
+        return dao.queryDataOneByName(column_name,dataName);
+    }
+
+    public void updateDataNum(String dataName,Integer pcAppointmentRecordNum) {
+        getNewSqlSession();
+        IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
+        dao.updateDataNum(dataName,pcAppointmentRecordNum);
+
+        sqlSession.commit();
+
+    }
+
+    public void updateDataAll(DataTemp dataTemp) {
+        getNewSqlSession();
+        IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
+        dao.updateDataAll(dataTemp);
+        System.out.println(dataTemp.getPcAppointmentRecordNum());
+        sqlSession.commit();
+
+    }
+
 }

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
@@ -55,7 +57,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-
+        commonConfig.referer=getJcReferdaily();
+        commonConfig.produce=EnumTestProduce.JIAOCHEN_DAILY.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -64,7 +67,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "汽车-轿辰 日常X");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -467,6 +471,18 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("pc接待车牌号验证");
         }
     }
+
+//    @Test
+//    public void Jc_pcmaintainPriceEdit() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("JC_pc修改预约配置验证");
+//        }
+//    }
 
 
 

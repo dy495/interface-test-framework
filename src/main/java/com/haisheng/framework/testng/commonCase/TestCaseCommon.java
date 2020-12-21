@@ -433,6 +433,9 @@ public class TestCaseCommon {
     public String getBjsReferOnline() {
         return "https://servicewechat.com/wx0cf070e8eed63e90/";
     }
+    public String getBjsReferDaily() {
+        return "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html";
+    }
 
     public String getJcReferOnline() {
         return "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";

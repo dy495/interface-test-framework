@@ -1,5 +1,6 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -22,7 +23,7 @@ public class DateTimeUtil {
     public String monthDateStr(Timestamp timestamp) {
         DateTime dateTime = new DateTime(timestamp);
         int dayOfWeek = dateTime.getDayOfMonth();
-        return dateTime.minusDays(dayOfWeek - 1).toString("yyyyMM");
+        return dateTime.minusDays(dayOfWeek - 1).toString("yyyy-MM");
     }
 
     public String getHistoryDate(int num_days) {
@@ -725,6 +726,20 @@ public class DateTimeUtil {
         Date m = c.getTime();
 
         return format.format(m);
+    }
+    //获取日期在当月第几天
+    public int getDay(int num_day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE,num_day);
+        int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
+        return monthDay;
+    }
+    //获取日期的年月
+    public String  getMounth(int num_day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE,num_day);
+        String month=new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
+        return month;
     }
 
 }

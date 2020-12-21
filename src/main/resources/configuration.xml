@@ -39,5 +39,6 @@
         <mapper resource="mapper/onlineYuexiuCustomerSearch.xml"/>
         <mapper resource="mapper/feidanPicSearch.xml"/>
         <mapper resource="mapper/config.xml"/>
+        <mapper resource="mapper/DataTemp.xml"/>
     </mappers>
 </configuration>

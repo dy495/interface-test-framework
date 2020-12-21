@@ -73,6 +73,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+            commonConfig.referer = getBjsReferDaily();
             String date = DateTimeUtil.addDayFormat(new Date(), 100);
             String customerName = "自动化";
             String customerPhoneNumber = "15037296015";

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
@@ -23,6 +24,44 @@ public class JcFunction {
 
         return num;
     }
+
+    //pc预约记录总数
+    public int pcAppointmentRecodePage(){
+        jc.pcLogin(pp.gwphone,pp.gwpassword);
+        int num=jc.appointmentRecordManage("","1","10",null,null).getInteger("total");
+        return num;
+    }
+    //小程序客户预约保养次数
+    public int pcAppointmentTimes(){
+        jc.pcLogin(pp.gwphone,pp.gwpassword);
+        int num=jc.weChatSleCustomerManage("","1","10","customer_phone","15037286013").getJSONArray("list").getJSONObject(0).getInteger("appointment_maintain");
+        return num;
+    }
+    //预约看板的预约数
+    public Integer appointmentNUmber(int num){
+        jc.appLogin(pp.jdgw,pp.jdgwpassword);
+        String month=dt.getMounth(num);
+        int day=dt.getDay(num);
+        Integer total=0;
+        JSONArray list=jc.pcTimeTableList(month).getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            int list_day=list.getJSONObject(i).getInteger("day");
+            if(list_day==day){
+                total=list.getJSONObject(i).getInteger("appointment_number");
+                break;
+            }
+        }
+        return total;
+    }
+
+    //app[任务-接待数]
+    public int appReceiptPage(){
+        jc.appLogin(pp.jdgw,pp.jdgwpassword);
+        JSONObject data = jc.appointmentPage(null, 10);
+        int total = data.getInteger("total");
+        return total;
+    }
+
     //app开始接待，并返回接待id
     public Long startReception(String carPlate) throws Exception{
         appStartReception sr=new appStartReception();
@@ -191,6 +230,20 @@ public class JcFunction {
             }
         }
         return id;
+    }
+    //小程序预约，返回预约id
+    public Long appletAppointment(int num){
+        //小程序预约
+        jc.appletLoginToken(pp.appletTocken);
+        appletAppointment pm = new appletAppointment();
+        pm.car_id = pp.car_idA;
+        pm.appointment_name = "自动夏";
+        pm.shop_id = Long.parseLong(pp.shopIdZ);
+        pm.staff_id = "uid_f9342ae2";
+        pm.time_id = getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(num));
+
+        Long appointmentId = jc.appletAppointment(pm).getLong("id");
+        return appointmentId;
     }
 
     //创建活动
