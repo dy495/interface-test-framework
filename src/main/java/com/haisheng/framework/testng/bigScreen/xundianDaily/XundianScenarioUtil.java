@@ -1691,4 +1691,90 @@ public class XundianScenarioUtil extends TestCaseCommon {
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+   /**---------------------------------------------------四、账号相关app1.1----------------------------------------------------**/
+    /**
+     * @author qingqing
+     * @description 1.1 获取登录验证码（V1.1）
+     */
+    public JSONObject getCode(String phone) throws Exception {
+        String url = "/store/m-app/login-verification-code";
+        JSONObject json = new JSONObject();
+        json.put("phone",phone);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description 1.2 登录（V1.1）
+     */
+    public JSONObject loginWay(String phone,String verification_code) throws Exception {
+        String url = "/store/m-app/login";
+        JSONObject json = new JSONObject();
+        json.put("phone",phone);
+        json.put("verification_code",verification_code);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @author qingqing
+     * @description 1.3 通过token获取用户信息（V1.1）
+     */
+    public JSONObject getUserInfo() throws Exception {
+        String url = "/store/m-app/auth/login-user/detail";
+        JSONObject json = new JSONObject();
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description 1.4 登出（V1.1）
+     */
+    public JSONObject loginOut() throws Exception {
+        String url = "/store/m-app/logout";
+        JSONObject json = new JSONObject();
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description 1.5 人脸检测（V1.1）
+     */
+    public JSONObject face_check(String image_base64) throws Exception {
+        String url = "/store/m-app/auth/login-user/face-check";
+        JSONObject json = new JSONObject();
+        json.put("image_base64",image_base64);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description1.6 人脸上传（V1.1）
+     */
+    public JSONObject face_unload(String face_url) throws Exception {
+        String url = "/store/m-app/auth/login-user/face-upload";
+        JSONObject json = new JSONObject();
+        json.put("face_url",face_url);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description 1.7 个人中心(V1.1新增字段)（V1.1）
+     */
+    public JSONObject user_center(String face_url) throws Exception {
+        String url = "/store/m-app/auth/user/center";
+        JSONObject json = new JSONObject();
+        json.put("face_url",face_url);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 }
