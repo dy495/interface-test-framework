@@ -89,7 +89,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
      *
      * ====================实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv======================
      * */
-    @Test
+    //@Test
     public void yesterdayTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -114,7 +114,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
                     pv = trend_list.getJSONObject(i).getInteger("pv");
                 }
             }
-            Preconditions.checkArgument((count == pv),"百果园实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument((count == pv),"周大福实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv+"。报错门店的shopId="+shop_id);
 
 
         } catch (AssertionError e) {
@@ -123,7 +123,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("百果园实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
+            saveData("周大福实时客流中，昨日到访各个时段的pv之和==历史客流中截至日期的的pv");
         }
 
     }

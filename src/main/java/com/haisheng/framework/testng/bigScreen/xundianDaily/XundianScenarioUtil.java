@@ -1181,49 +1181,6 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @author zhoutao
-     * @description 3.18 巡店记录处理事项下拉列表（V1.1）
-     */
-    public JSONObject handleStatusList() {
-        String url = "/patrol/m-app/auth/shop/handle_status/list";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-
-    /**
-     * @author zhoutao
-     * @description 3.19 巡店记录巡店结果下拉列表（V1.1）
-     */
-    public JSONObject resultTypeList() {
-        String url = "/patrol/m-app/auth/shop/result-type/list";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * @author zhoutao
-     * @description 3.20 巡店报告详情执行项结果下拉列表（V1.1）
-     */
-    public JSONObject checkResultList() {
-        String url = "/patrol/m-app/auth/shop/check_result/list";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
      * app checks submit 定检任务单项审核之后，总提交
      */
     public JSONObject responsors(Long shop_id) throws Exception {
@@ -1666,6 +1623,71 @@ public class XundianScenarioUtil extends TestCaseCommon {
         json.put("shop_id", shop_id);
         json.put("check_list_id",check_list_id);
         json.put("check_result",check_result);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author zhoutao
+     * @description 3.18 巡店记录处理事项下拉列表（V1.1）
+     */
+    public JSONObject handleStatusList() throws Exception {
+        String url = "/patrol/m-app/auth/shop/handle_status/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @author zhoutao
+     * @description 3.19 巡店记录巡店结果下拉列表（V1.1）
+     */
+    public JSONObject resultTypeList() throws Exception {
+        String url = "/patrol/m-app/auth/shop/result-type/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @author zhoutao
+     * @description 3.20 巡店报告详情执行项结果下拉列表（V1.1）
+     */
+    public JSONObject checkResultList()throws Exception{
+        String url = "/patrol/m-app/auth/shop/check_result/list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @author qingqing
+     * @description 3.21 摄像头云台控制（V1.1）
+     */
+    public JSONObject device_control(String device_id,String command) throws Exception {
+        String url = "/patrol/m-app/auth/shop/device/control";
+        JSONObject json = new JSONObject();
+        json.put("device_id",device_id);
+        json.put("command", command);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @author qingqing
+     * @description 3.22 移动端base64图片上传（V1.1）
+     */
+    public JSONObject upload_pic(String pic_data,Long shop_id,Integer type) throws Exception {
+        String url = "/patrol/m-app/auth/pic/base64/upload";
+        JSONObject json = new JSONObject();
+        json.put("pic_data",pic_data);
+        json.put("shop_id", shop_id);
+        json.put("type", type);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
