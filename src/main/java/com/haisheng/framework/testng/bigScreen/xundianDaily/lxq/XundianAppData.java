@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -68,11 +69,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :【远程巡店-页面内一致性】提交结果时展示的不合格/合格/不适用项数==执行项选择时的不合格/合格/不适用项数
+     * @description :【远程/现场巡店-页面内一致性】提交结果时展示的不合格/合格/不适用项数==执行项选择时的不合格/合格/不适用项数
      * @date :2020/12/22 16:00
      **/
-    @Test
-    public void RemoteOnePgae1() {
+    @Test(dataProvider = "XDTYPE")
+    public void xdOnePgae1(String type,String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int notok = 0; // 巡检过程中不合格数量
@@ -81,11 +82,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
             //开始巡店,获取巡店清单&每个清单的项目&patrol_id
-            JSONObject obj = xd.checkStartapp(info.shop_id_01,"REMOTE",0);
+            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1);
             Long patrolID = obj.getLong("id");
             JSONArray checklist = obj.getJSONArray("check_lists");
             for (int i = 0; i < checklist.size();i++){
-                JSONObject eachlist = checklist.getJSONObject(0);
+                JSONObject eachlist = checklist.getJSONObject(i);
                 Long listID = eachlist.getLong("id"); // 获取list id
                 JSONArray chkitems = eachlist.getJSONArray("check_items");
                 for (int j =0; j < chkitems.size();j++){
@@ -122,34 +123,40 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("【远程巡店】提交结果时展示的不合格/合格/不适用项数==执行项选择时的不合格/合格/不适用项数");
+            saveData("【"+chinesetype+"】提交结果时展示的不合格/合格/不适用项数==执行项选择时的不合格/合格/不适用项数");
         }
     }
 
     /**
-     * @description :【远程巡店-页面内一致性】提交一个执行项，执行清单的执行中分子+1
+     * @description :【远程/现场巡店-页面内一致性】提交一个执行项，执行清单的执行中分子+1
      * @date :2020/12/22 16:00
      **/
-    @Test
-    public void RemoteOnePgae2() {
+    @Test(dataProvider = "CHKRESULT")
+    public void xdOnePgae2(String type, String chinesetype, String result,String mes) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int checkedbefore = 0 ;
 
-
-            //开始巡店,获取巡店清单&每个清单的项目&patrol_id
-            JSONObject obj = xd.checkStartapp(info.shop_id_01,"REMOTE",0);
+            //重置检查清单，开始巡店
+            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1);
             Long patrolID = obj.getLong("id");
             JSONArray checklist = obj.getJSONArray("check_lists");
-            for (int i = 0; i < checklist.size();i++){
-                JSONObject eachlist = checklist.getJSONObject(0);
-                Long listID = eachlist.getLong("id"); // 获取list id
-                JSONArray chkitems = eachlist.getJSONArray("check_items");
-                for (int j =0; j < chkitems.size();j++) {
-                    JSONObject eachitem = chkitems.getJSONObject(j);
-                    Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
-                    //巡检项目结果 1合格；2不合格；3不适用
-                }
-            }
+            //第一个清单的已检查数量
+            checkedbefore = checklist.getJSONObject(0).getInteger("checked");
+            JSONObject eachlist = checklist.getJSONObject(0);
+            Long listID = eachlist.getLong("id"); // 获取list id
+
+            JSONArray chkitems = eachlist.getJSONArray("check_items");
+            JSONObject eachitem = chkitems.getJSONObject(0);
+            Long itemID = eachitem.getLong("id"); //第一个清单的第一个item id
+            //巡检项目结果 1合格；2不合格；3不适用
+            xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,Integer.parseInt(result),"zdh",null);
+
+
+            //重新巡店，不重置清单，查看第一个清单完成数量
+            int checkedafter = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists").getJSONObject(0).getInteger("checked");
+            int a = checkedafter - checkedbefore;
+            Preconditions.checkArgument(a==1,"提交一个"+mes+"执行项，分子增加了"+a);
 
 
         } catch (AssertionError e) {
@@ -157,8 +164,200 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("【远程巡店】提交一个执行项，执行清单的执行中分子+1");
+            saveData("【"+chinesetype+"】提交一个"+mes+"执行项，执行清单的执行中分子+1");
         }
+    }
+
+    /**
+     * @description :【远程/现场巡店-页面内一致性】执行清单的总数量分母==执行清单的总条数
+     * @date :2020/12/22 16:00
+     **/
+    @Test(dataProvider = "XDTYPE")
+    public void xdOnePgae3(String type, String chinesetype) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists");
+            for (int i=0; i < chklist.size(); i++){
+                JSONObject eachlist = chklist.getJSONObject(i);
+                int total = eachlist.getInteger("total"); //分母数
+                int itemsum = eachlist.getJSONArray("check_items").size();
+                Preconditions.checkArgument(total==itemsum,"分母="+total+", 列表条数="+ itemsum);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】执行清单的总数量分母==执行清单的总条数");
+        }
+    }
+
+    /**
+     * @description :【远程/现场巡店-页面内一致性】执行清单的执行中分子==执行清单已执行完成的条数
+     * @date :2020/12/22 16:00
+     **/
+    @Test(dataProvider = "XDTYPE")
+    public void xdOnePgae4(String type,String chinesetype) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists");
+            for (int i=0; i < chklist.size(); i++){
+                int itemsum = 0;
+                JSONObject eachlist = chklist.getJSONObject(i);
+                int checked = eachlist.getInteger("checked"); //分子数
+
+                JSONArray itemarr = eachlist.getJSONArray("check_items");
+                for (int j = 0; j < itemarr.size();j++){
+                    JSONObject obj = itemarr.getJSONObject(i);
+                    if (obj.getInteger("check_result") != 0){
+                        itemsum = itemsum + 1;
+                    }
+                }
+                Preconditions.checkArgument(checked==itemsum,"分子="+checked+", 列表已完成条数="+ itemsum);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】执行清单的执行中分子==执行清单已执行完成的条数");
+        }
+    }
+
+
+
+    @Test(dataProvider = "CHKRESULT")
+    public void xdSevlPgae1(String type, String chinesetype, String result,String mes) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int bef = xd.getShopChecksPage(info.shop_id_01,Integer.parseInt(result),null,null,null,null,1,null).getInteger("total");
+            int bef2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
+
+            //巡店
+            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
+            int after = xd.getShopChecksPage(info.shop_id_01,Integer.parseInt(result),null,null,null,null,1,null).getInteger("total");
+
+            int after2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
+            int add = after - bef;
+            int add2 = after2 - bef2;
+
+            Preconditions.checkArgument(add==1,"app【巡店记录】中巡店报告 期待增加1，实际增加"+add);
+            Preconditions.checkArgument(add2==1,"PC【巡店中心详情中】巡店报告 期待增加1，实际增加"+add2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】提交一个"+mes+"报告，app【巡店记录】中巡店报告+1、PC【巡店中心详情中】巡店报告+1");
+        }
+    }
+
+    @Test(dataProvider = "CHKRESULT")
+    public void xdSevlPgae2(String type, String chinesetype, String result,String mes) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int bef1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+            int bef2 = xd.xd_report_list(null,info.shop_id_01_chin,null,null,null,1,1).getInteger("total");
+            //巡店
+            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
+            int after1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+            int after2 = xd.xd_report_list(null,info.shop_id_01_chin,null,null,null,1,1).getInteger("total");
+
+            int add1 = after1 - bef1;
+            int add2 = after2 - bef2;
+            Preconditions.checkArgument(add1==1,"PC【巡店中心】巡店次数 期待增加1，实际增加"+add1);
+            Preconditions.checkArgument(add2==1,"PC【巡店报告中心】巡店报告 期待增加1，实际增加"+add2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】提交一个"+mes+"报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1");
+        }
+    }
+
+    @Test(dataProvider = "XDTYPE")
+    public void xdSevlPgae3(String type,String chinesetype) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            double bef1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
+            //巡店
+            info.xdOperate(info.shop_id_01,type,1,2);
+            double after1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
+            double add1 = after1 - bef1;
+
+            Preconditions.checkArgument(add1<0,"今日巡店合格率 增加"+add1);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】提交一个不合格报告，PC【巡店分析】中的今日巡店合格率降低");
+        }
+    }
+
+    @Test(dataProvider = "XDTYPE")
+    public void xdSevlPgae4(String type,String chinesetype) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            double bef1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
+            //巡店
+            info.xdOperate(info.shop_id_01,type,1,1);
+            double after1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
+            double add1 = after1 - bef1;
+
+            Preconditions.checkArgument(add1>0,"今日巡店合格率 减少"+add1);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【"+chinesetype+"】提交一个合格报告，PC【巡店分析】中的今日巡店合格率增加");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    @DataProvider(name = "CHKRESULT")
+    public  Object[] chkResult() {
+
+        return new String[][]{
+                {"REMOTE","远程巡店","1","合格"},
+                {"REMOTE","远程巡店","2","不合格"},
+                {"REMOTE","远程巡店","3","不适用"},
+                {"SPOT","现场巡店","1","合格"},
+                {"SPOT","现场巡店","2","不合格"},
+                {"SPOT","现场巡店","3","不适用"},
+
+        };
+    }
+
+    @DataProvider(name = "XDTYPE")
+    public  Object[] xdtype() {
+
+        return new String[][]{
+                {"REMOTE","远程巡店"},
+                {"SPOT","现场巡店"},
+
+        };
     }
 
 
