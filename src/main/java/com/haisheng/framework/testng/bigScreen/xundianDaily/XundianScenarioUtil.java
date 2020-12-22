@@ -1404,7 +1404,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject device_replay(String device_id,long shop_id,String date,String time ) throws Exception {
-        String url = "/patrol/m/shop/device/replay";
+        String url = "/store/m-app/shop/device/replay";
         String json =
                 "{" +
                         "\"device_id\" :\"" + device_id + "\",\n" +
@@ -1423,7 +1423,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject task_list(Integer page,Integer size,Integer type,Long last_value) throws Exception {
-        String url = "/patrol/m-app/auth/patrol/task/list";
+        String url = "/store/m-app/auth/patrol/task/list";
         String json =
                 "{" +
                         "\"page\" :" + page + ",\n" +
@@ -1441,7 +1441,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject task_detail(Long id) throws Exception {
-        String url = "/patrol/m-app/auth/patrol/task/detail";
+        String url = "• /store/m-app/auth/patrol/task/detail";
         String json =
                 "{" +
                         "\"id\" :" + id + "\n" +
@@ -1457,7 +1457,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject task_step_submit(Long shop_id,Long id,JSONArray pic_list,Integer recheck_result,String comment) throws Exception {
-        String url = "/patrol/m/task/step/submit";
+        String url = "/store/m-app/task/step/submit";
         String json =
                 "{" +
                         "\"id\" :" + id + "\n" +
@@ -1473,7 +1473,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject shopChecks_start(Long shop_id,String check_type,Integer reset,Long task_id) throws Exception {
-        String url = "/patrol/m-app/auth/shop/checks/start";
+        String url = "/store/m-app/auth/shop/checks/start";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
@@ -1492,7 +1492,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject checks_item_submit(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
-        String url = "/patrol/m-app/auth/shop/checks/item/submit";
+        String url = "/store/m-app/auth/shop/checks/item/submit";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1513,7 +1513,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject checks_submit(Long shop_id,Long patrol_id,String comment) throws Exception {
-        String url = "/patrol/m-app/auth/shop/checks/submit";
+        String url = "/store/m-app/auth/shop/checks/submit";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1531,7 +1531,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject problem_items(Long shop_id) throws Exception {
-        String url = "/patrol/m-app/auth/shop/problem/items";
+        String url = "/store/m-app/auth/shop/problem/items";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
@@ -1547,7 +1547,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject problem_items(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
-        String url = "/patrol/m-app/auth/shop/problem/mark";
+        String url = "/store/m-app/auth/shop/problem/mark";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1569,7 +1569,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject inspectors_list(Long shop_id) throws Exception {
-        String url = "/patrol/m-app/auth/shop/inspectors";
+        String url = "/store/m-app/auth/shop/inspectors";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
@@ -1585,7 +1585,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject schedule_pic_list(Long shop_id,String device_id,String date) throws Exception {
-        String url = "/patrol/m-app/auth/task/schedule-pic/list";
+        String url = "/store/m-app/auth/task/schedule-pic/list";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1600,7 +1600,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * app checks submit 3.15 获取门店巡店记录列表（V1.1）
      */
     public JSONObject getShopChecksPage(Long shop_id, Integer check_result,Integer handle_status,String inspector_name,String inspector_id,String order_rule,Integer size,Long last_value) throws Exception {
-        String url = "/patrol/m-app/auth/shop/checks/page";
+        String url = "/store/m-app/auth/shop/checks/page";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
         json.put("check_result",check_result);
@@ -1617,7 +1617,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * app checks submit 3.16获取门店巡店记录详情（V1.1）
      */
     public JSONObject getShopChecksDetail(Long id,Long shop_id,Long check_list_id,Long check_result) throws Exception {
-        String url = "/patrol/m-app/auth/shop/checks/detail";
+        String url = "/store/m-app/auth/shop/checks/detail";
         JSONObject json = new JSONObject();
         json.put("id",id);
         json.put("shop_id", shop_id);
@@ -1632,7 +1632,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description 3.18 巡店记录处理事项下拉列表（V1.1）
      */
     public JSONObject handleStatusList() throws Exception {
-        String url = "/patrol/m-app/auth/shop/handle_status/list";
+        String url = "/store/m-app/auth/shop/handle_status/list";
         String json =
                 "{}";
 
@@ -1644,7 +1644,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description 3.19 巡店记录巡店结果下拉列表（V1.1）
      */
     public JSONObject resultTypeList() throws Exception {
-        String url = "/patrol/m-app/auth/shop/result-type/list";
+        String url = "/store/m-app/auth/shop/result-type/list";
         String json =
                 "{}";
 
@@ -1658,7 +1658,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description 3.20 巡店报告详情执行项结果下拉列表（V1.1）
      */
     public JSONObject checkResultList()throws Exception{
-        String url = "/patrol/m-app/auth/shop/check_result/list";
+        String url = "/store/m-app/auth/shop/check_result/list";
         String json =
                 "{}";
 
@@ -1670,7 +1670,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description 3.21 摄像头云台控制（V1.1）
      */
     public JSONObject device_control(String device_id,String command) throws Exception {
-        String url = "/patrol/m-app/auth/shop/device/control";
+        String url = "/store/m-app/auth/shop/device/control";
         JSONObject json = new JSONObject();
         json.put("device_id",device_id);
         json.put("command", command);
@@ -1683,7 +1683,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description 3.22 移动端base64图片上传（V1.1）
      */
     public JSONObject upload_pic(String pic_data,Long shop_id,Integer type) throws Exception {
-        String url = "/patrol/m-app/auth/pic/base64/upload";
+        String url = "/store/m-app/auth/pic/base64/upload";
         JSONObject json = new JSONObject();
         json.put("pic_data",pic_data);
         json.put("shop_id", shop_id);
