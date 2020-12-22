@@ -9,11 +9,12 @@ public class PublicParm {
     public String shopIdZ="46012";   //门店Id
     public String reception_sale_id="xx";
     public String name="";
+    public String customerPhone="15037286013";
     public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/intefer/jcBase64.txt";
 
     public String shichang="";
     public String shichangPassword="";
-
+    public String verification_code="OGWTJK";   //夏夏的核销码
     public String carModelId="198";
     public String car_id="63217";    //小程序车id
     public String carplate="浙QWER123";      //编辑小程序车牌号

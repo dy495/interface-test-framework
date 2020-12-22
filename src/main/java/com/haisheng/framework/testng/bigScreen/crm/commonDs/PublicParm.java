@@ -25,7 +25,7 @@ public class PublicParm {
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
     public String xsgwPassword = "e10adc3949ba59abbe56e057f20f883e";
     public String dcc = "xdcc";      //销售账号
-    public String xiaoshouZongjian = "xszj";      //销售账号
+    public String xiaoshouZongjian = "xx";      //销售账号
     //预约使用参数
     public String customer_name = "@@@a";
     public String customer_phone_number = "15037286013";

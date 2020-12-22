@@ -54,6 +54,11 @@ public class JcFunction {
         return total;
     }
 
+    public Integer appletmyAppointment(){
+        jc.appletLoginToken(pp.appletTocken);
+        return jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+    }
+
     //app[任务-接待数]
     public int appReceiptPage(){
         jc.appLogin(pp.jdgw,pp.jdgwpassword);
@@ -298,4 +303,25 @@ public class JcFunction {
         return count;
     }
 
+    //获取小程序可用核销码
+    public String[] voucherName()throws Exception{
+        jc.appletLoginToken(pp.appletTocken);
+        JSONArray list = jc.appletVoucherList(null,"GENERAL",20).getJSONArray("list");
+        String voucher_code[]={"123","123",""};
+        for(int i=0;i<list.size();i++){
+            JSONObject data=list.getJSONObject(i);
+            String isLimitCar=data.getString("is_limit_car");
+            String status_name=data.getString("status_name");
+            if(isLimitCar.equals("false")&&(status_name.equals("快过期")||status_name.equals("未使用"))){
+                voucher_code[0]=data.getString("voucher_code");
+                voucher_code[1]=data.getString("title");
+                voucher_code[2]=data.getString("id");
+                break;
+            }
+        }
+        if(voucher_code.equals("123")){
+            throw new Exception("小程序卡券不足，需领取卡券");
+        }
+        return voucher_code;
+    }
 }

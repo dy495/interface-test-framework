@@ -616,25 +616,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void write(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            //取卡券码
-//            jc.appletLoginToken(EnumAppletToken.JC_WM_DAILY.getToken());
-            jc.appletLoginToken(pp.appletTocken);
-            JSONArray list = jc.appletVoucherList(null,"GENERAL",20).getJSONArray("list");
-            String voucher_code="123";
-            String voucher_name="123";
-            for(int i=0;i<list.size();i++){
-                JSONObject data=list.getJSONObject(i);
-                String isLimitCar=data.getString("is_limit_car");
-                String status_name=data.getString("status_name");
-                if(!isLimitCar.equals("FALSE")&&(status_name.equals("快过期")||status_name.equals("快过期"))){
-                    voucher_code=data.getString("voucher_code");
-                    voucher_name=data.getString("title");
-                    break;
-                }
-            }
-            if(voucher_code.equals("123")){
-                throw new Exception("小程序卡券不足，需领取卡券");
-            }
+            String voucher_code[]=pf.voucherName();
             //pc
             jc.pcLogin(pp.gwphone,pp.gwpassword);
             int  messagePctotal=jc.pushMsgListFilterManage("-1","1","10",null,null).getInteger("total");
@@ -644,7 +626,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             jc.appLogin(pp.jdgw,pp.jdgwpassword);
             int total=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
             //核销
-            jc.verification(voucher_code, true);
+            jc.verification(voucher_code[0], true);
             int totalA=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
             //小程序消息最新一条信息校验
             jc.appletLoginToken(pp.appletTocken);
@@ -660,7 +642,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(messagePctotalA-messagePctotal==1,"核销后pc消息总数没-1");
             Preconditions.checkArgument(verificationReordPctotalA-verificationReordPctotal==1,"核销后pc核销记录记录总数没-1");
             Preconditions.checkArgument(totalA-total==1,"核销后记录总数没-1");
-            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_name+"】已被核销，请立即查看"));
+            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_code[1]+"】已被核销，请立即查看"));
 
 
         }catch(AssertionError | Exception e){

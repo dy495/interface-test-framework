@@ -38,14 +38,6 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
-    public int page = 1;
-    public int size = 50;
-    public String name = "";
-    public String email = "";
-    public String phone = "";
-
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -577,5 +569,42 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("小程序活动首页最多10个");
         }
     }
+
+    @Test(description = "自主核销异常验证")
+    public void appletVerification() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String verification_code[]={"OGW","OGW123","OGWTJKW","OGWT真"};
+            String voucher_code[]=pf.voucherName();
+            for(int i=0;i<verification_code.length;i++){
+                int code=jc.appleterification(voucher_code[2],verification_code[i],false).getInteger("code");
+                Preconditions.checkArgument(code==1001,"异常核销码");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("自主核销异常验证");
+        }
+    }
+    @Test(description = "自主核销")
+    public void appletVerification2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String voucher_code[]=pf.voucherName();
+            jc.appleterification(voucher_code[2],pp.verification_code,true).getInteger("code");
+
+            //小程序消息最新一条信息校验
+            jc.appletLoginToken(pp.appletTocken);
+            JSONObject message=jc.appletMessageList(null,20).getJSONArray("list").getJSONObject(0);
+            String messageName=message.getString("content");
+            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_code[1]+"】已被核销，请立即查看"));
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("自主核销");
+        }
+    }
+
 
 }

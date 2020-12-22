@@ -3483,4 +3483,15 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("id",id);
         return invokeApi(url,json1);
     }
+    /**
+     * @description :自主核销
+     * @date :2020/12/22 17:46
+     **/
+    public JSONObject appleterification(String id,String verification_code,Boolean checkcode) {
+        String url = "/jiaochen/applet/granted/voucher/verification";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("verification_code",verification_code);
+        return invokeApi(url,json1,checkcode);
+    }
 }

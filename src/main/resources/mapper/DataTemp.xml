@@ -69,7 +69,8 @@
         app_all_reception=#{app_all_reception},
         appointmentId=#{appointmentId},
         pcAppointmentNUmber=#{pcAppointmentNUmber},
-        pc_appointment_times=#{pc_appointment_times}
+        pc_appointment_times=#{pc_appointment_times},
+        applet_myappointment=#{applet_myappointment}
         WHERE
         data_name = #{dataName}
     </update>

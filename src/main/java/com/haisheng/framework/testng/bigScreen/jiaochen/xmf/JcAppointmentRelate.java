@@ -31,6 +31,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     JcFunction pf = new JcFunction();
     PublicParm pp = new PublicParm();
+    int num=0;   //预约天数控制
 
 
 
@@ -107,16 +108,17 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             DataTemp dataTemp=new DataTemp();
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
-            dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(0));
+            dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
             int appTodayTask[]=pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             dataTemp.setPc_appointment_times(pf.pcAppointmentTimes());
+            dataTemp.setApplet_myappointment(pf.appletmyAppointment());
 
             //预约
-//            dataTemp.setAppointmentId(pf.appletAppointment(0));
+            dataTemp.setAppointmentId(pf.appletAppointment(num));
 
             System.out.println("PcNUm:"+dataTemp.getPcAppointmentNUmber());
 
@@ -150,7 +152,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     public void Pc_appointmentTimeTable() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int result2=pf.appointmentNUmber(0);  //先调取函数可先验证此接口，在验证数据
+            int result2=pf.appointmentNUmber(num);  //先调取函数可先验证此接口，在验证数据
             int result1=qaDbUtil.selsetDataTempOne("pcAppointmentNUmber","pc_appointmentPage");
             System.out.println(result1+":"+result2);
             Preconditions.checkArgument(result2-result1==1,"预约后预约看板数没+1,预约前："+result1+"预约后："+result2);
@@ -206,6 +208,41 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("预约后，app今日任务分子分母+1");
+        }
+    }
+
+    @Test()  //预约后，小程序预约消息列表数+1
+    public void AppletMyAppointment() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int totalA=pf.appletmyAppointment();
+            int total=qaDbUtil.selsetDataTempOne("applet_myappointment","pc_appointmentPage");
+            Preconditions.checkArgument(totalA-total==1,"预约后app今日任务app_all_appointment,预约前："+total+"预约后："+totalA);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("预约后，app今日任务分子分母+1");
+        }
+    }
+
+    @Test()  //预约后，pc预约记录信息校验
+    public void pcAppointmentRecodeCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.appointmentRecordManage("","1","10","customer_phone",pp.customerPhone).getJSONArray("list").getJSONObject(0);
+            String customer_name=data.getString("customer_name");
+            String customer_phone=data.getString("customer_phone");
+            String plate_number=data.getString("plate_number");
+            String customer_manager=data.getString("customer_manager");
+            Preconditions.checkArgument(customer_manager.equals("xx"),"接待人名异常");
+            Preconditions.checkArgument(customer_name.equals("自动夏"),"预约用户名异常");
+            Preconditions.checkArgument(customer_phone.equals(pp.customerPhone),"预约手机号异常");
+            Preconditions.checkArgument(plate_number.equals(pp.carplate7),"预约车牌号异常");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("预约后pc预约记录页信息校验");
         }
     }
 

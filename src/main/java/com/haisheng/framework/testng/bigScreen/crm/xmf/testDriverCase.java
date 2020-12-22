@@ -45,7 +45,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.produce = EnumProduce.BSJ.name();
-
+        commonConfig.referer=getBjsReferDaily();
         //replace backend gateway url
         //commonConfig.gateway = "";
 

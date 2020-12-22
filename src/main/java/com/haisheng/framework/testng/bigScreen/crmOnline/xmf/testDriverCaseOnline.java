@@ -43,7 +43,7 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
+        commonConfig.referer = getBjsReferOnline();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
