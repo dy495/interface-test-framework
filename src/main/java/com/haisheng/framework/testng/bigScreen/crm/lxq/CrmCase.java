@@ -2013,4 +2013,47 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    /**
+     *  4.3数据一致性
+     */
+
+    @Test(dataProvider = "CHANNELPARM", dataProviderClass = CrmScenarioUtil.class)
+    public void sourceChannel100_0(String type,String day) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            double sum = 0.0;
+            if (type.equals("cycle_type")){
+                JSONArray arr = crm.sourceChannel(day,null,null,null).getJSONArray("list");
+                for (int i = 0 ; i < arr.size();i++){
+                    sum = sum + arr.getJSONObject(i).getDouble("percentage");
+                }
+            }
+            if (type.equals("month")){
+                JSONArray arr = crm.sourceChannel(null,day,null,null).getJSONArray("list");
+                for (int i = 0 ; i < arr.size();i++){
+                    sum = sum + arr.getJSONObject(i).getDouble("percentage");
+                }
+            }
+            if (type.equals("day")){
+                JSONArray arr = crm.sourceChannel(null,null,day,null).getJSONArray("list");
+                for (int i = 0 ; i < arr.size();i++){
+                    sum = sum + arr.getJSONObject(i).getDouble("percentage");
+                }
+            }
+            Preconditions.checkArgument(sum==0 || sum==1,"总和为"+sum);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【店面数据分析】渠道来源分析，各渠道百分比之和=100%或0%");
+        }
+    }
+
+
+
+
+
 }
