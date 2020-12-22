@@ -252,7 +252,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.20</version>
                 <configuration>
-                    <!--<forkMode>once</forkMode>-->
+                    <forkMode>once</forkMode>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
                     <!--<argLine>-Dfile.encoding=UTF-8 -Xmx1024m -XX:MaxPermSize=256m</argLine>-->
                     <suiteXmlFiles>
                         <!--<suiteXmlFile>src/main/resources/testng/pv-cloud-test.xml</suiteXmlFile>-->
