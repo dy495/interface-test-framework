@@ -16,7 +16,6 @@ import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 
 
 /**
@@ -324,79 +323,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
-    public void allEQAlone_4tab() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int service1 = 0;
-            int test_drive1 = 0;
-            int deal1 = 0;
-            int delivery1 = 0;
-            JSONArray array = crm.allSale().getJSONArray("list");
-            for (int i = 0; i < array.size(); i++) {
-                String saleid = array.getJSONObject(i).getString("sale_id");
-                JSONObject obj1 = crm.shopPannel("DAY", "", saleid);
-                service1 = service1 + obj1.getInteger("service"); //累计接待
-                test_drive1 = obj1.getInteger("test_drive"); //累计试驾
-                deal1 = obj1.getInteger("deal"); //累计成交
-                delivery1 = obj1.getInteger("delivery"); //累计交车
-            }
-            Preconditions.checkArgument(service >= service1, "各销售累计接待" + service1 + " > 不选销售顾问累计接待" + service);
-            Preconditions.checkArgument(test_drive == test_drive1, "各销售累计试驾" + test_drive1 + "！= 不选销售顾问累计试驾" + test_drive);
-            Preconditions.checkArgument(deal == deal1, "各销售累计成交" + deal1 + "！= 不选销售顾问累计成交" + deal);
-            Preconditions.checkArgument(delivery == delivery1, "各销售累计交车" + delivery1 + "！= 不选销售顾问累计交车" + delivery);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析：4个tab【不选销售顾问】累计数据=各个销售顾问累计数据之和");
-        }
-    }
-
-    //@Test(priority = 1)
-    public void allEQAlone_rectime() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int all_10 = 0;
-            int all_30 = 0;
-            int all_60 = 0;
-            int all_120l = 0;
-            int all_120g = 0;
-            JSONArray array = crm.allSale().getJSONArray("list");
-            for (int i = 0; i < array.size(); i++) {
-                String saleid = array.getJSONObject(i).getString("sale_id");
-                JSONArray array0 = crm.receptTime("DAY", "", saleid).getJSONArray("list");
-                all_10 = all_10 + array0.getJSONObject(0).getInteger("value");
-                all_30 = all_30 + array0.getJSONObject(1).getInteger("value");
-                all_60 = all_60 + array0.getJSONObject(2).getInteger("value");
-                all_120l = all_120l + array0.getJSONObject(3).getInteger("value");
-                all_120g = all_120g + array0.getJSONObject(4).getInteger("value");
-            }
-            JSONArray array1 = crm.receptTime("DAY", "", "").getJSONArray("list");
-            int l10 = array1.getJSONObject(0).getInteger("value");
-            int l30 = array1.getJSONObject(1).getInteger("value");
-            int l60 = array1.getJSONObject(2).getInteger("value");
-            int l120 = array1.getJSONObject(3).getInteger("value");
-            int g120 = array1.getJSONObject(4).getInteger("value");
-
-            Preconditions.checkArgument(all_10 <= l10, "10分钟内：不选销售累计组数" + l10 + " != 各销售接待组数之和" + all_10);
-            Preconditions.checkArgument(all_30 <= l30, "10~30分钟：不选销售累计组数" + l30 + " != 各销售接待组数之和" + all_30);
-            Preconditions.checkArgument(all_60 <= l60, "30～60分钟：不选销售累计组数" + l60 + " != 各销售接待组数之和" + all_60);
-            Preconditions.checkArgument(all_120l <= l120, "60～120分钟：不选销售累计组数" + l120 + " != 各销售接待组数之和" + all_120l);
-            Preconditions.checkArgument(all_120g <= g120, "大于120分钟：不选销售累计组数" + g120 + " != 各销售接待组数之和" + all_120g);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析：各时间段接待时长【不选销售顾问】接待组数=各个销售顾问接待组数之和");
-        }
-    }
 
     @Test(priority = 1)
     public void businessClue() {
@@ -468,21 +394,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test(priority = 1) //case不正确
-    public void businessClueGTReceive() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
 
-            Preconditions.checkArgument(clue >= receive, "线索" + clue + " < 接待" + receive);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-业务漏斗：线索>=接待");
-        }
-    }
 
     @Test(priority = 1)
     public void businessReceiveGTDriver() {
@@ -500,21 +412,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
-    public void businessReceiveGTClue() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Preconditions.checkArgument(receive == recp, "接待" + receive + " != 接待线索" + recp);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-业务漏斗：接待==接待线索");
-        }
-    }
 
     @Test(priority = 1)
     public void businessReceiveGTOrder() {
@@ -570,21 +467,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
-    public void businessService() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Preconditions.checkArgument(service == receive, "累计接待" + service + " != 业务漏斗接待" + receive);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析: 累计接待=【业务漏斗】接待");
-        }
-    }
 
     @Test(priority = 1)
     public void businessTestDriverEQFunnel() {
@@ -784,226 +666,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    /**
-     * --------------------店面数据分析页 页面间一致性-------------------
-     */
 
-
-    //@Test(priority = 1)
-    public void serviceChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待+今日老客接待").split("/")[1]);
-            Preconditions.checkArgument(service == yesterday, "累计接待=" + service + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-4个tab：累计接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待 之和");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void testDriverChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日试驾").split("/")[1]);
-            Preconditions.checkArgument(test_drive == yesterday, "累计试驾=" + test_drive + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-4个tab：累计试驾=【前一日】【销售总监-app-我的试驾】今日试驾 之和");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void dealChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日交车").split("/")[1]);
-            Preconditions.checkArgument(deal >= yesterday, "累计成交=" + deal + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-4个tab：累计成交>=【前一日】【销售总监-app-我的交车】今日交车 之和");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void deliveryChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日交车").split("/")[1]);
-            Preconditions.checkArgument(delivery == yesterday, "累计交车=" + delivery + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-4个tab：累计交车=【前一日】【销售总监-app-我的交车】今日交车 之和");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void receiveChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待+今日老客接待").split("/")[1]);
-            Preconditions.checkArgument(receive == yesterday, "接待=" + receive + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-漏斗：接待=【前一日】【销售总监-app-我的接待】今日新客接待+今日老客接待");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void recpChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待1").split("/")[1]);
-            Preconditions.checkArgument(recp == yesterday, "接待线索=" + recp + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-漏斗：接待线索=【前一日】【销售总监-app-销售接待】今日新客接待");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void receive_secondChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int yesterday = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日老客接待1").split("/")[1]);
-            Preconditions.checkArgument(receive_second == yesterday, "再次接待=" + receive_second + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-漏斗：再次接待=【前一日】【销售总监-app-我的接待】今日老客接待");
-        }
-    }
-
-
-    //@Test(priority = 1)
-    public void creatChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int newa = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日新客接待1").split("/")[1]);
-            int clue = Integer.parseInt(fileUtil.findLineByKey(filePath, "今日线索").split("/")[1]);
-            int yesterday = clue - newa;
-            Preconditions.checkArgument(creat == yesterday, "创建线索=" + creat + "前一日=" + yesterday);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-漏斗：创建线索=【前一日】【销售总监-app-销售接待】今日线索-【选中时间】【销售总监-app-我的接待】今日新客接待");
-        }
-    }
-
-
-    //@Test
-    public void recpTimeChk() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int less10 = 0;
-            int less30 = 0;
-            int less60 = 0;
-            int less120 = 0;
-            int more120 = 0;
-
-            String time = dt.getHistoryDate(-1);
-            int total = crm.receptionPage1(1, "PRE_SALES", 1).getInteger("total");
-            int a = 0;
-            if (total > 50) {
-                if (total % 50 == 0) {
-                    a = total / 50;
-                } else {
-                    a = (int) Math.ceil(total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-
-                    JSONArray list = crm.receptionPage1(i, "PRE_SALES", 50).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-
-                        if (list.getJSONObject(j).getString("reception_date").equals(time) && list.getJSONObject(j).getString("reception_time") != null) {
-                            String start = list.getJSONObject(j).getString("reception_time");
-                            String end = list.getJSONObject(j).getString("leave_time");
-                            int diff = dt.calTimeHourDiff(start, end);
-                            if (diff < 10) {
-                                less10 = less10 + 1;
-                            } else if (diff < 30) {
-                                less30 = less30 + 1;
-                            } else if (diff < 60) {
-                                less60 = less60 + 1;
-                            } else if (diff < 120) {
-                                less120 = less120 + 1;
-                            } else {
-                                more120 = more120 + 1;
-                            }
-                        }
-                    }
-                }
-            } else {
-                JSONArray list = crm.receptionPage1(1, "PRE_SALES", total).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    if (list.getJSONObject(j).getString("reception_date").equals(time) && list.getJSONObject(j).getString("reception_time") != null) {
-                        String start = list.getJSONObject(j).getString("reception_time");
-                        String end = list.getJSONObject(j).getString("leave_time");
-                        int diff = dt.calTimeHourDiff(start, end);
-                        if (diff < 10) {
-                            less10 = less10 + 1;
-                        } else if (diff < 30) {
-                            less30 = less30 + 1;
-                        } else if (diff < 60) {
-                            less60 = less60 + 1;
-                        } else if (diff < 120) {
-                            less120 = less120 + 1;
-                        } else {
-                            more120 = more120 + 1;
-                        }
-                    }
-                }
-            }
-            JSONArray array = crm.receptTime("DAY", "", "").getJSONArray("list");
-            int l10 = array.getJSONObject(0).getInteger("value");
-            int l30 = array.getJSONObject(1).getInteger("value");
-            int l60 = array.getJSONObject(2).getInteger("value");
-            int l120 = array.getJSONObject(3).getInteger("value");
-            int g120 = array.getJSONObject(4).getInteger("value");
-
-            Preconditions.checkArgument(less10 == l10, "10分钟内：组数=" + l10 + "接待列表组数=" + less10);
-            Preconditions.checkArgument(less30 == l30, "10~30分钟：组数=" + l30 + "接待列表组数=" + less30);
-            Preconditions.checkArgument(less60 == l60, "30～60分钟：组数=" + l60 + "接待列表组数=" + less60);
-            Preconditions.checkArgument(less120 == l120, "60～120分钟：组数=" + l120 + "接待列表组数=" + less120);
-            Preconditions.checkArgument(more120 == g120, "大于120分钟：组数=" + g120 + "接待列表组数=" + more120);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("店面数据分析-客户接待时长分析：时间段内组数=【前一日】【销售总监-app-销售接待】对应接待时长的数量");
-        }
-    }
 
 
     /**
@@ -1077,55 +740,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void carOwnerPersonalPercent() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray array = crm.carOwner("DAY", "", "").getJSONArray("ratio_list");
-            int personal = array.getJSONObject(0).getInteger("value");
-            int business = array.getJSONObject(1).getInteger("value");
-            int all = personal + business;
-            double a = (double) personal / all;
-            BigDecimal bd = new BigDecimal(a);
-            String jisuan = bd.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-            String personalPer = array.getJSONObject(0).getString("percent");
-
-            Preconditions.checkArgument(jisuan.equals(personalPer), "不等于");
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("成交客户分析: 个人车主百分比=个人车主数量/（个人+公司车主数量）");
-        }
-    }
-
-    @Test
-    public void carOwnerBusinessPercent() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray array = crm.carOwner("DAY", "", "").getJSONArray("ratio_list");
-            int personal = array.getJSONObject(0).getInteger("value");
-            int business = array.getJSONObject(1).getInteger("value");
-            int all = personal + business;
-            double a = (double) business / all;
-            BigDecimal bd = new BigDecimal(a);
-            String jisuan = bd.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-            String businessPer = array.getJSONObject(1).getString("percent");
-
-            Preconditions.checkArgument(jisuan.equals(businessPer), "不等于");
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("成交客户分析: 公司车主百分比=公司车主数量/（个人+公司车主数量）");
-        }
-    }
 
     @Test
     public void carOwnerAge100() {
@@ -1191,49 +805,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void city100() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray array = crm.city("DAY", "", "").getJSONArray("list");
-            double sum = 0;
-            for (int i = 0; i < array.size(); i++) {
-                sum = sum + array.getJSONObject(i).getDouble("percentage");
-            }
-            double abs = 1 - sum;
-            Preconditions.checkArgument(Math.abs(abs) <= 1 || Math.abs(abs) == 0, "总和为" + sum);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("[成交客户分析] 苏州各区成交量 成交量百分比之和=100% 或0%");
-        }
-    }
-
-    @Test
-    public void partLTCity() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray array = crm.city("DAY", "", "").getJSONArray("list");
-            int sum = 0;
-            for (int i = 0; i < array.size(); i++) {
-                sum = sum + array.getJSONObject(i).getInteger("value");
-            }
-            int jiangsu = crm.wholeCountry("DAY", "", "").getJSONArray("list").getJSONObject(0).getInteger("value");
-            Preconditions.checkArgument(sum <= jiangsu, "苏州各区之和" + sum + "> 江苏" + jiangsu);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("[成交客户分析] 苏州各区成交量之和<=江苏成交量");
-        }
-    }
 
 
 }

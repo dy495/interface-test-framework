@@ -5801,6 +5801,41 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String result = httpPost(url, object.toJSONString(), IpPort);
         return JSON.parseObject(result);
     }
+
+
+    //4.3PC渠道来源分析
+    public JSONObject sourceChannel(String cycle_type, String month,String day,String sale_id) {
+        String url = "/porsche/analysis2/shop/source-channel";
+        JSONObject object = new JSONObject();
+        object.put("cycle_type", cycle_type);
+        object.put("month", month);
+        object.put("day", day);
+        object.put("sale_id", sale_id);
+        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    @DataProvider(name = "CHANNELPARM")
+    public static Object[] channelParm() {
+
+        return new String[][]{
+                {"cycle_type", "DAY"},
+//                {"cycle_type", "WEEK"},
+//                {"cycle_type", "MONTH"},
+//                {"cycle_type", "QUARTER"},
+//                {"cycle_type", "YEAR"},
+//                {"cycle_type", "ALL"},
+//                {"month", "2020-11"},
+//                {"month", "2020-12"},
+//                {"day", dt.getHistoryDate(0)},
+//                {"day", dt.getHistoryDate(-1)},
+//                {"day", dt.getHistoryDate(-8)},
+//                {"day", dt.getHistoryDate(-10)},
+
+        };
+    }
+
+
 }
 
 
