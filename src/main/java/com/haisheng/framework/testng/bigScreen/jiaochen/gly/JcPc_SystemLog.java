@@ -78,7 +78,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate1(){
+    public void SystemLog_Date1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
@@ -110,7 +110,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate2(){
+    public void SystemLog_Date2(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
@@ -139,7 +139,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate3(){
+    public void SystemLog_Date3(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
@@ -168,7 +168,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate4(){
+    public void SystemLog_Date4(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //筛选栏直接搜索
@@ -191,7 +191,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate5() {
+    public void SystemLog_Date5() {
         logger.logCaseStart(caseResult.getCaseName());
         Workbook wb = null;
         try {
@@ -237,7 +237,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate6(){
+    public void SystemLog_Date6(){
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -273,7 +273,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate7(){
+    public void SystemLog_Date7(){
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -303,7 +303,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate8(){
+    public void SystemLog_Date8(){
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -333,44 +333,101 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---个人
+     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择ALL-1-1门店
      * @date :2020/12/21
      **/
     @Test
-    public void SystemLogDate9(){
+    public void SystemLog_Date9(){
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String messageContent="吨吨吨吨吨-自动化";
-        String messageName="吨吨吨-自动化"+df.format(date);
-        ArrayList<String> phone=new ArrayList();
-        phone.add("13373166806");
+        String messageContent="推送ALL-1-1门店-自动化";
+        String messageName="推送ALL-1-1门店-自动化"+df.format(date);
+        ArrayList<String> shop=new ArrayList();
+        shop.add("45973");
+        int isReadNum=0;
         try {
             //查看消息记录的总条数
             JSONObject respon=jc.pushMsgListFilterManage("","1","10","","");
             int total=respon.getInteger("total");
             //推送个人消息-13373166806
-            jc.pushMessage(true,messageContent,messageName,"PERSONNEL_CUSTOMER",phone);
-            int receiveCount=jc.messageFormFilterManage("","1","10","customer_name","Max").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            jc.pushMessageShop(true,messageContent,messageName,"SHOP_CUSTOMER",shop);
+            int receiveCount=jc.messageFormFilterManage("","1","10","shop_id","45973").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
             //推送消息以后再次查看消息记录的总条数
-            JSONObject respon1=jc.pushMsgListFilterManage("","1","10","","");
+            JSONObject respon1=jc.pushMsgListFilterManage("","1","100","","");
             int total1=respon1.getInteger("total");
             //消息记录新增的数量
             int num=total1-total;
+            System.out.println("total1: "+total1+" total: "+total+"----------"+num);
             //消息记录查看为是的个数
-            int isReadNum=0;
             for(int i=0;i<num;i++){
                 String isRead=respon1.getJSONArray("list").getJSONObject(i).getString("is_read");
                 if(isRead.equals("true")){
                     isReadNum++;
                 }
             }
-            System.out.println("同一批次消息记录中查看为是的消息为:"+isReadNum+" 消息表单中收到的消息为:"+receiveCount+" 原本消息推送的人数为1人");
+            System.out.println("同一批次消息记录中查看为是的消息为:"+isReadNum+"消息表单中收到的消息为:"+receiveCount);
             Preconditions.checkArgument(receiveCount>isReadNum||receiveCount==isReadNum,"同一批次消息记录中查看为是的消息为:"+isReadNum+"消息表单中收到的消息为:"+receiveCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("系统日志-数据一致性9:【营销管理】里面消息推送给个人,消息记录中消息+1");
+        }
+    }
+
+    /**
+     * @description :系统日志-功能:导入记录列表项不为空校验---校验前2页的数据
+     * @date :2020/12/22
+     **/
+    @Test
+    public void SystemLog_System1(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.importListFilterManage(shopId,"1","20","","");
+            JSONArray list=respon.getJSONArray("list");
+            for(int i=0;i<20;i++){
+                String affiliation=list.getJSONObject(i).getString("affiliation");
+                String typeName=list.getJSONObject(i).getString("type_name");
+                String importTime=list.getJSONObject(i).getString("import_time");
+                String fileType=list.getJSONObject(i).getString("file_type");
+                String importNum=list.getJSONObject(i).getString("import_num");
+                String successNum=list.getJSONObject(i).getString("success_num");
+                String failureNum=list.getJSONObject(i).getString("failure_num");
+                String operateShopName=list.getJSONObject(i).getString("operate_shop_name");
+                String userName=list.getJSONObject(i).getString("user_name");
+                String userAccount=list.getJSONObject(i).getString("user_account");
+                String fileUploadUrl=list.getJSONObject(i).getString("file_upload_url");
+                Preconditions.checkArgument(affiliation!=null&&typeName!=null&&importTime!=null&&fileType!=null&&importNum!=null&&successNum!=null&&failureNum!=null &&operateShopName!=null&&userName!=null&&userAccount!=null&&fileUploadUrl!=null,"导入记录前20行列表项中存在列表项为空的行数为:"+i);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("系统日志-功能1:导入记录列表项不为空校验");
+        }
+    }
+
+    /**
+     * @description :系统日志-功能:消息记录列表项不为空校验---校验前5页的数据
+     * @date :2020/12/22
+     **/
+    @Test
+    public void SystemLog_System2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.pushMsgListFilterManage(shopId,"1","50","","");
+            JSONArray list=respon.getJSONArray("list");
+            for(int i=0;i<50;i++){
+                String messageTypeName=list.getJSONObject(i).getString("message_type_name");
+                String phone=list.getJSONObject(i).getString("phone");
+                String sendTime=list.getJSONObject(i).getString("send_time");
+                String content=list.getJSONObject(i).getString("content");
+                String isRead=list.getJSONObject(i).getString("is_read");
+                Preconditions.checkArgument(messageTypeName!=null&&phone!=null&&sendTime!=null&&content!=null&&isRead!=null,"消息记录前50行列表项中存在列表项为空的行数为:"+i);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("系统日志-功能1:消息记录列表项不为空校验");
         }
     }
 
