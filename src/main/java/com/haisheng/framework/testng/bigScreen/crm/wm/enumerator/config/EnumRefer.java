@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public enum EnumRefer {
 
-    PORSCHE_REFERER_DAILY(""),
+    PORSCHE_REFERER_DAILY("https://servicewechat.com/wx5102264595be8c23/0/page-frame.html"),
 
     PORSCHE_REFERER_ONLINE("https://servicewechat.com/wx0cf070e8eed63e90/5/page-frame.html"),
 

@@ -2,6 +2,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator;
 
 import lombok.Getter;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 特定卡券&套餐
  */
@@ -20,4 +25,10 @@ public enum EnumVP {
     private final String voucherName;
     @Getter
     private final String packageName;
+
+
+    public static boolean isContains(String str) {
+        List<String> list = Arrays.stream(EnumVP.values()).map(EnumVP::getPackageName).filter(e -> e.equals(str)).collect(Collectors.toList());
+        return list.size() != 0;
+    }
 }

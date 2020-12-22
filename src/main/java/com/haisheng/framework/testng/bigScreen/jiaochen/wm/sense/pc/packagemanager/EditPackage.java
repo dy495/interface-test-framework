@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
@@ -12,12 +13,15 @@ import java.util.List;
 @Builder
 public class EditPackage extends BaseScene {
     private final String packageName;
-    private final String validity;
+    private final Integer validity;
     private final String packageDescription;
-    private final String voucherList;
-    private final Integer packagePrice;
+    private final JSONArray voucherList;
+    private final String packagePrice;
     private final List<Long> shopIds;
     private final Boolean status;
+    private final String id;
+    private final String subjectType;
+    private final Long subjectId;
 
     @Override
     public JSONObject getJSONObject() {
@@ -29,6 +33,9 @@ public class EditPackage extends BaseScene {
         object.put("package_price", packagePrice);
         object.put("shop_ids", shopIds);
         object.put("status", status);
+        object.put("id", id);
+        object.put("subject_type", subjectType);
+        object.put("subject_id", subjectId);
         return object;
     }
 

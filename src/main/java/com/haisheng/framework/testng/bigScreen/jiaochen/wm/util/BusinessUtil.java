@@ -407,6 +407,24 @@ public class BusinessUtil {
     }
 
     /**
+     * 获取可修改的套餐id
+     *
+     * @return 套餐id
+     */
+    public Long getModifyPackageId() {
+        List<Long> list = new ArrayList<>();
+        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> !EnumVP.isContains(e.getString("package_name")))
+                    .map(e -> e.getLong("package_id")).collect(Collectors.toList()));
+        }
+        return list.get(0);
+    }
+
+    /**
      * 获套餐id
      *
      * @return 套餐id
