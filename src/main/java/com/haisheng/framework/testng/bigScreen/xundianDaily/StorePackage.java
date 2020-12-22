@@ -6,6 +6,9 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.testng.annotations.DataProvider;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -41,6 +44,7 @@ public class StorePackage extends TestCaseCommon {
      */
     public String IpPort = "http://123.57.148.247";
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
 
     /**
      * @description:登录
@@ -88,128 +92,12 @@ public class StorePackage extends TestCaseCommon {
         System.out.println(timestamp);
     }
 
-
-    @DataProvider(name = "CYCLE_TYPE")
-    public static Object[] cycle_type() {
-
-        return new String[]{
-                "RECENT_SEVEN",
-                "RECENT_FOURTEEN",
-                "RECENT_THIRTY",
-                "RECENT_SIXTY"
-        };
-    }
-
-    @DataProvider(name = "END_TIME_TYPE")
-    public static Object[] endTimeType() {
-
-        return new String[]{
-                "2020-07-14",
-                "2020-07-18"
-
-        };
-    }
-
-    @DataProvider(name = "DESCRIPTION")
-    public static Object[] description() {
-
-        return new String[]{
-                "店庆店庆店庆店庆店庆",
-                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆"
-        };
-    }
-
-    @DataProvider(name = "DESCRIPTION_FALSE")
-    public static Object[] description_false() {
-
-        return new String[]{
-                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆",
-                ""
-        };
-    }
-
-    @DataProvider(name = "THING_TYPE")
-    public static Object[] thing_type() {
-
-        return new String[]{
-                "NEW_COMMODITY",
-                "CHANGE_COMMODITY",
-                "PROMOTIONS"
-        };
-    }
-
-    @DataProvider(name = "THING_TYPE_FALSE")
-    public static Object[] thing_type_false() {
-
-        return new String[]{
-                ""
-        };
-    }
-
-    @DataProvider(name = "TIME_TYPE_FALSE")
-    public static Object[] time_type_false() {
-
-        return new String[]{
-                "2019-08-08",
-                "2020-07-09",
-                ""
-        };
-    }
-
-    @DataProvider(name = "AREA_CODE")
-    public static Object[] area_code() {
-
-        return new String[]{
-                "110000"
-        };
-    }
-
-    @DataProvider(name = "AREA_TYPE")
-    public static Object[] area_type() {
-
-        return new String[]{
-                "[\"NORMAL\"]"
-        };
-    }
-
-    @DataProvider(name = "CUSTMER_TYPE")
-    public static Object[] custmer_type() {
-
-        return new String[]{
-                "PASS_BY",
-                "INTEREST",
-                "ENTER",
-                "DEAL"
-        };
-    }
-
-    @DataProvider(name = "STATUS")
-    public static Object[] status() {
-
-        return new String[]{
-                "RUNNING",
-                "STREAM_ERROR",
-                "OFFLINE"
-        };
-    }
-
-    @DataProvider(name = "SEARCH")
-    public static Object[] search() {
-
-        return new String[]{
-                "[\"name\"]",
-                "[\"type\"]",
-                "[\"accept_role\"]",
-                "[\"statu\"]"
-        };
-    }
-
     /**
      *
      *云追客（客流分析）模块
      */
 
-    //获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员，获取前天的累计顾客总数
+    /**获取昨天的累计客户总数,今天新增的顾客、全渠道会员、付费会员，获取前天的累计顾客总数**/
     public  Map<String, Integer> getAllCustomer(Long shop_id,String cycle_type,String month) throws Exception {
         JSONArray trend_list = md.historyShopMemberV3(shop_id, cycle_type, month).getJSONArray("trend_list");
         Integer customer_uv= 0;
@@ -235,7 +123,7 @@ public class StorePackage extends TestCaseCommon {
         result.put("omni_uv_total_01", omni_uv_total_01);
         return result;
     }
-    //获取最近x天各个客群时段分布的总和
+    /**获取最近x天各个客群时段分布的总和**/
     public Map<String, Integer> getAllCustSum(JSONArray showList,int count) throws Exception {
         int times1 = 0;
         int times2 = 0;
@@ -272,7 +160,7 @@ public class StorePackage extends TestCaseCommon {
         return result;
     }
 
-    //将账户使用次数为0的角色删除
+    /**将账户使用次数为0的角色删除**/
     public void deleteRole() throws Exception {
         JSONArray role_list = md.organizationRolePage("",1,100).getJSONArray("list");
         for(int i=0;i<role_list.size();i++){
@@ -289,7 +177,7 @@ public class StorePackage extends TestCaseCommon {
      *云中客（新增客户）模块
      */
 
-    //从昨日新增人数分析模块-获取昨日新增顾客/全渠道会员/付费会员的新增人数
+    /**从昨日新增人数分析模块-获取昨日新增顾客/全渠道会员/付费会员的新增人数**/
     public int  getNewCount(JSONArray data_list,String type) throws Exception {
         int new_uv = 0;
         for(int i=0;i<data_list.size();i++){
@@ -300,7 +188,7 @@ public class StorePackage extends TestCaseCommon {
         }
         return new_uv;
     }
-    //获取客户趋势图中昨日新增的客户人数(所有店)
+    /**获取客户趋势图中昨日新增的客户人数(所有店)**/
     public int  getYesNew_count(String type,String cycle_type) throws Exception {
         JSONArray list = md.member_newCount_pic(cycle_type).getJSONArray("list");
         int num = 0;
@@ -312,7 +200,7 @@ public class StorePackage extends TestCaseCommon {
         }
         return num;
     }
-    //获取客户趋势图中昨日新增的顾客人数(所有店)
+    /**获取客户趋势图中昨日新增的顾客人数(所有店)**/
     public Map<String, Integer>  getNew_counts(JSONArray list,String DataType) throws Exception {
         int uv1 = 0;
         int uv2 = 0;
@@ -322,7 +210,7 @@ public class StorePackage extends TestCaseCommon {
                 uv1 = list.getJSONObject(i1).getInteger(DataType);
             }
         }
-        //获取客户趋势图中一周前新增的顾客人数
+        /**获取客户趋势图中一周前新增的顾客人数**/
         for(int i2 =0;i2<count;i2++){
             if( i2 == count-8){
                 uv2 = list.getJSONObject(i2).getInteger(DataType);
@@ -334,7 +222,7 @@ public class StorePackage extends TestCaseCommon {
         return result;
     }
 
-    //获取客户趋势图中昨日新增的客户人数(单店)
+    /**获取客户趋势图中昨日新增的客户人数(单店)**/
     public int  getYesNew_count_single(String type,Long shop_id_01,String cycle_type) throws Exception {
         JSONArray list = md.single_newCount_pic(shop_id_01,cycle_type).getJSONArray("list");
         int num = 0;
@@ -347,7 +235,7 @@ public class StorePackage extends TestCaseCommon {
         return num;
     }
 
-    //从新增顾客占比部分获取顾客部分得顾客占比(所有店)
+    /**从新增顾客占比部分获取顾客部分得顾客占比(所有店)**/
     public String getTransformData(String type,String data_type ) throws Exception {
         JSONArray data_list = md.member_newCount_data().getJSONArray("list");
         String transform = "";
@@ -360,7 +248,7 @@ public class StorePackage extends TestCaseCommon {
         return transform;
     }
 
-    //从新增顾客占比部分获取顾客部分得顾客占比(单店)
+    /**从新增顾客占比部分获取顾客部分得顾客占比(单店)**/
     public String  getTransform_single(String type,Long shop_id_01,String data_type) throws Exception {
         JSONArray data_list = md.single_newCount_data(shop_id_01).getJSONArray("list");
         String transform = "";
@@ -372,7 +260,7 @@ public class StorePackage extends TestCaseCommon {
         }
         return transform;
     }
-    //获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)
+    /**获取历史客流中昨日的到店客流总数(所有店客户占比计算时需要的到店客流数)**/
     public int getday_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
         JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
         int uv1 = 0;
@@ -399,7 +287,7 @@ public class StorePackage extends TestCaseCommon {
         return uvs;
     }
 
-    //获取客户趋势图中昨日和前天新增的顾客人数
+    /**获取客户趋势图中昨日和前天新增的顾客人数**/
     public Map<String, Integer> getNewCounts(JSONArray list,String DataType) throws Exception {
         int uv1 = 0;
         int uv2 = 0;
@@ -419,8 +307,7 @@ public class StorePackage extends TestCaseCommon {
     }
 
 
-
-    //获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)
+    /**获取历史客流中昨日的到店客流总数(所有店日环比计算需要的客流数)**/
     public Map<String, Double> getday_count_all(String cycle_type, String month, Long shop_id_01, Long shop_id) throws Exception {
         double uv1 = 0;
         double uv2 = 0;
@@ -459,7 +346,7 @@ public class StorePackage extends TestCaseCommon {
         result.put("uv4", uv4);
         return result;
     }
-    //获取到店趋势数据
+    /**获取到店趋势数据**/
     public int  getArriveCust(String cycle_type,String month,Long shop_id) throws Exception {
         JSONArray trend_list = md.historyShopTrendV3(cycle_type, month,shop_id ).getJSONArray("trend_list");
         int pvValues = 0;
@@ -476,7 +363,7 @@ public class StorePackage extends TestCaseCommon {
     }
 
 
-    //所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和
+    /**所选周期内（30天）的所有门店的各天顾客/全渠道/付费会员的累计和**/
     public Map<String, Integer> getEverySum(JSONArray trend_list) throws Exception {
         Integer customer_uv = 0;
         Integer omni_uv = 0;
@@ -499,7 +386,7 @@ public class StorePackage extends TestCaseCommon {
         return result;
     }
 
-    //获取所选周期的所有门店各天顾客之和
+    /**获取所选周期的所有门店各天顾客之和**/
     public Map<String, Integer> getAllStoreCust_sum(JSONArray member_list) throws Exception {
         Integer cust_uv = 0;
         Integer channel_uv = 0;
@@ -531,7 +418,7 @@ public class StorePackage extends TestCaseCommon {
         return result;
     }
 
-    //获取历史客流中昨日的到店客流总数(所有店给周同比)
+    /**获取历史客流中昨日的到店客流总数(所有店给周同比)**/
     public Map<String, Double> getweek_count(String cycle_type, String month, Long shop_id, Long shop_id_01) throws Exception {
         JSONArray trend_list1 = md.historyShopTrendV3(cycle_type, month, shop_id_01).getJSONArray("trend_list");
         double uv1 = 0;
@@ -572,7 +459,6 @@ public class StorePackage extends TestCaseCommon {
         return result;
 
     }
-
 
 }
 
