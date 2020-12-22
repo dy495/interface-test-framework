@@ -319,9 +319,23 @@ public class CommonUtil {
         return false;
     }
 
+    @Contract(pure = true)
+    public static <T> void checkResult(String key, T value, T expect, T actual) {
+        String result = key + "为：" + value + " 预期结果：" + expect + " 实际结果：" + actual;
+        if (expect instanceof String && actual instanceof String) {
+            Preconditions.checkArgument(expect.equals(actual), result);
+        }
+        if (expect instanceof Integer && actual instanceof Integer) {
+            Preconditions.checkArgument(expect == actual, result);
+        }
+        if (expect instanceof Double && actual instanceof Double) {
+            Preconditions.checkArgument(expect == actual, result);
+        }
+    }
+
     @NotNull
     @Contract(pure = true)
-    public static <T> String errMessage(T expect, T actual) {
+    public static <T> String checkResult(T expect, T actual) {
         return " 预期结果：" + expect + " 实际结果：" + actual;
     }
 

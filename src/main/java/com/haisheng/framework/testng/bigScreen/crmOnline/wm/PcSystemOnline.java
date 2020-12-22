@@ -175,16 +175,16 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             String message7 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", "", carPic, carTypeName, 20, interiorPic, 10, spacePic).getString("message");
             String message8 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, "", 20, interiorPic, 10, spacePic).getString("message");
             String message9 = crm.goodsManagerAddCar(appearancePic, bigPic, "无优惠", carIntroduce, carPic, carTypeName, 10, interiorPic, 200, spacePic).getString("message");
-            Preconditions.checkArgument(message.equals("车辆图片不能为空"), "pc商品管理，车辆图片为空也可创建成功");
-            Preconditions.checkArgument(message1.equals("车辆外观图片不能为空"), "pc商品管理，外观照片为空也可创建成功");
-            Preconditions.checkArgument(message2.equals("车辆内饰图片不能为空"), "pc商品管理，内饰照片为空也可创建成功");
-            Preconditions.checkArgument(message3.equals("车辆空间图片不能为空"), "pc商品管理，空间照片为空也可创建成功");
-            Preconditions.checkArgument(message4.equals("车辆大图不能为空"), "pc商品管理，大图照片为空也可创建成功");
-            Preconditions.checkArgument(message5.equals("车辆最高价格不能为空"), "pc商品管理，最高价格为空也可创建成功");
-            Preconditions.checkArgument(message6.equals("车辆最低价格不能为空"), "pc商品管理，最低价格为空也可创建成功");
-            Preconditions.checkArgument(message7.equals("车辆介绍不能为空"), "pc商品管理，车辆介绍为空也可创建成功");
-            Preconditions.checkArgument(message8.equals("车辆类型名称不能为空"), "pc商品管理，车辆最低价格>最高价格也可创建成功");
-            Preconditions.checkArgument(message9.equals("车辆最低价格不能高于车辆最高价格"), "所有必填项全正确填写，车型创建失败");
+            CommonUtil.checkResult("车辆图片", null, "车辆图片不能为空", message);
+            CommonUtil.checkResult("车辆外观图片", null, "车辆外观图片不能为空", message1);
+            CommonUtil.checkResult("车辆内饰图片", null, "车辆内饰图片不能为空", message2);
+            CommonUtil.checkResult("车辆空间图片", null, "车辆空间图片不能为空", message3);
+            CommonUtil.checkResult("车辆大图", null, "车辆大图不能为空", message4);
+            CommonUtil.checkResult("车辆最高价格", null, "车辆最高价格不能为空", message5);
+            CommonUtil.checkResult("车辆最低价格", null, "车辆最低价格不能为空", message6);
+            CommonUtil.checkResult("车辆介绍", null, "车辆介绍不能为空", message7);
+            CommonUtil.checkResult("车辆类型名称", null, "车辆类型名称不能为空", message8);
+            CommonUtil.checkResult("车辆最低价格", "高于车辆最高价格", "车辆最低价格不能高于车辆最高价格", message9);
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -221,8 +221,7 @@ public class PcSystemOnline extends TestCaseCommon implements TestCaseStd {
             String message = dccEdit(builder);
             Preconditions.checkArgument(message.equals("成功"), message);
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户管理--DCC客户编辑--填写所有项，保存");
         }

@@ -14,7 +14,7 @@ public class PushMessage extends BaseScene {
     private final String pushTarget;
     private final List<Long> shopList;
     private final List<String> telList;
-    private final String  messageName;
+    private final String messageName;
     private final String messageContent;
     private final Integer type;
     private final List<Long> voucherOrPackageList;
@@ -22,7 +22,8 @@ public class PushMessage extends BaseScene {
     private final String endUseTime;
     private final Integer useDays;
     private final Long sendTime;
-    private final Boolean ifSendImmediately;
+    @Builder.Default
+    private final Boolean ifSendImmediately = true;
     private final Long activityId;
 
     @Override

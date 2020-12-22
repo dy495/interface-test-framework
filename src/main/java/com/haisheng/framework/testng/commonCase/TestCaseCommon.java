@@ -25,9 +25,11 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -118,8 +120,7 @@ public class TestCaseCommon {
         if (StringUtils.isEmpty(method.getName())) {
             caseResult.setCaseName("login");
         } else {
-            String caseName = StringUtils.isEmpty(commonConfig.produce) ? method.getName() : commonConfig.produce + "_" + method.getName();
-            caseResult.setCaseName(caseName);
+            caseResult.setCaseName(method.getName());
         }
         logger.debug("fresh case: " + caseResult);
         return caseResult;
@@ -430,6 +431,7 @@ public class TestCaseCommon {
     public String getProscheShopOline() {
         return "12928";
     }
+
     public String getBjsReferOnline() {
         return "https://servicewechat.com/wx0cf070e8eed63e90/";
     }

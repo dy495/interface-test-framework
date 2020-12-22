@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * app售后
@@ -898,10 +899,9 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "售后--活动任务--添加1个报名,报名条数+1&&删除1个报名，报名条数-1")
     public void afterSale_activity_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
-        int activityId;
-        String phone = getDistinctPhone();
         try {
-            activityId = getActivityId();
+            String phone = getDistinctPhone();
+            int activityId = getActivityId();
             int a = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
             crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
             int b = crm.activityTaskInfo(String.valueOf(activityId)).getJSONArray("customer_list").size();
@@ -968,13 +968,9 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             int activityId = getActivityId();
             JSONObject response = crm.activityTaskInfo(String.valueOf(activityId));
             String activityTitle = response.getString("article_title");
-            int id = 0;
             JSONArray list = crm.activityShowList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("name").equals(activityTitle)) {
-                    id = list.getJSONObject(i).getInteger("id");
-                }
-            }
+            int id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals(activityTitle))
+                    .map(e -> e.getInteger("id")).collect(Collectors.toList()).get(0);
             JSONArray a = crm.customerTaskPage(size, 1, id).getJSONArray("list");
             crm.registeredCustomer1(activityId, "哈哈哈", phone).getString("message");
             JSONArray b = crm.customerTaskPage(size, 1, id).getJSONArray("list");
@@ -984,7 +980,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(b.size() == a.size() + 1, "添加1个报名,后台任务客户未+1");
             Preconditions.checkArgument(c.size() == b.size() - 1, "删除1个报名,后台任务客户未-1");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--活动任务--添加1个报名,后台任务客户+1");
         }
@@ -995,24 +991,21 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_reception_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            List<String> arrayList = new ArrayList<>();
             UserUtil.login(zjl);
-            IScene scene = ReceptionAfterCustomerListScene.builder().build();
-            JSONArray list = crm.invokeApi(scene).getJSONArray("list");
+            ReceptionAfterCustomerListScene.ReceptionAfterCustomerListSceneBuilder builder = ReceptionAfterCustomerListScene.builder();
+            JSONArray list = crm.invokeApi(builder.build()).getJSONArray("list");
             String plateNumber = list.getJSONObject(0).getString("plate_number");
             CommonUtil.valueView(plateNumber);
             String findParam = plateNumber.substring(0, 3);
             CommonUtil.valueView(findParam);
-            IScene scene1 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).build();
-            int total = crm.invokeApi(scene1).getInteger("total");
+            int total = crm.invokeApi(builder.searchCondition(findParam).build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
-                IScene scene2 = ReceptionAfterCustomerListScene.builder().searchCondition(findParam).page(i).size(size).build();
-                JSONArray list1 = crm.invokeApi(scene2).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(j).getString("plate_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
-                }
+                JSONArray list1 = crm.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                arrayList.addAll(list1.stream().map(e -> (JSONObject) e).map(e -> e.getString("plate_number")).collect(Collectors.toList()));
             }
+            arrayList.forEach(e -> Preconditions.checkArgument(e.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam));
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -1443,14 +1436,14 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             String message11 = crm.registeredCustomer1(activityId, "哈哈哈", phone.substring(0, phone.length() - 1)).getString("message");
             Preconditions.checkArgument(message.equals("请输入有效手机号码"), phone + "1".length() + "位手机号码报名成功");
             Preconditions.checkArgument(message1.equals("您只能输入长度不超过10的汉字") && message2.equals("您只能输入长度不超过10的汉字") && message3.equals("您只能输入长度不超过10的汉字"), "客户名称包含1、Q、/报名成功");
-            Preconditions.checkArgument(message4.equals("客户名称长度不能超过十个字"), "客户名称超过10个字报名成功");
-            Preconditions.checkArgument(message5.equals("请输入有效手机号码"), "中文号码报名成功");
-            Preconditions.checkArgument(message6.equals("请输入有效手机号码"), "英文号码报名成功");
-            Preconditions.checkArgument(message7.equals("请输入有效手机号码"), "标点号码报名成功");
-            Preconditions.checkArgument(message8.equals("请输入有效手机号码"), "数字+中文号码报名成功");
-            Preconditions.checkArgument(message9.equals("请输入有效手机号码"), "数字+英文号码报名成功");
-            Preconditions.checkArgument(message10.equals("请输入有效手机号码"), "数字+标点号码报名成功");
-            Preconditions.checkArgument(message11.equals("请输入有效手机号码"), phone.substring(0, phone.length() - 1).length() + "位手机号码报名成功");
+            Preconditions.checkArgument(message4.equals("客户名称长度不能超过十个字"), message);
+            Preconditions.checkArgument(message5.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message6.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message7.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message8.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message9.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message10.equals("请输入有效手机号码"), message);
+            Preconditions.checkArgument(message11.equals("请输入有效手机号码"), phone.substring(0, phone.length() - 1).length() + message);
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -1523,14 +1516,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     private int getActivityId() {
         UserUtil.login(fw);
         JSONArray list = crm.activityTaskPage(1, size).getJSONArray("list");
-        int activityTaskId = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.getJSONObject(i).getBoolean("is_edit")
-                    && list.getJSONObject(i).getString("activity_task_status_name").equals("未完成")) {
-                activityTaskId = list.getJSONObject(i).getInteger("activity_task_id");
-            }
-        }
-        return activityTaskId;
+        return list.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("is_edit") && e.getString("activity_task_status_name").equals("未完成")).map(e -> e.getInteger("activity_task_id")).collect(Collectors.toList()).get(0);
     }
 
     /**

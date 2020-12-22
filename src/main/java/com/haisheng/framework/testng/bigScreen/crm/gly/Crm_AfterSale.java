@@ -117,7 +117,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "车主名称长度在1-15字之间";
-                    Preconditions.checkArgument(message.equals(err), "车主姓名为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("车主姓名", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -164,7 +164,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "联系方式1必须为11位手机号";
-                    Preconditions.checkArgument(message.equals(err), "车主电话为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("车主电话", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -216,7 +216,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "备注在10-200字之间";
-                Preconditions.checkArgument(message.equals(err), "备注为：" + remark + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("备注为", remark, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -263,7 +263,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "行驶里程数字错误";
-                    Preconditions.checkArgument(message.equals(err), "行驶里程为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("行驶里程为", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -312,7 +312,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "联系方式2必须为11位手机号";
-                    Preconditions.checkArgument(message.equals(err), "车主电话2为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("车主电话2", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -360,7 +360,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "预约电话2必须为11位手机号";
-                    Preconditions.checkArgument(message.equals(err), "预约电话2为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("预约电话2", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -411,7 +411,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "联系人1姓名长度在1-10字之间";
-                    Preconditions.checkArgument(message.equals(err), "联系人1姓名为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("联系人1姓名", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -462,7 +462,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "联系人2姓名长度在1-10字之间";
-                    Preconditions.checkArgument(message.equals(err), "联系人2姓名：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("联系人2姓名", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -511,7 +511,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = (s.length() == 7 || s.length() == 8) ? "车牌号码只允许文字+数字+大写字母" : "请输入7-8位车牌号码位数";
-                    Preconditions.checkArgument(message.equals(err), " 异常车牌号：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("陪同车牌2", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -560,7 +560,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                             .build();
                     String message = crm.invokeApi(scene, false).getString("message");
                     String err = "维修天数必须在1～365天之间";
-                    Preconditions.checkArgument(message.equals(err), "维修天数为：" + s + CommonUtil.errMessage(err, message));
+                    CommonUtil.checkResult("维修天数", s, err, message);
                 }
             }
         } catch (Exception | AssertionError e) {
@@ -605,7 +605,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "客户姓名不允许为空";
-                Preconditions.checkArgument(message.equals(err), "客户名称为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("客户名称", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -649,7 +649,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "车主电话1不允许为空";
-                Preconditions.checkArgument(message.equals(err), "车主电话1为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("车主电话1", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -693,7 +693,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "预约名称不允许为空";
-                Preconditions.checkArgument(message.equals(err), "预约名称为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("预约名称", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -737,7 +737,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "预约电话不允许为空";
-                Preconditions.checkArgument(message.equals(err), "预约电话为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("预约电话", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -781,7 +781,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "车牌号1不允许为空";
-                Preconditions.checkArgument(message.equals(err), "车牌号1为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("车牌号1", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -826,7 +826,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "行驶里程不允许为空";
-                Preconditions.checkArgument(message.equals(err), "行驶里程为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("行驶里程", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -915,7 +915,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
                         .build();
                 String message = crm.invokeApi(scene, false).getString("message");
                 String err = "客户来源不允许为空";
-                Preconditions.checkArgument(message.equals(err), "客户来源为：" + null + CommonUtil.errMessage(err, message));
+                CommonUtil.checkResult("客户来源", null, err, message);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);

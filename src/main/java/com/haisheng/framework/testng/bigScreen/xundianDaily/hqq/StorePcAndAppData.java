@@ -698,12 +698,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
                 JSONArray gender = md.invokeApi(appScene).getJSONArray("age");
-                List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e)
-                        .map(s -> percentToDouble(s.getString("gender_ratio"))).collect(Collectors.toList());
+                List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e).map(s -> percentToDouble(s.getString("gender_ratio"))).collect(Collectors.toList());
                 IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("interest").getJSONArray("list");
-                List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent")))
-                        .collect(Collectors.toList());
+                List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                 CommonUtil.valueView(pcPercentList);
                 CommonUtil.valueView(appPercentList, pcPercentList);
                 Preconditions.checkArgument(appPercentList.equals(pcPercentList), "");
