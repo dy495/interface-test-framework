@@ -283,27 +283,34 @@ public class EdgeRegressionTest {
             EXPECT_ENTER  = 16;
             EXPECT_LEAVE  = 16;
 
-        } else if (VIDEO.contains("entry_7375502601552896_L1-1号门扶梯L2-L1进场-20min.mp4-8077890396619776")) {
+        } else if (VIDEO.contains("8077890396619776")) {
+            //entry_7375502601552896_L1-1号门扶梯L2-L1进场-20min.mp4-8077890396619776
+            //为了避免中文乱码导致字符串匹配失败，故去除掉中文匹配
             EXPECT_ENTER  = 51;
             EXPECT_LEAVE  = 49;
 
-        } else if (VIDEO.contains("cross_enter_shop_7375502689698816_L1-POPMART-左-20min.mp4-8078193393271808")) {
+        } else if (VIDEO.contains("8078193393271808")) {
+            //cross_enter_shop_7375502689698816_L1-POPMART-左-20min.mp4-8078193393271808
             EXPECT_ENTER  = 31;
             EXPECT_LEAVE  = 33;
 
-        } else if (VIDEO.contains("cross_enter_shop_7375502704772096_L1-ZARA-左-20min.mp4-8086022718817280")) {
+        } else if (VIDEO.contains("8086022718817280")) {
+            //cross_enter_shop_7375502704772096_L1-ZARA-左-20min.mp4-8086022718817280
             EXPECT_ENTER  = 51;
             EXPECT_LEAVE  = 32;
 
-        } else if (VIDEO.contains("entry_7375503052014592_L1-86街区入口-进场-右-20min.mp4-8086101118223360")) {
+        } else if (VIDEO.contains("8086101118223360")) {
+            //entry_7375503052014592_L1-86街区入口-进场-右-20min.mp4-8086101118223360
             EXPECT_ENTER  = 115;
             EXPECT_LEAVE  = 64;
 
-        } else if (VIDEO.contains("entry_7375503100871680_L1-杂物社旁扶梯L2-L1进场-20min.mp4-8086148282876928")) {
+        } else if (VIDEO.contains("8086148282876928")) {
+            //entry_7375503100871680_L1-杂物社旁扶梯L2-L1进场-20min.mp4-8086148282876928
             EXPECT_ENTER  = 41;
             EXPECT_LEAVE  = 29;
 
-        } else if (VIDEO.contains("entry_7375503431795712_L1-4号直梯-进场-20min.mp4-8086389486846976")) {
+        } else if (VIDEO.contains("8086389486846976")) {
+            //entry_7375503431795712_L1-4号直梯-进场-20min.mp4-8086389486846976
             EXPECT_ENTER  = 34;
             EXPECT_LEAVE  = 16;
 
