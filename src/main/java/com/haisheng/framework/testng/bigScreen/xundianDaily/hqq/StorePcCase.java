@@ -8,7 +8,7 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StorePackage;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    StorePackage mds = StorePackage.getInstance();
+    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     String districtCode = "";
     String shopManager = "";
     int page = 1;
@@ -669,7 +669,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================设备管理摄像头的筛选======================
      */
-    @Test(dataProvider = "STATUS", dataProviderClass = StorePackage.class)
+    @Test(dataProvider = "STATUS", dataProviderClass = StoreFuncPackage.class)
     public void find_camera(String status) {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -1052,8 +1052,6 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                 checkArgument(type.equals(type1), "根据列表第一个的规则类型作为条件进行筛选搜索,没有查询到应有的结果");
 
             }
-
-
             //根据门店类型进行筛选
             JSONArray list3 = md.risk_controlPage("", "", shop_type, null, page, size).getJSONArray("list");
             for (int i = 0; i < list3.size(); i++) {

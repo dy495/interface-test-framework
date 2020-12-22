@@ -1,37 +1,34 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import org.testng.annotations.DataProvider;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StorePackage extends TestCaseCommon {
+public class StoreFuncPackage extends TestCaseCommon {
 
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
 
-    private static volatile StorePackage instance = null;
-    private StorePackage() {
+    private static volatile StoreFuncPackage instance = null;
+    private StoreFuncPackage() {
     }
 
-    public static StorePackage getInstance() {
+    public static StoreFuncPackage getInstance() {
 
         if (null == instance) {
-            synchronized (StorePackage.class) {
+            synchronized (StoreFuncPackage.class) {
                 if (null == instance) {
                     //这里
-                    instance = new StorePackage();
+                    instance = new StoreFuncPackage();
                 }
             }
         }

@@ -5,16 +5,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import jdk.nashorn.internal.scripts.JS;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -31,7 +29,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static StoreScenarioUtil getInstance() {
 
         if (null == instance) {
-            synchronized (StorePackage.class) {
+            synchronized (StoreFuncPackage.class) {
                 if (null == instance) {
                     //这里
                     instance = new StoreScenarioUtil();

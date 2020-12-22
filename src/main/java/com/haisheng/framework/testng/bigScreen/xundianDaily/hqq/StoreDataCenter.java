@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StorePackage;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -32,7 +32,7 @@ import java.util.*;
 
 public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    StorePackage mds = StorePackage.getInstance();
+    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
     long shop_id = 4116 ;
