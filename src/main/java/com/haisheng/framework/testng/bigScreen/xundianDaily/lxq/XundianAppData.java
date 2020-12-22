@@ -126,6 +126,41 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description :【远程巡店-页面内一致性】提交一个执行项，执行清单的执行中分子+1
+     * @date :2020/12/22 16:00
+     **/
+    @Test
+    public void RemoteOnePgae2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            //开始巡店,获取巡店清单&每个清单的项目&patrol_id
+            JSONObject obj = xd.checkStartapp(info.shop_id_01,"REMOTE",0);
+            Long patrolID = obj.getLong("id");
+            JSONArray checklist = obj.getJSONArray("check_lists");
+            for (int i = 0; i < checklist.size();i++){
+                JSONObject eachlist = checklist.getJSONObject(0);
+                Long listID = eachlist.getLong("id"); // 获取list id
+                JSONArray chkitems = eachlist.getJSONArray("check_items");
+                for (int j =0; j < chkitems.size();j++) {
+                    JSONObject eachitem = chkitems.getJSONObject(j);
+                    Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
+                    //巡检项目结果 1合格；2不合格；3不适用
+                }
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【远程巡店】提交一个执行项，执行清单的执行中分子+1");
+        }
+    }
+
 
 
 

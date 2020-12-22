@@ -1768,10 +1768,9 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author qingqing
      * @description 1.7 个人中心(V1.1新增字段)（V1.1）
      */
-    public JSONObject user_center(String face_url) throws Exception {
+    public JSONObject user_center() throws Exception {
         String url = "/store/m-app/auth/user/center";
         JSONObject json = new JSONObject();
-        json.put("face_url",face_url);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
