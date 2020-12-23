@@ -50,6 +50,10 @@ public class FeidanMiniApiSystemtestDaily {
     //    -------------------------------------------------数据一致性验证-------------------------------------------------------------
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
+    MD5Util md5 = new MD5Util();
+    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,"");
+    JSONArray qxlistarr =new JSONArray();
+
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -889,7 +893,7 @@ public class FeidanMiniApiSystemtestDaily {
                 phone = phone + random.nextInt(10);
 
             }
-            addChannel(channelname, channelname, phone, "837");
+            addChannel(channelname, creatQDzlr(), phone, "837");
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String today = formatter.format(date);
@@ -993,7 +997,7 @@ public class FeidanMiniApiSystemtestDaily {
      * @date: 2020.12.15
      *  账号管理--搜索
      */
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "SEARCH")
     public void accountSearch1(String name){
         String ciCaseName = new Object() {
@@ -1003,7 +1007,8 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            JSONObject dataaobj = accountPage(1,50,name,"","","","");
+            JSONObject dataaobj = accountPage(1,50,name,null,null,null,null);
+            System.out.println(dataaobj);
             if (dataaobj.getInteger("total")>0){
                 for (int i = 0 ; i < dataaobj.getInteger("total");i++){
                     JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
@@ -1021,7 +1026,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "SEARCH")
     public void accountSearch2(String email){
         String ciCaseName = new Object() {
@@ -1031,7 +1036,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            JSONObject dataaobj = accountPage(1,50,"","",email,"","");
+            JSONObject dataaobj = accountPage(1,50,null,null,email,null,null);
             if (dataaobj.getInteger("total")>0){
                 for (int i = 0 ; i < dataaobj.getInteger("total");i++){
                     JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
@@ -1049,7 +1054,8 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
+    @Ignore // 手机号没了
     @Test(dataProvider = "SEARCH")
     public void accountSearch3(String phone){
         String ciCaseName = new Object() {
@@ -1059,7 +1065,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            JSONObject dataaobj = accountPage(1,50,"",phone,"","","");
+            JSONObject dataaobj = accountPage(1,50,null,phone,null,null,null);
             if (dataaobj.getInteger("total")>0){
                 for (int i = 0 ; i < dataaobj.getInteger("total");i++){
                     JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
@@ -1077,7 +1083,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountSearch4(){
         String ciCaseName = new Object() {
@@ -1086,8 +1092,8 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
-            String rolename = roleList().getJSONArray("list").getJSONObject(0).getString("name");
-            JSONObject dataaobj = accountPage(1,50,"","","",rolename,"");
+            String rolename = roleList(1,10,null).getJSONArray("list").getJSONObject(0).getString("name");
+            JSONObject dataaobj = accountPage(1,50,null,null,null,rolename,null);
             if (dataaobj.getInteger("total")>0){
                 for (int i = 0 ; i < dataaobj.getInteger("total");i++){
                     JSONArray rolelist1 = dataaobj.getJSONArray("list").getJSONObject(i).getJSONArray("role_list");
@@ -1110,7 +1116,8 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
+    @Ignore //手机号没了
     @Test(dataProvider = "SEARCH")
     public void accountSearch5(String phone){
         String ciCaseName = new Object() {
@@ -1120,7 +1127,7 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
 
-            JSONObject dataaobj = accountPage(1,50,phone,phone,"","","");
+            JSONObject dataaobj = accountPage(1,50,phone,phone,null,null,null);
             if (dataaobj.getInteger("total")>0){
                 for (int i = 0 ; i < dataaobj.getInteger("total");i++){
                     JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
@@ -1143,10 +1150,12 @@ public class FeidanMiniApiSystemtestDaily {
     @DataProvider(name = "SEARCH")
     public  Object[] search() {
         return new String[]{
-                "1",
+                "13",
                 "@",
                 "qqq",
-                "自测"
+                "测试",
+                "越秀",
+                "管理",
         };
     }
 
@@ -1154,22 +1163,22 @@ public class FeidanMiniApiSystemtestDaily {
      * @date: 2020.12.15
      *  账号管理--新建账号
      */
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ACC_ADD")
-    public void accountadd(String name,String email,String type , String gender,String mes){
+    public void accountadd(String name,String email, String phone,String mes){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
         try {
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
-            int code = accountAddNotChk(name,null,email,type,rolelist,gender,null).getInteger("code");
+
+
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
             Preconditions.checkArgument(code==1000,mes+"期待1000，实际"+code);
 
             //删除账号
-            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            String id = accountPage(1,10,name,phone,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
             accountDelete(id);
 
         } catch (AssertionError e) {
@@ -1182,31 +1191,56 @@ public class FeidanMiniApiSystemtestDaily {
             saveData(aCase, ciCaseName, caseName, "校验：新建账号\n");
         }
     }
-    @Ignore // 未提测 先注释掉
+
+    public JSONArray addrolelist (int roleid,String rolename,int shopid1,String shopname1,int shopid2,String shopname2){
+
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+        obj.put("role_id",roleid);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",shopid1);
+        obj1.put("shop_name",shopname1);
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+        if (shopid2!=0){
+            JSONObject obj2 = new JSONObject();
+            obj2.put("shop_id",shopid2);
+            obj2.put("shop_name",shopname2);
+            a.add(obj2);
+        }
+        obj.put("shop_list",a);
+        arr.add(obj);
+        return arr;
+
+    }
+
+    public String phonenum(){
+        String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));
+        return phone;
+    }
     @DataProvider(name = "ACC_ADD")
     public  Object[] accountAdd() {
         return new String[][]{
-                {"a",System.currentTimeMillis()+"@qq.com","EMAIL","MALE","姓名1个字"},
-                {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com","EMAIL","MALE","姓名10个字"},
-                {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn","EMAIL","MALE","姓名20个字"},
-                //{"name"+System.currentTimeMillis(),System.currentTimeMillis()+"@outlook.com","EMAIL","FEMALE","姓名一个字"},
-                {"zhd"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-@qq.com","EMAIL","MALE","邮箱100个字"},
+                {"a",System.currentTimeMillis()+"@qq.com",phonenum(),"姓名1个字"},
+                {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com",phonenum(),"姓名10个字"},
+                {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名20个字"},
+                {"zhd"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-"+Integer.toString((int)((Math.random()*9+1)*100000))+"789-123456789-\"+Integer.toString((int)((Math.random()*9+1)*100000))+\"789-123456789-123456789-123456789-@qq.com",phonenum(),"邮箱100个字"},
 
         };
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ACC_ADDERR")
-    public void accountaddErr(String name,String phone , String email,String type , String gender,String mes){
+    public void accountaddErr(String name , String email,String phone,String mes){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
         try {
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
-            int code = accountAddNotChk(name,phone,email,type,rolelist,gender,null).getInteger("code");
+
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
             Preconditions.checkArgument(code==1001,mes+"期待1001，实际"+code);
 
         } catch (AssertionError e) {
@@ -1222,17 +1256,17 @@ public class FeidanMiniApiSystemtestDaily {
     @DataProvider(name = "ACC_ADDERR")
     public  Object[] accountAddErr() {
         return new String[][]{
-                {"123Aa啊！@啊1123Aa啊！@啊11","",System.currentTimeMillis()+"@yahoo.cn","EMAIL","MALE","姓名21个字"},
-                {"zdh","1234567890",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号10位"},
-                {"zdh","123456789012",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号12位"},
-                {"zdh","啊啊啊啊啊！@啊啊啊啊",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号11位汉字"},
-                {"zdh","12345678Aazs",System.currentTimeMillis()+"@yahoo.cn","PHONE","MALE","手机号12位英文"},
-                {"zdh"+Integer.toString((int)(Math.random()*100)),"","111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-1@qq.com","EMAIL","MALE","邮箱101个字"},
+                {"123Aa啊！@啊1123Aa啊！@啊11",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名21个字"},
+//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","1234567890","手机号10位"},
+//                {"zdh",System.currentTimeMillis()+"@yahoo.cn",phonenum()+"1","手机号12位"},
+//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","请问请问请问请问请问全","手机号11位汉字"},
+//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","pppppppppppp","手机号12位英文"},
+                {"zdh"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-1@qq.com",phonenum(),"邮箱101个字"},
 
         };
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountEdit(){
         String ciCaseName = new Object() {
@@ -1244,22 +1278,19 @@ public class FeidanMiniApiSystemtestDaily {
             //新建账号
             String name= ""+System.currentTimeMillis();
             String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
+            String phone = phonenum();
+
             //新建
-            accountAdd(name,null,email,type,rolelist,gender,null);
+            accountAdd(name,phone,email,rolelist);
             String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
 
             //编辑
             String name1= "new"+System.currentTimeMillis();
-            String phone="13412150001";
-            String type1 ="PHONE";
-            String gender1="MALE";
-            JSONArray rolelist1 =  new JSONArray();
-            rolelist1.add("");
-            accountEdit(id,name1,phone,null,type1,rolelist1,gender1,null);
+            String email1=System.currentTimeMillis()+"@qq.com";
+            String phone1=phonenum();
+
+
+            accountEdit(id,name1,phone1,email1,rolelist);
 
             String name2= "";
             String phone2="";
@@ -1271,14 +1302,14 @@ public class FeidanMiniApiSystemtestDaily {
                 JSONObject obj = array.getJSONObject(i);
                 if (obj.getString("id").equals(id)){
                     name2 = obj.getString("name");
-                    phone2 = obj.getString("phone");
+//                    phone2 = obj.getString("phone");
                     email2 = obj.getString("email");
                 }
             }
 
             Preconditions.checkArgument(name2.equals(name1),"姓名修改为"+name1+" , 实际为"+ name2);
-            Preconditions.checkArgument(phone2.equals(phone),"手机号修改为"+phone+" , 实际为"+ phone2);
-            Preconditions.checkArgument(email2.equals(""),"邮箱修改为空 , 实际为"+ email2);
+//            Preconditions.checkArgument(phone2.equals(phone1),"手机号修改为"+phone1+" , 实际为"+ phone2);
+            Preconditions.checkArgument(email2.equals(email1),"邮箱修改为"+email1+" , 实际为"+ email2);
 
             //删除账号
             accountDelete(id);
@@ -1290,13 +1321,13 @@ public class FeidanMiniApiSystemtestDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：编辑账号修改登陆方式\n");
+            saveData(aCase, ciCaseName, caseName, "校验：编辑账号修改信息\n");
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ACC_ADDERR")
-    public void accountEditErr(String name1,String phone1 , String email1,String type1 , String gender1,String mes1){
+    public void accountEditErr(String name1 , String email1,String phone1,String mes){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1306,17 +1337,15 @@ public class FeidanMiniApiSystemtestDaily {
             //新建账号
             String name= ""+System.currentTimeMillis();
             String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
+            String phone = phonenum();
+
             //新建
-            accountAdd(name,null,email,type,rolelist,gender,null);
-            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountAdd(name,phone,email,rolelist);
+            String id = accountPage(1,10,name,phone,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
 
 
-            int code = accountEditNotchk(id,name1,phone1,null,type1,rolelist,gender1,null).getInteger("code");
-            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+            int code = accountEditNotchk(id,name1,phone1,email1,rolelist).getInteger("code");
+            Preconditions.checkArgument(code==1001,mes+"状态码期待1001，实际"+code);
 
 
             //删除账号
@@ -1333,7 +1362,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void NotExistAccountLogin(){
         String ciCaseName = new Object() {
@@ -1344,19 +1373,17 @@ public class FeidanMiniApiSystemtestDaily {
         try {
             //新建账号
             String name= ""+System.currentTimeMillis();
-            String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
-            accountAdd(name,null,email,type,rolelist,gender,null);
+
+            String pwd = ""+System.currentTimeMillis();
+            String email=pwd+"@qq.com";
+            accountAdd(name,phonenum(),email,rolelist);
 
             //删除账号
             String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
             accountDelete(id);
 
             //使用该账号登陆
-            int code = loginPC(email,"").getInteger("code");
+            int code = loginPC(email,md5.getMD5(pwd)).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
 
@@ -1371,7 +1398,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void AccountDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1383,18 +1410,15 @@ public class FeidanMiniApiSystemtestDaily {
             //新建账号
             String name= ""+System.currentTimeMillis();
             String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
-            accountAdd(name,null,email,type,rolelist,gender,null);
+            String phone = phonenum();
+            accountAdd(name,phone,email,rolelist);
 
             //删除账号
             String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
             accountDelete(id);
 
             //使用新建
-            int code = accountAddNotChk(name,null,email,type,rolelist,gender,null).getInteger("code");
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除账号
@@ -1413,7 +1437,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void AccountDelAndEdit(){
         String ciCaseName = new Object() {
@@ -1422,16 +1446,19 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
-            Long roleid = creatRole();
-            String accountid = creatAccount(roleid);
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+            String accountid = creatAccount(roleid,rolename);
 
             //删除账号
             accountDelete(accountid);
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
+
             //编辑账号
-            int code = accountEditNotchk(accountid,"name","13100000000","1@qq.com","EMAIL",rolelist,"FEMALE","").getInteger("code");
+            int code = accountEditNotchk(accountid,"name","13100000000","1@qq.com",rolelist).getInteger("code");
             Preconditions.checkArgument(code == 1001,"状态码期待1001，实际"+code);
+            //删除角色
+            roleDelete(roleid);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1444,7 +1471,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void AccountDisableAndLogin(){
         String ciCaseName = new Object() {
@@ -1455,26 +1482,27 @@ public class FeidanMiniApiSystemtestDaily {
         try {
             //新建账号
             String name= ""+System.currentTimeMillis();
-            String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
-            accountAdd(name,null,email,type,rolelist,gender,null);
+            String pwd = ""+System.currentTimeMillis();
+            String email=pwd+"@qq.com";
+            String phone = phonenum();
+
+
+            accountAdd(name,phone,email,rolelist);
 
             //禁用账号
             String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
             accountStatus(id,"DISABLE");
 
             //登陆
-            int code = loginPC(email,"").getInteger("code");
+            int code = loginPC(email,md5.getMD5(pwd)).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
+            loginPC("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
             //启用账号
             accountStatus(id,"ENABLE");
 
             //登陆
-            int code2 = loginPC(email,"").getInteger("code");
+            int code2 = loginPC(email,md5.getMD5(pwd)).getInteger("code");
             Preconditions.checkArgument(code2==1000,"状态码期待1000，实际"+code);
 
             //删除账号
@@ -1497,7 +1525,7 @@ public class FeidanMiniApiSystemtestDaily {
      *  角色管理--新建角色
      */
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1507,7 +1535,19 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("");
+            arr.add("149");
+            arr.add("150");
+            arr.add("151");
+            arr.add("152");
+            arr.add("153");
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            arr.add("157");
+            arr.add("158");
+            arr.add("159");
+            arr.add("160");
+            arr.add("161");
             int code = roleAddNotchk(name,desc,arr).getInteger("code");
             Preconditions.checkArgument(code==1000,mess+"状态码期待1000，实际"+code);
             //删除角色
@@ -1521,9 +1561,38 @@ public class FeidanMiniApiSystemtestDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：新建角色\n");
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色功能权限多选\n");
         }
     }
+
+    @Test(dataProvider = "ROLE_ADD")
+    public void roleAdd1(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("149");
+
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"状态码期待1000，实际"+code);
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色功能权限单选\n");
+        }
+    }
+
     @DataProvider(name = "ROLE_ADD")
     public  Object[] roleAdd() {
         return new String[][]{
@@ -1535,7 +1604,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleAddErr(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1545,7 +1614,19 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("");
+            arr.add("149");
+            arr.add("150");
+            arr.add("151");
+            arr.add("152");
+            arr.add("153");
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            arr.add("157");
+            arr.add("158");
+            arr.add("159");
+            arr.add("160");
+            arr.add("161");
             int code = roleAddNotchk(name,desc,arr).getInteger("code");
             Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
 
@@ -1557,7 +1638,7 @@ public class FeidanMiniApiSystemtestDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：新建角色\n");
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色异常场景\n");
         }
     }
     @DataProvider(name = "ROLE_ADDERR")
@@ -1569,7 +1650,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void roleAddRe(){
         String ciCaseName = new Object() {
@@ -1579,7 +1660,8 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("");
+            arr.add("150");
+            arr.add("151");
             String name="重复名字";
             String desc="重复说明";
             roleAdd(name,desc,arr);
@@ -1602,7 +1684,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleEditErr(String name1, String desc1, String mess){
         String ciCaseName = new Object() {
@@ -1612,12 +1694,15 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("");
-            String name="新建名字";
-            String desc="新建说明";
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            String name=""+System.currentTimeMillis();
+            String desc=""+System.currentTimeMillis();
             roleAdd(name,desc,arr);
             Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
             int code = roleEditNotChk(id,name1,desc1,arr).getInteger("code");
+            roleDelete(id);
             Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
 
         } catch (AssertionError e) {
@@ -1631,7 +1716,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void roleDelInUse(){
         String ciCaseName = new Object() {
@@ -1640,9 +1725,12 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
-            Long roleid = creatRole();
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+
             //使用角色新建账号
-            String accountid = creatAccount(roleid);
+            String accountid = creatAccount(roleid,rolename);
             //删除角色
             int code = roleDeleteNotChk(roleid).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际1000");
@@ -1662,7 +1750,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void roleReDel(){
         String ciCaseName = new Object() {
@@ -1671,7 +1759,12 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
-            Long roleid = creatRole();
+
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+
+
             //删除角色
             roleDelete(roleid);
 
@@ -1691,7 +1784,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void roleDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1701,16 +1794,21 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("XXXXX要改的");
-            String name="角色"+System.currentTimeMillis();
+            arr.add("153");
+
             String desc="说明"+System.currentTimeMillis();
-            roleAdd(name,desc,arr);
-            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            String rolename = creatRole().getString("rolename");
+            Long id = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getLong("id");
 
             //删除角色
             roleDelete(id);
             //再次新建
-            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            int code = roleAddNotchk(rolename,desc,arr).getInteger("code");
+            Long id2 = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            //删除角色
+            roleDelete(id2);
 
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际1001");
 
@@ -1732,26 +1830,72 @@ public class FeidanMiniApiSystemtestDaily {
 
 
     //新建角色
-    public Long creatRole() throws Exception {
+    public JSONObject creatRole() throws Exception {
         JSONArray arr = new JSONArray();
-        arr.add("");
+        arr.add("149");
+        arr.add("150");
+        arr.add("151");
+        arr.add("152");
+        arr.add("153");
+        arr.add("154");
+        arr.add("155");
+        arr.add("156");
+        arr.add("157");
+        arr.add("158");
+        arr.add("159");
+        arr.add("160");
+        arr.add("161");
         String name="角色"+System.currentTimeMillis();
         String desc="说明"+System.currentTimeMillis();
         roleAdd(name,desc,arr);
         Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
-        return id;
+        JSONObject obj = new JSONObject();
+        obj.put("id",id);
+        obj.put("rolename",name);
+        return obj;
     }
 
     //新建账号
-    public String creatAccount (Long id) throws Exception {
+    public String creatAccount (Long id,String rolename) throws Exception {
         String name= ""+System.currentTimeMillis();
         String email=System.currentTimeMillis()+"@qq.com";
-        String type ="EMAIL";
-        String gender="MALE";
-        JSONArray rolelist =  new JSONArray();
-        rolelist.add(id);
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",id);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",2606);
+        obj1.put("shop_name","越秀售楼处");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
         //新建
-        accountAdd(name,null,email,type,rolelist,gender,null);
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+    public String creatQDzlr () throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",4116);
+        obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
         String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
         return  asscountid;
     }
@@ -1826,7 +1970,7 @@ public class FeidanMiniApiSystemtestDaily {
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
-
+        logger.info("response: {}", response);
         checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
@@ -1835,11 +1979,14 @@ public class FeidanMiniApiSystemtestDaily {
 
     public String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
-        config.url(path).json(json);
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
+        logger.info("response: {}", response);
+        //checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -2110,13 +2257,12 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     //新建渠道
-    public void addChannel(String channelName, String owner, String phone, String ruleId) throws Exception {
+    public void addChannel(String channelName, String owner_id, String phone, String ruleId) throws Exception {
         String url = "/risk/channel/add";
         String json =
                 "{\n" +
                         "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"owner_id\":\"" + owner_id + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";
@@ -3065,7 +3211,7 @@ public class FeidanMiniApiSystemtestDaily {
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
-        json.put("phone", phone);
+//        json.put("phone", phone);
         json.put("email", email);
         json.put("role_name", rolename);
         json.put("shop_name", shopname);
@@ -3074,83 +3220,77 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     //角色列表
-    public JSONObject roleList() throws Exception {
+    public JSONObject roleList(int page,int size,String role) throws Exception {
         String url = "/risk/role/page";
         JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("role_name",role);
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     //新建账号
-    public JSONObject accountAdd(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
         String url = "/risk/account/add";
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
-                        "    \"type\":\"" + type + "\"," +
-                        "    \"role_list\":" + role_list + "," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"plate_number\":\"" + plate_number + "\"" +
 
+                        "    \"role_list\":" + role_list  +
                         "}";
+
 
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject accountAddNotChk(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountAddNotChk(String name, String phone, String email,JSONArray role_list ) throws Exception {
         String url = "/risk/account/add";
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
-                        "    \"type\":\"" + type + "\"," +
-                        "    \"role_list\":" + role_list + "," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"plate_number\":\"" + plate_number + "\"" +
+                        "    \"role_list\":" + role_list  +
+
 
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostUrl(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //编辑账号
-    public JSONObject accountEditNotchk(String id, String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountEditNotchk(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
         String url = "/risk/account/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-        json.put("phone", phone);
+//        json.put("phone", phone);
         json.put("email", email);
-        json.put("type", type);
         json.put("role_list", role_list);
-        json.put("gender", gender);
-        json.put("plate_number", plate_number);
         String result = httpPostUrl(url, json.toJSONString());
         return JSON.parseObject(result);
     }
 
-    public JSONObject accountEdit(String id, String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountEdit(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
         String url = "/risk/account/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-        json.put("phone", phone);
+//        json.put("phone", phone);
         json.put("email", email);
-        json.put("type", type);
         json.put("role_list", role_list);
-        json.put("gender", gender);
-        json.put("plate_number", plate_number);
+
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
     }

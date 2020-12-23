@@ -2653,7 +2653,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         try {
 
             String cardId = feidan.genCardId();
-            String personName = "半脸测试";
+            String personName = "半脸测试9";
 
             String s = feidan.witnessUpload(cardId, personName);
 

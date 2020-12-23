@@ -34,13 +34,15 @@ public class FeidanMiniApiOrderCheckDaily {
 
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
-    String wudongChannelNameStr = "测试FREEZE";
+    //String wudongChannelNameStr = "测试FREEZE";
+    String wudongChannelNameStr = "uid_3636d079";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
     String lianjiaChannelStr = "1";
     int lianjiaChannelInt = 1;
     String lianjiaChannelName = "链家";
+    //String lianjiaChannelName = "链家";
     String lianjiaOwnerPhone = "16600000001";
 
 //  ------------------------------------------业务员-----------------------------------------------------

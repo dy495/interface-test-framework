@@ -509,7 +509,7 @@ public class Feidan {
     /**
      * 编辑渠道
      */
-    public void channelEdit(String channelId, String channelName, String owner, String phone, String ruleId) throws
+    public void channelEdit(String channelId, String channelName, String owner_id, String phone, String ruleId) throws
             Exception {
 
         String url = "/risk/channel/edit/" + channelId;
@@ -517,23 +517,23 @@ public class Feidan {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"owner_id\":\"" + owner_id + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"" +
                         "}";
 
         httpPostWithCheckCode(url, json);
     }
 
-    public void channelEditFinally(String channelId, String channelName, String owner, String phone, String ruleId) {
+    public void channelEditFinally(String channelId, String channelName, String owner_id, String phone, String ruleId) {
 
         String url = "/risk/channel/edit/" + channelId;
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"owner_id\":\"" + owner_id + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"" +
                         "}";
 
@@ -735,18 +735,77 @@ public class Feidan {
     }
 
 
-    public void addChannel(String channelName, String owner, String phone, String ruleId) throws Exception {
+    public void addChannel(String channelName, String owner_id, String phone, String ruleId) throws Exception {
         String url = "/risk/channel/add";
         String json =
                 "{\n" +
                         "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"owner_id\":\"" + owner_id + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
+    }
+    public String creatQDzlr () throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",4116);
+        obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+    //新建账号
+    public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
+        String url = "/risk/account/add";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+
+                        "    \"role_list\":" + role_list  +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    public String phonenum(){
+        String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));
+        return phone;
+    }
+
+    //账号列表分页
+    public JSONObject accountPage(int page, int size, String name, String phone, String email, String rolename, String shopname) throws Exception {
+        String url = "/risk/account/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+//        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_name", rolename);
+        json.put("shop_name", shopname);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
     }
 
     public JSONObject channelList(int page, int size) throws Exception {

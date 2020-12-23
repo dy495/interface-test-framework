@@ -1366,7 +1366,7 @@ public class FeidanMiniApiSTDaily {
             String owner = "owner";
 
 //            新建渠道
-            feidan.addChannel(channelName, owner, phoneNum, defaultRuleId);
+            feidan.addChannel(channelName, feidan.creatQDzlr(), phoneNum, defaultRuleId);
 
 //            渠道列表
             JSONArray channelList = feidan.channelList(1, 10).getJSONArray("list");

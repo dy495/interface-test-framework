@@ -53,8 +53,9 @@ import java.util.Random;
 
 public class FeidanMiniApiDataConsistencyDaily {
     //    -------------------------------------------------数据一致性验证-------------------------------------------------------------
-        String roleid = "";
-        String rolename = "";
+        String roleid = "1062";
+        String rolename = "自动化用的角色-别删";
+    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,"");
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -2330,7 +2331,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 phone = phone + random.nextInt(10);
 
             }
-            addChannel(channelname, channelname, phone, "837");
+            addChannel(channelname, creatQDzlr(), phone, "837");
             int channelid = channelList(1, 1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
@@ -2415,7 +2416,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
             }
             //System.out.println("phone : "+phone);
-            addChannel(channelname, channelname, phone, "837");
+            addChannel(channelname, creatQDzlr(), phone, "837");
             int channelid = channelList(1, 1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
 
 
@@ -2882,7 +2883,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      */
 
     //账号管理-页面内一致性
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountOnePage1() {
         String ciCaseName = new Object() {
@@ -2895,13 +2896,18 @@ public class FeidanMiniApiDataConsistencyDaily {
             int bef_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
 
             //新建账号
-            String id = addAccount(roleid);
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+            String accountid = creatAccount(roleid,rolename);
 
             //新建后账号列表数
             int after_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
 
             //删除账号
-            accountDelete(id);
+            accountDelete(accountid);
+            //删除角色
+            roleDelete(roleid);
             //删除后账号列表数
             int afterdel_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
 
@@ -2922,7 +2928,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountOnePage2() {
         String ciCaseName = new Object() {
@@ -2933,22 +2939,19 @@ public class FeidanMiniApiDataConsistencyDaily {
             //新建账号
             String name= ""+System.currentTimeMillis();
             String email=System.currentTimeMillis()+"@qq.com";
-            String type ="EMAIL";
-            String gender="MALE";
-            JSONArray rolelist =  new JSONArray();
-            rolelist.add("");
+
             //新建
-            accountAdd(name,null,email,type,rolelist,gender,null);
+            accountAdd(name,phonenum(),email,rolelist);
             //查询
             JSONObject obj = accountPage(1,10,null,null,null,null,null).getJSONArray("list").getJSONObject(0);
             String id = obj.getString("id");
             String name1 = obj.getString("name");
             String email1 = obj.getString("email");
-            String gender1 = obj.getString("gender");
+
 
             Preconditions.checkArgument(name.equals(name1),"姓名不一致");
             Preconditions.checkArgument(email.equals(email1),"邮箱不一致");
-            Preconditions.checkArgument(gender.equals(gender1),"性别不一致");
+
 
             //删除账号
             accountDelete(id);
@@ -2964,7 +2967,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountOnePage3() {
         String ciCaseName = new Object() {
@@ -2973,7 +2976,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
         try {
             //新建账号
-            String id = addAccount(roleid);
+            String id = creatQDzlr();
 
             //禁用前列表数
             int bef_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
@@ -2998,7 +3001,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void accountSeveralPage1() {
         String ciCaseName = new Object() {
@@ -3010,7 +3013,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             int bef_total = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getInteger("num");
 
             //新建账号
-            String id = addAccount(roleid);
+            String id = creatQDzlr();
 
             //新建后角色使用账号数
             int after_total = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getInteger("num");
@@ -3036,7 +3039,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    @Ignore // 未提测 先注释掉
+
     @Test
     public void roleOnePage1() {
         String ciCaseName = new Object() {
@@ -3048,7 +3051,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             int bef_total = rolePage(1,1,null).getInteger("total");
 
             //新建角色
-            Long id = addRole();
+            Long id = creatRole().getLong("id");
 
             //新建后列表数
             int after_total = rolePage(1,1,null).getInteger("total");
@@ -3080,33 +3083,103 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 
-    public String addAccount(String role) throws Exception {
-        //新建账号
+    //新建角色
+    public JSONObject creatRole() throws Exception {
+        JSONArray arr = new JSONArray();
+        arr.add("149");
+        arr.add("150");
+        arr.add("151");
+        arr.add("152");
+        arr.add("153");
+        arr.add("154");
+        arr.add("155");
+        arr.add("156");
+        arr.add("157");
+        arr.add("158");
+        arr.add("159");
+        arr.add("160");
+        arr.add("161");
+        String name="角色"+System.currentTimeMillis();
+        String desc="说明"+System.currentTimeMillis();
+        roleAdd(name,desc,arr);
+        Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+        JSONObject obj = new JSONObject();
+        obj.put("id",id);
+        obj.put("rolename",name);
+        return obj;
+    }
+
+    //新建账号
+    public String creatAccount (Long id,String rolename) throws Exception {
         String name= ""+System.currentTimeMillis();
         String email=System.currentTimeMillis()+"@qq.com";
-        String type ="EMAIL";
-        String gender="MALE";
-        JSONArray rolelist =  new JSONArray();
-        rolelist.add(role);
-        //新建
-        accountAdd(name,null,email,type,rolelist,gender,null);
-        String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
-        return id;
-
-    }
-
-    public Long addRole() throws Exception{
         JSONArray arr = new JSONArray();
-        arr.add("");
-        String name=""+System.currentTimeMillis();
-        String desc=""+System.currentTimeMillis();
-        roleAdd(name,desc,arr);
+        JSONObject obj = new JSONObject();
 
-        Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
-        return id;
+        obj.put("role_id",id);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",2606);
+        obj1.put("shop_name","越秀售楼处");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
     }
 
+    public String creatQDzlr () throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
 
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",4116);
+        obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+    public String phonenum(){
+        String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));
+        return phone;
+    }
+    public JSONArray addrolelist (int roleid,String rolename,int shopid1,String shopname1,int shopid2,String shopname2){
+
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+        obj.put("role_id",roleid);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",shopid1);
+        obj1.put("shop_name",shopname1);
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+        if (shopid2!=0){
+            JSONObject obj2 = new JSONObject();
+            obj2.put("shop_id",shopid2);
+            obj2.put("shop_name",shopname2);
+            a.add(obj2);
+        }
+        obj.put("shop_list",a);
+        arr.add(obj);
+        return arr;
+
+    }
 
 
 
@@ -3180,7 +3253,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
-
+        logger.info("response: {}", response);
         checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
@@ -3189,11 +3262,14 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     public String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
-        config.url(path).json(json);
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
+        logger.info("response: {}", response);
+//        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -4467,6 +4543,14 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    public JSONObject roleDeleteNotChk(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
     //账号列表分页
     public JSONObject accountPage(int page, int size, String name, String phone, String email, String rolename, String shopname) throws Exception {
         String url = "/risk/account/page";
@@ -4474,7 +4558,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
-        json.put("phone", phone);
+//        json.put("phone", phone);
         json.put("email", email);
         json.put("role_name", rolename);
         json.put("shop_name", shopname);
@@ -4483,68 +4567,77 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     //角色列表
-    public JSONObject roleList() throws Exception {
+    public JSONObject roleList(int page,int size,String role) throws Exception {
         String url = "/risk/role/page";
         JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("role_name",role);
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
     }
 
     //新建账号
-    public JSONObject accountAdd(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
         String url = "/risk/account/add";
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
-                        "    \"type\":\"" + type + "\"," +
-                        "    \"role_list\":" + role_list + "," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"plate_number\":\"" + plate_number + "\"" +
 
+                        "    \"role_list\":" + role_list  +
                         "}";
+
 
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject accountAddNotChk(String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountAddNotChk(String name, String phone, String email,JSONArray role_list ) throws Exception {
         String url = "/risk/account/add";
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
-                        "    \"type\":\"" + type + "\"," +
-                        "    \"role_list\":" + role_list + "," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"plate_number\":\"" + plate_number + "\"" +
+                        "    \"role_list\":" + role_list  +
+
 
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostUrl(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //编辑账号
-    public JSONObject accountEdit(String id, String name, String phone, String email, String type, JSONArray role_list , String gender, String plate_number) throws Exception {
+    public JSONObject accountEditNotchk(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
         String url = "/risk/account/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-        json.put("phone", phone);
+//        json.put("phone", phone);
         json.put("email", email);
-        json.put("type", type);
         json.put("role_list", role_list);
-        json.put("gender", gender);
-        json.put("plate_number", plate_number);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    public JSONObject accountEdit(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+//        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_list", role_list);
+
         String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result).getJSONObject("data");
     }
