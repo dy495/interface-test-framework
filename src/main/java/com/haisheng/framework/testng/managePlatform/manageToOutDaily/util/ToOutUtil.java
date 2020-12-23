@@ -80,7 +80,7 @@ public class ToOutUtil extends TestCaseCommon {
      * @author qingqing
      * @description 查询摄像头设备列表（分页）(2020.10.14)
      */
-    public JSONObject device_seach(Integer page, Integer size, List shop_ids, String device_type, Long device_id, Integer device_status) throws Exception {
+    public JSONObject device_seach(Integer page, Integer size, List shop_ids, String device_type, Long device_id, String device_status) throws Exception {
         String url = "/admin/inner/data/device/list";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -97,15 +97,17 @@ public class ToOutUtil extends TestCaseCommon {
      * @author qingqing
      * @description 查询服务器设备列表（分页）(2020.10.14)
      */
-    public JSONObject cluster_seach(Integer page, Integer size, JSONArray shop_ids, String device_type, Long device_id, Integer device_status) throws Exception {
+    public JSONObject cluster_seach(Integer page, Integer size, List shop_ids, String device_name, Long device_id, String device_status,String shop_name,String device_model) throws Exception {
         String url = "/admin/inner/cluster/node/list";
         JSONObject json = new JSONObject();
         json.put("page", page);
         json.put("size", size);
         json.put("shop_ids", shop_ids);
-        json.put("device_type", device_type);
+        json.put("device_name", device_name);
         json.put("device_id", device_id);
         json.put("device_status", device_status);
+        json.put("shop_name", shop_name);
+        json.put("device_model", device_model);
         JSONObject http = this.http(os_data + url, json);
         return http.getJSONObject("data");
     }
