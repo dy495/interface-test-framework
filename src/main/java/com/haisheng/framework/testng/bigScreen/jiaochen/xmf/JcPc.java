@@ -477,7 +477,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcCancleReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgwName,pp.jdgwpassword);
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
             int appTask=pf.appReceptionPage();
             jc.pcLogin(pp.jdgw,pp.jdgwpassword);
             //取消接待
@@ -490,7 +490,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 return;
             }
             jc.pcCancelReception(receptionID,shopId);
-            jc.appLogin(pp.jdgwName,pp.jdgwpassword);
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
             int appTaskA=pf.appReceptionPage();
             Preconditions.checkArgument(appTask-appTaskA==1,"pc取消接待，app接待任务没-1");
 
