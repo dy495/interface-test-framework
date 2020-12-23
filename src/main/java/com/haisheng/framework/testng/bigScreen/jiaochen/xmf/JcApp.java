@@ -189,7 +189,17 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     .create_end(dt.getHistoryDate(0))
                     .create_start(dt.getHistoryDate(0)).build();
 
-            int appointmentTotal = jc.invokeApi(scene).getInteger("total");
+            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+
+            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+                    .size("10").customer_name(pp.jdgwName)
+                    .shop_id(pp.shopIdZ)
+                    .appointment_status("20")
+                    .create_end(dt.getHistoryDate(0))
+                    .create_start(dt.getHistoryDate(0)).build();
+
+            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+            int appointmentTotal=appointmentTotal1-appointmentTotal2;
 
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
@@ -198,7 +208,10 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             sr.reception_end = dt.getHistoryDate(0);
             sr.reception_start = dt.getHistoryDate(0);
 
-            int total = jc.receptionManageC(sr).getInteger("total");
+            int total1 = jc.receptionManageC(sr).getInteger("total");
+            sr.reception_status="2000";
+            int total2=jc.receptionManageC(sr).getInteger("total");
+            int total=total1-total2;
             sr = null;
 
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
@@ -229,14 +242,28 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     .create_end(dt.getHistoryDate(0))
                     .create_start(dt.getHistoryDate(0)).build();
 
-            int appointmentTotal = jc.invokeApi(scene).getInteger("total");
+            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+
+            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+                    .size("10")
+                    .shop_id(pp.shopIdZ)
+                    .appointment_status("20")
+                    .create_end(dt.getHistoryDate(0))
+                    .create_start(dt.getHistoryDate(0)).build();
+
+            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+            int appointmentTotal=appointmentTotal1-appointmentTotal2;
+
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
             sr.shop_id = pp.shopIdZ;
             sr.reception_end = dt.getHistoryDate(0);
             sr.reception_start = dt.getHistoryDate(0);
 
-            int total = jc.receptionManageC(sr).getInteger("total");
+            int total1 = jc.receptionManageC(sr).getInteger("total");
+            sr.reception_status="2000";
+            int total2=jc.receptionManageC(sr).getInteger("total");
+            int total=total1-total2;
             sr = null;
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
             Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
@@ -262,18 +289,29 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10")
-                    .shop_id(pp.shopId)
                     .create_end(dt.getHistoryDate(0))
                     .create_start(dt.getHistoryDate(0)).build();
 
-            int appointmentTotal = jc.invokeApi(scene).getInteger("total");
+            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+
+            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+                    .size("10")
+                    .appointment_status("20")
+                    .create_end(dt.getHistoryDate(0))
+                    .create_start(dt.getHistoryDate(0)).build();
+
+            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+            int appointmentTotal=appointmentTotal1-appointmentTotal2;
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
-            sr.shop_id = pp.shopId;
+//            sr.shop_id = pp.shopId;
             sr.reception_end = dt.getHistoryDate(0);
             sr.reception_start = dt.getHistoryDate(0);
 
-            int total = jc.receptionManageC(sr).getInteger("total");
+            int total1 = jc.receptionManageC(sr).getInteger("total");
+            sr.reception_status="2000";
+            int total2=jc.receptionManageC(sr).getInteger("total");
+            int total=total1-total2;
             sr = null;
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
             Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
