@@ -36,10 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.File;
 import java.text.ParseException;
@@ -2885,6 +2882,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      */
 
     //账号管理-页面内一致性
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountOnePage1() {
         String ciCaseName = new Object() {
@@ -2924,6 +2922,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountOnePage2() {
         String ciCaseName = new Object() {
@@ -2965,6 +2964,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountOnePage3() {
         String ciCaseName = new Object() {
@@ -2998,6 +2998,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountSeveralPage1() {
         String ciCaseName = new Object() {
@@ -3035,6 +3036,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void roleOnePage1() {
         String ciCaseName = new Object() {

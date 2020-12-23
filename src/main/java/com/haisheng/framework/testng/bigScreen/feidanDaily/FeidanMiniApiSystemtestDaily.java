@@ -993,6 +993,7 @@ public class FeidanMiniApiSystemtestDaily {
      * @date: 2020.12.15
      *  账号管理--搜索
      */
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "SEARCH")
     public void accountSearch1(String name){
         String ciCaseName = new Object() {
@@ -1020,6 +1021,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "SEARCH")
     public void accountSearch2(String email){
         String ciCaseName = new Object() {
@@ -1047,6 +1049,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "SEARCH")
     public void accountSearch3(String phone){
         String ciCaseName = new Object() {
@@ -1074,6 +1077,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountSearch4(){
         String ciCaseName = new Object() {
@@ -1106,6 +1110,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "SEARCH")
     public void accountSearch5(String phone){
         String ciCaseName = new Object() {
@@ -1149,6 +1154,7 @@ public class FeidanMiniApiSystemtestDaily {
      * @date: 2020.12.15
      *  账号管理--新建账号
      */
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ACC_ADD")
     public void accountadd(String name,String email,String type , String gender,String mes){
         String ciCaseName = new Object() {
@@ -1176,6 +1182,7 @@ public class FeidanMiniApiSystemtestDaily {
             saveData(aCase, ciCaseName, caseName, "校验：新建账号\n");
         }
     }
+    @Ignore // 未提测 先注释掉
     @DataProvider(name = "ACC_ADD")
     public  Object[] accountAdd() {
         return new String[][]{
@@ -1188,6 +1195,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ACC_ADDERR")
     public void accountaddErr(String name,String phone , String email,String type , String gender,String mes){
         String ciCaseName = new Object() {
@@ -1224,6 +1232,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void accountEdit(){
         String ciCaseName = new Object() {
@@ -1285,6 +1294,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ACC_ADDERR")
     public void accountEditErr(String name1,String phone1 , String email1,String type1 , String gender1,String mes1){
         String ciCaseName = new Object() {
@@ -1323,6 +1333,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void NotExistAccountLogin(){
         String ciCaseName = new Object() {
@@ -1360,6 +1371,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void AccountDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1401,6 +1413,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void AccountDelAndEdit(){
         String ciCaseName = new Object() {
@@ -1431,6 +1444,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void AccountDisableAndLogin(){
         String ciCaseName = new Object() {
@@ -1483,6 +1497,7 @@ public class FeidanMiniApiSystemtestDaily {
      *  角色管理--新建角色
      */
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1520,6 +1535,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleAddErr(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1553,6 +1569,7 @@ public class FeidanMiniApiSystemtestDaily {
         };
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void roleAddRe(){
         String ciCaseName = new Object() {
@@ -1585,6 +1602,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleEditErr(String name1, String desc1, String mess){
         String ciCaseName = new Object() {
@@ -1613,6 +1631,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void roleDelInUse(){
         String ciCaseName = new Object() {
@@ -1643,6 +1662,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void roleReDel(){
         String ciCaseName = new Object() {
@@ -1671,6 +1691,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
+    @Ignore // 未提测 先注释掉
     @Test
     public void roleDelAndAdd(){
         String ciCaseName = new Object() {

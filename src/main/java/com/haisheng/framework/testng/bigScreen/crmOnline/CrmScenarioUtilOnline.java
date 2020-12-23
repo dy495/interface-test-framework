@@ -4933,7 +4933,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     public static Object[][] add_car() {
 
         return new String[][]{
-                {"ZDH" + (int) ((Math.random() * 9 + 1) * 10), getPlateNum(), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
+                {"" + (int) ((Math.random() * 9 + 1) * 10000), getPlateNum(), "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号7位，车架号17位
                 {"ZDH20WEIAAAAA" + (int) ((Math.random() * 9 + 1) * 1000000), getPlateNum() + "1", "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000)}, //名字5位，车牌号8位，车架号17位
 
         };
