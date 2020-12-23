@@ -351,6 +351,9 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             //根据今日巡店报告数和权限下门店总数得到今日覆盖率
             String ss=  CommonUtil.getPercent(count,total,4);
             String today_coverage =  ss.replace("%","");
+            if(today_coverage.equals("0.0")){
+                today_coverage =  ss.replace("%","").substring(0,1);
+            }
 
             //从巡店分析巡店概况中获取今日巡店覆盖率
             String coverage_rate = xd.xd_analysis_data().getString("today_patrol_coverage_rate");
@@ -577,6 +580,9 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             //【巡店报告中心】今日巡店合格报告数/总提交报告数
             String ss=  CommonUtil.getPercent(count1,count2,4);
             String rate =  ss.replace("%","");
+            if(rate.equals("0.0")){
+                rate =  ss.replace("%","").substring(0,1);
+            }
             //从巡店分析巡店概况中获取今日巡店合格率
             String qualified_rate = xd.xd_analysis_data().getString("today_patrol_pass_rate");
 

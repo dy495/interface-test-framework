@@ -787,7 +787,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
      * @description :10.门店列表页查询
      * @date :2020/6/24 13:56
      **/
-    @Test
+   // @Test
     public void selectShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -940,7 +940,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
      * @description :13 pc巡店提交说明字数限制和非法字符
      * @date :2020/6/25 13:09
      **/
-    @Test
+   // @Test
     public void wordLimit1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -631,7 +631,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================账户列表的筛选（单一查询）======================
      */
-    @Test
+    //@Test
     public void accountPage_search() {
         logger.logCaseStart(caseResult.getCaseName());
 

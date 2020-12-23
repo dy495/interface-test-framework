@@ -336,15 +336,15 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================消费者到店趋势中各天pv累计==到店客群总人次======================
      */
-    @Test()
+   // @Test()
     public void mpvTotals() {
         logger.logCaseStart(caseResult.getCaseName());
         
         try {
             //获取到店趋势数据
-            int pvValues = mds.getArriveCust(cycle_type, month, shop_id);
+            int pvValues = mds.getArriveCust(cycle_type, month, shop_id_01);
             //获取进店客群总人次
-            JSONArray ldlist = md.historyShopConversionV3(shop_id, cycle_type, month).getJSONArray("list");
+            JSONArray ldlist = md.historyShopConversionV3(shop_id_01, cycle_type, month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("pv1");
             Preconditions.checkArgument(pvValues == value1, "消费者到店趋势中各天pv累计=" + pvValues + "到店客群总人次=" + value1);
@@ -2070,7 +2070,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================客户详情累计交易的次数==留痕事件中门店下单的次数|||累计到店的数据==留痕事件中进店次数+门店下单的次数========================
      */
-    @Test
+   // @Test
     public void custInfoData() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2100,7 +2100,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
                     if (deal == null) {
                         deal = 0;
                     }
-                    Preconditions.checkArgument(count == deal, "累计交易：" + deal + "门店下单留痕：" +count+ "。报错门店的shopId=" + shop_id);
+                    Preconditions.checkArgument(count == deal, "客户的id="+customer_id+"累计交易：" + deal + "门店下单留痕：" +count+ "。报错门店的shopId=" + shop_id);
                 }
             }
 
