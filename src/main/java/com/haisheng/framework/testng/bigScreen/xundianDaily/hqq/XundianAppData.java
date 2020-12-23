@@ -173,7 +173,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("将【待办事项】中【未完成】中的不合格事项处理为不合格==【巡店记录】中该报告的已处理执行项不变");
+            saveData("将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告数据+1 && APP【巡店中心】累计报告数量+1");
         }
     }
 }

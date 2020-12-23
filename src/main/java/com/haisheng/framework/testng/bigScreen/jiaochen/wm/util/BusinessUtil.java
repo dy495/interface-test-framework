@@ -613,12 +613,12 @@ public class BusinessUtil {
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING.getPhone());
         List<Long> voucherList = new ArrayList<>();
-        long voucherId = getVoucherList().getJSONObject(0).getLong("voucher_id");
+        Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
         voucherList.add(voucherId);
         PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
                 .type(0).voucherOrPackageList(voucherList).useDays(10);
-        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 60), "yyyy-MM-dd HH:mm:ss");
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
         jc.invokeApi(builder.build());
