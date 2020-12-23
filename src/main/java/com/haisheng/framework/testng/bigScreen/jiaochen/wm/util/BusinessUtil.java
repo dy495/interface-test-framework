@@ -613,7 +613,7 @@ public class BusinessUtil {
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING.getPhone());
         List<Long> voucherList = new ArrayList<>();
-        long voucherId = getVoucherList().getJSONObject(0).getLong("voucher_id");
+        Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
         voucherList.add(voucherId);
         PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
