@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-public class Jc_Pc_customerManage extends TestCaseCommon implements TestCaseStd {
+public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
 //    JsonPathUtil jpu = new JsonPathUtil();
@@ -172,7 +172,7 @@ public class Jc_Pc_customerManage extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     * @description :客户管理-销售客户-列表项校验不为空--现在销售客户界面存在问题，列表为空
+     * @description :客户管理-销售客户-列表项校验不为空
      * @date :2020/12/22
      **/
     @Test
@@ -218,6 +218,7 @@ public class Jc_Pc_customerManage extends TestCaseCommon implements TestCaseStd 
                 for(int i=0;i<list.size()-1;i++){
                     String createDate=list.getJSONObject(i).getString("create_date");
                     String createDateNext=list.getJSONObject(i+1).getString("create_date");
+                    System.out.println("表排序按照创建时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
                     Preconditions.checkArgument(createDate.compareTo(createDateNext)>0||createDate.compareTo(createDateNext)==0,"表排序按照创建时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
                 }
             }
@@ -225,6 +226,121 @@ public class Jc_Pc_customerManage extends TestCaseCommon implements TestCaseStd 
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理-销售客户-列表排序按照创建时间倒序排列");
+        }
+    }
+
+    /**
+     * @description :客户管理-售后客户-列表排序按照导入时间倒序排列
+     * @date :2020/12/23
+     **/
+    @Test
+    public void customerManage_System7(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.afterSleCustomerManage("","1","10","","");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.afterSleCustomerManage("",String.valueOf(page),"10","","").getJSONArray("list");
+                for(int i=0;i<list.size()-1;i++){
+                    String createDate=list.getJSONObject(i).getString("import_date");
+                    String createDateNext=list.getJSONObject(i+1).getString("import_date");
+                    System.out.println("表排序按照导入时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
+                    Preconditions.checkArgument(createDate.compareTo(createDateNext)>0||createDate.compareTo(createDateNext)==0,"表排序按照导入时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理-售后客户-列表排序按照导入时间倒序排列");
+        }
+    }
+
+    /**
+     * @description :客户管理-售后客户-列表项校验不为空
+     * @date :2020/12/23
+     **/
+    @Test
+    public void customerManage_System8(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.afterSleCustomerManage("","1","10","","");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.afterSleCustomerManage("",String.valueOf(page),"10","","").getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String shopName=list.getJSONObject(i).getString("shop_name");
+                    String brandName=list.getJSONObject(i).getString("brand_name");
+                    String registrationStatusName=list.getJSONObject(i).getString("registration_status_name");
+                    String plateNumber=list.getJSONObject(i).getString("plate_number");
+                    String sex=list.getJSONObject(i).getString("sex");
+                    String repairCustomerName=list.getJSONObject(i).getString("repair_customer_name");
+                    String repairCustomerPhone=list.getJSONObject(i).getString("repair_customer_phone");
+                    String importDate=list.getJSONObject(i).getString("import_date");
+                    Preconditions.checkArgument(shopName!=null&&brandName!=null&&plateNumber!=null&&registrationStatusName!=null&&repairCustomerName!=null&&sex!=null&&repairCustomerPhone!=null&&importDate!=null,"销售客户列表中第 "+(i+1)+"行，列表项为空");
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理-售后客户-列表项校验不为空");
+        }
+    }
+
+    /**
+     * @description :客户管理-小程序客户-列表排序按照注册时间倒序排列
+     * @date :2020/12/23
+     **/
+    @Test
+    public void customerManage_System9(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.weChatSleCustomerManage("","1","10","","");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.weChatSleCustomerManage("",String.valueOf(page),"10","","").getJSONArray("list");
+                for(int i=0;i<list.size()-1;i++){
+                    String createDate=list.getJSONObject(i).getString("create_date");
+                    String createDateNext=list.getJSONObject(i+1).getString("create_date");
+                    System.out.println("表排序按照注册时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
+                    Preconditions.checkArgument(createDate.compareTo(createDateNext)>0||createDate.compareTo(createDateNext)==0,"表排序按照注册时间倒序排列，现在的创建时间是:"+createDate+"下一个创建时间为："+createDateNext);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理-小程序客户-列表排序按照注册时间倒序排列");
+        }
+    }
+
+    /**
+     * @description :客户管理-小程序客户-列表项校验不为空
+     * @date :2020/12/23
+     **/
+    @Test
+    public void customerManage_System10(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject respon=jc.weChatSleCustomerManage("","1","10","","");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.weChatSleCustomerManage("",String.valueOf(page),"10","","").getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String createDate=list.getJSONObject(i).getString("create_date");
+                    String customerPhone=list.getJSONObject(i).getString("customer_phone");
+                    String activeType=list.getJSONObject(i).getString("active_type");
+                    String appointmentActivity=list.getJSONObject(i).getString("appointment_activity");
+                    String appointmentMaintain=list.getJSONObject(i).getString("appointment_maintain");
+                    String appointmentRepair=list.getJSONObject(i).getString("appointment_repair");
+                    String appointmentTestDrive=list.getJSONObject(i).getString("appointment_test_drive");
+                    String arriveTimes=list.getJSONObject(i).getString("arrive_times");
+                    String consumeTimes=list.getJSONObject(i).getString("consume_times");
+                    Preconditions.checkArgument(createDate!=null&&customerPhone!=null&&activeType!=null&&appointmentActivity!=null&&appointmentMaintain!=null&&appointmentRepair!=null&&appointmentTestDrive!=null&&arriveTimes!=null&&consumeTimes!=null,"销售客户列表中第 "+(i+1)+"行，列表项为空");
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理-小程序客户-列表项校验不为空");
         }
     }
 

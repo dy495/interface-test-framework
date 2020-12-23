@@ -260,6 +260,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             //查看现在的-客户查看
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             String isReadAfter=jc.pushMsgListFilterManage("","1","10","","").getJSONArray("list").getJSONObject(0).getString("is_read");
+            System.out.println("客户查看之前的状态为:"+isReadBefore+"现在客户查看的状态为:"+isReadAfter);
             Preconditions.checkArgument(isReadAfter.equals("true"),"客户查看之前的状态为:"+isReadBefore+"现在客户查看的状态为:"+isReadAfter);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -427,7 +428,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("系统日志-功能1:消息记录列表项不为空校验");
+            saveData("系统日志-功能2:消息记录列表项不为空校验");
         }
     }
 
