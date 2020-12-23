@@ -3511,4 +3511,22 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("verification_code",verification_code);
         return invokeApi(url,json1,checkcode);
     }
+
+    /**
+     * @description :PC-创建销售客户
+     *  * * @author: gly
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject createCustomer(String shopId, String customerName, String customerPhone, String sex, String customerType) {
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
+        JSONObject json=new JSONObject();
+        json.put("shop_id",shopId);
+        json.put("customer_name",customerName);
+        json.put("customer_phone",customerPhone);
+        json.put("sex",sex);
+        json.put("customer_type",customerType);
+        return invokeApi(url,json);
+    }
+
+
 }

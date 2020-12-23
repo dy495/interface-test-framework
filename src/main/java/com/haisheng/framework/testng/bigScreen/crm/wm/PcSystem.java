@@ -746,8 +746,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             deleteActivity();
             String type = "ACTIVITY_1";
-            String content = "测试";
             String title = "售前可见";
+            String content = "测试" + title;
             String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/proportion/比例5-3图.jpg";
             String picture = new ImageUtil().getImageBinary(path);
             String startDate = DateTimeUtil.getFormat(new Date());
@@ -791,8 +791,8 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
         try {
             deleteActivity();
             String type = "ACTIVITY_1";
-            String content = "测试";
             String title = "售后可见";
+            String content = "测试" + title;
             String path = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/multimedia/proportion/比例5-3图.jpg";
             String picture = new ImageUtil().getImageBinary(path);
             String startDate = DateTimeUtil.getFormat(new Date());

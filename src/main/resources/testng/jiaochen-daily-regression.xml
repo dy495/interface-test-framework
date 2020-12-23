@@ -17,6 +17,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>
 
         </classes>
     </test>

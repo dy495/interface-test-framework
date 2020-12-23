@@ -2053,7 +2053,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "套餐购买记录--某一售出类型套餐的列表数=【套餐表单】中此套餐的售出数量")
+    @Test(description = "套餐购买记录--某一类型套餐确认支付后的的列表数=【套餐表单】中此套餐的售出数量")
     public void packageManager_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2082,21 +2082,21 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         array1.forEach(b -> {
                             JSONObject object = (JSONObject) b;
                             long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(object.getString("send_time"), format));
-                            if (sendTime >= createTime) {
+                            if (sendTime >= createTime && !((JSONObject) b).getBoolean("status")) {
                                 sum.getAndIncrement();
                             }
                         });
                     }
                     CommonUtil.valueView(soldNumber, sum.get());
                     Preconditions.checkArgument(soldNumber == sum.get(),
-                            packageName + "累计售出：" + soldNumber + " 套餐购买记录中购买数量：" + sum.get());
+                            packageName + "累计售出：" + soldNumber + " 套餐购买记录中购买并且确认支付数量：" + sum.get());
                     CommonUtil.logger(packageName);
                 });
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐购买记录--某一售出类型套餐的列表数=【套餐表单】中此套餐的售出数量");
+            saveData("套餐购买记录--某一类型套餐确认支付后的的列表数=【套餐表单】中此套餐的售出数量");
         }
     }
 
@@ -2190,6 +2190,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2235,6 +2236,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2245,7 +2247,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(messageTotal, newMessageTotal);
             Preconditions.checkArgument(newMessageTotal == messageTotal + 1,
                     "消息定时后，消息列表数：" + CommonUtil.checkResult(messageTotal + 1, newMessageTotal));
-            String sendTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 60), "yyyy-MM-dd HH:mm");
+            String sendTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
             int s = CommonUtil.getTurningPage(newMessageTotal, size);
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
@@ -2302,6 +2304,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //发送消息
             util.pushMessage(true);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -2407,7 +2410,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(appletUser);
             int listSize = util.getMessageListSize();
             //发消息
-            user.login(marketing);
+            user.login(administrator);
             util.pushMessage(true);
             //消息列表数
             user.loginApplet(appletUser);
@@ -2426,6 +2429,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //发消息
             util.pushMessage(true);
             //消息列表消息内容
