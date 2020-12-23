@@ -291,18 +291,6 @@ public class BusinessUtil {
         return packageName;
     }
 
-    public void ss() {
-        List<Long> packageList = new ArrayList<>();
-        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
-        int total = jc.invokeApi(builder.build()).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
-        for (int i = 1; i < s; i++) {
-            JSONArray list = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            packageList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> !e.getString("package_name").equals(EnumVP.ONE.getPackageName())).map(e -> e.getLong("package_id")).collect(Collectors.toList()));
-        }
-        jc.pcPackageDetail(packageList.get(0));
-    }
-
     /**
      * 创建一个套餐名
      *
