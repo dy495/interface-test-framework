@@ -39,4 +39,29 @@ public class MendianInfo {
         retobj.put("patrolID",patrolID);
         return retobj;
     }
+
+
+
+
+    public final JSONObject djXdOperate(Long shopid, String type, int reset, int result,Long task_id) throws Exception {
+        JSONObject obj = xd.checkStartapp(shopid, type, reset,task_id);
+        Long patroldjID = obj.getLong("id");
+        JSONArray checklist = obj.getJSONArray("check_lists");
+        for (int i = 0; i < checklist.size(); i++) {
+            JSONObject eachlist = checklist.getJSONObject(i);
+            Long listID = eachlist.getLong("id"); // 获取list id
+            JSONArray chkitems = eachlist.getJSONArray("check_items");
+            for (int j = 0; j < chkitems.size(); j++) {
+                JSONObject eachitem = chkitems.getJSONObject(j);
+                Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
+                //巡检项目结果 1合格；2不合格；3不适用
+                xd.checks_item_submit(shopid, patroldjID, listID, itemID, result, "zdh", null);
+            }
+
+        }
+        xd.checks_submit(shopid, patroldjID, "一次定检巡店完成");
+        JSONObject retobj = new JSONObject();
+        retobj.put("patrolID",patroldjID);
+        return retobj;
+    }
 }
