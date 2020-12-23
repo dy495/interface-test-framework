@@ -484,6 +484,11 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             JSONObject dd=jc.receptionManage("","1","10","","").getJSONArray("list").getJSONObject(0);
             long receptionID=dd.getLong("reception_id");
             long shopId=dd.getLong("shop_id");
+            String reception_status_name=dd.getString("reception_status_name");
+            if(!reception_status_name.equals("接待中")){
+               logger.warn("暂无接待中客户");
+                return;
+            }
             jc.pcCancelReception(receptionID,shopId);
             jc.appLogin(pp.jdgwName,pp.jdgwpassword);
             int appTaskA=pf.appReceptionPage();

@@ -37,7 +37,7 @@ public class appointmentRecodeSelect extends BaseScene {
         json1.put("appointment_start",appointment_start);
         json1.put("shop_id",shop_id);
         json1.put("customer_name",customer_name);
-        json1.put("appointment_status",appointment_status);
+        json1.put("confirm_status",appointment_status);
         json1.put("create_date",create_date);
         json1.put("create_end",create_end);
         json1.put("create_start",create_start);
