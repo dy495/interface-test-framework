@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--
-namespace: 命名空间，用于标识每一个Mapper XML文件中的语句，预防在不同的Mapper XML文件中存在相同的语句ID
--->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haisheng.framework.dao.IPorscheDao">
-    <!--
-        resultType: 也称为自动映射，只有在表的列名与POJO类的属性完全一致时使用，会比较方便，全类名
-    -->
-
     <resultMap id="PorscheDeliverInfo" type="com.haisheng.framework.model.bean.PorscheDeliverInfo">
         <result property="id" column="id"/>
         <result property="shopId" column="shop_id"/>
-        <result property="receptionSale" column="reception_sale"/>
-        <result property="entranceId" column="entrance_id"/>
-        <result property="pv" column="pv"/>
-        <result property="uv" column="uv"/>
-        <result property="expectPV" column="expect_pv"/>
-        <result property="expectUV" column="expect_uv"/>
-        <result property="status" column="status"/>
-        <result property="pvAccuracyRate" column="pv_accuracy_rate"/>
-        <result property="uvAccuracyRate" column="uv_accuracy_rate"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="image" column="image"/>
-        <result property="video" column="video"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="idNumber" column="id_number"/>
+        <result property="birthday" column="birthday"/>
+        <result property="address" column="address"/>
+        <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
+        <result property="phones" column="phones"/>
+        <result property="subjectTypeName" column="subject_type_name"/>
+        <result property="saleName" column="sale_name"/>
+        <result property="saleId" column="sale_id"/>
+        <result property="carStyle" column="car_style"/>
+        <result property="carModel" column="car_model"/>
+        <result property="deliverDate" column="deliver_date"/>
+        <result property="plateTypeName" column="plate_type_name"/>
+        <result property="defrayTypeName" column="defray_type_name"/>
+        <result property="payTypeName" column="pay_type_name"/>
+        <result property="plateNumber" column="plate_number"/>
+        <result property="vehicleChassisCode" column="vehicle_chassis_code"/>
+        <result property="gmtCreate" column="gmt_create"/>
     </resultMap>
 
-    <select id="selectPorscheDeliver" resultType="PorscheDeliverInfo">
+    <select id="selectPorscheDeliver" resultType="com.haisheng.framework.model.bean.PorscheDeliverInfo">
         select * from t_porsche_deliver_info
     </select>
 </mapper>

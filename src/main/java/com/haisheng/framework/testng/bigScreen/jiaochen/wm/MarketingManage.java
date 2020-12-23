@@ -1078,7 +1078,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
             //核销
             user.loginApplet(appletUser);
-            JSONObject voucherInfo = util.getVoucherListId();
+            JSONObject voucherInfo = util.getCanUsedVoucherListId();
             long id = voucherInfo.getLong("id");
             String voucherName = voucherInfo.getString("voucherName");
             long voucherId = util.getVoucherListId(voucherName);
@@ -1516,7 +1516,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             Long id = util.getNoInventoryVoucherId();
             String voucherName = util.getVoucherName(id);
-            JSONArray voucherList = util.getVoucherList(voucherName);
+            JSONArray voucherList = util.getVoucherList(voucherName, 2);
             String subjectType = util.getSubjectType();
             //后买临时套餐
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())

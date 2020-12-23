@@ -14,6 +14,8 @@ public enum EnumVP {
     ONE("凯迪拉克无限卡券", "凯迪拉克无限套餐"),
 
     TWO("剩余库存不足卡券", "剩余卡券不足套餐"),
+
+    TEMPORARY("临时卡券", "临时套餐"),
     ;
 
     EnumVP(String voucherName, String packageName) {

@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
@@ -372,14 +373,15 @@ public class BusinessUtil {
     /**
      * 获取卡券信息集合
      *
-     * @param voucherName 卡券名
+     * @param voucherName  卡券名
+     * @param voucherCount 卡券数量
      * @return 卡券信息集合
      */
-    public JSONArray getVoucherList(String voucherName) {
+    public JSONArray getVoucherList(String voucherName, int voucherCount) {
         JSONArray voucherList = new JSONArray();
         JSONArray array = jc.pcVoucherList().getJSONArray("list");
         JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()).get(0);
-        jsonObject.put("voucher_count", 2);
+        jsonObject.put("voucher_count", voucherCount);
         voucherList.add(jsonObject);
         return voucherList;
     }
@@ -604,6 +606,53 @@ public class BusinessUtil {
     }
 
     /**
+     * 接待时购买固定套餐
+     *
+     * @param type 0赠送/1购买
+     */
+    public void receptionBuyFixedPackage(int type) {
+        IScene pageScene = Page.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
+        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
+        Long customerId = jsonObject.getLong("customer_id");
+        Long receptionId = jsonObject.getLong("reception_id");
+        String customerPhone = jsonObject.getString("customer_phone");
+        String plateNumber = jsonObject.getString("plate_number");
+        //购买套餐
+        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
+                .PurchaseFixedPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(plateNumber).packageId(getPackageId(EnumVP.ONE.getPackageName()))
+                .packagePrice("1.11").expiryDate("1").remark(EnumContent.B.getContent())
+                .subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType()))
+                .extendedInsuranceYear("").extendedInsuranceCopies("").type(type).receptionId(receptionId)
+                .customerId(customerId).build();
+        jc.invokeApi(purchaseScene);
+    }
+
+    /**
+     * 接待时购买临时套餐
+     *
+     * @param type 0赠送/1购买
+     */
+    public void receptionBuyTemporaryPackage(int type) {
+        IScene pageScene = Page.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
+        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
+        Long customerId = jsonObject.getLong("customer_id");
+        Long receptionId = jsonObject.getLong("reception_id");
+        String customerPhone = jsonObject.getString("customer_phone");
+        String plateNumber = jsonObject.getString("plate_number");
+        //购买套餐
+        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
+                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(plateNumber).voucherList(getVoucherList(EnumVP.ONE.getVoucherName(), 1))
+                .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
+                .subjectId(getSubjectId(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
+                .type(type).receptionId(receptionId).customerId(customerId).build();
+        jc.invokeApi(purchaseScene);
+    }
+
+    /**
      * 消息推送
      *
      * @param immediately 是否立即发送
@@ -686,7 +735,7 @@ public class BusinessUtil {
      *
      * @return 卡券id
      */
-    public JSONObject getVoucherListId() throws Exception {
+    public JSONObject getCanUsedVoucherListId() throws Exception {
         Integer id = null;
         Integer status = null;
         JSONArray list;
@@ -716,7 +765,6 @@ public class BusinessUtil {
         } while (list.size() == 20);
         throw new Exception("无可用卡券");
     }
-
 
     /**
      * 获取小程序卡券数量
