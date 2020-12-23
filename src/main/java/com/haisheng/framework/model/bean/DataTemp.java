@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Data
 public class DataTemp implements Serializable {
     int id;
-    String dataName="pc_appointmentPage";
+    String dataName;
     Integer pcAppointmentRecordNum;    //pc预约记录数
     Integer appReceiptage;             //app接待列表数
     Integer pcAppointmentNUmber;             //pc预约看板预约数

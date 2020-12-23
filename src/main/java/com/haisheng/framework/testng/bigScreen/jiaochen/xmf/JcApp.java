@@ -357,44 +357,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test(description = "pc接待,app今日任务分子、分母+1，完成接待分子-1，分母-0")   --王敏写过了
-    public void Jc_receptionTodayTaskPc() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，今日任务
-            int tasknum[] = pf.appTask();
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-
-            jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-            //开始接待
-            Long id = pf.startReception(pp.carplate);
-
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            int tasknumA[] = pf.appTask();
-            JSONObject dd = jc.appreceptionPage(null, 10);
-            int totalA = dd.getInteger("total");
-            //完成接待
-            jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-            jc.finishReception(id, pp.shopIdZ);
-
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            int tasknumB[] = pf.appTask();
-            int totalC = jc.appreceptionPage(null, 10).getInteger("total");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
 
     @Test(description = "app接待,pc接待管理列表+1")
     public void Jc_receptionPcPage() {

@@ -472,6 +472,31 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //pc-取消接待
+    @Test()
+    public void Jc_pcCancleReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appLogin(pp.jdgwName,pp.jdgwpassword);
+            int appTask=pf.appReceptionPage();
+            jc.pcLogin(pp.jdgw,pp.jdgwpassword);
+            //取消接待
+            JSONObject dd=jc.receptionManage("","1","10","","").getJSONArray("list").getJSONObject(0);
+            long receptionID=dd.getLong("reception_id");
+            long shopId=dd.getLong("shop_id");
+            jc.pcCancelReception(receptionID,shopId);
+            jc.appLogin(pp.jdgwName,pp.jdgwpassword);
+            int appTaskA=pf.appReceptionPage();
+            Preconditions.checkArgument(appTask-appTaskA==1,"pc取消接待，app接待任务没-1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc取消接待，app任务-1");
+        }
+    }
+
+
 //    @Test
 //    public void Jc_pcmaintainPriceEdit() {
 //        logger.logCaseStart(caseResult.getCaseName());

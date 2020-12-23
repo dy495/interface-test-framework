@@ -151,6 +151,16 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 开始接待
+    public JSONObject pcStartReception(appStartReception ar) {
+        String path = "/jiaochen/pc/reception-manage/start-reception";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", ar.id);
+        object.put("plate_number", ar.plate_number);
+        object.put("customer_name", ar.customer_name);
+        object.put("customer_phone", ar.customer_phone);
+        return invokeApi(path, object);
+    }
+    //pc接待管理 -> 开始接待
     public JSONObject pcStartReception(String customerId, List<Long> voucherIdList, String customerName, String customerPhone) {
         String path = "/jiaochen/pc/reception-manage/start-reception";
         JSONObject object = new JSONObject();
@@ -160,7 +170,6 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("customer_phone", customerPhone);
         return invokeApi(path, object);
     }
-
     //pc接待管理 -> 开始接待
     public JSONObject pcManageReception(String plate_number, boolean checkCode) {
         String path = "/jiaochen/pc/reception-manage/reception";
@@ -182,6 +191,14 @@ public class ScenarioUtil extends TestCaseCommon {
         String path = "/jiaochen/pc/reception-manage/cancel-reception";
         JSONObject object = new JSONObject();
         object.put("reception_id", receptionId);
+        return invokeApi(path, object);
+    }
+    //pc接待管理 -> 取消接待
+    public JSONObject pcCancelReception(Long receptionId,Long shop_id) {
+        String path = "/jiaochen/pc/reception-manage/cancel-reception";
+        JSONObject object = new JSONObject();
+        object.put("id", receptionId);
+        object.put("shop_id", shop_id);
         return invokeApi(path, object);
     }
 
@@ -913,7 +930,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("shop_id", shop_id);
         json1.put("page", page);
         json1.put("size", size);
-        if (parm != null || !parm.equals("")) {
+        if (parm != null) {
             json1.put(parm, result);
         }
         return invokeApi(url, json1);

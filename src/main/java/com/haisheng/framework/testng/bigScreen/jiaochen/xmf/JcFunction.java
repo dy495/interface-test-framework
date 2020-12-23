@@ -53,16 +53,30 @@ public class JcFunction {
         }
         return total;
     }
-
+    //小程序预约消息数
     public Integer appletmyAppointment(){
         jc.appletLoginToken(pp.appletTocken);
         return jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
     }
 
-    //app[任务-接待数]
+    //pc接待管理总数
+    public int pcReceptionPage(){
+        jc.appLogin(pp.jdgw,pp.jdgwpassword);
+        int num=jc.receptionManage("","1","10",null,null).getInteger("total");
+        return num;
+    }
+    //app[任务-预约数]
     public int appReceiptPage(){
         jc.appLogin(pp.jdgw,pp.jdgwpassword);
         JSONObject data = jc.appointmentPage(null, 10);
+        int total = data.getInteger("total");
+        return total;
+    }
+
+    //app[任务-接待数]
+    public int appReceptionPage(){
+        jc.appLogin(pp.jdgw,pp.jdgwpassword);
+        JSONObject data = jc.appreceptionPage(null, 10);
         int total = data.getInteger("total");
         return total;
     }
@@ -90,6 +104,7 @@ public class JcFunction {
 
     //app开始接待，并返回接待id
     public Long pcstartReception(String carPlate) throws Exception{
+        jc.pcLogin(pp.jdgw,pp.jdgwpassword);
         appStartReception sr=new appStartReception();
         JSONObject data=jc.pcManageReception(carPlate,true).getJSONArray("customers").getJSONObject(0);
 
@@ -98,10 +113,10 @@ public class JcFunction {
         sr.customer_name=data.getString("customer_name");
         sr.customer_phone=data.getString("customer_phone");
         //开始接待
-//        jc.pcStartReception(sr);
+        jc.pcStartReception(sr);
         //取接待列表id
-        JSONObject dd=jc.appreceptionPage(null,10).getJSONArray("list").getJSONObject(0);
-        long receptionID=dd.getLong("id");
+        JSONObject dd=jc.receptionManage("","1","10","","").getJSONArray("list").getJSONObject(0);
+        long receptionID=dd.getLong("reception_id");
         String plate_number=dd.getString("plate_number");
         if(!carPlate.equals(plate_number)){
             throw new Exception("获取接待id失败");

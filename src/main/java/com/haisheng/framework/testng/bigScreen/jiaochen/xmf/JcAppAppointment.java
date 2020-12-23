@@ -66,7 +66,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.appLogin(pp.jdgw, pp.jdgwpassword);
+        jc.appletLoginToken(pp.appletTocken);
 
 
     }

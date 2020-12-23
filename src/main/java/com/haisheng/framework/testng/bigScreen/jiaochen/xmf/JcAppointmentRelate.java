@@ -32,6 +32,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     JcFunction pf = new JcFunction();
     PublicParm pp = new PublicParm();
     int num=0;   //预约天数控制
+    String dataName="pc_appointmentPage";
 
 
 
@@ -106,6 +107,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     public void BeforeStart(){
         try{
             DataTemp dataTemp=new DataTemp();
+            dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
@@ -130,8 +132,6 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         }
 
     }
-
-
 
     @Test()  //预约后，预约记录数+1
     public void Pc_appointmentMessage() {

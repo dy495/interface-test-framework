@@ -1,11 +1,14 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -25,7 +28,7 @@ import java.lang.reflect.Method;
  * @date :2020/12/18 16:45
  **/
 
-public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
+public class JcPcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
@@ -33,7 +36,6 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     JcFunction pf = new JcFunction();
     PublicParm pp = new PublicParm();
     int num=0;   //预约天数控制
-    String dataName="pc_appointmentPage";
 
 
 
@@ -108,7 +110,6 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     public void BeforeStart(){
         try{
             DataTemp dataTemp=new DataTemp();
-            dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
@@ -118,10 +119,12 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             dataTemp.setPc_appointment_times(pf.pcAppointmentTimes());
+            dataTemp.setApplet_myappointment(pf.appletmyAppointment());
 
-            Integer id=qaDbUtil.selsetDataTempOne("appointmentId","pc_appointmentPage");
             //预约
-            jc.appletCancleAppointment(id.longValue(),pp.shopIdZ);
+            dataTemp.setAppointmentId(pf.appletAppointment(num));
+
+            System.out.println("PcNUm:"+dataTemp.getPcAppointmentNUmber());
 
             qaDbUtil.updateDataAll(dataTemp);
         }catch (AssertionError | Exception e){
@@ -141,11 +144,11 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             int result2=pf.pcAppointmentRecodePage();  //先调取函数可先验证此接口，在验证数据
             int result1=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
             System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==0,"取消预约后预约记录数没+1,预约前："+result1+"取消预约后："+result2);
+            Preconditions.checkArgument(result2-result1==1,"预约后预约记录数没+1,预约前："+result1+"预约后："+result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("取消预约后，预约记录数+1");
+            saveData("预约后，预约记录数+1");
         }
     }
 
@@ -156,11 +159,11 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             int result2=pf.appointmentNUmber(num);  //先调取函数可先验证此接口，在验证数据
             int result1=qaDbUtil.selsetDataTempOne("pcAppointmentNUmber","pc_appointmentPage");
             System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==-1,"取消预约后预约看板数没-1,预约前："+result1+"取消预约后："+result2);
+            Preconditions.checkArgument(result2-result1==1,"预约后预约看板数没+1,预约前："+result1+"预约后："+result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("取消预约后，预约看板数+1");
+            saveData("预约后，预约看板数+1");
         }
     }
 
@@ -171,11 +174,11 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             int result2=pf.pcAppointmentTimes();
             int result1=qaDbUtil.selsetDataTempOne("pc_appointment_times","pc_appointmentPage");
             System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==-1,"取消预约后,该小程序客户预约次数没+1，预约前："+result1+"取消预约后："+result2);
+            Preconditions.checkArgument(result2-result1==1,"预约后,该小程序客户预约次数没+1，预约前："+result1+"预约后："+result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("取消预约后，该小程序客户预约次数");
+            saveData("预约后，该小程序客户预约次数");
         }
     }
 
@@ -187,11 +190,11 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             int result2=pf.appReceiptPage();  //先调取函数可先验证此接口，在验证数据
             int result1=qaDbUtil.selsetDataTempOne("appReceiptage","pc_appointmentPage");
             System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==-1,"取消预约后app预约任务列数,预约前："+result1+"取消预约后："+result2);
+            Preconditions.checkArgument(result2-result1==1,"预约后app预约任务列数,预约前："+result1+"预约后："+result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("取消预约后，app预约任务列数");
+            saveData("预约后，app预约任务列数");
         }
     }
 
@@ -203,26 +206,78 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
 
             int appSurplusAppointment=qaDbUtil.selsetDataTempOne("appSurplusAppointment","pc_appointmentPage");
             int app_all_appointment=qaDbUtil.selsetDataTempOne("app_all_appointment","pc_appointmentPage");
-            Preconditions.checkArgument(appTask[0]-appSurplusAppointment==-1,"取消预约后app今日任务appSurplusAppointment,预约前："+appSurplusAppointment+"取消预约后："+appTask[0]);
-            Preconditions.checkArgument(appTask[1]-app_all_appointment==-1,"取消预约后app今日任务app_all_appointment,预约前："+app_all_appointment+"取消预约后："+appTask[1]);
+            Preconditions.checkArgument(appTask[0]-appSurplusAppointment==1,"预约后app今日任务appSurplusAppointment,预约前："+appSurplusAppointment+"预约后："+appTask[0]);
+            Preconditions.checkArgument(appTask[1]-app_all_appointment==1,"预约后app今日任务app_all_appointment,预约前："+app_all_appointment+"预约后："+appTask[1]);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("取消预约后，app今日任务分子分母+1");
+            saveData("预约后，app今日任务分子分母+1");
         }
     }
+
     @Test()  //预约后，小程序预约消息列表数+1
     public void AppletMyAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int totalA=pf.appletmyAppointment();
             int total=qaDbUtil.selsetDataTempOne("applet_myappointment","pc_appointmentPage");
-            Preconditions.checkArgument(totalA-total==0,"预约后app今日任务app_all_appointment,预约前："+total+"预约后："+totalA);
+            Preconditions.checkArgument(totalA-total==1,"预约后app今日任务app_all_appointment,预约前："+total+"预约后："+totalA);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("预约后，app今日任务分子分母+1");
+        }
+    }
+
+    @Test()  //预约后，pc预约记录信息校验
+    public void pcAppointmentRecodeCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.appointmentRecordManage("","1","10","customer_phone",pp.customerPhone).getJSONArray("list").getJSONObject(0);
+            String customer_name=data.getString("customer_name");
+            String customer_phone=data.getString("customer_phone");
+            String plate_number=data.getString("plate_number");
+            String customer_manager=data.getString("customer_manager");
+            Preconditions.checkArgument(customer_manager.equals("xx"),"接待人名异常");
+            Preconditions.checkArgument(customer_name.equals("自动夏"),"预约用户名异常");
+            Preconditions.checkArgument(customer_phone.equals(pp.customerPhone),"预约手机号异常");
+            Preconditions.checkArgument(plate_number.equals(pp.carplate7),"预约车牌号异常");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("预约后pc预约记录页信息校验");
+        }
+    }
+
+
+    @Test()  //测试函数
+    public void test1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+//            Integer re=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
+//            System.out.println("re:"+re);
+
+//            qaDbUtil.updateDataNum("pc_appointmentPage",66);
+//            System.out.println("test");
+
+//            DataTemp dt1=new DataTemp();
+//            dt1.setPcAppointmentRecordNum(83);
+//            System.out.println(dt1.getPcAppointmentRecordNum());
+//            qaDbUtil.updateDataAll(dt1);
+//
+//            DataTemp result1=qaDbUtil.selsetDataTemp("pc_appointmentPage");
+//            System.out.println(result1.getPcAppointmentRecordNum());
+
+            int num=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
+            System.out.println(num);
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+//            saveData("轿辰-今日任务数=今日数据各列数据之和");
         }
     }
 

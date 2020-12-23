@@ -885,7 +885,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 list = crm.userPage(2, 100).getJSONArray("list");
             }
             crm.login(pp.zongjingli, pp.adminpassword);
-            String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             JSONArray listA = crm.ManageListNoSelect(role_ids).getJSONArray("list");
             int numA = listA.size();
 
@@ -978,9 +978,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int totalB = crm.userPage(1, 100).getInteger("total");
             Preconditions.checkArgument(totalB == total, "增加排版，用户数量不变");
             //删除增加的排班
-            JSONArray listB = crm.ManageList(role_ids).getJSONArray("list");
-            int index = listB.size() - 1;
-            Integer id = crm.ManageList(role_ids).getJSONArray("list").getJSONObject(index).getInteger("id");
+
+            Integer id = crm.ManageList(role_ids).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.ManageDelete(id);
 
             int totalD = crm.userPage(1, 100).getInteger("total");
