@@ -78,19 +78,15 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     public void customer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject object = crm.customerList("", "", "", "", "", 1, 100);
+            JSONObject object = crm.customerList("", "", "", "", "", 1, 10);
             //客户总数
             int total = object.getInteger("total");
-            int pageSize = CommonUtil.getTurningPage(total, 100);
-            int listSizeTotal = 0;
-            for (int i = 1; i < pageSize; i++) {
-                JSONArray array = crm.customerList("", "", "", "", "", i, 100).getJSONArray("list");
-                for (int j = 0; j < array.size(); j++) {
-                    listSizeTotal++;
-                }
-            }
-            CommonUtil.valueView(total, listSizeTotal);
-            Preconditions.checkArgument(listSizeTotal == total, "pc端我的客户总数为：" + total + "列表总数为：" + listSizeTotal);
+            int page = object.getInteger("pages");
+            int listSize = (page - 1) * 10;
+            JSONArray array = crm.customerList("", "", "", "", "", page, 10).getJSONArray("list");
+            int arraySize = array.size();
+            CommonUtil.valueView(total, listSize + arraySize);
+            Preconditions.checkArgument(total == listSize + arraySize, "pc端我的客户总数为：" + total + "列表总数为：" + listSize + arraySize);
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
