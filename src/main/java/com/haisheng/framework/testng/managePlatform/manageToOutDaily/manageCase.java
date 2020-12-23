@@ -83,11 +83,11 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
     //获取服务器型号枚举
     public String getCluster_model() throws Exception{
         JSONArray list = dw.cluster_model().getJSONArray("list");
-        String type ="";
+        String model ="";
         for(int i=0;i<list.size();i++){
-            type =list.getJSONObject(i).getString("type");
+            model =list.getJSONObject(i).getString("model");
         }
-        return type;
+        return model;
     }
 
     @Test(description = "[管理后台对外接口]查询摄像头设备列表,根据门店43072单个条件调取设备列表")
@@ -168,7 +168,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "[管理后台对外接口]查询服务器列表,根据【门店43072】调取服务器列表")
+    @Test(description = "[管理后台对外接口]查询服务器列表")
     public void cluster_list1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -176,15 +176,15 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             shop_ids.add(43072L);
             JSONObject data = dw.cluster_seach(page, size, shop_ids,"",null,"", "","");
             JSONArray list = data.getJSONArray("list");
-            int total = data.getInteger("total");
+            Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 || list.size() != 0,
+                    total != null ,
                     "根据门店43072单个条件调取服务器列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("[管理后台对外接口]查询服务器列表,根据【门店43072】调取设备列表");
+            saveData("[管理后台对外接口]查询服务器列表");
         }
     }
 
