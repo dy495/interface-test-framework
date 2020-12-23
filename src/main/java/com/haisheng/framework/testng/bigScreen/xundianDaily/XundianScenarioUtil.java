@@ -1414,7 +1414,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
