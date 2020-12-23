@@ -6,7 +6,9 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.Test;
 
 import java.security.InvalidKeyException;
@@ -72,10 +74,11 @@ public class XdPackageData extends TestCaseCommon {
         //saveData("登陆");
 
     }
+
     /**
-     *获取待办事项列表中三个tab页的数量
+     * 获取待办事项列表中三个tab页的数量
      */
-    public <T>Map<String, T> getTab_total(Integer page,Integer size,Integer type,Long last_value) throws Exception {
+    public <T> Map<String, T> getTab_total(Integer page, Integer size, Integer type, Long last_value) throws Exception {
         JSONArray list = xd.task_list(page, size, type, last_value).getJSONArray("list");
         Integer total = list.size();
         Map<String, T> result = new HashMap<>();
@@ -85,9 +88,9 @@ public class XdPackageData extends TestCaseCommon {
     }
 
     /**
-     *获取待办事项列表中的shop_id和id
+     * 获取待办事项列表中的shop_id和id
      */
-    public Map<String, Long> getId_ShopId(JSONArray list,String taskType) throws Exception {
+    public Map<String, Long> getId_ShopId(JSONArray list, String taskType) throws Exception {
         Long id = null;
         Long shop_id = null;
         for (int i = 0; i < list.size(); i++) {
@@ -99,14 +102,14 @@ public class XdPackageData extends TestCaseCommon {
         }
         Map<String, Long> result = new HashMap<>();
         result.put("id", id);
-        result.put("shop_id",  shop_id);
+        result.put("shop_id", shop_id);
         return result;
     }
 
     /**
-     *获取待办事项列表中为处理结果查看的shop_id和id
+     * 获取base64接口上传留痕图片的数组（里面是5张）
      */
-    public JSONArray  getPicPath() throws Exception {
+    public JSONArray getPicPath() throws Exception {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < 5; i++) {
             String picture = new ImageUtil().getImageBinary(filepath);
@@ -114,6 +117,44 @@ public class XdPackageData extends TestCaseCommon {
             jsonArray.add(picPath);
         }
         return jsonArray;
+    }
+
+    /**
+     * 开始定检巡店
+     */
+    public Map<String, Object> Scheduled(Long shop_id, Integer reset, Long task_id) throws Exception {
+        JSONObject res = xd.shopChecks_start(shop_id, "SCHEDULED", reset, task_id);
+        Long patrol_id = res.getLong("id");
+        Long list_id = null;
+        Long item_id = null;
+        JSONArray check_lists = res.getJSONArray("check_lists");
+        for (int i = 0; i < check_lists.size(); i++) {
+            list_id = check_lists.getJSONObject(i).getLong("id");
+            JSONArray items_list = check_lists.getJSONObject(i).getJSONArray("check_items");
+            for (int j = 0; j < items_list.size(); j++) {
+                item_id = items_list.getJSONObject(j).getLong("id");
+            }
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("patrol_id", patrol_id);
+        result.put("list_id", list_id);
+        result.put("item_id", item_id);
+        return result;
+    }
+    /**
+     * 获取门店的巡店次数
+     */
+    public Integer patrol_num(JSONObject data ,Long shop_id) throws Exception {
+        Integer patrol_num = 0;
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            long id = list.getJSONObject(i).getInteger("id");
+            if (id == shop_id) {
+                patrol_num = list.getJSONObject(i).getInteger("patrol_num");
+                break;
+            }
+        }
+        return patrol_num;
     }
 }
 

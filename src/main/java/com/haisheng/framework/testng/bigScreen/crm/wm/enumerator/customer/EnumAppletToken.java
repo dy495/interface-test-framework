@@ -10,9 +10,9 @@ import lombok.Getter;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "gtrOgq5Rxy2fF79cR+s7xw==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
+    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "HPLfevPPf88Hvql8BkP2tA==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90"),
 
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "secrarR6b4DrZ/7lkmB4LQ==", "纯牛奶", true, ""),
+    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "PXi/v1x6FLDJsVHry8mFGw==", "纯牛奶", true, ""),
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "Yyq04ubFzxKP8GzWC1yhzw==", "@@@", true, ""),
 

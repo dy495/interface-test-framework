@@ -116,27 +116,64 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         try {
             //获取【待办事项】待处理的个数、进行处理需要用到的参数
             JSONArray list = (JSONArray) xds.getTab_total(page, size, 0, null).get("list");
-            Integer un_finished_total = (Integer) xds.getTab_total(page, size, 0, null).get("total");
+            Integer finished_total1 = (Integer) xds.getTab_total(page, size, 1, null).get("total");
+            Integer un_finished_total1 = (Integer) xds.getTab_total(page, size, 0, null).get("total");
             Long shop_id = xds.getId_ShopId(list,"HANDLE_RESULT").get("shop_id");
             Long id =  xds.getId_ShopId(list,"HANDLE_RESULT").get("id");
-            //通过base64接口上传留痕图片
-            JSONArray pic_list= xds.getPicPath();
             //该次是处理复检事项，所以不需要上传留痕图片
             xd.MstepSumit(shop_id, id, comment, null, 1);
-            //获取处理完结以后的已处理事项
-            Integer finished_total = (Integer) xds.getTab_total(page, size, 1, null).get("total");
-
-
-//            Preconditions.checkArgument(
-//                    total == un_finished_total,
-//                    "【待办事项】中[未完成]列表的数量"+total+"！==【个人中心】中[未完成]的待办事项的的展示项" + un_finished_total
-//            );
+            Integer finished_total2 = (Integer) xds.getTab_total(page, size, 1, null).get("total");
+            Integer un_finished_total2 = (Integer) xds.getTab_total(page, size, 0, null).get("total");
+            Preconditions.checkArgument(
+                    finished_total2-finished_total1 == 1,
+                    "【待办事项】中待处理进行处理为合格或不合格,【已完成】列表没有+1"
+            );
+            Preconditions.checkArgument(
+                    un_finished_total1-un_finished_total2 == 1,
+                    "【待办事项】中待处理进行处理为合格或不合格,[未完成]列表没有-1"
+            );
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("【待办事项】中[未完成]列表的数量==【个人中心】中[未完成]的待办事项的的展示项");
+         saveData("将【待办事项】中[未完成]列表的待处理进行处理为合格或不合格==[未完成]列表-1&&【已完成】列表+1");
+        }
+    }
+
+    @Test(description = "将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告数据+1 && APP【巡店中心】累计报告数量+1")
+    public void dealAfterData_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取【待办事项】待处理的个数、进行处理需要用到的参数
+            JSONArray list = (JSONArray) xds.getTab_total(page, size, 0, null).get("list");
+            Long shop_id = xds.getId_ShopId(list,"SCHEDULE_TASK").get("shop_id");
+            Long id =  xds.getId_ShopId(list,"SCHEDULE_TASK").get("id");
+
+            JSONObject data1 = xd.ShopPage(page,size);
+            Integer patrol_num1 = xds.patrol_num(data1,shop_id);
+            //通过base64接口上传留痕图片
+            JSONArray pic_list= xds.getPicPath();
+            Map<String, Object> map = xds.Scheduled(shop_id, 1, id);
+            long patrol_id = (long) map.get("patrol_id");
+            long list_id = (long) map.get("list_id");
+            long item_id = (long) map.get("item_id");
+            xd.checks_item_submit(shop_id,patrol_id,list_id,item_id,2,"自动化处理为不合格",pic_list);
+            xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格");
+
+            JSONObject data2 = xd.ShopPage(page,size);
+            Integer patrol_num2 = xds.patrol_num(data2,shop_id);
+
+            Preconditions.checkArgument(
+                    patrol_num2-patrol_num1 == 1,
+                    "将【待办事项】中[未完成]中的定检任务进行处理,PC【巡店中心】巡店次数没有+1"
+            );
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("将【待办事项】中【未完成】中的不合格事项处理为不合格==【巡店记录】中该报告的已处理执行项不变");
         }
     }
 }

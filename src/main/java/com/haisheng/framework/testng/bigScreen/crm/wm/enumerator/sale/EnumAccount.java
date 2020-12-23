@@ -26,7 +26,7 @@ public enum EnumAccount {
     /**
      * 保养顾问
      */
-    FW_BAOYANG_DAILY("baoyangr", getPassword("123456"), "", "daily", "baoyangr"),
+    FW_BAOYANG_DAILY("by", getPassword("123456"), "", "daily", "baoyangr"),
 
     /**
      * 总经理
