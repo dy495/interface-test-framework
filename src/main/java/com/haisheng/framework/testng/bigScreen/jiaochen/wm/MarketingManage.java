@@ -2190,6 +2190,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2235,6 +2236,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2245,7 +2247,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(messageTotal, newMessageTotal);
             Preconditions.checkArgument(newMessageTotal == messageTotal + 1,
                     "消息定时后，消息列表数：" + CommonUtil.checkResult(messageTotal + 1, newMessageTotal));
-            String sendTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 60), "yyyy-MM-dd HH:mm");
+            String sendTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
             int s = CommonUtil.getTurningPage(newMessageTotal, size);
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
