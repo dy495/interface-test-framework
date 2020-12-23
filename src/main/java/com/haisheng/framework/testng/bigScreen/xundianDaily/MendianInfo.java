@@ -14,6 +14,8 @@ public class MendianInfo {
     public final String shop_id_01_chin = "AI-Test(门店订单录像)";
 
     public final String deviceId = ""; //设备id
+    public final String deviceId2 = ""; //设备id
+    public final String deviceId3 = ""; //设备id
     public final String picPath = ""; //图片相对路径
 
     public final JSONObject xdOperate(Long shopid, String type, int reset, int result) throws Exception {

@@ -237,11 +237,12 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
-    public void xdHistory() {
+    @Test(dataProvider = "REPLAY")
+    public void xdHistory(String deviceid, String date,String time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
+            int code = xd.device_replay(deviceid,info.shop_id_01,date,time).getInteger("code");
+            Preconditions.checkArgument(code==1000,"选择设备"+deviceid+",日期="+date+"时间="+time+"状态码"+code);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -249,6 +250,22 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("app【远程巡店-历史画面】，根据日期/摄像头筛选");
+        }
+    }
+
+    @Test
+    public void xdHistoryErr() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = xd.device_replay(info.deviceId,info.shop_id_01,dt.getHistoryDate(1),"09:00:00").getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app【远程巡店-历史画面】，日期选择明天");
         }
     }
 
@@ -275,6 +292,18 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                 {"0","合格"},
                 {"1","不合格"},
                 {"2","无需处理"},
+
+        };
+    }
+
+    @DataProvider(name = "REPLAY")
+    public  Object[] replay() {
+
+        return new String[][]{
+                {info.deviceId,dt.getHistoryDate(0),"03:00:00"},
+                {info.deviceId2,dt.getHistoryDate(-1),"20:30:00"},
+                {info.deviceId,dt.getHistoryDate(-7),"08:00:00"},
+
 
         };
     }
