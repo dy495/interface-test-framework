@@ -2247,9 +2247,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
+            int s = CommonUtil.getTurningPage(total, 10);
             for (int i = 1; i < s; i++) {
-                JSONArray list = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                JSONArray list = jc.invokeApi(builder.page(i).size(10).build()).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject jsonObject = list.getJSONObject(j);
                     int sendCount = jsonObject.getInteger("send_count");
@@ -2260,8 +2260,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                     String statusName = jsonObject.getString("status_name");
                     CommonUtil.valueView(result, statusName);
                     Preconditions.checkArgument(statusName.equals(result),
-                            i + "页" + j + "条" + "发出条数/收到条数=" + percent + CommonUtil.checkResult(result, statusName));
-                    CommonUtil.logger(i + "页" + j + "条");
+                            i + "页" + (j + 1) + "条" + "发出条数/收到条数=" + percent + CommonUtil.checkResult(result, statusName));
+                    CommonUtil.logger(i + "页" + (j + 1) + "条");
                 }
             }
         } catch (Exception | AssertionError e) {

@@ -2209,23 +2209,21 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumFindType.values()).forEach(a -> {
-                Arrays.stream(EnumCarStyle.values()).forEach(b -> {
-                    CommonUtil.valueView(b.getName() + a.getName());
-                    IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
-                    JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-                    List<Integer> num1List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
-                    List<String> percentStrList = getValue(ratioList, "name", "个人车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
-                    List<Integer> num2List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
-                    for (int i = 0; i < num1List.size(); i++) {
-                        String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
-                        String percentStr = percentStrList.get(i).replace("%", "");
-                        CommonUtil.valueView(result, percentStr);
-                        Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                        CommonUtil.logger(b.getName());
-                    }
-                });
-            });
+            Arrays.stream(EnumFindType.values()).forEach(a -> Arrays.stream(EnumCarStyle.values()).forEach(b -> {
+                CommonUtil.valueView(b.getName() + a.getName());
+                IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
+                JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
+                List<Integer> num1List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                List<String> percentStrList = getValue(ratioList, "name", "个人车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
+                List<Integer> num2List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                for (int i = 0; i < num1List.size(); i++) {
+                    String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
+                    String percentStr = percentStrList.get(i).replace("%", "");
+                    CommonUtil.valueView(result, percentStr);
+                    Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
+                    CommonUtil.logger(b.getName());
+                }
+            }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
