@@ -233,7 +233,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
 
     }
     /**
-     * @description :系统日志-数据一致性6:小程序客户查看通知消息的内容+1==PC消息记录中客户查看为【是】+1
+     * @description :系统日志-数据一致性6:小程序客户查看通知消息的内容+1==PC消息记录中客户查看为【是】+1(发送一条消息。)
      * @date :2020/12/21
      **/
     @Test
@@ -351,7 +351,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             //查看消息记录的总条数
             JSONObject respon=jc.pushMsgListFilterManage("","1","10","","");
             int total=respon.getInteger("total");
-            //推送个人消息-13373166806
+            //推送推送ALL-1-1门店消息
             jc.pushMessageShop(true,messageContent,messageName,"SHOP_CUSTOMER",shop);
             int receiveCount=jc.messageFormFilterManage("","1","10","shop_id","45973").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
             //推送消息以后再次查看消息记录的总条数
@@ -359,7 +359,6 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             int total1=respon1.getInteger("total");
             //消息记录新增的数量
             int num=total1-total;
-            System.out.println("total1: "+total1+" total: "+total+"----------"+num);
             //消息记录查看为是的个数
             for(int i=0;i<num;i++){
                 String isRead=respon1.getJSONArray("list").getJSONObject(i).getString("is_read");
@@ -372,7 +371,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("系统日志-数据一致性9:【营销管理】里面消息推送给个人,消息记录中消息+1");
+            saveData("系统日志-数据一致性9:【营销管理】里面消息推送给门店,消息记录中消息+门店对应的人数");
         }
     }
 
