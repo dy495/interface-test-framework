@@ -353,7 +353,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "创建线索,全部客未+1");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建线索,全部客户+1");
         }

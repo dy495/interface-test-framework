@@ -28,6 +28,8 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
+ * 关闭的case后端无校验，前端有校验
+ *
  * @author : guoliya
  * @date :  2020/10/15
  */
@@ -226,7 +228,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程", enabled = false)
     public void afterSaleReceptionException4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -323,7 +325,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话2异常", enabled = false)
     public void afterSaleReceptionException6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -522,7 +524,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-维修天数异常", enabled = false)
     public void afterSaleReceptionException10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -615,7 +617,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话1不填写")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-车主电话1不填写", enabled = false)
     public void afterSaleReceptionException12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -659,7 +661,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约名称不填写", enabled = false)
     public void afterSaleReceptionException13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -703,7 +705,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-预约电话不填写", enabled = false)
     public void afterSaleReceptionException14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -791,7 +793,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写")
+    @Test(description = "APP-售后客户-我的接待-编辑维修中新客（创建客户）--异常情况-行驶里程不填写", enabled = false)
     public void afterSaleReceptionException16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
