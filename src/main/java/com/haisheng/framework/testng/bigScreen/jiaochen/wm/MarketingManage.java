@@ -80,7 +80,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.login(marketing);
+        user.login(administrator);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -159,7 +159,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long stock = 1000L;
-            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                    .subjectType(EnumSubject.STORE.name())
                     .voucherDescription(util.getDesc()).stock(stock).cost(util.getCost(stock))
                     .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
             String message = jc.invokeApi(scene, false).getString("message");
@@ -306,8 +307,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String invalidAccount = CommonUtil.getStrField(response, 0, "invalid_account");
             String invalidStatusName = CommonUtil.getStrField(response, 0, "invalid_status_name");
             Preconditions.checkArgument(invalidTime.equals(date), "作废时间：" + invalidTime + " 当前时间：" + date);
-            Preconditions.checkArgument(invalidAccount.equals(marketing.getPhone()),
-                    "作废账号：" + invalidAccount + " 当前操作账号" + marketing.getPhone());
+            Preconditions.checkArgument(invalidAccount.equals(administrator.getPhone()),
+                    "作废账号：" + invalidAccount + " 当前操作账号" + administrator.getPhone());
             Preconditions.checkArgument(invalidStatusName.equals(EnumVoucherStatus.INVALID.getName()),
                     "发放状态：" + invalidStatusName);
         } catch (Exception | AssertionError e) {
@@ -461,7 +462,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
@@ -577,7 +577,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //获取核销码
             String code = util.getVerificationCode("本司员工");
             //发出一张卡券
@@ -610,7 +609,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             JSONArray voucherList = util.getVoucherList(1);
             String voucherName = voucherList.getJSONObject(0).getString("voucher_name");
             IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
@@ -746,7 +744,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String format = "yyyy-MM-dd HH:mm";
             String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), format);
             long time = Long.parseLong(DateTimeUtil.dateToStamp(date, format));
-            user.login(administrator);
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
@@ -872,7 +869,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             JSONArray list = jc.pcVoucherList().getJSONArray("list");
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
@@ -902,7 +898,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //发出一张卡券
             long voucherId = util.pushMessage(true);
             String voucherName = util.getVoucherName(voucherId);
@@ -1021,7 +1016,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = VerificationPeople.builder().build();
             //查询列表数
             int total = jc.invokeApi(scene).getInteger("total");
-            user.login(administrator);
             String phone = util.getStaffPhone();
             CommonUtil.valueView(phone);
             user.login(marketing);
@@ -1047,7 +1041,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = VerificationPeople.builder().build();
             //查询列表数
             int total = jc.invokeApi(scene).getInteger("total");
-            user.login(administrator);
             String phone = util.getDistinctPhone();
             user.login(marketing);
             IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
@@ -1068,7 +1061,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_32() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //获取核销码
             String code = util.getVerificationCode("本司员工");
             IScene scene = VerificationPeople.builder().verificationCode(code).build();
@@ -1207,7 +1199,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name())
                     .voucherList(util.getVoucherList())
                     .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
             String message = jc.invokeApi(scene, false).getString("message");
@@ -1537,7 +1529,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "套餐表单--购买/赠送套餐未确认前，选择的卡券被作废，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
     public void packageManager_system_19() {
         try {
-            user.login(administrator);
             Long id = util.getObsoleteVoucherId();
             String voucherName = util.getVoucherName(id);
             JSONArray voucherList = util.getOneVoucherList(voucherName);
@@ -1562,7 +1553,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String subjectType = util.getSubjectType();
             long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
             //购买固定套餐
@@ -1587,7 +1577,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         long packageId = 0;
         try {
-            user.login(administrator);
             packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             //关闭套餐
             jc.pcSwitchPackageStatus(false, packageId);
@@ -1612,7 +1601,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String[] packageNames = {EnumVP.ONE.getPackageName(), EnumContent.A.getContent(), null, ""};
             long packageId = util.getModifyPackageId();
             Arrays.stream(packageNames).forEach(packageName -> {
@@ -1635,7 +1623,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String[] contents = {EnumContent.C.getContent(), null, ""};
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
@@ -1659,7 +1646,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String[] subjectTypes = {"全部权限", null, ""};
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
@@ -1683,7 +1669,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
@@ -1703,7 +1688,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_26() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             List<JSONArray> voucherList = new ArrayList<>();
@@ -1728,7 +1712,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_27() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             String[] prices = {"100000000.01", "10000000001", null, ""};
@@ -1751,7 +1734,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_28() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
@@ -1771,8 +1753,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //登录管理员
-            user.login(administrator);
             Arrays.stream(EnumSubject.values()).forEach(subject -> {
                 //创建套餐前列表数量
                 IScene scene = PackageFormPage.builder().build();
@@ -1857,7 +1837,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             WechatCustomerPage.WechatCustomerPageBuilder builder = WechatCustomerPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
@@ -1885,7 +1864,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             JSONArray array = jc.pcPackageList().getJSONArray("list");
             array.forEach(e -> {
                 JSONObject jsonObject = (JSONObject) e;
@@ -2010,7 +1988,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String format = "yyyy-MM-dd HH:mm";
             String startTime = "2020-12-09";
             String endTime = DateTimeUtil.getFormat(new Date());
@@ -2057,7 +2034,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             String format = "yyyy-MM-dd HH:mm";
             String startTime = "2020-12-09";
             String endTime = DateTimeUtil.getFormat(new Date());
@@ -2104,7 +2080,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(appletUser);
             int voucherNumber = util.getVoucherListSize();
             int packageNumber = util.getPackageListSize();
             user.login(marketing);
@@ -2129,14 +2104,13 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(appletUser);
             int voucherNumber = util.getVoucherListSize();
             int packageNumber = util.getPackageListSize();
-            user.login(marketing);
+            user.login(administrator);
             //购买固定套餐
             util.buyFixedPackage(1);
             //确认支付
-            util.makeSureBuyPackage("凯迪拉克无限套餐");
+            util.makeSureBuyPackage(EnumVP.ONE.getPackageName());
             user.loginApplet(appletUser);
             int newVoucherNumber = util.getVoucherListSize();
             int newPackageNumber = util.getPackageListSize();
@@ -2154,7 +2128,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             List<String> phoneList = new ArrayList<>();
             phoneList.add(marketing.getPhone());
             List<Long> voucherList = new ArrayList<>();
@@ -2190,7 +2163,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2236,7 +2208,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //消息列表数
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int messageTotal = jc.invokeApi(builder.build()).getInteger("total");
@@ -2273,7 +2244,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             MessageFormPage.MessageFormPageBuilder builder = MessageFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
@@ -2304,7 +2274,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //发送消息
             util.pushMessage(true);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -2340,10 +2309,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            List<Long> shopList = new ArrayList<>();
             JSONArray array = jc.pcShopList().getJSONArray("list");
-            List<Long> shopIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
+            shopList.add(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()).get(0));
             //发送消息
-            IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopIds)
+            IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopList)
                     .messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
                     .ifSendImmediately(true).build();
             jc.invokeApi(scene);
@@ -2429,7 +2399,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //发消息
             util.pushMessage(true);
             //消息列表消息内容
@@ -2627,6 +2596,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             //发消息
             long voucherId = util.getNoInventoryVoucherId();
+            CommonUtil.valueView(util.getVoucherName(voucherId));
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                     .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
@@ -2666,7 +2636,6 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.login(administrator);
             //发消息
             long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
@@ -2678,7 +2647,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
+            saveData("消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择");
         }
     }
 }

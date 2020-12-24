@@ -2,8 +2,10 @@ package com.haisheng.framework.model.bean;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class PorscheDeliverInfo {
+public class PorscheDeliverInfo implements Serializable {
 
     private long id;
     private String shopId;
