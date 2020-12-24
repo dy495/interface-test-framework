@@ -291,12 +291,12 @@ public class EdgeRegressionTest {
 
         } else if (VIDEO.contains("8078193393271808")) {
             //cross_enter_shop_7375502689698816_L1-POPMART-左-20min.mp4-8078193393271808
-            EXPECT_ENTER  = 31;
+            EXPECT_ENTER  = 18;
             EXPECT_LEAVE  = 33;
 
         } else if (VIDEO.contains("8086022718817280")) {
             //cross_enter_shop_7375502704772096_L1-ZARA-左-20min.mp4-8086022718817280
-            EXPECT_ENTER  = 51;
+            EXPECT_ENTER  = 65;
             EXPECT_LEAVE  = 32;
 
         } else if (VIDEO.contains("8086101118223360")) {
@@ -311,7 +311,7 @@ public class EdgeRegressionTest {
 
         } else if (VIDEO.contains("8086389486846976")) {
             //entry_7375503431795712_L1-4号直梯-进场-20min.mp4-8086389486846976
-            EXPECT_ENTER  = 34;
+            EXPECT_ENTER  = 28;
             EXPECT_LEAVE  = 16;
 
         }
