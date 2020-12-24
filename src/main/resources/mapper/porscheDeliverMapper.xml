@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.haisheng.framework.dao.IPorscheDao">
+<mapper namespace="com.haisheng.framework.dao.IPorscheDeliverDao">
     <resultMap id="ConfigMap" type="com.haisheng.framework.model.bean.PorscheDeliverInfo">
         <result property="id" column="id"/>
         <result property="shopId" column="shop_id"/>
