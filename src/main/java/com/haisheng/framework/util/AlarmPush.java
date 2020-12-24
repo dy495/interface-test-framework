@@ -288,8 +288,13 @@ public class AlarmPush {
                 lastVideo = item.getVideo();
             }
 
+            if (item.getStatus().contains("PASS")) {
+                //不再推送pass信息, 2020.12.24
+                continue;
+            }
+
             msg += "\n>###### >>" + item.getStatus() + "\n";
-            msg += "\n>###### ----->准确率：" + item.getPvAccuracyRate() + "\n";
+            msg += "\n>###### ----->准确率：" + item.getPvAccuracyRate() + "；期望值：" + item.getExpect() + "；算法值：" + item.getActual() + "\n";
         }
         msg += "\n##### 准确率历史信息请点击[链接](" + grafanaLink +")";;
         DingChatbot.sendMarkdown(msg);

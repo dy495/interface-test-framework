@@ -4,6 +4,8 @@
     <resultMap id="AccuracyMap" type="com.haisheng.framework.model.bean.EdgePvAccuracy">
         <result property="status" column="status" />
         <result property="pvAccuracyRate" column="pv_accuracy_rate" />
+        <result property="expect" column="expect_pv" />
+        <result property="actual" column="pv" />
         <result property="updateTime" column="update_time" />
         <result property="image" column="image" />
         <result property="video" column="video" />
@@ -50,7 +52,7 @@
     <select id="getAccuracyByDay"
             resultMap="AccuracyMap">
         select
-        status,pv_accuracy_rate,update_time,image,video
+        status,pv_accuracy_rate,pv,expect_pv,update_time,image,video
         from
         t_edge_pv_regression
         <where>
