@@ -266,7 +266,7 @@ public class EdgeRegressionTest {
         if (StringUtils.isEmpty(VIDEO)) {
             return;
         } else if (VIDEO.contains("cross_enter_shop_personLes_youyiku")) {
-            EXPECT_ENTER      = 9;
+            EXPECT_ENTER      = 4;
             EXPECT_LEAVE      = 8;
             EXPECT_PASS       = 50;
 
@@ -280,7 +280,7 @@ public class EdgeRegressionTest {
             EXPECT_LEAVE  = 11;
 
         } else if (VIDEO.contains("entry_personMore_jinjie")) {
-            EXPECT_ENTER  = 16;
+            EXPECT_ENTER  = 13;
             EXPECT_LEAVE  = 16;
 
         } else if (VIDEO.contains("8077890396619776")) {
