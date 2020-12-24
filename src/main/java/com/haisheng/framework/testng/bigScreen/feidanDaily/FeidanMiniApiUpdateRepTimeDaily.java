@@ -26,6 +26,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
     String wudongChannelNameStr = "测试FREEZE";
+    String wudongChannelowner_id = "uid_e07e08c7";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
@@ -33,6 +34,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
     String lianjiaChannelStr = "1";
     String lianjiaChannelName = "链家";
+    String lianjiaChannelowner_id= "uid_58ee7ff2";
     String lianjiaOwnerPhone = "16600000001";
 
 //  ------------------------------------------业务员-----------------------------------------------------
@@ -111,7 +113,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
         try {
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // 报备
             String customerPhone = "14422110014";
@@ -164,7 +166,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -187,7 +189,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
         try {
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ahead1hRuleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ahead1hRuleId);
 
             // PC报备
             String customerPhone = "14422110015";
@@ -250,7 +252,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -596,7 +598,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
         try {
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // 报备
             String customerPhone = "18210113587";
@@ -657,7 +659,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -768,9 +770,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             String customerPhone = "14422110004";
             String customerName = caseName + "-" + feidan.getNamePro();
@@ -833,8 +835,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -858,9 +860,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
         try {
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             String customerPhone = "14422110005";
             String customerName = ciCaseName + "-" + feidan.getNamePro();
@@ -930,8 +932,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -958,7 +960,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1017,7 +1019,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1320,9 +1322,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备(勿动)
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1383,8 +1385,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
 
         }
@@ -1411,9 +1413,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // PC报备
             String adviserName = zhangName;
@@ -1477,8 +1479,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1503,9 +1505,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String smsCode = "748338";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1567,9 +1569,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
 
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1594,7 +1596,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String smsCode = "105793";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
             feidan.updateReportTimeChannel(customerPhone, customerName, 5, wudongStaffIdInt, reportTime);
@@ -1645,7 +1647,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1676,7 +1678,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerPhoneA = "18210113587";
             String smsCode = "805805";
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             String customerName = caseName + "-" + feidan.getNamePro();
 
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
@@ -1746,7 +1748,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1781,7 +1783,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String channelStaffPhone = lianjiaStaffPhone;
             int channelStaffId = 2124;
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
 
             feidan.newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
 
@@ -1848,7 +1850,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -2156,7 +2158,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String id = ruleData.getString("id");
 
 //            编辑渠道规则
-            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", feidan.genPhoneNum(), id);
+            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", wudongChannelowner_id, feidan.genPhoneNum(), id);
 
 //            报备
             String customerPhone = "18210113587";
@@ -2185,7 +2187,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
 
 //            删除引用
-            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", feidan.genPhoneNum(), defaultRuleId);
+            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", wudongChannelowner_id, feidan.genPhoneNum(), defaultRuleId);
 
 //            删除引用后删除规则
             feidan.deleteRiskRule(id);
@@ -2349,7 +2351,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerName = ciCaseName + "-" + namePro;
             String customerPhone = feidan.genPhoneNum();
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            勿动报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -2379,7 +2381,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             aCase.setFailReason(failReason);
             CURRENT_CASE = caseName;
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             if ( (null != failReason && failReason.trim().length() > 1) ) {
                 //case failed, update db
                 feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);

@@ -3495,13 +3495,13 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     //新建渠道
-    public void addChannel(String channelName, String owner, String phone, String ruleId) throws Exception {
+    public void addChannel(String channelName, String owner_id, String phone, String ruleId) throws Exception {
         String url = "/risk/channel/add";
         String json =
                 "{\n" +
                         "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"owner_id\":\"" + owner_id + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";

@@ -1397,8 +1397,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return new Object[]{
                 "[list]-channel_id",
                 "[list]-channel_name",
-                "[list]-owner_principal",
-                "[list]-phone",
+//                "[list]-owner_principal",
+//                "[list]-phone",
                 "[list]-register_time",
         };
     }
