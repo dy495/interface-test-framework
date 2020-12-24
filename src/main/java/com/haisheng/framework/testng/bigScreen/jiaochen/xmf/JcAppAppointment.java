@@ -92,17 +92,18 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
 
     @DataProvider(name = "TYPE")
     public static Object[] type() {
-        return new String[]{
-                "AGREE",
-                "CANCLE",
+        return new Integer[]{
+                10,
+                20,
 
         };
     }
 
     @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE",priority = 2)
-    public void agreeCancleAppointment(String type) {
+    public void agreeCancleAppointment(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
             JSONObject data = jc.appointmentPage(null, 10);
             int total = data.getInteger("total");
 
@@ -111,10 +112,11 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("没预约任务,case无法执行");
             }
             Long id = list.getJSONObject(0).getLong("id");  //取一个预约id
+            Long shop_id = list.getJSONObject(0).getLong("shop_id");  //取一个预约id
             int tasknum[] = pf.appTask();
 
             //确认预约
-            jc.appointmentHandle(id, type);
+            jc.appointmentHandle(id, type,shop_id);
 
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
@@ -130,7 +132,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "小程序预约,app任务列表+1，今日任务数+1",priority = 1)
+//    @Test(description = "小程序预约,app任务列表+1，今日任务数+1",priority = 1)
     public void AppletAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

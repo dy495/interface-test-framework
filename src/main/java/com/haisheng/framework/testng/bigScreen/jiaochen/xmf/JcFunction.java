@@ -82,10 +82,10 @@ public class JcFunction {
     }
 
     //app开始接待，并返回接待id
-    public Long startReception(String carPlate) throws Exception{
+    public Long[] startReception(String carPlate) throws Exception{
         appStartReception sr=new appStartReception();
         JSONObject data=jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
-
+        Long result[]=new Long[2];
         sr.id=data.getString("customer_id");
         sr.plate_number=carPlate;
         sr.customer_name=data.getString("customer_name");
@@ -94,12 +94,13 @@ public class JcFunction {
         jc.StartReception(sr);
         //取接待列表id
         JSONObject dd=jc.appreceptionPage(null,10).getJSONArray("list").getJSONObject(0);
-        long receptionID=dd.getLong("id");
+        result[0]=dd.getLong("id");
         String plate_number=dd.getString("plate_number");
+       result[1]=dd.getLong("shop_id");
         if(!carPlate.equals(plate_number)){
             throw new Exception("获取接待id失败");
         }
-        return receptionID;
+        return result;
     }
 
     //app开始接待，并返回接待id

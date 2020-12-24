@@ -3393,7 +3393,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
             Preconditions.checkArgument(allAppointmentAfter1 == allAppointmentBefore + 1, "预约保养前APP全部预约为" + allAppointmentBefore + "  预约保养后的全部预约为" + allAppointmentAfter1 + "  数据有问题");
             //取消预约保养
-            jc.appointmentHandle(123L, "10");
+            jc.appointmentHandle(123L, 10,10L);
             //获取APP的今日任务－全部预约,数据应该-1
             Long allAppointmentAfter2 = jc.appTodayTask().getLong("all_appointment");
 

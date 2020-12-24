@@ -333,14 +333,14 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int total = jc.appreceptionPage(null, 10).getInteger("total");
 
             //开始接待
-            Long id = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate);
 
             JSONObject dd = jc.appreceptionPage(null, 10);
             int totalA = dd.getInteger("total");
             String shopId = dd.getJSONArray("list").getJSONObject(0).getString("shop_id");
 
             //完成接待
-            jc.finishReception(id, shopId);
+            jc.finishReception(id[0], id[1]);
             int totalC = jc.appreceptionPage(null, 10).getInteger("total");
 
             Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
@@ -358,9 +358,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long id = pf.startReception(pp.carplate7);
+            Long id[] = pf.startReception(pp.carplate7);
 
-            jc.finishReception(id,pp.shopIdZ);
+            jc.finishReception(id[0],id[1]);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -376,10 +376,10 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //接待前，今日任务
             int tasknum[] = pf.appTask();
             //开始接待
-            Long id = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate);
             int tasknumA[] = pf.appTask();
             //完成接待
-            jc.finishReception(id, pp.shopIdZ);
+            jc.finishReception(id[0], id[0]);
             int tasknumB[] = pf.appTask();
 
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
@@ -407,7 +407,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //app登录 开始接待
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            Long id = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate);
 
             //pc登录
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
@@ -415,7 +415,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            jc.finishReception(id, pp.shopIdZ);
+            jc.finishReception(id[1], id[1]);
 
             //pc登录
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
@@ -437,13 +437,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //开始接待
-            Long id = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate);
 
             int total = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknum[] = pf.appTask();
 
             //取消接待
-            jc.cancleReception(id, pp.shopIdZ);
+            jc.cancleReception(id[0],id[1]);
             int totalA = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
@@ -468,10 +468,10 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //接待前，今日任务
             int tasknum[] = pf.apptodayDate(type, name);
             //开始接待
-            Long id = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate);
             int tasknumA[] = pf.apptodayDate(type, name);
             //完成接待
-            jc.finishReception(id, pp.shopIdZ);
+            jc.finishReception(id[0], id[1]);
             int tasknumB[] = pf.apptodayDate(type, name);
 
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");

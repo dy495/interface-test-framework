@@ -1052,11 +1052,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 15:30
      **/
 
-    public JSONObject appointmentHandle(Long id, String type) {
+    public JSONObject appointmentHandle(Long id, Integer type,Long shop_id) {
         String url = "/jiaochen/m-app/task/appointment/handle";
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("type", type);
+        json.put("shop_id", shop_id);
 
         return invokeApi(url, json);
     }
@@ -1118,7 +1119,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:31
      **/
 
-    public JSONObject finishReception(Long id, String shop_id) {
+    public JSONObject finishReception(Long id, Long shop_id) {
         String url = "/jiaochen/m-app/task/reception/finish-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -1132,7 +1133,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 19:32
      **/
 
-    public JSONObject cancleReception(Long id, String shopId) {
+    public JSONObject cancleReception(Long id, Long shopId) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
