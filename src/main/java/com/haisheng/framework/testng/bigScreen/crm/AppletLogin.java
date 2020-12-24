@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.feidanDaily.Link;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -23,7 +24,10 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author : yu
@@ -121,6 +125,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
+            if (phoneList.size() != 0) {
+                commonConfig.pushRd = new String[]{phoneList.get(0)};
+            }
             commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
             commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
