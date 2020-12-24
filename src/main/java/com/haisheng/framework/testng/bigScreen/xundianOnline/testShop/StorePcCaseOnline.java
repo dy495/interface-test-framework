@@ -598,7 +598,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================账户列表的筛选（单一查询）======================
      */
-    @Test
+    //@Test
     public void accountPage_search() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
