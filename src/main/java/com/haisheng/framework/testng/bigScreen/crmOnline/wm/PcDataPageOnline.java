@@ -2208,32 +2208,26 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "订单客户分析--【各时间段+各车型筛选】个人车主百分比=个人车主数量/（个人+公司车主数量）")
     public void orderCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
-        String percentStr = null;
         try {
-            for (EnumFindType a : EnumFindType.values()) {
-                for (EnumCarStyle e : EnumCarStyle.values()) {
-                    double num1 = 0;
-                    double num2 = 0;
-                    CommonUtil.valueView(e.getName() + a.getName());
-                    IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
+            Arrays.stream(EnumFindType.values()).forEach(a -> {
+                Arrays.stream(EnumCarStyle.values()).forEach(b -> {
+                    CommonUtil.valueView(b.getName() + a.getName());
+                    IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
                     JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-                    for (int i = 0; i < ratioList.size(); i++) {
-                        if (ratioList.getJSONObject(i).getString("name").equals("个人车主")) {
-                            num1 = ratioList.getJSONObject(i).getDouble("value");
-                            percentStr = ratioList.getJSONObject(i).getString("percent_str");
-                        }
-                        if (ratioList.getJSONObject(i).getString("name").equals("公司车主")) {
-                            num2 = ratioList.getJSONObject(i).getDouble("value");
-                        }
+                    List<Integer> num1List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                    List<String> percentStrList = getValue(ratioList, "name", "个人车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
+                    List<Integer> num2List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                    for (int i = 0; i < num1List.size(); i++) {
+                        String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
+                        String percentStr = percentStrList.get(i).replace("%", "");
+                        CommonUtil.valueView(result, percentStr);
+                        Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
+                        CommonUtil.logger(b.getName());
                     }
-                    String result = CommonUtil.getPercent(num1, num2 + num1, 3);
-                    CommonUtil.valueView(percentStr, result);
-                    Preconditions.checkArgument(result.equals(percentStr), e.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                    CommonUtil.logger(e.getName());
-                }
-            }
+                });
+            });
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】个人车主百分比=个人车主数量/（个人+公司车主数量）");
         }
@@ -2242,35 +2236,36 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     @Test(description = "订单客户分析--【各时间段+各车型筛选】公司车主百分比=公司车主数量/（个人+公司车主数量）")
     public void orderCustomer_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
-        String percentStr = null;
         try {
-            for (EnumFindType a : EnumFindType.values()) {
-                for (EnumCarStyle e : EnumCarStyle.values()) {
-                    double num1 = 0;
-                    double num2 = 0;
-                    CommonUtil.valueView(e.getName() + a.getName());
-                    IScene scene = Analysis2OrderCarOwnerScene.builder().carType(e.getStyleId()).cycleType(a.getType()).build();
-                    JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-                    for (int i = 0; i < ratioList.size(); i++) {
-                        if (ratioList.getJSONObject(i).getString("name").equals("公司车主")) {
-                            num1 = ratioList.getJSONObject(i).getDouble("value");
-                            percentStr = ratioList.getJSONObject(i).getString("percent_str");
-                        }
-                        if (ratioList.getJSONObject(i).getString("name").equals("个人车主")) {
-                            num2 = ratioList.getJSONObject(i).getDouble("value");
-                        }
-                    }
-                    String result = CommonUtil.getPercent(num1, num2 + num1, 3);
-                    CommonUtil.valueView(percentStr, result);
-                    Preconditions.checkArgument(result.equals(percentStr), e.getName() + a.getName() + "公司车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                    CommonUtil.logger(e.getName());
+            Arrays.stream(EnumFindType.values()).forEach(a -> Arrays.stream(EnumCarStyle.values()).forEach(b -> {
+                CommonUtil.valueView(b.getName() + a.getName());
+                IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
+                JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
+                List<Integer> num1List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                List<String> percentStrList = getValue(ratioList, "name", "公司车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
+                List<Integer> num2List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                for (int i = 0; i < num1List.size(); i++) {
+                    String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
+                    String percentStr = percentStrList.get(i).replace("%", "");
+                    CommonUtil.valueView(result, percentStr);
+                    Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "公司车主计算百分比为：" + result + "界面展示为：" + percentStr);
+                    CommonUtil.logger(b.getName());
                 }
-            }
+            }));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("订单客户分析--【各时间段+各车型筛选】公司车主百分比=公司车主数量/（个人+公司车主数量）");
         }
+    }
+
+    public List<Object> getValue(JSONArray list, String key, String value, String field) {
+        return list.stream().map(object -> (JSONObject) object).filter(object -> object.getString(key).equals(value))
+                .map(object -> object.get(field)).collect(Collectors.toList());
+    }
+
+    public boolean compareData(String a, String b) {
+        return Double.parseDouble(b) <= Double.parseDouble(a) + 0.1 || Double.parseDouble(b) >= Double.parseDouble(a) - 0.1;
     }
 
     @Test(description = "订单客户分析--【各时间段+各车型筛选】车主年龄分析 各年龄段之和=100%或 0%")

@@ -189,7 +189,6 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @Test(description = "接待管理--购买临时套餐，确认支付之后，【我的消息】+1", enabled = false)
     public void receptionManage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());

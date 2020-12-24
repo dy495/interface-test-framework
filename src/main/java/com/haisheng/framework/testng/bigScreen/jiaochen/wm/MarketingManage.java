@@ -2104,6 +2104,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.loginApplet(appletUser);
             int voucherNumber = util.getVoucherListSize();
             int packageNumber = util.getPackageListSize();
             user.login(administrator);
