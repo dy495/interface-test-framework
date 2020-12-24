@@ -26,11 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description :app 相关case --xia
- * @date :2020/6/29 20:14
+ * @description :app 相关case
+ * @date :2020/12/22 16:14
  **/
-
-
 public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
@@ -40,20 +38,13 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     String comment = "自动化在进行处理，闲人走开";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/卡券图.jpg";  //巡店不合格图片base64
 
-    //读取文件内容
-    public String texFile(String fileName) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String str = in.readLine();
-        return str;
-    }
-
-    public String getPicList(String filename) throws Exception {
-        String pic_data0 = texFile(filepath);
-        JSONObject pic = xd.picUpload(1, pic_data0);
-        String pic_list0 = pic.getString("pic_path");
-        return pic_list0;
-    }
-
+//    //读取文件内容
+//    public String texFile(String fileName) throws IOException {
+//        BufferedReader in = new BufferedReader(new FileReader(fileName));
+//        String str = in.readLine();
+//        return str;
+//    }
+//
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -141,7 +132,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告数据+1 && APP【巡店中心】累计报告数量+1")
+    @Test(description = "将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告记录数据+1 && APP【巡店中心】累计报告数量+1")
     public void dealAfterData_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -150,6 +141,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"SCHEDULE_TASK").get("shop_id");
             Long id =  xds.getId_ShopId(list,"SCHEDULE_TASK").get("id");
 
+            int total1 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject data1 = xd.ShopPage(page,size);
             Integer patrol_num1 = xds.patrol_num(data1,shop_id);
             //通过base64接口上传留痕图片
@@ -161,9 +153,13 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             xd.checks_item_submit(shop_id,patrol_id,list_id,item_id,2,"自动化处理为不合格",pic_list);
             xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格");
 
+            int total2 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject data2 = xd.ShopPage(page,size);
             Integer patrol_num2 = xds.patrol_num(data2,shop_id);
-
+            Preconditions.checkArgument(
+                    total2-total1 == 1,
+                    "将【待办事项】中[未完成]中的定检任务进行处理,pc【巡店报告中心】的报告记录数据没有+1 "
+            );
             Preconditions.checkArgument(
                     patrol_num2-patrol_num1 == 1,
                     "将【待办事项】中[未完成]中的定检任务进行处理,PC【巡店中心】巡店次数没有+1"
@@ -173,7 +169,9 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告数据+1 && APP【巡店中心】累计报告数量+1");
+            saveData("将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告记录数据+1 && APP【巡店中心】累计报告数量+1");
         }
     }
+
+
 }

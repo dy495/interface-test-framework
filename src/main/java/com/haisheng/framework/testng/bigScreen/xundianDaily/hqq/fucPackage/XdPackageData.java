@@ -13,7 +13,9 @@ import org.testng.annotations.Test;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class XdPackageData extends TestCaseCommon {
@@ -93,7 +95,7 @@ public class XdPackageData extends TestCaseCommon {
     public Map<String, Long> getId_ShopId(JSONArray list, String taskType) throws Exception {
         Long id = null;
         Long shop_id = null;
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size()-1; i++) {
             String task_type = list.getJSONObject(i).getString("task_type");
             if (task_type.equals(taskType)) {
                 id = list.getJSONObject(i).getLong("id");
@@ -118,6 +120,31 @@ public class XdPackageData extends TestCaseCommon {
         }
         return jsonArray;
     }
+    /**
+     * 获取base64接口上传留痕图片的数组（里面是6张）
+     */
+    public JSONArray getPicPath1() throws Exception {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < 6; i++) {
+            String picture = new ImageUtil().getImageBinary(filepath);
+            String picPath = xd.picUpload(0, picture).getString("pic_path");
+            jsonArray.add(picPath);
+        }
+        return jsonArray;
+    }
+    /**
+     * 获取base64接口上传留痕图片的数组（里面是1张）
+     */
+    public JSONArray getPicPath2() throws Exception {
+        JSONArray jsonArray = new JSONArray();
+            String picture = new ImageUtil().getImageBinary(filepath);
+            String picPath = xd.picUpload(0, picture).getString("pic_path");
+            jsonArray.add(picPath);
+
+        return jsonArray;
+    }
+
+
 
     /**
      * 开始定检巡店
