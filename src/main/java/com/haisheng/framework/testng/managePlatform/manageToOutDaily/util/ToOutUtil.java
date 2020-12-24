@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -206,14 +207,25 @@ public class ToOutUtil extends TestCaseCommon {
      * @author qingqing
      * @description 摄像头云台控制（给业务模块调用）
      */
-    public JSONObject device_control(String terminal_device_id, int command, int duration) throws Exception {
+    public JSONObject device_control(String terminal_device_id, Integer command, Integer duration) throws Exception {
         String url = "/admin/inner/device/ptz/control";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id", terminal_device_id);
         json.put("command", command);
         json.put("duration", duration);
         JSONObject http = this.http(os_data + url, json);
-        return http.getJSONObject("data");
+        return http;
     }
 
+    @DataProvider(name = "COMMAND")
+    public static Object[] command() {
+        return new Integer[]{
+                0,
+                1,
+                2,
+                3,
+                8,
+                9
+        };
+    }
 }

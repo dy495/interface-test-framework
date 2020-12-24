@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.managePlatform.manageToOutDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -296,6 +297,27 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表");
+        }
+    }
+
+    /**
+     * *description = "[管理后台对外接口]摄像头云台控制,上、下、左、右、缩、放"
+     */
+    @Test(dataProvider = "COMMAND",dataProviderClass = ToOutUtil.class)
+    public void device_control(Integer command) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String terminal_device_id = "8061367735976960";
+            JSONObject res = dw.device_control(terminal_device_id, command, null);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(
+                    code ==1000 ,
+                    "[管理后台对外接口]摄像头云台控制uniview-云台全功能,上、下、左、右、缩、放中的【"+command+"】出错了。0-上，1-下，2-左，3-右，8-放大，9-缩小"
+            );
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("[管理后台对外接口]摄像头云台控制,上、下、左、右、缩、放");
         }
     }
 
