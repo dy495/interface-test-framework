@@ -18,7 +18,9 @@ public class MendianInfo {
     public final String deviceId3 = ""; //设备id
     public final String picPath = ""; //图片相对路径
 
-    public final JSONObject xdOperate(Long shopid, String type, int reset, int result) throws Exception {
+
+
+    public final Long xdOperateitem(Long shopid, String type, int reset, int result) throws Exception {
         JSONObject obj = xd.checkStartapp(shopid, type, reset);
         Long patrolID = obj.getLong("id");
         JSONArray checklist = obj.getJSONArray("check_lists");
@@ -34,6 +36,12 @@ public class MendianInfo {
             }
 
         }
+        return patrolID;
+    }
+
+    public final JSONObject xdOperate(Long shopid, String type, int reset, int result) throws Exception {
+
+        Long patrolID =  xdOperateitem(shopid,type,reset,result);
         xd.checks_submit(shopid, patrolID, "一次巡店完成");
         JSONObject retobj = new JSONObject();
         retobj.put("patrolID",patrolID);

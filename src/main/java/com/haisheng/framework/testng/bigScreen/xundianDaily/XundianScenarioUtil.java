@@ -1525,6 +1525,19 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject checks_submitNotChk(Long shop_id,Long patrol_id,String comment) throws Exception {
+        String url = "/store/m-app/auth/shop/checks/submit";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"patrol_id\" :" + patrol_id + ",\n" +
+                        "\"comment\" :\"" + comment + "\"\n" +
+                        "} ";
+
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
+
     /**
      * @description:3.11 门店当前清单项目列表（V1.1）
      * @author: qingqing

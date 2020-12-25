@@ -254,9 +254,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj1.containsKey("inappropriate_num"),"记录"+id+"未展示不适用项数");
                 Preconditions.checkArgument(obj1.containsKey("qualified_num"),"记录"+id+"未展示合格项数");
                 Preconditions.checkArgument(obj1.containsKey("unqualified_num"),"记录"+id+"未展示不合格项数");
-
             }
-
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -299,6 +297,34 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(dataProvider = "")
+    public void commmitxdResult(String chkcode, String content, String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id = info.xdOperateitem(info.shop_id_01,"REMOTE",1,1);
+            int code = 0;
+            if (chkcode.equals(1000)){
+                code = xd.checks_submitNotChk(info.shop_id_01, id, content).getInteger("code");
+            }
+            if (chkcode.equals(1001)){
+                code = xd.checks_submitNotChk(info.shop_id_01, id, content).getInteger("code");
+            }
+            Preconditions.checkArgument(code==Integer.parseInt(chkcode),mess+"期待状态码"+chkcode+"实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app【提交巡店结果】，提交说明的字数内容校验");
+        }
+    }
+
+
+
+
+
+
 
 
 
@@ -334,6 +360,17 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                 {info.deviceId2,dt.getHistoryDate(-1),"20:30:00"},
                 {info.deviceId,dt.getHistoryDate(-7),"08:00:00"},
 
+
+        };
+    }
+
+    @DataProvider(name = "XDRESULT")
+    public  Object[] xdresult() {
+
+        return new String[][]{
+                {"1000","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123","100个字的说明"},
+                {"1000","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123","50个字的说明"},
+                {"1001","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa1234567654321231","101个字的说明"},
 
         };
     }
