@@ -741,7 +741,7 @@ public class Feidan {
                 "{\n" +
                         "    \"channel_name\":\"" + channelName + "\"," +
                         "    \"owner_id\":\"" + owner_id + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";
@@ -777,7 +777,7 @@ public class Feidan {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
 
                         "    \"role_list\":" + role_list  +

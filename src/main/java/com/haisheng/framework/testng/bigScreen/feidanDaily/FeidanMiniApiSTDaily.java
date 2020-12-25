@@ -1380,7 +1380,7 @@ public class FeidanMiniApiSTDaily {
                     checkUtil.checkKeyValue("渠道列表", single, "channel_name", channelName, true);
                     checkUtil.checkKeyValue("渠道列表", single, "register_time", "register_time", false);
                     checkUtil.checkKeyValue("渠道列表", single, "rule_name", "默认规则", true);
-                    checkUtil.checkKeyValue("渠道列表", single, "owner_principal", owner, true);
+//                    checkUtil.checkKeyValue("渠道列表", single, "owner_principal", owner, true);
                     checkUtil.checkKeyValue("渠道列表", single, "total_customers", "", false);
 
 
@@ -1398,8 +1398,8 @@ public class FeidanMiniApiSTDaily {
                             checkUtil.checkKeyValue("渠道列表", singleA, "channel_name", channelNameNew, true);
                             checkUtil.checkKeyValue("渠道列表", singleA, "register_time", "register_time", false);
                             checkUtil.checkKeyValue("渠道列表", singleA, "rule_name", "ahead60min", true);
-                            checkUtil.checkKeyValue("渠道列表", singleA, "owner_principal", owner, true);
-                            checkUtil.checkKeyValue("渠道列表", singleA, "phone", phoneNumNew, true);
+//                            checkUtil.checkKeyValue("渠道列表", singleA, "owner_principal", owner, true);
+//                            checkUtil.checkKeyValue("渠道列表", singleA, "phone", phoneNumNew, true);
                             checkUtil.checkKeyValue("渠道列表", singleA, "total_customers", "", false);
                             break;
                         }

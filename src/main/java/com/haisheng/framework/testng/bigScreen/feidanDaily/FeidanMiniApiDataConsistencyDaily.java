@@ -2410,7 +2410,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             //新建渠道
             String channelname = Long.toString(System.currentTimeMillis());
             Random random = new Random();
-            String phone = "134";
+            String phone = "133";
             for (int i = 0; i < 8; i++) {
                 phone = phone + random.nextInt(10);
 
@@ -2423,7 +2423,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
             //业务员手机号随机生成
-            String phone2 = "135";
+            String phone2 = "139";
             for (int i = 0; i < 8; i++) {
                 phone2 = phone2 + random.nextInt(10);
 
@@ -4558,7 +4558,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
-//        json.put("phone", phone);
+        json.put("phone", phone);
         json.put("email", email);
         json.put("role_name", rolename);
         json.put("shop_name", shopname);
@@ -4585,7 +4585,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
 
                         "    \"role_list\":" + role_list  +
@@ -4604,7 +4604,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
                         "    \"role_list\":" + role_list  +
 

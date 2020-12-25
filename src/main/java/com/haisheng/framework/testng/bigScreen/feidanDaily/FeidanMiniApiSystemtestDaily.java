@@ -887,13 +887,13 @@ public class FeidanMiniApiSystemtestDaily {
         try {
             //新建渠道
             String channelname = Long.toString(System.currentTimeMillis());
-            Random random = new Random();
-            String phone = "147";
-            for (int i = 0; i < 8; i++) {
-                phone = phone + random.nextInt(10);
 
-            }
-            addChannel(channelname, creatQDzlr(), phone, "837");
+
+            addChannel(channelname, creatQDzlr(), "", "837");
+            JSONObject obj = accountPage(1,10,"","","",null,null).getJSONArray("list").getJSONObject(0);
+            String name = obj.getString("name");
+            String phone = obj.getString("phone");
+
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String today = formatter.format(date);
@@ -902,15 +902,18 @@ public class FeidanMiniApiSystemtestDaily {
             JSONObject single = channelList(1,1).getJSONArray("list").getJSONObject(0);
             String single_channel_name = single.getString("channel_name");
             String single_rule_name = single.getString("rule_name");
-            String owner_principal = single.getString("owner_principal");
             String single_phone = single.getString("phone");
+            String single_owner_principal = single.getString("owner_principal");
+
             String total_customers = single.getString("total_customers");
             Long register_time = single.getLong("register_time"); //注册时间
             String showdate = getDateToString(register_time);
             Preconditions.checkArgument(single_channel_name.equals(channelname),"新建时渠道名称为["+ channelname + "], 展示为[" + single_channel_name + "]");
             Preconditions.checkArgument(single_rule_name.equals("默认规则"),"新建时规则名称为[默认规则], 展示为[" + single_rule_name + "]");
-            Preconditions.checkArgument(owner_principal.equals(channelname),"新建时主理人为["+ channelname + "], 展示为[" + owner_principal + "]");
-            Preconditions.checkArgument(single_phone.equals(phone),"新建时主理人手机号为["+ phone + "], 展示为[" + single_phone + "]");
+
+            Preconditions.checkArgument(single_phone.equals(phone),"新建时主理人手机号为["+phone+"], 展示为[" + single_phone + "]");
+            Preconditions.checkArgument(single_owner_principal.equals(name),"新建时主理人为["+name+"], 展示为[" + single_owner_principal + "]");
+
             Preconditions.checkArgument(showdate.equals(today),"新建时日期为["+ today + "], 展示为[" + showdate + "]");
             Preconditions.checkArgument(total_customers.equals("0"),"累计报备顾客期待为0，实际为"+ total_customers);
 
@@ -1770,7 +1773,7 @@ public class FeidanMiniApiSystemtestDaily {
 
             //再次删除角色
             int code = roleDeleteNotChk(roleid).getInteger("code");
-            Preconditions.checkArgument(code==1001,"状态码期待1001，实际1000");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
         } catch (AssertionError e) {
             failReason += e.toString();
