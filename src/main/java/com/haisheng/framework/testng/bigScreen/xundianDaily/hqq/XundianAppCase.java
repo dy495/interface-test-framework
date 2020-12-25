@@ -91,17 +91,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment, null, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1000,
-                    "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code3 = xd.MstepSumit(shop_id, id, comment1, null, 1).getInteger("code");
-            Preconditions.checkArgument(
-                    code3 == 1001,
-                    "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核提交说明为101个字,提交成功，成功code="+code
-            );
-
+            Preconditions.checkArgument(code3 == 1001, "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核提交说明为101个字,提交成功，成功code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -120,16 +113,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment, null, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1000,
-                    "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code1 = xd.MstepSumit(shop_id, id, comment, null, 1).getInteger("code");
-            Preconditions.checkArgument(
-                    code1 == 1000,
-                    "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核结果为合格,提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核结果为合格,提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -148,16 +135,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment1, null, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1001,
-                    "[APP]个人中心待办事项中远程巡店不合格项进行处理(101字说明)提交成功，成功code="+code
-            );
+            Preconditions.checkArgument(code == 1001, "[APP]个人中心待办事项中远程巡店不合格项进行处理(101字说明)提交成功，成功code="+code);
             JSONArray pic_list= xds.getPicPath1();
             Integer code1 = xd.MstepSumit(shop_id, id, comment, pic_list, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code1 == 1001,
-                    "[APP]个人中心待办事项中远程巡店不合格项进行处理，留痕六张提交成功，成功code="+code
-            );
+            Preconditions.checkArgument(code1 == 1001, "[APP]个人中心待办事项中远程巡店不合格项进行处理，留痕六张提交成功，成功code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -176,29 +157,17 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment, pic_list, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1000,
-                    "[APP]个人中心待办事项中远程巡店不合格项进行处理，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店不合格项进行处理，提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code1 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code1 == 1000,
-                    "[APP]个人中心待办事项中远程巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中远程巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login("8888@qq.com", "cf79ae6addba60ad018347359bd144d2");//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.MstepSumit(shop_id, id, comment, pic_list1, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code2 == 1000,
-                    "[APP]个人中心待办事项中远程巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中远程巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code3 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code3 == 1000,
-                    "[APP]个人中心待办事项中远程巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中远程巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -217,29 +186,17 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"SPOT_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"SPOT_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment, pic_list, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1000,
-                    "[APP]个人中心待办事项中现场巡店不合格项进行处理，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中现场巡店不合格项进行处理，提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code1 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code1 == 1000,
-                    "[APP]个人中心待办事项中现场巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中现场巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login("8888@qq.com", "cf79ae6addba60ad018347359bd144d2");//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.MstepSumit(shop_id, id, comment, pic_list1, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code2 == 1000,
-                    "[APP]个人中心待办事项中现场巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中现场巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code3 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code3 == 1000,
-                    "[APP]个人中心待办事项中现场巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中现场巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -258,29 +215,17 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"SCHEDULE_UNQUALIFIED").get("shop_id");
             Long id =  xds.getId_ShopId(list,"SCHEDULE_UNQUALIFIED").get("id");
             Integer code = xd.MstepSumit(shop_id, id, comment, pic_list, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code == 1000,
-                    "[APP]个人中心待办事项中定检巡店不合格项进行处理，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中定检巡店不合格项进行处理，提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code1 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code1 == 1000,
-                    "[APP]个人中心待办事项中定检巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中定检巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login("8888@qq.com", "cf79ae6addba60ad018347359bd144d2");//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.MstepSumit(shop_id, id, comment, pic_list1, null).getInteger("code");
-            Preconditions.checkArgument(
-                    code2 == 1000,
-                    "[APP]个人中心待办事项中定检巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中定检巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer code3 = xd.MstepSumit(shop_id, id, comment, null, 0).getInteger("code");
-            Preconditions.checkArgument(
-                    code3 == 1000,
-                    "[APP]个人中心待办事项中现场定检不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code
-            );
+            Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中现场定检不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -303,10 +248,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             for(int i=0;i<pic_list.size();i++){
                 show_url = pic_list.getJSONObject(i).getString("show_url");
             }
-            Preconditions.checkArgument(
-                    !show_url.isEmpty(),
-                    "将【待办事项】中[未完成]中的定检任务中没有生成定检图片"
-            );
+            Preconditions.checkArgument(!show_url.isEmpty(), "将【待办事项】中[未完成]中的定检任务中没有生成定检图片");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
