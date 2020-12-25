@@ -236,6 +236,36 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void xdRecordDetailDisplay() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = xd.getShopChecksPage(info.shop_id_01,null,null,null,null,
+                    null,100,null).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                Long id = obj.getLong("id");
+                JSONObject obj1 = xd.getShopChecksDetail(id,info.shop_id_01,null,null);
+
+                Preconditions.checkArgument(obj1.containsKey("check_time"),"记录"+id+"未展示提交时间");
+                Preconditions.checkArgument(obj1.containsKey("submit_comment") ,"记录"+id+"未展示提交说明");
+                Preconditions.checkArgument(obj1.containsKey("inspector_name"),"记录"+id+"未展示巡店者");
+                Preconditions.checkArgument(obj1.containsKey("check_type_name"),"记录"+id+"未展示巡店方式");
+                Preconditions.checkArgument(obj1.containsKey("inappropriate_num"),"记录"+id+"未展示不适用项数");
+                Preconditions.checkArgument(obj1.containsKey("qualified_num"),"记录"+id+"未展示合格项数");
+                Preconditions.checkArgument(obj1.containsKey("unqualified_num"),"记录"+id+"未展示不合格项数");
+
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app【巡店报告详情-报告信息】，事项展示校验");
+        }
+    }
 
     @Test(dataProvider = "REPLAY")
     public void xdHistory(String deviceid, String date,String time) {

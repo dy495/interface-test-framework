@@ -1225,7 +1225,7 @@ public class FeidanMiniApiSystemtestDaily {
                 {"a",System.currentTimeMillis()+"@qq.com",phonenum(),"姓名1个字"},
                 {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com",phonenum(),"姓名10个字"},
                 {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名20个字"},
-                {"zhd"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-"+Integer.toString((int)((Math.random()*9+1)*100000))+"789-123456789-\"+Integer.toString((int)((Math.random()*9+1)*100000))+\"789-123456789-123456789-123456789-@qq.com",phonenum(),"邮箱100个字"},
+                {"zhd","123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890000@qq.com",phonenum(),"邮箱100个字"},
 
         };
     }
@@ -1257,11 +1257,11 @@ public class FeidanMiniApiSystemtestDaily {
     public  Object[] accountAddErr() {
         return new String[][]{
                 {"123Aa啊！@啊1123Aa啊！@啊11",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名21个字"},
-//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","1234567890","手机号10位"},
-//                {"zdh",System.currentTimeMillis()+"@yahoo.cn",phonenum()+"1","手机号12位"},
-//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","请问请问请问请问请问全","手机号11位汉字"},
-//                {"zdh",System.currentTimeMillis()+"@yahoo.cn","pppppppppppp","手机号12位英文"},
-                {"zdh"+Integer.toString((int)(Math.random()*100)),"111-2222222222-3333333333-456789-123456789-123456789-123456789-123456789-123456789-123456789-1@qq.com",phonenum(),"邮箱101个字"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","1234567890","手机号10位"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn",phonenum()+"1","手机号12位"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","请问请问请问请问请问全","手机号11位汉字"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","pppppppppppp","手机号12位英文"},
+                {"zdh"+Integer.toString((int)(Math.random()*100)),"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678900001@qq.com",phonenum(),"邮箱101个字"},
 
         };
     }
@@ -1302,13 +1302,13 @@ public class FeidanMiniApiSystemtestDaily {
                 JSONObject obj = array.getJSONObject(i);
                 if (obj.getString("id").equals(id)){
                     name2 = obj.getString("name");
-//                    phone2 = obj.getString("phone");
+                    phone2 = obj.getString("phone");
                     email2 = obj.getString("email");
                 }
             }
 
             Preconditions.checkArgument(name2.equals(name1),"姓名修改为"+name1+" , 实际为"+ name2);
-//            Preconditions.checkArgument(phone2.equals(phone1),"手机号修改为"+phone1+" , 实际为"+ phone2);
+            Preconditions.checkArgument(phone2.equals(phone1),"手机号修改为"+phone1+" , 实际为"+ phone2);
             Preconditions.checkArgument(email2.equals(email1),"邮箱修改为"+email1+" , 实际为"+ email2);
 
             //删除账号
@@ -2951,8 +2951,8 @@ public class FeidanMiniApiSystemtestDaily {
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
-    String lianjiaFreezeStaffIdStr = "2136";
-    int lianjiaFreezeStaffIdInt = 2136;
+    String lianjiaFreezeStaffIdStr = "2124"; //2136
+    int lianjiaFreezeStaffIdInt = 2124;//2136
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
     String wudongStaffIdStr = "2098";
@@ -3238,7 +3238,7 @@ public class FeidanMiniApiSystemtestDaily {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
 
                         "    \"role_list\":" + role_list  +
@@ -3257,7 +3257,7 @@ public class FeidanMiniApiSystemtestDaily {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"name\":\"" + name + "\"," +
-//                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
                         "    \"email\":\"" + email + "\"," +
                         "    \"role_list\":" + role_list  +
 
@@ -3275,7 +3275,7 @@ public class FeidanMiniApiSystemtestDaily {
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-//        json.put("phone", phone);
+        json.put("phone", phone);
         json.put("email", email);
         json.put("role_list", role_list);
         String result = httpPostUrl(url, json.toJSONString());
@@ -3287,7 +3287,7 @@ public class FeidanMiniApiSystemtestDaily {
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-//        json.put("phone", phone);
+        json.put("phone", phone);
         json.put("email", email);
         json.put("role_list", role_list);
 

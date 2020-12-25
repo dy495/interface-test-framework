@@ -26,6 +26,7 @@ public class FeidanWithoutCodeDaily {
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
     String wudongChannelNameStr = "测试FREEZE";
+    String wudongChannelowner_id = "uid_e07e08c7";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
@@ -34,15 +35,16 @@ public class FeidanWithoutCodeDaily {
     String lianjiaChannelStr = "1";
     String lianjiaChannelName = "链家";
     String lianjiaOwnerPhone = "16600000001";
+    String lianjiaChannelowner_id= "uid_58ee7ff2";
 
 //  ------------------------------------------业务员-----------------------------------------------------
 
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
-    String lianjiaFreezeStaffIdStr = "2136";
-    int lianjiaFreezeStaffIdInt = 2136;
+    String lianjiaFreezeStaffIdStr = "2124"; //2136
+    int lianjiaFreezeStaffIdInt = 2124; //2136
 
-    String lianjiaStaffIdStr = "2136";
+    String lianjiaStaffIdStr = "2124"; //2136
     String lianjiaStaffName = "链家业务员";
     String lianjiaStaffPhone = "17711111024";
 
@@ -50,7 +52,7 @@ public class FeidanWithoutCodeDaily {
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
 
-    String wudongStaffIdStr = "2098";
+    String wudongStaffIdStr = "2098"; //17722222221
     int wudongStaffIdInt = 2098;
 
     String maitianStaffName = "喵喵喵";
@@ -71,7 +73,8 @@ public class FeidanWithoutCodeDaily {
 
     //long firstAppearTime = 1582684439509L; //原
     //long firstAppearTime = 1583900897877L;
-    long firstAppearTime = 1584936946964L;
+    //long firstAppearTime = 1584936946964L;
+    long firstAppearTime = 1603158881173L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
@@ -109,7 +112,7 @@ public class FeidanWithoutCodeDaily {
 
         try {
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // 报备
             String customerPhone = "14422110014";
@@ -162,7 +165,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -185,7 +188,7 @@ public class FeidanWithoutCodeDaily {
 
         try {
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ahead1hRuleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ahead1hRuleId);
 
             // PC报备
             String customerPhone = "14422110015";
@@ -248,7 +251,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -594,7 +597,7 @@ public class FeidanWithoutCodeDaily {
 
         try {
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // 报备
             String customerPhone = "18210113587";
@@ -655,7 +658,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -766,9 +769,9 @@ public class FeidanWithoutCodeDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             String customerPhone = "14422110004";
             String customerName = caseName + "-" + feidan.getNamePro();
@@ -831,8 +834,8 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -856,9 +859,9 @@ public class FeidanWithoutCodeDaily {
 
         try {
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             String customerPhone = "14422110005";
             String customerName = ciCaseName + "-" + feidan.getNamePro();
@@ -928,8 +931,8 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -956,7 +959,7 @@ public class FeidanWithoutCodeDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1015,7 +1018,7 @@ public class FeidanWithoutCodeDaily {
 
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1318,9 +1321,9 @@ public class FeidanWithoutCodeDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备(勿动)
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1381,8 +1384,8 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
 
         }
@@ -1409,9 +1412,9 @@ public class FeidanWithoutCodeDaily {
 
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
             // PC报备
             String adviserName = zhangName;
@@ -1475,8 +1478,8 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1501,9 +1504,9 @@ public class FeidanWithoutCodeDaily {
             String smsCode = "748338";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, ruleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, ruleId);
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1565,9 +1568,9 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
 
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1592,7 +1595,7 @@ public class FeidanWithoutCodeDaily {
             String smsCode = "105793";
             String customerName = caseName + "-" + feidan.getNamePro();
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, ruleId);
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
             feidan.updateReportTimeChannel(customerPhone, customerName, 5, wudongStaffIdInt, reportTime);
@@ -1643,7 +1646,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1674,7 +1677,7 @@ public class FeidanWithoutCodeDaily {
             String customerPhoneA = "18210113587";
             String smsCode = "805805";
 
-            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             String customerName = caseName + "-" + feidan.getNamePro();
 
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
@@ -1744,7 +1747,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, wudongChannelowner_id, wudongOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -1779,7 +1782,7 @@ public class FeidanWithoutCodeDaily {
             String channelStaffPhone = lianjiaStaffPhone;
             int channelStaffId = 2124;
 
-            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEdit(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
 
             feidan.newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
 
@@ -1846,7 +1849,7 @@ public class FeidanWithoutCodeDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
+            feidan.channelEditFinally(lianjiaChannelStr, lianjiaChannelName, lianjiaChannelowner_id, lianjiaOwnerPhone, defaultRuleId);
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -2154,7 +2157,7 @@ public class FeidanWithoutCodeDaily {
             String id = ruleData.getString("id");
 
 //            编辑渠道规则
-            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", feidan.genPhoneNum(), id);
+            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", wudongChannelowner_id, feidan.genPhoneNum(), id);
 
 //            报备
             String customerPhone = "18210113587";
@@ -2183,7 +2186,7 @@ public class FeidanWithoutCodeDaily {
             feidan.checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
 
 //            删除引用
-            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", feidan.genPhoneNum(), defaultRuleId);
+            feidan.channelEdit(wudongChannelIdStr, "测试FREEZE", wudongChannelowner_id, feidan.genPhoneNum(), defaultRuleId);
 
 //            删除引用后删除规则
             feidan.deleteRiskRule(id);

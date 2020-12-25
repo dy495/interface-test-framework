@@ -41,10 +41,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
-    String lianjiaFreezeStaffIdStr = "2136";
-    int lianjiaFreezeStaffIdInt = 2136;
+    String lianjiaFreezeStaffIdStr = "2124"; //2136
+    int lianjiaFreezeStaffIdInt = 2124; //2136
 
-    String lianjiaStaffIdStr = "2136";
+    String lianjiaStaffIdStr = "2124"; //2136
     String lianjiaStaffName = "链家业务员";
     String lianjiaStaffPhone = "17711111024";
 
@@ -52,7 +52,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
 
-    String wudongStaffIdStr = "2098";
+    String wudongStaffIdStr = "2098"; //17722222221
     int wudongStaffIdInt = 2098;
 
     String maitianStaffName = "喵喵喵";

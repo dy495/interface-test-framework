@@ -2491,7 +2491,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             H5Lianjia(name, phone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2124, 1585220718000L);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
@@ -2565,7 +2565,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             H5WuDong(name, fixphone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2124, 1585220718000L);
             updateReportTimeChannel(fixphone, name, 5, 2098, 1585220718000L);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -2641,7 +2641,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             H5WuDong(name, phone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2124, 1585220718000L);
             Thread.sleep(500);
             updateReportTimeChannel(phone, name, 5, 2098, 1585220718000L);
             Thread.sleep(500);
@@ -4298,8 +4298,8 @@ public class FeidanMiniApiDataConsistencyDaily {
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
-    String lianjiaFreezeStaffIdStr = "2136";
-    int lianjiaFreezeStaffIdInt = 2136;
+    String lianjiaFreezeStaffIdStr = "2124";
+    int lianjiaFreezeStaffIdInt = 2124;
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
     String wudongStaffIdStr = "2098";
