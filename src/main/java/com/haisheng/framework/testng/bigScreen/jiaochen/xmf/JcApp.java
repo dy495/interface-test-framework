@@ -379,7 +379,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Long id[] = pf.startReception(pp.carplate);
             int tasknumA[] = pf.appTask();
             //完成接待
-            jc.finishReception(id[0], id[0]);
+            jc.finishReception(id[0], id[1]);
             int tasknumB[] = pf.appTask();
 
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
@@ -415,7 +415,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            jc.finishReception(id[1], id[1]);
+            jc.finishReception(id[0], id[1]);
 
             //pc登录
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
@@ -463,6 +463,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_receptionTodayDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
             String type = "all";
             String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
             //接待前，今日任务
@@ -487,7 +488,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "HEXIAONUM")
+    @DataProvider(name = "HEXIAONUM")  //核销，核销记录+1
     public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
         return new String[]{
                 "1234567890123456",     //16位
@@ -537,6 +538,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void messageFormOneFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
 
             Map<String, String> map = new HashMap<String, String>();
@@ -562,6 +564,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
             saveData("消息表单单项查询，结果校验");
         }
     }

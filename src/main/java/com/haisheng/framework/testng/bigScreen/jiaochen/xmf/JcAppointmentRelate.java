@@ -263,11 +263,11 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
 //            System.out.println(dt1.getPcAppointmentRecordNum());
 //            qaDbUtil.updateDataAll(dt1);
 //
-//            DataTemp result1=qaDbUtil.selsetDataTemp("pc_appointmentPage");
-//            System.out.println(result1.getPcAppointmentRecordNum());
-
-            int num=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
-            System.out.println(num);
+            DataTemp result1=qaDbUtil.selsetDataTemp("pc_appointmentPage");
+            System.out.println(result1.getPcAppointmentRecordNum());
+//
+//            int num=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
+//            System.out.println(num);
 
 
         } catch (AssertionError | Exception e) {
