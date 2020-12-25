@@ -345,7 +345,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //增发
             util.addVoucher(voucherName, 10);
             //增发后数据
-            builder.voucherName(voucherName);
+            builder.size(size).page(1).voucherName(voucherName);
             JSONObject response = jc.invokeApi(builder.build());
             int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory") == null
                     ? 0 : CommonUtil.getIntField(response, 0, "surplus_inventory");
@@ -391,7 +391,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //审批通过
             util.applyVoucher(voucherName, "1");
             //审批后数据
-            builder.voucherName(voucherName);
+            builder.size(size).page(1).voucherName(voucherName);
             JSONObject response = jc.invokeApi(builder.build());
             int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory") == null
                     ? 0 : CommonUtil.getIntField(response, 0, "surplus_inventory");
@@ -439,11 +439,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //审批不通过
             util.applyVoucher(voucherName, "2");
             //审批后数据
-            builder.voucherName(voucherName);
-            JSONObject response = jc.invokeApi(builder.build());
-            int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory") == null
-                    ? 0 : CommonUtil.getIntField(response, 0, "surplus_inventory");
-            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            builder.size(size).page(1).voucherName(voucherName);
+            JSONObject response = jc.invokeApi(builder.build()).getJSONArray("list").getJSONObject(0);
+            Integer newSurplusInventory = response.getInteger("surplus_inventory");
+            Integer newAdditionalInventory = response.getInteger("additional_inventory");
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
             if (surplusInventory != 0) {
                 Preconditions.checkArgument(newSurplusInventory == surplusInventory,
