@@ -1041,7 +1041,6 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //查询列表数
             int total = jc.invokeApi(scene).getInteger("total");
             String phone = util.getDistinctPhone();
-            user.login(marketing);
             IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
                     .verificationPersonPhone(phone).type(1).status(1).build();
             jc.invokeApi(scene1);
