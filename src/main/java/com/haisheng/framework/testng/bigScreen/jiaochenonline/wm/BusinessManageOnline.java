@@ -360,30 +360,4 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
             saveData("客户管理--【售后客户】的送修人姓名&&联系电话&&里程数=维修记录中最新及记录的姓名&&联系电话&&里程数");
         }
     }
-
-    @Test(description = "客户管理--【小程序客户】总消费=【售后客户】按此电话号搜索", enabled = false)
-    public void customerManage_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int total = jc.pcWechatCustomerPage(null, null, null, 1, size).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.pcWechatCustomerPage(null, null, null, i, size).getJSONArray("list");
-                for (int j = 0; j < array.size(); j++) {
-                    int totalPrice = array.getJSONObject(j).getInteger("total_price");
-                    String customerPhone = array.getJSONObject(j).getString("customer_phone");
-                    AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(customerPhone);
-                    int afterTotal = jc.invokeApi(builder.build()).getInteger("total");
-                    int x = CommonUtil.getTurningPage(afterTotal, size);
-                    for (int y = 1; y < x; y++) {
-                        JSONArray array1 = jc.invokeApi(builder.page(y).size(size).build()).getJSONArray("list");
-                    }
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("客户管理--【小程序客户】总消费=【售后客户】按此电话号搜索");
-        }
-    }
 }

@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumCarType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
@@ -91,11 +92,11 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--开始接待，列表数+1,【首页-今日任务-接待】分子，分母+1,【首页-今日任务-接待】分子，分母+1");
+            saveData("接待管理--【套餐管理-套餐购买记录】列表数+1");
         }
     }
 
-    @Test(description = "接待管理--购买套餐，确认支付之后，【我的消息】+1")
+    @Test(description = "接待管理--购买套餐，确认支付之后，该套餐购买数量+1")
     public void receptionManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -113,7 +114,29 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--购买套餐并确认支付【套餐管理-套餐表单】售出/赠送套数+1");
+            saveData("接待管理--购买套餐，确认支付之后，该套餐购买数量+1");
+        }
+    }
+
+    @Test(description = "接待管理--赠送套餐，确认支付之后，该套餐赠送数量+1")
+    public void receptionManage_data_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //套餐购卖数量
+            IScene packageFormPageScene = PackageFormPage.builder().packageName(EnumVP.ONE.getPackageName()).build();
+            int num = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "give_number");
+            //购买套餐
+            util.receptionBuyFixedPackage(0);
+            //确认支付
+            util.makeSureBuyPackage(EnumVP.ONE.getPackageName());
+            //购买后套餐购卖数量
+            int newNum = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "give_number");
+            CommonUtil.valueView(num, newNum);
+            Preconditions.checkArgument(newNum == num + 1, "套餐购买列表" + CommonUtil.checkResult(num + 1, newNum));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("接待管理--赠送套餐，确认支付之后，该套餐赠送数量+1");
         }
     }
 
@@ -137,11 +160,11 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--购买套餐并确认支付【套餐管理-套餐表单】售出/赠送套数+1");
+            saveData("接待管理--购买套餐，确认支付之后，【我的消息】+1");
         }
     }
 
-    @Test(description = "接待管理--购买固定套餐，确认支付之后，【我的消息】+1")
+    @Test(description = "接待管理--购买固定套餐，确认支付之后，【我的套餐】列表+1")
     public void receptionManage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -161,7 +184,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--取消，列表数+0");
+            saveData("接待管理--购买固定套餐，确认支付之后，【我的套餐】列表+1");
         }
     }
 
@@ -185,11 +208,11 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--取消，列表数+0");
+            saveData("接待管理--购买临时套餐，确认支付之后，【我的卡券】列表+1");
         }
     }
 
-    @Test(description = "接待管理--购买临时套餐，确认支付之后，【我的消息】+1", enabled = false)
+    @Test(description = "接待管理--购买一个套餐，【小程序客户】消费频次+1&&【小程序客户】总消费+累计金额&&【售后客户】频次+1&&【售后客户】总消费+累计金额", enabled = false)
     public void receptionManage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -211,7 +234,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             long wechatTotalPrice = (long) CommonUtil.getIntField(wechatCustomerData, 0, "total_price");
             //购买套餐
             IScene scene = PurchaseFixedPackage.builder().customerId(customerId).receptionId(receptionId)
-                    .packageId(null).carType("ALL_CAR").selectNumber(1).packagePrice("100").expiryDate("30").remark("xxxxxxx")
+                    .packageId(null).carType(EnumCarType.ALL_CAR.name()).selectNumber(1).packagePrice("100").expiryDate("30").remark("xxxxxxx")
                     .voucherType("CURRENT").type(1).subjectType("").subjectId(1L).build();
             jc.invokeApi(scene);
             //购买后，售后客户消费频次+1
@@ -335,32 +358,6 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("客户管理--【售后客户】的送修人姓名&&联系电话&&里程数=维修记录中最新及记录的姓名&&联系电话&&里程数");
-        }
-    }
-
-    @Test(description = "客户管理--【小程序客户】总消费=【售后客户】按此电话号搜索", enabled = false)
-    public void customerManage_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int total = jc.pcWechatCustomerPage(null, null, null, 1, size).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.pcWechatCustomerPage(null, null, null, i, size).getJSONArray("list");
-                for (int j = 0; j < array.size(); j++) {
-                    int totalPrice = array.getJSONObject(j).getInteger("total_price");
-                    String customerPhone = array.getJSONObject(j).getString("customer_phone");
-                    AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(customerPhone);
-                    int afterTotal = jc.invokeApi(builder.build()).getInteger("total");
-                    int x = CommonUtil.getTurningPage(afterTotal, size);
-                    for (int y = 1; y < x; y++) {
-                        JSONArray array1 = jc.invokeApi(builder.page(y).size(size).build()).getJSONArray("list");
-                    }
-                }
-            }
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("客户管理--【小程序客户】总消费=【售后客户】按此电话号搜索");
         }
     }
 }
