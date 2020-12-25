@@ -160,6 +160,7 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("customer_phone", ar.customer_phone);
         return invokeApi(path, object);
     }
+
     //pc接待管理 -> 开始接待
     public JSONObject pcStartReception(String customerId, List<Long> voucherIdList, String customerName, String customerPhone) {
         String path = "/jiaochen/pc/reception-manage/start-reception";
@@ -170,6 +171,7 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("customer_phone", customerPhone);
         return invokeApi(path, object);
     }
+
     //pc接待管理 -> 开始接待
     public JSONObject pcManageReception(String plate_number, boolean checkCode) {
         String path = "/jiaochen/pc/reception-manage/reception";
@@ -193,8 +195,9 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("reception_id", receptionId);
         return invokeApi(path, object);
     }
+
     //pc接待管理 -> 取消接待
-    public JSONObject pcCancelReception(Long receptionId,Long shop_id) {
+    public JSONObject pcCancelReception(Long receptionId, Long shop_id) {
         String path = "/jiaochen/pc/reception-manage/cancel-reception";
         JSONObject object = new JSONObject();
         object.put("id", receptionId);
@@ -322,7 +325,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //卡券管理 -> 卡券转移
-    public JSONObject pcTransfer(String transferPhone, String receivePhone, String voucherIds) {
+    public JSONObject pcTransfer(String transferPhone, String receivePhone, List<Long> voucherIds) {
         String url = "/jiaochen/pc/voucher-manage/transfer";
         JSONObject object = new JSONObject();
         object.put("transfer_phone", transferPhone);
@@ -1052,7 +1055,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/11/24 15:30
      **/
 
-    public JSONObject appointmentHandle(Long id, Integer type,Long shop_id) {
+    public JSONObject appointmentHandle(Long id, Integer type, Long shop_id) {
         String url = "/jiaochen/m-app/task/appointment/handle";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -3459,74 +3462,77 @@ public class ScenarioUtil extends TestCaseCommon {
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
+
     /**
      * @description :消息管理-推送消息--推送个人
-     *  * * @author: gly
+     * * * @author: gly
      * @date :2020/12/17 14:35
      **/
     public JSONObject pushMessage(Boolean if_send_immediately, String message_content, String message_name, String push_target, ArrayList tel_list) {
         String url = "/jiaochen/pc/message-manage/push-message";
-        JSONObject json1=new JSONObject();
-        json1.put("if_send_immediately",if_send_immediately);
-        json1.put("message_content",message_content);
-        json1.put("message_name",message_name);
-        json1.put("push_target",push_target);
-        json1.put("tel_list",tel_list);
-        return invokeApi(url,json1);
+        JSONObject json1 = new JSONObject();
+        json1.put("if_send_immediately", if_send_immediately);
+        json1.put("message_content", message_content);
+        json1.put("message_name", message_name);
+        json1.put("push_target", push_target);
+        json1.put("tel_list", tel_list);
+        return invokeApi(url, json1);
     }
+
     /**
      * @description :消息管理-推送消息--推送门店
-     *  * * @author: gly
+     * * * @author: gly
      * @date :2020/12/17 14:35
      **/
     public JSONObject pushMessageShop(Boolean if_send_immediately, String message_content, String message_name, String push_target, ArrayList shop_list) {
         String url = "/jiaochen/pc/message-manage/push-message";
-        JSONObject json1=new JSONObject();
-        json1.put("if_send_immediately",if_send_immediately);
-        json1.put("message_content",message_content);
-        json1.put("message_name",message_name);
-        json1.put("push_target",push_target);
-        json1.put("shop_list",shop_list);
-        return invokeApi(url,json1);
+        JSONObject json1 = new JSONObject();
+        json1.put("if_send_immediately", if_send_immediately);
+        json1.put("message_content", message_content);
+        json1.put("message_name", message_name);
+        json1.put("push_target", push_target);
+        json1.put("shop_list", shop_list);
+        return invokeApi(url, json1);
     }
 
     /**
      * @description :小程序-我的消息-消息详情
-     *  * * @author: gly
+     * * * @author: gly
      * @date :2020/12/17 14:35
      **/
     public JSONObject messageDetail(String id) {
         String url = "/jiaochen/applet/granted/message/detail";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
-        return invokeApi(url,json1);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
+        return invokeApi(url, json1);
     }
+
     /**
      * @description :自主核销
      * @date :2020/12/22 17:46
      **/
-    public JSONObject appleterification(String id,String verification_code,Boolean checkcode) {
+    public JSONObject appleterification(String id, String verification_code, Boolean checkcode) {
         String url = "/jiaochen/applet/granted/voucher/verification";
-        JSONObject json1=new JSONObject();
-        json1.put("id",id);
-        json1.put("verification_code",verification_code);
-        return invokeApi(url,json1,checkcode);
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
+        json1.put("verification_code", verification_code);
+        return invokeApi(url, json1, checkcode);
     }
 
     /**
      * @description :PC-创建销售客户
-     *  * * @author: gly
+     * * * @author: gly
      * @date :2020/12/17 14:35
      **/
     public JSONObject createCustomer(String shopId, String customerName, String customerPhone, String sex, String customerType) {
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
-        JSONObject json=new JSONObject();
-        json.put("shop_id",shopId);
-        json.put("customer_name",customerName);
-        json.put("customer_phone",customerPhone);
-        json.put("sex",sex);
-        json.put("customer_type",customerType);
-        return invokeApi(url,json);
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("customer_name", customerName);
+        json.put("customer_phone", customerPhone);
+        json.put("sex", sex);
+        json.put("customer_type", customerType);
+        return invokeApi(url, json);
     }
 
 

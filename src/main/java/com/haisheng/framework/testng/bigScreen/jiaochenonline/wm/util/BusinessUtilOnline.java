@@ -688,12 +688,11 @@ public class BusinessUtilOnline {
      *
      * @return 卡券编号
      */
-    public long getVoucherListId(String voucherName) throws Exception {
+    public long getVoucherListId(String voucherName) {
+        List<Long> voucherList = new ArrayList<>();
         Integer id = null;
         Integer status = null;
         JSONArray list;
-        AtomicReference<Long> newId = new AtomicReference<>();
-        AtomicBoolean sign = new AtomicBoolean(false);
         do {
             VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
@@ -701,22 +700,63 @@ public class BusinessUtilOnline {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             list = response.getJSONArray("list");
-            list.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                String name = jsonObject.getString("title");
-                String statusName = jsonObject.getString("status_name");
-                if (voucherName.equals(name) && !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
-                        && !statusName.equals(EnumAppletVoucherStatus.USED.getName())) {
-                    sign.set(true);
-                    newId.set(jsonObject.getLong("id"));
-                }
-            });
+            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("title") != null
+                    && e.getString("title").equals(voucherName)
+                    && !e.getString("status_name").equals(EnumAppletVoucherStatus.EXPIRED.getName())
+                    && !e.getString("status_name").equals(EnumAppletVoucherStatus.USED.getName()))
+                    .map(e -> e.getLong("id")).collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
-            if (sign.get()) {
-                return newId.get();
-            }
         } while (list.size() == 20);
-        throw new Exception("无此卡券");
+        return voucherList.get(0);
+    }
+
+    /**
+     * 获取小程序卡券名称
+     *
+     * @return 卡券编号
+     */
+    public String getVoucherListName(Long voucherId) {
+        List<String> voucherList = new ArrayList<>();
+        Integer id = null;
+        Integer status = null;
+        JSONArray list;
+        do {
+            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(size).id(id).status(status);
+            JSONObject response = jc.invokeApi(builder.build());
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            list = response.getJSONArray("list");
+            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(voucherId))
+                    .map(e -> e.getString("title")).collect(Collectors.toList()));
+            logger.info("id:{},status:{}", id, status);
+        } while (list.size() == size);
+        return voucherList.get(0);
+    }
+
+    /**
+     * 获取卡券集合
+     *
+     * @param type 类型：已使用/已过期/快过期
+     * @return 卡券id集合
+     */
+    public List<Long> getVoucherList(String type) {
+        List<Long> voucherList = new ArrayList<>();
+        Integer id = null;
+        Integer status = null;
+        JSONArray list;
+        do {
+            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            JSONObject response = jc.invokeApi(builder.build());
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            list = response.getJSONArray("list");
+            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("status_name").equals(type))
+                    .map(e -> e.getLong("id")).collect(Collectors.toList()));
+            logger.info("id:{},status:{}", id, status);
+        } while (list.size() == 20);
+        return voucherList;
     }
 
     /**

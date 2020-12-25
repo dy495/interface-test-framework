@@ -48,6 +48,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
     private static final EnumAccount marketing = EnumAccount.MARKETING_ONLINE;
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final EnumAppletToken appletUser = EnumAppletToken.JC_WM_ONLINE;
+    private static final EnumAppletToken applet = EnumAppletToken.JC_GLY_DAILY;
 
     @BeforeClass
     @Override
@@ -260,6 +261,102 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             collectMessage(e);
         } finally {
             saveData("卡券表单--新建卡券--成本异常情况");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
+    public void voucherManage_system_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已使用的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.USED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+                    .voucherIds(getList(voucherList.get(0))).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
+            CommonUtil.checkResult("转移卡券", voucherName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
+    public void voucherManage_system_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已使用的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+                    .voucherIds(getList(voucherList.get(0))).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
+            CommonUtil.checkResult("转移卡券", voucherName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，转移账号异常")
+    public void voucherManage_system_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {"13654973499"};
+            //获取已过期的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            Arrays.stream(phones).forEach(phone -> {
+                IScene scene = Transfer.builder().transferPhone(phone).receivePhone(applet.getPhone())
+                        .voucherIds(getList(voucherList.get(0))).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = "推送用户id不能为空";
+                CommonUtil.checkResult("转移卡券", voucherName, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，接收账号异常")
+    public void voucherManage_system_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {"13654973499", marketing.getPhone()};
+            //获取已过期的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            Arrays.stream(phones).forEach(phone -> {
+                IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(phone)
+                        .voucherIds(getList(voucherList.get(0))).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = phone.equals(marketing.getPhone()) ? "转移账号和接收账号不能相同" : "卡券接收人未注册小程序";
+                CommonUtil.checkResult("转移卡券", voucherName, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
         }
     }
 
@@ -922,6 +1019,72 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
+    @Test(description = "核销人员--创建异页核销,列表数+1")
+    public void voucherManage_data_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = VerificationPeople.builder().build();
+            //查询列表数
+            int total = jc.invokeApi(scene).getInteger("total");
+            String phone = util.getDistinctPhone();
+            IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
+                    .verificationPersonPhone(phone).type(1).status(1).build();
+            jc.invokeApi(scene1);
+            int newTotal = jc.invokeApi(scene).getInteger("total");
+            CommonUtil.valueView(total, newTotal);
+            Preconditions.checkArgument(newTotal == total + 1,
+                    "列表数：" + CommonUtil.checkResult(total + 1, newTotal));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建异页核销,列表数+1");
+        }
+    }
+
+    @Test(description = "核销人员--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
+    public void voucherManage_data_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取核销码
+            String code = util.getVerificationCode("本司员工");
+            IScene scene = VerificationPeople.builder().verificationCode(code).build();
+            int num = CommonUtil.getIntField(jc.invokeApi(scene), 0, "verification_number");
+            //核销列表
+            VerificationRecord.VerificationRecordBuilder builder = VerificationRecord.builder();
+            int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
+            //核销
+            user.loginApplet(appletUser);
+            JSONObject voucherInfo = util.getCanUsedVoucherListId();
+            long id = voucherInfo.getLong("id");
+            String voucherName = voucherInfo.getString("voucherName");
+            long voucherId = util.getVoucherListId(voucherName);
+            IScene scene1 = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
+            String message = jc.invokeApi(scene1, false).getString("message");
+            if (message.equals("该卡券未开启自助核销功能")) {
+                jc.pcSwichSelfVerification(voucherId, true);
+            }
+            //核销后该核销员的核销数量
+            user.login(administrator);
+            int newNum = CommonUtil.getIntField(jc.invokeApi(scene), 0, "verification_number");
+            CommonUtil.valueView(num, newNum);
+            Preconditions.checkArgument(newNum == num + 1, "核销前核销数：" + num + "核销后核销数：" + newNum);
+            int newVerificationTotal = jc.invokeApi(builder.build()).getInteger("total");
+            CommonUtil.valueView(verificationTotal, newVerificationTotal);
+            Preconditions.checkArgument(newVerificationTotal == verificationTotal + 1,
+                    "核销前核销记录列表数：" + verificationTotal + "核销后核销记录列表数：" + newVerificationTotal);
+            //核销渠道
+            JSONObject response = jc.invokeApi(builder.voucherName(voucherName).build());
+            String verificationChannelName = CommonUtil.getStrField(response, 0, "verification_channel_name");
+            CommonUtil.valueView(verificationChannelName);
+            Preconditions.checkArgument(verificationChannelName.equals("主动核销"),
+                    "核销渠道：" + CommonUtil.checkResult("主动核销", verificationChannelName));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
+        }
+    }
+
     @Test(description = "核销人员--创建异页核销,名称异常")
     public void voucherManage_system_30() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1030,72 +1193,6 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             collectMessage(e);
         } finally {
             saveData("核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1");
-        }
-    }
-
-    @Test(description = "核销人员--创建异页核销,列表数+1")
-    public void voucherManage_data_31() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene scene = VerificationPeople.builder().build();
-            //查询列表数
-            int total = jc.invokeApi(scene).getInteger("total");
-            String phone = util.getDistinctPhone();
-            IScene scene1 = CreateVerificationPeople.builder().verificationPersonName("walawala")
-                    .verificationPersonPhone(phone).type(1).status(1).build();
-            jc.invokeApi(scene1);
-            int newTotal = jc.invokeApi(scene).getInteger("total");
-            CommonUtil.valueView(total, newTotal);
-            Preconditions.checkArgument(newTotal == total + 1,
-                    "列表数：" + CommonUtil.checkResult(total + 1, newTotal));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--创建异页核销,列表数+1");
-        }
-    }
-
-    @Test(description = "核销人员--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
-    public void voucherManage_data_32() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取核销码
-            String code = util.getVerificationCode("本司员工");
-            IScene scene = VerificationPeople.builder().verificationCode(code).build();
-            int num = CommonUtil.getIntField(jc.invokeApi(scene), 0, "verification_number");
-            //核销列表
-            VerificationRecord.VerificationRecordBuilder builder = VerificationRecord.builder();
-            int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
-            //核销
-            user.loginApplet(appletUser);
-            JSONObject voucherInfo = util.getCanUsedVoucherListId();
-            long id = voucherInfo.getLong("id");
-            String voucherName = voucherInfo.getString("voucherName");
-            long voucherId = util.getVoucherListId(voucherName);
-            IScene scene1 = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
-            String message = jc.invokeApi(scene1, false).getString("message");
-            if (message.equals("该卡券未开启自助核销功能")) {
-                jc.pcSwichSelfVerification(voucherId, true);
-            }
-            //核销后该核销员的核销数量
-            user.login(administrator);
-            int newNum = CommonUtil.getIntField(jc.invokeApi(scene), 0, "verification_number");
-            CommonUtil.valueView(num, newNum);
-            Preconditions.checkArgument(newNum == num + 1, "核销前核销数：" + num + "核销后核销数：" + newNum);
-            int newVerificationTotal = jc.invokeApi(builder.build()).getInteger("total");
-            CommonUtil.valueView(verificationTotal, newVerificationTotal);
-            Preconditions.checkArgument(newVerificationTotal == verificationTotal + 1,
-                    "核销前核销记录列表数：" + verificationTotal + "核销后核销记录列表数：" + newVerificationTotal);
-            //核销渠道
-            JSONObject response = jc.invokeApi(builder.voucherName(voucherName).build());
-            String verificationChannelName = CommonUtil.getStrField(response, 0, "verification_channel_name");
-            CommonUtil.valueView(verificationChannelName);
-            Preconditions.checkArgument(verificationChannelName.equals("主动核销"),
-                    "核销渠道：" + CommonUtil.checkResult("主动核销", verificationChannelName));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
         }
     }
 
