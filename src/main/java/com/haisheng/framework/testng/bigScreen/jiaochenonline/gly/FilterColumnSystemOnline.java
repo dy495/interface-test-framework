@@ -1907,7 +1907,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.messageFormTimeFilterManage("", String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String pushTime = list.getJSONObject(i).getString("push_time");
+                    String pushTime = list.getJSONObject(i).getString("push_time").substring(0,10);
                     Preconditions.checkArgument(pushTime.compareTo(startTime) >= 0 && pushTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + " 推送时间为：" + pushTime);
                 }
             }
