@@ -1298,10 +1298,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String type = "CASHIER";
             //风控告警规则的ID
             JSONArray rule_id = new JSONArray();
-            rule_id.add(1);
+            rule_id.add(54);
             //告警接收者按照选择角色的ID
             JSONArray accept_id = new JSONArray();
-            accept_id.add(1);
+            accept_id.add(296);
 
             String start_time = "08:00";
             String end_time = "16:00";
