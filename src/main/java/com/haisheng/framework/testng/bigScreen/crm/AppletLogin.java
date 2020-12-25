@@ -74,6 +74,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
+            if (phoneList.size() != 0) {
+                commonConfig.pushRd = new String[]{phoneList.get(0)};
+            }
             commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
             commonConfig.referer = getBjsReferDaily();
