@@ -643,23 +643,26 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
     public void voucherManage_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String date = "2020-12-09";
             VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
                 for (int j = 0; j < array.size(); j++) {
-                    String voucherName = array.getJSONObject(j).getString("voucher_name");
-                    int cumulativeUse = array.getJSONObject(j).getInteger("cumulative_use");
-                    int cumulativeOverdue = array.getJSONObject(j).getInteger("cumulative_overdue");
-                    int cumulativeDelivery = array.getJSONObject(j).getInteger("cumulative_delivery");
-                    Preconditions.checkArgument(cumulativeDelivery >= cumulativeOverdue,
-                            voucherName + "累计发出：" + cumulativeDelivery + "累计过期：" + cumulativeOverdue);
-                    Preconditions.checkArgument(cumulativeDelivery >= cumulativeUse,
-                            voucherName + "累计发出：" + cumulativeDelivery + "累计使用：" + cumulativeUse);
-                    Preconditions.checkArgument(cumulativeDelivery >= cumulativeOverdue + cumulativeUse,
-                            voucherName + "累计发出：" + cumulativeDelivery + "累计使用+累计过期+：" + cumulativeOverdue + cumulativeUse);
-                    CommonUtil.logger(voucherName);
+                    if (array.getJSONObject(j).getString("create_time").compareTo(date) > 0) {
+                        String voucherName = array.getJSONObject(j).getString("voucher_name");
+                        int cumulativeUse = array.getJSONObject(j).getInteger("cumulative_use");
+                        int cumulativeOverdue = array.getJSONObject(j).getInteger("cumulative_overdue");
+                        int cumulativeDelivery = array.getJSONObject(j).getInteger("cumulative_delivery");
+                        Preconditions.checkArgument(cumulativeDelivery >= cumulativeOverdue,
+                                voucherName + "累计发出：" + cumulativeDelivery + "累计过期：" + cumulativeOverdue);
+                        Preconditions.checkArgument(cumulativeDelivery >= cumulativeUse,
+                                voucherName + "累计发出：" + cumulativeDelivery + "累计使用：" + cumulativeUse);
+                        Preconditions.checkArgument(cumulativeDelivery >= cumulativeOverdue + cumulativeUse,
+                                voucherName + "累计发出：" + cumulativeDelivery + "累计使用+累计过期+：" + cumulativeOverdue + cumulativeUse);
+                        CommonUtil.logger(voucherName);
+                    }
                 }
             }
         } catch (Exception | AssertionError e) {
