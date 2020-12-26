@@ -16,7 +16,7 @@ public enum EnumAppletToken {
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "Yyq04ubFzxKP8GzWC1yhzw==", "@@@", true, "", ""),
 
-    BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "v6CrjxBj/3TGYzE52mY6qQ==", "Max", true, "", "13373166806"),
+    BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "YfRMJg382YOSCOMovQs0CQ==", "Max", true, "", "13373166806"),
 
     BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cw4sTi87+ZWGuDqdsfZXSA==", "@@@", false, "", ""),
 
@@ -31,8 +31,8 @@ public enum EnumAppletToken {
     JC_XMF_DAILY(EnumProduce.JC.name(), "3QQYlO1DtjV5mwp2hP/cwg==", "", false, "", ""),
     JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false, "", ""),
 
-    JC_GLY_DAILY(EnumProduce.JC.name(), "TSqSTW2XWlkPFK8rYWHT1Q==", "Max", true, "", "13373166806"),
-    JC_GLY_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "Max", false, "", "13373166806"),
+    JC_GLY_DAILY(EnumProduce.JC.name(), "TSqSTW2XWlkPFK8rYWHT1Q==", "Max", true, "", ""),
+    JC_GLY_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "Max", false, "", ""),
     ;
 
     EnumAppletToken(String produce, String token, String wechatName, boolean isDaily, String wechatId, String phone) {
