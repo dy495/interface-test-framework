@@ -815,7 +815,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_level_name"), "接口返回参数中不包含字段：customer_level_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_name"), "接口返回参数中不包含字段：customer_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_phone"), "接口返回参数中不包含字段：customer_phone");
-                Preconditions.checkArgument(list.getJSONObject(i).containsKey("intention_car_style_name"), "接口返回参数中不包含字段：intention_car_style_name");
+//                Preconditions.checkArgument(list.getJSONObject(i).containsKey("intention_car_style_name"), "接口返回参数中不包含字段：intention_car_style_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("customer_type_name"), "接口返回参数中不包含字段：customer_type_name");
                 Preconditions.checkArgument(list.getJSONObject(i).containsKey("task_status_name"), "接口返回参数中不包含字段：task_status_name");
             }

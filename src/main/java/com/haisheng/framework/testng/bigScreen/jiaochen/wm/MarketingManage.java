@@ -888,7 +888,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                     for (int i1 = 1; i1 < x; i1++) {
                         JSONArray applyArray = jc.invokeApi(applyBuilder.page(i1).size(size).build()).getJSONArray("list");
                         for (int j1 = 0; j1 < applyArray.size(); j1++) {
-                            if (applyArray.getJSONObject(j1).getString("apply_type_name").equals("增发")) {
+                            if (applyArray.getJSONObject(j1).getString("apply_type_name").equals("增发")
+                                    && applyArray.getJSONObject(j1).getString("name").equals(voucherName)) {
                                 numSum += applyArray.getJSONObject(j1).getInteger("num");
                             }
                         }

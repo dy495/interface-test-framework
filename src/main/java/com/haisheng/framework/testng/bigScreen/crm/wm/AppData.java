@@ -207,9 +207,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 客户管理-我的交车
-     */
     @Test(description = "今日交车数=今日交车列表手机号去重后列数和")
     public void myDeliverCar_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -267,9 +264,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 客户管理-我的试驾
-     */
     @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
     public void myTestDriver_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -314,9 +308,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 工作管理-我的客户
-     */
     @Test(description = "全部客户=列表数")
     public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -465,7 +456,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "app我的客户页列表数!=PC我的客户页列表数");
+            Preconditions.checkArgument(total == listSize, "app我的客户页列表数：" + total + "PC我的客户页列表数" + listSize);
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -503,9 +494,6 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 工作管理-我的预约
-     */
     @Test(description = "全部预约人数>=今日预约人数")
     public void myAppointment_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
