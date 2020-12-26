@@ -248,7 +248,8 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             for(int i=0;i<pic_list.size();i++){
                 show_url = pic_list.getJSONObject(i).getString("show_url");
             }
-            Preconditions.checkArgument(!show_url.isEmpty(), "将【待办事项】中[未完成]中的定检任务中没有生成定检图片");
+            Preconditions.checkArgument(!show_url.isEmpty(), "将【待办事项】中[未完成]中的定检任务中没有生成定检图片"
+            );
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

@@ -241,7 +241,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "yesterday_uv")).sum();
             CommonUtil.valueView(appSum, pcSum);
-            Preconditions.checkArgument(appSum == pcSum, "");
+            Preconditions.checkArgument(appSum == pcSum, "app权限下【首页】全部门店昨日各时段中人数之和"+appSum+"!==pc【客流分析】各个门店昨日各时段中人数之和"+pcSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -261,7 +261,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "yesterday_pv")).sum();
             CommonUtil.valueView(appSum, pcSum);
-            Preconditions.checkArgument(appSum == pcSum, "app昨日到访人次之和：" + appSum + " pc【客流分析】各个门店昨日各时段中人数之和：" + pcSum);
+            Preconditions.checkArgument(appSum == pcSum, "app昨日到访人次之和：" + appSum + " pc【客流分析】各个门店昨日各时段中人次之和：" + pcSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -653,7 +653,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("deal").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "male_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, "");
+                Preconditions.checkArgument(pcPercent == appPercent, "历史客流--选择同一时间段，男性别占比"+pcPercent+"==pc客群漏斗中男女性别占比"+appPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -704,7 +704,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                 CommonUtil.valueView(pcPercentList);
                 CommonUtil.valueView(appPercentList, pcPercentList);
-                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "");
+                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "历史客流--选择同一时间段，年龄段占比"+appPercentList+"!==pc客群漏斗中年龄段占比"+pcPercentList);
                 CommonUtil.logger(shopId + " " + month);
             }));
         } catch (Exception | AssertionError e) {
