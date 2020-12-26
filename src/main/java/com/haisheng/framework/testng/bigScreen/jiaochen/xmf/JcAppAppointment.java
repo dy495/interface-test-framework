@@ -99,11 +99,11 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE",priority = 2)
+    @Test(description = "确认预约,app任务列表-1，今日任务数-1", dataProvider = "TYPE", priority = 2)
     public void agreeCancleAppointment(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             JSONObject data = jc.appointmentPage(null, 10);
             int total = data.getInteger("total");
 
@@ -116,7 +116,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //确认预约
-            jc.appointmentHandle(id, type,shop_id);
+            jc.appointmentHandle(id, type, shop_id);
 
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
@@ -132,7 +132,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(description = "小程序预约,app任务列表+1，今日任务数+1",priority = 1)
+    //    @Test(description = "小程序预约,app任务列表+1，今日任务数+1",priority = 1)
     public void AppletAppointment() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -172,33 +172,33 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/16 20:04
      **/
     @Test
-    public void appointmentRecoder(){
+    public void appointmentRecoder() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             jc.appletLoginToken(pp.appletTocken);
-            int total=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+            int total = jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
             //预约
             appletAppointment pm = new appletAppointment();
-            pm.car_id=pp.car_idA;
-            pm.appointment_name="自动夏";
-            pm.shop_id=Long.parseLong(pp.shopIdZ);
-            pm.staff_id="uid_f9342ae2";
-            pm.time_id=pf.getTimeId(pm.shop_id,pm.car_id,dt.getHistoryDate(4));
-            Long appointmentId=jc.appletAppointment(pm).getLong("id");
-            int totalA=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+            pm.car_id = pp.car_idA;
+            pm.appointment_name = "自动夏";
+            pm.shop_id = Long.parseLong(pp.shopIdZ);
+            pm.staff_id = "uid_f9342ae2";
+            pm.time_id = pf.getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(4));
+            Long appointmentId = jc.appletAppointment(pm).getLong("id");
+            int totalA = jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
 
             //取消预约
-            jc.appletCancleAppointment(appointmentId,pp.shopIdZ);
+            jc.appletCancleAppointment(appointmentId, pp.shopIdZ);
             //删除预约记录
             jc.appletmaintainDelete(appointmentId.toString());
-            int totalC=jc.appletAppointmentList("MAINTAIN","20",null).getInteger("total");
+            int totalC = jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
 
-            Preconditions.checkArgument(totalA-total==1,"预约后，预约记录未+1");
-            Preconditions.checkArgument(totalA-totalC==1,"删除预约记录，预约记录未+1");
+            Preconditions.checkArgument(totalA - total == 1, "预约后，预约记录未+1");
+            Preconditions.checkArgument(totalA - totalC == 1, "删除预约记录，预约记录未+1");
 
-        }catch (AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
+        } finally {
             saveData("预约，取消。删除记录,数据一致性变化");
         }
     }

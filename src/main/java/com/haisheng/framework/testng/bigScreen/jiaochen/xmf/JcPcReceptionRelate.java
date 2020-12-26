@@ -33,11 +33,10 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     JcFunction pf = new JcFunction();
     PublicParm pp = new PublicParm();
-    String dataName="pc_reception";
+    String dataName = "pc_reception";
 
 
-
-    public void initial1(){
+    public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
 
@@ -89,8 +88,8 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
-            afterClassClean();
-            qaDbUtil.closeConnection();
+        afterClassClean();
+        qaDbUtil.closeConnection();
     }
 
     /**
@@ -105,14 +104,14 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     }
 
     //操作
-    public void BeforeStart(){
-        try{
+    public void BeforeStart() {
+        try {
             //创建一个活动，保存活动id,活动已报名，已入选，小程序活动数，报名人数，总数
-            DataTemp dataTemp=new DataTemp();
+            DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
             dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int appTodayTask[]=pf.appTask();
+            int appTodayTask[] = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -121,9 +120,9 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
             dataTemp.setAppointmentId(pf.pcstartReception(pp.carplate));
 
             qaDbUtil.updateDataAll(dataTemp);
-        }catch (AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally {
+        } finally {
             logger.info("start:");
         }
 
@@ -133,10 +132,10 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public void Pc_appointmentMessage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int result2=pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum",dataName);
-            System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==1,"接待后pc接待列表+1,接待前："+result1+"接待后："+result2);
+            int result2 = pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
+            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            System.out.println(result1 + ":" + result2);
+            Preconditions.checkArgument(result2 - result1 == 1, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -148,10 +147,10 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public void AppTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int result2=pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1=qaDbUtil.selsetDataTempOne("appReceiptage",dataName);
-            System.out.println(result1+":"+result2);
-            Preconditions.checkArgument(result2-result1==1,"接待后app接待任务列数,接待前："+result1+"接待后："+result2);
+            int result2 = pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
+            int result1 = qaDbUtil.selsetDataTempOne("appReceiptage", dataName);
+            System.out.println(result1 + ":" + result2);
+            Preconditions.checkArgument(result2 - result1 == 1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -163,19 +162,18 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[]=pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
 
-            int app_surplus_reception=qaDbUtil.selsetDataTempOne("app_surplus_reception",dataName);
-            int app_all_reception=qaDbUtil.selsetDataTempOne("app_all_reception",dataName);
-            Preconditions.checkArgument(appTask[2]-app_surplus_reception==1,"接待后app今日任务appSurplusAppointment,接待前："+app_surplus_reception+"接待后："+appTask[2]);
-            Preconditions.checkArgument(appTask[3]-app_all_reception==1,"接待后app今日任务app_all_appointment,接待前："+app_all_reception+"接待后："+appTask[3]);
+            int app_surplus_reception = qaDbUtil.selsetDataTempOne("app_surplus_reception", dataName);
+            int app_all_reception = qaDbUtil.selsetDataTempOne("app_all_reception", dataName);
+            Preconditions.checkArgument(appTask[2] - app_surplus_reception == 1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
+            Preconditions.checkArgument(appTask[3] - app_all_reception == 1, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("接待后，app今日任务分子分母+1");
         }
     }
-
 
 
 }

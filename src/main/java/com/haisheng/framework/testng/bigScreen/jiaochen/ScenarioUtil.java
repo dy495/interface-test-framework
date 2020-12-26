@@ -425,7 +425,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //保养配置修改
-    public JSONObject pcCarModelPriceEdit(Long id, Double price, String status) {
+    public JSONObject pcCarModelPriceEdit(String id, Double price, String status) {
         String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);

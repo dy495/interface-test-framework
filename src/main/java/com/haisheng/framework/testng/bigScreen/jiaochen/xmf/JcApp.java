@@ -97,11 +97,11 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ACOUNT")
     public static Object[] acount() {
         return new String[][]{
-                {"13412010056", "000000", "全部-集团"},
-                {"13412010055", "000000", "全部-区域"},
-                {"13412010054", "000000", "全部-品牌"},
-                {"13412010043", "000000", "别删-吕13412010043"},
-                {"13412010089", "000000", "xx"},
+                {"13412010056", "000000", "全部-集团" },
+                {"13412010055", "000000", "全部-区域" },
+                {"13412010054", "000000", "全部-品牌" },
+                {"13412010043", "000000", "别删-吕13412010043" },
+                {"13412010089", "000000", "xx" },
         };
     }
 
@@ -199,7 +199,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     .create_start(dt.getHistoryDate(0)).build();
 
             int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal=appointmentTotal1-appointmentTotal2;
+            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
 
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
@@ -209,9 +209,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             sr.reception_start = dt.getHistoryDate(0);
 
             int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status="2000";
-            int total2=jc.receptionManageC(sr).getInteger("total");
-            int total=total1-total2;
+            sr.reception_status = "2000";
+            int total2 = jc.receptionManageC(sr).getInteger("total");
+            int total = total1 - total2;
             sr = null;
 
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
@@ -252,7 +252,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     .create_start(dt.getHistoryDate(0)).build();
 
             int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal=appointmentTotal1-appointmentTotal2;
+            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
 
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
@@ -261,9 +261,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             sr.reception_start = dt.getHistoryDate(0);
 
             int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status="2000";
-            int total2=jc.receptionManageC(sr).getInteger("total");
-            int total=total1-total2;
+            sr.reception_status = "2000";
+            int total2 = jc.receptionManageC(sr).getInteger("total");
+            int total = total1 - total2;
             sr = null;
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
             Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
@@ -301,7 +301,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     .create_start(dt.getHistoryDate(0)).build();
 
             int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal=appointmentTotal1-appointmentTotal2;
+            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
             //接待管理页今日数据
             SelectReception sr = new SelectReception();
 //            sr.shop_id = pp.shopId;
@@ -309,9 +309,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             sr.reception_start = dt.getHistoryDate(0);
 
             int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status="2000";
-            int total2=jc.receptionManageC(sr).getInteger("total");
-            int total=total1-total2;
+            sr.reception_status = "2000";
+            int total2 = jc.receptionManageC(sr).getInteger("total");
+            int total = total1 - total2;
             sr = null;
             Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
             Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
@@ -360,7 +360,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             Long id[] = pf.startReception(pp.carplate7);
 
-            jc.finishReception(id[0],id[1]);
+            jc.finishReception(id[0], id[1]);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -443,7 +443,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //取消接待
-            jc.cancleReception(id[0],id[1]);
+            jc.cancleReception(id[0], id[1]);
             int totalA = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
 
@@ -463,7 +463,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_receptionTodayDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             String type = "all";
             String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
             //接待前，今日任务
@@ -498,6 +498,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                 "1234567890123ASD", //含小写
                 "1234567890123asd", //含字母
                 "234567890123asd&**",//含字符
+                "160731387200000030",//已使用的核销码
+//                "160741180800000005",//已过期
         };
     }
 
@@ -538,7 +540,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void messageFormOneFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
 
             Map<String, String> map = new HashMap<String, String>();
@@ -564,20 +566,20 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             saveData("消息表单单项查询，结果校验");
         }
     }
 
     @Test(description = "登录登出验证")
-    public void apploginNor(){
+    public void apploginNor() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            jc.appLogin2(pp.jdgw,pp.jdgwpassword,true);
+        try {
+            jc.appLogin2(pp.jdgw, pp.jdgwpassword, true);
             jc.appLoginout();
-        }catch(AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
+        } finally {
             saveData("登录登出校验");
         }
     }
@@ -586,27 +588,28 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
      * @description :登录异常
      * @date :2020/12/17 11:45
      **/
-    @Test(dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)
-    public void apploginAb(String phone){
+    @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
+    public void apploginAb(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            int code=jc.appLogin2(phone,"000000",false).getInteger("code");
-            Preconditions.checkArgument(code==1001,"登录异常手机号");
-        }catch(AssertionError | Exception e){
+        try {
+            int code = jc.appLogin2(phone, "000000", false).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "登录异常手机号");
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
+        } finally {
             saveData("登录手机号异常校验");
         }
     }
-    @Test(dataProvider = "CODE",dataProviderClass = DataAbnormal.class)
-    public void apploginAb2(String code){
+
+    @Test(dataProvider = "CODE", dataProviderClass = DataAbnormal.class)
+    public void apploginAb2(String code) {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            int code1=jc.appLogin2(pp.jdgw,code,false).getInteger("code");
-            Preconditions.checkArgument(code1==1001,"登录异常手机号");
-        }catch(AssertionError | Exception e){
+        try {
+            int code1 = jc.appLogin2(pp.jdgw, code, false).getInteger("code");
+            Preconditions.checkArgument(code1 == 1001, "登录异常手机号");
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
+        } finally {
             saveData("登录验证码异常校验");
         }
     }
@@ -616,42 +619,42 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/17 14:58
      **/
     @Test()
-    public void write(){
+    public void write() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            String voucher_code[]=pf.voucherName();
+        try {
+            String voucher_code[] = pf.voucherName();
             //pc
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int  messagePctotal=jc.pushMsgListFilterManage("-1","1","10",null,null).getInteger("total");
-            int verificationReordPctotal=jc.verificationReordFilterManage("-1","1","10",null,null).getInteger("total");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
+            int verificationReordPctotal = jc.verificationReordFilterManage("-1", "1", "10", null, null).getInteger("total");
 
             //核销记录总数
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
-            int total=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            int total = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
             //核销
             jc.verification(voucher_code[0], true);
-            int totalA=jc.appWriteOffRecordsPage("ALL","10",null).getInteger("total");
+            int totalA = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
             //小程序消息最新一条信息校验
             jc.appletLoginToken(pp.appletTocken);
-            JSONObject message=jc.appletMessageList(null,20).getJSONArray("list").getJSONObject(0);
-            String messageName=message.getString("content");
+            JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
+            String messageName = message.getString("content");
 //            String messageTime=message.getString("content");
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int  messagePctotalA=jc.pushMsgListFilterManage("-1","1","10",null,null).getInteger("total");
-            int verificationReordPctotalA=jc.verificationReordFilterManage("-1","1","10",null,null).getInteger("total");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            int messagePctotalA = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
+            int verificationReordPctotalA = jc.verificationReordFilterManage("-1", "1", "10", null, null).getInteger("total");
 
 
-            Preconditions.checkArgument(messagePctotalA-messagePctotal==1,"核销后pc消息总数没-1");
-            Preconditions.checkArgument(verificationReordPctotalA-verificationReordPctotal==1,"核销后pc核销记录记录总数没-1");
-            Preconditions.checkArgument(totalA-total==1,"核销后记录总数没-1");
-            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_code[1]+"】已被核销，请立即查看"));
+            Preconditions.checkArgument(messagePctotalA - messagePctotal == 1, "核销后pc消息总数没-1");
+            Preconditions.checkArgument(verificationReordPctotalA - verificationReordPctotal == 1, "核销后pc核销记录记录总数没-1");
+            Preconditions.checkArgument(totalA - total == 1, "核销后记录总数没-1");
+            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
 
 
-        }catch(AssertionError | Exception e){
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        }finally{
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+        } finally {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             saveData("app核销记录数据一致校验");
         }
     }
