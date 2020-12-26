@@ -462,7 +462,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
                 }
             }
             CommonUtil.valueView(total, listSize);
-            Preconditions.checkArgument(total == listSize, "app我的客户页列表数!=PC我的客户页列表数");
+            Preconditions.checkArgument(total == listSize, "app我的客户页列表数：" + total + "PC我的客户页列表数" + listSize);
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
