@@ -478,7 +478,64 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
 //---------------------------------------------------分界线-----------------------------------
+    /**
+     * 巡检门店
+     */
+    public JSONObject shopList(String inspectorId, String districtCode) throws Exception {
+        String url = "/patrol/schedule-check/shop/list";
+        String json =
+                "{\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"district_code\":\"" + districtCode + "\"\n" +
+                        "}";
 
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //门店详情
+    public JSONObject taskDetail() throws Exception {
+        String url = "/patrol/m/task/detail";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * 巡检员列表
+     *
+     * @return
+     * @throws Exception
+     */
+    public JSONObject inspectorList() throws Exception {
+        String url = "/patrol/schedule-check/inspector/list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        System.out.println(res);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //app开始巡店,适用于定检任务巡店
+    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset, Long task_id) throws Exception {
+        String url = "/store/m-app/auth/shop/checks/start";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("check_type", check_type);
+        json.put("reset", reset);
+        json.put("task_id", task_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //适用于现场巡店
+    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset) throws Exception {
+        String url = "/store/m-app/auth/shop/checks/start";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("check_type", check_type);
+        json.put("reset", reset);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
     /**
      * @description :新增清单
      * @date :2020/6/20 16:42
