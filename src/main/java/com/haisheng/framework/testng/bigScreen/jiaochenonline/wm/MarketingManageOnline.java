@@ -2406,7 +2406,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
-    @Test(description = "消息管理--发送给发送多人时客户名称为全部&联系方式&车牌号码显示为空")
+    @Test(description = "消息管理--发送给发送多人时客户名称为全部&联系方式&车牌号码显示为空", priority = 1)
     public void messageManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
