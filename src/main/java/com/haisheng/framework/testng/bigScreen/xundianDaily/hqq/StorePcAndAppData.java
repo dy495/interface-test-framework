@@ -23,10 +23,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -57,7 +54,8 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumShopId.XUNDIAN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("store " + md);
-        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        //md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        md.login("2842729999@qq.com", "d1487f65671ae61d513764093af222d1");
     }
 
     @AfterClass
@@ -278,7 +276,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "gender", "gender_ratio");
                 CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际"+percent);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -296,7 +294,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "age", "age_ratio");
                 CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际"+percent);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -305,12 +303,13 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Ignore
     @Test(description = "实时客流--会员占比+非会员占比==100%")
     public void passengerFlow_data_3() {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "实时客流--今日到访人数<=今日各时刻中人次之和")
+    @Test(description = "实时客流--今日到访人数<=今日各时刻中人次之和") //ok
     public void passengerFlow_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -319,12 +318,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
                 //今日到访人数
-                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
-                //今日各时刻中人数之和
+                //今日各时刻中人次之和
                 int sumValue = getTypeSum(scene1, "pv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value <= sumValue, "");
+                Preconditions.checkArgument(value <= sumValue, "今日到访人数"+value+"，各时刻人次和"+sumValue);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -333,7 +332,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "实时客流--今日到访人次==今日各时段中人数之和")
+    @Test(description = "实时客流--今日到访人次==今日各时段中人次之和") //ok
     public void passengerFlow_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -342,17 +341,17 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourTotal.builder().shopId(shopId).build();
                 JSONArray list = md.invokeApi(scene).getJSONArray("list");
                 //今日到访人次
-                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
+                int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 //今日各时段中人次之和
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
-                int sumValue = getTypeSum(scene1, "uv");
+                int sumValue = getTypeSum(scene1, "pv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value == sumValue, "");
+                Preconditions.checkArgument(value == sumValue, "今日到访人次"+value+", 今日各时段中人次之和"+sumValue);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("实时客流--今日到访人次==今日各时段中人数之和");
+            saveData("实时客流--今日到访人次==今日各时段中人次之和");
         }
     }
 
@@ -386,7 +385,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "实时客流--app今日到访人数==pc【实时客流】今日到访人数")
+    @Test(description = "实时客流--app今日到访人数==pc【实时客流】今日到访人数") //ok
     public void passengerFlow_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -400,7 +399,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
                 Integer pcUv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView(appUv, pcUv);
-                Preconditions.checkArgument(appUv.equals(pcUv), "");
+                Preconditions.checkArgument(appUv.equals(pcUv), "app" + appUv+",pc"+pcUv);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -410,7 +409,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "实时客流--app今日到访人次==pc【实时客流】今日到访人次")
+    @Test(description = "实时客流--app今日到访人次==pc【实时客流】今日到访人次")//ok
     public void passengerFlow_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -424,7 +423,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
                 Integer pcPv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView(appPv, pcPv);
-                Preconditions.checkArgument(appPv.equals(pcPv), "");
+                Preconditions.checkArgument(appPv.equals(pcPv), "app"+appPv+", pc"+pcPv);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -446,7 +445,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
                 int pcUvSum = getTypeSum(scene1, "yesterday_uv");
                 CommonUtil.valueView(appUvSum, pcUvSum);
-                Preconditions.checkArgument(appUvSum == pcUvSum, "");
+                Preconditions.checkArgument(appUvSum == pcUvSum, "app"+appUvSum+", pc"+pcUvSum);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
