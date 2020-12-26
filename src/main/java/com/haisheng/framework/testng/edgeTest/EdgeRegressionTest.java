@@ -276,12 +276,12 @@ public class EdgeRegressionTest {
             EXPECT_PASS       = 79;
 
         } else if (VIDEO.contains("entry_personLess_anquantongdao")) {
-            EXPECT_ENTER  = 11;
-            EXPECT_LEAVE  = 11;
+            EXPECT_ENTER  = 11*2;
+            EXPECT_LEAVE  = 11*2;
 
         } else if (VIDEO.contains("entry_personMore_jinjie")) {
-            EXPECT_ENTER  = 13;
-            EXPECT_LEAVE  = 16;
+            EXPECT_ENTER  = 13*2; //该类型有总进出口和楼层进出口，故x2
+            EXPECT_LEAVE  = 16*2;
 
         } else if (VIDEO.contains("8077890396619776")) {
             //entry_7375502601552896_L1-1号门扶梯L2-L1进场-20min.mp4-8077890396619776
