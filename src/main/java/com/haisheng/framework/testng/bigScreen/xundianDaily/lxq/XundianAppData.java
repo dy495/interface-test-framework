@@ -263,7 +263,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         try {
 
             int bef1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
-            int bef2 = xd.xd_report_list(null,info.shop_id_01_chin,null,null,null,1,1).getInteger("total");
+            int bef2 = xd.xd_report_list("",info.shop_id_01_chin,"","",null,1,1).getInteger("total");
             //巡店
             info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
             int after1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");

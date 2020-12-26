@@ -13,8 +13,8 @@ public class MendianInfo {
     public final long shop_id_01 = 43072L;
     public final String shop_id_01_chin = "AI-Test(门店订单录像)";
 
-    public final String deviceId = ""; //设备id
-    public final String deviceId2 = ""; //设备id
+    public final String deviceId = "8075861419983872"; //设备id 152-k8s-1
+    public final String deviceId2 = "7975589134468096"; //设备id AI摄像头算法测试 （152）
     public final String deviceId3 = ""; //设备id
     public final String picPath = ""; //图片相对路径
 

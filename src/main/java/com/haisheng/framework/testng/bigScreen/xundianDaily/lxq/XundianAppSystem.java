@@ -297,16 +297,16 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "")
+    @Test(dataProvider = "XDRESULT")
     public void commmitxdResult(String chkcode, String content, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long id = info.xdOperateitem(info.shop_id_01,"REMOTE",1,1);
             int code = 0;
-            if (chkcode.equals(1000)){
+            if (chkcode.equals("1000")){
                 code = xd.checks_submitNotChk(info.shop_id_01, id, content).getInteger("code");
             }
-            if (chkcode.equals(1001)){
+            if (chkcode.equals("1001")){
                 code = xd.checks_submitNotChk(info.shop_id_01, id, content).getInteger("code");
             }
             Preconditions.checkArgument(code==Integer.parseInt(chkcode),mess+"期待状态码"+chkcode+"实际"+code);
