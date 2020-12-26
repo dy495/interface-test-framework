@@ -2691,7 +2691,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
-    @Test(description = "消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】已作废, 请重新选择！")
+    @Test(description = "消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！")
     public void messageManager_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2707,7 +2707,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("消息管理--选择卡券时，卡券被作废，提交时提示：卡券【XXXXX】已作废, 请重新选择！");
+            saveData("消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！");
         }
     }
 

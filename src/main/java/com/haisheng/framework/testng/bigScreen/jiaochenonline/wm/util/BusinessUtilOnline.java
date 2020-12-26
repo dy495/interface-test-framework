@@ -219,6 +219,13 @@ public class BusinessUtilOnline {
             String voucherName = createVoucher(1L);
             applyVoucher(voucherName, "1");
             voucherLIst.add(getVoucherId(voucherName));
+            List<String> phoneList = new ArrayList<>();
+            phoneList.add(EnumAccount.MARKETING.getPhone());
+            //发出此卡券
+            PushMessage.PushMessageBuilder pushMessageBuilder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+                    .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .type(0).voucherOrPackageList(voucherLIst).useDays(10).ifSendImmediately(true);
+            jc.invokeApi(pushMessageBuilder.build());
         }
         return voucherLIst.get(0);
     }
