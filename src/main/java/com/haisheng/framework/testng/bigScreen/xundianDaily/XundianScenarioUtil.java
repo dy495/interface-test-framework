@@ -1154,13 +1154,14 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject task_step_submit(Long shop_id,Long id,JSONArray pic_list,Integer recheck_result,String comment) throws Exception {
-        String url = "/store/m-app/auth/task/step/submit";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String url = "/store/m-app/auth/patrol/task/step/submit";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("id", id);
+        json.put("pic_list", pic_list);
+        json.put("recheck_result", recheck_result);
+        json.put("comment", comment);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 

@@ -95,7 +95,7 @@ public class XdPackageData extends TestCaseCommon {
     public Map<String, Long> getId_ShopId(JSONArray list, String taskType) throws Exception {
         Long id = null;
         Long shop_id = null;
-        for (int i = 0; i < list.size()-1; i++) {
+        for (int i = 0; i < list.size(); i++) {
             String task_type = list.getJSONObject(i).getString("task_type");
             if (task_type.equals(taskType)) {
                 id = list.getJSONObject(i).getLong("id");
