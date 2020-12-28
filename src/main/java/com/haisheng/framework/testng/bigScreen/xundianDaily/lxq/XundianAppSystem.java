@@ -208,7 +208,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "CHECKRESULT") //这块接口文档有点问题！！！！！
+    @Test(dataProvider = "CHECKRESULT") // 没改完 有问题
     public void xdRecordDetailFilter2(String type, String mes) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -217,15 +217,13 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                     null,100,null).getJSONArray("list").getJSONObject(0).getLong("id");
 
             JSONArray checklist = new JSONArray();
-            JSONArray recordDetail = xd.getShopChecksDetail(id,info.shop_id_01,null,Long.parseLong(type)).getJSONArray("check_lists");
-            for (int i = 0 ; i < recordDetail.size();i++){
-                JSONObject obj = recordDetail.getJSONObject(i);
-                JSONArray itemlist = obj.getJSONArray("check_items");
+            JSONArray itemlist = xd.getShopChecksDetail(id,info.shop_id_01,null,Long.parseLong(type)).getJSONArray("check").getJSONObject(0).getJSONArray("check_items");
+
                 for (int j = 0 ; j < itemlist.size();j++){
                     Long checkresult = itemlist.getJSONObject(j).getLong("check_result");
                     Preconditions.checkArgument(checkresult==Long.parseLong(type),"筛选"+type+mes+"结果包含"+checkresult);
                 }
-            }
+
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -236,7 +234,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test //ok
     public void xdRecordDetailDisplay() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -265,7 +263,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "REPLAY")
+    @Test(dataProvider = "REPLAY") //ok
     public void xdHistory(String deviceid, String date,String time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -281,7 +279,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test // bug 6502
     public void xdHistoryErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

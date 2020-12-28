@@ -52,7 +52,7 @@ import java.util.Random;
 public class FeidanMiniApiSystemtestOnline {
     StringUtil stringUtil = new StringUtil();
     MD5Util md5 = new MD5Util();
-    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,""); //要改
+    JSONArray rolelist = addrolelist(711,"管理员",97,"赢识办公室",0,"");
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -1100,6 +1100,7 @@ public class FeidanMiniApiSystemtestOnline {
      *  账号管理--新建账号
      */
 
+    @Ignore
     @Test(dataProvider = "ACC_ADD")
     public void accountadd(String name,String email, String phone,String mes){
         String ciCaseName = new Object() {
@@ -1167,6 +1168,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test(dataProvider = "ACC_ADDERR")
     public void accountaddErr(String name , String email,String phone,String mes){
         String ciCaseName = new Object() {
@@ -1203,6 +1205,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void accountEdit(){
         String ciCaseName = new Object() {
@@ -1262,6 +1265,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test(dataProvider = "ACC_ADDERR")
     public void accountEditErr(String name1 , String email1,String phone1,String mes){
         String ciCaseName = new Object() {
@@ -1299,6 +1303,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void NotExistAccountLogin(){
         String ciCaseName = new Object() {
@@ -1335,6 +1340,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void AccountDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1374,6 +1380,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void AccountDelAndEdit(){
         String ciCaseName = new Object() {
@@ -1408,6 +1415,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void AccountDisableAndLogin(){
         String ciCaseName = new Object() {
@@ -1462,6 +1470,7 @@ public class FeidanMiniApiSystemtestOnline {
      */
 
 
+    @Ignore
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1501,6 +1510,7 @@ public class FeidanMiniApiSystemtestOnline {
         }
     }
 
+    @Ignore
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd1(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1541,6 +1551,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleAddErr(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1587,6 +1598,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void roleAddRe(){
         String ciCaseName = new Object() {
@@ -1621,6 +1633,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleEditErr(String name1, String desc1, String mess){
         String ciCaseName = new Object() {
@@ -1653,6 +1666,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void roleDelInUse(){
         String ciCaseName = new Object() {
@@ -1687,6 +1701,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    @Ignore
     @Test
     public void roleReDel(){
         String ciCaseName = new Object() {
@@ -1721,6 +1736,7 @@ public class FeidanMiniApiSystemtestOnline {
 
 
 
+    @Ignore
     @Test
     public void roleDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1820,7 +1836,7 @@ public class FeidanMiniApiSystemtestOnline {
         JSONArray arr = new JSONArray();
         JSONObject obj = new JSONObject();
 
-        obj.put("role_id",1062);
+        obj.put("role_id",717);
         obj.put("role_name","自动化用的角色-别删");
         JSONObject obj1 = new JSONObject();
         obj1.put("shop_id",97);

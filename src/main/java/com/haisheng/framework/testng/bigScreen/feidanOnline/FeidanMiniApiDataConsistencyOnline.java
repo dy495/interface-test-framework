@@ -46,9 +46,9 @@ import java.util.*;
 
 public class FeidanMiniApiDataConsistencyOnline {
 
-    String roleid = "1062"; //要改
+    String roleid = "717"; //要改
     String rolename = "自动化用的角色-别删"; //要改
-    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,""); //要改
+    JSONArray rolelist = addrolelist(711,"管理员",97,"赢识办公室",0,"");
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -2128,6 +2128,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     //账号管理-页面内一致性
 
+    @Ignore
     @Test
     public void accountOnePage1() {
         String ciCaseName = new Object() {
@@ -2173,6 +2174,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    @Ignore
     @Test
     public void accountOnePage2() {
         String ciCaseName = new Object() {
@@ -2212,6 +2214,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    @Ignore
     @Test
     public void accountOnePage3() {
         String ciCaseName = new Object() {
@@ -2246,6 +2249,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    @Ignore
     @Test
     public void accountSeveralPage1() {
         String ciCaseName = new Object() {
@@ -2284,6 +2288,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    @Ignore
     @Test
     public void roleOnePage1() {
         String ciCaseName = new Object() {
