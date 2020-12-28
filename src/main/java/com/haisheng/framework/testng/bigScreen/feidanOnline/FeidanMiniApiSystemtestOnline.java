@@ -51,7 +51,8 @@ import java.util.Random;
 
 public class FeidanMiniApiSystemtestOnline {
     StringUtil stringUtil = new StringUtil();
-
+    MD5Util md5 = new MD5Util();
+    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,""); //要改
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -925,7 +926,1183 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
+    /**
+     * V3。1。2
+     */
+    /**
+     * @date: 2020.12.15
+     *  账号管理--搜索
+     */
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch1(String name){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,name,null,null,null,null);
+            System.out.println(dataaobj);
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("name").contains(name),"根据"+name+"进行搜索，结果包含"+obj.getString("name"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据账号名称搜索\n");
+        }
+    }
+
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch2(String email){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,null,null,email,null,null);
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("email").contains(email),"搜索"+email+"，结果包含"+obj.getString("email"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆邮箱搜索\n");
+        }
+    }
+
+
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch3(String phone){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,null,phone,null,null,null);
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("phone").contains(phone),"搜索"+phone+"，结果包含"+obj.getString("phone"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆手机号搜索\n");
+        }
+    }
+
+
+    @Test
+    public void accountSearch4(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String rolename = roleList(1,10,null).getJSONArray("list").getJSONObject(0).getString("name");
+            JSONObject dataaobj = accountPage(1,50,null,null,null,rolename,null);
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONArray rolelist1 = dataaobj.getJSONArray("list").getJSONObject(i).getJSONArray("role_list");
+                    int listsize = rolelist1.size();
+                    for (int j = 0 ; j < listsize;j++ ){
+                        String rolename_search = rolelist1.getJSONObject(j).getString("role_name");
+                        Preconditions.checkArgument(rolename_search.equals(rolename),"搜索"+rolename+"，结果包含"+rolename_search);
+                    }
+
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据角色搜索\n");
+        }
+    }
+
+
+
+    @Test(dataProvider = "SEARCH")
+    public void accountSearch5(String phone){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject dataaobj = accountPage(1,50,phone,phone,null,null,null);
+            if (dataaobj.getInteger("total")>0){
+                for (int i = 0 ; i < dataaobj.getInteger("total");i++){
+                    JSONObject obj = dataaobj.getJSONArray("list").getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("phone").contains(phone) && obj.getString("name").contains(phone),
+                            "搜索姓名和手机号为"+phone+"，结果包含手机号"+obj.getString("phone")+"姓名为"+obj.getString("name"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据登陆手机号和名称搜索\n");
+        }
+    }
+
+
+    @DataProvider(name = "SEARCH")
+    public  Object[] search() {
+        return new String[]{
+                "13",
+                "@",
+                "qqq",
+                "测试",
+                "越秀",
+                "管理",
+        };
+    }
+
+    /**
+     * @date: 2020.12.15
+     *  账号管理--新建账号
+     */
+
+    @Test(dataProvider = "ACC_ADD")
+    public void accountadd(String name,String email, String phone,String mes){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
+            Preconditions.checkArgument(code==1000,mes+"期待1000，实际"+code);
+
+            //删除账号
+            String id = accountPage(1,10,name,phone,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号\n");
+        }
+    }
+
+    public JSONArray addrolelist (int roleid,String rolename,int shopid1,String shopname1,int shopid2,String shopname2){
+
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+        obj.put("role_id",roleid);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",shopid1);
+        obj1.put("shop_name",shopname1);
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+        if (shopid2!=0){
+            JSONObject obj2 = new JSONObject();
+            obj2.put("shop_id",shopid2);
+            obj2.put("shop_name",shopname2);
+            a.add(obj2);
+        }
+        obj.put("shop_list",a);
+        arr.add(obj);
+        return arr;
+
+    }
+
+    public String phonenum(){
+        String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));
+        return phone;
+    }
+    @DataProvider(name = "ACC_ADD")
+    public  Object[] accountAdd() {
+        return new String[][]{
+                {"a",System.currentTimeMillis()+"@qq.com",phonenum(),"姓名1个字"},
+                {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com",phonenum(),"姓名10个字"},
+                {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名20个字"},
+                {"zhd","123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890000@qq.com",phonenum(),"邮箱100个字"},
+
+        };
+    }
+
+
+    @Test(dataProvider = "ACC_ADDERR")
+    public void accountaddErr(String name , String email,String phone,String mes){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
+            Preconditions.checkArgument(code==1001,mes+"期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号异常参数\n");
+        }
+    }
+    @DataProvider(name = "ACC_ADDERR")
+    public  Object[] accountAddErr() {
+        return new String[][]{
+                {"123Aa啊！@啊1123Aa啊！@啊11",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名21个字"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","1234567890","手机号10位"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn",phonenum()+"1","手机号12位"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","请问请问请问请问请问全","手机号11位汉字"},
+                {"zdh",System.currentTimeMillis()+"@yahoo.cn","pppppppppppp","手机号12位英文"},
+                {"zdh"+Integer.toString((int)(Math.random()*100)),"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678900001@qq.com",phonenum(),"邮箱101个字"},
+
+        };
+    }
+
+
+    @Test
+    public void accountEdit(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String phone = phonenum();
+
+            //新建
+            accountAdd(name,phone,email,rolelist);
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+
+            //编辑
+            String name1= "new"+System.currentTimeMillis();
+            String email1=System.currentTimeMillis()+"@qq.com";
+            String phone1=phonenum();
+
+
+            accountEdit(id,name1,phone1,email1,rolelist);
+
+            String name2= "";
+            String phone2="";
+            String email2= "";
+
+            //根据id查询，结果是编辑后的账号
+            JSONArray array = accountPage(1,100,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getString("id").equals(id)){
+                    name2 = obj.getString("name");
+                    phone2 = obj.getString("phone");
+                    email2 = obj.getString("email");
+                }
+            }
+
+            Preconditions.checkArgument(name2.equals(name1),"姓名修改为"+name1+" , 实际为"+ name2);
+            Preconditions.checkArgument(phone2.equals(phone1),"手机号修改为"+phone1+" , 实际为"+ phone2);
+            Preconditions.checkArgument(email2.equals(email1),"邮箱修改为"+email1+" , 实际为"+ email2);
+
+            //删除账号
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑账号修改信息\n");
+        }
+    }
+
+
+    @Test(dataProvider = "ACC_ADDERR")
+    public void accountEditErr(String name1 , String email1,String phone1,String mes){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String phone = phonenum();
+
+            //新建
+            accountAdd(name,phone,email,rolelist);
+            String id = accountPage(1,10,name,phone,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+
+
+            int code = accountEditNotchk(id,name1,phone1,email1,rolelist).getInteger("code");
+            Preconditions.checkArgument(code==1001,mes+"状态码期待1001，实际"+code);
+
+
+            //删除账号
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑账号修改信息为异常内容\n");
+        }
+    }
+
+
+    @Test
+    public void NotExistAccountLogin(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+
+            String pwd = ""+System.currentTimeMillis();
+            String email=pwd+"@qq.com";
+            accountAdd(name,phonenum(),email,rolelist);
+
+            //删除账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+            //使用该账号登陆
+            int code = loginPC(email,md5.getMD5(pwd)).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除账号后使用该账号登陆失败\n");
+        }
+    }
+
+
+    @Test
+    public void AccountDelAndAdd(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String phone = phonenum();
+            accountAdd(name,phone,email,rolelist);
+
+            //删除账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id);
+
+            //使用新建
+            int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+
+            //删除账号
+            String id2 = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountDelete(id2);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除账号后使用相同信息新建\n");
+        }
+    }
+
+
+    @Test
+    public void AccountDelAndEdit(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+            String accountid = creatAccount(roleid,rolename);
+
+            //删除账号
+            accountDelete(accountid);
+
+            //编辑账号
+            int code = accountEditNotchk(accountid,"name","13100000000","1@qq.com",rolelist).getInteger("code");
+            Preconditions.checkArgument(code == 1001,"状态码期待1001，实际"+code);
+            //删除角色
+            roleDelete(roleid);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑时账号被删除\n");
+        }
+    }
+
+
+    @Test
+    public void AccountDisableAndLogin(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String pwd = ""+System.currentTimeMillis();
+            String email=pwd+"@qq.com";
+            String phone = phonenum();
+
+
+            accountAdd(name,phone,email,rolelist);
+
+            //禁用账号
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            accountStatus(id,"DISABLE");
+
+            //登陆
+            int code = loginPC(email,md5.getMD5(pwd)).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+            loginPC("demo@winsense.ai","f2064e9d2477a6bc75c132615fe3294c");
+            //启用账号
+            accountStatus(id,"ENABLE");
+
+            //登陆
+            int code2 = loginPC(email,md5.getMD5(pwd)).getInteger("code");
+            Preconditions.checkArgument(code2==1000,"状态码期待1000，实际"+code);
+
+            //删除账号
+            accountDelete(id);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：禁用账号后登陆失败，启用后登陆成功\n");
+        }
+    }
+
+    /**
+     * @date: 2020.12.16
+     *  角色管理--新建角色
+     */
+
+
+    @Test(dataProvider = "ROLE_ADD")
+    public void roleAdd(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("149");
+            arr.add("150");
+            arr.add("151");
+            arr.add("152");
+            arr.add("153");
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            arr.add("157");
+            arr.add("158");
+            arr.add("159");
+            arr.add("160");
+            arr.add("161");
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"状态码期待1000，实际"+code);
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色功能权限多选\n");
+        }
+    }
+
+    @Test(dataProvider = "ROLE_ADD")
+    public void roleAdd1(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("149");
+
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"状态码期待1000，实际"+code);
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色功能权限单选\n");
+        }
+    }
+
+    @DataProvider(name = "ROLE_ADD")
+    public  Object[] roleAdd() {
+        return new String[][]{
+                {"a","1","角色名称和说明1个字"},
+                {"123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊","角色名称10个字，角色说明50个字"},
+                {"123QWa!@#啊123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#","角色名称20个字，角色说明49个字"},
+                {"123QW","123QWa!@#啊123QWa!@#啊","角色名称5个字，角色说明20个字"},
+
+        };
+    }
+
+
+    @Test(dataProvider = "ROLE_ADDERR")
+    public void roleAddErr(String name, String desc, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("149");
+            arr.add("150");
+            arr.add("151");
+            arr.add("152");
+            arr.add("153");
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            arr.add("157");
+            arr.add("158");
+            arr.add("159");
+            arr.add("160");
+            arr.add("161");
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色异常场景\n");
+        }
+    }
+    @DataProvider(name = "ROLE_ADDERR")
+    public  Object[] roleAddErr() {
+        return new String[][]{
+                {"123QWa!@#啊","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊啊","角色名称10个字，角色说明51个字"},
+                {"123QWa!@#啊123QWa!@#啊1","123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#啊123QWa!@#","角色名称21个字，角色说明49个字"},
+
+        };
+    }
+
+
+    @Test
+    public void roleAddRe(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("150");
+            arr.add("151");
+            String name="重复名字";
+            String desc="重复说明";
+            roleAdd(name,desc,arr);
+
+            int code = roleAddNotchk(name,desc,arr).getInteger("code");
+            //删除角色
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            roleDelete(id);
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：使用已存在的角色名新建角色\n");
+        }
+    }
+
+
+    @Test(dataProvider = "ROLE_ADDERR")
+    public void roleEditErr(String name1, String desc1, String mess){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("154");
+            arr.add("155");
+            arr.add("156");
+            String name=""+System.currentTimeMillis();
+            String desc=""+System.currentTimeMillis();
+            roleAdd(name,desc,arr);
+            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+            int code = roleEditNotChk(id,name1,desc1,arr).getInteger("code");
+            roleDelete(id);
+            Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：编辑角色异常内容\n");
+        }
+    }
+
+
+    @Test
+    public void roleDelInUse(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+
+            //使用角色新建账号
+            String accountid = creatAccount(roleid,rolename);
+            //删除角色
+            int code = roleDeleteNotChk(roleid).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际1000");
+
+            //删除账号
+            accountDelete(accountid);
+            //删除角色
+            roleDelete(roleid);
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除使用中的角色\n");
+        }
+    }
+
+
+    @Test
+    public void roleReDel(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+
+
+            //删除角色
+            roleDelete(roleid);
+
+            //再次删除角色
+            int code = roleDeleteNotChk(roleid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：重复删除同一角色\n");
+        }
+    }
+
+
+
+    @Test
+    public void roleDelAndAdd(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONArray arr = new JSONArray();
+            arr.add("153");
+
+            String desc="说明"+System.currentTimeMillis();
+
+            String rolename = creatRole().getString("rolename");
+            Long id = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            //删除角色
+            roleDelete(id);
+            //再次新建
+            int code = roleAddNotchk(rolename,desc,arr).getInteger("code");
+            Long id2 = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            //删除角色
+            roleDelete(id2);
+
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际1001");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：删除后新建同名角色\n");
+        }
+    }
+
+
+
+
+
+
+
+    //新建角色
+    public JSONObject creatRole() throws Exception {
+        JSONArray arr = new JSONArray();
+        arr.add("149");
+        arr.add("150");
+        arr.add("151");
+        arr.add("152");
+        arr.add("153");
+        arr.add("154");
+        arr.add("155");
+        arr.add("156");
+        arr.add("157");
+        arr.add("158");
+        arr.add("159");
+        arr.add("160");
+        arr.add("161");
+        String name="角色"+System.currentTimeMillis();
+        String desc="说明"+System.currentTimeMillis();
+        roleAdd(name,desc,arr);
+        Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+        JSONObject obj = new JSONObject();
+        obj.put("id",id);
+        obj.put("rolename",name);
+        return obj;
+    }
+
+    //新建账号
+    public String creatAccount (Long id,String rolename) throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",id);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",97);
+        obj1.put("shop_name","赢识办公室");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+    public String creatQDzlr () throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",97);
+        obj1.put("shop_name","赢识办公室");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+
+
+
+
+
+
+
+
+
+
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
+
+    // --- V3.1.2 新增接口 2020.12.14
+
+
+
+    public JSONObject loginPC(String username, String passwd) throws Exception {
+
+        String url = "/risk-login";
+
+        String json =
+                "{\n" +
+                        "\"username\":\"" + username + "\"," +
+                        "\"passwd\":\"" + passwd + "\"" +
+                        "}";
+
+        String res = httpPostUrl(url, json);
+
+        return JSON.parseObject(res);
+
+
+    }
+
+    //角色列表分页
+    public JSONObject rolePage(Integer page, Integer size, String rolename) throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("role_name", rolename);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //权限树
+    public JSONObject authTree() throws Exception {
+        String url = "/risk/auth/tree";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建角色
+    public JSONObject roleAdd(String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        json.put("description", description);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject roleAddNotchk(String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        json.put("description", description);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //角色状态变更
+    public JSONObject roleStatusChange(Integer id, String status) throws Exception {
+        String url = "/risk/role/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色详情
+    public JSONObject roleDetail(Long id) throws Exception {
+        String url = "/risk/role/detail";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色编辑
+    public JSONObject roleEdit(Long id, String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        json.put("description", description);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject roleEditNotChk(Long id, String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        json.put("description", description);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //角色删除
+    public JSONObject roleDelete(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject roleDeleteNotChk(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //账号列表分页
+    public JSONObject accountPage(int page, int size, String name, String phone, String email, String rolename, String shopname) throws Exception {
+        String url = "/risk/account/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_name", rolename);
+        json.put("shop_name", shopname);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色列表
+    public JSONObject roleList(int page,int size,String role) throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("role_name",role);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建账号
+    public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
+        String url = "/risk/account/add";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+
+                        "    \"role_list\":" + role_list  +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject accountAddNotChk(String name, String phone, String email,JSONArray role_list ) throws Exception {
+        String url = "/risk/account/add";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+                        "    \"role_list\":" + role_list  +
+
+
+                        "}";
+
+        String res = httpPostUrl(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+    //编辑账号
+    public JSONObject accountEditNotchk(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_list", role_list);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    public JSONObject accountEdit(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_list", role_list);
+
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号状态变更
+    public JSONObject accountStatus(String id, String status) throws Exception {
+        String url = "/risk/account/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //修改密码
+    public JSONObject passwdChg(String newp, String oldp) throws Exception {
+        String url = "/risk/account/change-password";
+        JSONObject json = new JSONObject();
+        json.put("new_password", newp);
+        json.put("old_password", oldp);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号删除
+    public JSONObject accountDelete(String id) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //渠道列表
+    public JSONObject shopchannel(JSONArray shoplist) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("shop_list", shoplist);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
+
+
+    //------原---------
+
 
     /**
      * 订单详情

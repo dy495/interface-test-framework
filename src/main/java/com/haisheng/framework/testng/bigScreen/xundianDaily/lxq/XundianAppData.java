@@ -93,12 +93,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                     JSONObject eachitem = chkitems.getJSONObject(j);
                     Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
                     //巡检项目结果 1合格；2不合格；3不适用
-                    if (itemID == 1){
+                    if (itemID %2 == 0){
                         xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,1,"zdh合格",null);
                         ok = ok +1;
                     }
-                    if (itemID == 2) {
-                        xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,2,"zdh不合格",null);
+                    if (itemID % 3  == 0) {
+                        xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,2,"zdh不合格",info.getpic(1));
                         notok = notok + 1;
                     }
                     else {
@@ -131,7 +131,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
      * @description :【远程/现场巡店-页面内一致性】提交一个执行项，执行清单的执行中分子+1
      * @date :2020/12/22 16:00
      **/
-    @Test(dataProvider = "CHKRESULT")
+    @Test(dataProvider = "CHKRESULT") //ok
     public void xdOnePgae2(String type, String chinesetype, String result,String mes) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -150,7 +150,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONObject eachitem = chkitems.getJSONObject(0);
             Long itemID = eachitem.getLong("id"); //第一个清单的第一个item id
             //巡检项目结果 1合格；2不合格；3不适用
-            xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,Integer.parseInt(result),"zdh",null);
+            xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,Integer.parseInt(result),"zdh",info.getpic(1));
 
 
             //重新巡店，不重置清单，查看第一个清单完成数量
@@ -172,7 +172,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
      * @description :【远程/现场巡店-页面内一致性】执行清单的总数量分母==执行清单的总条数
      * @date :2020/12/22 16:00
      **/
-    @Test(dataProvider = "XDTYPE")
+    @Test(dataProvider = "XDTYPE") //ok
     public void xdOnePgae3(String type, String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -197,7 +197,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
      * @description :【远程/现场巡店-页面内一致性】执行清单的执行中分子==执行清单已执行完成的条数
      * @date :2020/12/22 16:00
      **/
-    @Test(dataProvider = "XDTYPE")
+    @Test(dataProvider = "XDTYPE")  //ok
     public void xdOnePgae4(String type,String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -340,12 +340,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public  Object[] chkResult() {
 
         return new String[][]{
-                {"REMOTE","远程巡店","1","合格"},
+//                {"REMOTE","远程巡店","1","合格"},
                 {"REMOTE","远程巡店","2","不合格"},
-                {"REMOTE","远程巡店","3","不适用"},
-                {"SPOT","现场巡店","1","合格"},
-                {"SPOT","现场巡店","2","不合格"},
-                {"SPOT","现场巡店","3","不适用"},
+//                {"REMOTE","远程巡店","3","不适用"},
+//                {"SPOT","现场巡店","1","合格"},
+//                {"SPOT","现场巡店","2","不合格"},
+//                {"SPOT","现场巡店","3","不适用"},
 
         };
     }

@@ -46,6 +46,10 @@ import java.util.*;
 
 public class FeidanMiniApiDataConsistencyOnline {
 
+    String roleid = "1062"; //要改
+    String rolename = "自动化用的角色-别删"; //要改
+    JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,""); //要改
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -2116,7 +2120,547 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+
+
+    /**
+     * V3.1.2数据一致性 2020-12-18
+     */
+
+    //账号管理-页面内一致性
+
+    @Test
+    public void accountOnePage1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            //新建前账号列表数
+            int bef_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
+
+            //新建账号
+            JSONObject obj = creatRole();
+            Long roleid =obj.getLong("id");
+            String rolename = obj.getString("rolename");
+            String accountid = creatAccount(roleid,rolename);
+
+            //新建后账号列表数
+            int after_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
+
+            //删除账号
+            accountDelete(accountid);
+            //删除角色
+            roleDelete(roleid);
+            //删除后账号列表数
+            int afterdel_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
+
+            int add = after_total - bef_total;
+            int del = after_total - afterdel_total;
+            Preconditions.checkArgument(add==1,"新建后，列表增加了"+add);
+            Preconditions.checkArgument(del==1,"删除后，列表减少了"+add);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号，列表+1；删除后，列表-1\n");
+        }
+    }
+
+
+    @Test
+    public void accountOnePage2() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+
+            //新建
+            accountAdd(name,phonenum(),email,rolelist);
+            //查询
+            JSONObject obj = accountPage(1,10,null,null,null,null,null).getJSONArray("list").getJSONObject(0);
+            String id = obj.getString("id");
+            String name1 = obj.getString("name");
+            String email1 = obj.getString("email");
+
+
+            Preconditions.checkArgument(name.equals(name1),"姓名不一致");
+            Preconditions.checkArgument(email.equals(email1),"邮箱不一致");
+
+
+            //删除账号
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号，列表信息与新建时信息一致\n");
+        }
+    }
+
+
+    @Test
+    public void accountOnePage3() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            //新建账号
+            String id = creatQDzlr();
+
+            //禁用前列表数
+            int bef_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
+
+            //禁用账号
+            accountStatus(id,"DISABLE");
+            //禁用后列表数
+            int after_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
+            int num = bef_total - after_total;
+            Preconditions.checkArgument(num==0,"禁用后列表减少"+num);
+            //删除账号
+            accountDelete(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：禁用账号，列表数-0 \n");
+        }
+    }
+
+
+    @Test
+    public void accountSeveralPage1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            //新建前角色使用账号数
+            int bef_total = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getInteger("num");
+
+            //新建账号
+            String id = creatQDzlr();
+
+            //新建后角色使用账号数
+            int after_total = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getInteger("num");
+            int num = after_total - bef_total;
+            Preconditions.checkArgument(num==1,"新建账号后，使用账号数量增加"+num);
+            //删除账号
+            accountDelete(id);
+
+            //新建后角色使用账号数
+            int afterdel_total = rolePage(1,1,rolename).getJSONArray("list").getJSONObject(0).getInteger("num");
+            int num1 = after_total - afterdel_total;
+            Preconditions.checkArgument(num1==1,"删除账号后，使用账号数量减少"+num1);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建账号，角色的使用账号数量+1 ；删除账号，角色的使用账号数量-1\n");
+        }
+    }
+
+
+    @Test
+    public void roleOnePage1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            //新建前角色列表数
+            int bef_total = rolePage(1,1,null).getInteger("total");
+
+            //新建角色
+            Long id = creatRole().getLong("id");
+
+            //新建后列表数
+            int after_total = rolePage(1,1,null).getInteger("total");
+            int num = after_total - bef_total;
+            Preconditions.checkArgument(num==1,"新建角色后，列表数增加"+num);
+
+            //删除角色
+            roleDelete(id);
+
+            //删除后角色列表数
+            int afterdel_total = rolePage(1,1,null).getInteger("total");
+            int num1 = after_total - afterdel_total;
+            Preconditions.checkArgument(num1==1,"删除角色后，列表数减少"+num1);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：新建角色，列表数+1 ；删除角色，列表数-1\n");
+        }
+    }
+
+
+
+
+
+
+
+    //新建角色
+    public JSONObject creatRole() throws Exception {
+        JSONArray arr = new JSONArray();
+        arr.add("149");
+        arr.add("150");
+        arr.add("151");
+        arr.add("152");
+        arr.add("153");
+        arr.add("154");
+        arr.add("155");
+        arr.add("156");
+        arr.add("157");
+        arr.add("158");
+        arr.add("159");
+        arr.add("160");
+        arr.add("161");
+        String name="角色"+System.currentTimeMillis();
+        String desc="说明"+System.currentTimeMillis();
+        roleAdd(name,desc,arr);
+        Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+        JSONObject obj = new JSONObject();
+        obj.put("id",id);
+        obj.put("rolename",name);
+        return obj;
+    }
+
+    //新建账号
+    public String creatAccount (Long id,String rolename) throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",id);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",2606);
+        obj1.put("shop_name","越秀售楼处");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+    public String creatQDzlr () throws Exception {
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",4116);
+        obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+        return  asscountid;
+    }
+
+    public String phonenum(){
+        String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));
+        return phone;
+    }
+    public JSONArray addrolelist (int roleid,String rolename,int shopid1,String shopname1,int shopid2,String shopname2){
+
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+        obj.put("role_id",roleid);
+        obj.put("role_name",rolename);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",shopid1);
+        obj1.put("shop_name",shopname1);
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+        if (shopid2!=0){
+            JSONObject obj2 = new JSONObject();
+            obj2.put("shop_id",shopid2);
+            obj2.put("shop_name",shopname2);
+            a.add(obj2);
+        }
+        obj.put("shop_list",a);
+        arr.add(obj);
+        return arr;
+
+    }
+
+
+
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
+// --- V3.1.2 新增接口 2020.12.14
+
+    //角色列表分页
+    public JSONObject rolePage(Integer page, Integer size, String rolename) throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("role_name", rolename);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //权限树
+    public JSONObject authTree() throws Exception {
+        String url = "/risk/auth/tree";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建角色
+    public JSONObject roleAdd(String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        json.put("description", description);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject roleAddNotchk(String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/add";
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("authlist", authlist);
+        json.put("description", description);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //角色状态变更
+    public JSONObject roleStatusChange(Integer id, String status) throws Exception {
+        String url = "/risk/role/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色详情
+    public JSONObject roleDetail(Long id) throws Exception {
+        String url = "/risk/role/detail";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色编辑
+    public JSONObject roleEdit(Long id, String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        json.put("description", description);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+    public JSONObject roleEditNotChk(Long id, String name, String description, JSONArray authlist) throws Exception {
+        String url = "/risk/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("auth_list", authlist);
+        json.put("description", description);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //角色删除
+    public JSONObject roleDelete(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    public JSONObject roleDeleteNotChk(Long id) throws Exception {
+        String url = "/risk/role/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    //账号列表分页
+    public JSONObject accountPage(int page, int size, String name, String phone, String email, String rolename, String shopname) throws Exception {
+        String url = "/risk/account/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_name", rolename);
+        json.put("shop_name", shopname);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //角色列表
+    public JSONObject roleList(int page,int size,String role) throws Exception {
+        String url = "/risk/role/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("role_name",role);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //新建账号
+    public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
+        String url = "/risk/account/add";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+
+                        "    \"role_list\":" + role_list  +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject accountAddNotChk(String name, String phone, String email,JSONArray role_list ) throws Exception {
+        String url = "/risk/account/add";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"email\":\"" + email + "\"," +
+                        "    \"role_list\":" + role_list  +
+
+
+                        "}";
+
+        String res = httpPostUrl(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+    //编辑账号
+    public JSONObject accountEditNotchk(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+//        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_list", role_list);
+        String result = httpPostUrl(url, json.toJSONString());
+        return JSON.parseObject(result);
+    }
+
+    public JSONObject accountEdit(String id, String name, String phone, String email, JSONArray role_list) throws Exception {
+        String url = "/risk/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+//        json.put("phone", phone);
+        json.put("email", email);
+        json.put("role_list", role_list);
+
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号状态变更
+    public JSONObject accountStatus(String id, String status) throws Exception {
+        String url = "/risk/account/status/change";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("status", status);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //修改密码
+    public JSONObject passwdChg(String newp, String oldp) throws Exception {
+        String url = "/risk/account/change-password";
+        JSONObject json = new JSONObject();
+        json.put("new_password", newp);
+        json.put("old_password", oldp);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //账号删除
+    public JSONObject accountDelete(String id) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+    //渠道列表
+    public JSONObject shopchannel(JSONArray shoplist) throws Exception {
+        String url = "/risk/account/delete";
+        JSONObject json = new JSONObject();
+        json.put("shop_list", shoplist);
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+
+    //----------------原接口--------------
 
     /**
      * 订单详情

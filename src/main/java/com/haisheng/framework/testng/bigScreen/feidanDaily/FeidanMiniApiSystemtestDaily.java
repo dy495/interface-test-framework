@@ -52,7 +52,7 @@ public class FeidanMiniApiSystemtestDaily {
     StringUtil stringUtil = new StringUtil();
     MD5Util md5 = new MD5Util();
     JSONArray rolelist = addrolelist(832,"超级管理员",2606,"越秀售楼处",0,"");
-    JSONArray qxlistarr =new JSONArray();
+
 
 
     /**
@@ -1058,7 +1058,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
-    @Ignore // 手机号没了
+
     @Test(dataProvider = "SEARCH")
     public void accountSearch3(String phone){
         String ciCaseName = new Object() {
@@ -1120,7 +1120,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
-    @Ignore //手机号没了
+
     @Test(dataProvider = "SEARCH")
     public void accountSearch5(String phone){
         String ciCaseName = new Object() {
@@ -3214,7 +3214,7 @@ public class FeidanMiniApiSystemtestDaily {
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
-//        json.put("phone", phone);
+        json.put("phone", phone);
         json.put("email", email);
         json.put("role_name", rolename);
         json.put("shop_name", shopname);

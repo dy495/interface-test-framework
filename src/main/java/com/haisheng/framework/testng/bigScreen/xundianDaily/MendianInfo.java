@@ -2,7 +2,12 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.util.DateTimeUtil;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MendianInfo {
     DateTimeUtil dt = new DateTimeUtil();
@@ -24,6 +29,7 @@ public class MendianInfo {
         JSONObject obj = xd.checkStartapp(shopid, type, reset);
         Long patrolID = obj.getLong("id");
         JSONArray checklist = obj.getJSONArray("check_lists");
+        JSONArray piclist = getpic(0);
         for (int i = 0; i < checklist.size(); i++) {
             JSONObject eachlist = checklist.getJSONObject(i);
             Long listID = eachlist.getLong("id"); // 获取list id
@@ -32,7 +38,7 @@ public class MendianInfo {
                 JSONObject eachitem = chkitems.getJSONObject(j);
                 Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
                 //巡检项目结果 1合格；2不合格；3不适用
-                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "zdh", null);
+                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
             }
 
         }
@@ -72,4 +78,37 @@ public class MendianInfo {
         retobj.put("patrolID",patroldjID);
         return retobj;
     }
+
+    public final JSONArray getpic(Integer type) throws Exception {
+        String base64 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
+        JSONObject obj = xd.upload_pic(base64,shop_id_01,type);
+        JSONArray pic_list = new JSONArray();
+        JSONObject obj1 = new JSONObject();
+        obj1.put("pic_path",obj.getString("pic_path"));
+        obj1.put("device_id",deviceId);
+        obj1.put("time",System.currentTimeMillis());
+        pic_list.add(obj1);
+
+        return pic_list;
+
+    }
+
+    public static String getImgStr(String imgFile) { //图片转base64
+        // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+
+        InputStream in = null;
+        byte[] data = null;
+        // 读取图片字节数组
+        try {
+            in = new FileInputStream(imgFile);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String(Base64.encodeBase64(data));
+    }
+
+
 }
