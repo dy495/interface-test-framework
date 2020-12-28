@@ -515,7 +515,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--业务漏斗,接待线索>=商机的FU")
+    //两个数据无关系
+    @Test(description = "店面数据分析--业务漏斗,接待线索>=商机的FU", enabled = false)
     public void shopPanel_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
