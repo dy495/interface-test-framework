@@ -1,12 +1,12 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.bean;
+package com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj;
 
 import lombok.Data;
 
 /**
- * 每日交车表
+ * 每日订单表
  */
 @Data
-public class TPorscheDeliverInfo {
+public class TPorscheOrderInfo {
 
     private Integer id;
     private String shopId;
@@ -23,7 +23,7 @@ public class TPorscheDeliverInfo {
     private String saleId;
     private String carStyle;
     private String carModel;
-    private String deliverDate;
+    private String orderDate;
     private String plateTypeName;
     private String defrayTypeName;
     private String sourceChannelName;

@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -421,7 +422,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int cumulativeUse = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_use");
             //核销
             user.loginApplet(appletUser);
-            long id = util.getVoucherListId(voucherName);
+            long id = util.getAppletVoucherId(voucherName);
             IScene scene1 = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
             jc.invokeApi(scene1);
             user.login(administrator);
@@ -739,7 +740,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int total = jc.invokeApi(scene).getInteger("total");
             //转移一张卡券
             user.loginApplet(appletUser);
-            long id = util.getVoucherListId(voucherName);
+            long id = util.getAppletVoucherId(voucherName);
             user.login(administrator);
             List<Long> list = new ArrayList<>();
             list.add(id);
@@ -791,10 +792,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
             //核销
             user.loginApplet(appletUser);
-            JSONObject voucherInfo = util.getCanUsedVoucherListId();
-            long id = voucherInfo.getLong("id");
-            String voucherName = voucherInfo.getString("voucherName");
-            long voucherId = util.getVoucherListId(voucherName);
+            AppletVoucherListData voucherInfo = util.getAppletCanUsedVoucherInfo().get(0);
+            long id = voucherInfo.getId();
+            String voucherName = voucherInfo.getTitle();
+            CommonUtil.valueView(id, voucherName);
+            long voucherId = util.getAppletVoucherId(voucherName);
             IScene scene1 = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
             String message = jc.invokeApi(scene1, false).getString("message");
             if (message.equals("该卡券未开启自助核销功能")) {
@@ -1180,16 +1182,16 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(appletUser);
-            int voucherNumber = util.getVoucherListSize();
-            int packageNumber = util.getPackageListSize();
+            int voucherNumber = util.getAppletVoucherNum();
+            int packageNumber = util.getAppletPackageNum();
             user.login(marketing);
             //购买临时套餐
             util.buyTemporaryPackage(1);
             //确认支付
             util.makeSureBuyPackage("临时套餐");
             user.loginApplet(appletUser);
-            int newVoucherNumber = util.getVoucherListSize();
-            int newPackageNumber = util.getPackageListSize();
+            int newVoucherNumber = util.getAppletVoucherNum();
+            int newPackageNumber = util.getAppletPackageNum();
             CommonUtil.valueView(voucherNumber, newVoucherNumber, packageNumber, newPackageNumber);
             Preconditions.checkArgument(newVoucherNumber == voucherNumber + 1, "购买套餐前我的卡券列表数：" + voucherNumber + "购买套餐后我的卡券列表数：" + newVoucherNumber);
             Preconditions.checkArgument(newPackageNumber == packageNumber, "购买套餐前我的套餐列表数：" + packageNumber + "购买套餐后我的套餐列表数：" + newPackageNumber);
@@ -1205,16 +1207,16 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(appletUser);
-            int voucherNumber = util.getVoucherListSize();
-            int packageNumber = util.getPackageListSize();
+            int voucherNumber = util.getAppletVoucherNum();
+            int packageNumber = util.getAppletPackageNum();
             user.login(administrator);
             //购买固定套餐
             util.buyFixedPackage(1);
             //确认支付
             util.makeSureBuyPackage(EnumVP.ONE.getPackageName());
             user.loginApplet(appletUser);
-            int newVoucherNumber = util.getVoucherListSize();
-            int newPackageNumber = util.getPackageListSize();
+            int newVoucherNumber = util.getAppletVoucherNum();
+            int newPackageNumber = util.getAppletPackageNum();
             CommonUtil.valueView(voucherNumber, newVoucherNumber, packageNumber, newPackageNumber);
             Preconditions.checkArgument(newVoucherNumber == voucherNumber, "购买套餐前我的卡券列表数：" + voucherNumber + "购买套餐后我的卡券列表数：" + newVoucherNumber);
             Preconditions.checkArgument(newPackageNumber == packageNumber + 1, "购买套餐前我的套餐列表数：" + packageNumber + "购买套餐后我的套餐列表数：" + newPackageNumber);
@@ -1479,13 +1481,13 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             //消息列表数
             user.loginApplet(appletUser);
-            int listSize = util.getMessageListSize();
+            int listSize = util.getAppletMessageNum();
             //发消息
             user.login(administrator);
             util.pushMessage(true);
             //消息列表数
             user.loginApplet(appletUser);
-            int newListSize = util.getMessageListSize();
+            int newListSize = util.getAppletMessageNum();
             CommonUtil.valueView(listSize, newListSize);
             Preconditions.checkArgument(newListSize == listSize + 1,
                     "收到消息前消息列表数：" + listSize + "收到消息后消息列表数：" + newListSize);
@@ -1701,8 +1703,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取已使用的卡券列表
             user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.USED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
+            List<Long> voucherList = util.getAppletVoucherList(EnumAppletVoucherStatus.USED.getName());
+            String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
             IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
@@ -1724,8 +1726,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取已使用的卡券列表
             user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
+            List<Long> voucherList = util.getAppletVoucherList(EnumAppletVoucherStatus.EXPIRED.getName());
+            String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
             IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
@@ -1748,8 +1750,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String[] phones = {"13654973499"};
             //获取已过期的卡券列表
             user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
+            List<Long> voucherList = util.getAppletVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
             Arrays.stream(phones).forEach(phone -> {
@@ -1773,8 +1775,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String[] phones = {"13654973499", marketing.getPhone()};
             //获取已过期的卡券列表
             user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
+            List<Long> voucherList = util.getAppletVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
             Arrays.stream(phones).forEach(phone -> {
@@ -1798,8 +1800,8 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             code = util.getVerificationCode(false, "本司员工");
             user.loginApplet(appletUser);
-            JSONObject voucherInfo = util.getCanUsedVoucherListId();
-            long id = voucherInfo.getLong("id");
+            AppletVoucherListData voucherInfo = util.getAppletCanUsedVoucherInfo().get(0);
+            long id = voucherInfo.getId();
             IScene scene = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
             String message = jc.invokeApi(scene, false).getString("message");
             String err = "核销码错误";

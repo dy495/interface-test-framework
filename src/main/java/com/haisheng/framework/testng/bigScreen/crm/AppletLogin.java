@@ -136,7 +136,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
             commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
             jc.appletLoginToken(token);
-            new BusinessUtil().getVoucherListSize();
+            new BusinessUtil().getAppletVoucherNum();
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -152,7 +152,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
             commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
             jcOnline.appletLoginToken(token);
-            new BusinessUtilOnline().getVoucherListSize();
+            new BusinessUtilOnline().getAppletVoucherNum();
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

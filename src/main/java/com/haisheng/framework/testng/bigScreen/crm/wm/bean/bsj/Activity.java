@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.bean;
+package com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj;
 
 import lombok.Data;
 

@@ -146,7 +146,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         try {
             //购买前消息列表数量
             user.loginApplet(appletUser);
-            int listSize = util.getMessageListSize();
+            int listSize = util.getAppletMessageNum();
             user.login(administrator);
             //购买套餐
             util.receptionBuyFixedPackage(1);
@@ -154,7 +154,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             util.makeSureBuyPackage(EnumVP.ONE.getPackageName());
             //购买后消息列表数量
             user.loginApplet(appletUser);
-            int newListSize = util.getMessageListSize();
+            int newListSize = util.getAppletMessageNum();
             CommonUtil.valueView(listSize, newListSize);
             Preconditions.checkArgument(newListSize == listSize + 1, "我的消息列表" + CommonUtil.checkResult(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {
@@ -170,7 +170,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         try {
             //购买前套餐列表数量
             user.loginApplet(appletUser);
-            int listSize = util.getPackageListSize();
+            int listSize = util.getAppletPackageNum();
             user.login(administrator);
             //购买套餐
             util.receptionBuyFixedPackage(1);
@@ -178,7 +178,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             util.makeSureBuyPackage(EnumVP.ONE.getPackageName());
             //购买后消息列表数量
             user.loginApplet(appletUser);
-            int newListSize = util.getPackageListSize();
+            int newListSize = util.getAppletPackageNum();
             CommonUtil.valueView(listSize, newListSize);
             Preconditions.checkArgument(newListSize == listSize + 1, "我的套餐列表" + CommonUtil.checkResult(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {
@@ -194,7 +194,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         try {
             //购买前卡券列表数量
             user.loginApplet(appletUser);
-            int listSize = util.getVoucherListSize();
+            int listSize = util.getAppletVoucherNum();
             user.login(administrator);
             //购买套餐
             util.receptionBuyTemporaryPackage(1);
@@ -202,7 +202,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             util.makeSureBuyPackage(EnumVP.TEMPORARY.getPackageName());
             //购买后消息列表数量
             user.loginApplet(appletUser);
-            int newListSize = util.getVoucherListSize();
+            int newListSize = util.getAppletVoucherNum();
             CommonUtil.valueView(listSize, newListSize);
             Preconditions.checkArgument(newListSize == listSize + 1, "我的卡券列表" + CommonUtil.checkResult(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {

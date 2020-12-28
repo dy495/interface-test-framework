@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.bean;
+package com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj;
 
 import lombok.Data;
 
@@ -7,7 +7,6 @@ import lombok.Data;
  */
 @Data
 public class TPorscheReceptionData {
-    @Column("id")
     private Integer id;
     private String shopId;
     private String receptionSale;

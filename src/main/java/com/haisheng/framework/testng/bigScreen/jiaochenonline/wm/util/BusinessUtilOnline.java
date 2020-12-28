@@ -2,6 +2,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
@@ -28,7 +30,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +39,7 @@ public class BusinessUtilOnline {
     public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     private static final int size = 100;
+
 
     /**
      * 创建卡券
@@ -674,7 +676,6 @@ public class BusinessUtilOnline {
         return list.get(0);
     }
 
-
     /**
      * 核销人员状态更改
      *
@@ -693,7 +694,7 @@ public class BusinessUtilOnline {
      *
      * @return 卡券编号
      */
-    public long getVoucherListId(String voucherName) {
+    public long getAppletVoucherId(String voucherName) {
         List<Long> voucherList = new ArrayList<>();
         Integer id = null;
         Integer status = null;
@@ -720,7 +721,7 @@ public class BusinessUtilOnline {
      *
      * @return 卡券编号
      */
-    public String getVoucherListName(Long voucherId) {
+    public String getAppletVoucherName(Long voucherId) {
         List<String> voucherList = new ArrayList<>();
         Integer id = null;
         Integer status = null;
@@ -740,12 +741,12 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 获取卡券集合
+     * 获取小程序卡券集合
      *
      * @param type 类型：已使用/已过期/快过期
      * @return 卡券id集合
      */
-    public List<Long> getVoucherList(String type) {
+    public List<Long> getAppletVoucherList(String type) {
         List<Long> voucherList = new ArrayList<>();
         Integer id = null;
         Integer status = null;
@@ -765,39 +766,34 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 获取可用卡券id
+     * 获取小程序可用卡券的信息
      *
      * @return 卡券id
      */
-    public JSONObject getCanUsedVoucherListId() throws Exception {
+    public List<AppletVoucherListData> getAppletCanUsedVoucherInfo() {
+        List<AppletVoucherListData> list = new ArrayList<>();
         Integer id = null;
         Integer status = null;
-        JSONArray list;
-        AtomicBoolean sign = new AtomicBoolean(false);
-        JSONObject object = new JSONObject();
+        JSONArray array;
         do {
             VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
-            list = response.getJSONArray("list");
-            list.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                String statusName = jsonObject.getString("status_name");
-                if (!statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
-                        && !statusName.equals(EnumAppletVoucherStatus.USED.getName())) {
-                    sign.set(true);
-                    object.put("id", jsonObject.getLong("id"));
-                    object.put("voucherName", jsonObject.getString("title"));
-                }
-            });
+            array = response.getJSONArray("list");
+            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(jsonObject -> compareType(jsonObject, "status_name"))
+                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherListData.class))
+                    .collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
-            if (sign.get()) {
-                return object;
-            }
-        } while (list.size() == 20);
-        throw new Exception("无可用卡券");
+        } while (array.size() == 20);
+        return list;
+    }
+
+    private boolean compareType(JSONObject jsonObject, String type) {
+        String statusName = jsonObject.getString(type);
+        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
+                && !statusName.equals(EnumAppletVoucherStatus.USED.getName());
     }
 
     /**
@@ -805,7 +801,7 @@ public class BusinessUtilOnline {
      *
      * @return 卡券数量
      */
-    public int getVoucherListSize() {
+    public int getAppletVoucherNum() {
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -827,7 +823,7 @@ public class BusinessUtilOnline {
      *
      * @return 套餐数量
      */
-    public int getPackageListSize() {
+    public int getAppletPackageNum() {
         Long lastValue = null;
         int listSize = 0;
         JSONArray array;
@@ -842,11 +838,11 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 我的消息列表数
+     * 获取小程序我的消息列表数
      *
      * @return 消息数量
      */
-    public int getMessageListSize() {
+    public int getAppletMessageNum() {
         Long lastValue = null;
         int listSize = 0;
         JSONArray array;
