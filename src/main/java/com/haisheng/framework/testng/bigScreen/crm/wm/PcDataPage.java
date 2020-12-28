@@ -22,7 +22,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -900,13 +899,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
      */
     private void compareCarTypeFunnelData(String type) {
         for (EnumFindType e : EnumFindType.values()) {
-            int y = 0;
             JSONArray zjlList = crm.saleFunnel(e.getType(), "", "").getJSONObject("car_type").getJSONArray("list");
-            for (int k = 0; k < zjlList.size(); k++) {
-                if (zjlList.getJSONObject(k).getString("type").equals(type)) {
-                    y = zjlList.getJSONObject(k).getInteger("value");
-                }
-            }
+            int y = zjlList.stream().map(a -> (JSONObject) a).filter(a -> a.getString("type").equals(type)).map(a -> a.getInteger("value")).collect(Collectors.toList()).get(0);
             int total = crm.userUserPage(1, 10).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             int sum = 0;
@@ -917,12 +911,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                         String userId = userList.getJSONObject(j).getString("user_id");
                         CommonUtil.valueView(userList.getJSONObject(j).getString("user_name"));
                         JSONArray list = crm.saleFunnel(e.getType(), "", userId).getJSONObject("car_type").getJSONArray("list");
-                        int value = 0;
-                        for (int a = 0; a < list.size(); a++) {
-                            if (list.getJSONObject(a).getString("type").equals(type)) {
-                                value = list.getJSONObject(a).getInteger("value");
-                            }
-                        }
+                        int value = list.stream().map(a -> (JSONObject) a).filter(a -> a.getString("type").equals(type)).map(a -> a.getInteger("value")).collect(Collectors.toList()).get(0);
                         sum += value;
                         CommonUtil.valueView(value, sum);
                         CommonUtil.log("分割线");
@@ -1018,13 +1007,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                 JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
                 class Inner {
                     int getValue(JSONArray array) {
-                        int value = 0;
-                        for (int i = 0; i < array.size(); i++) {
-                            if (array.getJSONObject(i).getString("type").equals(type)) {
-                                value = array.getJSONObject(i).getInteger("value");
-                            }
-                        }
-                        return value;
+                        return array.stream().map(a -> (JSONObject) a).filter(a -> a.getString("type").equals(type))
+                                .map(a -> a.getInteger("value")).collect(Collectors.toList()).get(0);
                     }
                 }
                 int businessValue = new Inner().getValue(businessList);
@@ -1047,14 +1031,10 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     CommonUtil.valueView(map.get("userName") + e.getName());
                     IScene scene = Analysis2ShopPanelScene.builder().saleId(map.get("userId")).cycleType(e.getType()).build();
                     int service = crm.invokeApi(scene).getInteger("service");
-                    int funnelService = 0;
                     IScene scene1 = Analysis2ShopSaleFunnelScene.builder().saleId(map.get("userId")).cycleType(e.getType()).build();
                     JSONArray businessList = crm.invokeApi(scene1).getJSONObject("business").getJSONArray("list");
-                    for (int i = 0; i < businessList.size(); i++) {
-                        if (businessList.getJSONObject(i).getString("type").equals("RECEIVE")) {
-                            funnelService = businessList.getJSONObject(i).getInteger("value");
-                        }
-                    }
+                    int funnelService = businessList.stream().map(a -> (JSONObject) a).filter(a -> a.getString("type").equals("RECEIVE"))
+                            .map(a -> a.getInteger("value")).collect(Collectors.toList()).get(0);
                     CommonUtil.valueView("人共接待：" + service, "漏斗商机：" + funnelService);
                     Preconditions.checkArgument(service >= funnelService, "人共接待数：" + service + "漏斗接商机数：" + funnelService);
                     CommonUtil.logger(map.get("userName"));
@@ -2156,23 +2136,21 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumFindType.values()).forEach(a -> {
-                Arrays.stream(EnumCarStyle.values()).forEach(b -> {
-                    CommonUtil.valueView(b.getName() + a.getName());
-                    IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
-                    JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
-                    List<Integer> num1List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
-                    List<String> percentStrList = getValue(ratioList, "name", "个人车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
-                    List<Integer> num2List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
-                    for (int i = 0; i < num1List.size(); i++) {
-                        String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
-                        String percentStr = percentStrList.get(i).replace("%", "");
-                        CommonUtil.valueView(result, percentStr);
-                        Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
-                        CommonUtil.logger(b.getName());
-                    }
-                });
-            });
+            Arrays.stream(EnumFindType.values()).forEach(a -> Arrays.stream(EnumCarStyle.values()).forEach(b -> {
+                CommonUtil.valueView(b.getName() + a.getName());
+                IScene scene = Analysis2OrderCarOwnerScene.builder().carType(b.getStyleId()).cycleType(a.getType()).build();
+                JSONArray ratioList = crm.invokeApi(scene).getJSONArray("ratio_list");
+                List<Integer> num1List = getValue(ratioList, "name", "个人车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                List<String> percentStrList = getValue(ratioList, "name", "个人车主", "percent_str").stream().map(n -> (String) n).collect(Collectors.toList());
+                List<Integer> num2List = getValue(ratioList, "name", "公司车主", "value").stream().map(n -> (Integer) n).collect(Collectors.toList());
+                for (int i = 0; i < num1List.size(); i++) {
+                    String result = CommonUtil.getPercent(num1List.get(i), num1List.get(i) + num2List.get(i), 3).replace("%", "");
+                    String percentStr = percentStrList.get(i).replace("%", "");
+                    CommonUtil.valueView(result, percentStr);
+                    Preconditions.checkArgument(compareData(result, percentStr), b.getName() + a.getName() + "个人车主计算百分比为：" + result + "界面展示为：" + percentStr);
+                    CommonUtil.logger(b.getName());
+                }
+            }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

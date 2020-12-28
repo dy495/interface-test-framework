@@ -87,277 +87,10 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "卡券表单--新建卡券--卡券名称异常")
-    public void voucherManage_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
-            Arrays.stream(strings).forEach(name -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
-                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
-                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(name) ? "卡券名称不能为空" : "卡券名称长度应为2～20个字";
-                Preconditions.checkArgument(message.equals(err), "卡券名称为：" + name + "创建成功");
-                CommonUtil.logger(name);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--卡券名称异常");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--卡券说明异常")
-    public void voucherManage_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            String[] strings = {null, "", EnumContent.C.getContent()};
-            Arrays.stream(strings).forEach(desc -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
-                        .voucherDescription(desc).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
-                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过200个字";
-                Preconditions.checkArgument(message.equals(err), "卡券说明为：" + desc + "创建成功");
-                CommonUtil.logger(desc);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--卡券说明异常");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--主体类型异常")
-    public void voucherManage_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            String[] strings = {"全部权限", null, ""};
-            Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(subjectType)
-                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(subjectType)).stock(stock).cost(util.getCost(stock))
-                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                Preconditions.checkArgument(message.equals("主体类型不存在"), "主体类型为：" + subjectType + "创建成功");
-                CommonUtil.logger(subjectType);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--主体类型异常");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--主体详情异常")
-    public void voucherManage_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
-                    .subjectType(EnumSubject.STORE.name())
-                    .voucherDescription(util.getDesc()).stock(stock).cost(util.getCost(stock))
-                    .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            Preconditions.checkArgument(message.equals("主体详情不能为空"), "主体详情为：" + null + "创建成功");
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--主体详情异常");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--库存数量异常情况")
-    public void voucherManage_system_5() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long[] longs = {1000000000L, null, -100L, 9999999999L};
-            Arrays.stream(longs).forEach(stock -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
-                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
-                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(stock) ? "库存不能为空" : stock > 1000000000L ? "请求入参类型不正确" : "卡券库存范围应在0 ～ 100000000张";
-                Preconditions.checkArgument(message.equals(err), "卡券库存为：" + stock + "创建成功");
-                CommonUtil.logger(stock);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--库存数量异常情况");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--业务类型异常情况")
-    public void voucherManage_system_6() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            Integer[] integers = {null, -1, 100};
-            Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
-                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
-                        .shopType(shopType).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(shopType) ? "业务类型不能为空" : "业务类型不存在";
-                Preconditions.checkArgument(message.equals(err), "业务类型为：" + shopType + "创建成功");
-                CommonUtil.logger(shopType);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--业务类型异常情况");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--成本异常情况")
-    public void voucherManage_system_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            Double[] doubles = {null, (double) -1, (double) 1000000000, 100000000.11};
-            Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
-                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(cost)
-                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(cost) ? "成本不能为空" : "卡券成本金额范围应在0 ～ 100000000元";
-                Preconditions.checkArgument(message.equals(err), "成本为：" + cost + "创建成功");
-                CommonUtil.logger(cost);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--成本异常情况");
-        }
-    }
-
-    @Test(description = "卡券表单--新建卡券--选择门店异常")
-    public void voucherManage_system_8() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long stock = 1000L;
-            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
-                    .subjectType(util.getSubjectType()).voucherDescription(util.getDesc())
-                    .subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
-                    .shopType(0).selfVerification(true).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            Preconditions.checkArgument(message.equals("卡券适用门店列表不能为空"),
-                    "卡券适用门店列表为：" + null + "创建成功");
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--新建卡券--成本异常情况");
-        }
-    }
-
-    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
-    public void voucherManage_system_9() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已使用的卡券列表
-            user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.USED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
-            //转移
-            user.login(administrator);
-            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
-                    .voucherIds(getList(voucherList.get(0))).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
-            CommonUtil.checkResult("转移卡券", voucherName, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
-        }
-    }
-
-    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
-    public void voucherManage_system_10() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已使用的卡券列表
-            user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
-            //转移
-            user.login(administrator);
-            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
-                    .voucherIds(getList(voucherList.get(0))).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
-            CommonUtil.checkResult("转移卡券", voucherName, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
-        }
-    }
-
-    @Test(description = "卡券表单--卡券转移，转移账号异常")
-    public void voucherManage_system_11() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] phones = {"13654973499"};
-            //获取已过期的卡券列表
-            user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
-            //转移
-            user.login(administrator);
-            Arrays.stream(phones).forEach(phone -> {
-                IScene scene = Transfer.builder().transferPhone(phone).receivePhone(applet.getPhone())
-                        .voucherIds(getList(voucherList.get(0))).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = "推送用户id不能为空";
-                CommonUtil.checkResult("转移卡券", voucherName, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
-        }
-    }
-
-    @Test(description = "卡券表单--卡券转移，接收账号异常")
-    public void voucherManage_system_12() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] phones = {"13654973499", marketing.getPhone()};
-            //获取已过期的卡券列表
-            user.loginApplet(appletUser);
-            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
-            String voucherName = util.getVoucherListName(voucherList.get(0));
-            //转移
-            user.login(administrator);
-            Arrays.stream(phones).forEach(phone -> {
-                IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(phone)
-                        .voucherIds(getList(voucherList.get(0))).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = phone.equals(marketing.getPhone()) ? "转移账号和接收账号不能相同" : "卡券接收人未注册小程序";
-                CommonUtil.checkResult("转移卡券", voucherName, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
-        }
+    private <T> List<T> getList(T str) {
+        List<T> list = new ArrayList<>();
+        list.add(str);
+        return list;
     }
 
     @Test(description = "卡券表单--新建卡券--列表数+1&发行库存=创建时填写数量&成本=创建时填写的成本")
@@ -1066,6 +799,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             String message = jc.invokeApi(scene1, false).getString("message");
             if (message.equals("该卡券未开启自助核销功能")) {
                 jc.pcSwichSelfVerification(voucherId, true);
+                jc.invokeApi(scene1, false);
             }
             //核销后该核销员的核销数量
             user.login(administrator);
@@ -1086,92 +820,6 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             collectMessage(e);
         } finally {
             saveData("核销人员--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
-        }
-    }
-
-    @Test(description = "核销人员--创建异页核销,名称异常")
-    public void voucherManage_system_30() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {null, EnumContent.B.getContent()};
-            Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreateVerificationPeople.builder().verificationPersonName(name)
-                        .verificationPersonPhone("13663366788").status(1).type(1).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
-                Preconditions.checkArgument(message.equals(err),
-                        "核销人员名字为：" + name + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(name);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--创建异页核销,名称异常");
-        }
-    }
-
-    @Test(description = "核销人员--创建财务核销,名称异常")
-    public void voucherManage_system_37() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {null, EnumContent.B.getContent()};
-            Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreateVerificationPeople.builder().verificationPersonName(name)
-                        .verificationPersonPhone("13663366788").status(1).type(1).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
-                Preconditions.checkArgument(message.equals(err), "核销人员名字为：" + name + "创建成功");
-                CommonUtil.logger(name);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--创建财务核销,名称异常");
-        }
-    }
-
-    @Test(description = "核销人员--创建财务核销,电话异常")
-    public void voucherManage_system_38() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
-            Arrays.stream(strings).forEach(phone -> {
-                IScene scene = CreateVerificationPeople.builder().verificationPersonName("郭丽雅")
-                        .verificationPersonPhone(phone).status(1).type(0).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = "手机号格式不正确";
-                Preconditions.checkArgument(message.equals(err),
-                        "手机号格式为：" + phone + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(phone);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--创建财务核销,电话异常");
-        }
-    }
-
-    @Test(description = "核销人员--创建财务核销,电话存在")
-    public void voucherManage_system_39() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {util.getRepetitionVerificationPhone()};
-            Arrays.stream(strings).forEach(phone -> {
-                IScene scene = CreateVerificationPeople.builder().verificationPersonName("郭丽雅")
-                        .verificationPersonPhone(phone).status(1).type(0).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = "手机号已存在";
-                Preconditions.checkArgument(message.equals(err),
-                        "手机号格式为：" + phone + CommonUtil.checkResult(err, message));
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("核销人员--创建财务核销,电话存在");
         }
     }
 
@@ -1197,654 +845,6 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             collectMessage(e);
         } finally {
             saveData("核销人员--创建财务核销,列表数+1&创建异页核销,列表数+1");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，套餐名称异常")
-    public void packageManager_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
-            Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreatePackage.builder().packageName(name).validity("30").packageDescription(util.getDesc())
-                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(name) ? "套餐名称不能为空" : "套餐名称输入应大于2字小于20字";
-                Preconditions.checkArgument(message.equals(err),
-                        "套餐名称为：" + name + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(name);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，套餐名称异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，套餐说明异常")
-    public void packageManager_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {null, "", EnumContent.C.getContent()};
-            Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30").packageDescription(desc)
-                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(desc) ? "套餐说明不能为空" : "套餐说明不能超过200字";
-                Preconditions.checkArgument(message.equals(err),
-                        "套餐说明为：" + desc + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(desc);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，套餐说明异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，有效天数异常")
-    public void packageManager_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {null, "", "2001", "0"};
-            Arrays.stream(strings).forEach(validity -> {
-                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity(validity)
-                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
-                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(validity) ? "套餐有效期不能为空" : "有效期请小于2000天";
-                Preconditions.checkArgument(message.equals(err),
-                        "有效期为：" + validity + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(validity);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，套餐说明异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，主体类型异常")
-    public void packageManager_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {"全部权限", null, ""};
-            Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                        .packageDescription(util.getDesc()).subjectType(subjectType)
-                        .subjectId(util.getSubjectId(subjectType)).voucherList(util.getVoucherList())
-                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = "主体类型不存在";
-                CommonUtil.checkResult("有效期", subjectType, err, message);
-                CommonUtil.logger(subjectType);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，主体类型异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，主体详情异常")
-    public void packageManager_system_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name())
-                    .voucherList(util.getVoucherList())
-                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            String err = "主体详情不能为空";
-            Preconditions.checkArgument(message.equals(err),
-                    "主体详情为：" + null + CommonUtil.checkResult(err, message));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，主体详情异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，包含卡券为空")
-    public void packageManager_system_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
-                    .subjectId(util.getSubjectId(util.getSubjectType()))
-                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            String err = "所选卡券不能为空";
-            Preconditions.checkArgument(message.equals(err),
-                    "包含卡券为：" + null + CommonUtil.checkResult(err, message));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，包含卡券为空");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，套餐价格异常")
-    public void packageManager_system_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Double[] doubles = {null, 100000000.01};
-            Arrays.stream(doubles).forEach(packagePrice -> {
-                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
-                        .packagePrice(packagePrice).status(true).shopIds(util.getShopIds()).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                CommonUtil.valueView(message);
-                String err = StringUtils.isEmpty(packagePrice) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
-                Preconditions.checkArgument(message.equals(err),
-                        "有效期为：" + packagePrice + CommonUtil.checkResult(err, message));
-                CommonUtil.logger(packagePrice);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，套餐价格异常");
-        }
-    }
-
-    @Test(description = "套餐表单--创建套餐，选择门店为空")
-    public void packageManager_system_8() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
-                    .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
-                    .packagePrice(5000.00).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            CommonUtil.valueView(message);
-            String err = "套餐适用门店列表不能为空";
-            Preconditions.checkArgument(message.equals(err),
-                    "选择门店为：" + null + CommonUtil.checkResult(err, message));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--创建套餐，选择门店为空");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，联系方式异常")
-    public void packageManager_system_9() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] phones = {null, "", "11111111111", "1532152798", "13654973499", "010-8888888"};
-            JSONArray voucherList = util.getVoucherList(1);
-            Arrays.stream(phones).forEach(phone -> {
-                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(phone)
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-                String err = StringUtils.isEmpty(phone) ? "客户手机号不能为空" : "客户不存在";
-                CommonUtil.checkResult("联系方式", phone, err, message);
-                CommonUtil.logger(phone);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，联系方式异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，车牌号为空")
-    public void packageManager_system_10() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] plateNumbers = {null, "", "京A444", "岗A88776"};
-            JSONArray voucherList = util.getVoucherList(1);
-            Arrays.stream(plateNumbers).forEach(plateNumber -> {
-                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-                String err = StringUtils.isEmpty(plateNumber) ? "车牌号不可为空" : plateNumber.length() == 7 || plateNumber.length() == 8 ?
-                        "车牌号格式不正确" : "请输入7-8位车牌号码位数";
-                CommonUtil.checkResult("车牌号", plateNumber, err, message);
-                CommonUtil.logger(plateNumber);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，联系方式异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，超过10张卡券")
-    public void packageManager_system_11() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            List<JSONArray> voucherLists = new ArrayList<>();
-            JSONArray array = util.getVoucherList(1);
-            array.getJSONObject(0).put("voucher_count", 100);
-            JSONArray array1 = util.getVoucherList(2);
-            array1.getJSONObject(0).put("voucher_count", 5);
-            array1.getJSONObject(1).put("voucher_count", 6);
-            voucherLists.add(array);
-            voucherLists.add(null);
-            voucherLists.add(array1);
-            voucherLists.forEach(voucherList -> {
-                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
-                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-                String err = voucherList == null ? "卡券列表不能为空" : "卡券数量不能超过10张";
-                CommonUtil.checkResult("卡券数量", voucherList, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，超过10张卡券");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，累计金额异常", enabled = false)
-    public void packageManager_system_12() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
-            //购买固定套餐
-            String[] packagePrices = {"0", "100000001"};
-            Arrays.stream(packagePrices).forEach(packagePrice -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice(packagePrice).expiryDate("1").remark(EnumContent.B.getContent())
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                        .extendedInsuranceCopies(10).type(1).build();
-                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-                String err = "卡券数量不能超过10张";
-                CommonUtil.checkResult("累计金额", packagePrice, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，累计金额异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，有效日期异常")
-    public void packageManager_system_13() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
-            //购买固定套餐
-            String[] expiryDates = {null, "", "20001", "12.23"};
-            Arrays.stream(expiryDates).forEach(expiryDate -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.11").expiryDate(expiryDate).remark(EnumContent.B.getContent())
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                        .extendedInsuranceCopies(10).type(1).build();
-                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-                String err = StringUtils.isEmpty(expiryDate) ? "有效期不能为空" : expiryDate.contains(".") ? "请求入参类型不正确" : "有效期不能查过2000天";
-                CommonUtil.checkResult("有效日期", expiryDate, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，有效日期异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，套餐说明异常")
-    public void packageManager_system_14() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
-            //购买固定套餐
-            String[] remarks = {EnumContent.C.getContent()};
-            Arrays.stream(remarks).forEach(remark -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(remark)
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                        .extendedInsuranceCopies(10).type(1).build();
-                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-                String err = "备注不能超过200字";
-                CommonUtil.checkResult("套餐说明", remark, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，套餐说明异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，主体类型异常")
-    public void packageManager_system_15() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
-            //购买固定套餐
-            String[] subjectTypes = {"全部权限", null, ""};
-            Arrays.stream(subjectTypes).forEach(subjectType -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                        .extendedInsuranceCopies(10).type(1).build();
-                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-                String err = "主体类型不存在";
-                CommonUtil.checkResult("主体类型", subjectType, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，主体类型异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，主体详情异常", enabled = false)
-    public void packageManager_system_16() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            long packageId = util.getPackageId("凯迪拉克无限套餐");
-            //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
-                    .subjectType(subjectType).extendedInsuranceYear(10)
-                    .extendedInsuranceCopies(10).type(1).build();
-            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-            String err = "主体详情不能为空";
-            CommonUtil.checkResult("主体类型", null, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，主体详情异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买套餐，选择套餐异常", enabled = false)
-    public void packageManager_system_17() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            Long[] packageIds = {null, 1L};
-            //购买固定套餐
-            Arrays.stream(packageIds).forEach(packageId -> {
-                //购买固定套餐
-                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                        .extendedInsuranceCopies(10).type(1).build();
-                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-                String err = packageId == null ? "套餐列表不能为空" : "";
-                CommonUtil.checkResult("选择套餐", packageId, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买套餐，主体详情异常");
-        }
-    }
-
-    @Test(description = "套餐表单--购买/赠送临时套餐时，选择的卡券无库存，确认时会有提示：卡券【XXXX】库存不足")
-    public void packageManager_system_18() {
-        try {
-            Long id = util.getNoInventoryVoucherId();
-            String voucherName = util.getVoucherName(id);
-            JSONArray voucherList = util.getVoucherList(voucherName, 2);
-            String subjectType = util.getSubjectType();
-            //后买临时套餐
-            IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
-                    .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
-                    .extendedInsuranceCopies("1").type(1).build();
-            String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-            String err = "卡券【" + voucherName + "】库存不足";
-            CommonUtil.checkResult("选择的卡券", "无库存卡券", err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买/赠送临时套餐时，选择的卡券无库存，确认时会有提示：卡券【XXXX】库存不足");
-        }
-    }
-
-    @Test(description = "套餐表单--购买/赠送套餐未确认前，选择的卡券被作废，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
-    public void packageManager_system_19() {
-        try {
-            Long id = util.getObsoleteVoucherId();
-            String voucherName = util.getVoucherName(id);
-            JSONArray voucherList = util.getOneVoucherList(voucherName);
-            String subjectType = util.getSubjectType();
-            //购买临时套餐
-            IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
-                    .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
-                    .extendedInsuranceCopies("1").type(1).build();
-            String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-            String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
-            CommonUtil.checkResult("选择的卡券", "已作废卡券", err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买/赠送套餐未确认前，选择的卡券被作废，确认时会有提示：卡券已被拒绝或者已取消，请重新选择！");
-        }
-    }
-
-    @Test(description = "套餐表单--购买/赠送固定套餐时，选择的套餐内包含无库存卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
-    public void packageManager_system_20() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String subjectType = util.getSubjectType();
-            long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
-            //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-                    .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
-                    .extendedInsuranceCopies(10).type(1).build();
-            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-            String err = "卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";
-            CommonUtil.checkResult("选择的套餐", "包含无库存卡券", err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--购买/赠送固定套餐时，选择的套餐内包含无库存卡券，确认时会有提示：卡券【XXXX】库存不足");
-        }
-    }
-
-    //关闭套餐也可购买
-    @Test(description = "套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭", enabled = false)
-    public void packageManager_system_21() {
-        logger.logCaseStart(caseResult.getCaseName());
-        long packageId = 0;
-        try {
-            packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-            //关闭套餐
-            jc.pcSwitchPackageStatus(false, packageId);
-            //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
-                    .extendedInsuranceCopies(10).type(1).build();
-            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-            String err = "此套餐已关闭";
-            Preconditions.checkArgument(message.contains(err), "购买的套餐内包含无库存卡券" + CommonUtil.checkResult(err, message));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            jc.pcSwitchPackageStatus(true, packageId);
-            saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，套餐名称异常")
-    public void packageManager_system_22() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] packageNames = {EnumVP.ONE.getPackageName(), EnumContent.A.getContent(), null, ""};
-            long packageId = util.getModifyPackageId();
-            Arrays.stream(packageNames).forEach(packageName -> {
-                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
-                        .id(String.valueOf(packageId)).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(packageName) ? "套餐名称不能为空" : EnumVP.isContains(packageName) ? "套餐名称重复，请重新输入！" : "套餐名称输入应大于2字小于20字";
-                CommonUtil.checkResult("套餐名称", packageName, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，套餐名称异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐， 套餐说明异常")
-    public void packageManager_system_23() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] contents = {EnumContent.C.getContent(), null, ""};
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            Arrays.stream(contents).forEach(content -> {
-                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(content).validity(2000)
-                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
-                        .id(String.valueOf(packageId)).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(content) ? "套餐说明不能为空" : "套餐说明不能超过200字";
-                CommonUtil.checkResult("套餐说明", content, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，名称异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，主体类型异常")
-    public void packageManager_system_24() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] subjectTypes = {"全部权限", null, ""};
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            Arrays.stream(subjectTypes).forEach(subjectType -> {
-                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).validity(2000)
-                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
-                        .id(String.valueOf(packageId)).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
-                CommonUtil.checkResult("主体类型", subjectType, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，主体详情异常")
-    public void packageManager_system_25() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                    .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(util.getVoucherList()).packagePrice("1.11")
-                    .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            String err = "主体详情不能为空";
-            CommonUtil.checkResult("主体详情", null, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，包含卡券异常")
-    public void packageManager_system_26() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            List<JSONArray> voucherList = new ArrayList<>();
-            voucherList.add(util.getVoucherList(11));
-            voucherList.add(null);
-            voucherList.forEach(voucher -> {
-                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                        .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(voucher)
-                        .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(voucher) ? "所选卡券不能为空" : "卡券数量不能超过10张";
-                CommonUtil.checkResult("所选卡券", voucher, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，套餐价格异常")
-    public void packageManager_system_27() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            String[] prices = {"100000000.01", "10000000001", null, ""};
-            Arrays.stream(prices).forEach(price -> {
-                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                        .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(util.getVoucherList())
-                        .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
-                String message = jc.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(price) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
-                CommonUtil.checkResult("套餐价格", price, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，套餐价格异常");
-        }
-    }
-
-    @Test(description = "套餐表单--修改套餐，所选门店为空")
-    public void packageManager_system_28() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            long packageId = util.getModifyPackageId();
-            String packageName = util.getPackageName(packageId);
-            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-                    .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(util.getVoucherList())
-                    .status(true).id(String.valueOf(packageId)).build();
-            String message = jc.invokeApi(scene, false).getString("message");
-            String err = "套餐适用门店列表不能为空";
-            CommonUtil.checkResult("套餐适用门店", null, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐表单--修改套餐，所选门店为空");
         }
     }
 
@@ -2518,6 +1518,1057 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
+    @Test(description = "卡券表单--新建卡券--卡券名称异常")
+    public void voucherManage_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
+            Arrays.stream(strings).forEach(name -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
+                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
+                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(name) ? "卡券名称不能为空" : "卡券名称长度应为2～20个字";
+                Preconditions.checkArgument(message.equals(err), "卡券名称为：" + name + "创建成功");
+                CommonUtil.logger(name);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--卡券名称异常");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--卡券说明异常")
+    public void voucherManage_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            String[] strings = {null, "", EnumContent.C.getContent()};
+            Arrays.stream(strings).forEach(desc -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                        .voucherDescription(desc).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
+                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过200个字";
+                Preconditions.checkArgument(message.equals(err), "卡券说明为：" + desc + "创建成功");
+                CommonUtil.logger(desc);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--卡券说明异常");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--主体类型异常")
+    public void voucherManage_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            String[] strings = {"全部权限", null, ""};
+            Arrays.stream(strings).forEach(subjectType -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(subjectType)
+                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(subjectType)).stock(stock).cost(util.getCost(stock))
+                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                Preconditions.checkArgument(message.equals("主体类型不存在"), "主体类型为：" + subjectType + "创建成功");
+                CommonUtil.logger(subjectType);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--主体类型异常");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--主体详情异常")
+    public void voucherManage_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                    .subjectType(EnumSubject.STORE.name())
+                    .voucherDescription(util.getDesc()).stock(stock).cost(util.getCost(stock))
+                    .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            Preconditions.checkArgument(message.equals("主体详情不能为空"), "主体详情为：" + null + "创建成功");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--主体详情异常");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--库存数量异常情况")
+    public void voucherManage_system_5() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long[] longs = {1000000000L, null, -100L, 9999999999L};
+            Arrays.stream(longs).forEach(stock -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
+                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(stock) ? "库存不能为空" : stock > 1000000000L ? "请求入参类型不正确" : "卡券库存范围应在0 ～ 100000000张";
+                Preconditions.checkArgument(message.equals(err), "卡券库存为：" + stock + "创建成功");
+                CommonUtil.logger(stock);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--库存数量异常情况");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--业务类型异常情况")
+    public void voucherManage_system_6() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            Integer[] integers = {null, -1, 100};
+            Arrays.stream(integers).forEach(shopType -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
+                        .shopType(shopType).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(shopType) ? "业务类型不能为空" : "业务类型不存在";
+                Preconditions.checkArgument(message.equals(err), "业务类型为：" + shopType + "创建成功");
+                CommonUtil.logger(shopType);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--业务类型异常情况");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--成本异常情况")
+    public void voucherManage_system_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            Double[] doubles = {null, (double) -1, (double) 1000000000, 100000000.11};
+            Arrays.stream(doubles).forEach(cost -> {
+                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                        .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(cost)
+                        .shopType(0).shopIds(util.getShopIds()).selfVerification(true).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(cost) ? "成本不能为空" : "卡券成本金额范围应在0 ～ 100000000元";
+                Preconditions.checkArgument(message.equals(err), "成本为：" + cost + "创建成功");
+                CommonUtil.logger(cost);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--成本异常情况");
+        }
+    }
+
+    @Test(description = "卡券表单--新建卡券--选择门店异常")
+    public void voucherManage_system_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long stock = 1000L;
+            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                    .subjectType(util.getSubjectType()).voucherDescription(util.getDesc())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
+                    .shopType(0).selfVerification(true).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            Preconditions.checkArgument(message.equals("卡券适用门店列表不能为空"),
+                    "卡券适用门店列表为：" + null + "创建成功");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--新建卡券--成本异常情况");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
+    public void voucherManage_system_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已使用的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.USED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+                    .voucherIds(getList(voucherList.get(0))).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
+            CommonUtil.checkResult("转移卡券", voucherName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，此时将卡券核销，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！")
+    public void voucherManage_system_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已使用的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+                    .voucherIds(getList(voucherList.get(0))).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
+            CommonUtil.checkResult("转移卡券", voucherName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，转移账号异常")
+    public void voucherManage_system_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {"13654973499"};
+            //获取已过期的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            Arrays.stream(phones).forEach(phone -> {
+                IScene scene = Transfer.builder().transferPhone(phone).receivePhone(applet.getPhone())
+                        .voucherIds(getList(voucherList.get(0))).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = "推送用户id不能为空";
+                CommonUtil.checkResult("转移卡券", voucherName, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "卡券表单--卡券转移，接收账号异常")
+    public void voucherManage_system_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {"13654973499", marketing.getPhone()};
+            //获取已过期的卡券列表
+            user.loginApplet(appletUser);
+            List<Long> voucherList = util.getVoucherList(EnumAppletVoucherStatus.NEAR_EXPIRED.getName());
+            String voucherName = util.getVoucherListName(voucherList.get(0));
+            //转移
+            user.login(administrator);
+            Arrays.stream(phones).forEach(phone -> {
+                IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(phone)
+                        .voucherIds(getList(voucherList.get(0))).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = phone.equals(marketing.getPhone()) ? "转移账号和接收账号不能相同" : "卡券接收人未注册小程序";
+                CommonUtil.checkResult("转移卡券", voucherName, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("卡券表单--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+        }
+    }
+
+    @Test(description = "核销人员--卡券核销时将核销人状态关闭，提示核销失败")
+    public void voucherManage_system_29() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String code = null;
+        try {
+            code = util.getVerificationCode(false, "本司员工");
+            user.loginApplet(appletUser);
+            JSONObject voucherInfo = util.getCanUsedVoucherListId();
+            long id = voucherInfo.getLong("id");
+            IScene scene = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            String err = "核销码错误";
+            CommonUtil.checkResult("核销卡券时核销码状态", "关闭", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            user.login(administrator);
+            util.switchVerificationStatus(code, true);
+            saveData("核销人员--卡券核销时将核销人状态关闭，提示核销失败");
+        }
+    }
+
+    @Test(description = "核销人员--创建异页核销,名称异常")
+    public void voucherManage_system_30() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, EnumContent.B.getContent()};
+            Arrays.stream(strings).forEach(name -> {
+                IScene scene = CreateVerificationPeople.builder().verificationPersonName(name)
+                        .verificationPersonPhone("13663366788").status(1).type(1).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
+                Preconditions.checkArgument(message.equals(err),
+                        "核销人员名字为：" + name + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(name);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建异页核销,名称异常");
+        }
+    }
+
+    @Test(description = "核销人员--创建财务核销,名称异常")
+    public void voucherManage_system_37() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, EnumContent.B.getContent()};
+            Arrays.stream(strings).forEach(name -> {
+                IScene scene = CreateVerificationPeople.builder().verificationPersonName(name)
+                        .verificationPersonPhone("13663366788").status(1).type(1).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
+                Preconditions.checkArgument(message.equals(err), "核销人员名字为：" + name + "创建成功");
+                CommonUtil.logger(name);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建财务核销,名称异常");
+        }
+    }
+
+    @Test(description = "核销人员--创建财务核销,电话异常")
+    public void voucherManage_system_38() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
+            Arrays.stream(strings).forEach(phone -> {
+                IScene scene = CreateVerificationPeople.builder().verificationPersonName("郭丽雅")
+                        .verificationPersonPhone(phone).status(1).type(0).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = "手机号格式不正确";
+                Preconditions.checkArgument(message.equals(err),
+                        "手机号格式为：" + phone + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(phone);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建财务核销,电话异常");
+        }
+    }
+
+    @Test(description = "核销人员--创建财务核销,电话存在")
+    public void voucherManage_system_39() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {util.getRepetitionVerificationPhone()};
+            Arrays.stream(strings).forEach(phone -> {
+                IScene scene = CreateVerificationPeople.builder().verificationPersonName("郭丽雅")
+                        .verificationPersonPhone(phone).status(1).type(0).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = "手机号已存在";
+                Preconditions.checkArgument(message.equals(err),
+                        "手机号格式为：" + phone + CommonUtil.checkResult(err, message));
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("核销人员--创建财务核销,电话存在");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，套餐名称异常")
+    public void packageManager_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
+            Arrays.stream(strings).forEach(name -> {
+                IScene scene = CreatePackage.builder().packageName(name).validity("30").packageDescription(util.getDesc())
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(name) ? "套餐名称不能为空" : "套餐名称输入应大于2字小于20字";
+                Preconditions.checkArgument(message.equals(err),
+                        "套餐名称为：" + name + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(name);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，套餐名称异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，套餐说明异常")
+    public void packageManager_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, "", EnumContent.C.getContent()};
+            Arrays.stream(strings).forEach(desc -> {
+                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30").packageDescription(desc)
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(desc) ? "套餐说明不能为空" : "套餐说明不能超过200字";
+                Preconditions.checkArgument(message.equals(err),
+                        "套餐说明为：" + desc + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(desc);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，套餐说明异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，有效天数异常")
+    public void packageManager_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {null, "", "2001", "0"};
+            Arrays.stream(strings).forEach(validity -> {
+                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity(validity)
+                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(validity) ? "套餐有效期不能为空" : "有效期请小于2000天";
+                Preconditions.checkArgument(message.equals(err),
+                        "有效期为：" + validity + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(validity);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，套餐说明异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，主体类型异常")
+    public void packageManager_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {"全部权限", null, ""};
+            Arrays.stream(strings).forEach(subjectType -> {
+                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(subjectType)
+                        .subjectId(util.getSubjectId(subjectType)).voucherList(util.getVoucherList())
+                        .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = "主体类型不存在";
+                CommonUtil.checkResult("有效期", subjectType, err, message);
+                CommonUtil.logger(subjectType);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，主体详情异常")
+    public void packageManager_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name())
+                    .voucherList(util.getVoucherList())
+                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "主体详情不能为空";
+            Preconditions.checkArgument(message.equals(err),
+                    "主体详情为：" + null + CommonUtil.checkResult(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，主体详情异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，包含卡券为空")
+    public void packageManager_system_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType()))
+                    .packagePrice(5000.00).status(true).shopIds(util.getShopIds()).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "所选卡券不能为空";
+            Preconditions.checkArgument(message.equals(err),
+                    "包含卡券为：" + null + CommonUtil.checkResult(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，包含卡券为空");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，套餐价格异常")
+    public void packageManager_system_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Double[] doubles = {null, 100000000.01};
+            Arrays.stream(doubles).forEach(packagePrice -> {
+                IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                        .packagePrice(packagePrice).status(true).shopIds(util.getShopIds()).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                CommonUtil.valueView(message);
+                String err = StringUtils.isEmpty(packagePrice) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
+                Preconditions.checkArgument(message.equals(err),
+                        "有效期为：" + packagePrice + CommonUtil.checkResult(err, message));
+                CommonUtil.logger(packagePrice);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，套餐价格异常");
+        }
+    }
+
+    @Test(description = "套餐表单--创建套餐，选择门店为空")
+    public void packageManager_system_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(util.getVoucherList())
+                    .packagePrice(5000.00).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "套餐适用门店列表不能为空";
+            Preconditions.checkArgument(message.equals(err),
+                    "选择门店为：" + null + CommonUtil.checkResult(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--创建套餐，选择门店为空");
+        }
+    }
+
+    @Test(description = "套餐表单--【创建套餐】选择卡券后将卡券作废，点击确定，提示：卡券【xxxx】已被作废，请重新选择！")
+    public void packageManager_system_29() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long voucherId = util.getObsoleteVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            JSONArray voucherList = util.getVoucherList(voucherName, 10);
+            IScene scene = CreatePackage.builder().packageName(util.createPackageName()).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(util.getSubjectType())
+                    .subjectId(util.getSubjectId(util.getSubjectType())).voucherList(voucherList)
+                    .packagePrice(5000.00).shopIds(util.getShopIds()).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            CommonUtil.valueView(message);
+            String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
+            CommonUtil.checkResult("创建套餐时所含卡券", "已作废卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--【创建套餐】选择卡券后将卡券作废，点击确定，提示：卡券【xxxx】已被作废，请重新选择！");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，联系方式异常")
+    public void packageManager_system_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {null, "", "11111111111", "1532152798", "13654973499", "010-8888888"};
+            JSONArray voucherList = util.getVoucherList(1);
+            Arrays.stream(phones).forEach(phone -> {
+                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(phone)
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
+                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
+                        .extendedInsuranceCopies("1").type(1).build();
+                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                String err = StringUtils.isEmpty(phone) ? "客户手机号不能为空" : "客户不存在";
+                CommonUtil.checkResult("联系方式", phone, err, message);
+                CommonUtil.logger(phone);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，联系方式异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，车牌号为空")
+    public void packageManager_system_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] plateNumbers = {null, "", "京A444", "岗A88776"};
+            JSONArray voucherList = util.getVoucherList(1);
+            Arrays.stream(plateNumbers).forEach(plateNumber -> {
+                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
+                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
+                        .extendedInsuranceCopies("1").type(1).build();
+                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                String err = StringUtils.isEmpty(plateNumber) ? "车牌号不可为空" : plateNumber.length() == 7 || plateNumber.length() == 8 ?
+                        "车牌号格式不正确" : "请输入7-8位车牌号码位数";
+                CommonUtil.checkResult("车牌号", plateNumber, err, message);
+                CommonUtil.logger(plateNumber);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，联系方式异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，超过10张卡券")
+    public void packageManager_system_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<JSONArray> voucherLists = new ArrayList<>();
+            JSONArray array = util.getVoucherList(1);
+            array.getJSONObject(0).put("voucher_count", 100);
+            JSONArray array1 = util.getVoucherList(2);
+            array1.getJSONObject(0).put("voucher_count", 5);
+            array1.getJSONObject(1).put("voucher_count", 6);
+            voucherLists.add(array);
+            voucherLists.add(null);
+            voucherLists.add(array1);
+            voucherLists.forEach(voucherList -> {
+                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
+                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
+                        .extendedInsuranceCopies("1").type(1).build();
+                String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                String err = voucherList == null ? "卡券列表不能为空" : "卡券数量不能超过10张";
+                CommonUtil.checkResult("卡券数量", voucherList, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，超过10张卡券");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，累计金额异常", enabled = false)
+    public void packageManager_system_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            //购买固定套餐
+            String[] packagePrices = {"0", "100000001"};
+            Arrays.stream(packagePrices).forEach(packagePrice -> {
+                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                        .packageId(packageId).packagePrice(packagePrice).expiryDate("1").remark(EnumContent.B.getContent())
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                        .extendedInsuranceCopies(10).type(1).build();
+                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                String err = "卡券数量不能超过10张";
+                CommonUtil.checkResult("累计金额", packagePrice, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，累计金额异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，有效日期异常")
+    public void packageManager_system_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            //购买固定套餐
+            String[] expiryDates = {null, "", "20001", "12.23"};
+            Arrays.stream(expiryDates).forEach(expiryDate -> {
+                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                        .packageId(packageId).packagePrice("1.11").expiryDate(expiryDate).remark(EnumContent.B.getContent())
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                        .extendedInsuranceCopies(10).type(1).build();
+                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                String err = StringUtils.isEmpty(expiryDate) ? "有效期不能为空" : expiryDate.contains(".") ? "请求入参类型不正确" : "有效期不能查过2000天";
+                CommonUtil.checkResult("有效日期", expiryDate, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，有效日期异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，套餐说明异常")
+    public void packageManager_system_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            //购买固定套餐
+            String[] remarks = {EnumContent.C.getContent()};
+            Arrays.stream(remarks).forEach(remark -> {
+                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(remark)
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                        .extendedInsuranceCopies(10).type(1).build();
+                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                String err = "备注不能超过200字";
+                CommonUtil.checkResult("套餐说明", remark, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，套餐说明异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，主体类型异常")
+    public void packageManager_system_15() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            //购买固定套餐
+            String[] subjectTypes = {"全部权限", null, ""};
+            Arrays.stream(subjectTypes).forEach(subjectType -> {
+                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                        .extendedInsuranceCopies(10).type(1).build();
+                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                String err = "主体类型不存在";
+                CommonUtil.checkResult("主体类型", subjectType, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，主体详情异常", enabled = false)
+    public void packageManager_system_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            long packageId = util.getPackageId("凯迪拉克无限套餐");
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
+                    .subjectType(subjectType).extendedInsuranceYear(10)
+                    .extendedInsuranceCopies(10).type(1).build();
+            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String err = "主体详情不能为空";
+            CommonUtil.checkResult("主体类型", null, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，主体详情异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买套餐，选择套餐异常", enabled = false)
+    public void packageManager_system_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            Long[] packageIds = {null, 1L};
+            //购买固定套餐
+            Arrays.stream(packageIds).forEach(packageId -> {
+                //购买固定套餐
+                IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                        .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                        .extendedInsuranceCopies(10).type(1).build();
+                String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                String err = packageId == null ? "套餐列表不能为空" : "";
+                CommonUtil.checkResult("选择套餐", packageId, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买套餐，主体详情异常");
+        }
+    }
+
+    @Test(description = "套餐表单--购买/赠送临时套餐时，选择的卡券无库存，确认时会有提示：卡券【XXXX】库存不足")
+    public void packageManager_system_18() {
+        try {
+            Long id = util.getNoInventoryVoucherId();
+            String voucherName = util.getVoucherName(id);
+            JSONArray voucherList = util.getVoucherList(voucherName, 2);
+            String subjectType = util.getSubjectType();
+            //后买临时套餐
+            IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
+                    .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
+                    .extendedInsuranceCopies("1").type(1).build();
+            String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+            String err = "卡券【" + voucherName + "】库存不足";
+            CommonUtil.checkResult("选择的卡券", "无库存卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买/赠送临时套餐时，选择的卡券无库存，确认时会有提示：卡券【XXXX】库存不足");
+        }
+    }
+
+    @Test(description = "套餐表单--购买/赠送套餐未确认前，选择的卡券被作废，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
+    public void packageManager_system_19() {
+        try {
+            Long id = util.getObsoleteVoucherId();
+            String voucherName = util.getVoucherName(id);
+            JSONArray voucherList = util.getOneVoucherList(voucherName);
+            String subjectType = util.getSubjectType();
+            //购买临时套餐
+            IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
+                    .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
+                    .extendedInsuranceCopies("1").type(1).build();
+            String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+            String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
+            CommonUtil.checkResult("选择的卡券", "已作废卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买/赠送套餐未确认前，选择的卡券被作废，确认时会有提示：卡券已被拒绝或者已取消，请重新选择！");
+        }
+    }
+
+    @Test(description = "套餐表单--购买/赠送固定套餐时，选择的套餐内包含无库存卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
+    public void packageManager_system_20() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String subjectType = util.getSubjectType();
+            long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
+                    .extendedInsuranceCopies(10).type(1).build();
+            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String err = "卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";
+            CommonUtil.checkResult("选择的套餐", "包含无库存卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买/赠送固定套餐时，选择的套餐内包含无库存卡券，确认时会有提示：卡券【XXXX】库存不足");
+        }
+    }
+
+    //关闭套餐也可购买
+    @Test(description = "套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭", enabled = false)
+    public void packageManager_system_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        long packageId = 0;
+        try {
+            packageId = util.getPackageId(EnumVP.ONE.getPackageName());
+            //关闭套餐
+            jc.pcSwitchPackageStatus(false, packageId);
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
+                    .extendedInsuranceCopies(10).type(1).build();
+            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String err = "此套餐已关闭";
+            Preconditions.checkArgument(message.contains(err), "购买的套餐内包含无库存卡券" + CommonUtil.checkResult(err, message));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            jc.pcSwitchPackageStatus(true, packageId);
+            saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，套餐名称异常")
+    public void packageManager_system_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] packageNames = {EnumVP.ONE.getPackageName(), EnumContent.A.getContent(), null, ""};
+            long packageId = util.getModifyPackageId();
+            Arrays.stream(packageNames).forEach(packageName -> {
+                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
+                        .id(String.valueOf(packageId)).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(packageName) ? "套餐名称不能为空" : EnumVP.isContains(packageName) ? "套餐名称重复，请重新输入！" : "套餐名称输入应大于2字小于20字";
+                CommonUtil.checkResult("套餐名称", packageName, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐名称异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐， 套餐说明异常")
+    public void packageManager_system_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] contents = {EnumContent.C.getContent(), null, ""};
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            Arrays.stream(contents).forEach(content -> {
+                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(content).validity(2000)
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
+                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
+                        .id(String.valueOf(packageId)).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(content) ? "套餐说明不能为空" : "套餐说明不能超过200字";
+                CommonUtil.checkResult("套餐说明", content, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，名称异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，主体类型异常")
+    public void packageManager_system_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] subjectTypes = {"全部权限", null, ""};
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            Arrays.stream(subjectTypes).forEach(subjectType -> {
+                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).validity(2000)
+                        .voucherList(util.getVoucherList()).packagePrice("1.11").status(true).shopIds(util.getShopIds())
+                        .id(String.valueOf(packageId)).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
+                CommonUtil.checkResult("主体类型", subjectType, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，主体详情异常")
+    public void packageManager_system_25() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                    .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(util.getVoucherList()).packagePrice("1.11")
+                    .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            String err = "主体详情不能为空";
+            CommonUtil.checkResult("主体详情", null, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，包含卡券异常")
+    public void packageManager_system_26() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            List<JSONArray> voucherList = new ArrayList<>();
+            voucherList.add(util.getVoucherList(11));
+            voucherList.add(null);
+            voucherList.forEach(voucher -> {
+                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                        .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(voucher)
+                        .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(voucher) ? "所选卡券不能为空" : "卡券数量不能超过10张";
+                CommonUtil.checkResult("所选卡券", voucher, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，套餐价格异常")
+    public void packageManager_system_27() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            String[] prices = {"100000000.01", "10000000001", null, ""};
+            Arrays.stream(prices).forEach(price -> {
+                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                        .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(util.getVoucherList())
+                        .status(true).shopIds(util.getShopIds()).id(String.valueOf(packageId)).build();
+                String message = jc.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(price) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
+                CommonUtil.checkResult("套餐价格", price, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐价格异常");
+        }
+    }
+
+    @Test(description = "套餐表单--修改套餐，所选门店为空")
+    public void packageManager_system_28() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            long packageId = util.getModifyPackageId();
+            String packageName = util.getPackageName(packageId);
+            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                    .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(util.getVoucherList())
+                    .status(true).id(String.valueOf(packageId)).build();
+            String message = jc.invokeApi(scene, false).getString("message");
+            String err = "套餐适用门店列表不能为空";
+            CommonUtil.checkResult("套餐适用门店", null, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，所选门店为空");
+        }
+    }
+
     @Test(description = "消息管理--推送消息，消息名称异常", enabled = false)
     public void messageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2643,12 +2694,6 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         } finally {
             saveData("消息管理--推送消息，推送目标异常");
         }
-    }
-
-    private <T> List<T> getList(T str) {
-        List<T> list = new ArrayList<>();
-        list.add(str);
-        return list;
     }
 
     @Test(description = "消息管理--推送消息，发送时间不填", enabled = false)

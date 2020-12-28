@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SwitchVerificationStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
@@ -306,7 +307,6 @@ public class BusinessUtilOnline {
      * @return 套餐名
      */
     public String createPackageName() {
-        List<String> list = new ArrayList<>();
         int num = CommonUtil.getRandom(1, 10000);
         String packageName = "立减套餐" + num;
         PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder().packageName(packageName);
@@ -376,7 +376,8 @@ public class BusinessUtilOnline {
      */
     public JSONArray getVoucherList(String voucherName, int voucherCount) {
         JSONArray voucherList = new JSONArray();
-        JSONArray array = jc.pcVoucherList().getJSONArray("list");
+        IScene scene = VoucherFormPage.builder().voucherName(voucherName).size(size).build();
+        JSONArray array = jc.invokeApi(scene).getJSONArray("list");
         JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()).get(0);
         jsonObject.put("voucher_count", voucherCount);
         voucherList.add(jsonObject);
@@ -613,7 +614,6 @@ public class BusinessUtilOnline {
         JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
         Long customerId = jsonObject.getLong("customer_id");
         Long receptionId = jsonObject.getLong("reception_id");
-        String customerPhone = jsonObject.getString("customer_phone");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
@@ -637,7 +637,6 @@ public class BusinessUtilOnline {
         JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
         Long customerId = jsonObject.getLong("customer_id");
         Long receptionId = jsonObject.getLong("reception_id");
-        String customerPhone = jsonObject.getString("customer_phone");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
@@ -678,17 +677,45 @@ public class BusinessUtilOnline {
      * @return 核销码
      */
     public String getVerificationCode(String verificationIdentity) {
+        return getVerificationCode(true, verificationIdentity);
+    }
+
+    /**
+     * 获取核销码
+     *
+     * @param verificationIdentity 核销员身份
+     * @return 核销码
+     */
+    public String getVerificationCode(boolean verificationStatus, String verificationIdentity) {
         List<String> list = new ArrayList<>();
         VerificationPeople.VerificationPeopleBuilder builder = VerificationPeople.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("verification_status")
-                    && e.getString("verification_identity").equals(verificationIdentity))
-                    .map(e -> e.getString("verification_code")).collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("verification_status") == verificationStatus
+                    && e.getString("verification_identity").equals(verificationIdentity)).map(e -> e.getString("verification_code")).collect(Collectors.toList()));
+        }
+        if (list.size() == 0) {
+            String code = getVerificationCode(verificationIdentity);
+            list.add(code);
+            switchVerificationStatus(code, false);
         }
         return list.get(0);
+    }
+
+
+    /**
+     * 核销人员状态更改
+     *
+     * @param code   核销码
+     * @param status 状态
+     */
+    public void switchVerificationStatus(String code, boolean status) {
+        IScene scene = VerificationPeople.builder().verificationCode(code).build();
+        long id = jc.invokeApi(scene).getJSONArray("list").getJSONObject(0).getLong("id");
+        IScene scene1 = SwitchVerificationStatus.builder().id(id).status(status).build();
+        jc.invokeApi(scene1);
     }
 
     /**
