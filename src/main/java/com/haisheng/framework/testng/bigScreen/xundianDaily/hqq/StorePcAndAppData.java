@@ -467,7 +467,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
                 int pcPvSum = getTypeSum(scene1, "yesterday_pv");
                 CommonUtil.valueView(appPvSum, pcPvSum);
-                Preconditions.checkArgument(appPvSum == pcPvSum, "");
+                Preconditions.checkArgument(appPvSum == pcPvSum, "app "+appPvSum +" ,pc"+pcPvSum);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -477,7 +477,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--最近7天、14天、30天、60天女性占比+男性占比==100%")
+    @Test(description = "历史客流--最近7天、14天、30天、60天女性占比+男性占比==100%") //ok
     public void passengerFlow_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -485,9 +485,9 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 List<String> shopIds = getAppShopIds();
                 shopIds.forEach(shopId -> {
                     IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
-                    double percent = getTypeSum(scene, "gender", "gender_ratio");
+                    double percent = getTypeSum(scene, "gender", "gender_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId+" "+enumCycleType.name()+"占比和="+percent);
                     CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
@@ -499,7 +499,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--最近7天、14天、30天、60年龄段占比相加==100%")
+    @Test(description = "历史客流--最近7天、14天、30天、60年龄段占比相加==100%") //ok
     public void passengerFlow_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -507,9 +507,9 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 List<String> shopIds = getAppShopIds();
                 shopIds.forEach(shopId -> {
                     IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
-                    double percent = getTypeSum(scene, "age", "age_ratio");
+                    double percent = getTypeSum(scene, "age", "age_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId+" "+enumCycleType.name()+"占比和="+percent);
                     CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
@@ -541,7 +541,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "历史客流--自然日--女性占比+男性占比==100%")
+    @Test(description = "历史客流--自然日--女性占比+男性占比==100%") //ok
     public void passengerFlow_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -549,10 +549,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> dayList.forEach(day -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
-                double percent = getTypeSum(scene, "gender", "gender_ratio");
-                CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
-                CommonUtil.logger(shopId + day);
+                if (hasType(scene,"gender")) {
+                    double percent = getTypeSum(scene, "gender", "gender_ratio_number");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + dayList + " 百分比为" + percent);
+                    CommonUtil.logger(shopId + day);
+                }
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -569,10 +571,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> dayList.forEach(day -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
-                double percent = getTypeSum(scene, "age", "age_ratio");
-                CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
-                CommonUtil.logger(shopId + day);
+                if (hasType(scene,"age")) {
+                    double percent = getTypeSum(scene, "age", "age_ratio_number");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + dayList + " 百分比为" + percent);
+                    CommonUtil.logger(shopId + day);
+                }
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -581,7 +585,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--自然月--女性占比+男性占比==100%")
+    @Test(description = "历史客流--自然月--女性占比+男性占比==100%") //ok
     public void passengerFlow_data_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -589,10 +593,13 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> monthList = getMonthList();
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
-                double percent = getTypeSum(scene, "gender", "gender_ratio");
-                CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
-                CommonUtil.logger(shopId + month);
+                if (hasType(scene,"gender")){
+                    double percent = getTypeSum(scene, "gender", "gender_ratio_number");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店"+shopId+ " "+ monthList+" 百分比为"+percent);
+                    CommonUtil.logger(shopId + month);
+                }
+
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -601,7 +608,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--自然月--年龄段占比相加==100%")
+    @Test(description = "历史客流--自然月--年龄段占比相加==100%") //ok
     public void passengerFlow_data_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -609,10 +616,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> monthList = getMonthList();
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
-                double percent = getTypeSum(scene, "age", "age_ratio");
-                CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "");
-                CommonUtil.logger(shopId + month);
+                if (hasType(scene,"age")) {
+                    double percent = getTypeSum(scene, "age", "age_ratio_number");
+                    CommonUtil.valueView(percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店"+shopId+ " "+ monthList+" 百分比为"+percent);
+                    CommonUtil.logger(shopId + month);
+                }
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -636,7 +645,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "历史客流--选择同一时间段，男性别占比==pc客群漏斗中男女性别占比")
+    @Test(description = "历史客流--选择同一时间段，男性别占比==pc客群漏斗中进店客群男女性别占比")
     public void passengerFlow_data_29() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -645,20 +654,22 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
                 JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
-                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("男性"))
-                        .map(s -> s.getString("gender_ratio")).collect(Collectors.toList()).get(0);
-                double appPercent = percentToDouble(appGenderRatio);
+//                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("男性"))
+//                        .map(s -> s.getString("gender_ratio_number")).collect(Collectors.toList()).get(0);
+//                double appPercent = percentToDouble(appGenderRatio);
+                double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
+
                 IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
-                JSONArray list = md.invokeApi(pcScene).getJSONObject("deal").getJSONArray("list");
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "male_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, "历史客流--选择同一时间段，男性别占比"+pcPercent+"==pc客群漏斗中男女性别占比"+appPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, "app"+appPercent+"， pc"+pcPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("历史客流--选择同一时间段，男性别占比==pc客群漏斗中男女性别占比");
+            saveData("历史客流--选择同一时间段，男性占比==pc客群漏斗进店客群中男性占比");
         }
     }
 
@@ -671,11 +682,13 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
                 JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
-                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("女性"))
-                        .map(s -> s.getString("gender_ratio")).collect(Collectors.toList()).get(0);
-                double appPercent = percentToDouble(appGenderRatio);
+
+//                String appGenderRatio = gender.stream().map(e -> (JSONObject) e).filter(object -> object.getString("gender_type").equals("男性"))
+//                        .map(s -> s.getString("gender_ratio_number")).collect(Collectors.toList()).get(0);
+//                double appPercent = percentToDouble(appGenderRatio);
+                double appPercent = gender.getJSONObject(1).getDouble("gender_ratio_number");
                 IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
-                JSONArray list = md.invokeApi(pcScene).getJSONObject("deal").getJSONArray("list");
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "female_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
                 Preconditions.checkArgument(pcPercent == appPercent, "");
@@ -841,6 +854,11 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         JSONArray list = md.invokeApi(scene).getJSONArray(key);
         return list.isEmpty() ? 0 : list.stream().map(e -> (JSONObject) e).map(jsonObject -> percentToDouble(jsonObject.getString(type) == null ? "0%" : jsonObject.getString(type)))
                 .collect(Collectors.toList()).stream().mapToDouble(e -> e).sum();
+    }
+
+    public boolean hasType(IScene scene, String key) {
+        return md.invokeApi(scene).containsKey(key);
+
     }
 
     /**
