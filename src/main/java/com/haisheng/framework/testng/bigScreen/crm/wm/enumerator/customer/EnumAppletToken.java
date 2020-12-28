@@ -28,10 +28,10 @@ public enum EnumAppletToken {
 
     JC_WM_ONLINE(EnumProduce.JC.name(), "B6H0gkhiYEpVOiEfDs5Sqw==", "", false, "", "15321527989"),
 
-    JC_XMF_DAILY(EnumProduce.JC.name(), "3QQYlO1DtjV5mwp2hP/cwg==", "", false, "", ""),
+    JC_XMF_DAILY(EnumProduce.JC.name(), "X7ub38LmihAlj4uUUIOWaQ==", "", false, "", ""),
     JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false, "", ""),
 
-    JC_GLY_DAILY(EnumProduce.JC.name(), "TSqSTW2XWlkPFK8rYWHT1Q==", "Max", true, "", "13373166806"),
+    JC_GLY_DAILY(EnumProduce.JC.name(), "Cu4VbW1A3clBjgwPzAM+KQ==", "Max", true, "", "13373166806"),
     JC_GLY_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "Max", false, "", "13373166806"),
     ;
 

@@ -14,11 +14,18 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import java.awt.*;
+import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -190,45 +197,63 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
      * @description :系统日志-数据一致性5:导入记录里面导入的条数＜＝５０００
      * @date :2020/12/21
      **/
-    @Test
+    @Test(enabled = false)
     public void SystemLog_Date5() {
         logger.logCaseStart(caseResult.getCaseName());
         Workbook wb = null;
+        Desktop desk= Desktop.getDesktop();
         try {
-//            wb = new HSSFWorkbook(new FileInputStream("E:\\Workspaces\\testdata\\仓库数据.xls"));
-//            Sheet sheet = wb.getSheetAt(0);
-//            CellReference cellReference = new CellReference("A4");
-//            boolean flag = false;
-//            System.out.println("总行数：" + (sheet.getLastRowNum() + 1));
-//            for (int i = cellReference.getRow(); i <= sheet.getLastRowNum(); ) {
-//                Row r = sheet.getRow(i);
-//                if (r == null) {
-//                    // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
-//                    sheet.shiftRows(i + 1, sheet.getLastRowNum(), -1);
-//                    continue;
-//                }
-//                flag = false;
-//                for (Cell c : r) {
-//                    if (c.getCellType() != Cell.CELL_TYPE_BLANK) {
-//                        flag = true;
-//                        break;
-//                    }
-//                }
-//                if (flag) {
-//                    i++;
-//                    continue;
-//                } else {//如果是空白行（即可能没有数据，但是有一定格式）
-//                    if (i == sheet.getLastRowNum())//如果到了最后一行，直接将那一行remove掉
-//                        sheet.removeRow(r);
-//                    else//如果还没到最后一行，则数据往上移一行
-//                        sheet.shiftRows(i + 1, sheet.getLastRowNum(), -1);
-//                }
+//            JSONObject respond=jc.importListFilterManage(shopId,"1","10","","");
+//            JSONArray list=respond.getJSONArray("list");
+//            for(int i=0;i<list.size();i++){
+//                String url=list.getJSONObject(0).getString("file_upload_url");
+//                System.out.println("第"+(i)+"个--------"+url);
+//                //下载第一页的10个excel文件   下载\批量新建顾客表单.xlsx
+//                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "+url);
 //            }
-//            System.out.println("总行数：" + (sheet.getLastRowNum() + 1));
+//            //打开文件的方法1
+//            File file=new File("C:\\Users\\郭丽雅\\Desktop\\工作文档\\1.xlsx");//创建一个java文件系统
+//            desk.open(file); //调用open（File f）方法打开文件
+//            //打开文件的方法2
+//            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler file:C:\\Users\\郭丽雅\\Desktop\\工作文档\\1.xlsx");
+
+            FileInputStream inp = new FileInputStream("C:\\work\\aaaaa.xlsx");
+            wb = new XSSFWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
+            CellReference cellReference = new CellReference("A4");
+            boolean flag = false;
+            System.out.println("总行数："+(sheet.getLastRowNum()+1));
+            for (int i = cellReference.getRow(); i <= sheet.getLastRowNum();) {
+                Row r = sheet.getRow(i);
+                System.out.println("---------"+r);
+                if(r == null){
+                    // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
+                    sheet.shiftRows(i+1, sheet.getLastRowNum(),-1);
+                    continue;
+                }
+                flag = false;
+                for(Cell c:r){
+                    if(c.getCellType() != Cell.CELL_TYPE_BLANK){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag){
+                    i++;
+                    continue;
+                }
+                else{//如果是空白行（即可能没有数据，但是有一定格式）
+                    if(i == sheet.getLastRowNum())//如果到了最后一行，直接将那一行remove掉
+                        sheet.removeRow(r);
+                    else//如果还没到最后一行，则数据往上移一行
+                        sheet.shiftRows(i+1, sheet.getLastRowNum(),-1);
+                }
+            }
+            System.out.println("总行数：" + (sheet.getLastRowNum() + 1));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("统日志-数据一致性5:筛选栏选择【导入工单】==列表展示全部的数据");
+//            saveData("统日志-数据一致性5:筛选栏选择【导入工单】==列表展示全部的数据");
         }
 
     }

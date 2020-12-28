@@ -14,6 +14,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
@@ -435,6 +436,7 @@ public class TestCaseCommon {
     public String getBjsReferOnline() {
         return "https://servicewechat.com/wx0cf070e8eed63e90/";
     }
+
     public String getBjsReferDaily() {
         return "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html";
     }
@@ -483,6 +485,13 @@ public class TestCaseCommon {
         Assert.assertNull(caseResult.getFailReason());
     }
 
+    public void restoreProductInMsg() {
+        //还原message
+        for (EnumTestProduce item : EnumTestProduce.values()) {
+            commonConfig.message = commonConfig.message.replace(item.getName(), commonConfig.TEST_PRODUCT);
+        }
+    }
+
     public void saveData(String caseDesc) {
         setBasicParaToDB(caseDesc);
         if (DEBUG.trim().toLowerCase().equals("false")) {
@@ -501,7 +510,10 @@ public class TestCaseCommon {
             message = message.replace(macroCaseDesc, caseDescription);
             message = message.replace(macroCaseFail, caseResult.getFailReason());
 
+            restoreProductInMsg();
             dingPushDaily(message);
+        } else {
+            restoreProductInMsg();
         }
     }
 
