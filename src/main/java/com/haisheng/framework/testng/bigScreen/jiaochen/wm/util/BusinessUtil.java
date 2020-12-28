@@ -1,7 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.ResponseData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -23,8 +25,10 @@ import com.haisheng.framework.util.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -286,20 +290,6 @@ public class BusinessUtil {
     }
 
     /**
-     * 创建套餐
-     *
-     * @return 套餐名
-     */
-    public String createPackage() {
-        String packageName = createPackageName();
-        IScene scene = CreatePackage.builder().packageName(createPackageName()).validity("30").packageDescription(getDesc())
-                .subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType())).voucherList(getVoucherList())
-                .packagePrice(5000.00).status(true).shopIds(getShopIds()).build();
-        jc.invokeApi(scene);
-        return packageName;
-    }
-
-    /**
      * 创建一个套餐名
      *
      * @return 套餐名
@@ -420,21 +410,6 @@ public class BusinessUtil {
                     .map(e -> e.getLong("package_id")).collect(Collectors.toList()));
         }
         return list.get(0);
-    }
-
-    /**
-     * 获套餐id
-     *
-     * @return 套餐id
-     */
-    public Long getPackageId() {
-        JSONArray array = jc.pcPackageList().getJSONArray("list");
-        if (array.size() == 0) {
-            String packageName = createPackage();
-            logger.info("packageName is：{}", packageName);
-        }
-        JSONObject data = jc.pcPackageList().getJSONArray("list").getJSONObject(0);
-        return data.getLong("package_id");
     }
 
     /**

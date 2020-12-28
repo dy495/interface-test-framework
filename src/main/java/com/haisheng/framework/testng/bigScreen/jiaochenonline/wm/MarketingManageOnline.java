@@ -2417,6 +2417,27 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
+    //没校验套餐过期
+    @Test(description = "套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期", enabled = false)
+    public void packageManager_system_30() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //过期套餐
+            long packageId = util.getPackageId(EnumVP.THREE.getPackageName());
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
+                    .extendedInsuranceCopies(10).type(1).build();
+            jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期");
+        }
+    }
+
     @Test(description = "套餐表单--修改套餐，套餐名称异常")
     public void packageManager_system_22() {
         logger.logCaseStart(caseResult.getCaseName());

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -288,20 +287,6 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 创建套餐
-     *
-     * @return 套餐名
-     */
-    public String createPackage() {
-        String packageName = createPackageName();
-        IScene scene = CreatePackage.builder().packageName(createPackageName()).validity("30").packageDescription(getDesc())
-                .subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType())).voucherList(getVoucherList())
-                .packagePrice(5000.00).status(true).shopIds(getShopIds()).build();
-        jc.invokeApi(scene);
-        return packageName;
-    }
-
-    /**
      * 创建一个套餐名
      *
      * @return 套餐名
@@ -422,21 +407,6 @@ public class BusinessUtilOnline {
                     .map(e -> e.getLong("package_id")).collect(Collectors.toList()));
         }
         return list.get(0);
-    }
-
-    /**
-     * 获套餐id
-     *
-     * @return 套餐id
-     */
-    public Long getPackageId() {
-        JSONArray array = jc.pcPackageList().getJSONArray("list");
-        if (array.size() == 0) {
-            String packageName = createPackage();
-            logger.info("packageName is：{}", packageName);
-        }
-        JSONObject data = jc.pcPackageList().getJSONArray("list").getJSONObject(0);
-        return data.getLong("package_id");
     }
 
     /**
