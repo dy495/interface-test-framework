@@ -242,7 +242,8 @@ public class BusinessUtil {
         for (int i = 1; i < s; i++) {
             JSONArray list = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("invalid_status_name").equals("已作废")
-                    && e.getString("audit_status_name").equals("已通过")).map(e -> e.getLong("voucher_id")).collect(Collectors.toList()));
+                    && e.getString("audit_status_name").equals("已通过") && e.getLong("surplus_inventory") != null && e.getLong("surplus_inventory") != 0)
+                    .map(e -> e.getLong("voucher_id")).collect(Collectors.toList()));
         }
         if (voucherList.size() == 0) {
             String voucherName = createVoucher(1L);
