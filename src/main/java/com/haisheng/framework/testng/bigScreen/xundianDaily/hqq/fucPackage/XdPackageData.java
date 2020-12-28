@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.jooq.util.derby.sys.Sys;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.security.InvalidKeyException;
@@ -49,8 +50,7 @@ public class XdPackageData extends TestCaseCommon {
      */
     public String IpPort = "http://123.57.148.247";
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
-
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg";  //巡店不合格图片base64
     /**
      * @description:登录
      * @author: qingqing
@@ -77,6 +77,28 @@ public class XdPackageData extends TestCaseCommon {
 
     }
 
+    @DataProvider(name = "FACE_URL")
+    public static Object[] face_url(){
+        return new String[]{
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/正脸.jpg"
+        };
+    }
+    @DataProvider(name = "FACE_URL1")
+    public static Object[] face_url1(){
+        return new String[]{
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/倒过来的脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/三分之一脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/三分之二脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/侧脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/光线暗淡脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/动漫正脸图.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/动物图.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/化妆人脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/多张人脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/模糊不清正脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/鬼脸.jpg",
+        };
+    }
     /**
      * 获取待办事项列表中三个tab页的数量
      */

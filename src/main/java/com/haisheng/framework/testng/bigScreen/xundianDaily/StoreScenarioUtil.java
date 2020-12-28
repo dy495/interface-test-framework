@@ -91,6 +91,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
+
     @DataProvider(name = "CYCLE_TYPE")
     public static Object[] cycle_type() {
 

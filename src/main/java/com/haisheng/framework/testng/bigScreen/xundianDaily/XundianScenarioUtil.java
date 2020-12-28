@@ -1162,7 +1162,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         json.put("recheck_result", recheck_result);
         json.put("comment", comment);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -1208,16 +1208,16 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject checks_submit(Long shop_id,Long patrol_id,String comment) throws Exception {
+    public JSONObject checks_submit(Long shop_id,Long id,String comment) throws Exception {
         String url = "/store/m-app/auth/shop/checks/submit";
 
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
-        json.put("patrol_id", patrol_id);
+        json.put("id", id);
         json.put("comment", comment);
 
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     public JSONObject checks_submitNotChk(Long shop_id,Long patrol_id,String comment) throws Exception {
@@ -1454,7 +1454,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("image_base64",image_base64);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**

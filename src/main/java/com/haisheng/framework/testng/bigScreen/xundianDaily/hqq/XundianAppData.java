@@ -36,7 +36,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     int page = 1;
     int size = 50;
     String comment = "自动化在进行处理，闲人走开";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/卡券图.jpg";  //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg"; //巡店不合格图片base64
 
 //    //读取文件内容
 //    public String texFile(String fileName) throws IOException {
@@ -88,10 +88,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int total = xd.task_list(page, size, 0, null).getInteger("total");
             //获取个人中心中【未完成待办事项】的数量
             int un_finished_total = xd.user_center().getInteger("un_finished_total");
-            Preconditions.checkArgument(
-                    total == un_finished_total,
-                    "【待办事项】中[未完成]列表的数量" + total + "！==【个人中心】中[未完成]的待办事项的的展示项" + un_finished_total
-            );
+            Preconditions.checkArgument(total == un_finished_total, "【待办事项】中[未完成]列表的数量" + total + "！==【个人中心】中[未完成]的待办事项的的展示项" + un_finished_total);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -112,7 +109,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             Long shop_id = xds.getId_ShopId(list,"HANDLE_RESULT").get("shop_id");
             Long id =  xds.getId_ShopId(list,"HANDLE_RESULT").get("id");
             //该次是处理复检事项，所以不需要上传留痕图片
-            xd.MstepSumit(shop_id, id, comment, null, 1);
+            xd.task_step_submit(shop_id, id, null, 1,comment);
             Integer finished_total2 = (Integer) xds.getTab_total(page, size, 1, null).get("total");
             Integer un_finished_total2 = (Integer) xds.getTab_total(page, size, 0, null).get("total");
             Preconditions.checkArgument(
@@ -151,19 +148,13 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             long list_id = (long) map.get("list_id");
             long item_id = (long) map.get("item_id");
             xd.checks_item_submit(shop_id,patrol_id,list_id,item_id,2,"自动化处理为不合格",pic_list);
-            xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格");
-
+            int code = xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格").getInteger("code");
+            Preconditions.checkArgument(code ==1000, "定检巡店提交失败"+code);
             int total2 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject data2 = xd.ShopPage(page,size);
             Integer patrol_num2 = xds.patrol_num(data2,shop_id);
-            Preconditions.checkArgument(
-                    total2-total1 == 1,
-                    "将【待办事项】中[未完成]中的定检任务进行处理,pc【巡店报告中心】的报告记录数据没有+1 "
-            );
-            Preconditions.checkArgument(
-                    patrol_num2-patrol_num1 == 1,
-                    "将【待办事项】中[未完成]中的定检任务进行处理,PC【巡店中心】巡店次数没有+1"
-            );
+            Preconditions.checkArgument(total2-total1 == 1, "将【待办事项】中[未完成]中的定检任务进行处理,pc【巡店报告中心】的报告记录数据没有+1 ");
+            Preconditions.checkArgument(patrol_num2-patrol_num1 == 1, "将【待办事项】中[未完成]中的定检任务进行处理,PC【巡店中心】巡店次数没有+1");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -173,5 +164,69 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "累计报告数量==该品牌下所有门店从上线至今提交的所有巡店报告数量")
+    public void checkInfoData() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = xd.xd_report_list("","","","",null,page,size).getInteger("total");
+            JSONObject object = xd.patrol_center().getJSONObject("total_patrol_result");
+            int total_patrol_number = object.getInteger("total_patrol_number");
+            Preconditions.checkArgument(total_patrol_number ==total , "PC【巡店报告中心】的报告数量="+total+".APP【巡店中心】中的累计提交报告="+total_patrol_number);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计报告数量==该品牌下所有门店从上线至今提交的所有巡店报告数量");
+        }
+    }
+    @Test(description = "APP【巡店中心】今日巡店数==PC【巡店分析】中的今日巡店数")
+    public void checkInfoData1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int today_patrol_shop_number = xd.xd_analysis_data().getInteger("today_patrol_shop_number");
+            JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
+            int patrol_shop_number = object.getInteger("patrol_shop_number");//APP中今日巡店数
+            Preconditions.checkArgument(patrol_shop_number ==today_patrol_shop_number , "APP【巡店中心】今日巡店数="+patrol_shop_number+"PC【巡店分析】中的今日巡店数="+today_patrol_shop_number);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("APP【巡店中心】今日巡店数==PC【巡店分析】中的今日巡店数");
+        }
+    }
+    @Test(description = "APP【巡店中心】今日覆盖率==PC【巡店分析】中的今日覆盖率")
+    public void checkInfoData2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today_patrol_coverage_rate = xd.xd_analysis_data().getString("today_patrol_coverage_rate");
+            JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
+            String patrol_coverage_rate = object.getString("patrol_coverage_rate");//APP中今日覆盖率
+            Preconditions.checkArgument(patrol_coverage_rate.equals(today_patrol_coverage_rate) , "APP【巡店中心】今日覆盖率="+patrol_coverage_rate+"PC【巡店分析】中的今日覆盖率="+today_patrol_coverage_rate);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("APP【巡店中心】今日覆盖率==PC【巡店分析】中的今日覆盖率");
+        }
+    }
 
+    @Test(description = "APP【巡店中心】今日合格率==PC【巡店分析】中的今日合格率")
+    public void checkInfoData3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today_patrol_pass_rate = xd.xd_analysis_data().getString("today_patrol_pass_rate");
+            JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
+            String patrol_pass_rate = object.getString("patrol_pass_rate");//APP中今日合格率
+            Preconditions.checkArgument(patrol_pass_rate.equals(today_patrol_pass_rate) , "APP【巡店中心】今日合格率="+patrol_pass_rate+"PC【巡店分析】中的今日合格率="+today_patrol_pass_rate);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("APP【巡店中心】今日合格率==PC【巡店分析】中的今日合格率");
+        }
+    }
 }
