@@ -309,7 +309,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "实时客流--今日到访人数<=今日各时刻中人次之和") //ok
+    @Test(description = "实时客流--今日到访人数<=今日各时刻中人数之和") //ok
     public void passengerFlow_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -321,14 +321,14 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 int value = list.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
                 //今日各时刻中人次之和
-                int sumValue = getTypeSum(scene1, "pv");
+                int sumValue = getTypeSum(scene1, "uv");
                 CommonUtil.valueView(value, sumValue);
                 Preconditions.checkArgument(value <= sumValue, "今日到访人数"+value+"，各时刻人次和"+sumValue);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("实时客流--今日到访人数<=今日各时刻中人次之和");
+            saveData("实时客流--今日到访人数<=今日各时刻中人数之和");
         }
     }
 
