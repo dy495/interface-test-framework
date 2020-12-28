@@ -645,7 +645,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //todo 请黄青青补充完整
     }
 
-    @Test(description = "历史客流--选择同一时间段，男性别占比==pc客群漏斗中进店客群男女性别占比")
+    @Test(description = "历史客流--选择同一时间段（月），男性占比==pc客群漏斗中进店客群男性占比") //bug 6483
     public void passengerFlow_data_29() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -663,7 +663,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "male_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, "app"+appPercent+"， pc"+pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -673,7 +673,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--选择同一时间段，女性别占比==pc客群漏斗中男女性别占比")
+    @Test(description = "历史客流--选择同一时间段（月），女性占比==pc客群漏斗中进店客群女性占比") //bug 6483
     public void passengerFlow_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -691,17 +691,17 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "female_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, "");
+                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+", pc"+pcPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("历史客流--选择同一时间段，女性别占比==pc客群漏斗中男女性别占比");
+            saveData("历史客流--选择同一时间段，女性占比==pc客群漏斗进店客群中女性占比");
         }
     }
 
-    @Test(description = "历史客流--选择同一时间段，年龄段占比==pc客群漏斗中年龄段占比")
+    @Test(description = "历史客流--选择同一时间段（月），年龄段占比==pc客群漏斗中年龄段占比") //bug 6483
     public void passengerFlow_data_31() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -709,14 +709,18 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> monthList = getMonthList();
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
-                JSONArray gender = md.invokeApi(appScene).getJSONArray("age");
-                List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e).map(s -> percentToDouble(s.getString("gender_ratio"))).collect(Collectors.toList());
+                JSONArray age = md.invokeApi(appScene).getJSONArray("age");
+                //List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e).map(s -> percentToDouble(s.getString("age_ratio_number"))).collect(Collectors.toList());
+                List<Double> appPercentList = new ArrayList<>();
+                for (int i = 0; i < age.size();i++){
+                    appPercentList.add(age.getJSONObject(i).getDouble("age_ratio_number"));
+                }
                 IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
-                JSONArray list = md.invokeApi(pcScene).getJSONObject("interest").getJSONArray("list");
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                 CommonUtil.valueView(pcPercentList);
                 CommonUtil.valueView(appPercentList, pcPercentList);
-                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "历史客流--选择同一时间段，年龄段占比"+appPercentList+"!==pc客群漏斗中年龄段占比"+pcPercentList);
+                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app"+appPercentList+"， pc"+pcPercentList);
                 CommonUtil.logger(shopId + " " + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -756,6 +760,97 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             saveData("历史客流--选择同一时间段，app转化率&吸引率&进店率==pc【客群漏斗】的转化率&吸引率&进店率");
         }
     }
+
+
+    @Test(description = "历史客流--选择同一时间段（7/14/30/60），男性占比==pc客群漏斗中进店客群男性占比") //同 bug 6483
+    public void passengerFlow_data_33() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            List<String> shopIds = getPcShopIds();
+
+            shopIds.forEach(shopId ->  {
+                IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
+                double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
+
+                IScene pcScene = HistoryShopAgeGenderDistribution.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
+                double pcPercent = getTypeSum(list, "male_percent");
+                CommonUtil.valueView(appPercent, pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
+                CommonUtil.logger(shopId + enumCycleType.name());
+            });});
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，男性占比==pc客群漏斗进店客群中男性占比");
+        }
+    }
+
+    @Test(description = "历史客流--选择同一时间段（7/14/30/60），女性占比==pc客群漏斗中进店客群女性占比")//同 bug 6483
+    public void passengerFlow_data_34() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+                List<String> shopIds = getPcShopIds();
+
+                shopIds.forEach(shopId ->  {
+                    IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
+                    double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
+
+                    IScene pcScene = HistoryShopAgeGenderDistribution.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
+                    double pcPercent = getTypeSum(list, "female_percent");
+                    CommonUtil.valueView(appPercent, pcPercent);
+                    Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
+                    CommonUtil.logger(shopId + enumCycleType.name());
+                });});
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，女性占比==pc客群漏斗进店客群中女性占比");
+        }
+    }
+
+    @Test(description = "历史客流--选择同一时间段（7/14/30/60），年龄段占比==pc客群漏斗中年龄段占比") //bug 6488
+    public void passengerFlow_data_35() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+                List<String> shopIds = getPcShopIds();
+
+                shopIds.forEach(shopId ->  {
+                    IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    JSONArray age = md.invokeApi(appScene).getJSONArray("age");
+                    List<Double> appPercentList = new ArrayList<>();
+                    for (int i = 0; i < age.size();i++){
+                        appPercentList.add(age.getJSONObject(i).getDouble("age_ratio_number"));
+                    }
+
+                    IScene pcScene = HistoryShopAgeGenderDistribution.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
+                    List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
+                    CommonUtil.valueView(pcPercentList);
+                    CommonUtil.valueView(appPercentList, pcPercentList);
+                    Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app"+appPercentList+"， pc"+pcPercentList);
+                    CommonUtil.logger(shopId + " " + enumCycleType.name());
+                });});
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("历史客流--选择同一时间段，年龄段占比==pc客群漏斗中年龄段占比");
+        }
+    }
+
+
+
+
+
+
+
 
     public List<String> getMonthList() {
         String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
