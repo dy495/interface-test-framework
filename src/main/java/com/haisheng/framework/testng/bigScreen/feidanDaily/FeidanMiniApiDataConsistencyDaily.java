@@ -147,9 +147,9 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 //            H5页面内报备数
             String staffPhone = "17722222221";
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
+//            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+//                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+            String token =wudongToken;
             customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
 
             String staffDetailH5 = staffDetailH5(token);
@@ -2560,12 +2560,12 @@ public class FeidanMiniApiDataConsistencyDaily {
 
             String name = "LW" + System.currentTimeMillis();
             String phone = "144****0066";
-            String fixphone = "14422110066";
+            String fixphone = "14452110066";
             H5Lianjia(name, phone);
             H5WuDong(name, fixphone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone, name, 1, 2124, 1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
             updateReportTimeChannel(fixphone, name, 5, 2098, 1585220718000L);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -2641,7 +2641,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             H5WuDong(name, phone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone, name, 1, 2124, 1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
             Thread.sleep(500);
             updateReportTimeChannel(phone, name, 5, 2098, 1585220718000L);
             Thread.sleep(500);
@@ -3839,14 +3839,14 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道业务员详情H5
      */
     public String staffDetailH5(String token) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/staff/detail";
+        String url = "/external/channel/staff/detail";
         String json =
                 "{\n" +
                         "    \"token\":\"" + token + "\"," +
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}\n";
 
-        String response = httpPostUrl(url, json);
+        String response = httpPostWithCheckCode(url, json);
 
         return response;
     }
@@ -3875,7 +3875,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 获取客户报备列表H5
      */
     public String channelCustomerListH5(String token, int page, int pageSize) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/customer/list";
+        String url = "/external/channel/customer/list";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
@@ -3884,7 +3884,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                         "    \"size\":\"" + pageSize + "\"" +
                         "}\n";
 
-        String response = httpPostUrl(url, json);
+        String response = httpPostWithCheckCode(url, json);
 
         return response;
     }
@@ -4299,7 +4299,8 @@ public class FeidanMiniApiDataConsistencyDaily {
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2124";
-    int lianjiaFreezeStaffIdInt = 2124;
+    int lianjiaFreezeStaffIdInt = 2124;     //链接业务员
+
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
     String wudongStaffIdStr = "2098";

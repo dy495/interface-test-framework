@@ -2190,7 +2190,7 @@ public class FeidanMiniApiSystemtestDaily {
     public JSONObject customerListnotcheck(int page, int pageSize, String phone_or_name) throws Exception {
 
         String path = "/risk/customer/list";
-        String queryUrl = getIpPort() + path;
+        String queryUrl = path;
         String json =
                 "{\n" +
                         "    \"page\":" + page + ",\n" +

@@ -820,7 +820,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String function = "校验： 查询设备列表-分页（/risk/device/page）关键字段非空\n";
         String key = "";
         try {
-            JSONObject data = devicePage();
+            JSONObject data = deviceList(1,10);
             for (Object obj :  devicePageNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -1296,7 +1296,26 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     public JSONObject devicePage() throws Exception {
         String url = "/risk/device/page";
         String json = "{\n" +
-                "    \"shop_id\":" + getShopId() + "\n}";
+                "    \"shop_id\":" + getShopId() +
+//                "    \"page\":" + 1 +
+//                "    \"size\":" + 10 +
+                "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *设备列表
+     */
+    public JSONObject deviceList(int page, int size) throws Exception {
+        String url = "/risk/device/page";
+        String json =
+                "{\n" +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
         String res = httpPostWithCheckCode(url, json);
         return JSON.parseObject(res).getJSONObject("data");
     }

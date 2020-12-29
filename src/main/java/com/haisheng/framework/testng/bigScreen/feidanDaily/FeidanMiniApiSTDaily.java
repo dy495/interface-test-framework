@@ -1363,10 +1363,10 @@ public class FeidanMiniApiSTDaily {
             String channelName = feidan.getNamePro();
             String channelNameNew = feidan.getNamePro();
 
-            String owner = "owner";
+            String zlr[]=feidan.creatQDzlr2();
 
 //            新建渠道
-            feidan.addChannel(channelName, feidan.creatQDzlr(), phoneNum, defaultRuleId);
+            feidan.addChannel(channelName, zlr[0], phoneNum, defaultRuleId);
 
 //            渠道列表
             JSONArray channelList = feidan.channelList(1, 10).getJSONArray("list");
@@ -1374,19 +1374,20 @@ public class FeidanMiniApiSTDaily {
             boolean isExistA = false;
             for (int i = 0; i < channelList.size(); i++) {
                 JSONObject single = channelList.getJSONObject(i);
-                if (phoneNum.equals(single.getString("phone"))) {
+                if (channelName.equals(single.getString("channel_name"))) {
                     isExist = true;
 
                     checkUtil.checkKeyValue("渠道列表", single, "channel_name", channelName, true);
                     checkUtil.checkKeyValue("渠道列表", single, "register_time", "register_time", false);
                     checkUtil.checkKeyValue("渠道列表", single, "rule_name", "默认规则", true);
-//                    checkUtil.checkKeyValue("渠道列表", single, "owner_principal", owner, true);
+                    checkUtil.checkKeyValue("渠道列表", single, "owner_principal", zlr[1], true);
+                    checkUtil.checkKeyValue("渠道列表", single, "phone", zlr[2], true);
                     checkUtil.checkKeyValue("渠道列表", single, "total_customers", "", false);
 
 
                     String channelId = single.getString("channel_id");
 
-                    feidan.channelEdit(channelId, channelNameNew, owner, phoneNumNew, ahead1hRuleId);
+                    feidan.channelEdit(channelId, channelNameNew, zlr[0], zlr[2], ahead1hRuleId);
 
                     JSONArray channelListA = feidan.channelList(1, 10).getJSONArray("list");
                     for (int j = 0; j < channelListA.size(); j++) {
@@ -1398,8 +1399,8 @@ public class FeidanMiniApiSTDaily {
                             checkUtil.checkKeyValue("渠道列表", singleA, "channel_name", channelNameNew, true);
                             checkUtil.checkKeyValue("渠道列表", singleA, "register_time", "register_time", false);
                             checkUtil.checkKeyValue("渠道列表", singleA, "rule_name", "ahead60min", true);
-//                            checkUtil.checkKeyValue("渠道列表", singleA, "owner_principal", owner, true);
-//                            checkUtil.checkKeyValue("渠道列表", singleA, "phone", phoneNumNew, true);
+                            checkUtil.checkKeyValue("渠道列表", singleA, "owner_principal", zlr[1], true);
+                            checkUtil.checkKeyValue("渠道列表", singleA, "phone", zlr[2], true);
                             checkUtil.checkKeyValue("渠道列表", singleA, "total_customers", "", false);
                             break;
                         }

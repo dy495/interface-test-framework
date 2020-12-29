@@ -741,7 +741,7 @@ public class Feidan {
                 "{\n" +
                         "    \"channel_name\":\"" + channelName + "\"," +
                         "    \"owner_id\":\"" + owner_id + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
                         "    \"rule_id\":\"" + ruleId + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";
@@ -769,6 +769,32 @@ public class Feidan {
         String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
         return  asscountid;
     }
+    public String[] creatQDzlr2 () throws Exception {
+        String asscountid[]=new String[3];
+        String name= ""+System.currentTimeMillis();
+        String email=System.currentTimeMillis()+"@qq.com";
+        JSONArray arr = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        obj.put("role_id",1062);
+        obj.put("role_name","自动化用的角色-别删");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("shop_id",4116);
+        obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
+        JSONArray a = new JSONArray();
+        a.add(obj1);
+
+        obj.put("shop_list",a);
+        arr.add(obj);
+        //新建
+        accountAdd(name,phonenum(),email,arr);
+        JSONObject dd = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0);
+        asscountid[0] = dd.getString("id");
+        asscountid[1] = dd.getString("name");
+        asscountid[2] = dd.getString("phone");
+        return  asscountid;
+    }
+
     //新建账号
     public JSONObject accountAdd(String name, String phone, String email,JSONArray role_list) throws Exception {
         String url = "/risk/account/add";
