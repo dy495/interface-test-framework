@@ -204,7 +204,6 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
             JSONArray list=respond.getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String url=list.getJSONObject(i).getString("file_upload_url");
-                System.out.println("第"+(i)+"个--------"+url);
                 //下载第一页的10个excel文件   下载\批量新建顾客表单.xlsx
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "+url);
             }
@@ -213,44 +212,43 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
                 File[] fileList = fileDir.listFiles();
                 for (int i = 0; i < 10; i++) {
                     //读取文件的条数
-                    assert fileList != null;
-                    FileInputStream inp = new FileInputStream(fileList[i].getPath());
-                    wb = new XSSFWorkbook(inp);
-                    Sheet sheet = wb.getSheetAt(0);
-                    CellReference cellReference = new CellReference("A1");
-                    boolean flag = false;
-                    for (int j = cellReference.getRow(); j <= sheet.getLastRowNum();) {
-                        Row r = sheet.getRow(j);
-                        if(r == null){
-                            // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
-                            sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
-                            continue;
-                        }
-                        flag = false;
-                        for(Cell c:r){
-                            if(c.getCellType()!= Cell.CELL_TYPE_BLANK){
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if(flag){
-                            j++;
-                            continue;
-                        }
-                        else{
-                            //如果是空白行（即可能没有数据，但是有一定格式）
-                            if(j == sheet.getLastRowNum()){
-                                //如果到了最后一行，直接将那一行remove掉
-                                sheet.removeRow(r);
-                            }
-                            else{
-                                //如果还没到最后一行，则数据往上移一行
-                                sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
-                            }
-                        }
-                    }
-                    System.out.println("第"+i+"文件的总行数    "+"总行数：" + sheet.getLastRowNum());
-                    Preconditions.checkArgument(sheet.getLastRowNum()<5000,"导入工单的条数大于5000条");
+//                    FileInputStream inp = new FileInputStream(fileList[i].getPath());
+//                    wb = new XSSFWorkbook(inp);
+//                    Sheet sheet = wb.getSheetAt(0);
+//                    CellReference cellReference = new CellReference("A1");
+//                    boolean flag = false;
+//                    for (int j = cellReference.getRow(); j <= sheet.getLastRowNum();) {
+//                        Row r = sheet.getRow(j);
+//                        if(r == null){
+//                            // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
+//                            sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
+//                            continue;
+//                        }
+//                        flag = false;
+//                        for(Cell c:r){
+//                            if(c.getCellType()!= Cell.CELL_TYPE_BLANK){
+//                                flag = true;
+//                                break;
+//                            }
+//                        }
+//                        if(flag){
+//                            j++;
+//                            continue;
+//                        }
+//                        else{
+//                            //如果是空白行（即可能没有数据，但是有一定格式）
+//                            if(j == sheet.getLastRowNum()){
+//                                //如果到了最后一行，直接将那一行remove掉
+//                                sheet.removeRow(r);
+//                            }
+//                            else{
+//                                //如果还没到最后一行，则数据往上移一行
+//                                sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
+//                            }
+//                        }
+//                    }
+//                    System.out.println("第"+i+"文件的总行数    "+"总行数：" + sheet.getLastRowNum());
+//                    Preconditions.checkArgument(sheet.getLastRowNum()<5000,"导入工单的条数大于5000条");
                 }
             }
             //清空文件夹中的所有文件
