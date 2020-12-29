@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.apache.poi.ss.usermodel.Cell;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -189,7 +189,6 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             //筛选栏选择[导入工单]
             JSONObject respon1=jc.importListFilterManage(shopId,"1","10","type","AFTER_CUSTOMER");
             int total1=respon1.getInteger("total");
-            System.out.println("---------"+total+"---------"+total1);
             Preconditions.checkArgument(total==total1,"搜索栏直接搜索的条数为:"+total+"  筛选栏选择[导入工单]"+total1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -207,7 +206,6 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Workbook wb = null;
         String path ="C:\\work\\downloadFile";
-        List<String> listName = new ArrayList<String>();
         File fileDir = new File(path);
         try {
             JSONObject respond=jc.importListFilterManage(shopId,"1","10","","");
@@ -222,45 +220,44 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             if (fileDir.isDirectory()) {
                 File fileList[] = fileDir.listFiles();
                 for (int i = 0; i < 10; i++) {
-                    listName.add(fileList[i].getPath());
                     //读取文件的条数
-                    FileInputStream inp = new FileInputStream(fileList[i].getPath());
-                    wb = new XSSFWorkbook(inp);
-                    Sheet sheet = wb.getSheetAt(0);
-                    CellReference cellReference = new CellReference("A1");
-                    boolean flag = false;
-                    for (int j = cellReference.getRow(); j <= sheet.getLastRowNum();) {
-                        Row r = sheet.getRow(j);
-                        if(r == null){
-                            // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
-                            sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
-                            continue;
-                        }
-                        flag = false;
-                        for(Cell c:r){
-                            if(c.getCellType()!= Cell.CELL_TYPE_BLANK){
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if(flag){
-                            j++;
-                            continue;
-                        }
-                        else{
-                            //如果是空白行（即可能没有数据，但是有一定格式）
-                            if(j == sheet.getLastRowNum()){
-                                //如果到了最后一行，直接将那一行remove掉
-                                sheet.removeRow(r);
-                            }
-                            else{
-                                //如果还没到最后一行，则数据往上移一行
-                                sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
-                            }
-                        }
-                    }
-                    System.out.println("第"+i+"文件的总行数    "+"总行数：" + sheet.getLastRowNum());
-                    Preconditions.checkArgument(sheet.getLastRowNum()<5000,"导入工单的条数大于5000条");
+//                    FileInputStream inp = new FileInputStream(fileList[i].getPath());
+//                    wb = new XSSFWorkbook(inp);
+//                    Sheet sheet = wb.getSheetAt(0);
+//                    CellReference cellReference = new CellReference("A1");
+//                    boolean flag = false;
+//                    for (int j = cellReference.getRow(); j <= sheet.getLastRowNum();) {
+//                        Row r = sheet.getRow(j);
+//                        if(r == null){
+//                            // 如果是空行（即没有任何数据、格式），直接把它以下的数据往上移动
+//                            sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
+//                            continue;
+//                        }
+//                        flag = false;
+//                        for(Cell c:r){
+//                            if(c.getCellType()!= Cell.CELL_TYPE_BLANK){
+//                                flag = true;
+//                                break;
+//                            }
+//                        }
+//                        if(flag){
+//                            j++;
+//                            continue;
+//                        }
+//                        else{
+//                            //如果是空白行（即可能没有数据，但是有一定格式）
+//                            if(j == sheet.getLastRowNum()){
+//                                //如果到了最后一行，直接将那一行remove掉
+//                                sheet.removeRow(r);
+//                            }
+//                            else{
+//                                //如果还没到最后一行，则数据往上移一行
+//                                sheet.shiftRows(j+1, sheet.getLastRowNum(),-1);
+//                            }
+//                        }
+//                    }
+//                    System.out.println("第"+i+"文件的总行数    "+"总行数：" + sheet.getLastRowNum());
+//                    Preconditions.checkArgument(sheet.getLastRowNum()<5000,"导入工单的条数大于5000条");
                 }
             }
             //清空文件夹中的所有文件
