@@ -39,6 +39,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     ScenarioUtilOnline jcOnline = ScenarioUtilOnline.getInstance();
     CommonConfig commonConfig = new CommonConfig();
+    private static String errMessage;
 
     @BeforeClass
     @Override
@@ -82,10 +83,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
-            if (phoneList.size() != 0) {
-                commonConfig.pushRd = new String[]{phoneList.get(0)};
-            }
             commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
             commonConfig.referer = getBjsReferDaily();
@@ -101,8 +98,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             Long appointId = response.getJSONObject("data").getLong("appointment_id");
             crm.cancle(appointId);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            errMessage = e.toString();
+            collectMessage(e);
         } finally {
+            addQa(errMessage, token);
             saveData("BSJ_小程序每4小时登陆一次，防止失效");
         }
     }
@@ -126,8 +125,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             Long appointId = response.getJSONObject("data").getLong("appointment_id");
             crmOnline.cancle(appointId);
         } catch (AssertionError | Exception e) {
+            errMessage = e.toString();
             collectMessage(e);
         } finally {
+            addQa(errMessage, token);
             saveData("BSJ_小程序每4小时登陆一次，防止失效");
         }
     }
@@ -146,8 +147,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(token);
             new BusinessUtil().getAppletVoucherNum();
         } catch (Exception | AssertionError e) {
+            errMessage = e.toString();
             collectMessage(e);
         } finally {
+            addQa(errMessage, token);
             saveData("JC_小程序每4小时登陆一次，防止失效");
         }
     }
@@ -162,8 +165,10 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             jcOnline.appletLoginToken(token);
             new BusinessUtilOnline().getAppletVoucherNum();
         } catch (Exception | AssertionError e) {
+            errMessage = e.toString();
             collectMessage(e);
         } finally {
+            addQa(errMessage, token);
             saveData("JC_小程序每4小时登陆一次，防止失效");
         }
     }
@@ -203,5 +208,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
                 EnumAppletToken.JC_XMF_ONLINE.getToken(),
                 EnumAppletToken.JC_GLY_ONLINE.getToken()
         };
+    }
+
+    public void addQa(String message, String token) {
+        if (message != null) {
+            List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
+            if (phoneList.size() != 0) {
+                commonConfig.pushRd = new String[]{phoneList.get(0)};
+            }
+        }
     }
 }
