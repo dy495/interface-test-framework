@@ -49,7 +49,7 @@ public class BusinessUtil {
         String voucherName = createVoucherName();
         IScene scene = Create.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
                 .voucherDescription(getDesc()).subjectId(getSubjectId(getSubjectType())).stock(stock).cost(getCost(stock))
-                .shopType(0).shopIds(getShopIds()).selfVerification(true).build();
+                .shopType(0).shopIds(getShopIdList()).selfVerification(true).build();
         jc.invokeApi(scene);
         return voucherName;
     }
@@ -134,7 +134,7 @@ public class BusinessUtil {
         }
         switch (subjectType) {
             case "STORE":
-                return getShopIds().get(0);
+                return getShopIdList().get(0);
             case "BRAND":
                 return getBrandIds().get(0);
             default:
@@ -160,7 +160,7 @@ public class BusinessUtil {
      *
      * @return 门店id
      */
-    public List<Long> getShopIds() {
+    public List<Long> getShopIdList() {
         List<Long> shopIds = new ArrayList<>();
         JSONArray array = jc.pcShopList().getJSONArray("list");
         Long shopId = array.getJSONObject(0).getLong("shop_id");
@@ -375,7 +375,7 @@ public class BusinessUtil {
      * @param voucherName 卡券名称
      * @return 卡券信息列表
      */
-    public JSONArray getOneVoucherList(String voucherName) throws Exception {
+    public JSONArray getOneVoucherInfo(String voucherName) throws Exception {
         JSONArray list = new JSONArray();
         VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
@@ -780,7 +780,7 @@ public class BusinessUtil {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(jsonObject -> compareType(jsonObject, "status_name"))
+            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType)
                     .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherListData.class))
                     .collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
@@ -788,8 +788,8 @@ public class BusinessUtil {
         return list;
     }
 
-    private boolean compareType(JSONObject jsonObject, String type) {
-        String statusName = jsonObject.getString(type);
+    private boolean compareType(JSONObject jsonObject) {
+        String statusName = jsonObject.getString("status_name");
         return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName())
                 && !statusName.equals(EnumAppletVoucherStatus.USED.getName());
     }

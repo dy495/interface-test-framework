@@ -485,13 +485,6 @@ public class TestCaseCommon {
         Assert.assertNull(caseResult.getFailReason());
     }
 
-    public void restoreProductInMsg() {
-        //还原message
-        for (EnumTestProduce item : EnumTestProduce.values()) {
-            commonConfig.message = commonConfig.message.replace(item.getName(), commonConfig.TEST_PRODUCT);
-        }
-    }
-
     public void saveData(String caseDesc) {
         setBasicParaToDB(caseDesc);
         if (DEBUG.trim().toLowerCase().equals("false")) {
@@ -509,11 +502,7 @@ public class TestCaseCommon {
             message = message.replace(macroCaseName, caseName);
             message = message.replace(macroCaseDesc, caseDescription);
             message = message.replace(macroCaseFail, caseResult.getFailReason());
-
-            restoreProductInMsg();
             dingPushDaily(message);
-        } else {
-            restoreProductInMsg();
         }
     }
 

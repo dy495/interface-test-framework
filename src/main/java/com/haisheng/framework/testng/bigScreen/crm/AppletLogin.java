@@ -70,6 +70,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    @AfterMethod
+    public void restoreProductInMsg() {
+        //还原message
+        for (EnumTestProduce item : EnumTestProduce.values()) {
+            commonConfig.message = commonConfig.message.replace(item.getName(), commonConfig.TEST_PRODUCT);
+        }
+    }
+
     @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -149,7 +157,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName());
             commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
             jcOnline.appletLoginToken(token);
             new BusinessUtilOnline().getAppletVoucherNum();
