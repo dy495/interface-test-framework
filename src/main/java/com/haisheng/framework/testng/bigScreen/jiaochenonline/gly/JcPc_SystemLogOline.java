@@ -1,19 +1,14 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -29,18 +24,12 @@ import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-
 import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.deleteFile;
-
-public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = new ScenarioUtil();
-    PublicParm pp = new PublicParm();
-    //    JsonPathUtil jpu = new JsonPathUtil();
+public class JcPc_SystemLogOline extends TestCaseCommon implements TestCaseStd {
+    ScenarioUtilOnline jc = new ScenarioUtilOnline();
     public String shopId = "-1";
-    public String appletTocken= EnumAppletToken.JC_GLY_DAILY.getToken();
+    public String appletTocken= EnumAppletToken.JC_GLY_ONLINE.getToken();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -52,19 +41,20 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.produce = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+        commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+
     }
 
     @AfterClass
@@ -82,7 +72,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        jc.pcLogin("15711200001", "000000");
     }
 
     /**
@@ -96,7 +86,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
                 String pages=respon.getString("pages");
-                for(int page=1;page<=Integer.valueOf(pages);page++){
+                for(int page = 1; page<=Integer.parseInt(pages); page++){
                     JSONArray list=jc.importListFilterManage(shopId, String.valueOf(page),"10","","").getJSONArray("list");
                     for(int i=0;i<list.size();i++){
                         //导入总数
@@ -128,14 +118,14 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
                 String pages=respon.getString("pages");
-                for(int page=1;page<=Integer.valueOf(pages);page++){
+                for(int page = 1; page<=Integer.parseInt(pages); page++){
                     JSONArray list=jc.importListFilterManage(shopId, String.valueOf(page),"10","","").getJSONArray("list");
                     for(int i=0;i<list.size();i++){
                         //导入总数
                         String imporNum=list.getJSONObject(i).containsKey("import_num")?list.getJSONObject(i).getString("import_num"):"0";
                         //导入成功条数
                         String successNum=list.getJSONObject(i).containsKey("success_num")?list.getJSONObject(i).getString("success_num"):"0";
-                        Preconditions.checkArgument(Integer.valueOf(imporNum)>Integer.valueOf(successNum)||Integer.valueOf(imporNum)==Integer.valueOf(successNum),"导入条数为:" + imporNum +"  导入成功的条数为:"+successNum);
+                        Preconditions.checkArgument(Integer.parseInt(imporNum)>=Integer.parseInt(successNum),"导入条数为:" + imporNum +"  导入成功的条数为:"+successNum);
                     }
                 }
             }
@@ -157,14 +147,15 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             JSONObject respon=jc.importListFilterManage(shopId,"1","10","","");
             if(respon.getJSONArray("list").size()>0){
                 String pages=respon.getString("pages");
-                for(int page=1;page<=Integer.valueOf(pages);page++){
+                for(int page = 1; page<=Integer.parseInt(pages); page++){
                     JSONArray list=jc.importListFilterManage(shopId, String.valueOf(page),"10","","").getJSONArray("list");
                     for(int i=0;i<list.size();i++){
                         //导入总数
                         String imporNum=list.getJSONObject(i).containsKey("import_num")?list.getJSONObject(i).getString("import_num"):"0";
                         //导入失败条数
                         String failureNum=list.getJSONObject(i).containsKey("failure_num")?list.getJSONObject(i).getString("failure_num"):"0";
-                        Preconditions.checkArgument(Integer.valueOf(imporNum)>=Integer.valueOf(failureNum),"导入条数为:" + imporNum + "  导入失败的条数为:" + failureNum);
+                        System.out.println("导入条数为:" + imporNum + "  导入失败的条数为:" + failureNum);
+                        Preconditions.checkArgument(Integer.parseInt(imporNum)>=Integer.parseInt(failureNum),"导入条数为:" + imporNum + "  导入失败的条数为:" + failureNum);
                     }
                 }
             }
@@ -207,7 +198,6 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Workbook wb = null;
         String path ="C:\\work\\downloadFile";
-        List<String> listName = new ArrayList<String>();
         File fileDir = new File(path);
         try {
             JSONObject respond=jc.importListFilterManage(shopId,"1","10","","");
@@ -220,10 +210,10 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             }
             // 判断是否是文件夹
             if (fileDir.isDirectory()) {
-                File fileList[] = fileDir.listFiles();
+                File[] fileList = fileDir.listFiles();
                 for (int i = 0; i < 10; i++) {
-                    listName.add(fileList[i].getPath());
                     //读取文件的条数
+                    assert fileList != null;
                     FileInputStream inp = new FileInputStream(fileList[i].getPath());
                     wb = new XSSFWorkbook(inp);
                     Sheet sheet = wb.getSheetAt(0);
@@ -288,7 +278,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             //推送个人消息-13373166806
             jc.pushMessage(true,messageContent,messageName,"PERSONNEL_CUSTOMER",phone);
-           //查看消息记录中的第一条消息
+            //查看消息记录中的第一条消息
             JSONObject respon=jc.pushMsgListFilterManage("","1","10","","");
             String isReadBefore=respon.getJSONArray("list").getJSONObject(0).getString("is_read");
             //登录小程序
@@ -298,7 +288,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             String id=list.getJSONObject(0).getString("id");
             jc.messageDetail(id);
             //查看现在的-客户查看
-            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            jc.pcLogin("15711200001", "000000");
             String isReadAfter=jc.pushMsgListFilterManage("","1","10","","").getJSONArray("list").getJSONObject(0).getString("is_read");
             System.out.println("客户查看之前的状态为:"+isReadBefore+"现在客户查看的状态为:"+isReadAfter);
             Preconditions.checkArgument(isReadAfter.equals("true"),"客户查看之前的状态为:"+isReadBefore+"现在客户查看的状态为:"+isReadAfter);
@@ -358,8 +348,8 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             int total=respon.getInteger("total");
             //推送个人消息-13373166806
             jc.pushMessage(true,messageContent,messageName,"PERSONNEL_CUSTOMER",phone);
-            int sendCount=jc.messageFormFilterManage("","1","10","customer_name","Max").getJSONArray("list").getJSONObject(0).getInteger("send_count");
-            int receiveCount=jc.messageFormFilterManage("","1","10","customer_name","Max").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            int sendCount=jc.messageFormFilterManage("","1","10","customer_name","哈哈哈").getJSONArray("list").getJSONObject(0).getInteger("send_count");
+            int receiveCount=jc.messageFormFilterManage("","1","10","customer_name","哈哈哈").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respon1=jc.pushMsgListFilterManage("","1","10","","");
             int total1=respon1.getInteger("total");
@@ -374,7 +364,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择ALL-1-1门店
+     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择中关村门店
      * @date :2020/12/21
      **/
     @Test
@@ -382,18 +372,18 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String messageContent="推送ALL-1-1门店-自动化";
-        String messageName="推送ALL-1-1门店-自动化"+df.format(date);
+        String messageContent="推送中关村门店-自动化";
+        String messageName="推送中关村门店-自动化"+df.format(date);
         ArrayList<String> shop=new ArrayList();
-        shop.add("45973");
+        shop.add("20032");
         int isReadNum=0;
         try {
             //查看消息记录的总条数
             JSONObject respon=jc.pushMsgListFilterManage("","1","10","","");
             int total=respon.getInteger("total");
-            //推送推送ALL-1-1门店消息
+            //推送中关村门店消息
             jc.pushMessageShop(true,messageContent,messageName,"SHOP_CUSTOMER",shop);
-            int receiveCount=jc.messageFormFilterManage("","1","10","shop_id","45973").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            int receiveCount=jc.messageFormFilterManage("","1","10","shop_id","20032").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respon1=jc.pushMsgListFilterManage("","1","100","","");
             int total1=respon1.getInteger("total");
@@ -406,7 +396,6 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
                     isReadNum++;
                 }
             }
-            System.out.println("同一批次消息记录中查看为是的消息为:"+isReadNum+"消息表单中收到的消息为:"+receiveCount);
             Preconditions.checkArgument(receiveCount>isReadNum||receiveCount==isReadNum,"同一批次消息记录中查看为是的消息为:"+isReadNum+"消息表单中收到的消息为:"+receiveCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -425,7 +414,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject respon=jc.importListFilterManage(shopId,"1","20","","");
             JSONArray list=respon.getJSONArray("list");
-            for(int i=0;i<20;i++){
+            for(int i=0;i<10;i++){
                 String affiliation=list.getJSONObject(i).getString("affiliation");
                 String typeName=list.getJSONObject(i).getString("type_name");
                 String importTime=list.getJSONObject(i).getString("import_time");
@@ -473,4 +462,5 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
 
 
 }
+
 

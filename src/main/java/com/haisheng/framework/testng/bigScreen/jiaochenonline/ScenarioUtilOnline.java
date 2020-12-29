@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -3322,6 +3323,65 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("id", id);
 
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :PC-创建销售客户
+     * * * @author: gly
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject createCustomer(String shopId, String customerName, String customerPhone, String sex, String customerType) {
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("customer_name", customerName);
+        json.put("customer_phone", customerPhone);
+        json.put("sex", sex);
+        json.put("customer_type", customerType);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :消息管理-推送消息--推送个人
+     * * * @author: gly
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject pushMessage(Boolean if_send_immediately, String message_content, String message_name, String push_target, ArrayList tel_list) {
+        String url = "/jiaochen/pc/message-manage/push-message";
+        JSONObject json1 = new JSONObject();
+        json1.put("if_send_immediately", if_send_immediately);
+        json1.put("message_content", message_content);
+        json1.put("message_name", message_name);
+        json1.put("push_target", push_target);
+        json1.put("tel_list", tel_list);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :消息管理-推送消息--推送门店
+     * * * @author: gly
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject pushMessageShop(Boolean if_send_immediately, String message_content, String message_name, String push_target, ArrayList shop_list) {
+        String url = "/jiaochen/pc/message-manage/push-message";
+        JSONObject json1 = new JSONObject();
+        json1.put("if_send_immediately", if_send_immediately);
+        json1.put("message_content", message_content);
+        json1.put("message_name", message_name);
+        json1.put("push_target", push_target);
+        json1.put("shop_list", shop_list);
+        return invokeApi(url, json1);
+    }
+    /**
+     * @description :小程序-我的消息-消息详情
+     * * * @author: gly
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject messageDetail(String id) {
+        String url = "/jiaochen/applet/granted/message/detail";
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
         return invokeApi(url, json1);
     }
 }
