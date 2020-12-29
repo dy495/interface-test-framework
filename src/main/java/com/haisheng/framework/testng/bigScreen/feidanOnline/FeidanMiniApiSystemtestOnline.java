@@ -1100,7 +1100,7 @@ public class FeidanMiniApiSystemtestOnline {
      *  账号管理--新建账号
      */
 
-    @Ignore
+    
     @Test(dataProvider = "ACC_ADD")
     public void accountadd(String name,String email, String phone,String mes){
         String ciCaseName = new Object() {
@@ -1168,7 +1168,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test(dataProvider = "ACC_ADDERR")
     public void accountaddErr(String name , String email,String phone,String mes){
         String ciCaseName = new Object() {
@@ -1205,7 +1205,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void accountEdit(){
         String ciCaseName = new Object() {
@@ -1265,7 +1265,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test(dataProvider = "ACC_ADDERR")
     public void accountEditErr(String name1 , String email1,String phone1,String mes){
         String ciCaseName = new Object() {
@@ -1303,7 +1303,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void NotExistAccountLogin(){
         String ciCaseName = new Object() {
@@ -1340,7 +1340,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void AccountDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1380,7 +1380,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void AccountDelAndEdit(){
         String ciCaseName = new Object() {
@@ -1415,7 +1415,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void AccountDisableAndLogin(){
         String ciCaseName = new Object() {
@@ -1470,7 +1470,6 @@ public class FeidanMiniApiSystemtestOnline {
      */
 
 
-    @Ignore
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1509,8 +1508,7 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, "校验：新建角色功能权限多选\n");
         }
     }
-
-    @Ignore
+    
     @Test(dataProvider = "ROLE_ADD")
     public void roleAdd1(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1551,7 +1549,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleAddErr(String name, String desc, String mess){
         String ciCaseName = new Object() {
@@ -1598,7 +1596,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void roleAddRe(){
         String ciCaseName = new Object() {
@@ -1633,7 +1631,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test(dataProvider = "ROLE_ADDERR")
     public void roleEditErr(String name1, String desc1, String mess){
         String ciCaseName = new Object() {
@@ -1666,7 +1664,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void roleDelInUse(){
         String ciCaseName = new Object() {
@@ -1701,7 +1699,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    @Ignore
+    
     @Test
     public void roleReDel(){
         String ciCaseName = new Object() {
@@ -1736,7 +1734,7 @@ public class FeidanMiniApiSystemtestOnline {
 
 
 
-    @Ignore
+    
     @Test
     public void roleDelAndAdd(){
         String ciCaseName = new Object() {
@@ -1921,7 +1919,7 @@ public class FeidanMiniApiSystemtestOnline {
         json.put("name", name);
         json.put("authlist", authlist);
         json.put("description", description);
-        String result = httpPostUrl(url, json.toJSONString());
+        String result = httpPostWithCheckCode(url, json.toJSONString());
         return JSON.parseObject(result);
     }
 
@@ -3169,16 +3167,18 @@ public class FeidanMiniApiSystemtestOnline {
 
     public String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
-        config.url(path).json(json);
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
+        logger.info("response: {}", response);
+//        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }
-
 
     public int getnum(int status) throws Exception { //截至昨天24点的数量。
         int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险

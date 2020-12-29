@@ -3002,7 +3002,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    @Test
+    @Test()
     public void accountSeveralPage1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();

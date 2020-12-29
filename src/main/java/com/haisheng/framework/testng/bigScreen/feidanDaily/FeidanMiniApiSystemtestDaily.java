@@ -2565,7 +2565,7 @@ public class FeidanMiniApiSystemtestDaily {
         HttpEntity resEntity = response.getEntity();
         this.response = EntityUtils.toString(resEntity, "UTF-8");
         System.out.println(response.getStatusLine());
-        //checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
+        checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
         return JSON.parseObject(this.response);
     }
 
@@ -2575,14 +2575,13 @@ public class FeidanMiniApiSystemtestDaily {
      */
     public String faceTraces(String showUrl) throws Exception {
         String url = "/risk/evidence/face/traces";
-        url = getIpPort() + url;
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
 
-        String res = httpPostUrl(url, json);
+        String res = httpPostWithCheckCode(url, json);
 
         return res;
     }
