@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListVO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -15,10 +15,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.Create;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SwitchVerificationStatus;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeople;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -136,7 +133,7 @@ public class BusinessUtil {
             case "STORE":
                 return getShopIdList().get(0);
             case "BRAND":
-                return getBrandIds().get(0);
+                return getBrandIdList().get(0);
             default:
                 return null;
         }
@@ -147,7 +144,7 @@ public class BusinessUtil {
      *
      * @return 品牌id
      */
-    public List<Long> getBrandIds() {
+    public List<Long> getBrandIdList() {
         List<Long> brandIds = new ArrayList<>();
         JSONArray array = jc.pcUserRangeDetail().getJSONArray("list");
         Long brandId = array.getJSONObject(0).getLong("id");
@@ -263,7 +260,8 @@ public class BusinessUtil {
      */
     public void addVoucher(String voucherName, Integer num) {
         Long voucherId = getVoucherId(voucherName);
-        jc.pcAddVoucher(voucherId, num);
+        IScene scene = AddVoucher.builder().id(voucherId).addNumber(num).build();
+        jc.invokeApi(scene);
     }
 
     /**
@@ -317,7 +315,7 @@ public class BusinessUtil {
      *
      * @return 卡券信息集合
      */
-    public JSONArray getVoucherList() {
+    public JSONArray getVoucherInfo() {
         JSONArray array = new JSONArray();
         JSONObject object = new JSONObject();
         JSONArray list = jc.pcVoucherList().getJSONArray("list");
@@ -338,7 +336,7 @@ public class BusinessUtil {
      * @param count 卡券种类数
      * @return 卡券信息集合
      */
-    public JSONArray getVoucherList(int count) {
+    public JSONArray getVoucherInfo(int count) {
         JSONArray voucherList = new JSONArray();
         JSONArray array = jc.pcVoucherList().getJSONArray("list");
         if (count > array.size()) {
@@ -359,7 +357,7 @@ public class BusinessUtil {
      * @param voucherCount 卡券数量
      * @return 卡券信息集合
      */
-    public JSONArray getVoucherList(String voucherName, int voucherCount) {
+    public JSONArray getVoucherInfo(String voucherName, int voucherCount) {
         JSONArray voucherList = new JSONArray();
         IScene scene = VoucherFormPage.builder().voucherName(voucherName).size(size).build();
         JSONArray array = jc.invokeApi(scene).getJSONArray("list");
@@ -545,7 +543,7 @@ public class BusinessUtil {
      */
     public void buyTemporaryPackage(int type) {
         EnumAccount marketing = EnumAccount.MARKETING;
-        JSONArray voucherList = getVoucherList(1);
+        JSONArray voucherList = getVoucherInfo(1);
         String platNumber = getPlatNumber(marketing.getPhone());
         IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
                 .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
@@ -611,7 +609,7 @@ public class BusinessUtil {
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
                 PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
-                .plateNumber(plateNumber).voucherList(getVoucherList(EnumVP.ONE.getVoucherName(), 1))
+                .plateNumber(plateNumber).voucherList(getVoucherInfo(EnumVP.ONE.getVoucherName(), 1))
                 .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
                 .subjectId(getSubjectId(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
                 .type(type).receptionId(receptionId).customerId(customerId).build();
@@ -768,8 +766,8 @@ public class BusinessUtil {
      *
      * @return 卡券id
      */
-    public List<AppletVoucherListData> getAppletCanUsedVoucherInfo() {
-        List<AppletVoucherListData> list = new ArrayList<>();
+    public List<AppletVoucherListVO> getAppletCanUsedVoucherInfoList() {
+        List<AppletVoucherListVO> list = new ArrayList<>();
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -781,7 +779,7 @@ public class BusinessUtil {
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
             list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType)
-                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherListData.class))
+                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherListVO.class))
                     .collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);

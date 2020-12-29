@@ -9,10 +9,14 @@ import lombok.Builder;
  */
 @Builder
 public class AfterSaleCustomerPage extends BaseScene {
+    private final String orderStartTime;
+    private final String orderEndTime;
     private final String customerName;
     private final String customerPhone;
     private final String createDate;
     private final String vehicleChassisCode;
+    private final String createStartTime;
+    private final String createEndTime;
     @Builder.Default
     private final Integer page = 1;
     @Builder.Default
@@ -25,6 +29,10 @@ public class AfterSaleCustomerPage extends BaseScene {
         object.put("customer_phone", customerPhone);
         object.put("create_date", createDate);
         object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("order_start_time", orderStartTime);
+        object.put("order_end_time", orderEndTime);
+        object.put("create_start_time", createStartTime);
+        object.put("create_end_time", createEndTime);
         object.put("page", page);
         object.put("size", size);
         return object;

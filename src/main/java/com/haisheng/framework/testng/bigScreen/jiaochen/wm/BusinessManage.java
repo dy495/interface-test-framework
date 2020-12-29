@@ -2,7 +2,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AfterSaleCustomerPageVO;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.WechatCustomerPageVO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -11,23 +14,30 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumCarType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerRepairPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseFixedPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 业务管理测试用例
@@ -37,8 +47,10 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     BusinessUtil util = new BusinessUtil();
     LoginUtil user = new LoginUtil();
     private static final Integer size = 100;
+    private static final EnumAccount marketing = EnumAccount.MARKETING;
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
     private static final EnumAppletToken appletUser = EnumAppletToken.JC_WM_DAILY;
+    private static final EnumAppletToken applet = EnumAppletToken.JC_GLY_DAILY;
 
     @BeforeClass
     @Override
@@ -359,5 +371,135 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("客户管理--【售后客户】的送修人姓名&&联系电话&&里程数=维修记录中最新及记录的姓名&&联系电话&&里程数");
         }
+    }
+
+    @Test(description = "客户管理--导入一次工单，【导入记录】+1")
+    public void customerManager_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = ImportPage.builder().build();
+            int total = jc.invokeApi(scene).getInteger("total");
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/服务单号已存在.xlsx";
+            String message = jc.pcWorkOrder(filePath).getString("message");
+            Assert.assertEquals(message, "success");
+            int newTotal = jc.invokeApi(scene).getInteger("total");
+            CommonUtil.valueView(total, newTotal);
+            Preconditions.checkArgument(newTotal == total + 1, "导入前导入记录总数为：" + total + "导入后记录总数为：" + newTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("客户管理--导入一次工单，【导入记录】+1");
+        }
+    }
+
+    @Test(description = "客户管理--小程序【我的爱车】新加一个爱车,售后客户+1")
+    public void customerManager_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String carId = null;
+        try {
+            String platNumber = "皖H123456";
+            user.login(marketing);
+            List<Long> shopList = util.getShopIdList();
+            user.login(administrator);
+            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(marketing.getPhone());
+            int customerNum = getCustomerNum(builder, shopList);
+            //小程序添加爱车
+            user.loginApplet(appletUser);
+            carId = new JcFunction().appletAddCar(platNumber);
+            //添加车辆后，客户列表数
+            user.login(administrator);
+            int newCustomerNum = getCustomerNum(builder, shopList);
+            CommonUtil.valueView(customerNum, newCustomerNum);
+            Preconditions.checkArgument(newCustomerNum == customerNum + 1, "添加爱车前售后客户列表数：" + customerNum + "添加爱车后售后客户列表数：" + newCustomerNum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            user.loginApplet(appletUser);
+            jc.appletCarDelst(carId);
+            saveData("客户管理--小程序【我的爱车】新加一个爱车,售后客户+1");
+        }
+    }
+
+    private int getCustomerNum(AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder, List<Long> shopList) {
+        List<JSONObject> list = new ArrayList<>();
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(1).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(object -> (JSONObject) object).filter(object -> object.getLong("shop_id").equals(shopList.get(0)))
+                    .collect(Collectors.toList()));
+        }
+        return list.size();
+    }
+
+    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和")
+    public void customerManager_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = WechatCustomerPage.builder().size(size).build();
+            JSONArray array = jc.invokeApi(scene).getJSONArray("list");
+            List<WechatCustomerPageVO> customerInfo = array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), WechatCustomerPageVO.class)).collect(Collectors.toList());
+            customerInfo.forEach(info -> {
+                CommonUtil.valueView(info.getCustomerName());
+                List<Double> priceList = new ArrayList<>();
+                String phone = info.getCustomerPhone();
+                Double price = info.getTotalPrice() == null ? 0 : info.getTotalPrice();
+                AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(phone);
+                int total = jc.invokeApi(builder.build()).getInteger("total");
+                for (int i = 1; i < total; i++) {
+                    JSONArray list = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                    priceList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> e.getDouble("total_price") == null ? 0 : e.getDouble("total_price")).collect(Collectors.toList()));
+                }
+                Double priceLitNum = priceList.stream().mapToDouble(e -> e).sum();
+                CommonUtil.valueView(price, priceLitNum);
+                Preconditions.checkArgument(price.equals(priceLitNum), info.getCustomerPhone() + "总金额：" + price + "产值之和：" + priceLitNum);
+                CommonUtil.logger(info.getCustomerName());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和");
+        }
+    }
+
+    @Test(description = "客户管理--【售后客列表户】中里程数＝【维修记录】中最新的一次里程数")
+    public void customerManager_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<AfterSaleCustomerPageVO> afterSaleInfo = new ArrayList<>();
+            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            int total = jc.invokeApi(builder.build()).getInteger("total");
+            int s = CommonUtil.getTurningPage(total, size);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                afterSaleInfo.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AfterSaleCustomerPageVO.class)).collect(Collectors.toList()));
+            }
+            afterSaleInfo.forEach(e -> {
+                CommonUtil.valueView(e.getRepairCustomerName(), e.getImportDate());
+                int newMiles = e.getNewestMiles() == null ? 0 : e.getNewestMiles();
+                int repairNewMiles = getMiles(e);
+                CommonUtil.valueView(newMiles, repairNewMiles);
+                Preconditions.checkArgument(newMiles == repairNewMiles, "售后客户列表最新里程数：" + newMiles + "维修记录最新里程数" + repairNewMiles);
+                CommonUtil.logger(e.getRepairCustomerName());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("客户管理--【售后客列表户】中里程数＝【维修记录】中最新的一次里程数");
+        }
+    }
+
+    private Integer getMiles(AfterSaleCustomerPageVO customerInfo) {
+        List<Integer> list = new ArrayList<>();
+        AfterSaleCustomerRepairPage.AfterSaleCustomerRepairPageBuilder builder = AfterSaleCustomerRepairPage.builder().carId(String.valueOf(customerInfo.getCarId()))
+                .shopId(String.valueOf(customerInfo.getShopId()));
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("repair_customer_phone").equals(customerInfo.getRepairCustomerPhone())).map(e -> e.getInteger("newest_miles"))
+                    .collect(Collectors.toList()));
+        }
+        return list.size() == 0 ? 0 : list.get(0);
     }
 }

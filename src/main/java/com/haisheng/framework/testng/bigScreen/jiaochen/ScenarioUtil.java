@@ -315,6 +315,12 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    public JSONObject pcWorkOrder(String filePath) {
+        String path = "/jiaochen/pc/import/work_order";
+        String response = uploadFile(filePath, path, IpPort);
+        return JSON.parseObject(response);
+    }
+
     //卡券管理 -> 卡券增发
     public JSONObject pcAddVoucher(Long id, Integer addNumber) {
         String url = "/jiaochen/pc/voucher-manage/add-voucher";

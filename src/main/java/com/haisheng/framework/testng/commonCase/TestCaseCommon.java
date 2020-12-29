@@ -20,11 +20,21 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.UUID;
@@ -423,6 +433,34 @@ public class TestCaseCommon {
         config = HttpConfig.custom()
                 .headers(headers)
                 .client(client);
+    }
+
+    public String uploadFile(String filePath, String path, String IpPort) {
+        String url = IpPort + path;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", commonConfig.shopId);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        File file = new File(filePath);
+        String res = "";
+        try {
+            builder.addBinaryBody(
+                    "file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            res = EntityUtils.toString(responseEntity, "UTF-8");
+            logger.info("response: " + res);
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        }
+        return res;
     }
 
     public String getProscheShop() {
