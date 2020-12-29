@@ -17,7 +17,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
-public class Jc_Pc_CustomerManageOline extends TestCaseCommon implements TestCaseStd {
+public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtilOnline jc = new ScenarioUtilOnline();
     public String shopId = "-1";
     CommonPram cp=new CommonPram();

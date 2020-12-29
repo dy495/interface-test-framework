@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.deleteFile;
-public class JcPc_SystemLogOline extends TestCaseCommon implements TestCaseStd {
+public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtilOnline jc = new ScenarioUtilOnline();
     public String shopId = "-1";
     public String appletTocken= EnumAppletToken.JC_GLY_ONLINE.getToken();
