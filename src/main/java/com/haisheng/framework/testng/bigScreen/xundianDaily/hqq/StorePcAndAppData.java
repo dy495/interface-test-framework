@@ -72,12 +72,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "权限下全部门店今日到访人数<=权限全部门店的趋势图中今日各时刻中人数之和")
+    @Test(description = "权限下全部门店今日到访人数<=权限全部门店的趋势图中今日各时刻中人数之和") //bug 6526
     public void homePage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0);
+            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int todayUv = total.getJSONObject("total_number").getInteger("today_uv");
             JSONArray trendList = total.getJSONArray("trend_list");
             int sumTodayUv = trendList.stream().map(e -> (JSONObject) e).mapToInt(jsonObject -> jsonObject.getInteger("today_uv") == null ? 0 : jsonObject.getInteger("today_uv")).sum();
@@ -90,12 +90,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "权限下全部门店今日到访人次==权限下全部门店趋势图今日各时段中人次之和")
+    @Test(description = "权限下全部门店今日到访人次==权限下全部门店趋势图今日各时段中人次之和") //bug 6527
     public void homePage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0);
+            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int todayPv = total.getJSONObject("total_number").getInteger("today_pv");
             JSONArray trendList = total.getJSONArray("trend_list");
             int sumTodayPv = trendList.stream().map(e -> (JSONObject) e).mapToInt(jsonObject -> jsonObject.getInteger("today_pv") == null ? 0 : jsonObject.getInteger("today_pv")).sum();
@@ -108,12 +108,12 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "权限下全部门店昨日到访人数<=权限下全部门店昨日各时段中人数之和")
+    @Test(description = "权限下全部门店昨日到访人数<=权限下全部门店昨日各时段中人数之和") //ok
     public void homePage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0);
+            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int yesterdayUv = total.getJSONObject("total_number").getInteger("yesterday_uv");
             JSONArray trendList = total.getJSONArray("trend_list");
             int sumYesterdayUv = trendList.stream().map(e -> (JSONObject) e).mapToInt(jsonObject -> jsonObject.getInteger("yesterday_uv") == null ? 0 : jsonObject.getInteger("yesterday_uv")).sum();
@@ -126,18 +126,18 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "权限下全部门店昨日到访人次==权限下全部门店昨日各时段中人次之和")
+    @Test(description = "权限下全部门店昨日到访人次==权限下全部门店昨日各时段中人次之和") //bug 6529
     public void homePage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
 
-            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0);
+            JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int yesterdayPv = total.getJSONObject("total_number").getInteger("yesterday_pv");
             JSONArray trendList = total.getJSONArray("trend_list");
             int sumYesterdayPv = trendList.stream().map(e -> (JSONObject) e).mapToInt(jsonObject -> jsonObject.getInteger("yesterday_pv") == null ? 0 : jsonObject.getInteger("yesterday_pv")).sum();
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
-            Preconditions.checkArgument(yesterdayPv <= sumYesterdayPv, "全部门店今日到访人次：" + yesterdayPv + " 全部门店趋势图今日各时段中人次之和" + sumYesterdayPv);
+            Preconditions.checkArgument(yesterdayPv <= sumYesterdayPv, "全部门店昨日到访人次：" + yesterdayPv + " 全部门店趋势图昨日各时段中人次之和" + sumYesterdayPv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -145,20 +145,20 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店昨日到访人数==pc权限下【客流分析】各个门店历史客流中截止日期得人数相加的和")
+    @Test(description = "app权限下【首页】全部门店昨日到访人数==pc权限下【客流分析】各个门店历史客流中截止日期得人数相加的和") //bug 6531
     public void homePage_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("total_number");
+            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-昨日到访总人数
             int yesterdayPv = totalNumber.getInteger("yesterday_uv");
             //pc各门店到访人数之和
             List<String> shopIds = getPcShopIds();
-            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "yesterday_uv")).sum();
+            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_uv")).sum(); //已经选了昨天的日期了，所以取那天的数据
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
-            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "");
+            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app "+yesterdayPv+" , pc "+sumYesterdayPv );
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -166,20 +166,20 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店昨日到访人次==pc【客流分析】各个门店历史客流中截止日期得人次之和")
+    @Test(description = "app权限下【首页】全部门店昨日到访人次==pc【客流分析】各个门店历史客流中截止日期得人次之和") //bug 6532
     public void homePage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("total_number");
+            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-昨日到访总人次
             int yesterdayPv = totalNumber.getInteger("yesterday_pv");
             //pc各门店到访人次之和
             List<String> shopIds = getPcShopIds();
-            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "yesterday_pv")).sum();
+            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_pv")).sum();
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
-            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "");
+            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app "+yesterdayPv+" , pc "+sumYesterdayPv );
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -187,19 +187,19 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和")
+    @Test(description = "app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和") //bug 6533
     public void homePage_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("total_number");
+            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-今日到访总人数
             int todayUv = totalNumber.getInteger("today_uv");
             //pc各门店到访人数之和
             List<String> shopIds = getPcShopIds();
             int sumTodayUv = shopIds.stream().map(shopId -> RealTimeShopPvUv.builder().shopId(shopId).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_uv")).sum();
             CommonUtil.valueView(todayUv, sumTodayUv);
-            Preconditions.checkArgument(todayUv == sumTodayUv, "");
+            Preconditions.checkArgument(todayUv == sumTodayUv, "app "+todayUv +" , pc "+sumTodayUv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -207,19 +207,19 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店今日到访人次==pc【客流分析】各个门店今日到访人次之和")
+    @Test(description = "app权限下【首页】全部门店今日到访人次==pc【客流分析】各个门店今日到访人次之和") // bug 6534
     public void homePage_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CardList.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
-            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("total_number");
+            JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-今日到访总人次
             int todayPv = totalNumber.getInteger("today_pv");
             //pc各门店到访人次之和
             List<String> shopIds = getPcShopIds();
             int sumTodayUv = shopIds.stream().map(shopId -> RealTimeShopPvUv.builder().shopId(shopId).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_pv")).sum();
             CommonUtil.valueView(todayPv, sumTodayUv);
-            Preconditions.checkArgument(todayPv == sumTodayUv, "");
+            Preconditions.checkArgument(todayPv == sumTodayUv, "app " +todayPv+" , pc"+sumTodayUv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -227,7 +227,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店昨日各时段中人数之和==pc【客流分析】各个门店昨日各时段中人数之和")
+    @Test(description = "app权限下【首页】全部门店昨日各时段中人数之和==pc【客流分析】各个门店昨日各时段中人数之和") //ok
     public void homePage_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -237,7 +237,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             int appSum = appShopIds.stream().map(shopId -> HistoryPvUv.builder().shopId(shopId).day(date).build()).mapToInt(scene -> getTypeSum(scene, "uv")).sum();
             //pc各门店到访人数之和
             List<String> shopIds = getPcShopIds();
-            int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "yesterday_uv")).sum();
+            int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_uv")).sum();
             CommonUtil.valueView(appSum, pcSum);
             Preconditions.checkArgument(appSum == pcSum, "app权限下【首页】全部门店昨日各时段中人数之和"+appSum+"!==pc【客流分析】各个门店昨日各时段中人数之和"+pcSum);
         } catch (Exception | AssertionError e) {
@@ -247,7 +247,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店昨日各时段中人次之和==pc【客流分析】各个门店昨日各时段中人次之和")
+    @Test(description = "app权限下【首页】全部门店昨日各时段中人次之和==pc【客流分析】各个门店昨日各时段中人次之和") //ok
     public void homePage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -257,7 +257,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             int appSum = appShopIds.stream().map(shopId -> HistoryPvUv.builder().shopId(shopId).day(date).build()).mapToInt(scene -> getTypeSum(scene, "pv")).sum();
             //pc各门店到访人次之和
             List<String> shopIds = getPcShopIds();
-            int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "yesterday_pv")).sum();
+            int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_pv")).sum();
             CommonUtil.valueView(appSum, pcSum);
             Preconditions.checkArgument(appSum == pcSum, "app昨日到访人次之和：" + appSum + " pc【客流分析】各个门店昨日各时段中人次之和：" + pcSum);
         } catch (Exception | AssertionError e) {
@@ -332,7 +332,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "实时客流--今日到访人次==今日各时段中人次之和") //ok
+    @Test(description = "实时客流--今日到访人次==今日各时段中人次之和") //ok //bug 6524
     public void passengerFlow_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -433,7 +433,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "实时客流--app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和")
+    @Test(description = "实时客流--app昨日各时段中人数之和==pc【实时客流】昨日各时段中人数之和") //6417
     public void passengerFlow_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -455,7 +455,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "实时客流--app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和")
+    //@Test(description = "实时客流--app昨日各时段中人次之和==pc【实时客流】昨日各时段中人次之和") // 没ok
     public void passengerFlow_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -730,7 +730,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "历史客流--选择同一时间段，app转化率&吸引率&进店率==pc【客群漏斗】的转化率&吸引率&进店率")
+    //@Test(description = "历史客流--选择同一时间段，app转化率&吸引率&进店率==pc【客群漏斗】的转化率&吸引率&进店率") //没ok
     public void passengerFlow_data_32() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

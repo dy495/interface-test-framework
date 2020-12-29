@@ -38,7 +38,9 @@ public class MendianInfo {
                 JSONObject eachitem = chkitems.getJSONObject(j);
                 Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
                 //巡检项目结果 1合格；2不合格；3不适用
-                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
+                //xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
+                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "", null);
+                Thread.sleep(100);
             }
 
         }
@@ -86,7 +88,7 @@ public class MendianInfo {
         JSONObject obj1 = new JSONObject();
         obj1.put("pic_path",obj.getString("pic_path"));
         obj1.put("device_id",deviceId);
-        obj1.put("time",System.currentTimeMillis());
+        //obj1.put("time",System.currentTimeMillis());
         pic_list.add(obj1);
 
         return pic_list;

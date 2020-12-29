@@ -14,6 +14,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StoreDataCenter"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData"></class>
         </classes>
     </test>
 </suite>
