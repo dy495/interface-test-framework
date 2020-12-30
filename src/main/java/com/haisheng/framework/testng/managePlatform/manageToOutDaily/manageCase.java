@@ -307,7 +307,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
     public void device_control(Integer command) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String terminal_device_id = "8061367735976960";
+            String terminal_device_id = "8097818264503296";
             JSONObject res = dw.device_control(terminal_device_id, command, null);
             Integer code = res.getInteger("code");
             Preconditions.checkArgument(

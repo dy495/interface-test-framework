@@ -121,7 +121,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        for (int i=0;i<6;i++) {
+        for (int i=0;i<60;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -167,7 +167,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String str = "{\n" +
                     "  \"uid\": \"uid_ef6d2de5\",\n" +
                     "  \"app_id\": \"49998b971ea0\",\n" +
-                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a75\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a91\",\n" +
                     "  \"version\": \"v1.0\",\n" +
                     "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
@@ -178,7 +178,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"202010000990\",\n" +
+                    "        \"user_id\": \"202086948397\",\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +

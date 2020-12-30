@@ -321,7 +321,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
      * @description :1. 新增门店执行清单，门店详情清单+1 ok
      * @date :2020/6/21 15:19
      **/
-    @Test
+   // @Test
     public void checklist() {
         logger.logCaseStart(caseResult.getCaseName());
         SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm");

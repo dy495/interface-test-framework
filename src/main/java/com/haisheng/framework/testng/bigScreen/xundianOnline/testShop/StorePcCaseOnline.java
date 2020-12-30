@@ -145,12 +145,12 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                 e.printStackTrace();
             }
             String timestamp = "" + System.currentTimeMillis();
-            String uid = "uid_580f244a";
-            String appId = "c30dcafc59c8";
-            String ak = "0d17651c55595b9b";
+            String uid = "uid_580f244a";//13260: uid_0ba743d8,14630:uid_580f244a
+            String appId = "c30dcafc59c8";//13260: 672170545f50,14630:c30dcafc59c8
+            String ak = "0d17651c55595b9b";//13260: 691ff41137d954f3,14630:0d17651c55595b9b
             String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
-            String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";
+            String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";//13260:d76f2d8a7846382f633c1334139767fe,14630:0ebe6128aedb44e0a7bd3f7a5378a7fc
             // java代码示例
             // java代码示例
             String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
