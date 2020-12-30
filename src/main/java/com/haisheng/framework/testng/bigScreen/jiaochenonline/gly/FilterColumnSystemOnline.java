@@ -501,18 +501,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONArray res = jc.afterSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
-                variable.vehicle_chassis_code = data.getString(flag[0][1].toString());
+//                variable.vehicle_chassis_code = (data.getString(flag[0][1].toString())==null)?"":data.getString(flag[0][1].toString());
                 variable.customer_name = data.getString(flag[1][1].toString());
                 variable.customer_phone = data.getString(flag[2][1].toString());
                 variable.size = "10";
                 variable.page = "1";
                 variable.shop_id = "-1";
                 //全部筛选之后的结果
-                JSONObject result = jc.afterSleCustomerManage(variable).getJSONArray("list").getJSONObject(1);
-                System.out.println("参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
-                System.out.println("参数全部输入的查询的" + variable.vehicle_chassis_code + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
-                System.out.println("参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-                if(variable.vehicle_chassis_code!=null){
+                JSONObject result = jc.afterSleCustomerManage(variable).getJSONArray("list").getJSONObject(0);
+                  if(variable.vehicle_chassis_code!=null){
                     Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.vehicle_chassis_code), "参数全部输入的查询的" + variable.vehicle_chassis_code + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 }
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
