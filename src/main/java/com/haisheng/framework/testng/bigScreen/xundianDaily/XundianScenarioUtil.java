@@ -1290,7 +1290,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject schedule_pic_list(Long shop_id,String device_id,String date) throws Exception {
-        String url = "/store/m-app/auth/task/schedule-pic/list";
+        String url = "/store/m-app/auth/patrol/task/schedule-pic/list";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
