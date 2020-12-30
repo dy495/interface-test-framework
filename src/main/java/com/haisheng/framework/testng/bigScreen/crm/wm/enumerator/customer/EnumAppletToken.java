@@ -10,9 +10,9 @@ import lombok.Getter;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "HPLfevPPf88Hvql8BkP2tA==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
+    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "pR9YaWL+SUN3c4hpgP9ymg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
 
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "PXi/v1x6FLDJsVHry8mFGw==", "纯牛奶", true, "", "15321527989"),
+    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "usxKib/bBsV+ahtyvx+/RA==", "纯牛奶", true, "", "15321527989"),
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "Yyq04ubFzxKP8GzWC1yhzw==", "@@@", true, "", ""),
 
@@ -20,13 +20,13 @@ public enum EnumAppletToken {
 
     BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cw4sTi87+ZWGuDqdsfZXSA==", "@@@", false, "", ""),
 
-    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "TIMWRzr8Z90Z1irPhNtklQ==", "w", false, "", "15321527989"),
+    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "/l2SriTdlX3tII0n/bbwtw==", "w", false, "", "15321527989"),
 
-    BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "dtp9Ydtr21uRLuK4+H7XgQ==", "纯牛奶", false, "", "15321527989"),
+    BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "4It447PUdHX0+ZOwM6EOuA==", "纯牛奶", false, "", "15321527989"),
 
-    JC_WM_DAILY(EnumProduce.JC.name(), "l2fRw5k+rH4Mqc/BEKDemw==", "", true, "", "15321527989"),
+    JC_WM_DAILY(EnumProduce.JC.name(), "4X5Z/xEJq06LP5uBJIBgpQ==", "", true, "", "15321527989"),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "B6H0gkhiYEpVOiEfDs5Sqw==", "", false, "", "15321527989"),
+    JC_WM_ONLINE(EnumProduce.JC.name(), "/l2SriTdlX3tII0n/bbwtw==", "", false, "", "15321527989"),
 
     JC_XMF_DAILY(EnumProduce.JC.name(), "X7ub38LmihAlj4uUUIOWaQ==", "", false, "", ""),
     JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false, "", ""),
