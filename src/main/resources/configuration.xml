@@ -40,6 +40,5 @@
         <mapper resource="mapper/feidanPicSearch.xml"/>
         <mapper resource="mapper/config.xml"/>
         <mapper resource="mapper/DataTemp.xml"/>
-        <mapper resource="mapper/porscheDeliverMapper.xml"/>
     </mappers>
 </configuration>
