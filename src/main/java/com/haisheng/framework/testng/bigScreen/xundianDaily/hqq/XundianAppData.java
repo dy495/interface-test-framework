@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.*;
@@ -221,6 +222,26 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
             String patrol_pass_rate = object.getString("patrol_pass_rate");//APP中今日合格率
             Preconditions.checkArgument(patrol_pass_rate.equals(today_patrol_pass_rate) , "APP【巡店中心】今日合格率="+patrol_pass_rate+"PC【巡店分析】中的今日合格率="+today_patrol_pass_rate);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("APP【巡店中心】今日合格率==PC【巡店分析】中的今日合格率");
+        }
+    }
+
+    @Test(description = "APP【巡店中心】累计合格率==提交时巡店结果为合格的巡店报告数量/所有门店从上线至今提交的所有巡店报告数量")
+    public void checkInfoData4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total1 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
+            int total2 = xd.xd_report_list("","","QUALIFIED","",null,page,size).getInteger("total");
+            String ss=  CommonUtil.getPercent(total2,total1,4);
+            String pass_rate =  ss.replace("%","");
+            JSONObject object = xd.patrol_center().getJSONObject("total_patrol_result");
+            String total_patrol_pass_rate = object.getString("total_patrol_pass_rate");//APP累计合格率
+            Preconditions.checkArgument(total_patrol_pass_rate.equals(pass_rate) , "APP【巡店中心】累计合格率"+total_patrol_pass_rate+"根据公式计算出来的累计合格率="+pass_rate);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
