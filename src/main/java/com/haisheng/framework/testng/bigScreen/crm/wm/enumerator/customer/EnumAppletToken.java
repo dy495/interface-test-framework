@@ -3,6 +3,10 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 小程序token枚举
  * 命名格式：项目_名字_环境
@@ -57,4 +61,8 @@ public enum EnumAppletToken {
     @Getter
     private final String phone;
 
+    public static String getPhone(String token) {
+        List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
+        return phoneList.size() == 0 ? JC_GLY_ONLINE.getPhone() : phoneList.get(0);
+    }
 }
