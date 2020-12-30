@@ -20,7 +20,7 @@ public enum EnumAppletToken {
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "Yyq04ubFzxKP8GzWC1yhzw==", "@@@", true, "", ""),
 
-    BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "YfRMJg382YOSCOMovQs0CQ==", "Max", true, "", "13373166806"),
+    BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "ykcw+P7/BrfMSFfxHQkfdg==", "Max", true, "", "13373166806"),
 
     BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cw4sTi87+ZWGuDqdsfZXSA==", "@@@", false, "", ""),
 
