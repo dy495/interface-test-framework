@@ -30,7 +30,7 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumProduce.JC.name(), "4X5Z/xEJq06LP5uBJIBgpQ==", "", true, "", "15321527989"),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "1/T/yuq+K0z8JvDer+1fIw==", "", false, "", "15321527989"),
+    JC_WM_ONLINE(EnumProduce.JC.name(), "5Vh23rx+RzSsFd0GIh2PdA==", "", false, "", "15321527989"),
 
     JC_XMF_DAILY(EnumProduce.JC.name(), "iZjgzpm0ltTWoM9UQQmkAQ==", "", false, "", ""),
     JC_XMF_ONLINE(EnumProduce.JC.name(), "cu7N+XqQ0AFa5QHXmqUm2A==", "", false, "", ""),
