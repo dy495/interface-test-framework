@@ -1112,7 +1112,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         json.put("date", date);
         json.put("time", time);
 
-        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
@@ -1477,6 +1477,25 @@ public class XundianScenarioUtil extends TestCaseCommon {
         String url = "/store/m-app/auth/user/center";
         JSONObject json = new JSONObject();
         String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject reporttype() throws Exception {
+        String url = "/patrol/download-center/report-type-list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    public JSONObject reporttime() throws Exception {
+        String url = "/patrol/download-center/report-time-type-list";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
         return JSON.parseObject(res).getJSONObject("data");
     }
 

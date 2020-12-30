@@ -38,8 +38,8 @@ public class MendianInfo {
                 JSONObject eachitem = chkitems.getJSONObject(j);
                 Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
                 //巡检项目结果 1合格；2不合格；3不适用
-                //xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
-                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "", null);
+                xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
+                //xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "", null);
                 Thread.sleep(100);
             }
 

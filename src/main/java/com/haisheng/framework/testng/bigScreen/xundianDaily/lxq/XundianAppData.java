@@ -340,12 +340,15 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public  Object[] chkResult() {
 
         return new String[][]{
-                {"REMOTE","远程巡店","0","合格"},
+//                {"REMOTE","远程巡店","0","合格"},
 //                {"REMOTE","远程巡店","1","不合格"},
 //                {"REMOTE","远程巡店","3","不适用"},
 //                {"SPOT","现场巡店","0","合格"},
 //                {"SPOT","现场巡店","1","不合格"},
 //                {"SPOT","现场巡店","3","不适用"},
+                {"REMOTE","远程巡店","1","合格"},
+                {"REMOTE","远程巡店","2","不合格"},
+                {"REMOTE","远程巡店","3","不适用"},
 
         };
     }

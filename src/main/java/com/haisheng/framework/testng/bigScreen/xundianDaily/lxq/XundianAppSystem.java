@@ -10,10 +10,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -101,7 +98,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
      * @description :app【巡店记录】-筛选框-巡店结果
      * @date :2020/12/23 11:00
      **/
-    @Test(dataProvider = "HANDLESTATUS")
+    @Test(dataProvider = "CHECKRESULT") //ok
     public void xdRecordFilter2(String type, String mes) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -110,7 +107,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
                 int check_result = obj.getInteger("check_result");
-                int check_result_name = obj.getInteger("check_result_name");
+                String check_result_name = obj.getString("check_result_name");
                 Preconditions.checkArgument(check_result== Integer.parseInt(type),"根据"+mes+"进行筛选，结果包含"+check_result_name);
             }
 
@@ -123,7 +120,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test//ok
     public void xdRecordDisplay1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -135,11 +132,11 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("check_result") && obj.containsKey("check_result_name"),"未展示巡店结果");
                 Preconditions.checkArgument(obj.containsKey("handle_status") && obj.containsKey("handle_status_name"),"未展示处理状态");
                 Preconditions.checkArgument(obj.containsKey("inspector_name"),"未展示报告提交者");
-                Preconditions.checkArgument(obj.containsKey(""),"未展示巡店方式"); //接口文档未给出 待补充
+                Preconditions.checkArgument(obj.containsKey("check_report_type"),"未展示巡店方式");
 
                 if (obj.getInteger("check_result")==1){
                     //不合格一定有说明
-                    Preconditions.checkArgument(obj.containsKey(""),"未展示报告提交说明"); //接口文档未给出 待补充
+                    Preconditions.checkArgument(obj.containsKey("submit_comment"),"未展示报告提交说明");
                 }
 
             }
@@ -153,7 +150,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test //ok
     public void xdRecordDisplay2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -162,8 +159,9 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
             List save = new ArrayList();
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                String time = obj.getString("check_time");
-                save.add(dt.dateToTimestamp("yyyy-MM-dd HH:mm:ss:000",time)); //每个时间转时间戳
+                String time = obj.getString("check_time")+":000";
+                String a = dt.dateToTimestamp("yyyy-MM-dd HH:mm:ss:000",time);
+                save.add(a); //每个时间转时间戳
             }
             //新建一个由大到小的list
             List newBittoSmall = save;
@@ -179,6 +177,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Ignore //暂时注释掉没想到好办法写
     @Test
     public void xdRecordDetailFilter1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -188,14 +187,14 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
                     null,100,null).getJSONArray("list").getJSONObject(0).getLong("id");
             //查看第一个记录的清单id
             JSONArray checklist = new JSONArray();
-            JSONArray recordDetail = xd.getShopChecksDetail(id,info.shop_id_01,null,null).getJSONArray("check_lists");
+            JSONArray recordDetail = xd.getShopChecksDetail(id,info.shop_id_01,null,null).getJSONArray("check");
             for (int i = 0; i < recordDetail.size();i++){
                 JSONObject obj = recordDetail.getJSONObject(i);
                 checklist.add(obj.getLong("id"));
             }
             for (int j = 0 ; j < checklist.size(); j++){
                 Long listid = (Long) checklist.get(j);
-                JSONArray recordDetail1 = xd.getShopChecksDetail(id,info.shop_id_01, listid,null).getJSONArray("check_lists");
+                JSONArray recordDetail1 = xd.getShopChecksDetail(id,info.shop_id_01, listid,null).getJSONArray("check");
                 Preconditions.checkArgument(recordDetail1.size()==1,"根据清单名称进行筛选，结果包含多个清单");
             }
 
@@ -318,6 +317,22 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void test() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            xd.reporttype();
+            xd.reporttime();
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("");
+        }
+    }
+
 
 
 
@@ -345,7 +360,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         return new String[][]{
                 {"0","合格"},
                 {"1","不合格"},
-                {"2","无需处理"},
+//                {"2","无需处理"},
 
         };
     }

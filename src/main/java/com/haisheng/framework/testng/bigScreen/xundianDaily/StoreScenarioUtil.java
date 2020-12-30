@@ -2285,6 +2285,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
+
 //------------------------------------------------------------------------------------------------------------------
 
     public JSONObject invokeApi(IScene scene) {
