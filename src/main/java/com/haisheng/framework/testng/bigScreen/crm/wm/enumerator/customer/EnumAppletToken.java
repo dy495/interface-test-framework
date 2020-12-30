@@ -30,7 +30,7 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumProduce.JC.name(), "4X5Z/xEJq06LP5uBJIBgpQ==", "", true, "", "15321527989"),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "/l2SriTdlX3tII0n/bbwtw==", "", false, "", "15321527989"),
+    JC_WM_ONLINE(EnumProduce.JC.name(), "1/T/yuq+K0z8JvDer+1fIw==", "", false, "", "15321527989"),
 
     JC_XMF_DAILY(EnumProduce.JC.name(), "X7ub38LmihAlj4uUUIOWaQ==", "", false, "", ""),
     JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false, "", ""),
@@ -61,7 +61,7 @@ public enum EnumAppletToken {
     @Getter
     private final String phone;
 
-    public static String getPhone(String token) {
+    public static String getPhoneByToken(String token) {
         List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
         return phoneList.size() == 0 ? JC_GLY_ONLINE.getPhone() : phoneList.get(0);
     }
