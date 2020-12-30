@@ -1169,6 +1169,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                 unique(obj);
                 suspected_catchNum = obj.size();
             }
+            System.out.println(suspectedNum+" aaaaa:"+suspected_catchNum);
             Preconditions.checkArgument(suspectedNum == suspected_catchNum, "今日实时-今日客流身份分布-疑似员工=" + suspectedNum + " != 到访人物页面今日疑似员工去重后=" + suspected_catchNum + " , 与预期不符");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2128,7 +2129,6 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     //账号管理-页面内一致性
 
-    @Ignore
     @Test
     public void accountOnePage1() {
         String ciCaseName = new Object() {
@@ -2140,11 +2140,10 @@ public class FeidanMiniApiDataConsistencyOnline {
             //新建前账号列表数
             int bef_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
 
-            //新建账号
-            JSONObject obj = creatRole();
+            JSONObject obj = creatRole();    //新建角色
             Long roleid =obj.getLong("id");
             String rolename = obj.getString("rolename");
-            String accountid = creatAccount(roleid,rolename);
+            String accountid = creatAccount(roleid,rolename);   //新建账号
 
             //新建后账号列表数
             int after_total = accountPage(1,1,null,null,null,null,null).getInteger("total");
@@ -2174,7 +2173,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    @Ignore
+
     @Test
     public void accountOnePage2() {
         String ciCaseName = new Object() {
@@ -2213,8 +2212,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
-
-    @Ignore
     @Test
     public void accountOnePage3() {
         String ciCaseName = new Object() {
@@ -2248,8 +2245,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
-
-    @Ignore
     @Test
     public void accountSeveralPage1() {
         String ciCaseName = new Object() {
@@ -2288,7 +2283,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    @Ignore
+
     @Test
     public void roleOnePage1() {
         String ciCaseName = new Object() {
@@ -2363,13 +2358,14 @@ public class FeidanMiniApiDataConsistencyOnline {
         String name= ""+System.currentTimeMillis();
         String email=System.currentTimeMillis()+"@qq.com";
         JSONArray arr = new JSONArray();
-        JSONObject obj = new JSONObject();
 
+        JSONObject obj = new JSONObject();
         obj.put("role_id",id);
         obj.put("role_name",rolename);
         JSONObject obj1 = new JSONObject();
-        obj1.put("shop_id",2606);
-        obj1.put("shop_name","越秀售楼处");
+        obj1.put("shop_id",97);
+        obj1.put("shop_name","赢识办公室");
+
         JSONArray a = new JSONArray();
         a.add(obj1);
 
@@ -2387,10 +2383,10 @@ public class FeidanMiniApiDataConsistencyOnline {
         JSONArray arr = new JSONArray();
         JSONObject obj = new JSONObject();
 
-        obj.put("role_id",1062);
+        obj.put("role_id",717);
         obj.put("role_name","自动化用的角色-别删");
         JSONObject obj1 = new JSONObject();
-        obj1.put("shop_id",4116);
+        obj1.put("shop_id",97);
         obj1.put("shop_name","赢识办公室(测试越秀/飞单)");
         JSONArray a = new JSONArray();
         a.add(obj1);

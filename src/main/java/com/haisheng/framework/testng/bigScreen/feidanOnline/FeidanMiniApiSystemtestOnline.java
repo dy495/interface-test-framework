@@ -1610,7 +1610,7 @@ public class FeidanMiniApiSystemtestOnline {
             arr.add("151");
             String name="重复名字";
             String desc="重复说明";
-            roleAdd(name,desc,arr);
+
 
             int code = roleAddNotchk(name,desc,arr).getInteger("code");
             //删除角色
@@ -1919,7 +1919,7 @@ public class FeidanMiniApiSystemtestOnline {
         json.put("name", name);
         json.put("authlist", authlist);
         json.put("description", description);
-        String result = httpPostWithCheckCode(url, json.toJSONString());
+        String result = httpPost(url, json.toJSONString());
         return JSON.parseObject(result);
     }
 
@@ -2306,7 +2306,6 @@ public class FeidanMiniApiSystemtestOnline {
     public JSONObject customerListnotcheck(int page, int pageSize, String phone_or_name) throws Exception {
 
         String path = "/risk/customer/list";
-        String queryUrl = getIpPort() + path;
         String json =
                 "{\n" +
                         "    \"page\":" + page + ",\n" +
@@ -2320,7 +2319,7 @@ public class FeidanMiniApiSystemtestOnline {
         json = json + "    \"shop_id\":" + getShopId() + "\n" +
                 "}";
 
-        String res = httpPostUrl(queryUrl, json);
+        String res = httpPostUrl(path, json);
 
         return JSON.parseObject(res);
     }
@@ -2700,7 +2699,6 @@ public class FeidanMiniApiSystemtestOnline {
      */
     public String faceTraces(String showUrl) throws Exception {
         String url = "/risk/evidence/face/traces";
-        url = getIpPort() + url;
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +

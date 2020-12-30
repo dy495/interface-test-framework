@@ -1765,6 +1765,7 @@ public class FeidanMiniApiOnline {
         String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
         pdfPath = pdfPath.replace("/", File.separator);
 
+        String currentTime1 = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
         String pdfUrl = reportCreate(orderId).getString("file_url");
 
         File pdfFile = new File(pdfPath);
@@ -1773,7 +1774,6 @@ public class FeidanMiniApiOnline {
         txtFile.delete();
 
 //        下载pdf
-        String currentTime1 = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
         downLoadPdf(pdfUrl);
         String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
 

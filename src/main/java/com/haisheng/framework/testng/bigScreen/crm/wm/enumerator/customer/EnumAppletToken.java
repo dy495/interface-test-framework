@@ -18,11 +18,11 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "usxKib/bBsV+ahtyvx+/RA==", "纯牛奶", true, "", "15321527989"),
 
-    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "Yyq04ubFzxKP8GzWC1yhzw==", "@@@", true, "", ""),
+    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "xYbesUkHQTXI0Zf5Cbp/FQ==", "@@@", true, "", ""),
 
     BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "YfRMJg382YOSCOMovQs0CQ==", "Max", true, "", "13373166806"),
 
-    BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cw4sTi87+ZWGuDqdsfZXSA==", "@@@", false, "", ""),
+    BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "E++thmPRX4y1TgxMjvpe9Q==", "@@@", false, "", ""),
 
     BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "/l2SriTdlX3tII0n/bbwtw==", "w", false, "", "15321527989"),
 
@@ -32,8 +32,8 @@ public enum EnumAppletToken {
 
     JC_WM_ONLINE(EnumProduce.JC.name(), "1/T/yuq+K0z8JvDer+1fIw==", "", false, "", "15321527989"),
 
-    JC_XMF_DAILY(EnumProduce.JC.name(), "X7ub38LmihAlj4uUUIOWaQ==", "", false, "", ""),
-    JC_XMF_ONLINE(EnumProduce.JC.name(), "zu+0zdqBw70D0R9WQK9C+A==", "", false, "", ""),
+    JC_XMF_DAILY(EnumProduce.JC.name(), "iZjgzpm0ltTWoM9UQQmkAQ==", "", false, "", ""),
+    JC_XMF_ONLINE(EnumProduce.JC.name(), "cu7N+XqQ0AFa5QHXmqUm2A==", "", false, "", ""),
 
     JC_GLY_DAILY(EnumProduce.JC.name(), "Cu4VbW1A3clBjgwPzAM+KQ==", "Max", true, "", "13373166806"),
     JC_GLY_ONLINE(EnumProduce.JC.name(), "cjEW0H1AT+uU35ELU+UFbQ==", "Max", false, "", "13373166806"),

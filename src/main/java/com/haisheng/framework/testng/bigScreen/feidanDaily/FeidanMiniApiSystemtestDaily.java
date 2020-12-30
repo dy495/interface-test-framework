@@ -2565,7 +2565,7 @@ public class FeidanMiniApiSystemtestDaily {
         HttpEntity resEntity = response.getEntity();
         this.response = EntityUtils.toString(resEntity, "UTF-8");
         System.out.println(response.getStatusLine());
-        checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
+//        checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
         return JSON.parseObject(this.response);
     }
 
@@ -2581,7 +2581,7 @@ public class FeidanMiniApiSystemtestDaily {
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostUrl(url, json);
 
         return res;
     }
