@@ -233,7 +233,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
      * @return saleId
      */
     private String getSaleId(String saleName) {
-        List<Map<String, String>> list = method.getSaleList("销售顾问");
+        List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
         for (Map<String, String> stringStringMap : list) {
             if (stringStringMap.get("userName").equals(saleName)) {
                 return stringStringMap.get("userId");

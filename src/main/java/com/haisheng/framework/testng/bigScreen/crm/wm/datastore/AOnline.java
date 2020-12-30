@@ -61,7 +61,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
     public void everydayData() {
         try {
             TPorscheTodayData db = new TPorscheTodayData();
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 if (arr.get("userName").contains("总经理")) {

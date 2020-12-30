@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
@@ -23,6 +24,7 @@ import com.haisheng.framework.util.ImageUtil;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PublicMethod {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
@@ -33,7 +35,7 @@ public class PublicMethod {
      *
      * @return list
      */
-    public List<Map<String, String>> getSaleList(String roleName) {
+    public List<Map<String, String>> getSaleListByRoleName(String roleName) {
         List<Map<String, String>> array = new ArrayList<>();
         int total = crm.userUserPage(1, 10).getInteger("total");
         int s = CommonUtil.getTurningPage(total, 100);
@@ -58,6 +60,23 @@ public class PublicMethod {
         map.put("account", "zjl");
         array.add(map);
         return array;
+    }
+
+    public List<SaleInfo> getSaleList(String roleName) {
+        List<SaleInfo> list = new ArrayList<>();
+        int total = crm.userUserPage(1, 10).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, 100);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = crm.userUserPage(i, 100).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("role_name").equals(roleName))
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), SaleInfo.class)).collect(Collectors.toList()));
+        }
+        SaleInfo saleInfo = new SaleInfo();
+        saleInfo.setUserId(null);
+        saleInfo.setUserName("总经理123456");
+        saleInfo.setAccount("zjl");
+        list.add(saleInfo);
+        return list;
     }
 
     /**

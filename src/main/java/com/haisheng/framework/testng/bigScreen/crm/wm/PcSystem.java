@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
@@ -12,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCa
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ArticleAddScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.CustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.DccEditScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.MessageAddScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -27,7 +29,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * pc系统测试用例
@@ -41,6 +46,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     private static final EnumAppletToken sale = EnumAppletToken.BSJ_WM_DAILY;
     private static final EnumAppletToken afterSale = EnumAppletToken.BSJ_WM_SMALL_DAILY;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
+    private static final int SIZE = 100;
 
     @BeforeClass
     @Override
@@ -872,6 +878,32 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     private void deleteMessage(int id) {
         UserUtil.login(zjl);
         crm.messageDelete(id);
+    }
+
+    @Test(description = "销售客户管理--我的客户--按照销售顾问搜索")
+    public void exhibitionCustomer_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                if (e.getUserId() != null) {
+                    List<String> saleList = new ArrayList<>();
+                    CustomerListScene.CustomerListSceneBuilder builder = CustomerListScene.builder().belongsSaleId(e.getUserId());
+                    int total = crm.invokeApi(builder.build()).getInteger("total");
+                    int s = CommonUtil.getTurningPage(total, SIZE);
+                    for (int i = 1; i < s; i++) {
+                        JSONArray array = crm.invokeApi(builder.page(i).size(SIZE).build()).getJSONArray("list");
+                        saleList.addAll(array.stream().map(object -> (JSONObject) object).map(object -> object.getString("belongs_sale_name")).collect(Collectors.toList()));
+                    }
+                    saleList.forEach(value -> Preconditions.checkArgument(value.equals(e.getUserName()), "搜索" + e.getUserName() + "列表结果：" + value));
+                    CommonUtil.logger(e.getUserName());
+                }
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("销售客户管理--我的客户--按照销售顾问搜索");
+        }
     }
 }
 

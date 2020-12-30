@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
@@ -16,6 +17,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumReturn
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReturnVisitTaskExecuteScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.ReturnVisitTaskPageScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.CustomerListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -30,10 +33,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * app系统测用例
@@ -62,7 +63,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         commonConfig.referer = EnumRefer.PORSCHE_REFERER_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName()+commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.QA_TEST_GRP.getWebHook();
         //放入shopId
@@ -641,7 +642,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
      * @param customerId 客户id
      */
     private void publicToSale(Integer customerId) {
-        List<Map<String, String>> list = method.getSaleList("销售顾问");
+        List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
         list.forEach(e -> {
             if (e.get("userName").contains("销售顾问temp")) {
                 String saleId = e.get("userId");
@@ -934,6 +935,32 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("销售排班");
+        }
+    }
+
+    @Test(description = "任务管理--回访任务--按照销售顾问搜索")
+    public void returnVisit_system_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                if (e.getUserId() != null) {
+                    List<String> saleList = new ArrayList<>();
+                    ReturnVisitTaskPageScene.ReturnVisitTaskPageSceneBuilder builder = ReturnVisitTaskPageScene.builder().belongSaleId(e.getUserId());
+                    int total = crm.invokeApi(builder.build()).getInteger("total");
+                    int s = CommonUtil.getTurningPage(total, size);
+                    for (int i = 1; i < s; i++) {
+                        JSONArray array = crm.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+                        saleList.addAll(array.stream().map(object -> (JSONObject) object).map(object -> object.getString("belongs_sale_name")).collect(Collectors.toList()));
+                    }
+                    saleList.forEach(value -> Preconditions.checkArgument(value.equals(e.getUserName()), "搜索" + e.getUserName() + "列表结果：" + value));
+                    CommonUtil.logger(e.getUserName());
+                }
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("任务管理--回访任务--按照销售顾问搜索");
         }
     }
 }

@@ -2,18 +2,18 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheDeliverInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheOrderInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumChannelName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
@@ -145,7 +145,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         for (EnumFindType e : EnumFindType.values()) {
             int gwSum = 0;
             int zjlNum = 0;
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName") + e.getName());
                 IScene scene = Analysis2ShopPanelScene.builder().cycleType(e.getType()).saleId(map.get("userId")).build();
@@ -237,7 +237,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         for (EnumFindType e : EnumFindType.values()) {
             int zjlNum = 0;
             int gwSum = 0;
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName") + e.getName());
                 IScene scene = Analysis2ShopReceptTimeScene.builder().cycleType(e.getType()).saleId(map.get("userId")).build();
@@ -286,7 +286,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 for (Map<String, String> map : list) {
                     CommonUtil.valueView(map.get("userName") + e.getName());
                     IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(e.getType()).saleId(map.get("userId")).build();
@@ -349,7 +349,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
      */
     private void compareBusinessFunnelData(final String type, final String funnelType) {
         for (EnumFindType e : EnumFindType.values()) {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName") + e.getName());
                 IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(e.getType()).saleId(map.get("userId")).build();
@@ -377,7 +377,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 for (Map<String, String> map : list) {
                     int clueValue = 0;
                     int receiveValue = 0;
@@ -448,7 +448,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 list.forEach(arr -> {
                     int orderNum = 0;
                     int dealNum = 0;
@@ -485,7 +485,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
      */
     private void compareFunnelPercent(final String type, String percentType) {
         for (EnumFindType e : EnumFindType.values()) {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 int aNum = 0;
                 int bNum = 0;
@@ -521,7 +521,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 for (Map<String, String> map : list) {
                     CommonUtil.valueView(map.get("userName") + e.getName());
                     class Inner {
@@ -624,7 +624,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_47() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.DAY, EnumFindType.WEEK, "service");
@@ -641,7 +641,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_48() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.WEEK, EnumFindType.MONTH, "service");
@@ -658,7 +658,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_49() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.MONTH, EnumFindType.QUARTER, "service");
@@ -675,7 +675,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_50() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.QUARTER, EnumFindType.YEAR, "service");
@@ -692,7 +692,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_51() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.DAY, EnumFindType.WEEK, "test_drive");
@@ -709,7 +709,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_52() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.WEEK, EnumFindType.MONTH, "test_drive");
@@ -726,7 +726,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_53() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.MONTH, EnumFindType.QUARTER, "test_drive");
@@ -743,7 +743,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_54() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.QUARTER, EnumFindType.YEAR, "test_drive");
@@ -760,7 +760,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_55() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.DAY, EnumFindType.WEEK, "deal");
@@ -777,7 +777,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_56() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.WEEK, EnumFindType.MONTH, "deal");
@@ -794,7 +794,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_57() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.MONTH, EnumFindType.QUARTER, "deal");
@@ -811,7 +811,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_58() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.QUARTER, EnumFindType.YEAR, "deal");
@@ -828,7 +828,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_59() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.DAY, EnumFindType.WEEK, "delivery");
@@ -845,7 +845,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_60() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.WEEK, EnumFindType.MONTH, "delivery");
@@ -862,7 +862,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_61() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.MONTH, EnumFindType.QUARTER, "delivery");
@@ -879,7 +879,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_62() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName"));
                 getData(arr.get("userId"), EnumFindType.QUARTER, EnumFindType.YEAR, "delivery");
@@ -1038,7 +1038,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         String type = "CLUE";
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> array = method.getSaleList("销售顾问");
+                List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
                 array.forEach(arr -> {
                     CommonUtil.valueView(arr.get("userName"));
                     JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
@@ -1082,7 +1082,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
      */
     private void compareTwoFunnelData(String type) {
         for (EnumFindType e : EnumFindType.values()) {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 CommonUtil.valueView(arr.get("userName") + e.getName());
                 JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
@@ -1114,7 +1114,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 for (Map<String, String> map : list) {
                     CommonUtil.valueView(map.get("userName") + e.getName());
                     IScene scene = Analysis2ShopPanelScene.builder().saleId(map.get("userId")).cycleType(e.getType()).build();
@@ -1144,7 +1144,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             for (EnumFindType e : EnumFindType.values()) {
-                List<Map<String, String>> list = method.getSaleList("销售顾问");
+                List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
                 for (Map<String, String> map : list) {
                     CommonUtil.valueView(map.get("userName") + e.getName());
                     IScene scene = Analysis2ShopPanelScene.builder().saleId(map.get("userId")).cycleType(e.getType()).build();
@@ -1180,7 +1180,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
                 String userId = arr.get("userId");
@@ -1217,7 +1217,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
                 String userId = arr.get("userId");
@@ -1254,7 +1254,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
                 String userId = arr.get("userId");
@@ -1291,7 +1291,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
                 String userId = arr.get("userId");
@@ -1328,7 +1328,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> array = method.getSaleList("销售顾问");
+            List<Map<String, String>> array = method.getSaleListByRoleName("销售顾问");
             array.forEach(arr -> {
                 String userName = arr.get("userName");
                 String userId = arr.get("userId");
@@ -1500,7 +1500,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> arr : list) {
                 if (arr.get("userName").contains("总经理")) {
                     continue;
@@ -1597,7 +1597,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> arr : list) {
                 CommonUtil.valueView(arr.get("userName"));
                 int createClueNum = 0;
@@ -1640,7 +1640,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 String userName = map.get("userName");
                 CommonUtil.valueView(userName);
@@ -1671,7 +1671,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 CommonUtil.valueView(map.get("userName"));
                 int num = getFunnelData("business", "DEAL", map);
@@ -1719,7 +1719,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 String userName = map.get("userName");
                 String userId = map.get("userId");
@@ -1750,7 +1750,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             for (Map<String, String> map : list) {
                 String userName = map.get("userName");
                 String userId = map.get("userId");
@@ -2483,7 +2483,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void orderCustomer_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int listSize = method.getSaleList("销售顾问").size() - 1;
+            int listSize = method.getSaleListByRoleName("销售顾问").size() - 1;
             for (EnumFindType b : EnumFindType.values()) {
                 for (EnumCarStyle a : EnumCarStyle.values()) {
                     CommonUtil.valueView(a.getName() + b.getName());
@@ -2750,7 +2750,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -2);
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(e -> {
                 IScene scene = Analysis2PotentialTrendScene.builder().saleId(e.get("userId")).cycleType(EnumFindType.DAY.getType()).build();
                 JSONArray array = crm.invokeApi(scene).getJSONArray("list");
@@ -2792,7 +2792,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
         try {
-            List<Map<String, String>> list = method.getSaleList("销售顾问");
+            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
             list.forEach(e -> {
                 IScene scene = Analysis2PotentialTrendScene.builder().saleId(e.get("userId")).cycleType(EnumFindType.DAY.getType()).build();
                 JSONArray array = crm.invokeApi(scene).getJSONArray("list");
@@ -2827,5 +2827,109 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("展厅热区管理--本期各时间段批次数<=【PC-接待列表】接待时间为昨天的各时间段数量");
         }
+    }
+
+    @Test(description = "店面数据分--渠道来源分析--各类型百分比之和=100%")
+    public void sourceChannel_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<SaleInfo> list = method.getSaleList("销售顾问");
+            list.forEach(a -> Arrays.stream(EnumFindType.values()).forEach(b -> {
+                List<SourceChannel> sourceChannelList = getSourceChannel(a.getUserId(), b.name());
+                double percent = sourceChannelList.stream().mapToDouble(SourceChannel::getPercentage).sum();
+                Preconditions.checkArgument(0.09 <= percent || percent <= 1.01 || percent == (double) 0, a.getUserName() + CommonUtil.checkResult("1或者0", percent));
+                CommonUtil.valueView(a.getUserName() + b.getName(), percent);
+                CommonUtil.logger(a.getUserName());
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("店面数据分--渠道来源分析--各类型百分比之和=100%");
+        }
+    }
+
+    @Test(description = "店面数据分--渠道来源分析--各类型百分比=该类数量/所有类型数量和")
+    public void sourceChannel_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<SaleInfo> list = method.getSaleList("销售顾问");
+            list.forEach(a -> Arrays.stream(EnumFindType.values()).forEach(b -> {
+                List<SourceChannel> sourceChannelList = getSourceChannel(a.getUserId(), b.name());
+                int valueSum = sourceChannelList.stream().mapToInt(SourceChannel::getValue).sum();
+                List<String> calculateList = sourceChannelList.stream().map(e -> CommonUtil.getPercent(e.getValue(), valueSum, 3)).collect(Collectors.toList());
+                List<String> percentList = sourceChannelList.stream().map(SourceChannel::getPercent).collect(Collectors.toList());
+                CommonUtil.valueView(calculateList, percentList);
+                for (int i = 0; i < calculateList.size(); i++) {
+                    Preconditions.checkArgument(calculateList.get(i).equals(percentList.get(i)), a.getUserName() + b.getName() + "计算结果为：" + calculateList.get(i) + "页面展示为：" + percentList.get(i));
+                }
+                CommonUtil.logger(a.getUserName());
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("店面数据分--渠道来源分析--各类型百分比=该类数量/所有类型数量和");
+        }
+    }
+
+    @Test(description = "店面数据分--渠道来源分析--【日】渠道来源为小程序的数量=昨日接待客户档案中，渠道来源为小程序的数量")
+    public void sourceChannel_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String date = DateTimeUtil.addDayFormat(new Date(), -1);
+        try {
+            Sql sql = Sql.instance().select().from(TPorscheReceptionData.class)
+                    .where("shop_id", "=", shopId)
+                    .and("reception_date", "=", date)
+                    .and("reception_sale_id", "is not", null).end();
+            List<TPorscheReceptionData> receptionDataList = ONE_PIECE_FACTORY.create(sql, TPorscheReceptionData.class);
+            CommonUtil.valueView(receptionDataList);
+            List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());
+            Arrays.stream(EnumChannelName.values()).forEach(channelName -> {
+                int value = getSourceChannel(null, EnumFindType.DAY.name()).stream().filter(e -> e.getChannelName().equals(channelName.getName())).map(SourceChannel::getValue).collect(Collectors.toList()).get(0);
+                CommonUtil.valueView(channelName.getName());
+                int sum = (int) customerIdList.stream().filter(customerId -> getChannelName(customerId).equals(channelName.getName())).count();
+                CommonUtil.valueView("页面" + channelName.getName() + "数量：" + value, channelName.getName() + "数量：" + sum);
+                Preconditions.checkArgument(value == sum, channelName.getName() + "页面展示：" + value + "昨日接待客户中数量：" + sum);
+                CommonUtil.logger(channelName.getName());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("店面数据分--渠道来源分析--各类型百分比=该类数量/所有类型数量和");
+        }
+    }
+
+    private String getChannelName(Integer customerId) {
+        IScene scenes = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
+        String channelName = crm.invokeApi(scenes).getString("channel_name");
+        return channelName == null ? "" : channelName;
+    }
+
+    @Test(description = "店面数据分--渠道来源分析--【日】各类型数量和=昨日接待客户总数")
+    public void sourceChannel_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            Sql sql = Sql.instance().select().from(TPorscheReceptionData.class)
+                    .where("shop_id", "=", shopId)
+                    .and("reception_date", "=", date)
+                    .and("reception_sale_id", "is not", null).end();
+            List<TPorscheReceptionData> receptionDataList = ONE_PIECE_FACTORY.create(sql, TPorscheReceptionData.class);
+            CommonUtil.valueView(receptionDataList);
+            List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());
+            int appSum = Arrays.stream(EnumChannelName.values()).mapToInt(channelName -> (int) customerIdList.stream().filter(customerId -> getChannelName(customerId).equals(channelName.getName())).count()).sum();
+            int pcSum = getSourceChannel(null, EnumFindType.DAY.name()).stream().mapToInt(SourceChannel::getValue).sum();
+            Preconditions.checkArgument(appSum == pcSum, "各类型数量和：" + pcSum + "昨日接待客户总数：" + appSum);
+            CommonUtil.valueView(appSum, pcSum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("店面数据分--渠道来源分析--【日】各类型数量和=昨日接待客户总数");
+        }
+    }
+
+    private List<SourceChannel> getSourceChannel(String saleId, String cycleType) {
+        IScene scene = SourceChannelScene.builder().saleId(saleId).cycleType(cycleType).build();
+        JSONArray array = crm.invokeApi(scene).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), SourceChannel.class)).collect(Collectors.toList());
     }
 }

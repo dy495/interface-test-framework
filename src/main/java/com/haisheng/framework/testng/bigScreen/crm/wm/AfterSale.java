@@ -305,7 +305,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     private void compareAfterSaleMyReception(String type) {
         UserUtil.login(zjl);
         int x = 0;
-        List<Map<String, String>> list = method.getSaleList("服务顾问");
+        List<Map<String, String>> list = method.getSaleListByRoleName("服务顾问");
         for (Map<String, String> stringStringMap : list) {
             CommonUtil.valueView(stringStringMap.get("userName"));
             if (stringStringMap.get("userName").contains("总经理")) {
@@ -481,7 +481,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
 
     private void compareAfterSaleMyCustomer(String type) {
         int x = 0;
-        List<Map<String, String>> list = method.getSaleList("服务顾问");
+        List<Map<String, String>> list = method.getSaleListByRoleName("服务顾问");
         for (Map<String, String> map : list) {
             CommonUtil.valueView(map.get("userName"));
             if (map.get("userName").contains("总经理")) {

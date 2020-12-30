@@ -198,14 +198,14 @@ public class CommonUtil {
             stringBuilder.append(str);
             stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length() - 1, "");
             String s = stringBuilder.toString();
-            return getS(s, ",");
+            return getS(s);
         }
-        return getS(str, ",");
+        return getS(str);
     }
 
-    private static String getS(final String y, final String s) {
+    private static String getS(final String y) {
         String result = y;
-        if (y.contains(s)) {
+        if (y.contains(",")) {
             result = y.replace(y.substring(y.indexOf(","), y.indexOf(",") + 1), "");
         }
         return result;
