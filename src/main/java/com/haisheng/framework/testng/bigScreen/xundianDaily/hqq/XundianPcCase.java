@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -34,6 +35,7 @@ import java.util.List;
 
 public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    MendianInfo info = new MendianInfo();
     String xjy4 = "uid_663ad653";
     String test = "uid_ef6d2de5";
     int page = 1;
@@ -970,7 +972,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
      * @description :14.pc特有截屏留痕
      * @date :2020/6/25 16:20
      **/
-    //@Test
+    @Test
     public void problemMark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -983,8 +985,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
             long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
             //截屏图片
             String pic_list1 = getPicList(filepath);
-            List<String> pic_list = new ArrayList<String>();
-            pic_list.add(pic_list1);
+            JSONArray pic_list = info.getpic(0);
             //获取整改处理人
             String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
             String audit_comment = "pc 截屏留痕推送给门店负责人";

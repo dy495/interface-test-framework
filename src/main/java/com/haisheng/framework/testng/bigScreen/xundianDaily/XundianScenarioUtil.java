@@ -823,7 +823,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description :截屏留痕
      * @date :2020/6/25 13:56
      **/
-    public JSONObject problemMark(String responsor_id, Long list_id, Long item_id, List<String> pic_list, String audit_comment) throws Exception {
+    public JSONObject problemMark(String responsor_id, Long list_id, Long item_id, JSONArray pic_list, String audit_comment) throws Exception {
         String url = "/patrol/shop/problem/mark";
         JSONObject json = new JSONObject();
         json.put("responsor_id", responsor_id);
@@ -853,7 +853,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @date :2020/6/25 17:18
      **/
     public JSONObject problemeItems() throws Exception {
-        String url = "/patrol/m/shop/problem/items";
+        String url = "/patrol/shop/problem/items";
         JSONObject json = new JSONObject();
         json.put("shop_id", getXunDianShop());
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);

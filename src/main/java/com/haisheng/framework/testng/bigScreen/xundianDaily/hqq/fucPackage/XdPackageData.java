@@ -122,8 +122,10 @@ public class XdPackageData extends TestCaseCommon {
             if (task_type.equals(taskType)) {
                 id = list.getJSONObject(i).getLong("id");
                 shop_id = list.getJSONObject(i).getLong("shop_id");
+                break;
             }
         }
+
         Map<String, Long> result = new HashMap<>();
         result.put("id", id);
         result.put("shop_id", shop_id);
