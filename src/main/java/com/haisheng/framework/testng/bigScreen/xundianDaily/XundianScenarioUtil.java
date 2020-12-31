@@ -1480,6 +1480,8 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+    //我的报表-报表类型枚举
     public JSONObject reporttype() throws Exception {
         String url = "/patrol/download-center/report-type-list";
         String json =
@@ -1489,12 +1491,63 @@ public class XundianScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    //我的报表-报表时间维度枚举
     public JSONObject reporttime() throws Exception {
         String url = "/patrol/download-center/report-time-type-list";
         String json =
                 "{}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //我的报表-列表
+    public JSONObject reportList(int page,int size, String report_name, String report_type,String report_time_dimensio,String shop_name) throws Exception {
+        String url = "/patrol/download-center/my-report";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("report_name",report_name);
+        json.put("report_type",report_type);
+        json.put("report_time_dimensio",report_time_dimensio);
+        json.put("shop_name",shop_name);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //我的报表-导出
+    public JSONObject reportExport(Integer id) throws Exception {
+        String url = "/patrol/download-center/report-export";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    //下载任务-任务类型枚举
+    public JSONObject downldTaskType() throws Exception {
+        String url = "/patrol/download-center/download-task-type-list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //下载任务-列表
+    public JSONObject downldPage(int page,int size, String task_name,String task_type ,String shop_name,String applicant) throws Exception {
+        String url = "/patrol/download-center/download-page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("task_name",task_name);
+        json.put("task_type",task_type);
+        json.put("shop_name",shop_name);
+        json.put("applicant",applicant);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
