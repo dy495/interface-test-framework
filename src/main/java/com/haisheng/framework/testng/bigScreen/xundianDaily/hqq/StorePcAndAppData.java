@@ -56,8 +56,8 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("store " + md);
-        //md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-        md.login("2842729999@qq.com", "d1487f65671ae61d513764093af222d1");
+        md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+//        md.login("2842729999@qq.com", "d1487f65671ae61d513764093af222d1");
     }
 
     @AfterClass
