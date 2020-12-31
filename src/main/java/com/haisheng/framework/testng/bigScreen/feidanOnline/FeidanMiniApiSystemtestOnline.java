@@ -15,6 +15,8 @@ import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -39,10 +41,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author : lvxueqing
@@ -1116,6 +1115,39 @@ public class FeidanMiniApiSystemtestOnline {
         }
     }
 
+    @Test()  //根据门店名搜索
+    public void accountSearch6() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONObject data = shoplist();
+            ReadContext context = JsonPath.parse(data);
+            List<String> parm = context.read("$.list[*].shop_name");
+            for (String e : parm) {
+                JSONObject dataaobj = accountPage(1, 50, null, null, null, null, e);
+                JSONArray array = dataaobj.getJSONArray("list");
+                for (int i = 0; i <array.size(); i++) {
+                    JSONObject listObject = array.getJSONObject(i);
+                    ReadContext context1 = JsonPath.parse(listObject);
+                    List<String> result = context1.read("$.role_list[*].shop_list[*].shop_name");
+                    if(!result.contains(e)){
+                        throw new Exception("账户管理查询异常，门店名为："+e);
+                    }
+                }
+            }
+
+
+        } catch (AssertionError | Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：账号管理根据店铺名称搜索\n");
+        }
+    }
+
 
     @DataProvider(name = "SEARCH")
     public  Object[] search() {
@@ -1638,6 +1670,28 @@ public class FeidanMiniApiSystemtestOnline {
         }
     }
 
+    @Test(description = "角色管理搜索")
+    public void roleSelect(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+        String caseName = ciCaseName;
+        try {
+            String name=rolePage(1,10,null).getJSONArray("list").getJSONObject(1).getString("name");
+            JSONArray list=rolePage(1,10,name).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String nameList=list.getJSONObject(i).getString("name");
+                Preconditions.checkArgument(nameList.contains(name),"搜索角色名称"+name+"，结果："+nameList);
+            }
+
+        } catch (AssertionError | Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "角色管理搜索\n");
+        }
+    }
+
+
     /**
      * @date: 2020.12.16
      *  角色管理--新建角色
@@ -2022,6 +2076,14 @@ public class FeidanMiniApiSystemtestOnline {
         accountAdd(name,phonenum(),email,arr);
         String asscountid = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
         return  asscountid;
+    }
+
+    //店铺名称
+    public JSONObject shoplist() throws Exception {
+        String url = "/risk/shop/list";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
     }
 
 

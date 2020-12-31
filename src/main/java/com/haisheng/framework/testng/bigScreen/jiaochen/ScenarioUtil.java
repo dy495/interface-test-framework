@@ -3540,5 +3540,9 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    public JSONObject appointmentTimeEdit(JSONObject json) {
+        String url = "/jiaochen/pc/manage/appointment/time-range/edit";
+        return invokeApi(url, json);
+    }
 
 }

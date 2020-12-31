@@ -1,15 +1,13 @@
 package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 
@@ -79,7 +77,15 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(dataProvider = "APPLET_TOKENS", dataProviderClass = CrmScenarioUtilOnlineX.class)
+    //小程序token
+    @DataProvider(name = "APPLET_TOKENS")
+    public static Object[] appletTokens() {
+        return new String[]{
+                EnumAppletToken.BSJ_XMF_ONLINE.getToken(),
+        };
+    }
+
+    @Test(dataProvider = "APPLET_TOKENS")
     public void applet4hour(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -91,7 +97,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("小程序每4小时登陆一次，防止失效");
+            saveData("小程序每4小时登陆一次，防止失效");
         }
     }
 }

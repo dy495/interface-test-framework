@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class JcPc extends TestCaseCommon implements TestCaseStd {
+    CommonConfig commonConfig = new CommonConfig();
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
@@ -50,7 +51,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
+
 
 
         //replace checklist app id and conf id
@@ -554,14 +555,51 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test  //pc修改工位，工作日和休息日不同步变更
+    @Test  //pc修改工位，工作日和休息日不同步变更
     public void Jc_pcmaintainTableEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = "46016";   //故宫店
+            //修改配置前，工作日的配置
+            JSONObject timeDetailWeekday=jc.timeRangeDetail("MAINTAIN","WEEKDAY");
+            JSONObject afternoonBefore=timeDetailWeekday.getJSONObject("afternoon");
+            JSONObject morningBefore=timeDetailWeekday.getJSONObject("morning");
+
+            //修改休息日的配置
+            JSONObject timeDetailWeekend=jc.timeRangeDetail("MAINTAIN","WEEKEND");
+            JSONObject morning1=timeDetailWeekend.getJSONObject("morning");
+            JSONObject afternoon1=timeDetailWeekend.getJSONObject("afternoon");
+
+            JSONObject morning=morning1;
+            morning.put("reply_start","09:00");
+            timeDetailWeekend.put("morning",morning);
+            timeDetailWeekend.put("date_type","WEEKDAY");
+            timeDetailWeekend.put("type","MAINTAIN");
+            //修改工作日工位配置
+            jc.appointmentTimeEdit(timeDetailWeekend);
+
+            //修改之后的配置,工作日
+            JSONObject timeDetailWeekdayAfter=jc.timeRangeDetail("MAINTAIN","WEEKDAY");
+            JSONObject afternoonAfter=timeDetailWeekdayAfter.getJSONObject("afternoon");
+            JSONObject morningAfter=timeDetailWeekdayAfter.getJSONObject("morning");
+            //休息日
+            JSONObject timeDetailWeekendAfter=jc.timeRangeDetail("MAINTAIN","WEEKEND");
+            JSONObject afternoonAfterend=timeDetailWeekendAfter.getJSONObject("afternoon");
+            JSONObject morningAfterend=timeDetailWeekendAfter.getJSONObject("morning");
+
+            //工作日
+            System.out.println(afternoonAfter.equals(afternoonBefore));
+            System.out.println(morningAfter.equals(morningBefore));
+            //休息日
+            System.out.println(afternoonAfterend.equals(afternoon1));
+            System.out.println(morningAfterend.equals(morning1));
+
+
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+            commonConfig.shopId = "46016";
             saveData("JC_pc修改工位，工作日和休息日不同步变更");
         }
     }
