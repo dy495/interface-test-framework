@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -46,11 +45,10 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
-        commonConfig.produce=EnumTestProduce.JIAOCHEN_ONLINE.getName();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
+        commonConfig.produce = EnumTestProduce.JIAOCHEN_ONLINE.getName();
 
 //        commonConfig.referer=getJcReferOnline();
-
 
 
         //replace backend gateway url

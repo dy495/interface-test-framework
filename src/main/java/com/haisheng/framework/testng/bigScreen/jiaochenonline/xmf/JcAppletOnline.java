@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
@@ -46,7 +45,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce=EnumTestProduce.JIAOCHEN_ONLINE.getName();
+        commonConfig.produce = EnumTestProduce.JIAOCHEN_ONLINE.getName();
 
 
         //replace backend gateway url
@@ -62,7 +61,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
 
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
 
 //        commonConfig.referer=getJcReferOnline();
 

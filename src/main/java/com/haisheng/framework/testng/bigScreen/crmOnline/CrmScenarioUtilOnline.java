@@ -8,8 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
@@ -58,7 +57,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumAddress.PORSCHE_ONLINE.getAddress();
+    public String IpPort = EnumTestProduce.JIAOCHEN_ONLINE.getAddress();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -2952,7 +2951,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId());
+        object.put("shop_id", EnumTestProduce.CRM_ONLINE.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);

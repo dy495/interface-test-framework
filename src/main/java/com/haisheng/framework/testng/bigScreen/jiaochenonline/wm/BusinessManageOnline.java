@@ -50,14 +50,14 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }

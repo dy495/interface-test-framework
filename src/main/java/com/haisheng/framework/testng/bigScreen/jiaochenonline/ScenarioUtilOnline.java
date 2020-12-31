@@ -3,8 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -24,8 +23,8 @@ import java.util.List;
  */
 public class ScenarioUtilOnline extends TestCaseCommon {
     private static volatile ScenarioUtilOnline instance = null;
-    private static final String IpPort = EnumAddress.JIAOCHEN_ONLINE.getAddress();
-    private static final String shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
+    private static final String IpPort = EnumTestProduce.JIAOCHEN_ONLINE.getAddress();
+    private static final String shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
 
     /**
      * 单例
@@ -1414,7 +1413,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     public JSONObject appletCarStyleList(Long brand_id) {
         String url = "/jiaochen/applet/style/list";
         JSONObject json1 = new JSONObject();
-        json1.put("brand_id",brand_id);
+        json1.put("brand_id", brand_id);
         return invokeApi(url, json1);
     }
 
@@ -3373,6 +3372,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json1.put("shop_list", shop_list);
         return invokeApi(url, json1);
     }
+
     /**
      * @description :小程序-我的消息-消息详情
      * * * @author: gly

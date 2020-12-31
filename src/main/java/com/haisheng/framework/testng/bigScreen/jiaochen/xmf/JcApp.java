@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
@@ -48,7 +46,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
 
 
@@ -97,11 +95,11 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ACOUNT")
     public static Object[] acount() {
         return new String[][]{
-                {"13412010056", "000000", "全部-集团" },
-                {"13412010055", "000000", "全部-区域" },
-                {"13412010054", "000000", "全部-品牌" },
-                {"13412010043", "000000", "别删-吕13412010043" },
-                {"13412010089", "000000", "xx" },
+                {"13412010056", "000000", "全部-集团"},
+                {"13412010055", "000000", "全部-区域"},
+                {"13412010054", "000000", "全部-品牌"},
+                {"13412010043", "000000", "别删-吕13412010043"},
+                {"13412010089", "000000", "xx"},
         };
     }
 

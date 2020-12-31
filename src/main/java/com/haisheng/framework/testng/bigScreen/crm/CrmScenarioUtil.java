@@ -9,8 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -58,7 +57,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumAddress.PORSCHE.getAddress();
+    public String IpPort = EnumTestProduce.CRM_DAILY.getAddress();
 
     //----------------------登陆--------------------
     public void login(String username, String password) {
@@ -2974,7 +2973,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumShopId.PORSCHE_DAILY.getShopId());
+        object.put("shop_id", EnumTestProduce.CRM_DAILY.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);
@@ -5804,7 +5803,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
 
     //4.3PC渠道来源分析
-    public JSONObject sourceChannel(String cycle_type, String month,String day,String sale_id) {
+    public JSONObject sourceChannel(String cycle_type, String month, String day, String sale_id) {
         String url = "/porsche/analysis2/shop/source-channel";
         JSONObject object = new JSONObject();
         object.put("cycle_type", cycle_type);

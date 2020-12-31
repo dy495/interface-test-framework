@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -68,7 +67,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 
         //set shop id
         commonConfig.shopId = "-1";
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
         beforeClassInit(commonConfig);
 

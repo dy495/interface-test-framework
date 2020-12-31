@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheOrderInfo
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheReceptionData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class B extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumShopId.PORSCHE_DAILY.getShopId();
+    private static final String shopId = EnumTestProduce.CRM_DAILY.getShopId();
     private static final int day = -1;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();

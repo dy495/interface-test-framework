@@ -1,12 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 
 import com.alibaba.fastjson.JSONArray;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheOrderInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BOnline extends TestCaseCommon implements TestCaseStd {
-    private static final String shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduce.CRM_ONLINE.getShopId();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final int day = -1;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();

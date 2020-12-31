@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -50,7 +49,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }

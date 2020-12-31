@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
@@ -30,7 +30,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
     PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final String shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduce.CRM_ONLINE.getShopId();
 
     @BeforeClass
     @Override

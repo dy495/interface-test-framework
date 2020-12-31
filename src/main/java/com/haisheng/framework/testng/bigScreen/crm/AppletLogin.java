@@ -5,8 +5,6 @@ import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -80,9 +78,9 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.PORSCHE_DAILY.getShopId();
+            commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
-            commonConfig.referer = getBjsReferDaily();
+            commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             crm.appletLoginToken(token);
             Response response = getPorsche(1);
@@ -101,9 +99,9 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.WINSENSE_PORSCHE_ONLINE.getShopId();
+            commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
-            commonConfig.referer = EnumRefer.PORSCHE_REFERER_ONLINE.getReferer();
+            commonConfig.referer = EnumTestProduce.CRM_ONLINE.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             crmOnline.appletLoginToken(token);
             Response response = getPorsche(2);
@@ -122,9 +120,9 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+            commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
-            commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_DAILY.getReferer();
+            commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             jc.appletLoginToken(token);
             Response response = getJiaoChen(3);
@@ -140,9 +138,9 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumShopId.JIAOCHEN_ONLINE.getShopId();
+            commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName());
-            commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+            commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             jcOnline.appletLoginToken(token);
             Response response = getJiaoChen(4);

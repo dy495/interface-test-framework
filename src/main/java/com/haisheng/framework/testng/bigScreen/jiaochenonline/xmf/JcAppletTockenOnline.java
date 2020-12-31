@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumRefer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -50,7 +49,7 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = EnumRefer.JIAOCHEN_REFERER_ONLINE.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
 
 //        commonConfig.referer=getJcReferOnline();
 

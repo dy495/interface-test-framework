@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
@@ -26,7 +25,10 @@ import org.springframework.util.StringUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +53,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getName());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumShopId.XUNDIAN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("store " + md);
         //md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -158,7 +160,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_uv")).sum(); //已经选了昨天的日期了，所以取那天的数据
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
-            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app "+yesterdayPv+" , pc "+sumYesterdayPv );
+            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app " + yesterdayPv + " , pc " + sumYesterdayPv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -179,7 +181,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_pv")).sum();
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
-            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app "+yesterdayPv+" , pc "+sumYesterdayPv );
+            Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app " + yesterdayPv + " , pc " + sumYesterdayPv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -199,7 +201,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int sumTodayUv = shopIds.stream().map(shopId -> RealTimeShopPvUv.builder().shopId(shopId).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_uv")).sum();
             CommonUtil.valueView(todayUv, sumTodayUv);
-            Preconditions.checkArgument(todayUv == sumTodayUv, "app "+todayUv +" , pc "+sumTodayUv);
+            Preconditions.checkArgument(todayUv == sumTodayUv, "app " + todayUv + " , pc " + sumTodayUv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -219,7 +221,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int sumTodayUv = shopIds.stream().map(shopId -> RealTimeShopPvUv.builder().shopId(shopId).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_pv")).sum();
             CommonUtil.valueView(todayPv, sumTodayUv);
-            Preconditions.checkArgument(todayPv == sumTodayUv, "app " +todayPv+" , pc"+sumTodayUv);
+            Preconditions.checkArgument(todayPv == sumTodayUv, "app " + todayPv + " , pc" + sumTodayUv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -239,7 +241,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int pcSum = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_uv")).sum();
             CommonUtil.valueView(appSum, pcSum);
-            Preconditions.checkArgument(appSum == pcSum, "app权限下【首页】全部门店昨日各时段中人数之和"+appSum+"!==pc【客流分析】各个门店昨日各时段中人数之和"+pcSum);
+            Preconditions.checkArgument(appSum == pcSum, "app权限下【首页】全部门店昨日各时段中人数之和" + appSum + "!==pc【客流分析】各个门店昨日各时段中人数之和" + pcSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -276,7 +278,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "gender", "gender_ratio");
                 CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际"+percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际" + percent);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -294,7 +296,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene = RealHourAgeGenderDistribution.builder().shopId(shopId).build();
                 double percent = getTypeSum(scene, "age", "age_ratio");
                 CommonUtil.valueView(percent);
-                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际"+percent);
+                Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "实际" + percent);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -323,7 +325,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 //今日各时刻中人次之和
                 int sumValue = getTypeSum(scene1, "uv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value <= sumValue, "今日到访人数"+value+"，各时刻人次和"+sumValue);
+                Preconditions.checkArgument(value <= sumValue, "今日到访人数" + value + "，各时刻人次和" + sumValue);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -346,7 +348,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = RealHourPvUv.builder().shopId(shopId).build();
                 int sumValue = getTypeSum(scene1, "pv");
                 CommonUtil.valueView(value, sumValue);
-                Preconditions.checkArgument(value == sumValue, "今日到访人次"+value+", 今日各时段中人次之和"+sumValue);
+                Preconditions.checkArgument(value == sumValue, "今日到访人次" + value + ", 今日各时段中人次之和" + sumValue);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -399,7 +401,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
                 Integer pcUv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("uv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView(appUv, pcUv);
-                Preconditions.checkArgument(appUv.equals(pcUv), "app" + appUv+",pc"+pcUv);
+                Preconditions.checkArgument(appUv.equals(pcUv), "app" + appUv + ",pc" + pcUv);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -423,7 +425,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list1 = md.invokeApi(scene1).getJSONArray("list");
                 Integer pcPv = list1.stream().map(e -> (JSONObject) e).filter(object -> object.getString("type").equals("pv")).map(object -> object.getInteger("value")).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView(appPv, pcPv);
-                Preconditions.checkArgument(appPv.equals(pcPv), "app"+appPv+", pc"+pcPv);
+                Preconditions.checkArgument(appPv.equals(pcPv), "app" + appPv + ", pc" + pcPv);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -445,7 +447,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
                 int pcUvSum = getTypeSum(scene1, "yesterday_uv");
                 CommonUtil.valueView(appUvSum, pcUvSum);
-                Preconditions.checkArgument(appUvSum == pcUvSum, "app"+appUvSum+", pc"+pcUvSum);
+                Preconditions.checkArgument(appUvSum == pcUvSum, "app" + appUvSum + ", pc" + pcUvSum);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -467,7 +469,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 IScene scene1 = RealTimeShopPvUv.builder().shopId(shopId).build();
                 int pcPvSum = getTypeSum(scene1, "yesterday_pv");
                 CommonUtil.valueView(appPvSum, pcPvSum);
-                Preconditions.checkArgument(appPvSum == pcPvSum, "app "+appPvSum +" ,pc"+pcPvSum);
+                Preconditions.checkArgument(appPvSum == pcPvSum, "app " + appPvSum + " ,pc" + pcPvSum);
                 CommonUtil.logger(shopId);
             });
         } catch (Exception | AssertionError e) {
@@ -487,7 +489,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                     IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
                     double percent = getTypeSum(scene, "gender", "gender_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId+" "+enumCycleType.name()+"占比和="+percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + enumCycleType.name() + "占比和=" + percent);
                     CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
@@ -509,7 +511,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                     IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
                     double percent = getTypeSum(scene, "age", "age_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId+" "+enumCycleType.name()+"占比和="+percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + enumCycleType.name() + "占比和=" + percent);
                     CommonUtil.logger(shopId);
                 });
                 CommonUtil.logger(enumCycleType.name());
@@ -549,7 +551,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> dayList.forEach(day -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
-                if (hasType(scene,"gender")) {
+                if (hasType(scene, "gender")) {
                     double percent = getTypeSum(scene, "gender", "gender_ratio_number");
                     CommonUtil.valueView(percent);
                     Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + dayList + " 百分比为" + percent);
@@ -571,7 +573,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getAppShopIds();
             shopIds.forEach(shopId -> dayList.forEach(day -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).day(day).build();
-                if (hasType(scene,"age")) {
+                if (hasType(scene, "age")) {
                     double percent = getTypeSum(scene, "age", "age_ratio_number");
                     CommonUtil.valueView(percent);
                     Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + dayList + " 百分比为" + percent);
@@ -593,10 +595,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> monthList = getMonthList();
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
-                if (hasType(scene,"gender")){
+                if (hasType(scene, "gender")) {
                     double percent = getTypeSum(scene, "gender", "gender_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店"+shopId+ " "+ monthList+" 百分比为"+percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + monthList + " 百分比为" + percent);
                     CommonUtil.logger(shopId + month);
                 }
 
@@ -616,10 +618,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> monthList = getMonthList();
             shopIds.forEach(shopId -> monthList.forEach(month -> {
                 IScene scene = HistoryAgeGenderDistribution.builder().shopId(shopId).month(month).build();
-                if (hasType(scene,"age")) {
+                if (hasType(scene, "age")) {
                     double percent = getTypeSum(scene, "age", "age_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店"+shopId+ " "+ monthList+" 百分比为"+percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, "门店" + shopId + " " + monthList + " 百分比为" + percent);
                     CommonUtil.logger(shopId + month);
                 }
             }));
@@ -664,7 +666,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "male_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + "， pc" + pcPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -693,7 +695,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                 double pcPercent = getTypeSum(list, "female_percent");
                 CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+", pc"+pcPercent);
+                Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + ", pc" + pcPercent);
                 CommonUtil.logger(shopId + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -715,7 +717,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 JSONArray age = md.invokeApi(appScene).getJSONArray("age");
                 //List<Double> appPercentList = gender.stream().map(e -> (JSONObject) e).map(s -> percentToDouble(s.getString("age_ratio_number"))).collect(Collectors.toList());
                 List<Double> appPercentList = new ArrayList<>();
-                for (int i = 0; i < age.size();i++){
+                for (int i = 0; i < age.size(); i++) {
                     appPercentList.add(age.getJSONObject(i).getDouble("age_ratio_number"));
                 }
                 IScene pcScene = HistoryShopAgeGenderDistribution.builder().month(month).shopId(shopId).build();
@@ -723,7 +725,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                 List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                 CommonUtil.valueView(pcPercentList);
                 CommonUtil.valueView(appPercentList, pcPercentList);
-                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app"+appPercentList+"， pc"+pcPercentList);
+                Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app" + appPercentList + "， pc" + pcPercentList);
                 CommonUtil.logger(shopId + " " + month);
             }));
         } catch (Exception | AssertionError e) {
@@ -771,20 +773,21 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
-            List<String> shopIds = getPcShopIds();
+                List<String> shopIds = getPcShopIds();
 
-            shopIds.forEach(shopId ->  {
-                IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
-                JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
-                double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
+                shopIds.forEach(shopId -> {
+                    IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
+                    double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
 
-                IScene pcScene = HistoryShopAgeGenderDistribution.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
-                JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
-                double pcPercent = getTypeSum(list, "male_percent");
-                CommonUtil.valueView(appPercent, pcPercent);
-                Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
-                CommonUtil.logger(shopId + enumCycleType.name());
-            });});
+                    IScene pcScene = HistoryShopAgeGenderDistribution.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
+                    double pcPercent = getTypeSum(list, "male_percent");
+                    CommonUtil.valueView(appPercent, pcPercent);
+                    Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + "， pc" + pcPercent);
+                    CommonUtil.logger(shopId + enumCycleType.name());
+                });
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -801,7 +804,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
                 List<String> shopIds = getPcShopIds();
 
-                shopIds.forEach(shopId ->  {
+                shopIds.forEach(shopId -> {
                     IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
                     JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
                     double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
@@ -810,9 +813,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                     JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                     double pcPercent = getTypeSum(list, "female_percent");
                     CommonUtil.valueView(appPercent, pcPercent);
-                    Preconditions.checkArgument(pcPercent == appPercent, shopId+ " app"+appPercent+"， pc"+pcPercent);
+                    Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + "， pc" + pcPercent);
                     CommonUtil.logger(shopId + enumCycleType.name());
-                });});
+                });
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -828,11 +832,11 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
                 List<String> shopIds = getPcShopIds();
 
-                shopIds.forEach(shopId ->  {
+                shopIds.forEach(shopId -> {
                     IScene appScene = HistoryAgeGenderDistribution.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
                     JSONArray age = md.invokeApi(appScene).getJSONArray("age");
                     List<Double> appPercentList = new ArrayList<>();
-                    for (int i = 0; i < age.size();i++){
+                    for (int i = 0; i < age.size(); i++) {
                         appPercentList.add(age.getJSONObject(i).getDouble("age_ratio_number"));
                     }
 
@@ -841,21 +845,16 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
                     List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                     CommonUtil.valueView(pcPercentList);
                     CommonUtil.valueView(appPercentList, pcPercentList);
-                    Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app"+appPercentList+"， pc"+pcPercentList);
+                    Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app" + appPercentList + "， pc" + pcPercentList);
                     CommonUtil.logger(shopId + " " + enumCycleType.name());
-                });});
+                });
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("历史客流--选择同一时间段，年龄段占比==pc客群漏斗中年龄段占比");
         }
     }
-
-
-
-
-
-
 
 
     public List<String> getMonthList() {

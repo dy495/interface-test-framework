@@ -3,8 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAddress;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -21,8 +20,8 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    private static final String IpPort = EnumAddress.JIAOCHEN_DAILY.getAddress();
-    private static final String shopId = EnumShopId.JIAOCHEN_DAILY.getShopId();
+    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+    private static final String shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
 
     /**
      * 单例

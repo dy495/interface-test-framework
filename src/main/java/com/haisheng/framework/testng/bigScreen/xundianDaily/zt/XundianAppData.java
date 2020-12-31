@@ -2,16 +2,14 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumShopId;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -22,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -48,7 +44,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getName());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumShopId.XUNDIAN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -86,20 +82,20 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int Unwanted_TypeNum = 0;//无需处理数量
             int deal_TypeNum = 0;//已处理数量
             int pending_TypeNum = 0;//待处理数量
-            for (int i=0;i<list_Type.size();i++){
+            for (int i = 0; i < list_Type.size(); i++) {
                 int typeNum = list_Type.getJSONObject(i).getInteger("type");
-                if(typeNum==0){
-                    Unwanted_TypeNum = Unwanted_TypeNum+1;
+                if (typeNum == 0) {
+                    Unwanted_TypeNum = Unwanted_TypeNum + 1;
                 }
-                if(typeNum==1){
-                    deal_TypeNum = deal_TypeNum+1;
+                if (typeNum == 1) {
+                    deal_TypeNum = deal_TypeNum + 1;
                 }
-                if(typeNum==2){
-                    pending_TypeNum = pending_TypeNum+1;
+                if (typeNum == 2) {
+                    pending_TypeNum = pending_TypeNum + 1;
                 }
 
             }
-            int listNum = Unwanted_TypeNum+deal_TypeNum+pending_TypeNum;//三项之和
+            int listNum = Unwanted_TypeNum + deal_TypeNum + pending_TypeNum;//三项之和
             Preconditions.checkArgument(checks_list == listNum, "巡店记录列表数量" + checks_list + "不等于待处理+已处理+无需处理的数量=" + listNum);
 
         } catch (AssertionError e) {
@@ -123,16 +119,16 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONObject shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, "越秀测试账号", xjyid, "DESC", null, null);
             Integer checks_list = shopCHeckStatus.getInteger("total");
             // 巡店记录处理下拉框
-            JSONArray list_Num= xd.resultTypeList().getJSONArray("list");
+            JSONArray list_Num = xd.resultTypeList().getJSONArray("list");
             int qualified_Num = 0;
             int unqualified_Num = 0;
-            for(int i=0;i<list_Num.size();i++){
+            for (int i = 0; i < list_Num.size(); i++) {
                 int type_Num = list_Num.getJSONObject(i).getInteger("type");
-                if (type_Num==0){
-                    qualified_Num = qualified_Num+1;
+                if (type_Num == 0) {
+                    qualified_Num = qualified_Num + 1;
                 }
-                if (type_Num==1){
-                    unqualified_Num = unqualified_Num+1;
+                if (type_Num == 1) {
+                    unqualified_Num = unqualified_Num + 1;
                 }
             }
             int result_Type = qualified_Num + unqualified_Num;
@@ -146,7 +142,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
         }
     }
-
 
 
     //巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容
@@ -184,12 +179,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             String inspector_name1 = shopCheck.getString("inspector_name");
             String check_type1 = shopCheck.getString("check_type");
 
-            checkArgument(inappropriate_num == inappropriate_num1, "【巡店详情】中报告不适用项数!=【app巡店信息】中报告不适用项数" + inappropriate_num +"!=" +inappropriate_num1);
-            checkArgument(qualified_num == qualified_num1, "【巡店详情】中报告合格项数!=【app巡店信息】中报告合格项数" + qualified_num +"!=" +qualified_num1);
-            checkArgument(unqualified_num == unqualified_num1, "【巡店详情】中报告不合格项数!=【app巡店信息】中报告不合格项数" + unqualified_num +"!=" +unqualified_num1);
-            checkArgument(submit_comment_list.equals(submit_comment1), "【巡店详情】中报告提交说明!=【app巡店信息】中提交说明" + submit_comment_list +"!=" +submit_comment1);
-            checkArgument(inspector_names.equals(inspector_name1), "【巡店详情】中报告巡店者!=【app巡店信息】中报告巡店者" + inspector_names +"!=" +inspector_name1);
-            checkArgument(check_type0.equals(check_type1), "【巡店详情】中巡店方式!=【app巡店信息】中巡店方式" + check_type0 +"!=" +check_type1);
+            checkArgument(inappropriate_num == inappropriate_num1, "【巡店详情】中报告不适用项数!=【app巡店信息】中报告不适用项数" + inappropriate_num + "!=" + inappropriate_num1);
+            checkArgument(qualified_num == qualified_num1, "【巡店详情】中报告合格项数!=【app巡店信息】中报告合格项数" + qualified_num + "!=" + qualified_num1);
+            checkArgument(unqualified_num == unqualified_num1, "【巡店详情】中报告不合格项数!=【app巡店信息】中报告不合格项数" + unqualified_num + "!=" + unqualified_num1);
+            checkArgument(submit_comment_list.equals(submit_comment1), "【巡店详情】中报告提交说明!=【app巡店信息】中提交说明" + submit_comment_list + "!=" + submit_comment1);
+            checkArgument(inspector_names.equals(inspector_name1), "【巡店详情】中报告巡店者!=【app巡店信息】中报告巡店者" + inspector_names + "!=" + inspector_name1);
+            checkArgument(check_type0.equals(check_type1), "【巡店详情】中巡店方式!=【app巡店信息】中巡店方式" + check_type0 + "!=" + check_type1);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -206,29 +201,29 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取门店巡店次数
-            int bef1 =xd.xunDianCenterselect(1,1,"赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+            int bef1 = xd.xunDianCenterselect(1, 1, "赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
             //获取巡店报告中心报告总数
-            int bef2 = xd.xd_report_list(null,"赢识办公室(测试越秀/飞单)",null,null,null,1,1).getInteger("total");
+            int bef2 = xd.xd_report_list(null, "赢识办公室(测试越秀/飞单)", null, null, null, 1, 1).getInteger("total");
 
-            int bef3 = xd.getShopChecksPage(info.shop_id,null,null,"","","DESC",null,null).getInteger("total");
+            int bef3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "DESC", null, null).getInteger("total");
             //定检任务列表
-            JSONArray dj = xd.scheduleCheckPage(1,10).getJSONArray("list");
+            JSONArray dj = xd.scheduleCheckPage(1, 10).getJSONArray("list");
             //获取定检任务id
             Long djid = dj.getLong(0);
             //开始一次定检巡店
-            info.djXdOperate(info.shop_id,type,1,Integer.parseInt(result),djid);
+            info.djXdOperate(info.shop_id, type, 1, Integer.parseInt(result), djid);
 
-            int after1 = xd.xunDianCenterselect(1,1,"赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
-            int after2 = xd.xd_report_list(null,"赢识办公室(测试越秀/飞单)",null,null,null,1,1).getInteger("total");
-            int after3 = xd.getShopChecksPage(info.shop_id,null,null,"","","DESC",null,null).getInteger("total");
+            int after1 = xd.xunDianCenterselect(1, 1, "赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+            int after2 = xd.xd_report_list(null, "赢识办公室(测试越秀/飞单)", null, null, null, 1, 1).getInteger("total");
+            int after3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "DESC", null, null).getInteger("total");
 
 
             int add1 = after1 - bef1;
             int add2 = after2 - bef2;
             int add3 = after3 - bef3;
-            Preconditions.checkArgument(add1==1,"PC【巡店中心】巡店次数 期待增加1，实际增加"+add1);
-            Preconditions.checkArgument(add2==1,"PC【巡店报告中心】巡店报告 期待增加1，实际增加"+add2);
-            Preconditions.checkArgument(add3==1,"app【巡店记录】巡店报告 期待增加1，实际增加"+add3);
+            Preconditions.checkArgument(add1 == 1, "PC【巡店中心】巡店次数 期待增加1，实际增加" + add1);
+            Preconditions.checkArgument(add2 == 1, "PC【巡店报告中心】巡店报告 期待增加1，实际增加" + add2);
+            Preconditions.checkArgument(add3 == 1, "app【巡店记录】巡店报告 期待增加1，实际增加" + add3);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -240,19 +235,19 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test
-    public void wwcSum(){
+    public void wwcSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待办列表事项总数totalsum
-            Long totalNum = xd.task_list(null,null,null,null).getLong("total");
-            JSONArray list_size = xd.task_list(null,null,null,null).getJSONArray("list");
-            checkArgument(totalNum == list_size.size() , "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + list_size.size());
+            Long totalNum = xd.task_list(null, null, null, null).getLong("total");
+            JSONArray list_size = xd.task_list(null, null, null, null).getJSONArray("list");
+            checkArgument(totalNum == list_size.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + list_size.size());
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-    //        saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
+            //        saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
         }
     }
 
@@ -260,12 +255,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 //    app账号下当前门店数量==pc该账号下巡店中心列表的数量
 
     @Test
-    public void mdNum(){
+    public void mdNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
-            Integer pcMdNum = md.patrolShopPageV3("",1,10).getInteger("total");
-            checkArgument(appMdNum == pcMdNum , "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
+            Integer pcMdNum = md.patrolShopPageV3("", 1, 10).getInteger("total");
+            checkArgument(appMdNum == pcMdNum, "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -275,8 +270,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
 
     }
-
-
 
 
 //
@@ -301,7 +294,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 //    }
 
 
-
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {
 
@@ -319,30 +311,30 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "DJTYPE")
     public Object[] DJTYPE() {
         return new String[][]{
-                {"SCHEDULE_TASK","定检任务","1","合格"},
-                {"SCHEDULE_TASK","定检任务","2","不合格"},
-                {"SCHEDULE_TASK","定检任务","3","不适用"},
+                {"SCHEDULE_TASK", "定检任务", "1", "合格"},
+                {"SCHEDULE_TASK", "定检任务", "2", "不合格"},
+                {"SCHEDULE_TASK", "定检任务", "3", "不适用"},
         };
     }
 
 
     @DataProvider(name = "XDTYPE")
-    public  Object[] xdtype() {
+    public Object[] xdtype() {
 
         return new String[][]{
-                {"REMOTE","远程巡店"},
-                {"SPOT","现场巡店"},
+                {"REMOTE", "远程巡店"},
+                {"SPOT", "现场巡店"},
 
         };
     }
 
     @DataProvider(name = "BLACKTYPE")
-    public Object[] blackType(){
+    public Object[] blackType() {
 
         return new String[][]{
-                {"0","待办"},
-                {"1","已办"},
-                {"2","已过期"}
+                {"0", "待办"},
+                {"1", "已办"},
+                {"2", "已过期"}
         };
     }
 
