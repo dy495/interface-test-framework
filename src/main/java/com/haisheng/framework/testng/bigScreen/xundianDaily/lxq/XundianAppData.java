@@ -97,11 +97,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                         xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,1,"zdh合格",null);
                         ok = ok +1;
                     }
-                    if (itemID % 3  == 0) {
+                    if (itemID %2 != 0 && itemID % 3  == 0) {
                         xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,2,"zdh不合格",info.getpic(1));
                         notok = notok + 1;
                     }
-                    else {
+                    if (itemID %2 != 0 && itemID % 3  != 0) {
                         xd.checks_item_submit(info.shop_id_01,patrolID,listID,itemID,3,"zdh不适用",null);
                         notapply = notapply + 1;
                     }
@@ -234,12 +234,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int bef = xd.getShopChecksPage(info.shop_id_01,Integer.parseInt(result),null,null,null,null,1,null).getInteger("total");
+            int bef = xd.getShopChecksPage(info.shop_id_01,null,null,null,null,null,1,null).getInteger("total");
             int bef2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
 
             //巡店
             info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
-            int after = xd.getShopChecksPage(info.shop_id_01,Integer.parseInt(result),null,null,null,null,1,null).getInteger("total");
+            int after = xd.getShopChecksPage(info.shop_id_01,null,null,null,null,null,1,null).getInteger("total");
 
             int after2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
             int add = after - bef;
@@ -340,15 +340,13 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public  Object[] chkResult() {
 
         return new String[][]{
-//                {"REMOTE","远程巡店","0","合格"},
-//                {"REMOTE","远程巡店","1","不合格"},
-//                {"REMOTE","远程巡店","3","不适用"},
-//                {"SPOT","现场巡店","0","合格"},
-//                {"SPOT","现场巡店","1","不合格"},
-//                {"SPOT","现场巡店","3","不适用"},
                 {"REMOTE","远程巡店","1","合格"},
                 {"REMOTE","远程巡店","2","不合格"},
                 {"REMOTE","远程巡店","3","不适用"},
+                {"SPOT","现场巡店","1","合格"},
+                {"SPOT","现场巡店","2","不合格"},
+                {"SPOT","现场巡店","3","不适用"},
+
 
         };
     }

@@ -92,7 +92,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "权限下全部门店今日到访人次==权限下全部门店趋势图今日各时段中人次之和") //bug 6527
+    @Test(description = "权限下全部门店今日到访人次==权限下全部门店趋势图今日各时段中人次之和") //bug 6527 已解决
     public void homePage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -128,7 +128,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "权限下全部门店昨日到访人次==权限下全部门店昨日各时段中人次之和") //bug 6529
+    @Test(description = "权限下全部门店昨日到访人次==权限下全部门店昨日各时段中人次之和") //bug 6529 已解决
     public void homePage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -168,7 +168,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店昨日到访人次==pc【客流分析】各个门店历史客流中截止日期得人次之和") //bug 6532
+    @Test(description = "app权限下【首页】全部门店昨日到访人次==pc【客流分析】各个门店历史客流中截止日期得人次之和") //bug 6532 已解决
     public void homePage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -189,7 +189,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和") //bug 6533
+    @Test(description = "app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和") //bug 6533 //已解决
     public void homePage_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
