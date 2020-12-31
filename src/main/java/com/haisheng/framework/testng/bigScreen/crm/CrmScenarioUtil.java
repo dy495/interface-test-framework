@@ -110,7 +110,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //修改顾客必填项 V1.1
     public JSONObject customerEdit_onlyNec(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) {
         String url = "/porsche/app/customer/edit";
-
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
