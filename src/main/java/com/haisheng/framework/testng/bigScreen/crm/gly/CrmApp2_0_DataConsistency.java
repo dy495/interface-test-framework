@@ -85,7 +85,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

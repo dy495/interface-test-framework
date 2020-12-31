@@ -60,7 +60,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

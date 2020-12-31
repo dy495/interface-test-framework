@@ -129,7 +129,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -393,7 +393,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             saveData("店面数据分析-业务漏斗：订单=首次+邀约+再次");
         }
     }
-
 
 
     @Test(priority = 1)
@@ -666,9 +665,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
     /**
      * --------------------潜在客户分析页 页面内一致性-------------------
      */
@@ -804,7 +800,6 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
             saveData("[成交客户分析] 全国各省成交量 成交量百分比之和=100% 或0%");
         }
     }
-
 
 
 }

@@ -55,6 +55,10 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return instance;
     }
 
+    public String getPorscheShop() {
+        return EnumTestProduce.CRM_ONLINE.getShopId();
+    }
+
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
@@ -123,7 +127,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
                         "\"along_list\" :" + along_list + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
@@ -155,7 +159,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
@@ -276,7 +280,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
@@ -302,7 +306,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
@@ -325,7 +329,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("customer_level", customer_level);
         object.put("remark", remark);
-        object.put("shop_id", getProscheShop());
+        object.put("shop_id", getPorscheShop());
         if (!analysis_customer_id.equals("")) {
             object.put("analysis_customer_id", analysis_customer_id);
         }
@@ -400,7 +404,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("customer_level", customer_level);
         object.put("remark", remark);
-        object.put("shop_id", getProscheShop());
+        object.put("shop_id", getPorscheShop());
         object.put("customer_phone", customerPhone);
         return object;
     }
@@ -412,7 +416,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         object.put("remark", remark);
         object.put("customer_name", customer_name);
         object.put("customer_phone", customer_phone);
-        object.put("shop_id", getProscheShop());
+        object.put("shop_id", getPorscheShop());
         return object;
     }
 
@@ -422,7 +426,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         object.put("remark", remark);
         object.put("customer_name", customer_name);
         object.put("customer_phone", customer_phone);
-        object.put("shop_id", getProscheShop());
+        object.put("shop_id", getPorscheShop());
         object.put("like_car", like_car);
         object.put("buy_car", buy_car);
         object.put("pre_buy_time", pre_buy_time);
@@ -454,7 +458,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         }
 
         json = json +
-                "   \"shop_id\" :" + getProscheShop() + ",\n" +
+                "   \"shop_id\" :" + getPorscheShop() + ",\n" +
                 "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
                 "   \"customer_level\" :" + customer_level + ",\n" +
                 "   \"customer_name\" :\"" + customer_name + "\",\n" +
@@ -487,7 +491,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{\n" + "   \"customer_id\" :" + customer_id + ",\n" +
-                        "   \"shop_id\" :" + getProscheShop() + ",\n" +
+                        "   \"shop_id\" :" + getPorscheShop() + ",\n" +
                         "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
                         "   \"buy_car\" :" + buy_car + "\n,\"customer_phone\":\"这是一个假电话\",\n\"customer_level\":\"" + customer_level + "\"";
         json = json + "} ";
@@ -503,7 +507,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_level\" : 1,\n" +
@@ -520,7 +524,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -538,7 +542,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -562,7 +566,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -582,7 +586,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -600,7 +604,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -619,7 +623,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"return_visit_task_id\" :" + return_visit_task_id + ",\n" +
                         "\"next_return_visit_time\" :\"" + next_return_visit_time + "\",\n" +
@@ -638,7 +642,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -656,7 +660,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -684,7 +688,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\" : " + id + ",\n" +
-                        "   \"shop_id\" :" + getProscheShop() +
+                        "   \"shop_id\" :" + getPorscheShop() +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -698,7 +702,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\" : " + id + ",\n" +
-                        "   \"shop_id\" :" + getProscheShop() +
+                        "   \"shop_id\" :" + getPorscheShop() +
                         "} ";
 
         String res = httpPost(url, json, IpPort);
@@ -713,7 +717,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\":" + id + ",\n" +
-                        "   \"shop_id\":\"" + getProscheShop() + "\"" +
+                        "   \"shop_id\":\"" + getPorscheShop() + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -727,7 +731,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\":" + id + ",\n" +
-                        "   \"shop_id\":\"" + getProscheShop() + "\"" +
+                        "   \"shop_id\":\"" + getPorscheShop() + "\"" +
                         "}";
 
         String res = httpPost(url, json, IpPort);
@@ -857,7 +861,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\" :" + getProscheShop() + ",\n";
+                        "   \"shop_id\" :" + getPorscheShop() + ",\n";
 
         if (!StringUtils.isEmpty(equals(id))) {
             json += "   \"belongs_sale_id\" : \"" + id + "\",\n";
@@ -959,7 +963,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\":" + getProscheShop() + ",\n";
+                        "   \"shop_id\":" + getPorscheShop() + ",\n";
 
         if (!StringUtils.isEmpty(customerPhone)) {
             json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
@@ -1012,7 +1016,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\":" + getProscheShop() + ",\n";
+                        "   \"shop_id\":" + getPorscheShop() + ",\n";
 
         if (!StringUtils.isEmpty(customerPhone)) {
             json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
@@ -1074,7 +1078,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         String json =
                 "{" +
                         "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
@@ -1102,7 +1106,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("belongs_sale_id", belongsSaleId);
         object.put("customer_id", customerId);
-        object.put("shop_id", getProscheShop());
+        object.put("shop_id", getPorscheShop());
         object.put("customer_level", customerLevel);
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
@@ -1117,7 +1121,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     public JSONObject receptionOrder() throws Exception {
         String url = "/porsche/reception/freeSaleUserList";
         String json = "{" +
-                "\"shop_id\" :" + getProscheShop() +
+                "\"shop_id\" :" + getPorscheShop() +
                 "}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1576,7 +1580,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization);
-        httppost.addHeader("shop_id", getProscheShop());
+        httppost.addHeader("shop_id", getPorscheShop());
         File file = new File(path);
         MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
         if (file.toString().contains("png")) {

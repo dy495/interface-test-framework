@@ -53,7 +53,8 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;;
+        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
+        ;
 
 
         //replace backend gateway url
@@ -72,7 +73,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOline();
+        commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

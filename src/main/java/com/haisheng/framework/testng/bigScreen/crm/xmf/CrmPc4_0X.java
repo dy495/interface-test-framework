@@ -44,7 +44,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.produce = EnumProduce.BSJ.name();
-        commonConfig.referer=getBjsReferDaily();
+        commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -62,7 +62,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

@@ -84,7 +84,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.produce = EnumProduce.BSJ.name();
-        commonConfig.referer=getBjsReferDaily();
+        commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
 
 
         //replace backend gateway url
@@ -103,7 +103,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -2242,7 +2242,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//         @Test(description = "删除用户管理中多余用户数据")
+    //         @Test(description = "删除用户管理中多余用户数据")
     public void deleteuser() {
         try {
             crm.login(baoshijie, adminpassword);

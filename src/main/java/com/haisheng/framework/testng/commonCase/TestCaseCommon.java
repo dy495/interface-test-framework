@@ -14,7 +14,6 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
@@ -36,11 +35,9 @@ import org.testng.Assert;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.UUID;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 
 /**
@@ -461,30 +458,6 @@ public class TestCaseCommon {
             appendFailReason(e.toString());
         }
         return res;
-    }
-
-    public String getProscheShop() {
-        return "22728";
-    }
-
-    public String getProscheShopOline() {
-        return "12928";
-    }
-
-    public String getBjsReferOnline() {
-        return "https://servicewechat.com/wx0cf070e8eed63e90/";
-    }
-
-    public String getBjsReferDaily() {
-        return "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html";
-    }
-
-    public String getJcReferOnline() {
-        return "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
-    }
-
-    public String getJcReferdaily() {
-        return "https://servicewechat.com/wx4071a91527930b48/0/page-frame.html";
     }
 
     public String getXundianShop() {

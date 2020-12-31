@@ -54,7 +54,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOline();
+        commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

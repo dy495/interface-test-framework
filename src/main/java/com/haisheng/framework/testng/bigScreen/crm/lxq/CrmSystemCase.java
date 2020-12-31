@@ -63,7 +63,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop();
+        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -476,7 +476,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list;
             if (total == 200) {
                 throw new Exception("用户数量已达上线，case运行终止");
-            } else{
+            } else {
                 crm.addUser(userName, userName, phone, cstm.pwd, roleId, "", "");
                 list = crm.userPage(1, 100).getJSONArray("list");
             }

@@ -3,8 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.inject.internal.cglib.proxy.$MethodProxy;
-import com.google.inject.internal.util.$SourceProvider;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -59,7 +57,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer = getJcReferdaily();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
         commonConfig.produce = EnumTestProduce.JIAOCHEN_DAILY.name();
 
         //replace backend gateway url
@@ -184,9 +182,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ROLENAME")
     public static Object[][] rolename() {
         return new String[][]{
-                {"这是一个二十字的角色名称是的是的是的", "角色名称为20个字，创建失败" },
-                {"这是一个二十字的角色名称AABB1111", "角色名称为中文+字母+数字，创建失败" },
-                {"这是一个二十字的角色名称AABB11.。", "角色名称为中文+字母+数字+字符，创建失败" },
+                {"这是一个二十字的角色名称是的是的是的", "角色名称为20个字，创建失败"},
+                {"这是一个二十字的角色名称AABB1111", "角色名称为中文+字母+数字，创建失败"},
+                {"这是一个二十字的角色名称AABB11.。", "角色名称为中文+字母+数字+字符，创建失败"},
         };
     }
 
@@ -216,8 +214,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ROLENAMEAB")
     public static Object[][] rolenameab() {
         return new String[][]{
-                {"这是一个二十一字的角色名称是的是的是的是的", "角色名称需要在1-20个字内", "角色名称需要在1-20个字内" },
-                {"别删-仅卡劵申请tab", "新增角色失败当前角色名称已存在！请勿重复添加", "重复的角色名称，创建成功" },
+                {"这是一个二十一字的角色名称是的是的是的是的", "角色名称需要在1-20个字内", "角色名称需要在1-20个字内"},
+                {"别删-仅卡劵申请tab", "新增角色失败当前角色名称已存在！请勿重复添加", "重复的角色名称，创建成功"},
         };
     }
 

@@ -66,7 +66,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShopOline();
+        commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -1110,7 +1110,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     public String getCarName() {
 
-        String name = "Name" + Integer.toString((int)((Math.random()*9+1)*1000000));
+        String name = "Name" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000000));
         return name;
     }
 
