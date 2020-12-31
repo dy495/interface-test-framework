@@ -65,7 +65,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduce.JIAOCHEN_ONLINE.getAddress();
+    public String IpPort = EnumTestProduce.CRM_ONLINE.getAddress();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {

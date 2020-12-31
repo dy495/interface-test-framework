@@ -19,4 +19,6 @@ public class Response implements Serializable {
     private Integer code;
     @JSONField(name = "data")
     private JSONObject data;
+    @JSONField(name = "request_id")
+    private String requestId;
 }

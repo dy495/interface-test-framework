@@ -5,12 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ArticlePage extends BaseScene {
-    private final String startDate;
-    private final String endDate;
-    private final String registerStartDate;
-    private final String registerEndDate;
-    private final String title;
+public class ApprovalPage extends BaseScene {
+    private final String articleId;
     @Builder.Default
     private final Integer page = 1;
     @Builder.Default
@@ -19,11 +15,7 @@ public class ArticlePage extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("start_date", startDate);
-        object.put("end_date", endDate);
-        object.put("register_start_date", registerStartDate);
-        object.put("register_end_date", registerEndDate);
-        object.put("title", title);
+        object.put("article_id", articleId);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -31,6 +23,6 @@ public class ArticlePage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/operation/article/page";
+        return "/jiaochen/pc/operation/approval/page";
     }
 }
