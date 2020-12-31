@@ -187,7 +187,7 @@ public class PackFunction {
 
         return jsonP;
     }
-
+    //创建新客指定手机号
     public JSONObject creatCust2(String phone) throws Exception {
         //前台登陆
         crm.login(pp.qiantai, pp.adminpassword);
@@ -316,7 +316,6 @@ public class PackFunction {
     //订车+交车封装  copy lxq debug ok
     public void creatDeliver(Long reception_id, Long customer_id, String customer_name, String deliver_car_time, Boolean accept_show) throws Exception {
         //订车
-//        crm.orderCar(customer_id);
         String vehicle_chassis_code = "ASD123456" + (random.nextInt(89999999) + 10000000);
         Long car_id = crm.addOrderCar(customer_id.toString(), reception_id.toString(), vehicle_chassis_code).getLong("car_id");
         //创建交车

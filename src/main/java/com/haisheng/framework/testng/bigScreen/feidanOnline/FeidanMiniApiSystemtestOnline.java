@@ -124,6 +124,40 @@ public class FeidanMiniApiSystemtestOnline {
         return "97";
     }
 
+    public void loginPcTocken(String username,String passwd) {
+        qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        initHttpConfig();
+        String path = "/risk-login";
+        String loginUrl = getIpPort() + path;
+        JSONObject json1=new JSONObject();
+        json1.put("username",username);
+        json1.put("passwd",passwd);
+        String json = json1.toJSONString();
+
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", this.authorization);
+        } catch (Exception e) {
+            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
+            logger.error(aCase.getFailReason());
+            logger.error(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
+        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+    }
+
 
 //-----------------人脸搜索页面 start-----------
 
@@ -1110,7 +1144,6 @@ public class FeidanMiniApiSystemtestOnline {
 
         try {
 
-
             int code = accountAddNotChk(name,phone,email,rolelist).getInteger("code");
             Preconditions.checkArgument(code==1000,mes+"期待1000，实际"+code);
 
@@ -1264,8 +1297,104 @@ public class FeidanMiniApiSystemtestOnline {
         }
     }
 
+    //编辑创建时间非今天的账号，创建时间不变
+    @Test
+    public void accountEdit2(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-    
+        String caseName = ciCaseName;
+
+        try {
+            String id="";
+            String name="";
+            String phone="";
+            String email="";
+            String creator= "";
+            String create_time= "";
+            JSONArray role_list=new JSONArray();
+            JSONArray list = accountPage(1,10,null,null,null,null,null).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                create_time=list.getJSONObject(i).getString("create_time");
+                if(!create_time.equals(dateTimeUtil.getHistoryDate(0))){
+                    id=list.getJSONObject(i).getString("id");
+                    name=list.getJSONObject(i).getString("name");
+                    phone=list.getJSONObject(i).getString("phone");
+                    email=list.getJSONObject(i).getString("email");
+                    role_list=list.getJSONObject(i).getJSONArray("role_list");
+                    creator=list.getJSONObject(i).getString("creator");
+                    break;
+                }
+            }
+
+            accountEdit(id,name,phone,email,role_list);
+
+            String creator1= "";
+            String create_time1= "";
+
+            //根据id查询，结果是编辑后的账号
+            JSONArray array = accountPage(1,100,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < array.size(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getString("id").equals(id)){
+                    creator1 = obj.getString("creator");
+                    create_time1= obj.getString("create_time");
+                    break;
+                }
+            }
+
+            Preconditions.checkArgument(create_time.equals(create_time1),"修改前创建者名为"+create_time+" , 修改后"+ create_time1);
+            Preconditions.checkArgument(creator.equals(creator1),"修改前创建者名为："+creator+" , 修改后"+ creator1);
+
+        } catch (AssertionError | Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "编辑账户信息，创建时间和创建者不变\n");
+        }
+    }
+
+    //新建渠道主理人，渠道主理人下拉菜单+1
+    @Test
+    public void roleAccountAndQd(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //新建前渠道主理人的数量
+            int total=channelOwerList().getJSONArray("list").size();
+            JSONArray rolelist = addrolelist(717,"自动化用的角色别删",97,"赢识办公室",0,"");
+
+            //创建角色，单一渠道主理人
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String email=System.currentTimeMillis()+"@qq.com";
+            String phone = phonenum();
+
+            //新建
+            accountAdd(name,phone,email,rolelist);
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+            int totalAfterAdd=channelOwerList().getJSONArray("list").size();
+
+            accountDelete(id);
+            int totalAfterDelete=channelOwerList().getJSONArray("list").size();
+
+            Preconditions.checkArgument(totalAfterAdd-total==1,"新建渠道主理人角色账号，渠道主理人下拉列表没+1");
+            Preconditions.checkArgument(totalAfterAdd-totalAfterDelete==1,"删除渠道主理人角色账号，渠道主理人下拉列表没-1");
+
+
+        } catch (AssertionError | Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "新建/删除渠道主理人，渠道主理人下拉菜单+/-1\n");
+        }
+    }
+
+
+
     @Test(dataProvider = "ACC_ADDERR")
     public void accountEditErr(String name1 , String email1,String phone1,String mes){
         String ciCaseName = new Object() {
@@ -1378,7 +1507,52 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, "校验：删除账号后使用相同信息新建\n");
         }
     }
+    //登录，修改密码，新密码生效，旧密码失效
+    @Test
+    public void accountPassword(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
+
+        try {
+            MD5Util md5=new MD5Util();
+            //新建账号
+            String name= ""+System.currentTimeMillis();
+            String password=""+System.currentTimeMillis();
+            String email=password+"@qq.com";
+            String phone = phonenum();
+            String oldpassword=md5.getMD5(password).toLowerCase();
+            String newpassword=md5.getMD5("password").toLowerCase();
+
+            //新建
+            accountAdd(name,phone,email,rolelist);
+            String id = accountPage(1,10,name,null,email,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+
+            int code=loginPC(email,oldpassword).getInteger("code");
+            if(code!=1000){
+                throw new Exception("新建账号登录失败");
+            }
+
+            loginPcTocken(email,oldpassword);
+            //修改密码
+            passwdChg(newpassword,oldpassword);
+            int codeO=loginPC(email,oldpassword).getInteger("code");
+            int codeN=loginPC(email,newpassword).getInteger("code");
+            login();
+            accountDelete(id);      //删除账号
+            Preconditions.checkArgument(codeO==1001,"旧密码登录应该失败");
+            Preconditions.checkArgument(codeN==1000,"新密码登录应该成功");
+
+
+        } catch (AssertionError | Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            login();
+            saveData(aCase, ciCaseName, caseName, "登录，修改密码，新密码生效，旧密码失效\n");
+        }
+    }
 
     
     @Test
@@ -1614,8 +1788,8 @@ public class FeidanMiniApiSystemtestOnline {
 
             int code = roleAddNotchk(name,desc,arr).getInteger("code");
             //删除角色
-            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
-            roleDelete(id);
+//            Long id = rolePage(1,1,name).getJSONArray("list").getJSONObject(0).getLong("id");
+//            roleDelete(id);
 
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
@@ -2110,6 +2284,13 @@ public class FeidanMiniApiSystemtestOnline {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    //渠道列表
+    public JSONObject channelOwerList() throws Exception {
+        String url = "/risk/channel/owner-list";
+        JSONObject json = new JSONObject();
+        String result = httpPostWithCheckCode(url, json.toJSONString());
+        return JSON.parseObject(result).getJSONObject("data");
+    }
 
 
 
@@ -3406,7 +3587,7 @@ public class FeidanMiniApiSystemtestOnline {
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
-
+        logger.info(response);
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }

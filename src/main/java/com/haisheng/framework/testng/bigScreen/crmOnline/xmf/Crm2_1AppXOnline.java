@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.orderCarOnline;
@@ -1663,6 +1664,131 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("创建顾客接待，填写全部信息，与客户管理信息校验");
+        }
+    }
+
+    @Test(description = "新客接待后，渠道为,再次交车后变更")
+    public void createCustomerQd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = pf.creatCust();
+
+            finishReceiveOnline fr = new finishReceiveOnline();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.name = object.getString("name");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            String loginname = object.getString("userLoginName");
+//            fr.id_number="411502199602197727";
+            fr.districtCode = "320506";
+
+            JSONObject data = crm.customerInfo(fr.customer_id);
+            String channel_name = data.getString("channel_name");
+            //交车两次
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), "新车授权", dt.getHistoryDate(0), true);
+
+            pf.creatDeliver(Long.parseLong(fr.reception_id), Long.parseLong(fr.customer_id), "新车授权", dt.getHistoryDate(0), true);
+
+            JSONObject dataAfterDeliver = crm.customerInfo(fr.customer_id);
+            String channelNnameAfterDeliver = dataAfterDeliver.getString("channel_name");
+
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(channel_name.equals("自然到访"),"首次到访渠道异常"+channel_name);
+            Preconditions.checkArgument(channelNnameAfterDeliver.equals("老客户重购"),"首次到访渠道异常"+channelNnameAfterDeliver);
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            saveData("创建顾客接待，填写全部信息，与客户管理信息校验");
+        }
+    }
+
+
+
+    @Test(description = "Dcc创建线索，接待线索客户的渠道为线上垂媒")
+    public void createDccCustomerQd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(pp.dcc, pp.adminpassword);
+            String name = "dcc" + dt.getHHmm(0);
+            Random random = new Random();
+            String phone = "177" + (random.nextInt(89999999) + 10000000);
+            crm.dccCreate(name, phone, "");
+            JSONObject object = pf.creatCustOld(phone);
+
+            finishReceiveOnline fr = new finishReceiveOnline();
+            fr.name=name;
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "BB";
+
+            String loginname = object.getString("userLoginName");
+            crm.login(loginname, pp.adminpassword);
+            fr.districtCode = "320506";
+
+            JSONObject data = crm.customerInfo(fr.customer_id);
+            String channel_name = data.getString("channel_name");
+
+            crm.finishReception3(fr);
+            Preconditions.checkArgument(channel_name.equals("线上垂媒"),"首次到访渠道异常"+channel_name);
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            saveData("Dcc创建线索，接待线索客户的渠道为线上垂媒");
+        }
+    }
+
+    @Test(description = "编辑新客户付款方式全款，再次查看客户标签出现高配车")
+    public void editCustomerGpc() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject object = pf.creatCust();
+            finishReceiveOnline fr = new finishReceiveOnline();
+            fr.customer_id = object.getString("customerId");
+            fr.reception_id = object.getString("reception_id");
+            fr.phoneList = object.getJSONArray("phoneList");
+            fr.belongs_sale_id = object.getString("sale_id");
+            fr.reception_type = "FU";
+            fr.pay_type="0";
+            String userLoginName = object.getString("userLoginName");
+            crm.login(userLoginName, pp.adminpassword);
+            fr.name = object.getString("name");
+            crm.editCustomer(fr);
+            String [][]faceLableList={{"GET_CLUES","首次到店"},{"BUY_CAR_ASPIRATION","一般"},{"ADVANCED_CAR","高配车"}};
+            JSONArray faceLable=crm.faceLable(fr.customer_id).getJSONArray("labels");
+            for(int j=0;j<faceLableList.length;j++){
+                int flag=0;
+                for(int i=0;i<faceLable.size();i++){
+                    flag++;
+                    JSONObject dd=faceLable.getJSONObject(i);
+                    String lableType=dd.getString("label_type");
+                    String label_value=dd.getString("label_value");
+                    if(lableType.equals(faceLableList[j][0])){
+                        Preconditions.checkArgument(label_value.equals(faceLableList[j][1]));
+                        break;
+                    }else if(flag== faceLable.size()){
+                        throw new Exception("缺少客户标签"+faceLableList[j][0]);
+                    }else{
+                        continue;
+                    }
+                }
+            }
+            crm.finishReception3(fr);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            saveData("编辑新客户付款方式全款，再次查看客户标签出现高配车");
         }
     }
 }

@@ -5818,6 +5818,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
+    //客户标签
+    public JSONObject faceLable(String customer_id) {
+        String url = "/porsche/app/customer/face-label";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", customer_id);
+        String result = httpPostWithCheckCode(url, object.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
     @DataProvider(name = "CHANNELPARM")
     public static Object[] channelParm() {
 
