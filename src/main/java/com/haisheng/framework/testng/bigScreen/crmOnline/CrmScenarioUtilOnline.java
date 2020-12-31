@@ -11,7 +11,6 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.HttpExecutorUtil;
@@ -38,7 +37,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
      * 此部分不变，后面的方法自行更改
      */
     private static volatile CrmScenarioUtilOnline instance = null;
-    CustomerInfoOnline cstm = new CustomerInfoOnline();
 
     private CrmScenarioUtilOnline() {
     }
@@ -52,10 +50,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
             }
         }
         return instance;
-    }
-
-    public String getPorscheShop() {
-        return EnumTestProduce.CRM_DAILY.getShopId();
     }
 
     public String getPorscheShopOnline() {
@@ -125,41 +119,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data").getLong("customer_id");
-    }
-
-    //修改顾客全部信息 V1.1
-    public JSONObject customerEditALL(Long customer_id, int customer_level, String customer_name, String customer_phone,
-                                      String pre_buy_time, String compare_car, String already_car, String car_assess,
-                                      int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car,
-                                      int show_price, int sehand_assess, int pay_type, int buy_car_type, int buy_car_attribute, List<Object> remarks, List<Object> along_list
-    ) throws Exception {
-        String url = "/porsche/app/customer/edit";
-        String json =
-                "{" +
-                        "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
-                        "\"along_list\" :" + along_list + ",\n" +
-                        "\"customer_level\" :" + customer_level + ",\n" +
-                        "\"customer_name\" :\"" + customer_name + "\",\n" +
-                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
-                        "\"compare_car\" :\"" + compare_car + "\",\n" +
-                        "\"already_car\" :\"" + already_car + "\",\n" +
-                        "\"car_assess\" :\"" + car_assess + "\",\n" +
-                        "\"like_car\" :" + like_car + ",\n" +
-                        "\"buy_car\" :" + buy_car + ",\n" +
-                        "\"visit_count\" :" + visit_count + ",\n" +
-                        "\"belongs_area\" :" + belongs_area + ",\n" +
-                        "\"test_drive_car\" :" + test_drive_car + ",\n" +
-                        "\"show_price\" :" + show_price + ",\n" +
-                        "\"sehand_assess\" :" + sehand_assess + ",\n" +
-                        "\"pay_type\" :" + pay_type + ",\n" +
-                        "\"buy_car_type\" :" + buy_car_type + ",\n" +
-                        "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
-                        "\"remarks\" :[\"" + remarks + "\"]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONObject receptionList(String customerId) {
@@ -310,163 +269,6 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-
-    //修改顾客必填项 V1.1
-    public JSONObject customerEdit_onlyNec(Long customer_id, int customer_level, String customer_name, String customer_phone, String remarks) throws Exception {
-        String url = "/porsche/app/customer/edit";
-
-        String json =
-                "{" +
-                        "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
-                        "\"customer_level\" :" + customer_level + ",\n" +
-                        "\"customer_name\" :\"" + customer_name + "\",\n" +
-                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"remarks\" :[\"" + remarks + "\"]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    //修改顾客全部信息 V1.1
-    public JSONObject customerEdit_car(Long customer_id, int customer_level, String customer_name, String customer_phone,
-                                       String pre_buy_time, String compare_car, int like_car, int buy_car, int visit_count,
-                                       int test_drive_car, int buy_car_attribute, String remarks
-    ) throws Exception {
-        String url = "/porsche/app/customer/edit";
-
-        String json =
-                "{" +
-                        "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
-                        "\"customer_level\" :" + customer_level + ",\n" +
-                        "\"customer_name\" :\"" + customer_name + "\",\n" +
-                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
-                        "\"compare_car\" :\"" + compare_car + "\",\n" +
-                        "\"like_car\" :" + like_car + ",\n" +
-                        "\"buy_car\" :" + buy_car + ",\n" +
-                        "\"visit_count\" :" + visit_count + ",\n" +
-                        "\"test_drive_car\" :" + test_drive_car + ",\n" +
-                        "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
-                        "\"remarks\" :[\"" + remarks + "\"]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    //修改顾客部分信息 V1.1
-    public JSONObject customerEdit_several(Long customer_id, int customer_level, String customer_name, String customer_phone,
-                                           String pre_buy_time, String compare_car, int pay_type, String remarks
-    ) throws Exception {
-        String url = "/porsche/app/customer/edit";
-
-        String json =
-                "{" +
-                        "\"customer_id\" :" + customer_id + ",\n" +
-                        "\"shop_id\" :" + getPorscheShop() + ",\n" +
-                        "\"customer_level\" :" + customer_level + ",\n" +
-                        "\"customer_name\" :\"" + customer_name + "\",\n" +
-                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
-                        "\"compare_car\" :\"" + compare_car + "\",\n" +
-                        "\"pay_type\" :" + pay_type + ",\n" +
-                        "\"remarks\" :[\"" + remarks + "\"]\n"
-                        + "} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    //决策客户全部信息
-    public JSONObject decisionCstmer_All(long customer_level, String remark, String analysis_customer_id, String customer_name, String customer_phone,
-                                         String visit_count, String belongs_area, String service_date, String service_time, String customer_select_type,
-                                         String customer_channel, String leave_time, String already_car, String test_drive_car, String sehand_assess,
-                                         String car_assess, String pre_buy_time, String like_car, String compare_car, String show_price, String pay_type,
-                                         String buy_car, String buy_car_attribute, String buy_car_type) {
-        JSONObject object = new JSONObject();
-        object.put("customer_level", customer_level);
-        object.put("remark", remark);
-        object.put("shop_id", getPorscheShop());
-        if (!analysis_customer_id.equals("")) {
-            object.put("analysis_customer_id", analysis_customer_id);
-        }
-        if (!customer_name.equals("")) {
-            object.put("customer_name", customer_name);
-        }
-        if (!customer_phone.equals("")) {
-            object.put("customer_phone", customer_phone);
-        }
-        if (!service_date.equals("")) {
-            object.put("service_date", service_date);
-        }
-        if (!service_time.equals("")) {
-            object.put("service_time", service_time);
-        }
-        if (!leave_time.equals("")) {
-            object.put("leave_time", leave_time);
-        }
-        if (!already_car.equals("")) {
-            object.put("already_car", already_car);
-        }
-        if (!car_assess.equals("")) {
-            object.put("car_assess", car_assess);
-        }
-        if (!pre_buy_time.equals("")) {
-            object.put("pre_buy_time", pre_buy_time);
-        }
-        if (!compare_car.equals("")) {
-            object.put("compare_car", compare_car);
-        }
-        if (!visit_count.equals("")) {
-            object.put("visit_count", Integer.parseInt(visit_count));
-        }
-        if (!belongs_area.equals("")) {
-            object.put("belongs_area", Integer.parseInt(belongs_area));
-        }
-        if (!customer_select_type.equals("")) {
-            object.put("customer_select_type", Integer.parseInt(customer_select_type));
-        }
-        if (!customer_channel.equals("")) {
-            object.put("customer_channel", Integer.parseInt(customer_channel));
-        }
-        if (!test_drive_car.equals("")) {
-            object.put("test_drive_car", Integer.parseInt(test_drive_car));
-        }
-        if (!sehand_assess.equals("")) {
-            object.put("sehand_assess", Integer.parseInt(sehand_assess));
-        }
-        if (!like_car.equals("")) {
-            object.put("like_car", Integer.parseInt(like_car));
-        }
-        if (!show_price.equals("")) {
-            object.put("show_price", Integer.parseInt(show_price));
-        }
-        if (!pay_type.equals("")) {
-            object.put("pay_type", Integer.parseInt(pay_type));
-        }
-        if (!buy_car.equals("")) {
-            object.put("buy_car", Integer.parseInt(buy_car));
-        }
-        if (!buy_car_attribute.equals("")) {
-            object.put("buy_car_attribute", Integer.parseInt(buy_car_attribute));
-        }
-        if (!buy_car_type.equals("")) {
-            object.put("buy_car_type", Integer.parseInt(buy_car_type));
-        }
-        return object;
-    }
-
-    //决策客户仅必填项
-    public JSONObject decisionCstmer_onlyNec(long customer_level, String customerPhone, String remark) {
-        JSONObject object = new JSONObject();
-        object.put("customer_level", customer_level);
-        object.put("remark", remark);
-        object.put("shop_id", getPorscheShop());
-        object.put("customer_phone", customerPhone);
-        return object;
-    }
-
     //决策客户带名字
     public JSONObject decisionCstmer_NamePhone(long customer_level, String remark, String customer_name, String customer_phone) {
         JSONObject object = new JSONObject();
@@ -474,7 +276,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         object.put("remark", remark);
         object.put("customer_name", customer_name);
         object.put("customer_phone", customer_phone);
-        object.put("shop_id", getPorscheShop());
+        object.put("shop_id", getPorscheShopOnline());
         return object;
     }
 
@@ -484,7 +286,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         object.put("remark", remark);
         object.put("customer_name", customer_name);
         object.put("customer_phone", customer_phone);
-        object.put("shop_id", getPorscheShop());
+        object.put("shop_id", getPorscheShopOnline());
         object.put("like_car", like_car);
         object.put("buy_car", buy_car);
         object.put("pre_buy_time", pre_buy_time);
@@ -516,7 +318,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         }
 
         json = json +
-                "   \"shop_id\" :" + getPorscheShop() + ",\n" +
+                "   \"shop_id\" :" + getPorscheShopOnline() + ",\n" +
                 "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
                 "   \"customer_level\" :" + customer_level + ",\n" +
                 "   \"customer_name\" :\"" + customer_name + "\",\n" +
@@ -549,7 +351,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{\n" + "   \"customer_id\" :" + customer_id + ",\n" +
-                        "   \"shop_id\" :" + getPorscheShop() + ",\n" +
+                        "   \"shop_id\" :" + getPorscheShopOnline() + ",\n" +
                         "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
                         "   \"buy_car\" :" + buy_car + "\n,\"customer_phone\":\"这是一个假电话\",\n\"customer_level\":\"" + customer_level + "\"";
         json = json + "} ";
@@ -565,7 +367,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_level\" : 1,\n" +
@@ -582,7 +384,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -600,7 +402,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -624,7 +426,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_phone\" :\"" + phone + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -644,7 +446,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -662,7 +464,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -681,7 +483,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"return_visit_task_id\" :" + return_visit_task_id + ",\n" +
                         "\"next_return_visit_time\" :\"" + next_return_visit_time + "\",\n" +
@@ -700,7 +502,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -718,7 +520,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -736,7 +538,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{" +
-                        "\"shop_id\" :\"" + getPorscheShop() + "\",\n" +
+                        "\"shop_id\" :\"" + getPorscheShopOnline() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"customer_level\" :\"" + level + "\",\n" +
                         "\"customer_name\" :\"" + name + "\",\n" +
@@ -764,7 +566,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\" : " + id + ",\n" +
-                        "   \"shop_id\" :" + getPorscheShop() +
+                        "   \"shop_id\" :" + getPorscheShopOnline() +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -778,7 +580,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\" : " + id + ",\n" +
-                        "   \"shop_id\" :" + getPorscheShop() +
+                        "   \"shop_id\" :" + getPorscheShopOnline() +
                         "} ";
 
         String res = httpPost(url, json, IpPort);
@@ -793,7 +595,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\":" + id + ",\n" +
-                        "   \"shop_id\":\"" + getPorscheShop() + "\"" +
+                        "   \"shop_id\":\"" + getPorscheShopOnline() + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -807,7 +609,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String json =
                 "{\n" +
                         "   \"customer_id\":" + id + ",\n" +
-                        "   \"shop_id\":\"" + getPorscheShop() + "\"" +
+                        "   \"shop_id\":\"" + getPorscheShopOnline() + "\"" +
                         "}";
 
         String res = httpPost(url, json, IpPort);
@@ -937,7 +739,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\" :" + getPorscheShop() + ",\n";
+                        "   \"shop_id\" :" + getPorscheShopOnline() + ",\n";
 
         if (!StringUtils.isEmpty(equals(id))) {
             json += "   \"belongs_sale_id\" : \"" + id + "\",\n";
@@ -1233,7 +1035,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("belongs_sale_id", belongsSaleId);
         object.put("customer_id", customerId);
-        object.put("shop_id", getPorscheShop());
+        object.put("shop_id", getPorscheShopOnline());
         object.put("customer_level", customerLevel);
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
@@ -1258,7 +1060,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
 //
 //                + "} ";
         String json = "{" +
-                "\"shop_id\" :" + getPorscheShop() +
+                "\"shop_id\" :" + getPorscheShopOnline() +
                 "}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
