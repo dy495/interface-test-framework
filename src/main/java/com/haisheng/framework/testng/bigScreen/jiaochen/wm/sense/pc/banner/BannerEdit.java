@@ -8,19 +8,19 @@ import lombok.Builder;
 @Builder
 public class BannerEdit extends BaseScene {
     private final String bannerImgUrl1;
-    private final String articleId1;
+    private final Long articleId1;
 
     private final String bannerImgUrl2;
-    private final String articleId2;
+    private final Long articleId2;
 
     private final String bannerImgUrl3;
-    private final String articleId3;
+    private final Long articleId3;
 
     private final String bannerImgUrl4;
-    private final String articleId4;
+    private final Long articleId4;
 
     private final String bannerImgUrl5;
-    private final String articleId5;
+    private final Long articleId5;
 
     @Override
     public JSONObject getJSONObject() {

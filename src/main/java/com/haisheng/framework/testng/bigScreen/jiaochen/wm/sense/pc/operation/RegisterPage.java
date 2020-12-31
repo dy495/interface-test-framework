@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ArticlePage extends BaseScene {
+public class RegisterPage extends BaseScene {
     private final String startDate;
     private final String endDate;
     private final String registerStartDate;
@@ -31,6 +31,6 @@ public class ArticlePage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/operation/article/page";
+        return "/jiaochen/pc/operation/register/page";
     }
 }
