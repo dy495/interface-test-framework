@@ -592,8 +592,16 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
     public void changeReceptionNoedit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取空闲销售，sale_id和接待列表数
-            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            //获取空闲销售，sale_id和接待列表数   //遇到空闲第一位的为所属顾问11 时，下一个
+            JSONArray list= crm.freeSaleList().getJSONArray("list");
+            String sale_id="";
+            for(int i=0;i<list.size();i++){
+                sale_id =list.getJSONObject(i).getString("sale_id");
+                if(!sale_id.equals("uid_c01f9419")){
+                    break;
+                }
+            }
+
             String loginTemp = pf.username(sale_id);
             crm.login(loginTemp, pp.adminpassword);    //变更接待前 接待销售接待列表数
             //创建老客接待，获取接待记录id;
@@ -625,9 +633,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             pm.belongs_sale_id = belong_sale_id;
             crm.finishReception3(pm);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             crm.login(pp.qiantai, pp.qtpassword);

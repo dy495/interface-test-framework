@@ -3,11 +3,15 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PublicParm {
     public int num = 5;
     public int roleId = 1;
     public String shopId = "-1";   //门店Id
     public String shopIdZ = "46012";   //门店Id
+    public String shopname="中关村";
     public String reception_sale_id = "xx";
     public String name = "";
     public String customerPhone = "15037286013";
@@ -33,6 +37,7 @@ public class PublicParm {
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码
 
     public String jdgw = "13412010080";  //xx ,属于中关村店
+    public String jdgw2 = "13412010089";  //xx ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
     public String jdgwName = "xx"; //单个店的客户的数据  登录密码
 
@@ -41,7 +46,7 @@ public class PublicParm {
 
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();
-    public String coordinate = "[116.29845,39.95933]}";  //经纬度
+    public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
     public JSONArray roleList = getRoleList();
@@ -51,6 +56,13 @@ public class PublicParm {
         moduleId2.add(136);
         moduleId2.add(137);
         return moduleId2;
+    }
+
+    public JSONArray getCoordinate() {
+       JSONArray dd=new JSONArray();
+       dd.add(39.95933);
+       dd.add(116.29845);
+        return dd;
     }
 
 

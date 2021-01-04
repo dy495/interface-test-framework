@@ -65,6 +65,14 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("verification_code", password);
         return invokeApi(path, object, checkCode);
     }
+    //pc登录
+    public JSONObject pcTryLogin(String phone, String verificationCode,Boolean checkcode) {
+        String path = "/jiaochen/login-pc";
+        JSONObject object = new JSONObject();
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
+        return invokeApi(path, object, checkcode);
+    }
 
     //app登录
     public void appLoginout() {
@@ -626,11 +634,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) {
+    public JSONObject organizationAccountEdit(String id, String name,String phone, JSONArray role_id_list, JSONArray shop_list) {
         String url = "/jiaochen/pc/staff/edit";
         String json =
                 "{" +
-                        "\"id\" :\"" + account + "\",\n" +
+                        "\"id\" :\"" + id + "\",\n" +
                         "\"name\" :\"" + name + "\",\n";
 
         if (phone != "") {
@@ -640,7 +648,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json = json +
 
                 "\"role_list\" :" + role_id_list + ",\n" +
-                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"shop_list\" :" + shop_list + "\n" +
                 "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1533,6 +1541,17 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url, json1);
     }
+
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day,Boolean checkcode) {
+        String url = "/jiaochen/applet/granted/maintain/time/list";
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
+        json1.put("car_id", car_id);
+        json1.put("day", day);
+
+        return invokeApi(url, json1,checkcode);
+    }
+
 
     /**
      * @description :可预约时段列表 xmf
@@ -3542,6 +3561,15 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject appointmentTimeEdit(JSONObject json) {
         String url = "/jiaochen/pc/manage/appointment/time-range/edit";
+        return invokeApi(url, json);
+    }
+
+    public JSONObject shopStatusChange(String id,String type,String status) {
+        String url = "/jiaochen/pc/shop/status/change";
+        JSONObject json=new JSONObject();
+        json.put("id",id);
+        json.put("type",type);
+        json.put("status",status);
         return invokeApi(url, json);
     }
 

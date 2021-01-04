@@ -876,14 +876,15 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject data = crm.userPage(1, 100);
             int total = data.getInteger("total");
             JSONArray list;
-            if (total == 200) {
-                logger.info("用户数量已达上限");
-                return;
-            } else if (total < 100) {
-                list = data.getJSONArray("list");
-            } else {
-                list = crm.userPage(2, 100).getJSONArray("list");
-            }
+            list = data.getJSONArray("list");
+//            if (total == 200) {
+//                logger.info("用户数量已达上限");
+//                return;
+//            } else if (total < 100) {
+//                list = data.getJSONArray("list");
+//            } else {
+//                list = crm.userPage(2, 100).getJSONArray("list");
+//            }
             crm.login(pp.zongjingli, pp.adminpassword);
             String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             JSONArray listA = crm.ManageListNoSelect(role_ids).getJSONArray("list");
@@ -926,15 +927,16 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject data = crm.userPage(1, 100);
             int total = data.getInteger("total");
             JSONArray list;
-            if (total == 200) {
-                logger.info("用户数量已达上限");
-                return;
-            } else if (total < 100) {
-                list = data.getJSONArray("list");
-            } else {
-                list = crm.userPage(2, 100).getJSONArray("list");
-            }
-            String userid = list.getJSONObject(list.size() - 1).getString("user_id"); //获取用户id
+            list = data.getJSONArray("list");
+//            if (total == 200) {
+//                logger.info("用户数量已达上限");
+//                return;
+//            } else if (total < 100) {
+//                list = data.getJSONArray("list");
+//            } else {
+//                list = crm.userPage(2, 100).getJSONArray("list");
+//            }
+            String userid = list.getJSONObject(0).getString("user_id"); //获取用户id
             //加人到小池子
             crm.login(adminname, adminpassword);
             crm.ManageAdd(roleId, userid);

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Random;
@@ -12,12 +13,74 @@ import java.util.Random;
 public class JcFunctionOnline {
     ScenarioUtilOnline jc=new ScenarioUtilOnline();
     PublicParmOnline pp=new PublicParmOnline();
+    DateTimeUtil dt=new DateTimeUtil();
     Random random=new Random();
     public String genPhoneNum() {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
     }
+    //pc预约记录总数
+    public int pcAppointmentRecodePage() {
+        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        int num = jc.appointmentRecordManage("", "1", "10", null, null).getInteger("total");
+        return num;
+    }
+
+    //小程序客户预约保养次数
+    public int pcAppointmentTimes() {
+        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        int num = jc.weChatSleCustomerManage("", "1", "10", "customer_phone", "15037286013").getJSONArray("list").getJSONObject(0).getInteger("appointment_maintain");
+        return num;
+    }
+
+    //预约看板的预约数
+    public Integer appointmentNUmber(int num) {
+        jc.appLogin(pp.jdgw, pp.jdgwpassword);
+        String month = dt.getMounth(num);
+        int day = dt.getDay(num);
+        Integer total = 0;
+        JSONArray list = jc.pcTimeTableList(month).getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            int list_day = list.getJSONObject(i).getInteger("day");
+            if (list_day == day) {
+                total = list.getJSONObject(i).getInteger("appointment_number");
+                break;
+            }
+        }
+        return total;
+    }
+
+    //小程序预约消息数
+    public Integer appletmyAppointment() {
+        jc.appletLoginToken(pp.appletTocken);
+        return jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
+    }
+
+    //pc接待管理总数
+    public int pcReceptionPage() {
+        jc.appLogin(pp.jdgw, pp.jdgwpassword);
+        int num = jc.receptionManage("", "1", "10", null, null).getInteger("total");
+        return num;
+    }
+
+    //app[任务-预约数]
+    public int appReceiptPage() {
+        jc.appLogin(pp.jdgw, pp.jdgwpassword);
+        JSONObject data = jc.appointmentPage(null, 10);
+        int total = data.getInteger("total");
+        return total;
+    }
+
+    //app[任务-接待数]
+    public int appReceptionPage() {
+        jc.appLogin(pp.jdgw, pp.jdgwpassword);
+        JSONObject data = jc.appreceptionPage(null, 10);
+        int total = data.getInteger("total");
+        return total;
+    }
+
+
     //app开始接待，并返回接待id
     public Long startReception(String carPlate) throws Exception{
         appStartReception sr=new appStartReception();

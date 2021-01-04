@@ -50,7 +50,22 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         object.put("verification_code", verificationCode);
         httpPost(path, object, IpPort);
     }
-
+    //pc登录
+    public JSONObject pcTryLogin(String phone, String verificationCode,Boolean checkcode) {
+        String path = "/jiaochen/login-pc";
+        JSONObject object = new JSONObject();
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
+        return invokeApi(path, object, checkcode);
+    }
+    //app登录
+    public JSONObject appLogin2(String username, String password, Boolean checkCode) {
+        String path = "/jiaochen/login-m-app";
+        JSONObject object = new JSONObject();
+        object.put("phone", username);
+        object.put("verification_code", password);
+        return invokeApi(path, object, checkCode);
+    }
     //app登录
     public void appLogin(String username, String password) {
         String path = "/jiaochen/login-m-app";
@@ -165,10 +180,11 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     }
 
     //pc接待管理 -> 取消接待
-    public JSONObject pcCancelReception(Long receptionId) {
+    public JSONObject pcCancelReception(Long receptionId, Long shop_id) {
         String path = "/jiaochen/pc/reception-manage/cancel-reception";
         JSONObject object = new JSONObject();
-        object.put("reception_id", receptionId);
+        object.put("id", receptionId);
+        object.put("shop_id", shop_id);
         return invokeApi(path, object);
     }
 
@@ -392,7 +408,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     }
 
     //保养配置修改
-    public JSONObject pcCarModelPriceEdit(Long id, Double price, String status) {
+    public JSONObject pcCarModelPriceEdit(String id, Double price, String status) {
         String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
@@ -588,7 +604,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) {
+    public JSONObject organizationAccountEdit(String account, String name, String phone, JSONArray role_id_list,  JSONArray shop_list) {
         String url = "/jiaochen/pc/staff/edit";
         String json =
                 "{" +
@@ -602,7 +618,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json = json +
 
                 "\"role_list\" :" + role_id_list + ",\n" +
-                "\"shop_list\" :" + shop_list + ",\n" +
+                "\"shop_list\" :" + shop_list + "\n" +
                 "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1490,6 +1506,16 @@ public class ScenarioUtilOnline extends TestCaseCommon {
 
         return invokeApi(url, json1);
     }
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day,Boolean checkcode) {
+        String url = "/jiaochen/applet/granted/maintain/time/list";
+        JSONObject json1 = new JSONObject();
+        json1.put("shop_id", shop_id);
+        json1.put("car_id", car_id);
+        json1.put("day", day);
+
+        return invokeApi(url, json1,checkcode);
+    }
+
 
     /**
      * @description :可预约时段列表 xmf
@@ -3383,5 +3409,64 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("id", id);
         return invokeApi(url, json1);
+    }
+    /**
+     * @description :自主核销
+     * @date :2020/12/22 17:46
+     **/
+    public JSONObject appleterification(String id, String verification_code, Boolean checkcode) {
+        String url = "/jiaochen/applet/granted/voucher/verification";
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
+        json1.put("verification_code", verification_code);
+        return invokeApi(url, json1, checkcode);
+    }
+
+    public JSONObject appointmentTimeEdit(JSONObject json) {
+        String url = "/jiaochen/pc/manage/appointment/time-range/edit";
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :卡券列表
+     * @date :2020/12/16 16:12
+     **/
+
+    public JSONObject appletvoucherList() {
+        String url = "/jiaochen/applet/granted/article/voucher/list";
+        JSONObject json1 = new JSONObject();
+        return invokeApi(url, json1);
+    }
+
+    //app-核销记录
+    public JSONObject appWriteOffRecordsPage(String type, String size, String last_value) {
+        String url = "/jiaochen/m-app/personal-center/write-off-records/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("type", type);
+        json1.put("size", size);
+        json1.put("last_value", last_value);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description :小程序预约记录
+     * @date :2020/12/17 14:35
+     **/
+    public JSONObject appletAppointmentList(String type, String size, String last_value) {
+        String url = "/jiaochen/applet/granted/appointment/list";
+        JSONObject json1 = new JSONObject();
+        json1.put("type", type);
+        json1.put("size", size);
+        json1.put("last_value", last_value);
+        return invokeApi(url, json1);
+    }
+
+    public JSONObject shopStatusChange(String id,String type,String status) {
+        String url = "/jiaochen/pc/shop/status/change";
+        JSONObject json=new JSONObject();
+        json.put("id",id);
+        json.put("type",type);
+        json.put("status",status);
+        return invokeApi(url, json);
     }
 }
