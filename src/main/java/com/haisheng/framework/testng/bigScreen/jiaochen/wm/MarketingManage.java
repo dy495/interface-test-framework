@@ -177,11 +177,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //增发
             util.addVoucher(voucherName, 10);
             //增发后数据
-            builder.size(size).page(1).voucherName(voucherName);
-            JSONObject response = jc.invokeApi(builder.build());
-            int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory") == null
-                    ? 0 : CommonUtil.getIntField(response, 0, "surplus_inventory");
-            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            VoucherInfoVO voucherInfoVO = util.getVoucherInfo(voucherName);
+            long newSurplusInventory = voucherInfoVO.getSurplusInventory() == null ? 0 : voucherInfoVO.getSurplusInventory();
+            Long newAdditionalInventory = voucherInfoVO.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
             Preconditions.checkArgument(newSurplusInventory == surplusInventory,
                     "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
