@@ -4,16 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ import java.util.List;
 public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     MendianInfo info = new MendianInfo();
     public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
 
@@ -321,6 +320,151 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void downldPageFilter1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray reportlist = xd.downldTaskType().getJSONArray("list");
+            for (int i = 0 ; i < reportlist.size();i++){
+                JSONObject obj = reportlist.getJSONObject(i);
+                JSONArray list = xd.downldPage(1,100,null,obj.getString("type"),null,null).getJSONArray("list");
+                for (int j = 0 ; j < list.size();j++){
+                    String reporttype = list.getJSONObject(j).getString("report_type");
+                    Preconditions.checkArgument(reporttype.equals(obj.getString("type")),"根据"+obj.getString("type")+"查询，结果包含"+reporttype);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[下载报表],根据报表类型筛选");
+        }
+    }
+
+    @Ignore //接口问题 bug 6634
+    @Test(dataProvider = "SEARCH")
+    public void downldPageFilter2(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = xd.downldPage(1,100,name,null,null,null).getJSONArray("list");
+            for (int j = 0 ; j < list.size();j++){
+                String reporttype = list.getJSONObject(j).getString("task_name");
+                Preconditions.checkArgument(reporttype.contains(name),"根据"+name+"查询，结果包含"+reporttype);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[下载报表],根据任务名称筛选");
+        }
+    }
+
+    @Ignore //接口问题 bug 6634
+    @Test(dataProvider = "SEARCH")
+    public void downldPageFilter3(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = xd.downldPage(1,100,null,null,name,null).getJSONArray("list");
+            for (int j = 0 ; j < list.size();j++){
+                String reporttype = list.getJSONObject(j).getString("shop_name");
+                Preconditions.checkArgument(reporttype.contains(name),"根据"+name+"查询，结果包含"+reporttype);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[下载报表],根据相关门店筛选");
+        }
+    }
+
+    @Test
+    public void downldPageFilter4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = xd.downldPage(1,100,null,null,null,null).getJSONArray("list");
+            for (int j = 0 ; j < list.size();j++){
+                String reporttype = list.getJSONObject(j).getString("applicant");
+                Preconditions.checkArgument(reporttype.equals(info.usernamechin),"结果包含"+reporttype);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[下载报表],申请人全部是当前登陆账号名称");
+        }
+    }
+
+    @Ignore //接口问题 bug 6634
+    @Test(dataProvider = "SEARCH")
+    public void downldPageFilter5(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = xd.downldPage(1,100,null,null,null,name).getJSONArray("list");
+            Preconditions.checkArgument(list.size()==0,"根据"+name+"查询，结果不为空");
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[下载报表],根据申请人筛选");
+        }
+    }
+
+    @Ignore //没调通
+    @Test(dataProvider = "SEARCH2")
+    public void devicePageFilter1(String search, String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = md.device_page(search,"","","","CAMERA",1,100).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String shop = list.getJSONObject(i).getString("shop_name");
+                Preconditions.checkArgument(info.usershop.contains(shop),"摄像头列表，包含了无权限门店"+shop);
+            }
+
+            JSONArray list2 = md.device_page("",search,"","","CAMERA",1,100).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String shop = list2.getJSONObject(i).getString("shop_name");
+                Preconditions.checkArgument(info.usershop.contains(shop),"摄像头列表，包含了无权限门店"+shop);
+            }
+
+            JSONArray list3 = md.device_page(search,"","","","SERVER",1,100).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String shop = list3.getJSONObject(i).getString("shop_name");
+                Preconditions.checkArgument(info.usershop.contains(shop),"服务器列表，包含了无权限门店"+shop);
+            }
+
+            JSONArray list4 = md.device_page("",search,"","","SERVER",1,100).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String shop = list4.getJSONObject(i).getString("shop_name");
+                Preconditions.checkArgument(info.usershop.contains(shop),"服务器列表，包含了无权限门店"+shop);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC[设备列表],根据"+mess+"筛选");
+        }
+    }
+
+
+
 
 
 
@@ -336,11 +480,22 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
     public  Object[] search() {
 
         return new String[]{
-               "月报表",
+               "报表",
                 "1",
                 "!@#$%^&*(",
                 "ABCabc",
                 "越秀售楼处",
+
+
+        };
+    }
+
+    @DataProvider(name = "SEARCH2")
+    public  Object[] search2() {
+
+        return new String[][]{
+                {"1","名称"},
+                {"1","所属门店"},
 
 
         };

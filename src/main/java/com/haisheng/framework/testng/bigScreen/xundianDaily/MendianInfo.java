@@ -13,7 +13,10 @@ public class MendianInfo {
     DateTimeUtil dt = new DateTimeUtil();
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     public final String username = "yuexiu@test.com";
+    public final String usernamechin = "越秀测试账号";
     public final String passwd = "f5b3e737510f31b88eb2d4b5d0cd2fb4";
+    public final String uid = "uid_ef6d2de5";
+    public final String usershop = "越秀售楼处bbbbbb赢识办公室(测试越秀/飞单)巡店测试门店1巡店测试门店2巡店测试门店3巡店测试门店4AI-Test(门店订单录像)";
     public final long shop_id = 4116L;
     public final long shop_id_01 = 43072L;
     public final String shop_id_01_chin = "AI-Test(门店订单录像)";
