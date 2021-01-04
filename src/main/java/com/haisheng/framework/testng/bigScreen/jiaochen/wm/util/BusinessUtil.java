@@ -194,9 +194,8 @@ public class BusinessUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        IScene scene = VoucherFormPage.builder().voucherName(voucherName).size(size).build();
-        JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-        return array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).map(e -> e.getLong("voucher_id")).collect(Collectors.toList()).get(0);
+        VoucherInfoVO voucherInfoVO = getVoucherInfo(voucherName);
+        return voucherInfoVO.getVoucherId();
     }
 
     /**

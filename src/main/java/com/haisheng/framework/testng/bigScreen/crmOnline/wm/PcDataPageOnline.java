@@ -2856,7 +2856,6 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             list.forEach(a -> Arrays.stream(EnumFindType.values()).forEach(b -> {
                 List<SourceChannel> sourceChannelList = getSourceChannel(a.getUserId(), b.name());
                 int valueSum = sourceChannelList.stream().mapToInt(SourceChannel::getValue).sum();
-
                 List<String> calculateList = sourceChannelList.stream().map(e -> CommonUtil.getPercent(e.getValue(), valueSum, 3)).collect(Collectors.toList());
                 List<String> percentList = sourceChannelList.stream().map(SourceChannel::getPercent).collect(Collectors.toList());
                 CommonUtil.valueView(calculateList, percentList);

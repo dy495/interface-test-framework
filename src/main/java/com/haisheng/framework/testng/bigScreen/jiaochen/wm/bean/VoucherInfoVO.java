@@ -7,6 +7,9 @@ import java.io.Serializable;
 
 @Data
 public class VoucherInfoVO implements Serializable {
+
+    @JSONField(name = "voucher_id")
+    private Long voucherId;
     /**
      * 卡券名称
      */
