@@ -11,7 +11,7 @@ import lombok.Getter;
 public enum EnumChecklistUser {
     WM("王敏"),
 
-    QQ("黄青青"),
+    QQ("青青"),
     ;
 
     EnumChecklistUser(String name) {
