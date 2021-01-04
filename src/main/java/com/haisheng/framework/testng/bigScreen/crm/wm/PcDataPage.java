@@ -2785,11 +2785,14 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             list.forEach(a -> Arrays.stream(EnumFindType.values()).forEach(b -> {
                 List<SourceChannel> sourceChannelList = getSourceChannel(a.getUserId(), b.name());
                 int valueSum = sourceChannelList.stream().mapToInt(SourceChannel::getValue).sum();
+
                 List<String> calculateList = sourceChannelList.stream().map(e -> CommonUtil.getPercent(e.getValue(), valueSum, 3)).collect(Collectors.toList());
                 List<String> percentList = sourceChannelList.stream().map(SourceChannel::getPercent).collect(Collectors.toList());
                 CommonUtil.valueView(calculateList, percentList);
                 for (int i = 0; i < calculateList.size(); i++) {
-                    Preconditions.checkArgument(calculateList.get(i).equals(percentList.get(i)), a.getUserName() + b.getName() + "计算结果为：" + calculateList.get(i) + "页面展示为：" + percentList.get(i));
+                    String calculate = calculateList.get(i).replace("%", "");
+                    String percent = percentList.get(i).replace("%", "");
+                    Preconditions.checkArgument(compareData(calculate, percent), a.getUserName() + b.getName() + "计算结果为：" + calculateList.get(i) + "页面展示为：" + percentList.get(i));
                 }
                 CommonUtil.logger(a.getUserName());
             }));

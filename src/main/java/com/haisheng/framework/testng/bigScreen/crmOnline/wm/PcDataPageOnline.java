@@ -2263,8 +2263,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 .map(object -> object.get(field)).collect(Collectors.toList());
     }
 
-    public boolean compareData(String a, String b) {
-        return Double.parseDouble(b) <= Double.parseDouble(a) + 0.1 || Double.parseDouble(b) >= Double.parseDouble(a) - 0.1;
+    public boolean compareData(String expect, String practical) {
+        return Double.parseDouble(practical) <= Double.parseDouble(expect) + 0.1 || Double.parseDouble(practical) >= Double.parseDouble(expect) - 0.1;
     }
 
     @Test(description = "订单客户分析--【各时间段+各车型筛选】车主年龄分析 各年龄段之和=100%或 0%")
@@ -2856,11 +2856,14 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             list.forEach(a -> Arrays.stream(EnumFindType.values()).forEach(b -> {
                 List<SourceChannel> sourceChannelList = getSourceChannel(a.getUserId(), b.name());
                 int valueSum = sourceChannelList.stream().mapToInt(SourceChannel::getValue).sum();
+
                 List<String> calculateList = sourceChannelList.stream().map(e -> CommonUtil.getPercent(e.getValue(), valueSum, 3)).collect(Collectors.toList());
                 List<String> percentList = sourceChannelList.stream().map(SourceChannel::getPercent).collect(Collectors.toList());
                 CommonUtil.valueView(calculateList, percentList);
                 for (int i = 0; i < calculateList.size(); i++) {
-                    Preconditions.checkArgument(calculateList.get(i).equals(percentList.get(i)), a.getUserName() + b.getName() + "计算结果为：" + calculateList.get(i) + "页面展示为：" + percentList.get(i));
+                    String calculate = calculateList.get(i).replace("%", "");
+                    String percent = percentList.get(i).replace("%", "");
+                    Preconditions.checkArgument(compareData(calculate, percent), a.getUserName() + b.getName() + "计算结果为：" + calculateList.get(i) + "页面展示为：" + percentList.get(i));
                 }
                 CommonUtil.logger(a.getUserName());
             }));
