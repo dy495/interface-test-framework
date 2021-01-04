@@ -13,6 +13,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.FinanceManagerOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.JcPc_SystemLogOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.Jc_Pc_CustomerManageOnline"/>
         </classes>
     </test>
 </suite>
