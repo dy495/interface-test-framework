@@ -1,17 +1,22 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherListVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApprovalVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegisterVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ApprovalPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.RegisterPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
@@ -907,10 +912,94 @@ public class BusinessUtil {
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             activityIds.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("register_end_date").compareTo(DateTimeUtil.getFormat(new Date())) > 0
-                    && e.getInteger("total_quota") > 100)
-                    .map(e -> e.getLong("id")).collect(Collectors.toList()));
+                    && e.getInteger("total_quota") > 100).map(e -> e.getLong("id")).collect(Collectors.toList()));
         }
         return count == null ? activityIds : activityIds.subList(0, count);
+    }
+
+    /**
+     * 获取活动名称
+     *
+     * @param activityId 活动id
+     * @return 活动名称
+     */
+    public String getActivityName(Long activityId) {
+        List<String> list = new ArrayList<>();
+        ArticlePage.ArticlePageBuilder builder = ArticlePage.builder();
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(activityId)).map(e -> e.getString("title"))
+                    .collect(Collectors.toList()));
+        }
+        return list.get(0);
+    }
+
+    /**
+     * 获取报名详情
+     *
+     * @param activityId 活动id
+     * @return 报名详情
+     */
+    public OperationRegisterVO getOperationRegisterInfo(Long activityId) {
+        List<OperationRegisterVO> operationRegisters = new ArrayList<>();
+        RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
+        int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
+            operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(activityId)).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
+        }
+        return operationRegisters.get(0);
+    }
+
+    /**
+     * 获取审批详情
+     *
+     * @param articleId  文章id
+     * @param approvalId 审批id
+     * @return 审批详情
+     */
+    public OperationApprovalVO getOperationApprovalInfo(Long articleId, Long approvalId) {
+        List<OperationApprovalVO> list = new ArrayList<>();
+        ApprovalPage.ApprovalPageBuilder builder = ApprovalPage.builder().articleId(String.valueOf(articleId));
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(approvalId))
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), OperationApprovalVO.class)).collect(Collectors.toList()));
+        }
+        return list.get(0);
+    }
+
+    /**
+     * 获取文章id
+     *
+     * @return 文章id集合
+     */
+    public List<Long> getArticleIdList() {
+        JSONArray array = jc.invokeApi(ArticleList.builder().build()).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取审批详情
+     *
+     * @param articleId 文章id
+     * @return 审批详情
+     */
+    public List<OperationApprovalVO> getOperationApprovalInfo(Long articleId) {
+        List<OperationApprovalVO> list = new ArrayList<>();
+        ApprovalPage.ApprovalPageBuilder builder = ApprovalPage.builder().articleId(String.valueOf(articleId));
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationApprovalVO.class)).collect(Collectors.toList()));
+        }
+        return list;
     }
 
     /**
@@ -919,6 +1008,6 @@ public class BusinessUtil {
      * @param activityId 活动id
      */
     public void applyActivity(Long activityId) {
-        jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
+        jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
     }
 }

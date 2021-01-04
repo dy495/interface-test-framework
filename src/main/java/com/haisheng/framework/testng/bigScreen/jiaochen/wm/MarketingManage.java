@@ -1408,6 +1408,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.login(administrator);
             List<Long> shopList = new ArrayList<>();
             JSONArray array = jc.pcShopList().getJSONArray("list");
             shopList.add(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()).get(0));

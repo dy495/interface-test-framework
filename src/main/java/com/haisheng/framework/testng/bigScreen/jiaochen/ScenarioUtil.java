@@ -1214,7 +1214,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :文章详情xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletArticleDetile(String id) {
+    public JSONObject appletArticleDetail(String id) {
         String url = "/jiaochen/applet/article/detail";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);

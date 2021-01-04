@@ -50,6 +50,17 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         object.put("verification_code", verificationCode);
         httpPost(path, object, IpPort);
     }
+
+    /**
+     * @description :文章详情xmf
+     * @date :2020/11/28 12:14
+     **/
+    public JSONObject appletArticleDetail(String id) {
+        String url = "/jiaochen/applet/article/detail";
+        JSONObject json1 = new JSONObject();
+        json1.put("id", id);
+        return invokeApi(url, json1);
+    }
     //pc登录
     public JSONObject pcTryLogin(String phone, String verificationCode,Boolean checkcode) {
         String path = "/jiaochen/login-pc";

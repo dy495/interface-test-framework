@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApprovalVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegisterVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -17,8 +16,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -39,16 +39,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 内容运营
+ * 业务管理测试用例
  */
-public class ContentOperation extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = ScenarioUtil.getInstance();
+public class ContentOperationOnline extends TestCaseCommon implements TestCaseStd {
+    ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
+    BusinessUtilOnline util = new BusinessUtilOnline();
     LoginUtil user = new LoginUtil();
-    BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
-    private static final EnumAppletToken applet = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAccount marketing = EnumAccount.MARKETING;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_ONLINE;
+    private static final EnumAppletToken applet = EnumAppletToken.JC_WM_ONLINE;
+    private static final EnumAccount marketing = EnumAccount.MARKETING_ONLINE;
 
     @BeforeClass
     @Override
@@ -57,17 +57,17 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.produce = EnumProduce.JC.name();
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }

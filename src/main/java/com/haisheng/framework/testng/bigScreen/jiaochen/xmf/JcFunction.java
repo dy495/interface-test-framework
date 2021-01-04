@@ -223,7 +223,7 @@ public class JcFunction {
 
         int num[] = new int[3];   //0
 
-        JSONObject ll = jc.appletArticleDetile(id);
+        JSONObject ll = jc.appletArticleDetail(id);
         num[0] = ll.getInteger("total_quota");    //全部名额
         num[1] = ll.getInteger("register_num");   //已报名名额
         JSONArray list = ll.getJSONArray("list");  //报名成功名单输
