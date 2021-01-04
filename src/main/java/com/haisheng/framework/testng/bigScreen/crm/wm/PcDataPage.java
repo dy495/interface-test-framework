@@ -2816,11 +2816,11 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(receptionDataList);
             List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());
             Arrays.stream(EnumChannelName.values()).forEach(channelName -> {
-                int value = getSourceChannel(null, EnumFindType.DAY.name()).stream().filter(e -> e.getChannelName().equals(channelName.getName())).map(SourceChannel::getValue).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView(channelName.getName());
+                int value = getSourceChannel(null, EnumFindType.DAY.name()).stream().filter(e -> e.getChannelName().equals(channelName.getName())).map(SourceChannel::getValue).collect(Collectors.toList()).get(0);
                 int sum = (int) customerIdList.stream().filter(customerId -> getChannelName(customerId).equals(channelName.getName())).count();
                 CommonUtil.valueView("页面" + channelName.getName() + "数量：" + value, channelName.getName() + "数量：" + sum);
-                Preconditions.checkArgument(value == sum, channelName.getName() + "页面展示：" + value + "昨日接待客户中数量：" + sum);
+                Preconditions.checkArgument(value == sum, channelName.getName() + "页面展示：" + value + "昨日接待客户中线上垂媒数量：" + sum);
                 CommonUtil.logger(channelName.getName());
             });
         } catch (Exception | AssertionError e) {
@@ -2831,8 +2831,8 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     }
 
     private String getChannelName(Integer customerId) {
-        IScene scenes = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
-        String channelName = crm.invokeApi(scenes).getString("channel_name");
+        IScene scene = CustomerInfoScene.builder().customerId(String.valueOf(customerId)).build();
+        String channelName = crm.invokeApi(scene).getString("channel_name");
         return channelName == null ? "" : channelName;
     }
 
@@ -2844,14 +2844,13 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             Sql sql = Sql.instance().select().from(TPorscheReceptionData.class)
                     .where("shop_id", "=", shopId)
                     .and("reception_date", "=", date)
-                    .and("reception_sale_id", "is not", null).end();
+                    .and("reception_sale_id", "is not", null)
+                    .end();
             List<TPorscheReceptionData> receptionDataList = ONE_PIECE_FACTORY.create(sql, TPorscheReceptionData.class);
             CommonUtil.valueView(receptionDataList);
-            List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());
-            int appSum = Arrays.stream(EnumChannelName.values()).mapToInt(channelName -> (int) customerIdList.stream().filter(customerId -> getChannelName(customerId).equals(channelName.getName())).count()).sum();
             int pcSum = getSourceChannel(null, EnumFindType.DAY.name()).stream().mapToInt(SourceChannel::getValue).sum();
-            Preconditions.checkArgument(appSum == pcSum, "各类型数量和：" + pcSum + "昨日接待客户总数：" + appSum);
-            CommonUtil.valueView(appSum, pcSum);
+            CommonUtil.valueView(pcSum, receptionDataList.size());
+            Preconditions.checkArgument(pcSum == receptionDataList.size(), "各类型数量和：" + pcSum + "昨日接待客户总数：" + receptionDataList.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
