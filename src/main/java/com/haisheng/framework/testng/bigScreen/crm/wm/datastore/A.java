@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.TPorscheTodayData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;

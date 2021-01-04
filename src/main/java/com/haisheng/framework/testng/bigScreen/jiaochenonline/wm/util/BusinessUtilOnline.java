@@ -3,15 +3,19 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListVO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherListVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MessageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.PackageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -309,6 +313,25 @@ public class BusinessUtilOnline {
             }
         }
         return createPackageName();
+    }
+
+    /**
+     * 获取卡券信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券信息
+     */
+    public VoucherInfoVO getVoucherInfo(String voucherName) {
+        List<VoucherInfoVO> list = new ArrayList<>();
+        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName))
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), VoucherInfoVO.class)).collect(Collectors.toList()));
+        }
+        return list.get(0);
     }
 
     /**

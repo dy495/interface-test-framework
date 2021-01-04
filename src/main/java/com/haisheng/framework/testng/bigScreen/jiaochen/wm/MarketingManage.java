@@ -3,11 +3,12 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.jc.AppletVoucherListVO;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherListVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MessageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerification;
@@ -222,11 +223,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //审批通过
             util.applyVoucher(voucherName, "1");
             //审批后数据
-            builder.size(size).page(1).voucherName(voucherName);
-            JSONObject response = jc.invokeApi(builder.build());
-            int newSurplusInventory = CommonUtil.getIntField(response, 0, "surplus_inventory") == null
-                    ? 0 : CommonUtil.getIntField(response, 0, "surplus_inventory");
-            int newAdditionalInventory = CommonUtil.getIntField(response, 0, "additional_inventory");
+            VoucherInfoVO voucherInfo = util.getVoucherInfo(voucherName);
+            long newSurplusInventory = voucherInfo.getSurplusInventory() == null ? 0 : voucherInfo.getSurplusInventory();
+            Long newAdditionalInventory = voucherInfo.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
             if (surplusInventory != 0) {
                 Preconditions.checkArgument(newSurplusInventory == surplusInventory + 10,
@@ -241,7 +240,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "卡券表单--增发卡券--审批通过后，新增发库存=原增发库存，新剩余库存=原剩余库存")
+    @Test(description = "卡券表单--增发卡券--审批不通过，新增发库存=原增发库存，新剩余库存=原剩余库存")
     public void voucherManage_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -270,21 +269,20 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //审批不通过
             util.applyVoucher(voucherName, "2");
             //审批后数据
-            builder.size(size).page(1).voucherName(voucherName);
-            JSONObject response = jc.invokeApi(builder.build()).getJSONArray("list").getJSONObject(0);
-            Integer newSurplusInventory = response.getInteger("surplus_inventory");
-            Integer newAdditionalInventory = response.getInteger("additional_inventory");
+            VoucherInfoVO voucherInfo = util.getVoucherInfo(voucherName);
+            Long newSurplusInventory = voucherInfo.getSurplusInventory();
+            Long newAdditionalInventory = voucherInfo.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
             if (surplusInventory != 0) {
                 Preconditions.checkArgument(newSurplusInventory == surplusInventory,
-                        "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
+                        voucherName + "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
             }
             Preconditions.checkArgument(newAdditionalInventory == additionalInventory,
-                    "增发前增发库存：" + additionalInventory + "增发后增发库存：" + newAdditionalInventory);
+                    voucherName + "增发前增发库存：" + additionalInventory + "增发后增发库存：" + newAdditionalInventory);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("卡券表单--增发卡券--审批通过后，新增发库存=原增发库存，新剩余库存=原剩余库存");
+            saveData("卡券表单--增发卡券--审批不通过，新增发库存=原增发库存，新剩余库存=原剩余库存");
         }
     }
 

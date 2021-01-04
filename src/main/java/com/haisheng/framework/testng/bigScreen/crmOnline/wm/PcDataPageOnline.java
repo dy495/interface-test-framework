@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;

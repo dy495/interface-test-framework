@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.bean.bsj;
+package com.haisheng.framework.testng.bigScreen.crm.wm.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
