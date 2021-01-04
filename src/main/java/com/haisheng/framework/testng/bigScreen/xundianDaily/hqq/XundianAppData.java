@@ -138,7 +138,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int total1 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject data1 = xd.ShopPage(page,size);
             Integer patrol_num1 = xds.patrol_num(data1,shop_id);
-            Long patrol_id = xds.Scheduled(shop_id, 1, id,"SCHEDULED",2);
+            Long patrol_id = xds.Scheduled(shop_id, 1, id,"SCHEDULED",2,0);
             int code = xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格").getInteger("code");
             Preconditions.checkArgument(code ==1000, "定检巡店提交失败"+code);
             int total2 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
