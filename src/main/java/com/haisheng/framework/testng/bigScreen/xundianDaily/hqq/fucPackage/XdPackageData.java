@@ -3,6 +3,8 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -51,6 +53,7 @@ public class XdPackageData extends TestCaseCommon {
     public String IpPort = "http://123.57.148.247";
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg";  //巡店不合格图片base64
+    MendianInfo info = new MendianInfo();
     /**
      * @description:登录
      * @author: qingqing
@@ -171,10 +174,11 @@ public class XdPackageData extends TestCaseCommon {
 
 
     /**
-     * 开始定检巡店
+     * 开始各自（根据传入的方式）巡店
      */
-    public Map<String, Object> Scheduled(Long shop_id, Integer reset, Long task_id) throws Exception {
-        JSONObject res = xd.shopChecks_start(shop_id, "SCHEDULED", reset, task_id);
+    public Long Scheduled(Long shop_id, Integer reset, Long task_id,String check_type,Integer check_result,Integer pic_type) throws Exception {
+        JSONObject res = xd.shopChecks_start(shop_id, check_type, reset, task_id);
+        Integer code = 0;
         Long patrol_id = res.getLong("id");
         Long list_id = null;
         Long item_id = null;
@@ -184,13 +188,13 @@ public class XdPackageData extends TestCaseCommon {
             JSONArray items_list = check_lists.getJSONObject(i).getJSONArray("check_items");
             for (int j = 0; j < items_list.size(); j++) {
                 item_id = items_list.getJSONObject(j).getLong("id");
+                JSONArray pic_list = info.getpic(pic_type);
+                code = xd.checks_item_submit(shop_id,patrol_id,list_id,item_id,check_result,"自动化处理为不合格",pic_list).getInteger("code");
+                Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code);
             }
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("patrol_id", patrol_id);
-        result.put("list_id", list_id);
-        result.put("item_id", item_id);
-        return result;
+
+        return patrol_id;
     }
     /**
      * 获取门店的巡店次数

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
@@ -36,11 +37,15 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     XdPackageData xds = XdPackageData.getInstance();
+    MendianInfo info = new MendianInfo();
     int page = 1;
     int size = 50;
     String dealer = "8888@qq.com";
     String dealer_psw = "cf79ae6addba60ad018347359bd144d2";
+    String checker ="2222@qq.com";
+    String checker_psw = "934b535800b1cba8f96a5d72f72f1611";
     String comment = "自动化在进行处理，闲人走开";
+    Long shop_id = 43072L;
     String comment1 = "我们班有些同bai学一听到写作文头就大，但是我不一样，习作对于我来说简直就是一种乐趣。一般我都是越往下写我就越想写，也就觉得越有意思，还可以增加我对写作的喜爱。可为什么我们班同学就那么不喜欢写作文呢哈哈哈哈";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg";  //巡店不合格图片base64
 
@@ -71,7 +76,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("store " + xd);
-        xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
+        xd.login(checker, checker_psw);
 
 
     }
@@ -86,6 +91,22 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void createFreshCase(Method method) {
 
     }
+    @Test(description = "远程巡店为下述造处理事件")
+    public void remote () {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long patrol_id=  xds.Scheduled(shop_id,0,null,"REMOTE",2,0);
+            int code = xd.checks_submit(shop_id,patrol_id,"自动化处理远程巡店全部不合格").getInteger("code");
+            Preconditions.checkArgument(code ==1000, "远程巡店提交失败"+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("[APP]远程巡店为下述造处理事件");
+        }
+    }
+
     @Test(description = "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交，巡检员复核提交说明为101个字")
     public void deal_unfinished_remoteFalse() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -96,8 +117,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.task_step_submit(shop_id, id, null, null,comment).getInteger("code");
             Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code3 = xd.task_step_submit(shop_id, id, null, 1,comment1).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id1 = dataList.getJSONObject(0).getLong("id");
+            Integer code3 = xd.task_step_submit(shop_id, id1, null, 1,comment1).getInteger("code");
             Preconditions.checkArgument(code3 == 1001, "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核提交说明为101个字,提交成功，成功code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -118,8 +141,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.task_step_submit(shop_id, id, null, null,comment).getInteger("code");
             Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店进行处理(100字说明、不带照片)提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code1 = xd.task_step_submit(shop_id, id, null, 1,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id1 = dataList.getJSONObject(0).getLong("id");
+            Integer code1 = xd.task_step_submit(shop_id, id1, null, 1,comment).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中远程巡店不合格项处理以后，巡检员复核结果为合格,提交失败，失败code="+code1);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -162,15 +187,19 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long id =  xds.getId_ShopId(list,"REMOTE_UNQUALIFIED").get("id");
             Integer code = xd.task_step_submit(shop_id, id, null, null,comment).getInteger("code");
             Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中远程巡店不合格项进行处理，提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code1 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id1 = dataList.getJSONObject(0).getLong("id");
+            Integer code1 = xd.task_step_submit(shop_id, id1, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中远程巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login(dealer, dealer_psw);//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.task_step_submit(shop_id, id, pic_list1, null,comment).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中远程巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code3 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList1 = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id2 = dataList1.getJSONObject(0).getLong("id");
+            Integer code3 = xd.task_step_submit(shop_id, id2, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中远程巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -191,15 +220,19 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long id =  xds.getId_ShopId(list,"SPOT_UNQUALIFIED").get("id");
             Integer code = xd.task_step_submit(shop_id, id, pic_list, null,comment).getInteger("code");
             Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中现场巡店不合格项进行处理，提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code1 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id1 = dataList.getJSONObject(0).getLong("id");
+            Integer code1 = xd.task_step_submit(shop_id, id1, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中现场巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login(dealer, dealer_psw);//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.task_step_submit(shop_id, id, pic_list1, null,comment).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中现场巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code3 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList2 = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id2 = dataList2.getJSONObject(0).getLong("id");
+            Integer code3 = xd.task_step_submit(shop_id, id2, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中现场巡店不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -220,15 +253,19 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Long id =  xds.getId_ShopId(list,"SCHEDULE_UNQUALIFIED").get("id");
             Integer code = xd.task_step_submit(shop_id, id, pic_list, null,comment).getInteger("code");
             Preconditions.checkArgument(code == 1000, "[APP]个人中心待办事项中定检巡店不合格项进行处理，提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code1 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id1 = dataList.getJSONObject(0).getLong("id");
+            Integer code1 = xd.task_step_submit(shop_id, id1, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "[APP]个人中心待办事项中定检巡店不合格项的复核结果，巡检员复核结果为不合格，提交失败，失败code="+code);
             xd.login(dealer, dealer_psw);//自动化专用店长账号
             JSONArray pic_list1= xds.getPicPath2();
             Integer code2 = xd.task_step_submit(shop_id, id, pic_list1, null,comment).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中定检巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
-            xd.login("2222@qq.com", "934b535800b1cba8f96a5d72f72f1611");
-            Integer code3 = xd.task_step_submit(shop_id, id, null, 0,comment).getInteger("code");
+            xd.login(checker, checker_psw);
+            JSONArray dataList1 = xd.task_list(page,size,0,null).getJSONArray("list");
+            Long id2 = dataList1.getJSONObject(0).getLong("id");
+            Integer code3 = xd.task_step_submit(shop_id, id2, null, 0,comment).getInteger("code");
             Preconditions.checkArgument(code3 == 1000, "[APP]个人中心待办事项中现场定检不合格项的再次处理结果，巡检员进行再次复核后，结果为合格提交失败，失败code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -243,14 +280,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void dealAfterData_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            xd.login(dealer, dealer_psw);//自动化专用店长账号
-            JSONArray list = (JSONArray) xds.getTab_total(page, size, 0, null).get("list");
-            Long id =  xds.getId_ShopId(list,"SCHEDULE_TASK").get("id");
-            JSONArray pic_list = xd.task_detail(id).getJSONArray("pic_list");
-            String show_url = "";
-            for(int i=0;i<pic_list.size();i++){
-                show_url = pic_list.getJSONObject(i).getString("show_url");
-            }
+            JSONArray list = xd.schedule_pic_list(shop_id,"8112290559198208","").getJSONArray("list");//设备为152
+            JSONObject pic = list.getJSONObject(0).getJSONObject("pic");
+            String show_url = pic.getString("show_url");
             Preconditions.checkArgument(!show_url.isEmpty(), "将【待办事项】中[未完成]中的定检任务中没有生成定检图片");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -281,7 +313,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * description = "APP【个人中心】人脸检测（正常脸检测）"
+     * description = "APP【个人中心】人脸检测（非正常脸检测）"
      * ***/
     @Test(dataProvider = "FACE_URL1",dataProviderClass = XdPackageData.class)
     public void face_check1(String face_url1 ) {

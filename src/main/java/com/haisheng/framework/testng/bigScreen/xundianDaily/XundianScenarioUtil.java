@@ -1137,11 +1137,12 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject task_detail(Long id) throws Exception {
+    public JSONObject task_detail(Long id,Integer type) throws Exception {
         String url = "/store/m-app/auth/patrol/task/detail";
         String json =
                 "{" +
-                        "\"id\" :" + id + "\n" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"type\" :" + type + "\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1201,7 +1202,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         json.put("pic_list", pic_list);
 
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * @description:3.10 提交巡检结果（V1.1）
@@ -1289,16 +1290,16 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
+    /**
+     * app checks submit 3.15 获取门店巡店记录列表（V1.1）
+     */
     public JSONObject schedule_pic_list(Long shop_id,String device_id,String date) throws Exception {
         String url = "/store/m-app/auth/patrol/task/schedule-pic/list";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"device_id\" :\"" + device_id + "\",\n" +
-                        "\"date\" :" + date + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("device_id",device_id);
+        json.put("date", date);
+        String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
     /**

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    MendianInfo info = new MendianInfo();
     XdPackageData xds = XdPackageData.getInstance();
     int page = 1;
     int size = 50;
@@ -99,7 +101,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "将【待办事项】中[未完成]列表的待处理进行处理为合格或不合格==[未完成]列表-1&&【已完成】列表+1")
+    //@Test(description = "将【待办事项】中[未完成]列表的待处理进行处理为合格或不合格==[未完成]列表-1&&【已完成】列表+1")
     public void dealAfterData() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -113,14 +115,8 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             xd.task_step_submit(shop_id, id, null, 1,comment);
             Integer finished_total2 = (Integer) xds.getTab_total(page, size, 1, null).get("total");
             Integer un_finished_total2 = (Integer) xds.getTab_total(page, size, 0, null).get("total");
-            Preconditions.checkArgument(
-                    finished_total2-finished_total1 == 1,
-                    "【待办事项】中待处理进行处理为合格或不合格,【已完成】列表没有+1"
-            );
-            Preconditions.checkArgument(
-                    un_finished_total1-un_finished_total2 == 1,
-                    "【待办事项】中待处理进行处理为合格或不合格,[未完成]列表没有-1"
-            );
+            Preconditions.checkArgument(finished_total2-finished_total1 == 1, "【待办事项】中待处理进行处理为合格或不合格,【已完成】列表没有+1");
+            Preconditions.checkArgument(un_finished_total1-un_finished_total2 == 1, "【待办事项】中待处理进行处理为合格或不合格,[未完成]列表没有-1");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -142,13 +138,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int total1 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject data1 = xd.ShopPage(page,size);
             Integer patrol_num1 = xds.patrol_num(data1,shop_id);
-            //通过base64接口上传留痕图片
-            JSONArray pic_list= xds.getPicPath();
-            Map<String, Object> map = xds.Scheduled(shop_id, 1, id);
-            long patrol_id = (long) map.get("patrol_id");
-            long list_id = (long) map.get("list_id");
-            long item_id = (long) map.get("item_id");
-            xd.checks_item_submit(shop_id,patrol_id,list_id,item_id,2,"自动化处理为不合格",pic_list);
+            Long patrol_id = xds.Scheduled(shop_id, 1, id,"SCHEDULED",2);
             int code = xd.checks_submit(shop_id,patrol_id,"自动化处理全部不合格").getInteger("code");
             Preconditions.checkArgument(code ==1000, "定检巡店提交失败"+code);
             int total2 = xd.xd_report_list("","","","",null,page,size).getInteger("total");
