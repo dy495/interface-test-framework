@@ -70,31 +70,20 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            // 获取巡检员id
-            JSONObject shop_id = xd.authShopInspectors(info.shop_id);
-            JSONArray xjyId = shop_id.getJSONArray("id");
-            String xjyId1 = String.valueOf(xjyId);
-            // 获取门店巡店记录列表total总数
-            JSONObject shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, "越秀测试账号", xjyId1, "DESC", 10, null);
-            Integer checks_list = shopCHeckStatus.getInteger("total");
-            // 巡店记录处理下拉框
-            JSONArray list_Type = xd.handleStatusList().getJSONArray("list");
-            int Unwanted_TypeNum = 0;//无需处理数量
-            int deal_TypeNum = 0;//已处理数量
-            int pending_TypeNum = 0;//待处理数量
-            for (int i = 0; i < list_Type.size(); i++) {
-                int typeNum = list_Type.getJSONObject(i).getInteger("type");
-                if (typeNum == 0) {
-                    Unwanted_TypeNum = Unwanted_TypeNum + 1;
-                }
-                if (typeNum == 1) {
-                    deal_TypeNum = deal_TypeNum + 1;
-                }
-                if (typeNum == 2) {
-                    pending_TypeNum = pending_TypeNum + 1;
-                }
 
-            }
+            // 获取门店巡店记录列表total总数
+            JSONObject shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, "", "", "", 100, null);
+            Integer checks_list = shopCHeckStatus.getInteger("total");
+            //无需处理
+            JSONObject Unwanted = xd.getShopChecksPage(info.shop_id, null, 0, "", "", "", 10, null);
+            Integer Unwanted_TypeNum = Unwanted.getInteger("total");
+            //待处理
+            JSONObject deal_Type = xd.getShopChecksPage(info.shop_id, null, 1, "", "", "", 10, null);
+            Integer deal_TypeNum = deal_Type.getInteger("total");
+            //已处理
+            JSONObject pending_Type = xd.getShopChecksPage(info.shop_id, null, 2, "", "", "", 10, null);
+            Integer pending_TypeNum = pending_Type.getInteger("total");
+
             int listNum = Unwanted_TypeNum + deal_TypeNum + pending_TypeNum;//三项之和
             Preconditions.checkArgument(checks_list == listNum, "巡店记录列表数量" + checks_list + "不等于待处理+已处理+无需处理的数量=" + listNum);
 
@@ -103,7 +92,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
+            saveData("巡店记录列表报告数量 == 待处理+已处理+无需处理的数量");
         }
     }
 
@@ -111,26 +100,16 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     //不合格报告+合格报告 == 列表下全部报告
     @Test
     public void getResultTypeList() {
+        logger.logCaseStart(caseResult.getCaseName());
         try {
-            // 获取巡检员id
-            JSONObject shop_id = xd.authShopInspectors(info.shop_id);
-            String xjyid = shop_id.getString("id");
             // 获取门店巡店记录列表total总数
-            JSONObject shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, "越秀测试账号", xjyid, "DESC", null, null);
+            JSONObject shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, "", "", "", 10, null);
             Integer checks_list = shopCHeckStatus.getInteger("total");
             // 巡店记录处理下拉框
-            JSONArray list_Num = xd.resultTypeList().getJSONArray("list");
-            int qualified_Num = 0;
-            int unqualified_Num = 0;
-            for (int i = 0; i < list_Num.size(); i++) {
-                int type_Num = list_Num.getJSONObject(i).getInteger("type");
-                if (type_Num == 0) {
-                    qualified_Num = qualified_Num + 1;
-                }
-                if (type_Num == 1) {
-                    unqualified_Num = unqualified_Num + 1;
-                }
-            }
+            JSONObject qualified_Type = xd.getShopChecksPage(info.shop_id, 0, null, "", "", "", 10, null);
+            Integer qualified_Num = qualified_Type.getInteger("total");
+            JSONObject unqualified_Type = xd.getShopChecksPage(info.shop_id, 1, null, "", "", "", 100, null);
+            Integer unqualified_Num = unqualified_Type.getInteger("total");
             int result_Type = qualified_Num + unqualified_Num;
             Preconditions.checkArgument(checks_list == result_Type, "巡店记录列表数量" + checks_list + "不等于合格+不合格的数量=" + result_Type);
 
@@ -139,7 +118,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
+            saveData("app不合格报告+合格报告 == 列表下全部报告");
         }
     }
 
@@ -149,32 +128,26 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public void getShopChecksDetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取shop_id
-            int page = 1;
-            JSONArray check_list = xd.ShopPage(page, size).getJSONArray("list");
-            int patrol_num = check_list.getJSONObject(0).getInteger("patrol_num");
-            int shop_id = check_list.getJSONObject(0).getInteger("id");
 
-            //获取pc报告id
-            JSONArray detailList = xd.shopChecksPage(page, size, shop_id).getJSONArray("list");
-            int id = detailList.getJSONObject(0).getInteger("id");
+            JSONArray bgList = xd.shopChecksPage(1,10,info.shop_id_01).getJSONArray("list");
+            Integer bgId = bgList.getJSONObject(0).getInteger("id");
             // 获取报告中不合格不合格项数，合格项数，不适用项数,巡店者，提交说明
-            int inappropriate_num = xd.shopChecksDetail(id, shop_id).getInteger("inappropriate_num");
-            int qualified_num = xd.shopChecksDetail(id, shop_id).getInteger("qualified_num");
-            int unqualified_num = xd.shopChecksDetail(id, shop_id).getInteger("unqualified_num");
-            String inspector_names = xd.shopChecksDetail(id, shop_id).getString("inspector_name");
-            String submit_comment_list = xd.shopChecksDetail(id, shop_id).getString("submit_comment");
-            String check_type0 = xd.shopChecksDetail(id, shop_id).getString("check_type");
+            Integer inappropriate_num = xd.shopChecksDetail(bgId, info.shop_id_01).getInteger("inappropriate_num");
+            Integer qualified_num = xd.shopChecksDetail(bgId, info.shop_id_01).getInteger("qualified_num");
+            Integer unqualified_num = xd.shopChecksDetail(bgId, info.shop_id_01).getInteger("unqualified_num");
+            String inspector_names = xd.shopChecksDetail(bgId, info.shop_id_01).getString("inspector_name");
+            String submit_comment_list = xd.shopChecksDetail(bgId, info.shop_id_01).getString("submit_comment");
+            String check_type0 = xd.shopChecksDetail(bgId, info.shop_id_01).getString("check_type");
 //            app端报告
-            JSONObject id1 = xd.authShopInspectors(info.shop_id);
-            String xjyid = id1.getString("id");
-            JSONArray shopCHeckStatus = xd.getShopChecksPage(info.shop_id, null, null, inspector_names, xjyid, "DESC", null, null).getJSONArray("list");
+            JSONArray shopCHeckStatus = xd.getShopChecksPage(info.shop_id_01, null, null, "", "", "", 10, null).getJSONArray("list");
             Long id2 = shopCHeckStatus.getJSONObject(0).getLong("id");
-
-            JSONObject shopCheck = xd.getShopChecksDetail(id2, info.shop_id, null, null);
-            int inappropriate_num1 = shopCheck.getInteger("inappropriate_num");
-            int qualified_num1 = shopCheck.getInteger("qualified_num");
-            int unqualified_num1 = shopCheck.getInteger("unqualified_num");
+//            Long bgId1 = bgId.longValue();
+            JSONArray checkListId = xd.patrol_detail(info.shop_id_01,id2).getJSONArray("list");
+            Long id3 = checkListId.getJSONObject(0).getLong("id");
+            JSONObject shopCheck = xd.getShopChecksDetail(id2, info.shop_id_01, id3, null);
+            Integer inappropriate_num1 = shopCheck.getInteger("inappropriate_num");
+            Integer qualified_num1 = shopCheck.getInteger("qualified_num");
+            Integer unqualified_num1 = shopCheck.getInteger("unqualified_num");
             String submit_comment1 = shopCheck.getString("submit_comment");
             String inspector_name1 = shopCheck.getString("inspector_name");
             String check_type1 = shopCheck.getString("check_type");
@@ -190,7 +163,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
+            saveData("巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容");
         }
     }
 
@@ -239,15 +212,17 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待办列表事项总数totalsum
-            Long totalNum = xd.task_list(null, null, null, null).getLong("total");
-            JSONArray list_size = xd.task_list(null, null, null, null).getJSONArray("list");
-            checkArgument(totalNum == list_size.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + list_size.size());
+            Long totalNum = xd.task_list(1, 50, 0, null).getLong("total");
+            //待办列表长度
+            JSONArray dbList = xd.task_list(1, 50, 0, null).getJSONArray("list");
+
+            checkArgument(totalNum == dbList.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + dbList.size());
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            //        saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
+                    saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
         }
     }
 
@@ -266,32 +241,28 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            //        saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
+                    saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
         }
 
     }
 
+    // app账号下当前门店数量==pc该账号下客流分析列表的数量
+    @Test
+    public void mdNum1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer appMdNum = md.app_shopNum().getInteger("shop_count");
+            Integer pcMdNum = md.patrolShopPageV3("", 1, 10).getInteger("total");
+            checkArgument(appMdNum == pcMdNum, "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
+        }
 
-//
-//    //个人中心【待办事项】未完成、已完成、已过期列表下所对应的事项
-//    @Test
-//    public void backlogNum(String type,String mes){
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray list = xd.task_list(100,100,Integer.parseInt(type),null).getJSONArray("list");
-//            for(int i=0;i<list.size();i++){
-//                JSONObject obj = list.getJSONObject(i);
-//
-//            }
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            //        saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
-//        }
-//
-//    }
+    }
 
 
     @DataProvider(name = "CHKRESULT")

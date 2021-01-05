@@ -696,6 +696,27 @@ public class StoreScenarioUtil extends TestCaseCommon {
     /**-------------------------------------------------------------8.5 会员相关---------------------------------------------**/
 
     /**
+     * @description:8.5 客流分析列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject customerFlowList(String district_code, Object shop_type, String shop_name,String shop_manager,String sort_type,Integer sort_type_order,Integer page,Integer size,String district_name) throws Exception {
+        String url = "/patrol/shop/page/passenger-flow";
+        JSONObject json = new JSONObject();
+        json.put("district_code", district_code);
+        json.put("shop_type", shop_type);
+        json.put("shop_manager", shop_manager);
+        json.put("sort_type", sort_type);
+        json.put("sort_type_order", sort_type_order);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("district_name", district_name);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
      * @description:8.5.1 会员类型列表
      * @author: qingqing
      * @time:
