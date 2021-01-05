@@ -347,8 +347,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             Object[][] flag = Constant.preSleCustomerManage_pram();
             PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
-            String startTime=  dt.getHistoryDate(-10);
-            String endTime=  dt.getHistoryDate(10);
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.customer_name = data.getString(flag[0][1].toString());
@@ -362,7 +360,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(variable.sale_name), "参数全部输入的查询的" + variable.sale_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString("create_date").compareTo(startTime)>=0&&result.getString("create_date").compareTo(endTime)<=0, "销售客户创建开始时间："+startTime+" 结束时间："+endTime+" 列表中的创建时间为："+result.getString("create_date"));
 
             } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
