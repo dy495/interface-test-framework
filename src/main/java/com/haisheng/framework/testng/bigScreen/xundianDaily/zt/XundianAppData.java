@@ -168,43 +168,43 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //未完成的定检任务进行处理，pc巡店中心巡店次数+1，巡店报告中心数据+1，app报告中心+1
-    @Test(dataProvider = "DJTYPE")
-    public void djXunDian(String type, String chinesetype, String result, String mes) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取门店巡店次数
-            int bef1 = xd.xunDianCenterselect(1, 1, "赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
-            //获取巡店报告中心报告总数
-            int bef2 = xd.xd_report_list(null, "赢识办公室(测试越秀/飞单)", null, null, null, 1, 1).getInteger("total");
-
-            int bef3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "DESC", null, null).getInteger("total");
-            //定检任务列表
-            JSONArray dj = xd.scheduleCheckPage(1, 10).getJSONArray("list");
-            //获取定检任务id
-            Long djid = dj.getLong(0);
-            //开始一次定检巡店
-            info.djXdOperate(info.shop_id, type, 1, Integer.parseInt(result), djid);
-
-            int after1 = xd.xunDianCenterselect(1, 1, "赢识办公室(测试越秀/飞单)").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
-            int after2 = xd.xd_report_list(null, "赢识办公室(测试越秀/飞单)", null, null, null, 1, 1).getInteger("total");
-            int after3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "DESC", null, null).getInteger("total");
-
-
-            int add1 = after1 - bef1;
-            int add2 = after2 - bef2;
-            int add3 = after3 - bef3;
-            Preconditions.checkArgument(add1 == 1, "PC【巡店中心】巡店次数 期待增加1，实际增加" + add1);
-            Preconditions.checkArgument(add2 == 1, "PC【巡店报告中心】巡店报告 期待增加1，实际增加" + add2);
-            Preconditions.checkArgument(add3 == 1, "app【巡店记录】巡店报告 期待增加1，实际增加" + add3);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
-        }
-    }
+//    //未完成的定检任务进行处理，pc巡店中心巡店次数+1，巡店报告中心数据+1，app报告中心+1
+//    @Test(dataProvider = "DJTYPE")
+//    public void djXunDian(String type, String chinesetype, String result, String mes) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取门店巡店次数
+//            int bef1 = xd.xunDianCenterselect(1, 10, "").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+//            //获取巡店报告中心报告总数
+//            int bef2 = xd.xd_report_list(null, "", null, null, null, 1, 10).getInteger("total");
+//
+//            int bef3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "", 10, null).getInteger("total");
+//            //定检任务列表
+//            JSONArray dj = xd.scheduleCheckPage(1, 10).getJSONArray("list");
+//            //获取定检任务id
+//            Long djid = dj.getLong(0);
+//            //开始一次定检巡店
+//            info.djXdOperate(info.shop_id, type, 1, Integer.parseInt(result), djid);
+//
+//            int after1 = xd.xunDianCenterselect(1, 10, "").getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+//            int after2 = xd.xd_report_list(null, "", null, null, null, 1, 10).getInteger("total");
+//            int after3 = xd.getShopChecksPage(info.shop_id, null, null, "", "", "", 10, null).getInteger("total");
+//
+//
+//            int add1 = after1 - bef1;
+//            int add2 = after2 - bef2;
+//            int add3 = after3 - bef3;
+//            Preconditions.checkArgument(add1 == 1, "PC【巡店中心】巡店次数 期待增加1，实际增加" + add1);
+//            Preconditions.checkArgument(add2 == 1, "PC【巡店报告中心】巡店报告 期待增加1，实际增加" + add2);
+//            Preconditions.checkArgument(add3 == 1, "app【巡店记录】巡店报告 期待增加1，实际增加" + add3);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("【" + chinesetype + "】提交一个" + mes + "报告，PC【巡店中心】巡店次数+1、PC【巡店报告中心】巡店报告+1、app【巡店记录】巡店报告+1");
+//        }
+//    }
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test
@@ -265,7 +265,36 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    //[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
+    @Test
+    public void todayNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray homeList = md.cardList("HOME_BELOW",null,10).getJSONArray("list");
+//            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
+            JSONArray resultList = homeList.getJSONObject(0).getJSONArray("result");
+            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
 
+            int todayUvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+
+            for(int i=0;i<trendList.size();i++){
+                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
+                if(uv==null){
+                    uv=0;
+;                }
+                todayUvCount += uv;
+            }
+            checkArgument(todayUv <= todayUvCount, "首页实时客流分析中今日到访人数" + todayUv + "趋势图中各时间段人数" + todayUvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("首页实时客流分钟中今日到访人数<= 趋势图中今天各时段人数之和");
+        }
+
+    }
 
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {
