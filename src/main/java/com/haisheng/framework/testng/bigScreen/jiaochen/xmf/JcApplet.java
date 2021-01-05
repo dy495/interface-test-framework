@@ -9,35 +9,39 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProd
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
-import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
     ScenarioUtil jc = new ScenarioUtil();
-
+    BusinessUtil util = new BusinessUtil();
+    LoginUtil user = new LoginUtil();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
+    CommonConfig commonConfig = new CommonConfig();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -46,7 +50,6 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
 
 
         //replace checklist app id and conf id
@@ -422,7 +425,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //修改用户信息
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
-            er.gender="FEMALE";
+            er.gender = "FEMALE";
             er.name = "@@@";
             er.contact = "15037286013";
             er.shipping_address = "中关村soho" + dt.getHHmm(0);
@@ -440,20 +443,20 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(description = "异常",dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)
+    //    @Test(description = "异常",dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)
     public void appletCustomer2(String contact) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //修改用户信息
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
-            er.gender="FEMALE";
+            er.gender = "FEMALE";
             er.name = "@@@";
             er.contact = contact;
-            er.checkcode=false;
+            er.checkcode = false;
             er.shipping_address = "中关村soho" + dt.getHHmm(0);
-            int code=jc.appletUserInfoEdit(er).getInteger("code");
-            Preconditions.checkArgument(code==1001,"applet-修改个人信息手机号异常");
+            int code = jc.appletUserInfoEdit(er).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "applet-修改个人信息手机号异常");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -461,24 +464,25 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("修改个人信息正常常");
         }
     }
-//    @Test(description = "异常")
+
+    //    @Test(description = "异常")
     public void appletCustomer3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //修改用户信息
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
-            er.gender="FEMALE";
+            er.gender = "FEMALE";
             er.name = "@@@";
             er.contact = "15037286013";
-            er.checkcode=false;
-            er.shipping_address="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十中关";
-            int code=jc.appletUserInfoEdit(er).getInteger("code");
-            er.shipping_address="中关村soho";
-            er.name="一二三四五六七八九十一二";
-            int code2=jc.appletUserInfoEdit(er).getInteger("code");
-            Preconditions.checkArgument(code==1001,"applet-修改个人信息地址长度异常验证");
-            Preconditions.checkArgument(code2==1001,"applet-修改个人信息名称长度异常验证");
+            er.checkcode = false;
+            er.shipping_address = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十中关";
+            int code = jc.appletUserInfoEdit(er).getInteger("code");
+            er.shipping_address = "中关村soho";
+            er.name = "一二三四五六七八九十一二";
+            int code2 = jc.appletUserInfoEdit(er).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "applet-修改个人信息地址长度异常验证");
+            Preconditions.checkArgument(code2 == 1001, "applet-修改个人信息名称长度异常验证");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -486,64 +490,87 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("修改个人信息异常验证");
         }
     }
+
     //报名领卡券 卡券选择通用不限量的固定id ok
+    //卡券累计发出+1，发卡记录+1
     @Test()
     public void activity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer voucherTotal=pf.getVoucherTotal();  //卡券数量
+            Integer voucherTotal = pf.getVoucherTotal();  //卡券数量
 //           Long total=jc.appletVoucherList(null,"GENERAL",20).getLong("total");
-            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
-            JSONArray voucherList=new JSONArray();
+            jc.pcLogin(pp.gwphone, pp.jdgwpassword);
+            //登录门店查询数据
+            commonConfig.shopId = "-1";
+            String voucherName = util.getVoucherName(pp.voucherId);
+            VoucherInfoVO voucherInfoVO = util.getVoucherInfo(voucherName);
+            //累计发出数
+            Long cumulativeDelivery = voucherInfoVO.getCumulativeDelivery();
+            //发卡记录数
+            int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            //登回
+            commonConfig.shopId = "45973";
+            JSONArray voucherList = new JSONArray();
 //            Long voucherId=jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
             voucherList.add(pp.voucherId);   //
-            Long id=pf.creteArticle(voucherList,"ARTICLE_BUTTON");
-
+            Long id = pf.creteArticle(voucherList, "ARTICLE_BUTTON");
             jc.appletLoginToken(pp.appletTocken);
-            jc.appletvoucherReceive(id.toString(),pp.voucherId.toString());   //领卡券
-            Integer voucherTotalB=pf.getVoucherTotal();      //查卡券数
-            Preconditions.checkArgument(voucherTotalB-voucherTotal==1,"活动领取卡券后，卡券数量未加1");
-
+            jc.appletvoucherReceive(id.toString(), pp.voucherId.toString());   //领卡券
+            Integer voucherTotalB = pf.getVoucherTotal();      //查卡券数
+            Preconditions.checkArgument(voucherTotalB - voucherTotal == 1, "活动领取卡券后，卡券数量未加1");
+            user.login(administrator);
+            //查询新数据
+            commonConfig.shopId = "-1";
+            //累计发出数
+            VoucherInfoVO newVoucherInfoVO = util.getVoucherInfo(voucherName);
+            Long newCumulativeDelivery = newVoucherInfoVO.getCumulativeDelivery();
+            //发卡记录数
+            int newSendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery, sendRecordTotal, newSendRecordTotal);
+            Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1, "领券之前累计发出数：" + cumulativeDelivery + "领券之后累计发出数：" + newCumulativeDelivery);
+            Preconditions.checkArgument(newSendRecordTotal == sendRecordTotal + 1, "领券之前发卡记录数：" + sendRecordTotal + "领券之后发卡记录数：" + newSendRecordTotal);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
+            //还原
+            commonConfig.shopId = "45973";
             saveData("创建活动，领卡券");
         }
     }
-    
+
     //报名领卡券报名通过即发券 卡券选择通用不限量的固定id  ok
     @Test()
     public void activity2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer voucherTotal=pf.getVoucherTotal();  //卡券数量
+            Integer voucherTotal = pf.getVoucherTotal();  //卡券数量
 //           Long total=jc.appletVoucherList(null,"GENERAL",20).getLong("total");
-            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
-            JSONArray voucherList=new JSONArray();
+            jc.pcLogin(pp.gwphone, pp.jdgwpassword);
+            JSONArray voucherList = new JSONArray();
 //            Long voucherId=jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
             voucherList.add(pp.voucherId);   //
-            Long id=pf.creteArticle(voucherList,"SIGN_UP");       //创建活动
+            Long id = pf.creteArticle(voucherList, "SIGN_UP");       //创建活动
 
             jc.appletLoginToken(pp.appletTocken);
             //报名
 //            Long id=3921L;
 
-            appletActivityRegister ar=new appletActivityRegister();
-            ar.id=id.toString();
-            ar.name="@@@";
-            ar.num=1;
-            ar.phone="15037286013";
+            appletActivityRegister ar = new appletActivityRegister();
+            ar.id = id.toString();
+            ar.name = "@@@";
+            ar.num = 1;
+            ar.phone = "15037286013";
             jc.appletactivityRegister(ar);
             //pc--审批通过
-            jc.pcLogin(pp.gwphone,pp.jdgwpassword);
-            String passId=jc.approvalListFilterManage(null,"1","10",id.intValue(),null,null).getJSONArray("list").getJSONObject(0).getString("id");
-            JSONArray json=new JSONArray();
+            jc.pcLogin(pp.gwphone, pp.jdgwpassword);
+            String passId = jc.approvalListFilterManage(null, "1", "10", id.intValue(), null, null).getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray json = new JSONArray();
             json.add(passId);
-            jc.approvalArticle(json,"APPROVAL_CONFIRM");    //审批通过
+            jc.approvalArticle(json, "APPROVAL_CONFIRM");    //审批通过
 
             jc.appletLoginToken(pp.appletTocken);
-            Integer voucherTotalB=pf.getVoucherTotal();      //查卡券数
-            Preconditions.checkArgument(voucherTotalB-voucherTotal==1,"活动领取卡券后，卡券数量未加1");
+            Integer voucherTotalB = pf.getVoucherTotal();      //查卡券数
+            Preconditions.checkArgument(voucherTotalB - voucherTotal == 1, "活动领取卡券后，卡券数量未加1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -560,8 +587,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void appletArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list=jc.appletArticleList("10",null).getJSONArray("list");
-            Preconditions.checkArgument(list.size()<=10,"首页文章超过了10");
+            JSONArray list = jc.appletArticleList("10", null).getJSONArray("list");
+            Preconditions.checkArgument(list.size() <= 10, "首页文章超过了10");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -574,11 +601,11 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void appletVerification() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String verification_code[]={"OGW","OGW123","OGWTJKW","OGWT真"};
-            String voucher_code[]=pf.voucherName();
-            for(int i=0;i<verification_code.length;i++){
-                int code=jc.appleterification(voucher_code[2],verification_code[i],false).getInteger("code");
-                Preconditions.checkArgument(code==1001,"异常核销码");
+            String verification_code[] = {"OGW", "OGW123", "OGWTJKW", "OGWT真"};
+            String voucher_code[] = pf.voucherName();
+            for (int i = 0; i < verification_code.length; i++) {
+                int code = jc.appleterification(voucher_code[2], verification_code[i], false).getInteger("code");
+                Preconditions.checkArgument(code == 1001, "异常核销码");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -586,18 +613,19 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("自主核销异常验证");
         }
     }
+
     @Test(description = "自主核销")
     public void appletVerification2() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
-            String voucher_code[]=pf.voucherName();
-            jc.appleterification(voucher_code[2],pp.verification_code,true).getInteger("code");
+        try {
+            String voucher_code[] = pf.voucherName();
+            jc.appleterification(voucher_code[2], pp.verification_code, true).getInteger("code");
 
             //小程序消息最新一条信息校验
             jc.appletLoginToken(pp.appletTocken);
-            JSONObject message=jc.appletMessageList(null,20).getJSONArray("list").getJSONObject(0);
-            String messageName=message.getString("content");
-            Preconditions.checkArgument(messageName.equals("您的卡券【"+voucher_code[1]+"】已被核销，请立即查看"));
+            JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
+            String messageName = message.getString("content");
+            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

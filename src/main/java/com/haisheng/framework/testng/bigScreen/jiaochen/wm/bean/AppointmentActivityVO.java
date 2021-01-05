@@ -6,15 +6,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class OperationRegisterVO implements Serializable {
-    @JSONField(name = "register_num")
-    private Integer registerNum;
-    @JSONField(name = "passed_num")
-    private Integer passedNum;
+public class AppointmentActivityVO implements Serializable {
+    @JSONField(name = "status_name")
+    private String statusName;
     @JSONField(name = "id")
     private Long id;
     @JSONField(name = "title")
     private String title;
-    @JSONField(name = "total_quota")
-    private Integer totalQuota;
+    @JSONField(name = "time_str")
+    private String timeStr;
 }

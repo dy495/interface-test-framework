@@ -17,4 +17,14 @@ public abstract class BaseScene implements IScene {
     public String getIpPort() {
         return null;
     }
+
+    @Override
+    public void setPage(Integer page) {
+
+    }
+
+    @Override
+    public void setSize(Integer size) {
+
+    }
 }

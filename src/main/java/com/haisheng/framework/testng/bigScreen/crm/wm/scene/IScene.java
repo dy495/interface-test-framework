@@ -12,4 +12,8 @@ public interface IScene {
     String getPath();
 
     String getIpPort();
+
+    void setPage(Integer page);
+
+    void setSize(Integer size);
 }

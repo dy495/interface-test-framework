@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
@@ -21,6 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -900,7 +902,7 @@ public class BusinessUtilOnline {
      *
      * @return 报名数量
      */
-    public int getAppletActivityNum() {
+    public int getAppletArticleNum() {
         Long lastValue = null;
         int listSize = 0;
         JSONArray array;
@@ -914,12 +916,26 @@ public class BusinessUtilOnline {
         return listSize;
     }
 
+    public List<AppointmentActivityVO> getAppletArticleList() {
+        List<AppointmentActivityVO> list = new ArrayList<>();
+        Long lastValue = null;
+        JSONArray array;
+        do {
+            AppointmentActivityList.AppointmentActivityListBuilder builder = AppointmentActivityList.builder().lastValue(lastValue).size(20);
+            JSONObject response = jc.invokeApi(builder.build());
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AppointmentActivityVO.class)).collect(Collectors.toList()));
+        } while (array.size() == 20);
+        return list;
+    }
+
     /**
-     * 获取能报名的活动id
+     * 获取能报名的文章id
      *
      * @param count 活动数量
      */
-    public List<Long> getCanApplyActivityList(Integer count) {
+    public List<Long> getCanApplyArticleList(Integer count) {
         List<Long> activityIds = new ArrayList<>();
         String startDate = "2020-12-01";
         String endDate = DateTimeUtil.addDayFormat(new Date(), 365);
@@ -937,17 +953,17 @@ public class BusinessUtilOnline {
     /**
      * 获取活动名称
      *
-     * @param activityId 活动id
+     * @param articleId 活动id
      * @return 活动名称
      */
-    public String getActivityName(Long activityId) {
+    public String getArticleName(Long articleId) {
         List<String> list = new ArrayList<>();
         ArticlePage.ArticlePageBuilder builder = ArticlePage.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(activityId)).map(e -> e.getString("title"))
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(articleId)).map(e -> e.getString("title"))
                     .collect(Collectors.toList()));
         }
         return list.get(0);
@@ -959,7 +975,7 @@ public class BusinessUtilOnline {
      * @param activityId 活动id
      * @return 报名详情
      */
-    public OperationRegisterVO getOperationRegisterInfo(Long activityId) {
+    public OperationRegisterVO getRegisterInfo(Long activityId) {
         List<OperationRegisterVO> operationRegisters = new ArrayList<>();
         RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
         int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
@@ -972,23 +988,62 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 获取审批详情
+     * 获取报名列表
      *
-     * @param articleId  文章id
-     * @param approvalId 审批id
+     * @return 报名列表
+     */
+    public List<OperationRegisterVO> getRegisterList() {
+        List<OperationRegisterVO> operationRegisters = new ArrayList<>();
+        RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
+        int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
+            operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
+        }
+        return operationRegisters;
+    }
+
+    /**
+     * 获取含有待审批的申请
+     * 如果没有时需要提供token报名一个活动
+     * 使用此方法后需要重新登录pc
+     *
+     * @param token 小程序token
+     * @return 活动id
+     */
+    public OperationRegisterVO getContainApplyRegisterInfo(EnumAppletToken token) {
+        Long articleId;
+        List<OperationRegisterVO> operationRegisters = getRegisterList();
+        OperationRegisterVO operationRegisterVO = operationRegisters.stream().filter(e -> getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
+        if (operationRegisterVO == null) {
+            articleId = getCanApplyArticleList(1).get(0);
+            new LoginUtil().loginApplet(token);
+            applyArticle(articleId);
+            new LoginUtil().login(EnumAccount.ADMINISTRATOR_ONLINE);
+        } else {
+            articleId = operationRegisterVO.getId();
+        }
+        return getRegisterInfo(articleId);
+    }
+
+
+    /**
+     * 获取待审批列表
+     *
+     * @param articleId 文章id
      * @return 审批详情
      */
-    public OperationApprovalVO getOperationApprovalInfo(Long articleId, Long approvalId) {
+    public List<OperationApprovalVO> getApprovalList(Long articleId) {
         List<OperationApprovalVO> list = new ArrayList<>();
         ApprovalPage.ApprovalPageBuilder builder = ApprovalPage.builder().articleId(String.valueOf(articleId));
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(approvalId))
-                    .map(e -> JSON.parseObject(JSON.toJSONString(e), OperationApprovalVO.class)).collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationApprovalVO.class)).collect(Collectors.toList()));
         }
-        return list.get(0);
+        return list;
     }
 
     /**
@@ -1007,7 +1062,7 @@ public class BusinessUtilOnline {
      * @param articleId 文章idz
      * @return 审批详情
      */
-    public List<OperationApprovalVO> getOperationApprovalInfo(Long articleId) {
+    public List<OperationApprovalVO> getApprovalInfo(Long articleId) {
         List<OperationApprovalVO> list = new ArrayList<>();
         ApprovalPage.ApprovalPageBuilder builder = ApprovalPage.builder().articleId(String.valueOf(articleId));
         int total = jc.invokeApi(builder.build()).getInteger("total");
@@ -1022,9 +1077,9 @@ public class BusinessUtilOnline {
     /**
      * 活动报名
      *
-     * @param activityId 活动id
+     * @param articleId 活动id
      */
-    public void applyActivity(Long activityId) {
-        jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
+    public void applyArticle(Long articleId) {
+        jc.invokeApi(ActivityRegister.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
     }
 }

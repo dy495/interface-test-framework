@@ -32,10 +32,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +45,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
     private static final Integer size = 100;
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final EnumAppletToken applet = EnumAppletToken.JC_WM_ONLINE;
+    private static final EnumAppletToken appletUser = EnumAppletToken.JC_GLY_ONLINE;
     private static final EnumAccount marketing = EnumAccount.MARKETING_ONLINE;
 
     @BeforeClass
@@ -148,22 +146,22 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int size = 1;
-            List<Long> activityIds = util.getCanApplyActivityList(size);
+            List<Long> activityIds = util.getCanApplyArticleList(size);
             //全部开启
             activityIds.forEach(e -> jc.invokeApi(StatusChange.builder().id(e).build()));
             Long activityId = activityIds.get(size - 1);
-            String activityName = util.getActivityName(activityId);
+            String activityName = util.getArticleName(activityId);
             //报名人数
             IScene scene = ApprovalPage.builder().articleId(String.valueOf(activityId)).build();
             int num = jc.invokeApi(scene).getInteger("total");
             user.loginApplet(applet);
             //我的活动列表数
-            int applyNum = util.getAppletActivityNum();
+            int applyNum = util.getAppletArticleNum();
             int registerNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
             //报名
             jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
             //我的报名列表消息+1
-            int newApplyNum = util.getAppletActivityNum();
+            int newApplyNum = util.getAppletArticleNum();
             CommonUtil.valueView(applyNum, newApplyNum);
             Preconditions.checkArgument(newApplyNum == applyNum + 1, "报名前我的活动列表数：" + applyNum + "报名后我的活动列表数：" + newApplyNum);
             int newRegisterNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
@@ -193,7 +191,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
                 JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
                 operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
             }
-            List<Integer> statusNameList = operationRegisters.stream().map(e -> (int) util.getOperationApprovalInfo(e.getId()).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count()).collect(Collectors.toList());
+            List<Integer> statusNameList = operationRegisters.stream().map(e -> (int) util.getApprovalInfo(e.getId()).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count()).collect(Collectors.toList());
             List<Integer> passedList = operationRegisters.stream().map(OperationRegisterVO::getPassedNum).collect(Collectors.toList());
             List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
             for (int i = 0; i < statusNameList.size(); i++) {
@@ -220,7 +218,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
                 JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
                 operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
             }
-            List<Integer> statusNameList = operationRegisters.stream().map(e -> util.getOperationApprovalInfo(e.getId()).size()).collect(Collectors.toList());
+            List<Integer> statusNameList = operationRegisters.stream().map(e -> util.getApprovalList(e.getId()).size()).collect(Collectors.toList());
             List<Integer> registerList = operationRegisters.stream().map(OperationRegisterVO::getRegisterNum).collect(Collectors.toList());
             List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
             for (int i = 0; i < statusNameList.size(); i++) {
@@ -235,43 +233,43 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间", priority = 1)
+    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间&&操作人=当前帐号", priority = 1)
     public void operationRegister_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.getFormat(new Date());
-            List<OperationRegisterVO> operationRegisters = new ArrayList<>();
-            RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
-            int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
-                operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
-            }
-            List<OperationRegisterVO> operationRegisterVOList = operationRegisters.stream().filter(e -> util.getOperationApprovalInfo(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).collect(Collectors.toList());
-            Long activityId = operationRegisterVOList.get(0).getId();
-            Integer passedNum = operationRegisterVOList.get(0).getPassedNum();
-            String activityName = operationRegisterVOList.get(0).getTitle();
-            int approvalNum = (int) util.getOperationApprovalInfo(activityId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
-            int passNum = (int) util.getOperationApprovalInfo(activityId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
-            CommonUtil.valueView(activityName, activityId, approvalNum, passNum, passedNum);
-            Long id = util.getOperationApprovalInfo(activityId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).findFirst().orElse(null);
+            //遍历报名列表，如果其中含有待审核的任务，获取文章id&标题
+            List<OperationRegisterVO> operationRegisters = util.getRegisterList();
+            OperationRegisterVO operationRegisterVO = operationRegisters.stream().filter(e -> util.getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
+            assert operationRegisterVO != null;
+            Long articleId = operationRegisterVO.getId();
+            String articleTitle = operationRegisterVO.getTitle();
+            //已入选数量
+            Integer passedNum = operationRegisterVO.getPassedNum();
+            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
+            //审批中数量
+            int approvalNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            //已通过数量
+            int passNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
+            CommonUtil.valueView(articleTitle, articleId, approvalNum, passNum, passedNum);
+            Long id = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).findFirst().orElse(null);
             //审批通过
             List<Long> list = new ArrayList<>();
             list.add(id);
             jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
             //审批通过后和数据数量
-            int newApprovalNum = (int) util.getOperationApprovalInfo(activityId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
-            int newPassNum = (int) util.getOperationApprovalInfo(activityId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
-            Preconditions.checkArgument(newApprovalNum == approvalNum - 1, activityName + "审批通过前待审核数量：" + approvalNum + "审批通过后待审核数量：" + newApprovalNum);
-            Preconditions.checkArgument(newPassNum == passNum + 1, activityName + "审批通过前已通过数量：" + passNum + "审批通过后已通过数量：" + newPassNum);
-            int newPassedNum = util.getOperationRegisterInfo(activityId).getPassedNum();
+            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
+            int newApprovalNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            int newPassNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
+            Preconditions.checkArgument(newApprovalNum == approvalNum - 1, articleTitle + "审批通过前待审核数量：" + approvalNum + "审批通过后待审核数量：" + newApprovalNum);
+            Preconditions.checkArgument(newPassNum == passNum + 1, articleTitle + "审批通过前已通过数量：" + passNum + "审批通过后已通过数量：" + newPassNum);
+            int newPassedNum = util.getRegisterInfo(articleId).getPassedNum();
             Preconditions.checkArgument(newPassedNum == passedNum + 1, "审批通过前已入选数量：" + passedNum + "审批通过后已入选数量：" + newPassedNum);
             //入选时间
-            String passedDate = util.getOperationApprovalInfo(activityId, id).getPassedDate();
+            String passedDate = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getPassedDate();
             Preconditions.checkArgument(passedDate.equals(date), "审批通过后入选时间为：" + passedDate);
             //操作账号
-            String userAccountName = util.getOperationApprovalInfo(activityId, id).getUserAccountName();
+            String userAccountName = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
             Preconditions.checkArgument(userAccountName.equals(administrator.getName()), "审批通过后为操作账号为：" + userAccountName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -280,18 +278,53 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
+    @Test(description = "内容运营--报名管理--PC活动报名中审批拒绝1个报名客户，审核页面中已拒绝+1，待审批-1&&操作账号=当前帐号")
     public void operationRegister_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //遍历报名列表，如果其中含有待审核的任务，获取文章id&标题
+            OperationRegisterVO operationRegisterVO = util.getContainApplyRegisterInfo(appletUser);
+            Long articleId = operationRegisterVO.getId();
+            String articleTitle = operationRegisterVO.getTitle();
+            //获取已拒绝和待审批数量
+            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
+            int refuseNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
+            int approvalNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            CommonUtil.valueView(articleTitle, articleId, approvalNum, refuseNum, approvalNum);
+            //获取审批任务id
+            Long id = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).findFirst().orElse(null);
+            //审批拒绝
+            List<Long> list = new ArrayList<>();
+            list.add(id);
+            jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_REJECT").build());
+            //拒绝之后的已拒绝&待审批数量
+            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
+            int newRefuseNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
+            int newApprovalNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            Preconditions.checkArgument(newApprovalNum == approvalNum - 1, articleTitle + "审批前待审批数量：" + approvalNum + "审批拒绝后待审批数量：" + newApprovalNum);
+            Preconditions.checkArgument(newRefuseNum == refuseNum + 1, articleTitle + "审批前已拒绝数量：" + refuseNum + "审批拒绝后已拒绝数量：" + newRefuseNum);
+            //操作账号
+            String userAccountName = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
+            Preconditions.checkArgument(userAccountName.equals(administrator.getName()), "审批通过后为操作账号为：" + userAccountName);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("内容运营--报名管理--PC活动报名中审批拒绝1个报名客户，审核页面中已拒绝+1，待审批-1&&操作账号=当前帐号");
+        }
+    }
+
+    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
+    public void operationRegister_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
             String date = DateTimeUtil.getFormat(new Date());
-            List<Long> activityIds = util.getCanApplyActivityList(3);
+            List<Long> activityIds = util.getCanApplyArticleList(3);
             //报名
             user.loginApplet(applet);
-            activityIds.forEach(e -> util.applyActivity(e));
+            activityIds.forEach(e -> util.applyArticle(e));
             //报名后，均有该用户的报名信息
             user.login(administrator);
-            List<List<OperationApprovalVO>> list = activityIds.stream().map(e -> util.getOperationApprovalInfo(e)).collect(Collectors.toList());
+            List<List<OperationApprovalVO>> list = activityIds.stream().map(e -> util.getApprovalList(e)).collect(Collectors.toList());
             List<OperationApprovalVO> operationApprovalVOList = list.stream().map(subList -> subList.stream().filter(e -> e.getRegisterTime().equals(date)).findFirst().orElse(null)).collect(Collectors.toList());
             operationApprovalVOList.forEach(e -> {
                 Preconditions.checkArgument(e.getCustomerName().equals("隔壁老王"), e.getTitle() + "报名客户名称为：隔壁老王" + "审批列表客户名称为：" + e.getCustomerName());
@@ -305,7 +338,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
     }
 
     @Test(description = "内容运营--报名管理--已入选<=活动名额")
-    public void operationRegister_data_6() {
+    public void operationRegister_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             List<OperationRegisterVO> operationRegisters = new ArrayList<>();

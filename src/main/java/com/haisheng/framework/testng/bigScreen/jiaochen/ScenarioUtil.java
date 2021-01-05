@@ -65,8 +65,9 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("verification_code", password);
         return invokeApi(path, object, checkCode);
     }
+
     //pc登录
-    public JSONObject pcTryLogin(String phone, String verificationCode,Boolean checkcode) {
+    public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkcode) {
         String path = "/jiaochen/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
@@ -666,7 +667,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationAccountEdit(String id, String name,String phone, JSONArray role_id_list, JSONArray shop_list) {
+    public JSONObject organizationAccountEdit(String id, String name, String phone, JSONArray role_id_list, JSONArray shop_list) {
         String url = "/jiaochen/pc/staff/edit";
         String json =
                 "{" +
@@ -1574,14 +1575,14 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json1);
     }
 
-    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day,Boolean checkcode) {
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day, Boolean checkcode) {
         String url = "/jiaochen/applet/granted/maintain/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", shop_id);
         json1.put("car_id", car_id);
         json1.put("day", day);
 
-        return invokeApi(url, json1,checkcode);
+        return invokeApi(url, json1, checkcode);
     }
 
 
@@ -3463,9 +3464,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2020/12/16 16:12
      **/
 
-    public JSONObject appletvoucherList() {
+    public JSONObject appletVoucherList(String articleId) {
         String url = "/jiaochen/applet/granted/article/voucher/list";
         JSONObject json1 = new JSONObject();
+        json1.put("id", articleId);
         return invokeApi(url, json1);
     }
 
@@ -3596,12 +3598,12 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
-    public JSONObject shopStatusChange(String id,String type,String status) {
+    public JSONObject shopStatusChange(String id, String type, String status) {
         String url = "/jiaochen/pc/shop/status/change";
-        JSONObject json=new JSONObject();
-        json.put("id",id);
-        json.put("type",type);
-        json.put("status",status);
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("type", type);
+        json.put("status", status);
         return invokeApi(url, json);
     }
 
