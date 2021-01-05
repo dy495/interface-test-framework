@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
@@ -1154,18 +1155,43 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject task_step_submit(Long shop_id,Long id,JSONArray pic_list,Integer recheck_result,String comment) throws Exception {
+    public JSONObject task_step_submit(Long shop_id,Long id,JSONArray pic_list,Integer recheck_result,String comment)  {
         String url = "/store/m-app/auth/patrol/task/step/submit";
-        JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("id", id);
-        json.put("pic_list", pic_list);
-        json.put("recheck_result", recheck_result);
-        json.put("comment", comment);
-        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res);
+        JSONObject object = new JSONObject();
+        object.put("shop_id", shop_id);
+        object.put("id", id);
+        object.put("pic_list", pic_list);
+        object.put("recheck_result", recheck_result);
+        object.put("comment", comment);
+        return invokeApi(url, object,false);
+      //  return JSON.parseObject(res);
     }
-
+    /**
+     * http请求方法调用
+     *
+     * @param url         url
+     * @param requestBody 请求体
+     * @param checkCode   是否校验code
+     * @return JSONObject response.data
+     */
+    public JSONObject invokeApi(String url, JSONObject requestBody, boolean checkCode) {
+        if (StringUtils.isEmpty(url)) {
+            throw new RuntimeException("url不可为空");
+        }
+        String request = JSON.toJSONString(requestBody);
+        String result = null;
+        if (checkCode) {
+            result = httpPostWithCheckCode(url, request, IpPort);
+            return JSON.parseObject(result).getJSONObject("data");
+        } else {
+            try {
+                result = httpPost(url, request, IpPort);
+            } catch (Exception e) {
+                appendFailReason(e.toString());
+            }
+            return JSON.parseObject(result);
+        }
+    }
     /**
      * @description:3.8 开始或继续巡店(V1.1)
      * @author: qingqing
@@ -1459,12 +1485,13 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @author qingqing
      * @description 1.5 人脸检测（V1.1）
      */
-    public JSONObject face_check(String image_base64) throws Exception {
+    public JSONObject face_check(String image_base64) {
         String url = "/store/m-app/auth/login-user/face-check";
         JSONObject json = new JSONObject();
         json.put("image_base64",image_base64);
-        String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res);
+        return invokeApi(url, json,false);
+       // String res = httpPost(url, json.toJSONString(), IpPort);
+       // return JSON.parseObject(res);
     }
 
     /**

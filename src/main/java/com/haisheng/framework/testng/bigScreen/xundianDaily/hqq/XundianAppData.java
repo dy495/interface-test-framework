@@ -101,7 +101,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test(description = "将【待办事项】中[未完成]列表的待处理进行处理为合格或不合格==[未完成]列表-1&&【已完成】列表+1")
+   // @Test(description = "将【待办事项】中[未完成]列表的待处理进行处理为合格或不合格==[未完成]列表-1&&【已完成】列表+1")
     public void dealAfterData() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -126,7 +126,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告记录数据+1 && APP【巡店中心】累计报告数量+1")
+    //@Test(description = "将【待办事项】中[未完成]中的定检任务进行处理==PC【巡店中心】巡店次数+1 && pc【巡店报告中心】的报告记录数据+1 && APP【巡店中心】累计报告数量+1")
     public void dealAfterData_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -162,7 +162,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int total = xd.xd_report_list("","","","",null,page,size).getInteger("total");
             JSONObject object = xd.patrol_center().getJSONObject("total_patrol_result");
             int total_patrol_number = object.getInteger("total_patrol_number");
-            Preconditions.checkArgument(total_patrol_number ==total , "PC【巡店报告中心】的报告数量="+total+".APP【巡店中心】中的累计提交报告="+total_patrol_number);
+            Preconditions.checkArgument(total_patrol_number ==total , "PC【巡店报告中心】的报告数量="+total+"。APP【巡店中心】中的累计提交报告="+total_patrol_number);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

@@ -826,7 +826,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
           //  String coverage_rate =  ss.replace("%","");
 
              //获取巡店分析中核心指标中的巡店整体覆盖率
-            JSONObject patrol_coverage = xd.xd_analysis_indeicators("RECENT_SEVEN","").getJSONObject("patrol_coverage");
+            JSONObject patrol_coverage = xd.xd_analysis_indeicators("RECENT_SIXTY","").getJSONObject("patrol_coverage");
             String patrol_coverage_rate_str= patrol_coverage.getString("patrol_coverage_rate_str");
 
             checkArgument( patrol_coverage_rate_str.equals(coverage_rate) , "" + "【巡店分析】巡店整体覆盖率:"+patrol_coverage_rate_str  +"!= 【巡店中心】下巡店门店的总数量/权限下门店总数＊100%:"+coverage_rate);
