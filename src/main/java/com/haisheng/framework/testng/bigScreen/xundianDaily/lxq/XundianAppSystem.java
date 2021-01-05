@@ -81,7 +81,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
                 int handleStatus = obj.getInteger("handle_status");
-                int handleStatusname = obj.getInteger("handle_status_name");
+                String handleStatusname = obj.getString("handle_status_name");
                 Preconditions.checkArgument(handleStatus== Integer.parseInt(type),"根据"+mes+"进行筛选，结果包含"+handleStatusname);
             }
 
@@ -207,6 +207,8 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    @Ignore
     @Test(dataProvider = "CHECKRESULT") // 没改完 有问题
     public void xdRecordDetailFilter2(String type, String mes) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -242,15 +244,20 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
                 Long id = obj.getLong("id");
-                JSONObject obj1 = xd.getShopChecksDetail(id,info.shop_id_01,null,null);
+                JSONArray getlistid =  xd.patrol_detail(info.shop_id_01,id).getJSONArray("list");
+                for (int j = 0; j < getlistid.size();j++){
+                    JSONObject obj2 = getlistid.getJSONObject(j);
+                    JSONObject obj1 = xd.getShopChecksDetail(id,info.shop_id_01,obj2.getLong("id"),null);
 
-                Preconditions.checkArgument(obj1.containsKey("check_time"),"记录"+id+"未展示提交时间");
-                Preconditions.checkArgument(obj1.containsKey("submit_comment") ,"记录"+id+"未展示提交说明");
-                Preconditions.checkArgument(obj1.containsKey("inspector_name"),"记录"+id+"未展示巡店者");
-                Preconditions.checkArgument(obj1.containsKey("check_type_name"),"记录"+id+"未展示巡店方式");
-                Preconditions.checkArgument(obj1.containsKey("inappropriate_num"),"记录"+id+"未展示不适用项数");
-                Preconditions.checkArgument(obj1.containsKey("qualified_num"),"记录"+id+"未展示合格项数");
-                Preconditions.checkArgument(obj1.containsKey("unqualified_num"),"记录"+id+"未展示不合格项数");
+                    Preconditions.checkArgument(obj1.containsKey("check_time"),"记录"+id+"未展示提交时间");
+                    Preconditions.checkArgument(obj1.containsKey("submit_comment") ,"记录"+id+"未展示提交说明");
+                    Preconditions.checkArgument(obj1.containsKey("inspector_name"),"记录"+id+"未展示巡店者");
+                    Preconditions.checkArgument(obj1.containsKey("check_type_name"),"记录"+id+"未展示巡店方式");
+                    Preconditions.checkArgument(obj1.containsKey("inappropriate_num"),"记录"+id+"未展示不适用项数");
+                    Preconditions.checkArgument(obj1.containsKey("qualified_num"),"记录"+id+"未展示合格项数");
+                    Preconditions.checkArgument(obj1.containsKey("unqualified_num"),"记录"+id+"未展示不合格项数");
+                }
+
             }
 
         } catch (AssertionError e) {
@@ -383,7 +390,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         return new String[][]{
                 {"1000","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123","100个字的说明"},
                 {"1000","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123","50个字的说明"},
-                {"1001","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa1234567654321231","101个字的说明"},
+                //{"1001","这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa123456765432123这是自动化的提交说明，100个字，～！@#¥%……&*（）AAAaaa1234567654321231","101个字的说明"},
 
         };
     }

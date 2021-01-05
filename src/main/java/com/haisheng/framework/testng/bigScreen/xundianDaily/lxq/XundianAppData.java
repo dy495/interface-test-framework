@@ -85,9 +85,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1);
             Long patrolID = obj.getLong("id");
             JSONArray checklist = obj.getJSONArray("check_lists");
+
+            Long listID = 1L;
             for (int i = 0; i < checklist.size();i++){
                 JSONObject eachlist = checklist.getJSONObject(i);
-                Long listID = eachlist.getLong("id"); // 获取list id
+                listID = eachlist.getLong("id"); // 获取list id
                 JSONArray chkitems = eachlist.getJSONArray("check_items");
                 for (int j =0; j < chkitems.size();j++){
                     JSONObject eachitem = chkitems.getJSONObject(j);
@@ -107,9 +109,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                     }
                 }
 
+
+
             }
             xd.checks_submit(info.shop_id_01,patrolID,"一次巡店完成");
-            JSONObject detail = xd.getShopChecksDetail(patrolID,info.shop_id_01,null,null);
+            JSONObject detail = xd.getShopChecksDetail(patrolID,info.shop_id_01,listID,null);
             int notokSUM = detail.getInteger("unqualified_num"); //提交结果后展示的不合格数量
             int okSUM = detail.getInteger("qualified_num");//提交结果后展示的合格数量
             int notapplySUM = detail.getInteger("inappropriate_num");//提交结果后展示的不适用数量
@@ -176,7 +180,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public void xdOnePgae3(String type, String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists");
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,1).getJSONArray("check_lists");
             for (int i=0; i < chklist.size(); i++){
                 JSONObject eachlist = chklist.getJSONObject(i);
                 int total = eachlist.getInteger("total"); //分母数
@@ -197,6 +201,8 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
      * @description :【远程/现场巡店-页面内一致性】执行清单的执行中分子==执行清单已执行完成的条数
      * @date :2020/12/22 16:00
      **/
+
+
     @Test(dataProvider = "XDTYPE")  //ok
     public void xdOnePgae4(String type,String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());

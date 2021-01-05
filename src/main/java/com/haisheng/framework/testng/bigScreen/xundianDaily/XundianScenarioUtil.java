@@ -1225,7 +1225,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         String url = "/store/m-app/auth/shop/checks/submit";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
-        json.put("patrol_id", patrol_id);
+        json.put("id", patrol_id);
         json.put("comment", comment);
 
         String res = httpPost(url, json.toJSONString(), IpPort);

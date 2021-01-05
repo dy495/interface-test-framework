@@ -32,7 +32,7 @@ public class MendianInfo {
         JSONObject obj = xd.checkStartapp(shopid, type, reset);
         Long patrolID = obj.getLong("id");
         JSONArray checklist = obj.getJSONArray("check_lists");
-        JSONArray piclist = getpic(0);
+
         for (int i = 0; i < checklist.size(); i++) {
             JSONObject eachlist = checklist.getJSONObject(i);
             Long listID = eachlist.getLong("id"); // 获取list id
@@ -40,6 +40,7 @@ public class MendianInfo {
             for (int j = 0; j < chkitems.size(); j++) {
                 JSONObject eachitem = chkitems.getJSONObject(j);
                 Long itemID = eachitem.getLong("id"); //每个清单内循环 获取item id
+                JSONArray piclist = getpic(0);
                 //巡检项目结果 1合格；2不合格；3不适用
                 xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "啊啊啊啊啊啊", piclist);
                 //xd.checks_item_submit(shopid, patrolID, listID, itemID, result, "", null);
