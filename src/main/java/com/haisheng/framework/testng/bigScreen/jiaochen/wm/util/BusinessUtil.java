@@ -1055,15 +1055,19 @@ public class BusinessUtil {
         jc.invokeApi(ActivityRegister.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
     }
 
-    public <T> List<T> doSomething(IScene scene, T t) {
-        List<T> list = new ArrayList<>();
+    public  List<Object> doSomething(IScene scene, Object t) {
+        List<Object> list = new ArrayList<>();
         int total = jc.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
             JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-            list.addAll((List<T>) array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), t.getClass())).collect(Collectors.toList()));
+            array.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                Object newT =  JSONObject.toJavaObject(jsonObject, t.getClass());
+                list.add(newT);
+            });
         }
         return list;
     }

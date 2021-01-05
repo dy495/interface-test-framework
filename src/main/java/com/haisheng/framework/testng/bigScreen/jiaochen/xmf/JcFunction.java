@@ -307,6 +307,34 @@ public class JcFunction {
     }
 
     /**
+     * 创建活动
+     *
+     * @param totalQuota 报名名额
+     * @return 活动id
+     */
+    public Long creteArticle(String totalQuota) {
+        String article_bg_pic = file.texFile(pp.filepath);
+        String path = jc.pcFileUpload(article_bg_pic, true, 1.5).getString("pic_path");
+        JSONArray picList = new JSONArray();
+        picList.add(path);
+        pccreateActile er = new pccreateActile();
+        er.title = "1234" + dt.getHHmm(0);
+        er.pic_type = "ONE_BIG";
+        er.content = "\"<p>890089008900890089008900</p>";
+        er.label = "SELL_WELL";
+        er.content_type = "ACTIVITY";
+        er.total_quota = totalQuota;
+        er.register_start_date = dt.getHistoryDate(0);
+        er.register_end_date = dt.getHistoryDate(0);
+        er.start_date = dt.getHistoryDate(0);
+        er.end_date = dt.getHistoryDate(0);
+        er.address = "海淀区中关村soho";
+        er.is_can_maintain = true;
+        er.pic_list = picList;
+        return jc.pccreateActile(er).getLong("id");
+    }
+
+    /**
      * @description :获取卡券列表中总数
      * @date :2020/12/16 17:18
      **/
@@ -333,7 +361,7 @@ public class JcFunction {
     public String[] voucherName() throws Exception {
         jc.appletLoginToken(pp.appletTocken);
         JSONArray list = jc.appletVoucherList(null, "GENERAL", 20).getJSONArray("list");
-        String voucher_code[] = {"123", "123", "" };
+        String voucher_code[] = {"123", "123", ""};
         for (int i = 0; i < list.size(); i++) {
             JSONObject data = list.getJSONObject(i);
             String isLimitCar = data.getString("is_limit_car");

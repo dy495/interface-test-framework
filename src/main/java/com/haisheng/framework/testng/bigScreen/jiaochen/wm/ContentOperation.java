@@ -15,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumArticleStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.Banner;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.ActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.*;
@@ -161,6 +160,39 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //bug
+    @Test(description = "内容运营--报名管理--到达报名名额后不可再审批通过,提示：人数已达到报名上线", enabled = false)
+    public void operationRegister_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //创建只有1个名额的文章
+            Long articleId = new JcFunction().creteArticle("1");
+            //报名
+            EnumAppletToken[] appletTokens = new EnumAppletToken[]{applet, applet1};
+            Arrays.stream(appletTokens).forEach(e -> {
+                //报名
+                user.loginApplet(e);
+                util.applyArticle(articleId);
+            });
+            user.login(administrator);
+            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
+            List<Long> ids = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).collect(Collectors.toList());
+            List<Long> list1 = new ArrayList<>();
+            list1.add(ids.get(0));
+            List<Long> list2 = new ArrayList<>();
+            list2.add(ids.get(1));
+            //审批通过
+            String message1 = jc.invokeApi(Approval.builder().registerIds(list1).status("APPROVAL_CONFIRM").build(), false).getString("message");
+            Preconditions.checkArgument(message1.equals("success"), "第一个审批通过" + CommonUtil.checkResult("success", message1));
+            String message2 = jc.invokeApi(Approval.builder().registerIds(list2).status("APPROVAL_CONFIRM").build(), false).getString("message");
+            Preconditions.checkArgument(message2.equals("success"), "第一个审批通过" + CommonUtil.checkResult("success", message2));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("内容运营--报名管理--到达报名名额后不可再审批通过,提示：人数已达到报名上线");
+        }
+    }
+
     @Test(description = "内容运营--报名管理--小程序报名一次,对应活动审批列表+1&&我的活动列表+1&&活动报名名单分子+1")
     public void operationRegister_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -169,22 +201,22 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             List<Long> activityIds = util.getCanApplyArticleList(size);
             //全部开启
             activityIds.forEach(e -> jc.invokeApi(StatusChange.builder().id(e).build()));
-            Long activityId = activityIds.get(size - 1);
-            String activityName = util.getArticleName(activityId);
+            Long articleId = activityIds.get(size - 1);
+            String activityName = util.getArticleName(articleId);
             //报名人数
-            IScene scene = ApprovalPage.builder().articleId(String.valueOf(activityId)).build();
+            IScene scene = ApprovalPage.builder().articleId(String.valueOf(articleId)).build();
             int num = jc.invokeApi(scene).getInteger("total");
             user.loginApplet(applet);
             //我的活动列表数
             int applyNum = util.getAppletArticleNum();
-            int registerNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
+            int registerNum = jc.appletArticleDetail(String.valueOf(articleId)).getInteger("register_num");
             //报名
-            jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
+            util.applyArticle(articleId);
             //我的报名列表消息+1
             int newApplyNum = util.getAppletArticleNum();
             CommonUtil.valueView(applyNum, newApplyNum);
             Preconditions.checkArgument(newApplyNum == applyNum + 1, "报名前我的活动列表数：" + applyNum + "报名后我的活动列表数：" + newApplyNum);
-            int newRegisterNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
+            int newRegisterNum = jc.appletArticleDetail(String.valueOf(articleId)).getInteger("register_num");
             CommonUtil.valueView(registerNum, newRegisterNum);
             Preconditions.checkArgument(newRegisterNum == registerNum + 1, "报名前活动报名表名单分子数：" + applyNum + "报名后活动报名表名单分子数：" + newApplyNum);
             //报名后报名列表数量+1
@@ -379,43 +411,6 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数")
-    public void operationRegister_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = util.getVoucherId(EnumVP.ONE.getVoucherName());
-            JSONArray array = new JSONArray();
-            array.add(voucherId);
-            Long articleId = new JcFunction().creteArticle(array, "ARTICLE_BUTTON");
-            String title = util.getRegisterInfo(articleId).getTitle();
-            //三人报名
-            EnumAppletToken[] tokens = new EnumAppletToken[]{applet, applet1, applet2};
-            Arrays.stream(tokens).forEach(token -> {
-                //登录
-                user.loginApplet(token);
-                //报名
-                util.applyArticle(articleId);
-            });
-            user.login(administrator);
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
-            long passNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
-            long approvalNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
-            //批量通过
-            List<Long> ids = util.getApprovalList(articleId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).collect(Collectors.toList());
-            jc.invokeApi(Approval.builder().registerIds(ids).status("APPROVAL_CONFIRM").build());
-            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
-            long newApprovalNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
-            long newPassNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
-            CommonUtil.valueView(approvalNum, newApprovalNum, passNum, newPassNum);
-            Preconditions.checkArgument(newApprovalNum == approvalNum - ids.size(), title + "批量通过前待审批数：" + approvalNum + "批量通过后待审批数：" + newApprovalNum);
-            Preconditions.checkArgument(newPassNum == passNum + ids.size(), title + "批量通过前已通过数：" + passNum + "批量通过后已通过数：" + newPassNum);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数");
-        }
-    }
-
     @Test(description = "内容运营--报名管理--多人报名，批量取消，已取消=原待已取消+批量数")
     public void operationRegister_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -455,4 +450,42 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             saveData("内容运营--报名管理--多人报名，批量取消，已取消=原待已取消+批量数");
         }
     }
+
+    @Test(description = "内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数")
+    public void operationRegister_data_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = util.getVoucherId(EnumVP.ONE.getVoucherName());
+            JSONArray array = new JSONArray();
+            array.add(voucherId);
+            Long articleId = new JcFunction().creteArticle(array, "ARTICLE_BUTTON");
+            String title = util.getRegisterInfo(articleId).getTitle();
+            //三人报名
+            EnumAppletToken[] tokens = new EnumAppletToken[]{applet, applet1, applet2};
+            Arrays.stream(tokens).forEach(token -> {
+                //登录
+                user.loginApplet(token);
+                //报名
+                util.applyArticle(articleId);
+            });
+            user.login(administrator);
+            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
+            long passNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
+            long approvalNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
+            //批量通过
+            List<Long> ids = util.getApprovalList(articleId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).collect(Collectors.toList());
+            jc.invokeApi(Approval.builder().registerIds(ids).status("APPROVAL_CONFIRM").build());
+            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
+            long newApprovalNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
+            long newPassNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
+            CommonUtil.valueView(approvalNum, newApprovalNum, passNum, newPassNum);
+            Preconditions.checkArgument(newApprovalNum == approvalNum - ids.size(), title + "批量通过前待审批数：" + approvalNum + "批量通过后待审批数：" + newApprovalNum);
+            Preconditions.checkArgument(newPassNum == passNum + ids.size(), title + "批量通过前已通过数：" + passNum + "批量通过后已通过数：" + newPassNum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数");
+        }
+    }
+
 }
