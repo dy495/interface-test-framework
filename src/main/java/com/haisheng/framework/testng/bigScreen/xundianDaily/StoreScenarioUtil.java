@@ -2017,6 +2017,23 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * -------------------------------门店1.0APP-----------------------------------------------------------------------------------------------
      */
 
+    /**
+     * @description:2.1 获取卡片列表
+     * @author: zt
+     * @time:
+     */
+    public JSONObject cardList(String page_type, Integer last_value,Integer size) throws Exception {
+        String url = "/store/m-app/auth/card/card-list";
+        JSONObject json = new JSONObject();
+        json.put("page_type",page_type);
+        json.put("last_value",last_value);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
 
     /**
      * @description:2.1 搜索筛选-门店类型列表

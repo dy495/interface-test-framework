@@ -252,17 +252,19 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
-            Integer pcMdNum = md.patrolShopPageV3("", 1, 10).getInteger("total");
-            checkArgument(appMdNum == pcMdNum, "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
+            Integer pcCustomerNum = md.customerFlowList("","","","","",null,1,10,"").getInteger("total");
+            checkArgument(appMdNum == pcCustomerNum, "app账号下当前门店数量" + appMdNum + "pc该账号下客流分析列表的数量" + pcCustomerNum);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
+            saveData("app账号下当前门店数量==pc该账号下客流分析列表的数量");
         }
 
     }
+
+
 
 
     @DataProvider(name = "CHKRESULT")
