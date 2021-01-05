@@ -447,6 +447,16 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    //保养配置修改
+    public JSONObject pcCarModelPriceEdit(String id, String price, String status,Boolean checkcode) {
+        String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("price", price);
+        object.put("status", status);
+        return invokeApi(url, object,checkcode);
+    }
+
     //预约时间段
     public JSONObject timeRangeDetail(String type, String dateType) {
         String url = "/jiaochen/pc/manage/appointment/time-range/detail";
@@ -609,6 +619,28 @@ public class ScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res);
+    }
+    public JSONObject organizationAccountAdd(String name, String phone, List role_list, List shop_list,Boolean checkcode) {
+        String url = "/jiaochen/pc/staff/add";
+        JSONObject json=new JSONObject();
+        json.put("name",name);
+        json.put("phone",phone);
+        json.put("role_list",role_list);
+        json.put("shop_list",shop_list);
+        return invokeApi(url,json,checkcode);
+    }
+
+    public JSONObject organizationAccountAdd2(String name, String phone, List role_list, List shop_list,Boolean checkcode,String empty) {
+        String url = "/jiaochen/pc/staff/add";
+        JSONObject json=new JSONObject();
+        json.put("name",name);
+        json.put("phone",phone);
+        json.put("role_list",role_list);
+        json.put("shop_list",shop_list);
+        if(empty!=null){
+            json.remove(empty);
+        }
+        return invokeApi(url,json,checkcode);
     }
 
 
@@ -3572,5 +3604,21 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("status",status);
         return invokeApi(url, json);
     }
+
+    public JSONObject pcappointmentConfig(pcAppointmentConfig er) {
+        String url = "/jiaochen/pc/manage/appointment/config";
+        JSONObject json1=new JSONObject();
+        json1.put("type",er.type);
+        json1.put("remind_time",er.remind_time);
+        json1.put("replay_time_limit",er.replay_time_limit);
+        json1.put("appointment_interval",er.appointment_interval);
+        json1.put("on_time_reward",er.on_time_reward);
+        json1.put("is_send_voucher",er.is_send_voucher);
+        json1.put("vouchers",er.vouchers);
+        json1.put("voucher_start",er.voucher_start);
+        json1.put("voucher_end",er.voucher_end);
+        return invokeApi(url, json1,er.checkcode);
+    }
+
 
 }

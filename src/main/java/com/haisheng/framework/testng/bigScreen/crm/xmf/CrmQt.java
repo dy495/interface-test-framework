@@ -220,7 +220,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test()
+    @Test()
     public void faceListNontull() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -228,9 +228,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
             if (list.size() == 0) {
                 throw new Exception("警告：日常人脸列表为空");
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("检查前台人脸列表是否为空");

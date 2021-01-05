@@ -17,7 +17,7 @@ public class PublicParmOnline {
 
     public String carModelId="111";
     public String carModel="AMG S 63 L 4MATIC+";
-    public String car_id="4624";    //小程序车id
+    public String car_id="4624";             //小程序车id
     public String carplate="浙QWER123";      //编辑小程序车牌号
 
     //预约使用车辆

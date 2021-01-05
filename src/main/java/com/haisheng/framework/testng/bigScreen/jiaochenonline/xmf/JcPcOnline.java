@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmScenarioUtilOnlineX;
@@ -36,6 +37,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
+    JsonPathUtil jpu = new JsonPathUtil();
     FileUtil file = new FileUtil();
     Random random = new Random();
     public int page = 1;
@@ -418,6 +420,21 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("pc接待车牌号验证");
+        }
+    }
+
+    @Test(description = "pc接待搜索老车牌号展示项验证")
+    public void Jc_pcReceipt() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.pcManageReception(pp.carplate, true);
+            String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc接待搜索老车牌号展示项验证");
         }
     }
 

@@ -28,6 +28,7 @@ public class PublicParm {
     //预约使用车辆
     public Long car_idA = 63213L;  //plate_number=津DAASSE
     public String modolIdAppointment = "151";
+    public String carModel="xia";
     public String carStyleId = "";
     public String carStyleName = "";
 

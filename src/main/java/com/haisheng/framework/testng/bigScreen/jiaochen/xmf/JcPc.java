@@ -3,11 +3,13 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -30,6 +32,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
+    JsonPathUtil jpu = new JsonPathUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
     FileUtil file = new FileUtil();
@@ -292,6 +295,153 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     }
 
+//    @Test(description = "新增姓名异常")    //接口未作限制
+    public void Jc_accountAb() {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            String phone = pf.genPhoneNum();
+            String name[]={"123456789012345678901"};  //长度超过20
+            for(int i=0;i<name.length;i++){
+                int code= jc.organizationAccountAdd(name[i], phone, r_dList, shop_list,false).getInteger("code");
+                Preconditions.checkArgument(code==1001,"新增账户，名称异常");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+        }
+    }
+
+    @Test(description = "新增姓名电话异常",dataProvider = "ERR_PHONE",dataProviderClass = DataAbnormal.class)    //ok
+    public void Jc_accountAb2(String phone) {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            //用EMAIL新增一个账号
+            int code= jc.organizationAccountAdd(name, phone, r_dList, shop_list,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"新增账户，电话异常");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+        }
+    }
+
+    @Test(description = "重复电话异常")    //ok
+    public void Jc_accountAb3() {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            String phone=pf.genPhoneNum();
+            //用EMAIL新增一个账号
+            int code= jc.organizationAccountAdd(name, phone, r_dList, shop_list,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"新增账户，电话异常");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+        }
+
+    }
+    @Test(description = "角色6个异常")    //ok
+    public void Jc_accountAb6() {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+            r_dList.add("418");
+            r_dList.add("419");
+            r_dList.add("420");
+            r_dList.add("421");
+            r_dList.add("426");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            String phone="15037286013";
+            //用EMAIL新增一个账号
+            int code= jc.organizationAccountAdd(name, phone, r_dList, shop_list,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"新增账户，角色超过5个");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+        }
+
+    }
+
+    @Test(description = "创建账号角色5个")    //ok
+    public void Jc_account5() {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+            r_dList.add("418");
+            r_dList.add("419");
+            r_dList.add("420");
+            r_dList.add("421");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            String phone=pf.genPhoneNum();
+            //新增一个账号
+            jc.organizationAccountAdd(name, phone, r_dList, shop_list,true);
+            JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("id");
+            jc.organizationAccountDelete(account);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-新增1个账号角色5个");
+        }
+    }
+
+    @Test(description = "创建账号必填项不填")    //角色列表和门店列表接口未作限制，前端作了限制
+    public void Jc_account7() {
+        try {
+            JSONArray r_dList = new JSONArray();
+            r_dList.add("417");
+            r_dList.add("418");
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add("46012");
+            String phone=pf.genPhoneNum();
+
+            String emptyList[]={"name",
+                                "phone",
+//                                "role_list",
+//                                "shop_list"
+            };
+            for(int i=0;i<emptyList.length;i++){
+                int code= jc.organizationAccountAdd2(name, phone, r_dList, shop_list,false,emptyList[i]).getInteger("code");//用EMAIL新增一个账号
+                Preconditions.checkArgument(code==1001,"新增账户必填项"+emptyList[i]+"不填仍成功");
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("轿辰-创建账号必填项不填");
+        }
+
+    }
+
+
     /**
      * ====================账户管理中的一致性========================
      */
@@ -487,6 +637,21 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "pc接待搜索老车牌号展示项验证")
+    public void Jc_pcReceipt() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.pcManageReception(pp.carplate, true);
+            String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
+            jpu.spiltString(data.toJSONString(), jsonpath);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc接待搜索老车牌号展示项验证");
+        }
+    }
+
     //pc-取消接待
     @Test()
     public void Jc_pcCancleReception() {
@@ -516,6 +681,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //***************pc保养配置相关********************
 
     @Test  //pc修改车预约价格，小程序对应变更
     public void Jc_pcmaintainPriceEdit() {
@@ -565,6 +731,99 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("JC_pc修改预约配置验证");
         }
     }
+    @Test  //pc修改车预约价格，价格格式异常判断
+    public void Jc_pcmaintainPriceEditAb() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String price[]={"","qwe","我","!@#","100000000.011"};   //保养价格为空，保养价格异常格式
+            //修改预约价格
+            for(int i=0;i<price.length;i++){
+                int code=jc.pcCarModelPriceEdit(pp.modolIdAppointment, price[i], null,false).getInteger("code");
+                System.out.println("code:"+code);
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("JC_pc修改预约配置价格格式验证");
+        }
+    }
+
+    @Test  //pc修改车预约价格，列表价格变更，其他不变更
+    public void Jc_pcmaintainPriceEdit2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String price="300";
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, 0);
+            if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+               price="200";
+            }
+           jc.pcCarModelPriceEdit(pp.modolIdAppointment,price , null,true);
+           String priceAfter= jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0).getString("price");
+           Preconditions.checkArgument(priceAfter.equals(price),"编辑后价格与入参不一致");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("JC_pc修改预约配置价格，列表验证");
+        }
+    }
+
+    @Test  //pc开关【保养配置】-预约按钮，小程序对应变更
+    public void Jc_pcappointmentButton() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.maintainFilterManage("","1","10","car_model","xia").getJSONArray("list").getJSONObject(0);
+            String status=data.getString("status");
+            if(!status.equals("ENABLE")){
+                throw new Exception("车型-赢识-xia,预约配置被关闭");
+            }
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
+
+            jc.appletLoginToken(pp.appletTocken);
+            JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),false);
+            int code= isAble.getInteger("code");
+            String message= isAble.getString("message");
+
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
+
+
+            Preconditions.checkArgument(code==1001,"预约配置关闭小程序预约保养页返回"+message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("JC_pc修改预约配置验证");
+        }
+    }
+
+    @Test  //pc开关【保养配置】-预约按钮，保养配置列表数量无变化
+    public void Jc_pcappointmentButton2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.maintainFilterManage("","1","10","car_model","xia").getJSONArray("list").getJSONObject(0);
+            String status=data.getString("status");
+            if(!status.equals("ENABLE")){
+                throw new Exception("车型-赢识-xia,预约配置被关闭");
+            }
+            int total=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
+            int totalAfter=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
+            int totalAfter2=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
+            Preconditions.checkArgument(total==totalAfter,"关闭后列表数量变化");
+            Preconditions.checkArgument(totalAfter==totalAfter2,"开启预约配置后列表数量变化");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("JC_pc开关预约配置按钮，预约配置列表数量有无变化");
+        }
+    }
+    //***********pc预约配置************************
 
     @Test  //pc修改工位，工作日和休息日不同步变更
     public void Jc_pcmaintainTableEdit() {
@@ -623,35 +882,109 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //pc开关预约配置按钮，小程序对应变更
-    public void Jc_pcappointmentButton() {
+    @Test  //pc修改预约配置，正常
+    public void Jc_pcmaintainTableEdit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.maintainFilterManage("","1","10","car_model","xia").getJSONArray("list").getJSONObject(0);
-            String status=data.getString("status");
-            if(!status.equals("ENABLE")){
-                throw new Exception("车型-赢识-xia,预约配置被关闭");
-            }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
+            jc.pcLogin(pp.jdgw,pp.jdgwpassword);
+            JSONArray voucher=new JSONArray();
+            voucher.add("77");
+            pcAppointmentConfig er=new pcAppointmentConfig();
+            er.type="MAINTAIN";
+            er.remind_time="720";
+            er.replay_time_limit="720";
+            er.appointment_interval="12";  //TODO:需设置成12 ，目前有bug
+            er.on_time_reward=true;
+            er.is_send_voucher=true;
+            er.vouchers=voucher;
+            er.voucher_start=dt.getHistoryDate(0);
+            er.voucher_end=dt.getHistoryDate(10);
+            jc.pcappointmentConfig(er);
 
-            jc.appletLoginToken(pp.appletTocken);
-            JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),false);
-            int code= isAble.getInteger("code");
-            String message= isAble.getString("message");
+            er.remind_time="20";
+            er.replay_time_limit="30";
+            er.appointment_interval="1";
+            jc.pcappointmentConfig(er);
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
-
-
-            Preconditions.checkArgument(code==1001,"预约配置关闭小程序预约保养页返回"+message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("JC_pc修改预约配置，正常");
         }
     }
 
+//    @Test  //pc修改预约配置，正常  限制使用天数超过2000  TODO:目前未作限制，bug修改后打开
+    public void Jc_pcmaintainTableEdit3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.pcLogin(pp.jdgw,pp.jdgwpassword);
+            JSONArray voucher=new JSONArray();
+            voucher.add("77");
+            pcAppointmentConfig er=new pcAppointmentConfig();
+            er.checkcode=false;
+            er.type="MAINTAIN";
+            er.remind_time="30";
+            er.replay_time_limit="20";
+            er.appointment_interval="1";
+            er.on_time_reward=true;
+            er.is_send_voucher=true;
+            er.vouchers=voucher;
+            er.voucher_effective_days="20000";
+            int code=jc.pcappointmentConfig(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"修改预约配置，卡券使用天数限制超过2000仍成功");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("JC_pc修改预约配置卡券限制使用时间2000天验证");
+        }
+    }
+
+//    @Test  //pc修改预约配置,异常    TODO:接口未作限制，前端限制
+    public void Jc_pcmaintainTableEditAb() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.pcLogin(pp.jdgw,pp.jdgwpassword);
+            JSONArray voucher=new JSONArray();
+            voucher.add("77");
+            pcAppointmentConfig er=new pcAppointmentConfig();
+            er.checkcode=false;
+            er.type="MAINTAIN";
+            er.remind_time="721";
+            er.replay_time_limit="20";
+            er.appointment_interval="1";
+            er.on_time_reward=true;
+            er.is_send_voucher=true;
+            er.vouchers=voucher;
+            er.voucher_start=dt.getHistoryDate(0);
+            er.voucher_end=dt.getHistoryDate(10);
+            int code=jc.pcappointmentConfig(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"修改预约配置异常："+er.remind_time);
+            er.remind_time="20";
+            er.replay_time_limit="721";
+            er.appointment_interval="1";
+            int code2=jc.pcappointmentConfig(er).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"修改预约配置异常："+er.replay_time_limit);
+
+            er.replay_time_limit="20";
+            er.appointment_interval="13";
+            int code3=jc.pcappointmentConfig(er).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"修改预约配置异常："+er.appointment_interval);
+            er.appointment_interval="1";
+            int code4=jc.pcappointmentConfig(er).getInteger("code");
+            Preconditions.checkArgument(code4==1000,"修改预约配置异常");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("JC_pc修改预约配置，异常");
+        }
+    }
+
+
+    //***********pc门店按钮开关************
     @Test  //pc门店预约关闭，小程序对应变更
     public void Jc_pcShopAppointmentButton() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -675,7 +1008,11 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             jc.pcLogin(pp.gwphone,pp.gwpassword);
             jc.shopStatusChange(pp.shopIdZ,"APPOINTMENT","ENABLE");
+            jc.appletLoginToken(pp.appletTocken);
+
+            int totalAfter2=jc.appletmaintainShopList(pp.car_idA.toString(),pp.coordinate).getJSONArray("list").size();
             Preconditions.checkArgument(total-totalAfter==1,"关闭预约配置，小程序预约门店-1");
+            Preconditions.checkArgument(totalAfter2-totalAfter==1,"开启预约配置，小程序预约门店+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
