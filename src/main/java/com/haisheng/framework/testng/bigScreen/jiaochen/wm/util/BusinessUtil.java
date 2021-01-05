@@ -1055,19 +1055,21 @@ public class BusinessUtil {
         jc.invokeApi(ActivityRegister.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
     }
 
-    public  List<Object> doSomething(IScene scene, Object t) {
-        List<Object> list = new ArrayList<>();
+    /**
+     * @param scene 接口场景
+     * @param clazz bean类
+     * @param <T>   T
+     * @return bean的集合
+     */
+    public <T> List<T> doSomething(IScene scene, Class<T> clazz) {
+        List<T> list = new ArrayList<>();
         int total = jc.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
             JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-            array.forEach(e -> {
-                JSONObject jsonObject = (JSONObject) e;
-                Object newT =  JSONObject.toJavaObject(jsonObject, t.getClass());
-                list.add(newT);
-            });
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, clazz)).collect(Collectors.toList()));
         }
         return list;
     }
