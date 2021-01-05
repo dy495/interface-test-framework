@@ -235,7 +235,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间")
+    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间", priority = 1)
     public void operationRegister_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -280,7 +280,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息")
+    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
     public void operationRegister_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -316,7 +316,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
                 JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
                 operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
             }
-            operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + "活动名额数：" + e.getTotalQuota() + "已入选数：" + e.getPassedNum()));
+            operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + " 活动名额数：" + e.getTotalQuota() + " 已入选数：" + e.getPassedNum()));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

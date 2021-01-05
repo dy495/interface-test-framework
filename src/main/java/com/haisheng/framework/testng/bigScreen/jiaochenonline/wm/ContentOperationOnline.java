@@ -125,17 +125,17 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path"))
                     .collect(Collectors.toList());
             IScene scene = BannerEdit.builder()
-                    .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
-                    .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))
-                    .bannerImgUrl3(picPaths.get(2)).articleId3(articleIds.get(2))
-                    .bannerImgUrl4(picPaths.get(3)).articleId4(articleIds.get(3))
-                    .bannerImgUrl5(picPaths.get(4)).articleId5(articleIds.get(4))
+                    .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0)).bannerId1(16)
+                    .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(0)).bannerId2(17)
+                    .bannerImgUrl3(picPaths.get(2)).articleId3(articleIds.get(0)).bannerId3(18)
+                    .bannerImgUrl4(picPaths.get(3)).articleId4(articleIds.get(0)).bannerId4(19)
+                    .bannerImgUrl5(picPaths.get(4)).articleId5(articleIds.get(0)).bannerId5(20)
                     .build();
             jc.invokeApi(scene);
             user.loginApplet(applet);
             JSONArray array = jc.invokeApi(Banner.builder().build()).getJSONArray("list");
             List<Long> appletArticleIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
-            Preconditions.checkArgument(appletArticleIds.equals(articleIds.subList(0, 5)), "pc端文章为：" + appletArticleIds + " applet端文章为：" + articleIds.subList(0, 5));
+            appletArticleIds.forEach(e -> Preconditions.checkArgument(e.equals(articleIds.get(0)), "pc端文章为：" + e + " applet端文章为：" + articleIds.get(0)));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -235,7 +235,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间")
+    @Test(description = "内容运营--报名管理--PC活动报名中审批通过1个报名客户，审核页面中已通过+1，待审批-1&&申请列表已入选+1&&入选时间=当前时间", priority = 1)
     public void operationRegister_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -280,7 +280,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息")
+    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
     public void operationRegister_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -316,7 +316,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
                 JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
                 operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
             }
-            operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + "活动名额数：" + e.getTotalQuota() + "已入选数：" + e.getPassedNum()));
+            operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + " 活动名额数：" + e.getTotalQuota() + " 已入选数：" + e.getPassedNum()));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

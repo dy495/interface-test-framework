@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherListVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApprovalVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegisterVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
@@ -464,6 +461,26 @@ public class BusinessUtil {
         }
         return list.get(0);
     }
+
+    /**
+     * 获取套餐信息
+     *
+     * @param packageName 套餐名
+     * @return 套餐信息
+     */
+    public PackageInfoVO getPackageInfo(String packageName) {
+        List<PackageInfoVO> list = new ArrayList<>();
+        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+        int total = jc.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName))
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), PackageInfoVO.class)).collect(Collectors.toList()));
+        }
+        return list.get(0);
+    }
+
 
     /**
      * 获取套餐包含的卡券

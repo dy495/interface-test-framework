@@ -966,10 +966,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 JSONObject jsonObject = (JSONObject) e;
                 String packageName = jsonObject.getString("package_name");
                 String price = jsonObject.getString("price");
-                IScene scene = PackageFormPage.builder().packageName(packageName).build();
-                String listPrice = CommonUtil.getStrField(jc.invokeApi(scene), 0, "price");
+                String listPrice =  util.getPackageInfo(packageName).getPrice();
                 CommonUtil.valueView(price, listPrice);
-                Preconditions.checkArgument(listPrice.equals(price), "购买套餐时套餐价格为：" + price + "此套餐列表展示套餐价格为：" + listPrice);
+                Preconditions.checkArgument(listPrice.equals(price), packageName + "购买套餐时套餐价格为：" + price + "此套餐列表展示套餐价格为：" + listPrice);
                 CommonUtil.logger(packageName);
             });
         } catch (Exception | AssertionError e) {
