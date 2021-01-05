@@ -54,6 +54,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
         commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
+        commonConfig.checklistQaOwner = "青青";
         beforeClassInit(commonConfig);
         logger.debug("store " + md);
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
