@@ -2797,7 +2797,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分--渠道来源分析--【日】渠道来源为小程序的数量=昨日接待客户档案中，渠道来源为小程序的数量")
+    @Test(description = "店面数据分--渠道来源分析--【日】各个渠道的数量=昨日接待客户档案中各个渠道的数量和")
     public void sourceChannel_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -2805,7 +2805,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             Sql sql = Sql.instance().select().from(TPorscheReceptionData.class)
                     .where("shop_id", "=", shopId)
                     .and("reception_date", "=", date)
-                    .and("reception_sale_id", "is not", null).end();
+                    .and("reception_sale", "is not", null).end();
             List<TPorscheReceptionData> receptionDataList = ONE_PIECE_FACTORY.create(sql, TPorscheReceptionData.class);
             CommonUtil.valueView(receptionDataList);
             List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());

@@ -2871,7 +2871,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             Sql sql = Sql.instance().select().from(TPorscheReceptionData.class)
                     .where("shop_id", "=", shopId)
                     .and("reception_date", "=", date)
-                    .and("reception_sale_id", "is not", null).end();
+                    .and("reception_sale", "is not", null).end();
             List<TPorscheReceptionData> receptionDataList = ONE_PIECE_FACTORY.create(sql, TPorscheReceptionData.class);
             CommonUtil.valueView(receptionDataList);
             List<Integer> customerIdList = receptionDataList.stream().map(TPorscheReceptionData::getCustomerId).collect(Collectors.toList());
