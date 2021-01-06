@@ -327,7 +327,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             List<List<OperationApprovalVO>> list = activityIds.stream().map(e -> util.getApprovalList(e)).collect(Collectors.toList());
             List<OperationApprovalVO> operationApprovalVOList = list.stream().map(subList -> subList.stream().filter(e -> e.getRegisterTime().equals(date)).findFirst().orElse(null)).collect(Collectors.toList());
             operationApprovalVOList.forEach(e -> {
-                Preconditions.checkArgument(e.getCustomerName().equals("隔壁老王"), e.getTitle() + "报名客户名称为：隔壁老王" + "审批列表客户名称为：" + e.getCustomerName());
+                Preconditions.checkArgument(e.getCustomerName().equals("小王"), e.getTitle() + "报名客户名称为：小王" + "审批列表客户名称为：" + e.getCustomerName());
                 Preconditions.checkArgument(e.getPhone().equals(marketing.getPhone()), e.getTitle() + "报名联系方式为：" + marketing.getPhone() + "审批列表客户名称为：" + e.getPhone());
             });
         } catch (Exception | AssertionError e) {
