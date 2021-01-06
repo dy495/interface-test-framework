@@ -169,24 +169,24 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
-    @Test
-    public void wwcSum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取待办列表事项总数totalsum
-            Long totalNum = xd.task_list(1, 50, 0, null).getLong("total");
-            //待办列表长度
-            JSONArray dbList = xd.task_list(1, 50, 0, null).getJSONArray("list");
-
-            checkArgument(totalNum == dbList.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + dbList.size());
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-                    saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
-        }
-    }
+//    @Test
+//    public void wwcSum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取待办列表事项总数totalsum
+//            Long totalNum = xd.task_list(1, 50, 0, null).getLong("total");
+//            //待办列表长度
+//            JSONArray dbList = xd.task_list(null, 50, 0, null).getJSONArray("list");
+//
+//            checkArgument(totalNum == dbList.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + dbList.size());
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//                    saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
+//        }
+//    }
 
 
 //    app账号下当前门店数量==pc该账号下巡店中心列表的数量
