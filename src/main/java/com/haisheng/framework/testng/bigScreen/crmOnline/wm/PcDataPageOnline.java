@@ -1020,7 +1020,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--【业务漏斗】交车==【车型漏斗】交车")
+    //交车数据含有导入数据，两者无关系
+    @Test(description = "店面数据分析--【业务漏斗】交车==【车型漏斗】交车", enabled = false)
     public void shopPanel_data_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1088,19 +1089,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 JSONObject data = crm.shopSaleFunnel(e.getType(), "", arr.get("userId"));
                 JSONArray businessList = data.getJSONObject("business").getJSONArray("list");
                 JSONArray carTypeList = data.getJSONObject("car_type").getJSONArray("list");
-                class Inner {
-                    int getValue(JSONArray array) {
-                        int value = 0;
-                        for (int i = 0; i < array.size(); i++) {
-                            if (array.getJSONObject(i).getString("type").equals(type)) {
-                                value = array.getJSONObject(i).getInteger("value");
-                            }
-                        }
-                        return value;
-                    }
-                }
-                int businessValue = new Inner().getValue(businessList);
-                int carTypeValue = new Inner().getValue(carTypeList);
+                int businessValue = businessList.stream().map(json -> (JSONObject) json).filter(json -> json.getString("type").equals(type)).map(json -> json.getInteger("value")).collect(Collectors.toList()).get(0);
+                int carTypeValue = carTypeList.stream().map(json -> (JSONObject) json).filter(json -> json.getString("type").equals(type)).map(json -> json.getInteger("value")).collect(Collectors.toList()).get(0);
                 CommonUtil.valueView("业务漏斗：" + businessValue, "车系漏斗：" + carTypeValue);
                 Preconditions.checkArgument(businessValue >= carTypeValue, arr.get("userName") +
                         " " + e.getName() + " 【业务漏斗】" + type + "数据为：" + businessValue + ",【车型漏斗】" + type + "数据为：" + carTypeValue);
