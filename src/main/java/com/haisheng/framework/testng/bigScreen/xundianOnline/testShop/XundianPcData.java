@@ -750,7 +750,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             }
             //从巡店分析巡店概况中获取昨日待整改项
             int fix_wait = xd.xd_analysis_data().getInteger("yesterday_need_rectific_number");
-            checkArgument(fix_wait == count2, "【巡店分析】昨天待整改数"+ fix_wait +"!=【巡店报告中心】条件为：昨天，不合格；待处理的不合格项数"  +count2);
+            checkArgument(fix_wait >= count2, "【巡店分析】昨天待整改数"+ fix_wait +"!=【巡店报告中心】条件为：昨天，不合格；待处理的不合格项数"  +count2);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
