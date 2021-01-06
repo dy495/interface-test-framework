@@ -375,7 +375,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================昨日巡店覆盖率==【巡店报告中心】昨日现有门店的巡店门店数/现有门店总数======================
      */
-    @Test
+    //@Test
     public void yesterday_coverage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -507,7 +507,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================昨日巡检人数==【巡店报告中心】昨日巡检的账号数======================
      */
-    @Test
+    //@Test
     public void ystday_checker() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -547,7 +547,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================今日巡检合格率==【巡店报告中心】今日巡店合格报告数/总提交报告数======================
      */
-    @Test
+    //@Test
     public void today_qualified_rate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -651,7 +651,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================今日待整改项数==【巡店报告中心】条件为：今天，不合格；待处理的不合格项数======================
      */
-    @Test
+    //@Test
     public void today_fix_wait() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

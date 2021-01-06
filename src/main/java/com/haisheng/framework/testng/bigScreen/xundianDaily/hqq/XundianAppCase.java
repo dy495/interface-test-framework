@@ -92,11 +92,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-    @Test(description = "远程巡店为下述造处理事件")
+   // @Test(description = "远程巡店为下述造处理事件")
     public void remote () {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for(int i=0;i<6;i++){
+            for(int i=0;i<2;i++){
                 Long patrol_id=  xds.Scheduled(shop_id,0,null,"REMOTE",2,0);
                 int code = xd.checks_submit(shop_id,patrol_id,"自动化处理远程巡店全部不合格").getInteger("code");
                 Preconditions.checkArgument(code ==1000, "远程巡店提交失败"+code);
@@ -110,11 +110,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             saveData("[APP]远程巡店为下述造处理事件");
         }
     }
-    @Test(description = "现场巡店为下述造处理事件")
+   // @Test(description = "现场巡店为下述造处理事件")
     public void remote1 () {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for(int i=0;i<6;i++){
+            for(int i=0;i<2;i++){
                 Long patrol_id=  xds.Scheduled(shop_id,0,null,"SPOT",2,0);
                 int code = xd.checks_submit(shop_id,patrol_id,"自动化处理现场远程巡店全部不合格").getInteger("code");
                 Preconditions.checkArgument(code ==1000, "现场巡店提交失败"+code);
@@ -272,7 +272,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             JSONArray dataList3 = xd.task_list(page,size,0,null).getJSONArray("list");
             Long id3 = dataList3.getJSONObject(0).getLong("id");
             JSONArray pic_list1= xds.getPicPath2();
-            Integer code2 = xd.task_step_submit(shop_id, id3, pic_list1, null,comment).getInteger("code");
+            Integer code2 = xd.task_step_submit(shop_id, id3, pic_list1, 1,comment).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中现场巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
            // xd.login(checker, checker_psw);
             JSONArray dataList2 = xd.task_list(page,size,0,null).getJSONArray("list");
