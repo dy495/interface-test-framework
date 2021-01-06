@@ -2820,7 +2820,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("店面数据分--渠道来源分析--各类型百分比=该类数量/所有类型数量和");
+            saveData("店面数据分--渠道来源分析--【日】各个渠道的数量=昨日接待客户档案中各个渠道的数量和");
         }
     }
 
