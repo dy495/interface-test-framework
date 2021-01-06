@@ -46,7 +46,8 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214","15084928847"};
-        commonConfig.shopId = getXundianShop(); //要改！！！
+        //commonConfig.shopId = getXundianShop(); //要改！！！
+        commonConfig.shopId = Long.toString(info.shop_id_01);
         beforeClassInit(commonConfig);
 
         logger.debug("store " + xd);
@@ -61,9 +62,12 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
+    @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
     }
 
 

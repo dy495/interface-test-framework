@@ -1,6 +1,5 @@
 package com.haisheng.framework.util;
 
-import com.alibaba.fastjson.JSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -740,6 +739,15 @@ public class DateTimeUtil {
         calendar.add(Calendar.DATE,num_day);
         String month=new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
         return month;
+    }
+
+    public String getLast12Months(int i) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MONTH, -i);
+        Date m = c.getTime();
+        return sdf.format(m);
     }
 
 }

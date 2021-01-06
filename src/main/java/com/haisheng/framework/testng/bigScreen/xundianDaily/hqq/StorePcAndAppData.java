@@ -159,7 +159,14 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             int yesterdayPv = totalNumber.getInteger("yesterday_uv");
             //pc各门店到访人数之和
             List<String> shopIds = getPcShopIds();
-            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_uv")).sum(); //已经选了昨天的日期了，所以取那天的数据
+            int sumYesterdayPv = 0;
+            for (int i = 0 ; i < shopIds.size();i++){
+                //sumYesterdayPv += shopIds.stream().map(shopId -> md.historyShopTrendV3("RECENT_SEVEN","",Long.parseLong(shopId)));
+                JSONObject obj = md.historyShopTrendV3("RECENT_SEVEN","",Long.parseLong(shopIds.get(i))).getJSONArray("trend_list").getJSONObject(6);
+                if (obj.containsKey("uv")){
+                    sumYesterdayPv += obj.getInteger("uv");
+                }
+            }
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
             Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app " + yesterdayPv + " , pc " + sumYesterdayPv);
         } catch (Exception | AssertionError e) {
@@ -180,7 +187,14 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             int yesterdayPv = totalNumber.getInteger("yesterday_pv");
             //pc各门店到访人次之和
             List<String> shopIds = getPcShopIds();
-            int sumYesterdayPv = shopIds.stream().map(shopId -> HistoryDayTrendPvUv.builder().shopId(shopId).day(date).build()).mapToInt(trendScene -> getTypeSum(trendScene, "today_pv")).sum();
+            int sumYesterdayPv = 0;
+            for (int i = 0 ; i < shopIds.size();i++){
+                //sumYesterdayPv += shopIds.stream().map(shopId -> md.historyShopTrendV3("RECENT_SEVEN","",Long.parseLong(shopId)));
+                JSONObject obj = md.historyShopTrendV3("RECENT_SEVEN","",Long.parseLong(shopIds.get(i))).getJSONArray("trend_list").getJSONObject(6);
+                if (obj.containsKey("uv")){
+                    sumYesterdayPv += obj.getInteger("pv");
+                }
+            }
             CommonUtil.valueView(yesterdayPv, sumYesterdayPv);
             Preconditions.checkArgument(yesterdayPv == sumYesterdayPv, "app " + yesterdayPv + " , pc " + sumYesterdayPv);
         } catch (Exception | AssertionError e) {
@@ -864,11 +878,14 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         String month = date.substring(5, 7);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            int y = Integer.parseInt(month) - i;
-            String newDate = y > 9 ? year + "-" + y : year + "-0" + y;
+//            int y = Integer.parseInt(month) - i;
+//            String newDate = y > 9 ? year + "-" + y : year + "-0" + y;
+            String newDate = dt.getLast12Months(i);
             list.add(newDate);
 
         }
+
+
         return list;
     }
 
