@@ -1088,7 +1088,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
 
     }
     /**
-     * ====================【巡店报告中心-不合格趋势图】中选择时间段内的不合格项数累计==【巡店核心指标】中同一时段的总不合格项数======================
+     * ====================【巡店分析-不合格趋势图】中选择时间段内的不合格项数累计==【巡店核心指标】中同一时段的总不合格项数======================
      */
     @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtilOnline.class)
     public void unqu_data_sum(String cycle_type) {
@@ -1106,7 +1106,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
                     sum += unqualified_number;
                 }
             }
-            checkArgument( unqualified_num == sum,   "【巡店报告中心-不合格趋势图】中选择时间段内的不合格项数累计:"+sum+" 【巡店核心指标】中同一时段的总不合格项数"+ unqualified_num);
+            checkArgument( unqualified_num == sum,   "【巡店分析-不合格趋势图】中选择时间段内的不合格项数累计:"+sum+" 【巡店核心指标】中同一时段的总不合格项数"+ unqualified_num);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1114,7 +1114,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("【巡店报告中心-不合格趋势图】中选择时间段内的不合格项数累计==【巡店核心指标】中同一时段的总不合格项数");
+            saveData("【巡店分析-不合格趋势图】中选择时间段内的不合格项数累计==【巡店核心指标】中同一时段的总不合格项数");
         }
 
     }
