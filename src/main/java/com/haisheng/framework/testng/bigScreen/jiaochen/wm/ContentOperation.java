@@ -367,7 +367,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
+    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息")
     public void operationRegister_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -491,7 +491,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
     //    @Test()
     public void test() {
         IScene scene = RegisterPage.builder().build();
-        List<OperationRegisterVO> operationRegisterVOS = util.doSomething(scene, OperationRegisterVO.class);
+        List<OperationRegisterVO> operationRegisterVOS = util.toJavaObject(scene, OperationRegisterVO.class);
         operationRegisterVOS.forEach(System.err::println);
     }
 }

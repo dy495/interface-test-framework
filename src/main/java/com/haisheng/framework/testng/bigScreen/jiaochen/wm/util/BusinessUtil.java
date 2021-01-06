@@ -1061,7 +1061,7 @@ public class BusinessUtil {
      * @param <T>   T
      * @return bean的集合
      */
-    public <T> List<T> doSomething(IScene scene, Class<T> clazz) {
+    public <T> List<T> toJavaObject(IScene scene, Class<T> clazz) {
         List<T> list = new ArrayList<>();
         int total = jc.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);

@@ -313,7 +313,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息", priority = 1)
+    @Test(description = "内容运营--报名管理--同一个人报名n个不同的活动,n个活动中都有此人的报名信息")
     public void operationRegister_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

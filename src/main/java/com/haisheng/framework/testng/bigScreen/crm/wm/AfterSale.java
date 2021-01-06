@@ -707,7 +707,8 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "售后--任务管理-全部预约保养<=列表数")
+    //有数据记录清除
+    @Test(description = "售后--任务管理-全部预约保养<=列表数", enabled = false)
     public void afterSale_appointment_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

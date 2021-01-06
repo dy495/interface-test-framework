@@ -12,20 +12,19 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.BusinessManage"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.ContentOperation"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.MarketingManage"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.FinanceManager"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.BusinessManage"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
-
         </classes>
     </test>
 </suite>
