@@ -847,8 +847,8 @@ public class BusinessUtil {
         JSONArray array;
         int listSize = 0;
         do {
-            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
-            JSONObject response = jc.invokeApi(builder.build());
+            IScene scene = VoucherList.builder().type("GENERAL").size(20).id(id).status(status).build();
+            JSONObject response = jc.invokeApi(scene);
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
@@ -868,8 +868,8 @@ public class BusinessUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            PackageList.PackageListBuilder builder = PackageList.builder().lastValue(lastValue).type("type").size(20);
-            JSONObject response = jc.invokeApi(builder.build());
+            IScene scene = PackageList.builder().lastValue(lastValue).type("type").size(20).build();
+            JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
             listSize += array.size();
@@ -887,8 +887,8 @@ public class BusinessUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            MessageList.MessageListBuilder builder = MessageList.builder().lastValue(lastValue).size(20);
-            JSONObject response = jc.invokeApi(builder.build());
+            IScene scene = MessageList.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
             listSize += array.size();
@@ -962,8 +962,7 @@ public class BusinessUtil {
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(articleId)).map(e -> e.getString("title"))
-                    .collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(articleId)).map(e -> e.getString("title")).collect(Collectors.toList()));
         }
         return list.get(0);
     }
@@ -1007,15 +1006,8 @@ public class BusinessUtil {
      * @return 报名列表
      */
     public List<OperationRegisterVO> getRegisterList() {
-        List<OperationRegisterVO> operationRegisters = new ArrayList<>();
-        RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
-        int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
-        for (int i = 1; i < s; i++) {
-            JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
-            operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
-        }
-        return operationRegisters;
+        IScene scene = RegisterPage.builder().build();
+        return collectBean(scene, OperationRegisterVO.class);
     }
 
     /**
@@ -1035,15 +1027,8 @@ public class BusinessUtil {
      * @return 审批详情
      */
     public List<OperationApprovalVO> getApprovalList(Long articleId) {
-        List<OperationApprovalVO> list = new ArrayList<>();
-        ApprovalPage.ApprovalPageBuilder builder = ApprovalPage.builder().articleId(String.valueOf(articleId));
-        int total = jc.invokeApi(builder.build()).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, size);
-        for (int i = 1; i < s; i++) {
-            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationApprovalVO.class)).collect(Collectors.toList()));
-        }
-        return list;
+        IScene scene = ApprovalPage.builder().articleId(String.valueOf(articleId)).build();
+        return collectBean(scene, OperationApprovalVO.class);
     }
 
     /**
@@ -1057,11 +1042,11 @@ public class BusinessUtil {
 
     /**
      * @param scene 接口场景
-     * @param clazz bean类
+     * @param bean  bean类
      * @param <T>   T
      * @return bean的集合
      */
-    public <T> List<T> toJavaObject(IScene scene, Class<T> clazz) {
+    public <T> List<T> collectBean(IScene scene, Class<T> bean) {
         List<T> list = new ArrayList<>();
         int total = jc.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
@@ -1069,7 +1054,7 @@ public class BusinessUtil {
             scene.setPage(i);
             scene.setSize(size);
             JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, clazz)).collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
         }
         return list;
     }

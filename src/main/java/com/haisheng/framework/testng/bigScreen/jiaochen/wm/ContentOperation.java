@@ -488,10 +488,10 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test()
+//    @Test()
     public void test() {
         IScene scene = RegisterPage.builder().build();
-        List<OperationRegisterVO> operationRegisterVOS = util.toJavaObject(scene, OperationRegisterVO.class);
+        List<OperationRegisterVO> operationRegisterVOS = util.collectBean(scene, OperationRegisterVO.class);
         operationRegisterVOS.forEach(System.err::println);
     }
 }
