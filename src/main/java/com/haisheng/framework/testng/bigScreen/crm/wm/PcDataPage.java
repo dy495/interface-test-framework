@@ -2835,7 +2835,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         return channelName == null ? "" : channelName;
     }
 
-    @Test(description = "店面数据分--渠道来源分析--【日】各类型数量和=昨日接待客户总数")
+    @Test(description = "店面数据分--渠道来源分析--【日】各类型数量和<=昨日接待客户总数")
     public void sourceChannel_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2849,11 +2849,11 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(receptionDataList);
             int pcSum = getSourceChannel(null, EnumFindType.DAY.name()).stream().mapToInt(SourceChannel::getValue).sum();
             CommonUtil.valueView(pcSum, receptionDataList.size());
-            Preconditions.checkArgument(pcSum == receptionDataList.size(), "各类型数量和：" + pcSum + "昨日接待客户总数：" + receptionDataList.size());
+            Preconditions.checkArgument(pcSum <= receptionDataList.size(), "各类型数量和：" + pcSum + "昨日接待客户总数：" + receptionDataList.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("店面数据分--渠道来源分析--【日】各类型数量和=昨日接待客户总数");
+            saveData("店面数据分--渠道来源分析--【日】各类型数量和<=昨日接待客户总数");
         }
     }
 
