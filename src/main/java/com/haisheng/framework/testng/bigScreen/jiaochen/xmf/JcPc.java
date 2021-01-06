@@ -345,7 +345,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             JSONArray shop_list = new JSONArray();
             shop_list.add("46012");
-            String phone=pf.genPhoneNum();
+            String phone="15037286013";
             //用EMAIL新增一个账号
             int code= jc.organizationAccountAdd(name, phone, r_dList, shop_list,false).getInteger("code");
             Preconditions.checkArgument(code==1001,"新增账户，电话异常");
@@ -380,7 +380,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("轿辰-新增1个账号电话号码重复异常验证");
         }
 
     }
@@ -728,6 +728,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
             saveData("JC_pc修改预约配置验证");
         }
     }
@@ -745,6 +746,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+
             saveData("JC_pc修改预约配置价格格式验证");
         }
     }
@@ -753,11 +755,12 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcmaintainPriceEdit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String price="300";
+            jc.pcLogin(pp.jdgw,pp.jdgwpassword);
+            String price="300.0";
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, 0);
             if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-               price="200";
+               price="200.0";
             }
            jc.pcCarModelPriceEdit(pp.modolIdAppointment,price , null,true);
            String priceAfter= jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0).getString("price");
@@ -893,7 +896,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             er.type="MAINTAIN";
             er.remind_time="720";
             er.replay_time_limit="720";
-            er.appointment_interval="12";  //TODO:需设置成12 ，目前有bug
+            er.appointment_interval="11";  //TODO:需设置成12 ，目前有bug
             er.on_time_reward=true;
             er.is_send_voucher=true;
             er.vouchers=voucher;
