@@ -1,31 +1,27 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
-import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.ImageUtil;
-import org.springframework.util.StringUtils;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @description :app 相关case
@@ -33,15 +29,15 @@ import java.util.Map;
  **/
 
 
-public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
+public class XundianAppCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     XdPackageData xds = XdPackageData.getInstance();
     MendianInfo info = new MendianInfo();
     int page = 1;
     int size = 50;
-    String dealer = "8888@qq.com";
-    String dealer_psw = "cf79ae6addba60ad018347359bd144d2";
+    String dealer = "storedemo@winsense.ai";
+    String dealer_psw = "b0581aa73b04d9fe6e3057a613e6f363";
     String checker ="2222@qq.com";
     String checker_psw = "934b535800b1cba8f96a5d72f72f1611";
     String comment = "自动化在进行处理，闲人走开";
@@ -65,17 +61,22 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
+        //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
-        commonConfig.pushRd = new String[]{ "15084928847"};
-        commonConfig.shopId = getXundianShop(); //要改！！！
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
+        //replace product name for ding push
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214","13604609869", "15084928847"};
+
+        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login(dealer, dealer_psw);
+
+
     }
 
 
