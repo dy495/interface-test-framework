@@ -13,6 +13,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StoreDataCenter"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zdf.SurveillanceForZDF"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.xtc.StoreDataForXtc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianAppData"></class>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.dzy.StoreDataForDzy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop.StoreDataForHS"></class>

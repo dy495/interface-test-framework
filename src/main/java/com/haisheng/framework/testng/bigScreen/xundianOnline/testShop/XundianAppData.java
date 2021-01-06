@@ -1,31 +1,24 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.ImageUtil;
-import org.springframework.util.StringUtils;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @description :app 相关case
@@ -33,7 +26,7 @@ import java.util.Map;
  **/
 public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
    // MendianInfo info = new MendianInfo();
     XdPackageData xds = XdPackageData.getInstance();
     int page = 1;
@@ -51,23 +44,35 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+     *
      */
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
+
+
+        //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
-        commonConfig.shopId = getXundianShop(); //要改！！！
+
+
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
+
+        //replace product name for ding push
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
+
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13581630214","13604609869", "15084928847"};
+
+        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
-        logger.debug("store " + xd);
-        xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+
+        logger.debug("xundian " + xd);
+
+        xd.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
 
 
     }
@@ -196,9 +201,14 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         try {
             String today_patrol_coverage_rate = xd.xd_analysis_data().getString("today_patrol_coverage_rate");
             JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
-            String patrol_coverage_rate = object.getString("patrol_coverage_rate");//APP中今日覆盖率
-            Preconditions.checkArgument(patrol_coverage_rate.equals(today_patrol_coverage_rate) , "APP【巡店中心】今日覆盖率="+patrol_coverage_rate+"PC【巡店分析】中的今日覆盖率="+today_patrol_coverage_rate);
-        } catch (AssertionError e) {
+            String patrol_coverage_rate = object.getString("patrol_coverage_rate");//APP中今日覆盖
+            //String patrol_coverage_rate = "29.09";//APP中今日覆盖
+            if(patrol_coverage_rate.equals("0.0")){
+                patrol_coverage_rate =  patrol_coverage_rate.substring(0,1);
+            }
+                Preconditions.checkArgument(patrol_coverage_rate.equals(today_patrol_coverage_rate) , "APP【巡店中心】今日覆盖率="+patrol_coverage_rate+"PC【巡店分析】中的今日覆盖率="+today_patrol_coverage_rate);
+
+            } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
@@ -214,6 +224,9 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             String today_patrol_pass_rate = xd.xd_analysis_data().getString("today_patrol_pass_rate");
             JSONObject object = xd.patrol_center().getJSONObject("today_patrol_result");
             String patrol_pass_rate = object.getString("patrol_pass_rate");//APP中今日合格率
+            if(patrol_pass_rate.equals("0.0")){
+                patrol_pass_rate =  patrol_pass_rate.substring(0,1);
+            }
             Preconditions.checkArgument(patrol_pass_rate.equals(today_patrol_pass_rate) , "APP【巡店中心】今日合格率="+patrol_pass_rate+"PC【巡店分析】中的今日合格率="+today_patrol_pass_rate);
         } catch (AssertionError e) {
             appendFailReason(e.toString());

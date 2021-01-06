@@ -81,28 +81,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
         xd.login(dealer, dealer_psw);
     }
-//    /**
-//     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-//     */
-//    @BeforeClass
-//    @Override
-//    public void initial() {
-//        logger.debug("before classs initial");
-//        CommonConfig commonConfig = new CommonConfig();
-//        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-//        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
-//        commonConfig.checklistQaOwner = "青青";
-//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-//        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
-//        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-//        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
-//        commonConfig.shopId = getXundianShop1(); //要改！！！
-//        beforeClassInit(commonConfig);
-//        logger.debug("store " + xd);
-//        xd.login(dealer, dealer_psw);
-//
-//
-//    }
+
 
     @AfterClass
     @Override
@@ -110,9 +89,12 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
+    @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
     }
     @Test(description = "远程巡店为下述造处理事件")
     public void remote () {

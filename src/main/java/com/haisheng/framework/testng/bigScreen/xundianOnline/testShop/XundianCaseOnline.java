@@ -999,7 +999,7 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
             long itemId=check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
             //截屏图片
             String pic_list1 = getPicList(filepath);
-            List<String> pic_list=new ArrayList<String>();
+            JSONArray pic_list=new JSONArray();
             pic_list.add(pic_list1);
             //获取整改处理人
             String responsorId=xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
