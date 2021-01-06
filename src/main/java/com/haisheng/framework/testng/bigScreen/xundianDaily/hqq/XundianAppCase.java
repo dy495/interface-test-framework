@@ -57,7 +57,6 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         return str;
     }
 
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -67,19 +66,43 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "青青";
+
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
+        commonConfig.pushRd = new String[]{ "15084928847"};
+
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
-        logger.debug("store " + xd);
+
+        logger.debug("xundian " + xd);
+
         xd.login(dealer, dealer_psw);
-
-
     }
+//    /**
+//     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+//     */
+//    @BeforeClass
+//    @Override
+//    public void initial() {
+//        logger.debug("before classs initial");
+//        CommonConfig commonConfig = new CommonConfig();
+//        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+//        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+//        commonConfig.checklistQaOwner = "青青";
+//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
+//        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
+//        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
+//        commonConfig.shopId = getXundianShop1(); //要改！！！
+//        beforeClassInit(commonConfig);
+//        logger.debug("store " + xd);
+//        xd.login(dealer, dealer_psw);
+//
+//
+//    }
 
     @AfterClass
     @Override
@@ -95,7 +118,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void remote () {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for(int i=0;i<3;i++){
+            for(int i=0;i<6;i++){
                 Long patrol_id=  xds.Scheduled(shop_id,0,null,"REMOTE",2,0);
                 int code = xd.checks_submit(shop_id,patrol_id,"自动化处理远程巡店全部不合格").getInteger("code");
                 Preconditions.checkArgument(code ==1000, "远程巡店提交失败"+code);
@@ -113,7 +136,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void remote1 () {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for(int i=0;i<3;i++){
+            for(int i=0;i<6;i++){
                 Long patrol_id=  xds.Scheduled(shop_id,0,null,"SPOT",2,0);
                 int code = xd.checks_submit(shop_id,patrol_id,"自动化处理现场远程巡店全部不合格").getInteger("code");
                 Preconditions.checkArgument(code ==1000, "现场巡店提交失败"+code);
@@ -235,7 +258,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             JSONArray pic_list1= xds.getPicPath2();
             JSONArray dataList2 = xd.task_list(page,size,0,null).getJSONArray("list");
             Long id3 = dataList2.getJSONObject(0).getLong("id");
-            Integer code2 = xd.task_step_submit(shop_id, id3, pic_list1, null,comment).getInteger("code");
+            Integer code2 = xd.task_step_submit(shop_id, id3, pic_list1, 1,comment).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "[APP]个人中心待办事项中远程巡店不合格项复核不合格后，再次进行处理后提交失败，失败code="+code);
            // xd.login(checker, checker_psw);
             JSONArray dataList1 = xd.task_list(page,size,0,null).getJSONArray("list");

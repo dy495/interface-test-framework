@@ -876,7 +876,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * ====================【巡店分析】环状图中的不合格率相加==100%======================
+     * ====================【问题分析】环状图中的不合格率相加==100%======================
      */
     @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
     public void unqualt_rate_sum(String cycle_type) {
@@ -899,12 +899,12 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("【巡店分析】环状图中的不合格率相加==100%");
+            saveData("【问题分析】环状图中的不合格率相加==100%");
         }
 
     }
     /**
-     * ====================【巡店分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数======================
+     * ====================【问题分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数======================
      */
     @Test(dataProvider = "CYCLE_TYPE",dataProviderClass = XundianScenarioUtil.class)
     public void unqual_sum_info(String cycle_type) {
@@ -929,7 +929,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("【巡店分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数");
+            saveData("【问题分析】环状图中的不合格项数相加==【巡店核心指标】中的总不合格项数");
         }
 
     }

@@ -463,6 +463,9 @@ public class TestCaseCommon {
     public String getXundianShop() {
         return "4116";
     }
+    public String getXundianShop1() {
+        return "43072";
+    }
 
     public String getXunDianShop() {
         return "4116";
