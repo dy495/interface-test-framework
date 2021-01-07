@@ -73,7 +73,7 @@ public class DemoCase2 extends TestCaseCommon implements TestCaseStd {
         logger.info("afterMethod expect: " + caseResult.getExpect());
     }
 
-    @Test
+    @Test(priority = 1)
     public void dctc1() {
         logger.logCaseStart(caseResult.getCaseName());
         caseResult.setResponse("resonsexxxx");
@@ -82,7 +82,7 @@ public class DemoCase2 extends TestCaseCommon implements TestCaseStd {
         saveData("xxxxx");
     }
 
-    @Test
+    @Test(priority = 2)
     public void dctc2() {
         logger.logCaseStart(caseResult.getCaseName());
         caseResult.setResponse("test2resonsexxxx");

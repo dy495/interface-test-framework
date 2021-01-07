@@ -4,6 +4,7 @@
 
     <listeners>
         <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+        <listener class-name="com.haisheng.framework.testng.service.RePrioritizingListener"/>
     </listeners>
 
     <test name="operation-center-rgn" preserve-order="true">

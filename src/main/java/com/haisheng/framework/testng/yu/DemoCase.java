@@ -75,7 +75,7 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
         logger.info("afterMethod response: " + caseResult.getResponse());
     }
 
-    @Test
+    @Test(priority = 1)
     public void test1() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -92,7 +92,7 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    @Test(priority = 2)
     public void test23() {
 
         logger.logCaseStart(caseResult.getCaseName());
