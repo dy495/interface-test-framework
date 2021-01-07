@@ -92,7 +92,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-   // @Test(description = "远程巡店为下述造处理事件")
+    @Test(description = "远程巡店为下述造处理事件")
     public void remote () {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -110,7 +110,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             saveData("[APP]远程巡店为下述造处理事件");
         }
     }
-   // @Test(description = "现场巡店为下述造处理事件")
+    @Test(description = "现场巡店为下述造处理事件")
     public void remote1 () {
         logger.logCaseStart(caseResult.getCaseName());
         try {

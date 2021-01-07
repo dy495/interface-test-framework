@@ -161,7 +161,6 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     .other("ExpiredTime", "50 * 1000")
                     .other("Authorization", auth)
                     .build();
-
             String transId = "QAtest_" + CommonUtil.getRandom(5);
             String transTime = "" + System.currentTimeMillis();
             String str = "{\n" +
@@ -217,6 +216,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             System.out.println(post);
         }
     }
+
+//    public static  class  gatewayBO(){
+//
+//    }
 
     /**
      * ====================添加事件(结束时间为开始时间&结束时间大于开始时间)======================
