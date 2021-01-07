@@ -3622,5 +3622,77 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json1,er.checkcode);
     }
 
+    /**
+     * @description :会员权益列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject equityPage(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/vip-marketing/equity/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :会员权益列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject washCarManagerPage(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :调整次数记录列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject adjustNumberRecord(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/record";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+    /**
+     * @description :签到配置列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject signInConfigPage(String shopId, String page, String size) {
+        String url = "jiaochen/pc/vip-marketing/sign_in_config/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :分享管理
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject shareManagerPage(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/vip-marketing/share-manager/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+
+
+
 
 }
