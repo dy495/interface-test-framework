@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class AfterSaleCustomerRepairPage extends BaseScene {
+public class RepairPage extends BaseScene {
     @Builder.Default
     private final Integer size = 10;
     @Builder.Default

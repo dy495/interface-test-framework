@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 卡券申请分页
  */
 @Builder
-public class ApplyPage extends BaseScene {
+public class ApplyPageExport extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default
@@ -21,6 +23,8 @@ public class ApplyPage extends BaseScene {
     private final String costCenter;
     private final String applyTime;
     private final String applyItem;
+    private final String exportType;
+    private final List<Long> ids;
 
     @Override
     public JSONObject getJSONObject() {
@@ -35,12 +39,14 @@ public class ApplyPage extends BaseScene {
         object.put("apply_time", applyTime);
         object.put("applyItem", applyItem);
         object.put("size", size);
+        object.put("export_type", exportType);
+        object.put("ids", ids);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher/apply/page";
+        return "/jiaochen/pc/voucher/apply/export";
     }
 
     @Override

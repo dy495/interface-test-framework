@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumCarType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerRepairPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
@@ -491,7 +491,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
 
     private Integer getMiles(AfterSaleCustomerPageVO customerInfo) {
         List<Integer> list = new ArrayList<>();
-        AfterSaleCustomerRepairPage.AfterSaleCustomerRepairPageBuilder builder = AfterSaleCustomerRepairPage.builder().carId(String.valueOf(customerInfo.getCarId()))
+        RepairPage.RepairPageBuilder builder = RepairPage.builder().carId(String.valueOf(customerInfo.getCarId()))
                 .shopId(String.valueOf(customerInfo.getShopId()));
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
