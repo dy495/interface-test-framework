@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
-/**
- * 领取记录
- */
+import java.util.List;
+
 @Builder
-public class SendRecord extends BaseScene {
+public class SendRecordExport extends BaseScene {
+    private final Long id;
     private final String receiver;
     private final String receivePhone;
     private final String useStatus;
@@ -17,8 +17,10 @@ public class SendRecord extends BaseScene {
     private final String customerLabel;
     private final String voucherName;
     private final String sender;
-    private final Long startTime;
-    private final Long endTime;
+    private final String startTime;
+    private final String endTime;
+    private final String exportType;
+    private final List<Long> ids;
     @Builder.Default
     private Integer page = 1;
     @Builder.Default
@@ -27,6 +29,7 @@ public class SendRecord extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
+        object.put("id", id);
         object.put("receiver", receiver);
         object.put("receive_phone", receivePhone);
         object.put("use_status", useStatus);
@@ -37,6 +40,8 @@ public class SendRecord extends BaseScene {
         object.put("sender", sender);
         object.put("start_time", startTime);
         object.put("end_time", endTime);
+        object.put("export_type", exportType);
+        object.put("ids", ids);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -44,7 +49,7 @@ public class SendRecord extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/send-record";
+        return "/jiaochen/pc/voucher-manage/voucher-form/page";
     }
 
     @Override

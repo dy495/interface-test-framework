@@ -6,21 +6,26 @@ import lombok.Builder;
 
 import java.util.List;
 
-/**
- * 卡券管理 -> 新建卡券
- */
 @Builder
-public class Create extends BaseScene {
-    private final String voucherPic;
+public class EditVoucher extends BaseScene {
+    private final Integer id;
     private final String voucherName;
-    private final String voucherDescription;
-    private final Long stock;
-    private final Double cost;
-    private final Integer shopType;
-    private final List<Long> shopIds;
-    private final Boolean selfVerification;
     private final String subjectType;
     private final Long subjectId;
+    private final String subjectName;
+    private final Long stock;
+    private final String cardType;
+    private final Boolean isThreshold;
+    private final Boolean thresholdPrice;
+    private final Boolean parValue;
+    private final Double discount;
+    private final Double mostDiscount;
+    private final String exchangeCommodityName;
+    private final Integer shopType;
+    private final String voucherDescription;
+    private final List<Long> shopIds;
+    private final String voucherPic;
+    private final Boolean selfVerification;
 
     @Override
     public JSONObject getJSONObject() {
@@ -29,22 +34,25 @@ public class Create extends BaseScene {
         object.put("voucher_name", voucherName);
         object.put("voucher_description", voucherDescription);
         object.put("stock", stock);
-        object.put("cost", cost);
+        object.put("id", id);
         object.put("shop_type", shopType);
         object.put("shop_ids", shopIds);
         object.put("self_verification", selfVerification);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);
+        object.put("subject_name", subjectName);
+        object.put("card_type", cardType);
+        object.put("is_threshold", isThreshold);
+        object.put("threshold_price", thresholdPrice);
+        object.put("par_value", parValue);
+        object.put("discount", discount);
+        object.put("most_discount", mostDiscount);
+        object.put("exchange_commodity_name", exchangeCommodityName);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/create";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
+        return "/jiaochen/pc/voucher-manage/edit-voucher";
     }
 }

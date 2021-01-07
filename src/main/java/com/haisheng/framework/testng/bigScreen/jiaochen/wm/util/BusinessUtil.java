@@ -50,7 +50,7 @@ public class BusinessUtil {
      */
     public String createVoucher(Long stock) {
         String voucherName = createVoucherName();
-        IScene scene = Create.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
+        IScene scene = CreateVoucher.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
                 .voucherDescription(getDesc()).subjectId(getSubjectId(getSubjectType())).stock(stock).cost(getCost(stock))
                 .shopType(0).shopIds(getShopIdList()).selfVerification(true).build();
         jc.invokeApi(scene);
@@ -329,7 +329,7 @@ public class BusinessUtil {
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName))
-                    .map(e -> JSON.parseObject(JSON.toJSONString(e), VoucherInfoVO.class)).collect(Collectors.toList()));
+                    .map(e -> JSONObject.toJavaObject(e, VoucherInfoVO.class)).collect(Collectors.toList()));
         }
         return list.get(0);
     }

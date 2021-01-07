@@ -52,7 +52,7 @@ public class BusinessUtilOnline {
      */
     public String createVoucher(Long stock) {
         String voucherName = createVoucherName();
-        IScene scene = Create.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
+        IScene scene = CreateVoucher.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
                 .voucherDescription(getDesc()).subjectId(getSubjectId(getSubjectType())).stock(stock).cost(getCost(stock))
                 .shopType(0).shopIds(getShopIdList()).selfVerification(true).build();
         jc.invokeApi(scene);

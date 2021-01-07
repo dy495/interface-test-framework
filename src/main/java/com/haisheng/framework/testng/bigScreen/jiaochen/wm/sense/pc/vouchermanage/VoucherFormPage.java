@@ -38,9 +38,4 @@ public class VoucherFormPage extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/voucher-manage/voucher-form/page";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

@@ -1522,7 +1522,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Long stock = 1000L;
             String[] strings = {EnumContent.B.getContent(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1545,7 +1545,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Long stock = 1000L;
             String[] strings = {null, "", EnumContent.C.getContent()};
             Arrays.stream(strings).forEach(desc -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
                         .voucherDescription(desc).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1568,7 +1568,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Long stock = 1000L;
             String[] strings = {"全部权限", null, ""};
             Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(subjectType)
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(subjectType)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(subjectType)).stock(stock).cost(util.getCost(stock))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1588,7 +1588,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long stock = 1000L;
-            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+            IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
                     .subjectType(EnumSubject.STORE.name())
                     .voucherDescription(util.getDesc()).stock(stock).cost(util.getCost(stock))
                     .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1609,7 +1609,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         try {
             Long[] longs = {1000000000L, null, -100L, 9999999999L};
             Arrays.stream(longs).forEach(stock -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1633,7 +1633,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Long stock = 1000L;
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1656,7 +1656,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Long stock = 1000L;
             Double[] doubles = {null, (double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
+                IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(cost)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -1677,7 +1677,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long stock = 1000L;
-            IScene scene = Create.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+            IScene scene = CreateVoucher.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
                     .subjectType(util.getSubjectType()).voucherDescription(util.getDesc())
                     .subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
                     .shopType(0).selfVerification(true).build();
