@@ -1227,7 +1227,7 @@ public class FeidanMiniApiSystemtestOnline {
                 {"a",System.currentTimeMillis()+"@qq.com",phonenum(),"姓名1个字"},
                 {"123Aa啊！@啊1",System.currentTimeMillis()+"@163.com",phonenum(),"姓名10个字"},
                 {"123Aa啊！@啊1123Aa啊！@啊1",System.currentTimeMillis()+"@yahoo.cn",phonenum(),"姓名20个字"},
-                {"zhd","123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890000@qq.com",phonenum(),"邮箱100个字"},
+//                {"zhd","123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890000@qq.com",phonenum(),"邮箱100个字"},
 
         };
     }

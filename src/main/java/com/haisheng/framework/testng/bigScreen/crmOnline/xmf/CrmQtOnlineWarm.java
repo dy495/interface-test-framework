@@ -51,8 +51,8 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName()+"门店：12732" + commonConfig.checklistQaOwner);
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_GRP;
-//        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.dingHook = DingWebhook.QA_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
