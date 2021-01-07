@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.dataCenter.interfaceUtil.dataLayerUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -39,6 +40,8 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
     String receipt_type = "";
     String posId = "pos-1234586789";
     String orderNumber = "8888888";
+    String face_path = "src/main/java/com/haisheng/framework/testng/dataCenter/img/china.png";
+    String face_path1 = "src/main/java/com/haisheng/framework/testng/dataCenter/img/woman.jpg";
 
 
 
@@ -175,11 +178,11 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
             obj.put("commodity_id","iPhone12");
             obj.put("commodity_name","苹果手机12代");
             obj.put("num",5);
-            obj.put("unit_price",123.12);
+            obj.put("unit_price",123.122);
             JSONArray commodity_list = new JSONArray();
             commodity_list.add(obj);
             JSONObject  res = data.customer_dealData("",trans_id,trans_time,trans_type,user_id,total_price,real_price,openid,orderNumber,memberName,receipt_type,posId,commodity_list);
-            checkArgument(res == null, "接收交易数据接口，必填项交易时间格式不正确，接口仍然调成功");
+            checkArgument(res == null, "接收交易数据接口，非必填项格式不正确，接口仍然调成功");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -214,15 +217,63 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String app_id = "49998b971ea0";
-           // checkArgument(res == null, "接收交易数据接口，必填项交易时间格式不正确，接口仍然调成功");
+            String face_url = new ImageUtil().getImageBinary(face_path1);
+            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+             Integer code =res.getInteger("code");
+             String  message = res.getString("message");
+             String requestId = res.getString("request_id");
+             checkArgument(code == 1000, "【会员管理】会员注册，正确格式传参报错,报错报文："+message+" 。【requestId】："+requestId);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("识别付款人物候选，上传图像(正确入参&格式)");
+            saveData("【会员管理】会员注册(正确入参&格式)");
         }
     }
-
+    /**
+     * ====================会员注册(人脸图片使用PNG格式)======================
+     */
+    @Test
+    public void member_register1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String app_id = "49998b971ea0";
+            String face_url = new ImageUtil().getImageBinary(face_path);
+            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+            Integer code =res.getInteger("code");
+            String  message = res.getString("message");
+            String requestId = res.getString("request_id");
+            checkArgument(code == 1000, "【会员管理】会员注册，人脸图片格式PNG，报错,报错报文："+message+" 。【requestId】："+requestId);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【会员管理】会员注册(正确入参&格式)");
+        }
+    }
+    /**
+     * ====================会员注册(错误参数)======================
+     */
+    @Test
+    public void member_register2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String app_id = "49998b971ea0";
+            String face_url = new ImageUtil().getImageBinary(face_path);
+            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+            Integer code =res.getInteger("code");
+            String  message = res.getString("message");
+            String requestId = res.getString("request_id");
+            checkArgument(code == 1000, "【会员管理】会员注册，人脸图片格式PNG，报错,报错报文："+message+" 。【requestId】："+requestId);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【会员管理】会员注册(正确入参&格式)");
+        }
+    }
 }
 

@@ -206,7 +206,7 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("is_cross_store",is_cross_store);
         json.put("mappings", mappings);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.2. 会员删除(删除人脸)
