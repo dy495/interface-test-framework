@@ -359,7 +359,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为接听,是否完成=已完成", priority = 4)
+    @Test(description = "销售--回访任务--回访结果为接听,是否完成=已完成")
     public void returnVisit_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -371,7 +371,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为其他,是否完成=已完成", priority = 5)
+    @Test(dependsOnMethods = "returnVisit_system_4", description = "销售--回访任务--回访结果为其他,是否完成=已完成")
     public void returnVisit_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -383,7 +383,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为无人接听,是否完成=未完成", priority = 6)
+    @Test(dependsOnMethods = "returnVisit_system_5", description = "销售--回访任务--回访结果为无人接听,是否完成=未完成")
     public void returnVisit_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -395,7 +395,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为挂断,是否完成=未完成", priority = 7)
+    @Test(dependsOnMethods = "returnVisit_system_6", description = "销售--回访任务--回访结果为挂断,是否完成=未完成")
     public void returnVisit_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -407,7 +407,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为稍后联系,是否完成=未完成", priority = 8)
+    @Test(dependsOnMethods = "returnVisit_system_7", description = "销售--回访任务--回访结果为稍后联系,是否完成=未完成")
     public void returnVisit_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -419,7 +419,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为错号,是否完成=已完成", priority = 9)
+    @Test(dependsOnMethods = "returnVisit_system_8", description = "销售--回访任务--回访结果为错号,是否完成=已完成")
     public void returnVisit_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -464,7 +464,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为战败，战败原因为购买竞品，是否完成=已完成", priority = 2, enabled = false)
+    @Test(dependsOnMethods = "returnVisit_system_10", description = "销售--回访任务--回访结果为战败，战败原因为购买竞品，是否完成=已完成", enabled = false)
     public void returnVisit_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -477,7 +477,7 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售--回访任务--回访结果为战败，战败原因为放弃购车，是否完成=已完成", priority = 3, enabled = false)
+    @Test(dependsOnMethods = "returnVisit_system_11", description = "销售--回访任务--回访结果为战败，战败原因为放弃购车，是否完成=已完成", enabled = false)
     public void returnVisit_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

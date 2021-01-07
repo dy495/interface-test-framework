@@ -78,9 +78,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         //set shop id
         commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
-
-        logger.debug("jc: " + jc);
         jc.appletLoginToken(pp.appletTocken);
+        logger.debug("jc: " + jc);
 
 
     }
@@ -534,6 +533,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } finally {
             //还原
             commonConfig.shopId = "45973";
+            jc.appletLoginToken(pp.appletTocken);
             saveData("创建活动，领卡券");
         }
     }
