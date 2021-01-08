@@ -10,10 +10,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 
@@ -61,9 +58,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
+    @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
     }
 
 
@@ -348,9 +348,9 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         return new String[][]{
                 {"REMOTE","远程巡店","1","合格"},
                 {"REMOTE","远程巡店","2","不合格"},
-                {"REMOTE","远程巡店","3","不适用"},
-                {"SPOT","现场巡店","1","合格"},
-                {"SPOT","现场巡店","2","不合格"},
+//                {"REMOTE","远程巡店","3","不适用"},
+//                {"SPOT","现场巡店","1","合格"},
+//                {"SPOT","现场巡店","2","不合格"},
                 {"SPOT","现场巡店","3","不适用"},
 
 

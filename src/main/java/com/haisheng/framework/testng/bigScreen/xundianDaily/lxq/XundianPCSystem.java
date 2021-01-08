@@ -63,9 +63,12 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
+    @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
     }
 
 
