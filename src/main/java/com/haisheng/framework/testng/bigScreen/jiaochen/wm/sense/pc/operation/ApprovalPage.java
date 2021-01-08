@@ -8,9 +8,9 @@ import lombok.Builder;
 public class ApprovalPage extends BaseScene {
     private final String articleId;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -24,5 +24,15 @@ public class ApprovalPage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/operation/approval/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

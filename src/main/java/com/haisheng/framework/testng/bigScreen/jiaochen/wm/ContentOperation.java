@@ -235,14 +235,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
     public void operationRegister_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<OperationRegisterVO> operationRegisters = new ArrayList<>();
-            RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
-            int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
-                operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
-            }
+            IScene scene = RegisterPage.builder().build();
+            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
             List<Integer> statusNameList = operationRegisters.stream().map(e -> (int) util.getApprovalList(e.getId()).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count()).collect(Collectors.toList());
             List<Integer> passedList = operationRegisters.stream().map(OperationRegisterVO::getPassedNum).collect(Collectors.toList());
             List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
@@ -488,7 +482,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test()
+    //    @Test()
     public void test() {
         IScene scene = RegisterPage.builder().build();
         List<OperationRegisterVO> operationRegisterVOS = util.collectBean(scene, OperationRegisterVO.class);
