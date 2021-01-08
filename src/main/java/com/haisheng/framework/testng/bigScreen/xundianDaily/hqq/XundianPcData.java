@@ -602,7 +602,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================昨日巡检合格率==【巡店报告中心】昨日巡店合格报告数/昨日总提交报告数======================
      */
-    @Test
+    //@Test
     public void ystday_qualified_rate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -618,7 +618,6 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
                     count1++;
                 }
             }
-
             //获取巡店报告中心昨日提交报告的全部报告数量
             JSONArray reportList2 = xd.xd_report_list("","","","",null,page,size).getJSONArray("list");
             int count2=0;
@@ -697,19 +696,19 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     public void yesterday_fix_wait() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String today= dt.getHistoryDate(-1);//YYYY-MM-DD
+            String yesterday= dt.getHistoryDate(-1);//YYYY-MM-DD
             int count1=0;
             int id = 0;
             Long shop_id =null;
             int unqualified_num =0;
             int count2=0;
             //获取巡店报告中心列表昨天提交的不合格报告数
-            JSONArray reportList1 = xd.xd_report_list("","","UNQUALIFIED","PENDING",null,page,size).getJSONArray("list");
+            JSONArray reportList1 = xd.xd_report_list("","赢识","UNQUALIFIED","PENDING",null,page,size).getJSONArray("list");
             for(int i=0;i<reportList1.size();i++){
                 String reportTime = reportList1.getJSONObject(i).getString("report_submit_time").substring(0, 10);
 
                 //获取列表报告的提交时间，看是否为昨天提交的报告
-                if(reportTime.equals(today)){
+                if(reportTime.equals(yesterday)){
                     id = reportList1.getJSONObject(i).getInteger("id");
                     shop_id = reportList1.getJSONObject(i).getLong("shop_id");
                     //获取今天每个不合格待处理的不合格项数
@@ -960,7 +959,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================【巡店报告中心】报告提交时间==【巡店中心】中提交巡检报告的时间======================
      */
-    @Test
+    //@Test
     public void report_detail_data() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

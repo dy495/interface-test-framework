@@ -27,7 +27,7 @@ import java.util.*;
  */
 public class dataCase extends TestCaseCommon implements TestCaseStd {
     dataLayerUtil data = dataLayerUtil.getInstance();
-    String request_id = "8b21f20d-6af6-43ff-8fd3-4251e959d28c";
+    String request_id = "8b21f20d-6af6-43ff-8fd3-4251e959d28v";
     String shop_id = "43072";
     String scope = "22728";
     String trans_id = "20210107";
@@ -40,8 +40,7 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
     String receipt_type = "";
     String posId = "pos-1234586789";
     String orderNumber = "8888888";
-    String face_path = "src/main/java/com/haisheng/framework/testng/dataCenter/img/china.png";
-    String face_path1 = "src/main/java/com/haisheng/framework/testng/dataCenter/img/woman.jpg";
+    String face_url = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=381876729,1649964117&fm=26&gp=0.jpg";
 
 
 
@@ -216,9 +215,8 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
     public void member_register() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String app_id = "49998b971ea0";
-            String face_url = new ImageUtil().getImageBinary(face_path1);
-            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+             String app_id = "88590052b177";
+             JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
              Integer code =res.getInteger("code");
              String  message = res.getString("message");
              String requestId = res.getString("request_id");
@@ -232,19 +230,39 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * ====================会员注册(人脸图片使用PNG格式)======================
+     * ====================会员注册(人脸图片使用非人脸)======================
      */
     @Test
     public void member_register1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String app_id = "49998b971ea0";
-            String face_url = new ImageUtil().getImageBinary(face_path);
+            String app_id = "88590052b177";
+            String face_url = "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1042556063,3979976810&fm=26&gp=0.jpg";
             JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
             Integer code =res.getInteger("code");
             String  message = res.getString("message");
             String requestId = res.getString("request_id");
-            checkArgument(code == 1000, "【会员管理】会员注册，人脸图片格式PNG，报错,报错报文："+message+" 。【requestId】："+requestId);
+            checkArgument(code==3001, "【会员管理】会员注册，人脸地址为动物，接口调用成功："+message+" 。【requestId】："+requestId);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【会员管理】会员注册(人脸图片使用非人脸)");
+        }
+    }
+    /**
+     * ====================会员注册(必填项错误)======================
+     */
+    @Test
+    public void member_register2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = data.memberRegisted(request_id,"23423324",scope,face_url,user_id,"tester",false,false,false,false,false,null);
+            Integer code =res.getInteger("code");
+            String  message = res.getString("message");
+            String requestId = res.getString("request_id");
+            checkArgument(code == 3001, "【会员管理】会员注册，app_id输入错误内容，接口调用成功："+message+" 。【requestId】："+requestId);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -253,26 +271,58 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
             saveData("【会员管理】会员注册(正确入参&格式)");
         }
     }
+
     /**
-     * ====================会员注册(错误参数)======================
+     * ====================会员注册(重复注册)======================
      */
     @Test
-    public void member_register2() {
+    public void member_register3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String app_id = "49998b971ea0";
-            String face_url = new ImageUtil().getImageBinary(face_path);
-            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
-            Integer code =res.getInteger("code");
-            String  message = res.getString("message");
-            String requestId = res.getString("request_id");
-            checkArgument(code == 1000, "【会员管理】会员注册，人脸图片格式PNG，报错,报错报文："+message+" 。【requestId】："+requestId);
+                String app_id = "88590052b177";
+                String face_url = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1340544313,4145608903&fm=26&gp=0.jpg";
+                data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+                JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+                Integer code =res.getInteger("code");
+                String  message = res.getString("message");
+                JSONObject same_member = res.getJSONObject("same_member");
+                String requestId = res.getString("request_id");
+                checkArgument(code == 1000 , "【会员管理】会员注册(重复注册)，接口调用失败："+message+" 。【requestId】："+requestId);
+                checkArgument(same_member != null, "【会员管理】会员注册(重复注册)，接口没有返回注册重复时的响应值参数【same_member】"+same_member+" 。【requestId】："+requestId);
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("【会员管理】会员注册(正确入参&格式)");
+            saveData("【会员管理】会员注册(重复注册)");
+        }
+    }
+
+    /**
+     * ====================会员删除-删除人脸======================
+     */
+    @Test
+    public void member_delete() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String app_id = "88590052b177";
+            String face_url = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1340544313,4145608903&fm=26&gp=0.jpg";
+            data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+            JSONObject res = data.memberRegisted(request_id,app_id,scope,face_url,user_id,"tester",false,false,false,false,false,null);
+            Integer code =res.getInteger("code");
+            String  message = res.getString("message");
+            JSONObject same_member = res.getJSONObject("same_member");
+            String requestId = res.getString("request_id");
+            checkArgument(code == 1000 , "【会员管理】会员注册(重复注册)，接口调用失败："+message+" 。【requestId】："+requestId);
+            checkArgument(same_member != null, "【会员管理】会员注册(重复注册)，接口没有返回注册重复时的响应值参数【same_member】"+same_member+" 。【requestId】："+requestId);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【会员管理】会员删除-删除人脸");
         }
     }
 }
