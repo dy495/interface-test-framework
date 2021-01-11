@@ -228,35 +228,35 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
-    @Test
-    public void todayNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray homeList = md.cardList("HOME_BELOW",null,10).getJSONArray("list");
-//            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
-            JSONArray resultList = homeList.getJSONObject(0).getJSONArray("result");
-            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
-
-            int todayUvCount = 0;
-            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
-
-            for(int i=0;i<trendList.size();i++){
-                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
-                if(uv==null){
-                    uv=0;
-;                }
-                todayUvCount += uv;
-            }
-            checkArgument(todayUv <= todayUvCount, "首页实时客流分析中今日到访人数" + todayUv + "趋势图中各时间段人数" + todayUvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("首页实时客流分钟中今日到访人数<= 趋势图中今天各时段人数之和");
-        }
-
-    }
+//    @Test
+//    public void todayNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray homeList = md.cardList("HOME_BELOW",null,10).getJSONArray("list");
+////            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
+//            JSONArray resultList = homeList.getJSONObject(0).getJSONArray("result");
+//            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
+//
+//            int todayUvCount = 0;
+//            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+//
+//            for(int i=0;i<trendList.size();i++){
+//                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
+//                if(uv==null){
+//                    uv=0;
+//;                }
+//                todayUvCount += uv;
+//            }
+//            checkArgument(todayUv <= todayUvCount, "首页实时客流分析中今日到访人数" + todayUv + "趋势图中各时间段人数" + todayUvCount);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("首页实时客流分钟中今日到访人数<= 趋势图中今天各时段人数之和");
+//        }
+//
+//    }
 
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {
