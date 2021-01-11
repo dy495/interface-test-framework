@@ -571,133 +571,133 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
      */
 
 
-    //门店管理--正常
-    @Ignore //创建太多门店 注视掉
-    @Test(dataProvider = "SHOP")
-    public void addshop(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
-                        String longitude, String latitude, String appointment_status, String washing_status) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arr = new JSONArray();
-            arr.add(info.BrandIDOnline);
-            int code = jc.addShopNotChk(info.logo, simple_name, name, arr, district_code, adddress, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店");
-        }
-    }
-
-    @DataProvider(name = "SHOP")
-    public Object[] shop() {
-
-        return new String[][]{
-//                {info.stringone, info.stringone,info.district_code,info.stringone, info.phone,info.phone,"129.8439","42.96805","ENABLE","ENABLE"}, //一个字符太少了 注视掉 每次需要更改
-//                {info.stringone, info.stringten,info.district_code,info.stringfifty, info.phone,info.phone,"129.8439","42.96805","ENABLE","DISABLE"},
-//                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","ENABLE"},
-                {info.stringten, info.stringfifty, info.district_code, info.stringone, info.phone, info.phone, "129.8439", "42.96805", "DISABLE", "DISABLE"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
-
-        };
-    }
-
-
-    @Ignore //创建太多门店 注视掉
-    @Test
-    public void addshop_rephone() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            String sale_tel = info.phone;
-            String service_tel = info.phone;
-
-            JSONArray arr = new JSONArray();
-            arr.add(info.BrandIDOnline);
-
-            jc.addShop(info.logo, info.stringsix, info.stringsix, arr, info.district_code, info.stringsix, sale_tel, service_tel,
-                    129.8439, 42.96805, "DISABLE", "DISABLE");
-            int code = jc.addShopNotChk(info.logo, info.stringsix + "1", info.stringsix + "1", arr, info.district_code, info.stringsix, sale_tel, service_tel,
-                    129.8439, 42.96805, "DISABLE", "DISABLE").getInteger("code");
-            Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店销售电话/售后电话与其他门店重复");
-        }
-    }
-
-    //门店管理--异常
-    @Test(dataProvider = "SHOPERR")
-    public void addshopErr(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
-                           String longitude, String latitude, String appointment_status, String washing_status, String a) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arr = new JSONArray();
-            arr.add(info.BrandIDOnline);
-            int code = jc.addShopNotChk(info.logo, simple_name, name, arr, district_code, adddress, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status).getInteger("code");
-            Preconditions.checkArgument(code == 1001, a + "期待状态码1001，实际" + code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店，参数不规范");
-        }
-    }
-
-    @DataProvider(name = "SHOPERR")
-    public Object[] shop_err() {
-
-        return new String[][]{
-                {info.stringten + "1", info.stringone, info.district_code, info.stringone, info.phone, info.phone, "129.8439", "42.96805", "ENABLE", "ENABLE", "门店简称11字"},
-                {info.stringone, info.stringfifty1, info.district_code, info.stringfifty, info.phone, info.phone, "129.8439", "42.96805", "ENABLE", "DISABLE", "门店全称1字"},
-                {info.stringten, info.stringfifty, info.district_code, info.stringfifty1, info.phone, info.phone, "129.8439", "42.96805", "DISABLE", "DISABLE", "详细地址51字"},
-//                {info.stringten, info.stringone,info.district_code,info.stringten, "11111111111",info.phone,"129.8439","42.96805","DISABLE","ENABLE","销售手机号11111111111"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, "111111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号12位"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, "1111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号10位"},
-//                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,"11111111111","129.8439","42.96805","DISABLE","ENABLE","售后手机号11111111111"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"111111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号12位"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"1111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号10位"},
-                {info.stringone, info.stringfifty, info.district_code, info.stringten, info.phone, info.phone, "1298439", "42.96805", "DISABLE", "DISABLE", "经度1298439"},
-                {info.stringone, info.stringfifty, info.district_code, info.stringten, info.phone, info.phone, "129.8439", "4296805", "DISABLE", "DISABLE", "纬度4296805"},
-
-
-        };
-    }
-
-    @Test
-    public void addshoperr1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            String sale_tel = info.phone;
-            String service_tel = info.phone;
-
-            JSONArray arr = new JSONArray();
-            arr.add(System.currentTimeMillis());
-
-            int code = jc.addShopNotChk(info.logo, info.stringsix, info.stringsix, arr, info.district_code, info.stringsix, sale_tel, service_tel,
-                    129.8439, 42.96805, "DISABLE", "DISABLE").getInteger("code");
-            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店时品牌不存在");
-        }
-    }
+//    //门店管理--正常
+//    @Ignore //创建太多门店 注视掉
+//    @Test(dataProvider = "SHOP")
+//    public void addshop(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
+//                        String longitude, String latitude, String appointment_status, String washing_status) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arr = new JSONArray();
+//            arr.add(info.BrandIDOnline);
+//            int code = jc.addShopNotChk(info.logo, simple_name, name, arr, district_code, adddress, sale_tel, service_tel, Double.valueOf(longitude),
+//                    Double.valueOf(latitude), appointment_status, washing_status).getInteger("code");
+//            Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店");
+//        }
+//    }
+//
+//    @DataProvider(name = "SHOP")
+//    public Object[] shop() {
+//
+//        return new String[][]{
+////                {info.stringone, info.stringone,info.district_code,info.stringone, info.phone,info.phone,"129.8439","42.96805","ENABLE","ENABLE"}, //一个字符太少了 注视掉 每次需要更改
+////                {info.stringone, info.stringten,info.district_code,info.stringfifty, info.phone,info.phone,"129.8439","42.96805","ENABLE","DISABLE"},
+////                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","ENABLE"},
+//                {info.stringten, info.stringfifty, info.district_code, info.stringone, info.phone, info.phone, "129.8439", "42.96805", "DISABLE", "DISABLE"},
+////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
+//
+//        };
+//    }
+//
+//
+//    @Ignore //创建太多门店 注视掉
+//    @Test
+//    public void addshop_rephone() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            String sale_tel = info.phone;
+//            String service_tel = info.phone;
+//
+//            JSONArray arr = new JSONArray();
+//            arr.add(info.BrandIDOnline);
+//
+//            jc.addShop(info.logo, info.stringsix, info.stringsix, arr, info.district_code, info.stringsix, sale_tel, service_tel,
+//                    129.8439, 42.96805, "DISABLE", "DISABLE");
+//            int code = jc.addShopNotChk(info.logo, info.stringsix + "1", info.stringsix + "1", arr, info.district_code, info.stringsix, sale_tel, service_tel,
+//                    129.8439, 42.96805, "DISABLE", "DISABLE").getInteger("code");
+//            Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店销售电话/售后电话与其他门店重复");
+//        }
+//    }
+//
+//    //门店管理--异常
+//    @Test(dataProvider = "SHOPERR")
+//    public void addshopErr(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
+//                           String longitude, String latitude, String appointment_status, String washing_status, String a) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arr = new JSONArray();
+//            arr.add(info.BrandIDOnline);
+//            int code = jc.addShopNotChk(info.logo, simple_name, name, arr, district_code, adddress, sale_tel, service_tel, Double.valueOf(longitude),
+//                    Double.valueOf(latitude), appointment_status, washing_status).getInteger("code");
+//            Preconditions.checkArgument(code == 1001, a + "期待状态码1001，实际" + code);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店，参数不规范");
+//        }
+//    }
+//
+//    @DataProvider(name = "SHOPERR")
+//    public Object[] shop_err() {
+//
+//        return new String[][]{
+//                {info.stringten + "1", info.stringone, info.district_code, info.stringone, info.phone, info.phone, "129.8439", "42.96805", "ENABLE", "ENABLE", "门店简称11字"},
+//                {info.stringone, info.stringfifty1, info.district_code, info.stringfifty, info.phone, info.phone, "129.8439", "42.96805", "ENABLE", "DISABLE", "门店全称1字"},
+//                {info.stringten, info.stringfifty, info.district_code, info.stringfifty1, info.phone, info.phone, "129.8439", "42.96805", "DISABLE", "DISABLE", "详细地址51字"},
+////                {info.stringten, info.stringone,info.district_code,info.stringten, "11111111111",info.phone,"129.8439","42.96805","DISABLE","ENABLE","销售手机号11111111111"},
+////                {info.stringone, info.stringfifty,info.district_code,info.stringten, "111111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号12位"},
+////                {info.stringone, info.stringfifty,info.district_code,info.stringten, "1111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号10位"},
+////                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,"11111111111","129.8439","42.96805","DISABLE","ENABLE","售后手机号11111111111"},
+////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"111111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号12位"},
+////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"1111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号10位"},
+//                {info.stringone, info.stringfifty, info.district_code, info.stringten, info.phone, info.phone, "1298439", "42.96805", "DISABLE", "DISABLE", "经度1298439"},
+//                {info.stringone, info.stringfifty, info.district_code, info.stringten, info.phone, info.phone, "129.8439", "4296805", "DISABLE", "DISABLE", "纬度4296805"},
+//
+//
+//        };
+//    }
+//
+//    @Test
+//    public void addshoperr1() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            String sale_tel = info.phone;
+//            String service_tel = info.phone;
+//
+//            JSONArray arr = new JSONArray();
+//            arr.add(System.currentTimeMillis());
+//
+//            int code = jc.addShopNotChk(info.logo, info.stringsix, info.stringsix, arr, info.district_code, info.stringsix, sale_tel, service_tel,
+//                    129.8439, 42.96805, "DISABLE", "DISABLE").getInteger("code");
+//            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店时品牌不存在");
+//        }
+//    }
 
 
     /**
