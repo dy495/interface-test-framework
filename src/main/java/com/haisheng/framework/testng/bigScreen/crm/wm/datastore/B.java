@@ -6,15 +6,13 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderInfoPageScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -22,10 +20,12 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import factory.Factory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sql.Sql;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -65,7 +65,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "每日接待记录", priority = 0)
+    @Test(description = "每日接待记录")
     public void receptionData() {
         try {
             TPorscheReceptionData db = new TPorscheReceptionData();
@@ -109,7 +109,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "每日交车记录", priority = 0)
+    @Test(description = "每日交车记录")
     public void deliverCarData() {
         try {
             TPorscheDeliverInfo db = new TPorscheDeliverInfo();
@@ -168,7 +168,7 @@ public class B extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "每日订车记录", priority = 0)
+    @Test(description = "每日订车记录")
     public void orderCarData() {
         try {
             TPorscheOrderInfo db = new TPorscheOrderInfo();

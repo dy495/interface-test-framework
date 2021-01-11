@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -137,10 +136,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             File file = new File(filePath);
             File[] files = file.listFiles();
             assert files != null;
-            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath()))
-                    .collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path"))
-                    .collect(Collectors.toList());
+            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
             IScene scene = BannerEdit.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))
@@ -256,14 +253,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
     public void operationRegister_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<OperationRegisterVO> operationRegisters = new ArrayList<>();
-            RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
-            int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
-                operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
-            }
+            IScene scene = RegisterPage.builder().build();
+            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
             List<Integer> statusNameList = operationRegisters.stream().map(e -> util.getApprovalList(e.getId()).size()).collect(Collectors.toList());
             List<Integer> registerList = operationRegisters.stream().map(OperationRegisterVO::getRegisterNum).collect(Collectors.toList());
             List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
@@ -389,14 +380,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
     public void operationRegister_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<OperationRegisterVO> operationRegisters = new ArrayList<>();
-            RegisterPage.RegisterPageBuilder registerBuilder = RegisterPage.builder();
-            int total = jc.invokeApi(registerBuilder.build()).getInteger("total");
-            int s = CommonUtil.getTurningPage(total, size);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = jc.invokeApi(registerBuilder.page(i).size(size).build()).getJSONArray("list");
-                operationRegisters.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()));
-            }
+            IScene scene = RegisterPage.builder().build();
+            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
             operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + " 活动名额数：" + e.getTotalQuota() + " 已入选数：" + e.getPassedNum()));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -480,12 +465,5 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数");
         }
-    }
-
-    //    @Test()
-    public void test() {
-        IScene scene = RegisterPage.builder().build();
-        List<OperationRegisterVO> operationRegisterVOS = util.collectBean(scene, OperationRegisterVO.class);
-        operationRegisterVOS.forEach(System.err::println);
     }
 }

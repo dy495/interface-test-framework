@@ -1,5 +1,7 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.container;
+package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config;
 
+import container.DbContainer;
+import container.IContainer;
 import lombok.Getter;
 
 public enum EnumContainer {

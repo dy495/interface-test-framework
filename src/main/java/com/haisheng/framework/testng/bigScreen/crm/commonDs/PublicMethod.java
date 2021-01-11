@@ -69,7 +69,7 @@ public class PublicMethod {
         for (int i = 1; i < s; i++) {
             JSONArray array = crm.userUserPage(i, 100).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("role_name").equals(roleName))
-                    .map(e -> JSON.parseObject(JSON.toJSONString(e), SaleInfo.class)).collect(Collectors.toList()));
+                    .map(e -> JSONObject.toJavaObject(e, SaleInfo.class)).collect(Collectors.toList()));
         }
         SaleInfo saleInfo = new SaleInfo();
         saleInfo.setUserId(null);
