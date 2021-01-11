@@ -3691,6 +3691,34 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    /**
+     * @description :卡券表单
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject oucherFormVoucherPage(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :增发记录
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject additionalRecordPage(String shopId, String page, String size) {
+        String url = "/jiaochen/pc/voucher-manage/additional-record";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        return invokeApi(url, json);
+    }
+
 
 
 

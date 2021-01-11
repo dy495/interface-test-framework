@@ -98,7 +98,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
       }catch(Exception|AssertionError e){
           appendFailReason(e.toString());
       }finally{
-          saveData("保养配置列表key值校验");
+          saveData("保养配置列表key值不为空校验");
       }
     }
 
@@ -131,7 +131,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("会员权益列表key值校验");
+            saveData("会员权益列表key值不为空校验");
         }
     }
 
@@ -162,7 +162,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("洗车管理列表key值校验");
+            saveData("洗车管理列表key值不为空校验");
         }
     }
 
@@ -194,7 +194,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("调整次数记录列表key值校验");
+            saveData("调整次数记录列表key值不为空校验");
         }
     }
 
@@ -223,7 +223,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("签到配置列表key值校验");
+            saveData("签到配置列表key值不为空校验");
         }
     }
 
@@ -257,7 +257,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("分享管理列表key值校验");
+            saveData("分享管理列表key值不为空校验");
         }
     }
 
@@ -295,7 +295,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导入记录列表key值校验");
+            saveData("导入记录列表key值不为空校验");
         }
     }
 
@@ -333,7 +333,113 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
         }finally{
-            saveData("导出记录列表key值校验");
+            saveData("导出记录列表key值不为空校验");
+        }
+    }
+
+    /**
+     * @description：消息记录列表
+     * @author: gly
+     * @time: 2021-01-08
+     */
+    @Test()
+    public void pushMsgList(){
+        try{
+            JSONObject respon=jc.pushMsgListFilterManage("","1","10","","");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.pushMsgListFilterManage("", String.valueOf(page),"10","","").getJSONArray("list");
+                for(int num=0;num<list.size();num++){
+                    JSONObject obj=list.getJSONObject(num);
+                    Preconditions.checkArgument(obj.containsKey("id"),"消息记录中第 "+num+" 行的信息中的key值："+"id"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("message_type"),"消息记录中第 "+num+" 行的信息中的key值："+"message_type"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("message_type_name"),"消息记录中第 "+num+" 行的信息中的key值：message_type_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("send_time"),"消息记录中第 "+num+" 行的信息中的key值：send_time 为空");
+                    Preconditions.checkArgument(obj.containsKey("content"),"消息记录中第 "+num+" 行的信息中的key值：content 为空");
+                    Preconditions.checkArgument(obj.containsKey("phone"),"消息记录中第 "+num+" 行的信息中的key值：phone 为空");
+                    Preconditions.checkArgument(obj.containsKey("customer_name"),"消息记录中第 "+num+" 行的信息中的key值：customer_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_read"),"消息记录中第 "+num+" 行的信息中的key值：is_read 为空");
+                    Preconditions.checkArgument(obj.containsKey("customer_type_name"),"消息记录中第 "+num+" 行的信息中的key值：customer_type_name 为空");
+                }
+            }
+        }catch(Exception|AssertionError e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("消息记录列表key值不为空校验");
+        }
+    }
+
+    /**
+     * @description：卡券表单列表
+     * @author: gly
+     * @time: 2021-01-08
+     */
+    @Test()
+    public void voucherList(){
+        try{
+            JSONObject respon=jc.oucherFormVoucherPage("","1","10");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.oucherFormVoucherPage("", String.valueOf(page),"10").getJSONArray("list");
+                for(int num=0;num<list.size();num++){
+                    JSONObject obj=list.getJSONObject(num);
+                    Preconditions.checkArgument(obj.containsKey("voucher_id"),"卡券表单中第 "+num+" 行的信息中的key值："+"voucher_id"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("voucher_name"),"卡券表单中第 "+num+" 行的信息中的key值："+"voucher_name"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("creator_name"),"卡券表单中第 "+num+" 行的信息中的key值：creator_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("creator_account"),"卡券表单中第 "+num+" 行的信息中的key值：creator_account 为空");
+                    Preconditions.checkArgument(obj.containsKey("voucher_status"),"卡券表单中第 "+num+" 行的信息中的key值：voucher_status 为空");
+                    Preconditions.checkArgument(obj.containsKey("voucher_status_name"),"卡券表单中第 "+num+" 行的信息中的key值：voucher_status_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("subject_name"),"卡券表单中第 "+num+" 行的信息中的key值：subject_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("surplus_inventory"),"卡券表单中第 "+num+" 行的信息中的key值：surplus_inventory 为空");
+                    Preconditions.checkArgument(obj.containsKey("cumulative_delivery"),"卡券表单中第 "+num+" 行的信息中的key值：cumulative_delivery 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_check"),"卡券表单中第 "+num+" 行的信息中的key值：is_check 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_extension"),"卡券表单中第 "+num+" 行的信息中的key值：is_extension 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_edit"),"卡券表单中第 "+num+" 行的信息中的key值：is_edit 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_additional"),"卡券表单中第 "+num+" 行的信息中的key值：is_additional 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_copy"),"卡券表单中第 "+num+" 行的信息中的key值：is_copy 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_invalid"),"卡券表单中第 "+num+" 行的信息中的key值：is_invalid 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_stop"),"卡券表单中第 "+num+" 行的信息中的key值：is_stop 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_recall"),"卡券表单中第 "+num+" 行的信息中的key值：is_recall 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_delete"),"卡券表单中第 "+num+" 行的信息中的key值：is_delete 为空");
+                    Preconditions.checkArgument(obj.containsKey("begin_send"),"卡券表单中第 "+num+" 行的信息中的key值：begin_send 为空");
+                }
+            }
+        }catch(Exception|AssertionError e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("卡券表单列表key值不为空校验");
+        }
+    }
+
+    /**
+     * @description：增发记录列表
+     * @author: gly
+     * @time: 2021-01-08
+     */
+    @Test()
+    public void additionalRecordList(){
+        try{
+            JSONObject respon=jc.additionalRecordPage("","1","10");
+            int pages=respon.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=jc.additionalRecordPage("", String.valueOf(page),"10").getJSONArray("list");
+                for(int num=0;num<list.size();num++){
+                    JSONObject obj=list.getJSONObject(num);
+                    Preconditions.checkArgument(obj.containsKey("id"),"增发记录中第 "+num+" 行的信息中的key值："+"id"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("voucher_name"),"增发记录中第 "+num+" 行的信息中的key值："+"voucher_name"+"为空");
+                    Preconditions.checkArgument(obj.containsKey("time"),"增发记录中第 "+num+" 行的信息中的key值：time 为空");
+                    Preconditions.checkArgument(obj.containsKey("operate_sale_name"),"增发记录中第 "+num+" 行的信息中的key值：operate_sale_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("operate_sale_account"),"增发记录中第 "+num+" 行的信息中的key值：operate_sale_account 为空");
+                    Preconditions.checkArgument(obj.containsKey("additional_num"),"增发记录中第 "+num+" 行的信息中的key值：additional_num 为空");
+                    Preconditions.checkArgument(obj.containsKey("status"),"增发记录中第 "+num+" 行的信息中的key值：status 为空");
+                    Preconditions.checkArgument(obj.containsKey("status_name"),"增发记录中第 "+num+" 行的信息中的key值：status_name 为空");
+                    Preconditions.checkArgument(obj.containsKey("is_recall"),"增发记录中第 "+num+" 行的信息中的key值：is_recall 为空");
+                   }
+            }
+        }catch(Exception|AssertionError e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("增发记录列表key值不为空校验");
         }
     }
 
