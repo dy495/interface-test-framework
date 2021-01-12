@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -3622,6 +3623,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json1,er.checkcode);
     }
 
+
     /**
      * @description :会员权益列表
      * * * @author: gly
@@ -3721,6 +3723,50 @@ public class ScenarioUtil extends TestCaseCommon {
 
 
 
+    //轿辰2.0
+    /**
+     * @description :app跟进列表
+     * @date :2021/1/7 18:46
+     **/
+
+    public JSONObject appFollowUpList(String size,JSONObject last_value) {
+        String url = "/jiaochen/m-app/follow-up/page";
+        JSONObject json1=new JSONObject();
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+
+        return invokeApi(url,json1);
+    }
+
+    public JSONObject appFollowUp(String id, String shop_id, String remark, Boolean checkcode) {
+        String url = "/jiaochen/m-app/follow-up/page";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+        json1.put("id",id);
+        json1.put("remark",remark);
+
+        return invokeApi(url,json1,checkcode);
+    }
+    /**
+     * @description :app我的消息列表
+     * @date :2021/1/7 19:06
+     **/
+
+    public JSONObject appmessageList(String size,JSONObject last_value) {
+        String url = "/jiaochen/m-app/message/page";
+        JSONObject json1=new JSONObject();
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+
+        return invokeApi(url,json1);
+    }
+    public JSONObject appmessagedetail(String id) {
+        String url = "/jiaochen/m-app/message/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
 
 
 }

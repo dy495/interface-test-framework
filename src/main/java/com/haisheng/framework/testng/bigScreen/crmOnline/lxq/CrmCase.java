@@ -219,8 +219,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
     //----------------------添加备注--------------------
-    @Ignore //4.0作废
-    @Test
+//    @Ignore //4.0作废
+//    @Test
     public void addVisitRemark200() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -248,8 +248,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Ignore //4.0作废
-    @Test
+//    @Ignore //4.0作废
+//    @Test
     public void addVisitRemarkNum50() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -279,8 +279,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Ignore //4.0作废
-    @Test
+//    @Ignore //4.0作废
+//    @Test
     public void addVisitRemarkNum51() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
