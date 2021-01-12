@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
@@ -22,7 +21,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Date;
 
 /**
  * @author : yu
@@ -185,7 +184,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             default:
                 throw new IllegalStateException("无此产品代号");
         }
-        return JSON.parseObject(JSON.toJSONString(data), Response.class);
+        return JSONObject.toJavaObject(data, Response.class);
     }
 
     @DataProvider(name = "BSJ_APPLET_TOKENS_DAILY")

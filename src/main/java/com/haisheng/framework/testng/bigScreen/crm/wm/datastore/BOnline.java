@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 
 import com.alibaba.fastjson.JSONArray;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
@@ -30,7 +31,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BOnline extends TestCaseCommon implements TestCaseStd {
     private static final String shopId = EnumTestProduce.CRM_ONLINE.getShopId();
@@ -233,13 +234,8 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
      * @return saleId
      */
     private String getSaleId(String saleName) {
-        List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-        for (Map<String, String> stringStringMap : list) {
-            if (stringStringMap.get("userName").equals(saleName)) {
-                return stringStringMap.get("userId");
-            }
-        }
-        return null;
+        List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+        return saleInfos.stream().filter(e -> e.getUserName().equals(saleName)).map(SaleInfo::getUserId).collect(Collectors.toList()).get(0);
     }
 
     /**

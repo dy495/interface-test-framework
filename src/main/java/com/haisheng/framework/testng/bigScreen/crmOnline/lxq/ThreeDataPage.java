@@ -371,7 +371,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
                 all_120l = all_120l + array0.getJSONObject(3).getInteger("value");
                 all_120g = all_120g + array0.getJSONObject(4).getInteger("value");
             }
-            JSONArray array1 = crm.receptTime("DAY", "", "").getJSONArray("list");
+            JSONArray array1 = crm.receptTime("DAY", "", null).getJSONArray("list");
             int l10 = array1.getJSONObject(0).getInteger("value");
             int l30 = array1.getJSONObject(1).getInteger("value");
             int l60 = array1.getJSONObject(2).getInteger("value");
@@ -559,7 +559,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         try {
 
             int sum = 0;
-            JSONArray array = crm.receptTime("DAY", "", "").getJSONArray("list");
+            JSONArray array = crm.receptTime("DAY", "", null).getJSONArray("list");
             for (int i = 0; i < 5; i++) {
                 sum = sum + array.getJSONObject(i).getInteger("value");
             }
@@ -846,7 +846,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-            JSONArray array = crm.receptTime("DAY", "", "").getJSONArray("list");
+            JSONArray array = crm.receptTime("DAY", "", null).getJSONArray("list");
             int l10 = array.getJSONObject(0).getInteger("value");
             int l30 = array.getJSONObject(1).getInteger("value");
             int l60 = array.getJSONObject(2).getInteger("value");

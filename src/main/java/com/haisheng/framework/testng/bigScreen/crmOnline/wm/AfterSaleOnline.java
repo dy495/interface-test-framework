@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
@@ -31,6 +32,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -251,11 +253,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_reception_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyReception("month_reception_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理本月接待售后车辆为   " + zjl_num + "各个顾问本月接待售后车辆之和  " + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyReception("month_reception_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理本月接待售后车辆为   " + map.get("zjlNum") + "各个顾问本月接待售后车辆之和  " + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--总经理本月接待售后车辆>=各个顾问本月接待售后车辆之和");
         }
@@ -265,11 +267,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_reception_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyReception("month_repaired_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理本月完成维修车辆为   " + zjl_num + "各个顾问本月完成维修车辆之和  " + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyReception("month_repaired_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理本月完成维修车辆为   " + map.get("zjlNum") + "各个顾问本月完成维修车辆之和  " + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--总经理本月完成维修车辆>=各个顾问本月完成维修车辆之和");
         }
@@ -279,11 +281,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_reception_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyReception("today_reception_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理今日接待售后车辆   " + zjl_num + "各个顾问今日接待售后车辆之和  " + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyReception("today_reception_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理今日接待售后车辆   " + map.get("zjlNum") + "各个顾问今日接待售后车辆之和  " + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后-我的接待--总经理今日接待售后车辆>=各个顾问今日接待售后车辆之和");
         }
@@ -293,37 +295,37 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_reception_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyReception("today_repaired_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理今日完成维修车辆   " + zjl_num + "各个顾问今日完成维修车辆之和  " + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyReception("today_repaired_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理今日完成维修车辆   " + map.get("zjlNum") + "各个顾问今日完成维修车辆之和  " + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--总经理今日完成维修车辆>=各个顾问今日完成维修车辆之和");
         }
     }
 
-    private void compareAfterSaleMyReception(String type) {
+    private Map<String, Integer> compareAfterSaleMyReception(String type) {
         UserUtil.login(zjl);
-        int x = 0;
-        List<Map<String, String>> list = method.getSaleListByRoleName("服务顾问");
-        for (Map<String, String> stringStringMap : list) {
-            CommonUtil.valueView(stringStringMap.get("userName"));
-            if (stringStringMap.get("userName").contains("总经理")) {
-                crm.login(stringStringMap.get("account"), zjl.getPassword());
-                IScene scene = ReceptionAfterCustomerListScene.builder().build();
-                zjl_num = crm.invokeApi(scene).getInteger(type);
+        Map<String, Integer> map = new HashMap<>();
+        AtomicInteger gwNum = new AtomicInteger();
+        IScene scene = ReceptionAfterCustomerListScene.builder().build();
+        List<SaleInfo> saleInfos = method.getSaleList("服务顾问");
+        saleInfos.forEach(info -> {
+            CommonUtil.valueView(info.getUserName());
+            if (info.getUserName().contains("总经理")) {
+                crm.login(info.getAccount(), zjl.getPassword());
+                int zjlNum = crm.invokeApi(scene).getInteger(type);
+                map.put("zjlNum", zjlNum);
             }
-            if (!stringStringMap.get("userName").contains("总经理")) {
-                crm.login(stringStringMap.get("account"), zjl.getPassword());
-                IScene scene = ReceptionAfterCustomerListScene.builder().build();
-                int num = crm.invokeApi(scene).getInteger(type);
-                CommonUtil.valueView(num);
-                x += num;
+            if (!info.getUserName().contains("总经理")) {
+                crm.login(info.getAccount(), zjl.getPassword());
+                gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }
-            gw_num = x;
-            CommonUtil.log("分割线");
-        }
+            map.put("gwNum", gwNum.get());
+            CommonUtil.logger(info.getUserName());
+        });
+        return map;
     }
 
     @Test(description = "售后--我的接待--增加20条备注，展示20条")
@@ -345,7 +347,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(array.size() == 20, "车牌号为：" + platNumber + "的客户，备注列表展示条数为：" + array.size());
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
+            collectMessage(e);
         } finally {
             saveData("售后--我的接待--增加20条备注，展示20条");
         }
@@ -419,6 +421,20 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "售后--客户管理--总经理的全部车辆>=各个顾问的全部车辆之和", enabled = false)
+    public void afterSale_customer_data_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<String, Integer> map = compareAfterSaleMyCustomer("total_reception_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理的全部车辆为：" + map.get("zjlNum") + "各顾问数量和为：" + map.get("gwNum"));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("售后--客户管理--总经理的全部车辆=各个顾问的全部车辆之和");
+        }
+    }
+
     @Test(description = "售后--客户管理--今日接待售后车辆>=今日新增售后车辆")
     public void afterSale_customer_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -432,7 +448,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(todayTotal, todayNew);
             Preconditions.checkArgument(todayTotal >= todayNew, "今日接待售后数量" + todayTotal + "<今日新增售后数量" + todayNew);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--客户管理--今日接待售后车辆>=今日新增售后车辆");
         }
@@ -442,11 +458,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_customer_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyCustomer("month_reception_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的本月新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyCustomer("month_reception_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理的本月新增车辆为：" + map.get("zjlNum") + "各顾问数量和为：" + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--客户管理--总经理的本月新增>=各个顾问的本月新增之和");
         }
@@ -456,9 +472,9 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     public void afterSale_customer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareAfterSaleMyCustomer("today_new_car");
-            CommonUtil.valueView(zjl_num, gw_num);
-            Preconditions.checkArgument(zjl_num >= gw_num, "总经理的今日新增车辆为：" + zjl_num + "各顾问数量和为：" + gw_num);
+            Map<String, Integer> map = compareAfterSaleMyCustomer("today_new_car");
+            CommonUtil.valueView(map.get("zjlNum"), map.get("gwNum"));
+            Preconditions.checkArgument(map.get("zjlNum") >= map.get("gwNum"), "总经理的今日新增车辆为：" + map.get("zjlNum") + "各顾问数量和为：" + map.get("gwNum"));
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -466,26 +482,26 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    private void compareAfterSaleMyCustomer(String type) {
-        int x = 0;
-        List<Map<String, String>> list = method.getSaleListByRoleName("服务顾问");
-        for (Map<String, String> map : list) {
-            CommonUtil.valueView(map.get("userName"));
-            if (map.get("userName").contains("总经理")) {
-                crm.login(map.get("account"), zjl.getPassword());
-                IScene scene = AfterSaleCustomerListScene.builder().build();
-                zjl_num = crm.invokeApi(scene).getInteger(type);
+    private Map<String, Integer> compareAfterSaleMyCustomer(String type) {
+        AtomicInteger gwNum = new AtomicInteger();
+        Map<String, Integer> map = new HashMap<>();
+        List<SaleInfo> saleInfos = method.getSaleList("服务顾问");
+        IScene scene = AfterSaleCustomerListScene.builder().build();
+        saleInfos.forEach(info -> {
+            CommonUtil.valueView(info.getUserName());
+            if (info.getUserName().contains("总经理")) {
+                crm.login(info.getAccount(), zjl.getPassword());
+                int zjlNum = crm.invokeApi(scene).getInteger(type);
+                map.put("zjlNum", zjlNum);
             }
-            if (!map.get("userName").contains("总经理")) {
-                crm.login(map.get("account"), zjl.getPassword());
-                IScene scene = AfterSaleCustomerListScene.builder().build();
-                int num = crm.invokeApi(scene).getInteger(type);
-                CommonUtil.valueView(x);
-                x += num;
+            if (!info.getUserName().contains("总经理")) {
+                crm.login(info.getAccount(), zjl.getPassword());
+                gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }
-            gw_num = x;
-            CommonUtil.log("分割线");
-        }
+            map.put("gwNum", gwNum.get());
+            CommonUtil.logger(info.getUserName());
+        });
+        return map;
     }
 
     @Test(description = "售后--客户管理--全部车辆>=今日接待售后车辆")

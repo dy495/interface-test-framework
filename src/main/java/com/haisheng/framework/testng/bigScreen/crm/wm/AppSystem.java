@@ -641,10 +641,10 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
      * @param customerId 客户id
      */
     private void publicToSale(Integer customerId) {
-        List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-        list.forEach(e -> {
-            if (e.get("userName").contains("销售顾问temp")) {
-                String saleId = e.get("userId");
+        List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+        saleInfos.forEach(e -> {
+            if (e.getUserName().contains("销售顾问temp")) {
+                String saleId = e.getUserId();
                 crm.customerAllot(saleId, customerId);
             }
         });

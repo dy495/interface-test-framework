@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.datastore;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumContainer;
@@ -24,7 +25,6 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class A extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
@@ -61,16 +61,16 @@ public class A extends TestCaseCommon implements TestCaseStd {
     public void everydayData() {
         try {
             TPorscheTodayData db = new TPorscheTodayData();
-            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-            list.forEach(arr -> {
-                CommonUtil.valueView(arr.get("userName"));
-                if (arr.get("userName").contains("总经理")) {
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(arr -> {
+                CommonUtil.valueView(arr.getUserName());
+                if (arr.getUserName().contains("总经理")) {
                     UserUtil.login(zjl);
                     JSONObject response = crm.receptionPage(1, 10, "", "");
                     db.setTodayReceptionNum(response.getInteger("today_reception_num"));
                     db.setTodayClueNum(response.getInteger("all_customer_num"));
                 } else {
-                    crm.login(arr.get("account"), zjl.getPassword());
+                    crm.login(arr.getAccount(), zjl.getPassword());
                 }
                 JSONObject responseA = crm.customerReceptionTotalInfo();
                 JSONObject responseB = crm.deliverCarTotal();
@@ -84,8 +84,8 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 db.setTodayTestDriverNum(responseC.getInteger("today_test_drive_total"));
                 db.setTodayDate(DateTimeUtil.getFormat(new Date()));
                 db.setShopId(shopId);
-                db.setSaleName(arr.get("userName"));
-                db.setSaleId(arr.get("userId"));
+                db.setSaleName(arr.getUserName());
+                db.setSaleId(arr.getUserId());
                 String sql = Sql.instance().insert()
                         .from(TPorscheTodayData.class)
                         .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num",

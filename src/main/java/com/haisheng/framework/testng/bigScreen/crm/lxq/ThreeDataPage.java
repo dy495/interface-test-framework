@@ -451,7 +451,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         try {
 
             int sum = 0;
-            JSONArray array = crm.receptTime("DAY", "", "").getJSONArray("list");
+            JSONArray array = crm.receptTime("DAY", "", null).getJSONArray("list");
             for (int i = 0; i < 5; i++) {
                 sum = sum + array.getJSONObject(i).getInteger("value");
             }

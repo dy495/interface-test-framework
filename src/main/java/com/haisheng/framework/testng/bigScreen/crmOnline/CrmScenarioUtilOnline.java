@@ -4183,12 +4183,8 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/analysis2/shop/recept-time";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
-        if (!month.equals("")) {
-            json.put("month", month);
-        }
-        if (!sale_id.equals("")) {
-            json.put("sale_id", sale_id);
-        }
+        json.put("month", month);
+        json.put("sale_id", sale_id);
         String result = httpPostWithCheckCode(url, JSON.toJSONString(json), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
