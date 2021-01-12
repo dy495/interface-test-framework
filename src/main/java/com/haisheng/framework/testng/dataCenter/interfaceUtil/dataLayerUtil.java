@@ -60,6 +60,7 @@ public class dataLayerUtil extends TestCaseCommon {
      */
     public String IpPort1 = "http://dev.api.winsenseos.com/retail/api/data/biz";
     public String IpPort = "http://39.105.226.180";
+    public  String IpPort2 ="http://39.105.225.20";
     public JSONObject http(String requestUrl ,Object requestJson,String router) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
         final String ALGORITHM = "HmacSHA256";
@@ -212,7 +213,7 @@ public class dataLayerUtil extends TestCaseCommon {
      * app checks submit 4.2. 会员删除(删除人脸)
      */
     public JSONObject deleteFace(String requestId,String app_id,String scope,String define_identify,String user_id,String face_id,boolean is_cross_store) throws Exception {
-        String url = "/business/member/REGISTER/"+requestId;
+        String url = "/business/member/DELETE_FACE/"+requestId;
         JSONObject json = new JSONObject();
         json.put("requestId", requestId);
         json.put("app_id",app_id);
@@ -222,23 +223,22 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("face_id", face_id);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.2. 会员删除(删除指定身份的会员)
      */
-    public JSONObject deleteUser(String requestId,String app_id,String scope,String define_identify,String user_id,String face_id,boolean is_cross_store) throws Exception {
-        String url = "/business/member/DELETE_USER"+requestId;
+    public JSONObject deleteUser(String requestId,String app_id,String scope,String define_identify,String user_id,boolean is_cross_store) throws Exception {
+        String url = "/business/member/DELETE_USER/"+requestId;
         JSONObject json = new JSONObject();
         json.put("requestId", requestId);
         json.put("app_id",app_id);
         json.put("scope", scope);
         json.put("define_identify", define_identify);
         json.put("user_id",user_id);
-        json.put("face_id", face_id);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.2. 会员删除(删除指定身份组)
@@ -252,7 +252,7 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("define_identify", define_identify);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.3 查询身份下的会员
@@ -266,7 +266,7 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("define_identify", define_identify);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.3 查询一个门店下包含的身份
@@ -279,7 +279,7 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("scope", scope);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.3 检索图片中的人脸在一个门店下的身份
@@ -295,37 +295,37 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("is_choose_biggest", is_choose_biggest);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * app checks submit 4.4 添加一个门店下某种身份的配置
      */
-    public JSONObject add_identify(String requestId,String app_id,String scope,boolean is_detect_face,boolean is_register_staff,boolean is_cross_store) throws Exception {
+    public JSONObject add_identify(String requestId,String app_id,String scope,String identify,boolean is_register_staff,boolean is_cross_store) throws Exception {
         String url = "/business/member/ADD_IDENTIFY_CONFIG/"+requestId;
         JSONObject json = new JSONObject();
         json.put("requestId", requestId);
         json.put("app_id",app_id);
         json.put("scope", scope);
-        json.put("is_detect_face", is_detect_face);
+        json.put("identify", identify);
         json.put("is_register_staff", is_register_staff);
         json.put("is_cross_store", is_cross_store);
         String res = httpPost(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
      * @author qingqing
      * @description 1.实时热力图
      */
-    public JSONObject thermal_map(String shop_id, String region_id, Long start_time, Long end_time) throws Exception {
+    public JSONObject thermal_map(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_THERMAL_MAP/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("region_id", region_id);
-        json.put("start_time", start_time);
-        json.put("end_time", end_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
@@ -340,13 +340,15 @@ public class dataLayerUtil extends TestCaseCommon {
      *
      * E. 年龄统计：空间上可以按照全店、区域统计，查询今天到目前的统计数据
      */
-    public JSONObject customer_currData(String shop_id, String region_id) throws Exception {
+    public JSONObject customer_currData(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("region_id", region_id);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
@@ -355,13 +357,15 @@ public class dataLayerUtil extends TestCaseCommon {
 
     B. 进出人数统计查询：空间上可以按照全店统计，查询今天到当前的统计数据
      */
-    public JSONObject curr_shopPv_Uv(String shop_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopPv_Uv(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_SCOPE_PUV_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
@@ -370,26 +374,30 @@ public class dataLayerUtil extends TestCaseCommon {
 
     B. 进出人数统计查询：空间上可以按照全店统计，查询今天到当前小时的统计数据
      */
-    public JSONObject curr_shopHourPv_Uv(String shop_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopHourPv_Uv(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_SCOPE_PUV_HOUR/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
      * @description 6. 当日商铺男女统计
     A. 男女统计：空间上可以按照全店统计，查询今天到目前的统计数据
      */
-    public JSONObject curr_shopSex(String shop_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopSex(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_SCOPE_SEX_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
 
     /**
@@ -397,13 +405,15 @@ public class dataLayerUtil extends TestCaseCommon {
      * @description 7. 当日商铺年龄统计
     A. 年龄统计：空间上可以按照全店统计，查询今天到目前的统计数据
      */
-    public JSONObject curr_shopAge(String shop_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopAge(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_SCOPE_AGE_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
 
     /**
@@ -413,42 +423,45 @@ public class dataLayerUtil extends TestCaseCommon {
 
     B. 进出人数统计查询：空间上可以按照商铺内区域统计，查询今天到当前的统计数据
      */
-    public JSONObject curr_shopRegin_PvUv(String shop_id, String region_id,Long statistics_time) throws Exception {
-        String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_REGION_PUV_DAY /v1.1";
+    public JSONObject curr_shopRegin_PvUv(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
+        String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_REGION_PUV_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("region_id", region_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
      * @description 9. 当日商铺内区域男女统计
     A. 男女统计：空间上可以按照商铺内区域统计，查询今天到目前的统计数据
      */
-    public JSONObject curr_shopRegin_sex(String shop_id, String region_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopRegin_sex(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_REGION_SEX_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("region_id", region_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
      * @description 10. 当日商铺内区域年龄统计
     A. 年龄统计：空间上可以按照商铺内区域统计，查询今天到目前的统计数据
      */
-    public JSONObject curr_shopRegin_age(String shop_id, String region_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopRegin_age(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_REGION_AGE_DAY/v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("region_id", region_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
     /**
      * @author qingqing
@@ -457,14 +470,15 @@ public class dataLayerUtil extends TestCaseCommon {
 
     B. 进出人数统计查询：空间上可以按照商铺内进出口统计，查询今天到当前的统计数据
      */
-    public JSONObject curr_shopEntrance_PvUv(String shop_id, String entrance_id, Long statistics_time) throws Exception {
+    public JSONObject curr_shopEntrance_PvUv(String request_id,String method_type,JSONObject data,JSONObject system) throws Exception {
         String url = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS_ENTRANCE_PUV_DAY /v1.1";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("entrance_id", entrance_id);
-        json.put("statistics_time", statistics_time);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        json.put("request_id", request_id);
+        json.put("method_type", method_type);
+        json.put("data", data);
+        json.put("system", system);
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
@@ -479,8 +493,8 @@ public class dataLayerUtil extends TestCaseCommon {
         json.put("method_type", method_type);
         json.put("data", data);
         json.put("system", system);
-        JSONObject http = this.http(IpPort1 + url, json,url);
-        return http.getJSONObject("data");
+        String res = httpPost(url, json.toJSONString(), IpPort2);
+        return JSON.parseObject(res);
     }
 
 }

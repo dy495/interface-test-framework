@@ -204,7 +204,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和") //bug 6533 //已解决
+    @Test(description = "app权限下【首页】全部门店今日到访人数<=pc【客流分析-趋势图】各个门店今日到访人数之和") //bug 6533 //已解决
     public void homePage_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -216,11 +216,11 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
             List<String> shopIds = getPcShopIds();
             int sumTodayUv = shopIds.stream().map(shopId -> RealTimeShopPvUv.builder().shopId(shopId).build()).mapToInt(realTimeScene -> getTypeSum(realTimeScene, "today_uv")).sum();
             CommonUtil.valueView(todayUv, sumTodayUv);
-            Preconditions.checkArgument(todayUv == sumTodayUv, "app " + todayUv + " , pc " + sumTodayUv);
+            Preconditions.checkArgument(todayUv <= sumTodayUv, "app " + todayUv + " , pc " + sumTodayUv);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app权限下【首页】全部门店今日到访人数==pc【客流分析】各个门店今日到访人数之和");
+            saveData("app权限下【首页】全部门店今日到访人数<=pc【客流分析】各个门店今日到访人数之和");
         }
     }
 

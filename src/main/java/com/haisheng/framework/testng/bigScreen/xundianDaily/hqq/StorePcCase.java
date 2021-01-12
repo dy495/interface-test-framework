@@ -121,7 +121,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        for (int i=0;i<6;i++) {
+        for (int i=0;i<1;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -161,7 +161,9 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     .other("ExpiredTime", "50 * 1000")
                     .other("Authorization", auth)
                     .build();
-            String transId = "QAtest_" + CommonUtil.getRandom(5);
+            String time= dt.getHistoryDate(0);
+            String time1= dt.getHHmm(0);
+            String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
             String transTime = "" + System.currentTimeMillis();
             String str = "{\n" +
                     "  \"uid\": \"uid_ef6d2de5\",\n" +
@@ -177,12 +179,12 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"202086948397\",\n" +
+                    "        \"user_id\": \"2021012900010\",\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"单笔金额大于1200要触发\",\n" +
+                    "        \"memberName\":\"无人风控要触发李嘉琪要的一个\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +
