@@ -238,13 +238,8 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String activity_type = "NEW_COMMODITY";
             String start_date = dt.getHistoryDate(0); //今天日期;
             String end_date = dt.getHistoryDate(0);
-            ;
-
             int code = md.activityAddV3(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
-
-
             checkArgument(code == 1000, "添加事项不成功");
-
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

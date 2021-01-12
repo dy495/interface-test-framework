@@ -1098,7 +1098,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         json.put("shop_id", shop_id);
 
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * @description:3.3 获取设备重播流

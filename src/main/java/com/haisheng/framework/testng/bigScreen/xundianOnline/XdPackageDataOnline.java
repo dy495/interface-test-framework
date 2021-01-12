@@ -94,6 +94,14 @@ public class XdPackageDataOnline extends TestCaseCommon {
                 "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/鬼脸.jpg",
         };
     }
+
+    @DataProvider(name = "DEVICE_ID")
+    public static Object[] device_id() {
+        return new String[][]{
+                {"7566140520039424"},
+                {"8134193718100992"}
+        };
+    }
     /**
      * 获取待办事项列表中三个tab页的数量
      */
