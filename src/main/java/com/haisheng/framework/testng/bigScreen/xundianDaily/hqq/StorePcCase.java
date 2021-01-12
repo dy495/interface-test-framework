@@ -163,6 +163,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     .build();
             String time= dt.getHistoryDate(0);
             String time1= dt.getHHmm(0);
+            String userId = "tester"+ CommonUtil.getRandom(6);
             String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
             String transTime = "" + System.currentTimeMillis();
             String str = "{\n" +
@@ -179,7 +180,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"2021012900010\",\n" +
+                    "        \"user_id\":  " + "\"" + userId + "\"" + " ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
