@@ -465,10 +465,10 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        String salePhone = "13373166806";
+        String salePhone = "13149835141";
         //查询公海数量
         try {
-            //先删除15321527989顾问的账号
+            //先删除13149835141顾问的账号
             deleteSaleUser(salePhone);
             //公海客户数量
             int total = crm.publicCustomerList("", "", size, 1).getInteger("total");
@@ -485,9 +485,9 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, total1);
             Preconditions.checkArgument(total1 == total + 1, "删除所属销售，公海数量未增加");
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
-            saveData("删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数");
+//            saveData("删除销售顾问，【PC公海】共计数量=原数量+【我的客户】全部客户数");
         }
     }
 

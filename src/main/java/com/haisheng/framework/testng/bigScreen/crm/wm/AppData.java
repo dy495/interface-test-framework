@@ -468,7 +468,7 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        String salePhone = "15321527989";
+        String salePhone = "13149835141";
         //查询公海数量
         try {
             //先删除15321527989顾问的账号
