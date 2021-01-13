@@ -11,11 +11,10 @@ import lombok.Builder;
  */
 @Builder
 public class OrderInfoPageScene extends BaseScene {
-
     @Builder.Default
-    private final int page = 1;
+    private int page = 1;
     @Builder.Default
-    private final int size = 10;
+    private int size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -31,7 +30,12 @@ public class OrderInfoPageScene extends BaseScene {
     }
 
     @Override
-    public String getIpPort() {
-        return null;
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

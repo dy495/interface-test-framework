@@ -102,7 +102,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(priority = 1)
+    @Test(dependsOnMethods = "everydayData")
     public void dataCheck() {
         String date = DateTimeUtil.getFormat(new Date());
         Sql sql = Sql.instance().select().from(TPorscheTodayData.class)

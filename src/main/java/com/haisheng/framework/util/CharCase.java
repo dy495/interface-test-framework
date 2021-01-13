@@ -15,7 +15,7 @@ public class CharCase {
         return new String[] {
                 "嗨", "", " ",
                 //小写字母
-                "a", "b",  "c",  "d",  "e",
+                "a", "b",  "c",  "d", "db",
                 "f",  "g",  "h",  "i", "j",
                 "k",  "l",  "m",  "n", "o",
                 "util",  "q", "r",  "s",  "t",

@@ -2054,7 +2054,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 int pcCustomerNum = ratioList.stream().map(a -> (JSONObject) a).filter(object -> object.getString("name").equals("个人车主"))
                         .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 Sql.Builder builder = Sql.instance()
-                        .select("distinct(phones)")
+                        .select("distinct(phone)")
                         .from(TPorscheDeliverInfo.class)
                         .where("deliver_date", "=", date)
                         .and("subject_type_name", "=", "个人")
@@ -2084,7 +2084,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 int pcCustomerNum = ratioList.stream().map(a -> (JSONObject) a).filter(object -> object.getString("name").equals("公司车主"))
                         .map(s -> s.getInteger("value")).collect(Collectors.toList()).get(0);
                 Sql.Builder builder = Sql.instance()
-                        .select("distinct(phones)")
+                        .select("distinct(phone)")
                         .from(TPorscheDeliverInfo.class)
                         .where("deliver_date", "=", date)
                         .and("subject_type_name", "=", "公司")

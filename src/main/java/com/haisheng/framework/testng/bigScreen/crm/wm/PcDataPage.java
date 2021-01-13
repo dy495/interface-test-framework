@@ -2006,7 +2006,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 Sql.Builder builder = Sql.instance()
-                        .select("distinct(phones)")
+                        .select("distinct(phone)")
                         .from(TPorscheDeliverInfo.class)
                         .where("deliver_date", "=", date)
                         .and("subject_type_name", "=", "个人")
@@ -2041,7 +2041,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
                     }
                 }
                 Sql.Builder builder = Sql.instance()
-                        .select("distinct(phones)")
+                        .select("distinct(phone)")
                         .from(TPorscheDeliverInfo.class)
                         .where("deliver_date", "=", date)
                         .and("subject_type_name", "=", "公司")
