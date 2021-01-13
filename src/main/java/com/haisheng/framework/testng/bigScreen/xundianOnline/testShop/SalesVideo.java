@@ -54,7 +54,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"13581630214","13604609869", "15084928847"};
+        commonConfig.pushRd = new String[]{"13581630214", "15084928847"};
         commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
