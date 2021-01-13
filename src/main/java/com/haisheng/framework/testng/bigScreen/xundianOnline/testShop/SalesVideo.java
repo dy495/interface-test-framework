@@ -92,7 +92,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("【待办事项】中[未完成]列表的数量==【个人中心】中[未完成]的待办事项的的展示项");
+            saveData("salesdemo门店的直播情况");
         }
     }
 
@@ -114,7 +114,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("【待办事项】中[未完成]列表的数量==【个人中心】中[未完成]的待办事项的的展示项");
+            saveData("salesdemo门店的回放情况");
         }
     }
 }
