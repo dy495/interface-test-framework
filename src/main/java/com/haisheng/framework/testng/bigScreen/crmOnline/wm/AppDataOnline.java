@@ -204,9 +204,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 客户管理-我的交车
-     */
     @Test(description = "今日交车数=今日交车列表手机号去重后列数和")
     public void myDeliverCar_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -264,9 +261,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 客户管理-我的试驾
-     */
     @Test(description = "今日试驾数=今日试驾列表手机号去重后列表数和")
     public void myTestDriver_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -311,9 +305,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 工作管理-我的客户
-     */
     @Test(description = "全部客户=列表数")
     public void myCustomer_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -474,7 +465,7 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
     public void myCustomer_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         EnumCustomerInfo customerInfo = EnumCustomerInfo.CUSTOMER_1;
-        String salePhone = "13654973499";
+        String salePhone = "13373166806";
         //查询公海数量
         try {
             //先删除15321527989顾问的账号
@@ -500,9 +491,6 @@ public class AppDataOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description: 工作管理-我的预约
-     */
     @Test(description = "全部预约人数>=今日预约人数")
     public void myAppointment_data_1() {
         logger.logCaseStart(caseResult.getCaseName());

@@ -487,7 +487,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_38() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareBusinessFunnelData("CLUE", "car_type");
+            compareBusinessFunnelData("car_type", "CLUE");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -499,7 +499,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_42() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareBusinessFunnelData("RECEIVE", "car_type");
+            compareBusinessFunnelData("car_type", "RECEIVE");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -511,7 +511,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_43() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareBusinessFunnelData("TEST_DRIVE", "car_type");
+            compareBusinessFunnelData("car_type", "TEST_DRIVE");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -523,7 +523,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_44() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareBusinessFunnelData("ORDER", "car_type");
+            compareBusinessFunnelData("car_type", "ORDER");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
@@ -535,7 +535,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     public void shopPanel_data_45() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            compareBusinessFunnelData("DEAL", "car_type");
+            compareBusinessFunnelData("car_type", "DEAL");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
