@@ -64,7 +64,8 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "data_center");
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "数据层接口 日常");
-        commonConfig.dingHook = DingWebhook.APP_DATA_LAYER_ALARM_GRP;
+       // commonConfig.dingHook = DingWebhook.APP_DATA_LAYER_ALARM_GRP;
+        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"18810332354", "15084928847"};
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
