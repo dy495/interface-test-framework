@@ -3,8 +3,6 @@ package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.XdPackageDataOnline;
@@ -14,7 +12,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -26,7 +23,7 @@ import java.lang.reflect.Method;
  * @description :app 相关case
  * @date :2020/12/22 16:14
  **/
-public class SalesVideo extends TestCaseCommon implements TestCaseStd {
+public class SalesVideoOne extends TestCaseCommon implements TestCaseStd {
 
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
@@ -76,27 +73,25 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
-
-    //(description = "salesdemo门店得两个设备直播流监控")
+//(description = "salesdemo门店得两个设备直播流监控")
     @Test(dataProvider = "DEVICE_ID",dataProviderClass = XdPackageDataOnline.class)
-    public void check_replay(String device_id) {
+    public void check_vedio(String device_id) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String date =dt.getHistoryDate(-1);
-            String time = dt.getHHmm(0)+":00";
-            JSONObject res = xd.device_replay(device_id,shop_id,date,time);
+            JSONObject res = xd.device_live(device_id,shop_id);
             Integer code = res.getInteger("code");
             JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
             String status_name = list.getJSONObject(0).getString("status_name");
-            Preconditions.checkArgument(code == 1000, "salesdemo门店的回放视频播放报错了,设备ID:"+device_id + "code :"+code);
-            Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的回放视频播放报错了,设备ID:"+device_id + "摄像头状态 :"+status_name);
+            Preconditions.checkArgument(code == 1000, "salesdemo门店的直播报错了,设备ID:"+device_id + "code :"+code);
+            Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备ID:"+device_id + "摄像头状态 :"+status_name);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("salesdemo门店的回放情况");
+            saveData("salesdemo门店的直播情况");
         }
     }
+
+
 }

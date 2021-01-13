@@ -65,7 +65,7 @@ public class logicLayerUtil extends TestCaseCommon {
     public String getRequest(String data, String requestId, String service){
         JSONObject jsonObject=new JSONObject();
         JSONObject system=new JSONObject();
-
+        JSONArray resource = new JSONArray();
         JSONArray scope = new JSONArray();
         scope.add(0,"22728");
         system.put("app_id","88590052b177");
@@ -74,7 +74,7 @@ public class logicLayerUtil extends TestCaseCommon {
         jsonObject.put("data",data);
         jsonObject.put("system",system);
         jsonObject.put("request_id",requestId);
-        jsonObject.put("resource",requestId);
+        jsonObject.put("resource",resource);
         return jsonObject.toJSONString();
     }
 
@@ -85,28 +85,66 @@ public class logicLayerUtil extends TestCaseCommon {
     /**
      * app checks submit 1. 特殊人物注册、新增人脸
      */
-    public JSONObject customer_dealData(String shop_id, String trans_id, String trans_time, List trans_type,String user_id,double total_price
-            ,double real_price,String openid,String orderNumber,String memberName,String receipt_type,String posId,JSONArray commodityList
+    public JSONObject special_register(String group_name, String user_id, JSON shop_user, String business_type,Boolean is_quality_limit,String pic_url
+            ,Boolean is_after_detect,Boolean is_choose_biggest_face,Float face_quality,int[] axis,Float yaw,Float pitch,Float roll,Float sunglasses,Float illumination
+            ,Float blur,Float mask
     ) throws Exception {
         String url = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("trans_id", trans_id);
-        json.put("trans_time", trans_time);
-        json.put("trans_type", trans_type);
+        json.put("group_name", group_name);
         json.put("user_id", user_id);
-        json.put("total_price", total_price);
-        json.put("real_price", real_price);
-        json.put("openid", openid);
-        json.put("orderNumber", orderNumber);
-        json.put("memberName", memberName);
-        json.put("receipt_type", receipt_type);
-        json.put("posId", posId);
-        json.put("commodityList", commodityList);
+        json.put("shop_user", shop_user);
+        json.put("business_type", business_type);
+        json.put("is_quality_limit", is_quality_limit);
+        json.put("pic_url", pic_url);
+        json.put("is_after_detect", is_after_detect);
+        json.put("is_choose_biggest_face", is_choose_biggest_face);
+        json.put("face_quality", face_quality);
+        json.put("axis", axis);
+        json.put("yaw", yaw);
+        json.put("pitch", pitch);
+        json.put("roll", roll);
+        json.put("sunglasses", sunglasses);
+        json.put("illumination", illumination);
+        json.put("blur", blur);
+        json.put("mask", mask);
         String res = httpPost1(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
+    /**
+     * @author qingqing
+     * @description 1.1. 特殊人物注册、新增人脸
+     */
+    /**
+     * app checks submit 1. 特殊人物注册、新增人脸
+     */
+    public JSONObject special_seracher(String group_name, String user_id, JSON shop_user, String business_type,Boolean is_quality_limit,String pic_url
+            ,Boolean is_after_detect,Boolean is_choose_biggest_face,Float face_quality,int[] axis,Float yaw,Float pitch,Float roll,Float sunglasses,Float illumination
+            ,Float blur,Float mask
+    ) throws Exception {
+        String url = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        json.put("shop_user", shop_user);
+        json.put("business_type", business_type);
+        json.put("is_quality_limit", is_quality_limit);
+        json.put("pic_url", pic_url);
+        json.put("is_after_detect", is_after_detect);
+        json.put("is_choose_biggest_face", is_choose_biggest_face);
+        json.put("face_quality", face_quality);
+        json.put("axis", axis);
+        json.put("yaw", yaw);
+        json.put("pitch", pitch);
+        json.put("roll", roll);
+        json.put("sunglasses", sunglasses);
+        json.put("illumination", illumination);
+        json.put("blur", blur);
+        json.put("mask", mask);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
 
 
 }
