@@ -1810,6 +1810,117 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description: 特殊人员管理 ---黑白名单列表(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_list(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+        String url = "/patrol/risk-control/rule/white-list/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("name",name);
+        json.put("member_id",member_id);
+        json.put("customer_id",customer_id);
+        json.put("type",type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description: 特殊人员管理 ---黑白名单-删除黑白名单(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_delete(String customer_id,String type) throws Exception {
+        String url = "/patrol/risk-control/rule/black-white-list/delete";
+        JSONObject json = new JSONObject();
+        json.put("customer_id",customer_id);
+        json.put("type",type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 特殊人员管理 ---黑白名单名单新增列表(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_addList(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+        String url = "/patrol/risk-control/rule/white-list/add/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("name",name);
+        json.put("member_id",member_id);
+        json.put("customer_id",customer_id);
+        json.put("type",type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 特殊人员管理 ---新增页面顾客详情(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_addDetail(String customer_id,String type) throws Exception {
+        String url = "/patrol/risk-control/rule/black-white-list/add/detail";
+        JSONObject json = new JSONObject();
+        json.put("customer_id",customer_id);
+        json.put("type",type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 特殊人员管理 ---新增黑白名单(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_add(String customer_id,String shop_id,String name,String add_reason,String type) throws Exception {
+        String url = "/patrol/risk-control/rule/black-white-list/add";
+        JSONObject json = new JSONObject();
+        json.put("customer_id",customer_id);
+        json.put("shop_id",shop_id);
+        json.put("name",name);
+        json.put("add_reason",add_reason);
+        json.put("type",type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 特殊人员管理 ---操作日志列表(黑白名单共用)
+     * @author: zt
+     * @time:
+     */
+    public JSONObject white_black_operate(Integer page,Integer size,String customer_id) throws Exception {
+        String url = "/patrol/risk-control/rule/black-white-list/operate/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("customer_id",customer_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 特殊人员管理 ---添加黑名单-风控事件列表
+     * @author: zt
+     * @time:
+     */
+    public JSONObject black_listPage(Integer page,Integer size,String customer_id) throws Exception {
+        String url = "/patrol/risk-control/rule/black-list/event/page";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("customer_id",customer_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
      * http请求方法调用
      *
      * @param url         url

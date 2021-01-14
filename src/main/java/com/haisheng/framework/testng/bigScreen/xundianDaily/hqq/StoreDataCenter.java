@@ -487,9 +487,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
                 if (value != null && value != 0) {
                     values += value;
                 }
-                if (value != null) {
                     values1++;
-                }
             }
             int values2 = values / values1;
             int result = Math.abs(averageFlow - values2);

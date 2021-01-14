@@ -121,7 +121,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        for (int i=0;i<2;i++) {
+        for (int i=0;i<1;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -169,7 +169,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String str = "{\n" +
                     "  \"uid\": \"uid_ef6d2de5\",\n" +
                     "  \"app_id\": \"49998b971ea0\",\n" +
-                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a91\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
                     "  \"version\": \"v1.0\",\n" +
                     "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
@@ -185,7 +185,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"五种风控都要触发，每个2条\",\n" +
+                    "        \"memberName\":\"周涛（非黑名单非员工again）\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +

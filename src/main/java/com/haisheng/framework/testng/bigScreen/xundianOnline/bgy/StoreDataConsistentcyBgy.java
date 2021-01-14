@@ -534,9 +534,8 @@ public class StoreDataConsistentcyBgy extends TestCaseCommon implements TestCase
                 if(value != null && value != 0){
                     values += value ;
                 }
-                if(value != null){
                     values1++;
-                }
+
 
             }
             int values2 = values/values1;

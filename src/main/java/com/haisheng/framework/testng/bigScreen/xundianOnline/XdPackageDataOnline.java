@@ -102,6 +102,40 @@ public class XdPackageDataOnline extends TestCaseCommon {
                 {"8134193718100992"}
         };
     }
+
+    @DataProvider(name = "DEVICE_ID1")//小天才宝龙店
+    public static Object[] device_id1() {
+        return new String[][]{
+                {"7769815058023424"},
+                {"7769766555419648"}
+        };
+    }
+    @DataProvider(name = "DEVICE_ID2")//小天才西溪店
+    public static Object[] device_id2() {
+        return new String[][]{
+                {"7772497769825280"},
+                {"7772223449760768"}
+        };
+    }
+
+    @DataProvider(name = "DEVICE_ID3")//德众赢
+    public static Object[] device_id3() {
+        return new String[][]{
+                {"8155008167379968"},
+                {"7774622989255680"},
+                {"7774557710124032"},
+                {"7774553327797248"}
+        };
+    }
+
+    @DataProvider(name = "DEVICE_ID4")//雷诺表
+    public static Object[] device_id4() {
+        return new String[][]{
+                {"7934264226186240"},
+                {"7934225610671104"},
+                {"7934141931160576"}
+        };
+    }
     /**
      * 获取待办事项列表中三个tab页的数量
      */

@@ -78,7 +78,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //(description = "salesdemo门店得两个设备直播流监控")
+    //(description = "salesdemo门店得两个设备回放流监控")
     @Test(dataProvider = "DEVICE_ID",dataProviderClass = XdPackageDataOnline.class)
     public void check_replay(String device_id) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -99,4 +99,80 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
             saveData("salesdemo门店的回放情况");
         }
     }
+
+
+    @Test(dataProvider = "DEVICE_ID1",dataProviderClass = XdPackageDataOnline.class)//小天才宝龙店
+    public void check_vedio1(String device_id1) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            md.login("xiaotiancai@xiaotiancai.com","de01cbdb4e06e9bbd91ccef41450b7dc");
+            JSONObject res = xd.device_live(device_id1,15617l);
+            Integer code = res.getInteger("code");
+//            JSONArray list = md.device_page("","",device_id1,"","AI_CAMERA",1,10).getJSONArray("list");
+//            String status_name = list.getJSONObject(0).getString("status_name");
+            Preconditions.checkArgument(code == 1000, "小天才宝龙店门店的直播报错了,设备ID:"+device_id1 + "code :"+code);
+           // Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备ID:"+device_id1 + "摄像头状态 :"+status_name);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小天才宝龙店门店的直播情况");
+        }
+    }
+
+    @Test(dataProvider = "DEVICE_ID2",dataProviderClass = XdPackageDataOnline.class)//小天才西溪
+    public void check_vedio2(String device_id2) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            md.login("xiaotiancai@xiaotiancai.com","de01cbdb4e06e9bbd91ccef41450b7dc");
+            JSONObject res = xd.device_live(device_id2,15617l);
+            Integer code = res.getInteger("code");
+//            JSONArray list = md.device_page("","",device_id2,"","AI_CAMERA",1,10).getJSONArray("list");
+//            String status_name = list.getJSONObject(0).getString("status_name");
+            Preconditions.checkArgument(code == 1000, "小天才西溪门店的直播报错了,设备ID:"+device_id2 + "code :"+code);
+            //Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备ID:"+device_id2 + "摄像头状态 :"+status_name);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小天才西溪门店的直播情况");
+        }
+    }
+
+    @Test(dataProvider = "DEVICE_ID3",dataProviderClass = XdPackageDataOnline.class)//德众赢
+    public void check_vedio3(String device_id3) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            md.login("dezhongying@dezhongying.com","e369d98765f98e1690609b544f4bc230");
+            JSONObject res = xd.device_live(device_id3,15694l);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "德众赢门店的直播报错了,设备ID:"+device_id3 + "code :"+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("德众赢门店的直播情况");
+        }
+    }
+
+    @Test(dataProvider = "DEVICE_ID4",dataProviderClass = XdPackageDataOnline.class)//雷诺表
+    public void check_vedio4(String device_id4) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            md.login("leinuobiao@leinuo.com","1843eee082b2956fac4920669b0dfc51");
+            JSONObject res = xd.device_live(device_id4,18176l);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "雷诺表门店的直播报错了,设备ID:"+device_id4 + "code :"+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("雷诺表门店的直播情况");
+        }
+    }
+
 }

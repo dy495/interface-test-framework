@@ -270,7 +270,7 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================会员注册(重复注册)======================
      */
-    @Test
+   // @Test
     public void member_register2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
