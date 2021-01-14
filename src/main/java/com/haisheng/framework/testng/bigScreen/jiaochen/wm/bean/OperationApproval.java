@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class OperationApprovalVO implements Serializable {
+public class OperationApproval implements Serializable {
     @JSONField(name = "id")
     private Long id;
     @JSONField(name = "status_name")

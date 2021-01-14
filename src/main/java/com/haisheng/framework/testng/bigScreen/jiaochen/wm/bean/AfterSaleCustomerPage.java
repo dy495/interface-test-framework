@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class AfterSaleCustomerPageVO implements Serializable {
+public class AfterSaleCustomerPage implements Serializable {
     @JSONField(name = "car_id")
     private Long carId;
     @JSONField(name = "shop_id")

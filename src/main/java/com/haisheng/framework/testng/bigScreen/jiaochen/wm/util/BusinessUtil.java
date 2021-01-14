@@ -197,8 +197,8 @@ public class BusinessUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        VoucherInfoVO voucherInfoVO = getVoucherInfo(voucherName);
-        return voucherInfoVO.getVoucherId();
+        VoucherInfo voucherInfo = getVoucherInfo(voucherName);
+        return voucherInfo.getVoucherId();
     }
 
     /**
@@ -321,15 +321,15 @@ public class BusinessUtil {
      * @param voucherName 卡券名称
      * @return 卡券信息
      */
-    public VoucherInfoVO getVoucherInfo(String voucherName) {
-        List<VoucherInfoVO> list = new ArrayList<>();
+    public VoucherInfo getVoucherInfo(String voucherName) {
+        List<VoucherInfo> list = new ArrayList<>();
         VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName))
-                    .map(e -> JSONObject.toJavaObject(e, VoucherInfoVO.class)).collect(Collectors.toList()));
+                    .map(e -> JSONObject.toJavaObject(e, VoucherInfo.class)).collect(Collectors.toList()));
         }
         return list.get(0);
     }
@@ -469,15 +469,15 @@ public class BusinessUtil {
      * @param packageName 套餐名
      * @return 套餐信息
      */
-    public PackageInfoVO getPackageInfo(String packageName) {
-        List<PackageInfoVO> list = new ArrayList<>();
+    public PackageInfo getPackageInfo(String packageName) {
+        List<PackageInfo> list = new ArrayList<>();
         PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName))
-                    .map(e -> JSON.parseObject(JSON.toJSONString(e), PackageInfoVO.class)).collect(Collectors.toList()));
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), PackageInfo.class)).collect(Collectors.toList()));
         }
         return list.get(0);
     }
@@ -810,8 +810,8 @@ public class BusinessUtil {
      *
      * @return 卡券id
      */
-    public List<AppletVoucherListVO> getAppletCanUsedVoucherInfoList() {
-        List<AppletVoucherListVO> list = new ArrayList<>();
+    public List<AppletVoucherList> getAppletCanUsedVoucherInfoList() {
+        List<AppletVoucherList> list = new ArrayList<>();
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -823,7 +823,7 @@ public class BusinessUtil {
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
             list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType)
-                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherListVO.class))
+                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherList.class))
                     .collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);
@@ -915,8 +915,8 @@ public class BusinessUtil {
         return listSize;
     }
 
-    public List<AppointmentActivityVO> getAppletArticleList() {
-        List<AppointmentActivityVO> list = new ArrayList<>();
+    public List<AppointmentActivity> getAppletArticleList() {
+        List<AppointmentActivity> list = new ArrayList<>();
         Long lastValue = null;
         JSONArray array;
         do {
@@ -924,7 +924,7 @@ public class BusinessUtil {
             JSONObject response = jc.invokeApi(builder.build());
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AppointmentActivityVO.class)).collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AppointmentActivity.class)).collect(Collectors.toList()));
         } while (array.size() == 20);
         return list;
     }
@@ -975,17 +975,17 @@ public class BusinessUtil {
      * @param token 小程序token
      * @return 活动id
      */
-    public OperationRegisterVO getContainApplyRegisterInfo(EnumAppletToken token) {
+    public OperationRegister getContainApplyRegisterInfo(EnumAppletToken token) {
         Long articleId;
-        List<OperationRegisterVO> operationRegisters = getRegisterList();
-        OperationRegisterVO operationRegisterVO = operationRegisters.stream().filter(e -> getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
-        if (operationRegisterVO == null) {
+        List<OperationRegister> operationRegisters = getRegisterList();
+        OperationRegister operationRegister = operationRegisters.stream().filter(e -> getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
+        if (operationRegister == null) {
             articleId = getCanApplyArticleList(1).get(0);
             new LoginUtil().loginApplet(token);
             applyArticle(articleId);
             new LoginUtil().login(EnumAccount.ADMINISTRATOR);
         } else {
-            articleId = operationRegisterVO.getId();
+            articleId = operationRegister.getId();
         }
         return getRegisterInfo(articleId);
     }
@@ -996,8 +996,8 @@ public class BusinessUtil {
      * @param articleId 活动id
      * @return 报名详情
      */
-    public OperationRegisterVO getRegisterInfo(Long articleId) {
-        return getRegisterList().stream().filter(e -> e.getId().equals(articleId)).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegisterVO.class)).collect(Collectors.toList()).get(0);
+    public OperationRegister getRegisterInfo(Long articleId) {
+        return getRegisterList().stream().filter(e -> e.getId().equals(articleId)).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegister.class)).collect(Collectors.toList()).get(0);
     }
 
     /**
@@ -1005,9 +1005,9 @@ public class BusinessUtil {
      *
      * @return 报名列表
      */
-    public List<OperationRegisterVO> getRegisterList() {
+    public List<OperationRegister> getRegisterList() {
         IScene scene = RegisterPage.builder().build();
-        return collectBean(scene, OperationRegisterVO.class);
+        return collectBean(scene, OperationRegister.class);
     }
 
     /**
@@ -1026,9 +1026,9 @@ public class BusinessUtil {
      * @param articleId 文章id
      * @return 审批详情
      */
-    public List<OperationApprovalVO> getApprovalList(Long articleId) {
+    public List<OperationApproval> getApprovalList(Long articleId) {
         IScene scene = ApprovalPage.builder().articleId(String.valueOf(articleId)).build();
-        return collectBean(scene, OperationApprovalVO.class);
+        return collectBean(scene, OperationApproval.class);
     }
 
     /**

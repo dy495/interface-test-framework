@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class OperationRegisterVO implements Serializable {
+public class OperationRegister implements Serializable {
     @JSONField(name = "register_num")
     private Integer registerNum;
     @JSONField(name = "passed_num")

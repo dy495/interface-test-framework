@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class AppletVoucherListVO implements Serializable {
+public class AppletVoucherList implements Serializable {
     @JSONField(name = "id")
     public Long id;
     @JSONField(name = "title")

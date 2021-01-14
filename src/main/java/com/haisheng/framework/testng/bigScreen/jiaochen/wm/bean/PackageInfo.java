@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class PackageInfoVO implements Serializable {
+public class PackageInfo implements Serializable {
     @JSONField(name = "package_name")
     private String packageName;
     @JSONField(name = "id")

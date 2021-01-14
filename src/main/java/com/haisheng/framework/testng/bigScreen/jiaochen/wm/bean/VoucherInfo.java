@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class VoucherInfoVO implements Serializable {
+public class VoucherInfo implements Serializable {
 
     @JSONField(name = "voucher_id")
     private Long voucherId;

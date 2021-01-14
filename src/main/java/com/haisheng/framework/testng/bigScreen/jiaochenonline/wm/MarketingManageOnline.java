@@ -3,11 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherListVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherList;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfoVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MessageList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerification;
@@ -177,9 +177,9 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //增发
             util.addVoucher(voucherName, 10);
             //增发后数据
-            VoucherInfoVO voucherInfoVO = util.getVoucherInfo(voucherName);
-            long newSurplusInventory = voucherInfoVO.getSurplusInventory() == null ? 0 : voucherInfoVO.getSurplusInventory();
-            Long newAdditionalInventory = voucherInfoVO.getAdditionalInventory();
+            VoucherInfo voucherInfo = util.getVoucherInfo(voucherName);
+            long newSurplusInventory = voucherInfo.getSurplusInventory() == null ? 0 : voucherInfo.getSurplusInventory();
+            Long newAdditionalInventory = voucherInfo.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
             Preconditions.checkArgument(newSurplusInventory == surplusInventory,
                     "增发前剩余库存：" + surplusInventory + "增发后剩余库存：" + newSurplusInventory);
@@ -221,7 +221,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //审批通过
             util.applyVoucher(voucherName, "1");
             //审批后数据
-            VoucherInfoVO voucherInfo = util.getVoucherInfo(voucherName);
+            VoucherInfo voucherInfo = util.getVoucherInfo(voucherName);
             long newSurplusInventory = voucherInfo.getSurplusInventory() == null ? 0 : voucherInfo.getSurplusInventory();
             Long newAdditionalInventory = voucherInfo.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
@@ -267,7 +267,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //审批不通过
             util.applyVoucher(voucherName, "2");
             //审批后数据
-            VoucherInfoVO voucherInfo = util.getVoucherInfo(voucherName);
+            VoucherInfo voucherInfo = util.getVoucherInfo(voucherName);
             Long newSurplusInventory = voucherInfo.getSurplusInventory();
             Long newAdditionalInventory = voucherInfo.getAdditionalInventory();
             CommonUtil.valueView(surplusInventory, newSurplusInventory, additionalInventory, newAdditionalInventory);
@@ -788,7 +788,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
             //核销
             user.loginApplet(appletUser);
-            AppletVoucherListVO voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
+            AppletVoucherList voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
             long id = voucherInfo.getId();
             String voucherName = voucherInfo.getTitle();
             CommonUtil.valueView(id, voucherName);
@@ -1873,7 +1873,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         try {
             code = util.getVerificationCode(false, "本司员工");
             user.loginApplet(appletUser);
-            AppletVoucherListVO voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
+            AppletVoucherList voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
             long id = voucherInfo.getId();
             IScene scene = VoucherVerification.builder().id(String.valueOf(id)).verificationCode(code).build();
             String message = jc.invokeApi(scene, false).getString("message");

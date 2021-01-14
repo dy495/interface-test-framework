@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class AppointmentActivityVO implements Serializable {
+public class AppointmentActivity implements Serializable {
     @JSONField(name = "status_name")
     private String statusName;
     @JSONField(name = "id")

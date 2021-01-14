@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AfterSaleCustomerPageVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.WechatCustomerPageVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AfterSaleCustomerPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
@@ -13,9 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumCarType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
@@ -235,12 +233,12 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             String plateNumber = CommonUtil.getStrField(pageData, 0, "plate_number");
             String customerPhone = CommonUtil.getStrField(pageData, 0, "customer_phone");
             //购买前，售后客户消费频次&总消费
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder afterSaleCustomerBuilder = AfterSaleCustomerPage.builder().customerPhone(customerPhone);
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder afterSaleCustomerBuilder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder().customerPhone(customerPhone);
             JSONObject afterSaleCustomerData = jc.invokeApi(afterSaleCustomerBuilder.build());
             int repairTimes = CommonUtil.getIntField(afterSaleCustomerData, 0, "repair_times");
             long afterSaleTotalPrice = (long) CommonUtil.getIntField(afterSaleCustomerData, 0, "total_price");
             //购买前，小程序客户消费频次&总消费
-            WechatCustomerPage.WechatCustomerPageBuilder wechatCustomerBuilder = WechatCustomerPage.builder().customerPhone(customerPhone);
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage.WechatCustomerPageBuilder wechatCustomerBuilder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage.builder().customerPhone(customerPhone);
             JSONObject wechatCustomerData = jc.invokeApi(wechatCustomerBuilder.build());
             int consumeTimes = CommonUtil.getIntField(wechatCustomerData, 0, "consume_times");
             long wechatTotalPrice = (long) CommonUtil.getIntField(wechatCustomerData, 0, "total_price");
@@ -282,7 +280,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -310,7 +308,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -344,7 +342,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -401,7 +399,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             user.login(marketing);
             List<Long> shopList = util.getShopIdList();
             user.login(administrator);
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(marketing.getPhone());
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder().customerPhone(marketing.getPhone());
             int customerNum = getCustomerNum(builder, shopList);
             //小程序添加爱车
             user.loginApplet(appletUser);
@@ -420,7 +418,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    private int getCustomerNum(AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder, List<Long> shopList) {
+    private int getCustomerNum(com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder, List<Long> shopList) {
         List<JSONObject> list = new ArrayList<>();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
@@ -436,15 +434,15 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = WechatCustomerPage.builder().size(size).build();
+            IScene scene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage.builder().size(size).build();
             JSONArray array = jc.invokeApi(scene).getJSONArray("list");
-            List<WechatCustomerPageVO> customerInfo = array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), WechatCustomerPageVO.class)).collect(Collectors.toList());
+            List<WechatCustomerPage> customerInfo = array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), WechatCustomerPage.class)).collect(Collectors.toList());
             customerInfo.forEach(info -> {
                 CommonUtil.valueView(info.getCustomerName());
                 List<Double> priceList = new ArrayList<>();
                 String phone = info.getCustomerPhone();
                 Double price = info.getTotalPrice() == null ? 0 : info.getTotalPrice();
-                AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder().customerPhone(phone);
+                com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder().customerPhone(phone);
                 int total = jc.invokeApi(builder.build()).getInteger("total");
                 for (int i = 1; i < total; i++) {
                     JSONArray list = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
@@ -466,13 +464,13 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<AfterSaleCustomerPageVO> afterSaleInfo = new ArrayList<>();
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            List<AfterSaleCustomerPage> afterSaleInfo = new ArrayList<>();
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
                 JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-                afterSaleInfo.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AfterSaleCustomerPageVO.class)).collect(Collectors.toList()));
+                afterSaleInfo.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AfterSaleCustomerPage.class)).collect(Collectors.toList()));
             }
             afterSaleInfo.forEach(e -> {
                 CommonUtil.valueView(e.getRepairCustomerName(), e.getImportDate());
@@ -489,7 +487,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    private Integer getMiles(AfterSaleCustomerPageVO customerInfo) {
+    private Integer getMiles(AfterSaleCustomerPage customerInfo) {
         List<Integer> list = new ArrayList<>();
         RepairPage.RepairPageBuilder builder = RepairPage.builder().carId(String.valueOf(customerInfo.getCarId()))
                 .shopId(String.valueOf(customerInfo.getShopId()));

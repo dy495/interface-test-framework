@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class WechatCustomerPageVO implements Serializable {
+public class WechatCustomerPage implements Serializable {
     @JSONField(name = "customer_phone")
     private String customerPhone;
     @JSONField(name = "total_price")

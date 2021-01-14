@@ -7,9 +7,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppointmentActivityVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApprovalVO;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegisterVO;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppointmentActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApproval;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumArticleStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
@@ -172,8 +172,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
                 util.applyArticle(articleId);
             });
             user.login(administrator);
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
-            List<Long> ids = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).collect(Collectors.toList());
+            List<OperationApproval> operationApprovals = util.getApprovalList(articleId);
+            List<Long> ids = operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApproval::getId).collect(Collectors.toList());
             List<Long> list1 = new ArrayList<>();
             list1.add(ids.get(0));
             List<Long> list2 = new ArrayList<>();
@@ -233,10 +233,10 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = RegisterPage.builder().build();
-            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
+            List<OperationRegister> operationRegisters = util.collectBean(scene, OperationRegister.class);
             List<Integer> statusNameList = operationRegisters.stream().map(e -> (int) util.getApprovalList(e.getId()).stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count()).collect(Collectors.toList());
-            List<Integer> passedList = operationRegisters.stream().map(OperationRegisterVO::getPassedNum).collect(Collectors.toList());
-            List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
+            List<Integer> passedList = operationRegisters.stream().map(OperationRegister::getPassedNum).collect(Collectors.toList());
+            List<String> titleList = operationRegisters.stream().map(OperationRegister::getTitle).collect(Collectors.toList());
             for (int i = 0; i < statusNameList.size(); i++) {
                 CommonUtil.valueView(statusNameList.get(i), passedList.get(i));
                 Preconditions.checkArgument(statusNameList.get(i).equals(passedList.get(i)), titleList.get(i) + "已入选数：" + passedList.get(i) + "审核列表已通过数：" + statusNameList.get(i));
@@ -254,10 +254,10 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = RegisterPage.builder().build();
-            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
+            List<OperationRegister> operationRegisters = util.collectBean(scene, OperationRegister.class);
             List<Integer> statusNameList = operationRegisters.stream().map(e -> util.getApprovalList(e.getId()).size()).collect(Collectors.toList());
-            List<Integer> registerList = operationRegisters.stream().map(OperationRegisterVO::getRegisterNum).collect(Collectors.toList());
-            List<String> titleList = operationRegisters.stream().map(OperationRegisterVO::getTitle).collect(Collectors.toList());
+            List<Integer> registerList = operationRegisters.stream().map(OperationRegister::getRegisterNum).collect(Collectors.toList());
+            List<String> titleList = operationRegisters.stream().map(OperationRegister::getTitle).collect(Collectors.toList());
             for (int i = 0; i < statusNameList.size(); i++) {
                 CommonUtil.valueView(statusNameList.get(i), registerList.get(i));
                 Preconditions.checkArgument(statusNameList.get(i).equals(registerList.get(i)), titleList.get(i) + "已报名数：" + registerList.get(i) + "审批列表数：" + statusNameList.get(i));
@@ -276,37 +276,37 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         try {
             String date = DateTimeUtil.getFormat(new Date());
             //遍历报名列表，如果其中含有待审核的任务，获取文章id&标题
-            List<OperationRegisterVO> operationRegisters = util.getRegisterList();
-            OperationRegisterVO operationRegisterVO = operationRegisters.stream().filter(e -> util.getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
-            assert operationRegisterVO != null;
-            Long articleId = operationRegisterVO.getId();
-            String articleTitle = operationRegisterVO.getTitle();
+            List<OperationRegister> operationRegisters = util.getRegisterList();
+            OperationRegister operationRegister = operationRegisters.stream().filter(e -> util.getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
+            assert operationRegister != null;
+            Long articleId = operationRegister.getId();
+            String articleTitle = operationRegister.getTitle();
             //已入选数量
-            Integer passedNum = operationRegisterVO.getPassedNum();
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
+            Integer passedNum = operationRegister.getPassedNum();
+            List<OperationApproval> operationApprovals = util.getApprovalList(articleId);
             //审批中数量
-            int approvalNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            int approvalNum = (int) operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
             //已通过数量
-            int passNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
+            int passNum = (int) operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
             CommonUtil.valueView(articleTitle, articleId, approvalNum, passNum, passedNum);
-            Long id = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).findFirst().orElse(null);
+            Long id = operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApproval::getId).findFirst().orElse(null);
             //审批通过
             List<Long> list = new ArrayList<>();
             list.add(id);
             jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
             //审批通过后和数据数量
-            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
-            int newApprovalNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
-            int newPassNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
+            List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
+            int newApprovalNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            int newPassNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已通过")).count();
             Preconditions.checkArgument(newApprovalNum == approvalNum - 1, articleTitle + "审批通过前待审核数量：" + approvalNum + "审批通过后待审核数量：" + newApprovalNum);
             Preconditions.checkArgument(newPassNum == passNum + 1, articleTitle + "审批通过前已通过数量：" + passNum + "审批通过后已通过数量：" + newPassNum);
             int newPassedNum = util.getRegisterInfo(articleId).getPassedNum();
             Preconditions.checkArgument(newPassedNum == passedNum + 1, "审批通过前已入选数量：" + passedNum + "审批通过后已入选数量：" + newPassedNum);
             //入选时间
-            String passedDate = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getPassedDate();
+            String passedDate = Objects.requireNonNull(newOperationApprovals.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getPassedDate();
             Preconditions.checkArgument(passedDate.equals(date), "审批通过后入选时间为：" + passedDate);
             //操作账号
-            String userAccountName = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
+            String userAccountName = Objects.requireNonNull(newOperationApprovals.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
             Preconditions.checkArgument(userAccountName.equals(administrator.getName()), "审批通过后为操作账号为：" + userAccountName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -320,30 +320,30 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //遍历报名列表，如果其中含有待审核的任务，获取文章id&标题
-            List<OperationRegisterVO> operationRegisters = util.getRegisterList();
-            OperationRegisterVO operationRegisterVO = operationRegisters.stream().filter(e -> util.getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
-            assert operationRegisterVO != null;
-            Long articleId = operationRegisterVO.getId();
-            String articleTitle = operationRegisterVO.getTitle();
+            List<OperationRegister> operationRegisters = util.getRegisterList();
+            OperationRegister operationRegister = operationRegisters.stream().filter(e -> util.getApprovalList(e.getId()).stream().anyMatch(approvalVO -> approvalVO.getStatusName().equals("待审批"))).findFirst().orElse(null);
+            assert operationRegister != null;
+            Long articleId = operationRegister.getId();
+            String articleTitle = operationRegister.getTitle();
             //获取已拒绝和待审批数量
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
-            int refuseNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
-            int approvalNum = (int) operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            List<OperationApproval> operationApprovals = util.getApprovalList(articleId);
+            int refuseNum = (int) operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
+            int approvalNum = (int) operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
             CommonUtil.valueView(articleTitle, articleId, approvalNum, refuseNum, approvalNum);
             //获取审批任务id
-            Long id = operationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).findFirst().orElse(null);
+            Long id = operationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApproval::getId).findFirst().orElse(null);
             //审批拒绝
             List<Long> list = new ArrayList<>();
             list.add(id);
             jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_REJECT").build());
             //拒绝之后的已拒绝&待审批数量
-            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
-            int newRefuseNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
-            int newApprovalNum = (int) newOperationApprovalVOs.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
+            List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
+            int newRefuseNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
+            int newApprovalNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
             Preconditions.checkArgument(newApprovalNum == approvalNum - 1, articleTitle + "审批前待审批数量：" + approvalNum + "审批拒绝后待审批数量：" + newApprovalNum);
             Preconditions.checkArgument(newRefuseNum == refuseNum + 1, articleTitle + "审批前已拒绝数量：" + refuseNum + "审批拒绝后已拒绝数量：" + newRefuseNum);
             //操作账号
-            String userAccountName = Objects.requireNonNull(newOperationApprovalVOs.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
+            String userAccountName = Objects.requireNonNull(newOperationApprovals.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null)).getUserAccountName();
             Preconditions.checkArgument(userAccountName.equals(administrator.getName()), "审批通过后为操作账号为：" + userAccountName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -363,9 +363,9 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             activityIds.forEach(e -> util.applyArticle(e));
             //报名后，均有该用户的报名信息
             user.login(administrator);
-            List<List<OperationApprovalVO>> list = activityIds.stream().map(e -> util.getApprovalList(e)).collect(Collectors.toList());
-            List<OperationApprovalVO> operationApprovalVOList = list.stream().map(subList -> subList.stream().filter(e -> e.getRegisterTime().equals(date)).findFirst().orElse(null)).collect(Collectors.toList());
-            operationApprovalVOList.forEach(e -> {
+            List<List<OperationApproval>> list = activityIds.stream().map(e -> util.getApprovalList(e)).collect(Collectors.toList());
+            List<OperationApproval> operationApprovalList = list.stream().map(subList -> subList.stream().filter(e -> e.getRegisterTime().equals(date)).findFirst().orElse(null)).collect(Collectors.toList());
+            operationApprovalList.forEach(e -> {
                 Preconditions.checkArgument(e.getCustomerName().equals("隔壁老王"), e.getTitle() + "报名客户名称为：隔壁老王" + "审批列表客户名称为：" + e.getCustomerName());
                 Preconditions.checkArgument(e.getPhone().equals(marketing.getPhone()), e.getTitle() + "报名联系方式为：" + marketing.getPhone() + "审批列表客户名称为：" + e.getPhone());
             });
@@ -381,7 +381,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = RegisterPage.builder().build();
-            List<OperationRegisterVO> operationRegisters = util.collectBean(scene, OperationRegisterVO.class);
+            List<OperationRegister> operationRegisters = util.collectBean(scene, OperationRegister.class);
             operationRegisters.forEach(e -> Preconditions.checkArgument(e.getTotalQuota() >= e.getPassedNum(), e.getTitle() + " 活动名额数：" + e.getTotalQuota() + " 已入选数：" + e.getPassedNum()));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -407,20 +407,20 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             });
             //取消数量
             user.login(administrator);
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
-            long cancelNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已取消")).count();
+            List<OperationApproval> operationApprovals = util.getApprovalList(articleId);
+            long cancelNum = operationApprovals.stream().filter(e -> e.getStatusName().equals("已取消")).count();
             Arrays.stream(tokens).forEach(token -> {
                 //登录
                 user.loginApplet(token);
                 //取消
                 Long id = util.getAppletArticleList().stream().filter(e -> e.getStatusName().equals("待审批") && e.getTitle().equals(title) && e.getTimeStr().equals(date))
-                        .map(AppointmentActivityVO::getId).findFirst().orElse(null);
+                        .map(AppointmentActivity::getId).findFirst().orElse(null);
                 jc.appletactivityCancel(String.valueOf(id));
             });
             //新取消数量
             user.login(administrator);
-            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
-            long newCancelNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已取消")).count();
+            List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
+            long newCancelNum = newOperationApprovals.stream().filter(e -> e.getStatusName().equals("已取消")).count();
             CommonUtil.valueView(cancelNum, newCancelNum);
             Preconditions.checkArgument(newCancelNum == cancelNum + tokens.length, title + "去消前已取消数：" + cancelNum + "取消后已取消数：" + newCancelNum);
         } catch (Exception | AssertionError e) {
@@ -448,15 +448,15 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
                 util.applyArticle(articleId);
             });
             user.login(administrator);
-            List<OperationApprovalVO> operationApprovalVOs = util.getApprovalList(articleId);
-            long passNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
-            long approvalNum = operationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
+            List<OperationApproval> operationApprovals = util.getApprovalList(articleId);
+            long passNum = operationApprovals.stream().filter(e -> e.getStatusName().equals("已通过")).count();
+            long approvalNum = operationApprovals.stream().filter(e -> e.getStatusName().equals("待审批")).count();
             //批量通过
-            List<Long> ids = util.getApprovalList(articleId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApprovalVO::getId).collect(Collectors.toList());
+            List<Long> ids = util.getApprovalList(articleId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApproval::getId).collect(Collectors.toList());
             jc.invokeApi(Approval.builder().registerIds(ids).status("APPROVAL_CONFIRM").build());
-            List<OperationApprovalVO> newOperationApprovalVOs = util.getApprovalList(articleId);
-            long newApprovalNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("待审批")).count();
-            long newPassNum = newOperationApprovalVOs.stream().filter(e -> e.getStatusName().equals("已通过")).count();
+            List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
+            long newApprovalNum = newOperationApprovals.stream().filter(e -> e.getStatusName().equals("待审批")).count();
+            long newPassNum = newOperationApprovals.stream().filter(e -> e.getStatusName().equals("已通过")).count();
             CommonUtil.valueView(approvalNum, newApprovalNum, passNum, newPassNum);
             Preconditions.checkArgument(newApprovalNum == approvalNum - ids.size(), title + "批量通过前待审批数：" + approvalNum + "批量通过后待审批数：" + newApprovalNum);
             Preconditions.checkArgument(newPassNum == passNum + ids.size(), title + "批量通过前已通过数：" + passNum + "批量通过后已通过数：" + newPassNum);
