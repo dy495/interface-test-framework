@@ -4,8 +4,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProd
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 小程序token枚举
@@ -62,7 +60,6 @@ public enum EnumAppletToken {
     private final String phone;
 
     public static String getPhoneByToken(String token) {
-        List<String> phoneList = Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).collect(Collectors.toList());
-        return phoneList.size() == 0 ? JC_GLY_ONLINE.getPhone() : phoneList.get(0);
+        return Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).map(EnumAppletToken::getPhone).findFirst().orElse(JC_GLY_ONLINE.getPhone());
     }
 }

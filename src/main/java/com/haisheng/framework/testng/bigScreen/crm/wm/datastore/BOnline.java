@@ -142,7 +142,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @AfterClass
-    @Test()
+    @Test(priority = 1)
     public void dataCheck() {
         String date = DateTimeUtil.addDayFormat(new Date(), day);
         Sql sql = Sql.instance().select().from(TPorscheDeliverInfo.class)

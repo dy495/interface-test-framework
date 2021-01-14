@@ -1381,7 +1381,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店面数据分析--【各时间段】接待的PU+BB >=【销售总监-app-我的接待】今日老客接待")
+    @Test(description = "店面数据分析--【各时间段】接待的PU+BB >=【销售总监-app-我的接待】今日老客接待", enabled = false)
     public void shopPanel_data_65() {
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -1410,7 +1410,7 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(receive, todayNewCustomerReceptionNum);
             Preconditions.checkArgument(receive >= todayNewCustomerReceptionNum, "接待的PU+BB：" + receive + "今日老客接待：" + todayNewCustomerReceptionNum);
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
+            collectMessage(e);
         } finally {
             saveData("店面数据分析--【各时间段】接待的PU+BB >=【销售总监-app-我的接待】今日老客接待");
         }
@@ -1561,27 +1561,26 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-            for (Map<String, String> map : list) {
-                String userName = map.get("userName");
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                String userName = e.getUserName();
                 CommonUtil.valueView(userName);
-                int num = getFunnelData("business", "ORDER", map);
+                int num = getFunnelData("business", "ORDER", e.getUserId());
                 Sql sql = Sql.instance().select("today_order_num")
                         .from(TPorscheTodayData.class)
-                        .where("sale_id", "=", map.get("userId"))
+                        .where("sale_id", "=", e.getUserId())
                         .and("shop_id", "=", shopId)
                         .and("today_date", "=", date).end();
-                List<TPorscheTodayData> list1 = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
-                if (list1.size() > 0) {
-                    int count = list1.get(0).getTodayOrderNum();
+                List<TPorscheTodayData> list = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
+                if (list.size() > 0) {
+                    int count = list.get(0).getTodayOrderNum();
                     CommonUtil.valueView(num, count);
-                    Preconditions.checkArgument(num >= count, userName + "各车型订单：" + num + " 该销售今日订单数量：" + count);
+                    Preconditions.checkArgument(num >= count, userName + "pc昨日订单数：" + num + " app昨日订单数：" + count);
                     CommonUtil.logger(userName);
                 }
-            }
+            });
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("店面数据分析--【各时间段+各销售】累计订单=【各销售-app-我的接待】今日订单数量");
         }
@@ -1592,47 +1591,27 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-            for (Map<String, String> map : list) {
-                CommonUtil.valueView(map.get("userName"));
-                int num = getFunnelData("business", "DEAL", map);
-                Sql sql = Sql.instance().select("today_deal_num")
-                        .from(TPorscheTodayData.class)
-                        .where("sale_id", "=", map.get("userId"))
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                CommonUtil.valueView(e.getUserName());
+                int num = getFunnelData("business", "DEAL", e.getUserId());
+                Sql sql = Sql.instance().select("today_deal_num").from(TPorscheTodayData.class)
+                        .where("sale_id", "=", e.getUserId())
                         .and("shop_id", "=", shopId)
                         .and("today_date", "=", date).end();
-                List<TPorscheTodayData> list1 = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
-                if (list1.size() > 0) {
-                    int count = list1.get(0).getTodayDealNum();
+                List<TPorscheTodayData> list = ONE_PIECE_FACTORY.create(sql, TPorscheTodayData.class);
+                if (list.size() > 0) {
+                    int count = list.get(0).getTodayDealNum();
                     CommonUtil.valueView(num, count);
-                    Preconditions.checkArgument(num == count, map.get("userName") + "各车型订单：" + num + " 该销售今日交车数量：" + count);
-                    CommonUtil.logger(map.get("userName"));
+                    Preconditions.checkArgument(num == count, e.getUserName() + "pc端昨日交车数：" + num + " app端昨日交车数：" + count);
+                    CommonUtil.logger(e.getUserName());
                 }
-            }
+            });
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("【各时间段+各销售】累计交车=【各销售-app-我的交车】今日交车数量");
         }
-    }
-
-    /**
-     * 获取业务漏斗数据
-     *
-     * @param type 标签类型
-     * @param map  用户
-     */
-    private int getFunnelData(String funnelType, String type, Map<String, String> map) {
-        int num = 0;
-        IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).saleId(map.get("userId")).build();
-        JSONArray array = crm.invokeApi(scene).getJSONObject(funnelType).getJSONArray("list");
-        for (int i = 0; i < array.size(); i++) {
-            if (array.getJSONObject(i).getString("type").equals(type)) {
-                num += array.getJSONObject(i).getInteger("value");
-            }
-        }
-        return num;
     }
 
     @Test(description = "店面数据分析--【时间段＋销售顾问】车系漏斗中订单＝成交记录中订车时间为【时间段＋销售顾问】的订单数量")
@@ -1640,12 +1619,12 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-            for (Map<String, String> map : list) {
-                String userName = map.get("userName");
-                String userId = map.get("userId");
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                String userName = e.getUserName();
+                String userId = e.getUserId();
                 CommonUtil.valueView(userName);
-                int num = getFunnelData("car_type", "ORDER", map);
+                int num = getFunnelData("car_type", "ORDER", userId);
                 Sql.Builder builder = Sql.instance().select()
                         .from(TPorscheOrderInfo.class)
                         .where("order_date", "=", date)
@@ -1657,10 +1636,9 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(num, count);
                 Preconditions.checkArgument(num == count, userName + "车系漏斗中订单：" + num + "成交记录中的订单数量：" + count);
                 CommonUtil.logger(userName);
-            }
+            });
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("店面数据分析--【时间段＋销售顾问】车系漏斗中订单＝成交记录中订车时间为【时间段＋销售顾问】的订单数量");
         }
@@ -1671,12 +1649,12 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            List<Map<String, String>> list = method.getSaleListByRoleName("销售顾问");
-            for (Map<String, String> map : list) {
-                String userName = map.get("userName");
-                String userId = map.get("userId");
+            List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
+            saleInfos.forEach(e -> {
+                String userName = e.getUserName();
+                String userId = e.getUserId();
                 CommonUtil.valueView(userName);
-                int num = getFunnelData("car_type", "DEAL", map);
+                int num = getFunnelData("car_type", "DEAL", userId);
                 Sql.Builder builder = Sql.instance().select()
                         .from(TPorscheDeliverInfo.class)
                         .where("deliver_date", "=", date)
@@ -1688,13 +1666,24 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.valueView(num, count);
                 Preconditions.checkArgument(num == count, userName + "车系漏斗中交车：" + num + "成交记录中的交车数量：" + count);
                 CommonUtil.logger(userName);
-            }
+            });
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("店面数据分析--【时间段＋销售顾问】车系漏斗中交车＝成交记录中交车时间为【时间段＋销售顾问】的订单数量");
         }
+    }
+
+    /**
+     * 获取业务漏斗数据
+     *
+     * @param type   标签类型
+     * @param userId 用户
+     */
+    private int getFunnelData(String funnelType, String type, String userId) {
+        IScene scene = Analysis2ShopSaleFunnelScene.builder().cycleType(EnumFindType.DAY.getType()).saleId(userId).build();
+        JSONArray array = crm.invokeApi(scene).getJSONObject(funnelType).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type").equals(type)).mapToInt(e -> e.getInteger("value")).sum();
     }
 
 //    -----------------------------------------------存量客户分析---------------------------------------------------
