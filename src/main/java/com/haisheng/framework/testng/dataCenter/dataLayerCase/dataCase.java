@@ -117,6 +117,41 @@ public class dataCase extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+    /**
+     * ====================接收交易数据(正确入参&格式)======================
+     */
+    @Test
+    public void reciveA() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            ArrayList<String> trans_type = new ArrayList<>();
+            trans_type.add("W");
+            JSONObject obj = new JSONObject();
+            obj.put("commodity_id","iPhone12");
+            obj.put("commodity_name","苹果手机12代");
+            obj.put("num",5);
+            obj.put("unit_price",123.12);
+            JSONArray commodity_list = new JSONArray();
+            commodity_list.add(obj);
+
+            String user_id = "Qing"+CommonUtil.getRandom(6);
+            String memberName="青青auto制造（触发一品一码）";
+            JSONObject  res = data.customer_dealData(shop_id,trans_id,trans_time,trans_type,user_id,total_price,real_price,openid,orderNumber,memberName,receipt_type,posId,commodity_list);
+            Integer code = res.getInteger("code");
+            String message = res.getString("message");
+            System.out.println(code);
+            checkArgument(code == 1000, "接收交易数据接口，正常格式入参报错,报错报文："+message);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("接收交易数据(正确入参&格式)");
+        }
+
+    }
     /**
      * ====================接收交易数据(必填项不填写)======================
      */

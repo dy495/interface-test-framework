@@ -121,7 +121,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        for (int i=0;i<1;i++) {
+        for (int i=0;i<3;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -180,30 +180,133 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
+                    "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"memberName\":\"触发规则\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"iPhone12ABC\",\n" +
+                    "                \"commodity_name\":\"苹果12s\",\n" +
+                    "                \"unit_price\": 200,\n" +
+                    "                \"num\": 4\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"bananaABC\",\n" +
+                    "                \"commodity_name\":\"香蕉20根啊\",\n" +
+                    "                \"unit_price\": 2,\n" +
+                    "                \"num\": 4\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"AppleABC\",\n" +
+                    "                \"commodity_name\":\"苹果20ge\",\n" +
+                    "                \"unit_price\": 3,\n" +
+                    "                \"num\": 4\n" +
+                    "            }\n" +
+                    "        ]\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+
+            JSONObject jsonObject = JSON.parseObject(str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+            String post = HttpClientUtil.post(config);
+            System.out.println(post);
+        }
+    }
+    /**
+     *生成交易订单
+     **/
+   // @Test
+    public void getA4116() throws Exception {
+        for (int i=0;i<1;i++) {
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+            String uid = "uid_ef6d2de5";
+            String appId = "49998b971ea0";
+            String ak = "3fdce1db0e843ee0";
+            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            String sk = "5036807b1c25b9312116fd4b22c351ac";
+            // java代码示例
+            // java代码示例
+            String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
+
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+            String time= dt.getHistoryDate(0);
+            String time1= dt.getHHmm(0);
+            String userId = "tester"+ CommonUtil.getRandom(6);
+            String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
+            String transTime = "" + System.currentTimeMillis();
+            String str = "{\n" +
+                    "  \"uid\": \"uid_ef6d2de5\",\n" +
+                    "  \"app_id\": \"49998b971ea0\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a7498728934\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \"4116\",\n" +
+                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"W\"\n" +
+                    "        ],\n" +
                     "        \"user_id\":  " + "\"" + userId + "\"" + " ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"周涛（非黑名单非员工again）\",\n" +
+                    "        \"memberName\":\"青青员工下单4116\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
-                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"posId\": \"1111\",\n" +
                     "        \"commodityList\": [\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"iPhone12\",\n" +
-                    "                \"commodity_name\":\"苹果派12\",\n" +
+                    "                \"commodityId\": \"iPhone1942349994\",\n" +
+                    "                \"commodity_name\":\"苹果派1332\",\n" +
                     "                \"unit_price\": 200,\n" +
                     "                \"num\": 1\n" +
                     "            },\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"banana\",\n" +
-                    "                \"commodity_name\":\"香蕉2根\",\n" +
+                    "                \"commodityId\": \"bananasss404345\",\n" +
+                    "                \"commodity_name\":\"香蕉333根\",\n" +
                     "                \"unit_price\": 2,\n" +
                     "                \"num\": 1\n" +
                     "            },\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"Apple\",\n" +
-                    "                \"commodity_name\":\"苹果16个\",\n" +
+                    "                \"commodityId\": \"Applesss45484234288885\",\n" +
+                    "                \"commodity_name\":\"苹果111个\",\n" +
                     "                \"unit_price\": 3,\n" +
                     "                \"num\": 1\n" +
                     "            }\n" +
@@ -219,7 +322,6 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             System.out.println(post);
         }
     }
-
 //    public static  class  gatewayBO(){
 //
 //    }
