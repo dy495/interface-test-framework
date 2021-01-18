@@ -920,45 +920,45 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     /**
      *    PC 有接待管理页面，无售后接待功能权限，无法在app/PC进行接待 角色1
      */
-    @Ignore //前端置灰按钮，后端未做校验
-    @Test
-    public void recWithoutrole() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray idlist= info.jiedai234auth_id;
-            List namelist=info.jiedai234auth_list;
-            String phone = "13412010069";
-
-            //创建角色和账号
-            JSONObject obj = creatRoleAndAccount(idlist,namelist,phone);
-            //角色id
-            String roleId_str = obj.getString("roleid");
-            //账号id
-            String accountid =  obj.getString("accountid");
-
-            //登陆PC，接待
-            jc.loginPC(phone,"000000");
-            int code = jc.pcManageReception("吉A123456",false).getInteger("code");
-            //登陆app，接待
-            jc.appLogin(phone,"000000");
-            int code2= jc.appReceptionAdmitcode("吉A123456").getInteger("code");
-
-            //删除账号
-            creatRoleAndAccount(roleId_str,accountid);
-
-            Preconditions.checkArgument(code==1001,"PC接待，状态码期待1001，实际"+code);
-            Preconditions.checkArgument(code2==1001,"APP接待，状态码期待1001，实际"+code);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("有接待管理页面，无售后接待功能权限，在app/PC进行接待");
-        }
-    }
+//    @Ignore //前端置灰按钮，后端未做校验
+//    @Test
+//    public void recWithoutrole() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            JSONArray idlist= info.jiedai234auth_id;
+//            List namelist=info.jiedai234auth_list;
+//            String phone = "13412010069";
+//
+//            //创建角色和账号
+//            JSONObject obj = creatRoleAndAccount(idlist,namelist,phone);
+//            //角色id
+//            String roleId_str = obj.getString("roleid");
+//            //账号id
+//            String accountid =  obj.getString("accountid");
+//
+//            //登陆PC，接待
+//            jc.loginPC(phone,"000000");
+//            int code = jc.pcManageReception("吉A123456",false).getInteger("code");
+//            //登陆app，接待
+//            jc.appLogin(phone,"000000");
+//            int code2= jc.appReceptionAdmitcode("吉A123456").getInteger("code");
+//
+//            //删除账号
+//            creatRoleAndAccount(roleId_str,accountid);
+//
+//            Preconditions.checkArgument(code==1001,"PC接待，状态码期待1001，实际"+code);
+//            Preconditions.checkArgument(code2==1001,"APP接待，状态码期待1001，实际"+code);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("有接待管理页面，无售后接待功能权限，在app/PC进行接待");
+//        }
+//    }
 
     /**
      *    PC 有售后客户页面，无售后接待功能权限，无法在PC售后客户导入工单 角色2

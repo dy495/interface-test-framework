@@ -91,60 +91,60 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
-    public void addshop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            String simple_name = "简称" + Integer.toString((int) (Math.random() * 100000));
-            String name = "全称" + System.currentTimeMillis();
-            String district_code = "222402";
-            String address = "修改前的地址";
-            String sale_tel = "13400000001";
-            String service_tel = "13499999990";
-            String longitude = "129.8439";
-            String latitude = "42.96805";
-            String appointment_status = "DISABLE";
-            String washing_status = "DISABLE";
-
-            JSONArray arr = new JSONArray();
-            arr.add(info.BrandID);
-
-            //获取门店列表数
-            int bef = jc.shopPage(1, 1, "").getInteger("total");
-            jc.addShop(info.logo, simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status);
-            int after = jc.shopPage(1, 1, "").getInteger("total");
-            JSONObject obj = jc.shopPage(1, 1, name).getJSONArray("list").getJSONObject(0);
-            String simple_name1 = obj.getString("simple_name");
-            String name1 = obj.getString("name");
-            String district_code1 = obj.getString("district_code");
-            String address1 = obj.getString("address");
-            String sale_tel1 = obj.getString("sale_tel");
-            String service_tel1 = obj.getString("service_tel");
-            String longitude1 = obj.getString("longitude");
-            String latitude1 = obj.getString("latitude");
-
-            int num = after - bef;
-            Preconditions.checkArgument(num == 1, "创建门店，门店列表增加了" + num);
-            Preconditions.checkArgument(simple_name.equals(simple_name1), "门店简称，创建时=" + simple_name + ",列表中=" + simple_name1);
-            Preconditions.checkArgument(name.equals(name1), "门店全称，创建时=" + name + ",列表中=" + name1);
-            Preconditions.checkArgument(district_code.equals(district_code1), "门店所属城市，创建时=" + district_code + ",列表中=" + district_code1);
-            Preconditions.checkArgument(address.equals(address1), "门店详细地址，创建时=" + address + ",列表中=" + address1);
-            Preconditions.checkArgument(sale_tel.equals(sale_tel1), "门店销售电话，创建时=" + sale_tel + ",列表中=" + sale_tel1);
-            Preconditions.checkArgument(service_tel.equals(service_tel1), "门店售后电话，创建时=" + service_tel + ",列表中=" + service_tel1);
-            Preconditions.checkArgument(longitude.equals(longitude1), "门店纬度，创建时=" + longitude + ",列表中=" + longitude1);
-            Preconditions.checkArgument(latitude.equals(latitude1), "门店经度，创建时=" + latitude + ",列表中=" + latitude1);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【门店管理】，新建门店, 列表数量+1，与新建时信息一致");
-        }
-    }
+//    @Test
+//    public void addshop() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            String simple_name = "简称" + Integer.toString((int) (Math.random() * 100000));
+//            String name = "全称" + System.currentTimeMillis();
+//            String district_code = "222402";
+//            String address = "修改前的地址";
+//            String sale_tel = "13400000001";
+//            String service_tel = "13499999990";
+//            String longitude = "129.8439";
+//            String latitude = "42.96805";
+//            String appointment_status = "DISABLE";
+//            String washing_status = "DISABLE";
+//
+//            JSONArray arr = new JSONArray();
+//            arr.add(info.BrandID);
+//
+//            //获取门店列表数
+//            int bef = jc.shopPage(1, 1, "").getInteger("total");
+//            jc.addShop(info.logo, simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
+//                    Double.valueOf(latitude), appointment_status, washing_status);
+//            int after = jc.shopPage(1, 1, "").getInteger("total");
+//            JSONObject obj = jc.shopPage(1, 1, name).getJSONArray("list").getJSONObject(0);
+//            String simple_name1 = obj.getString("simple_name");
+//            String name1 = obj.getString("name");
+//            String district_code1 = obj.getString("district_code");
+//            String address1 = obj.getString("address");
+//            String sale_tel1 = obj.getString("sale_tel");
+//            String service_tel1 = obj.getString("service_tel");
+//            String longitude1 = obj.getString("longitude");
+//            String latitude1 = obj.getString("latitude");
+//
+//            int num = after - bef;
+//            Preconditions.checkArgument(num == 1, "创建门店，门店列表增加了" + num);
+//            Preconditions.checkArgument(simple_name.equals(simple_name1), "门店简称，创建时=" + simple_name + ",列表中=" + simple_name1);
+//            Preconditions.checkArgument(name.equals(name1), "门店全称，创建时=" + name + ",列表中=" + name1);
+//            Preconditions.checkArgument(district_code.equals(district_code1), "门店所属城市，创建时=" + district_code + ",列表中=" + district_code1);
+//            Preconditions.checkArgument(address.equals(address1), "门店详细地址，创建时=" + address + ",列表中=" + address1);
+//            Preconditions.checkArgument(sale_tel.equals(sale_tel1), "门店销售电话，创建时=" + sale_tel + ",列表中=" + sale_tel1);
+//            Preconditions.checkArgument(service_tel.equals(service_tel1), "门店售后电话，创建时=" + service_tel + ",列表中=" + service_tel1);
+//            Preconditions.checkArgument(longitude.equals(longitude1), "门店纬度，创建时=" + longitude + ",列表中=" + longitude1);
+//            Preconditions.checkArgument(latitude.equals(latitude1), "门店经度，创建时=" + latitude + ",列表中=" + latitude1);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店, 列表数量+1，与新建时信息一致");
+//        }
+//    }
 
     @Test
     public void editshop() {

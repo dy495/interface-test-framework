@@ -115,184 +115,184 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      */
 
 
-    @Ignore
-    @Test
-    public void addVisitRemarkChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            String phone1 = phone.substring(3);
-            customerid = creatCust(name, phone);
-
-            //完成接待
-
-
-            //修改创建时间为昨天
-            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
-
-            //查看顾客详情，备注条数
-            int listbefore = crm.customerDetailPC(customerid).getJSONArray("remark").size();
-
-            //添加备注
-            JSONObject visit = new JSONObject();
-            String comment = ""; //备注内容
-            for (int i = 0; i < 20; i++) {
-                comment = comment + "备";
-            }
-            crm.customerEditRemarkPC(customerid, name, phone1, level_id, comment);
-
-            //查看顾客详情，备注条数
-            int listafter = crm.customerDetailPC(customerid).getJSONArray("remark").size();
-            int change = listafter - listbefore;
-            Preconditions.checkArgument(change == 1, "备注数增加" + change);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("添加备注，备注条数+1");
-        }
-
-    }
-
-    @Ignore
-    @Test
-    public void addVisitCommentChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String phone1 = phone.substring(3);
-            String name = phone;
-            customerid = creatCust(name, phone);
-
-            //完成接待
-
-
-            //修改创建时间为昨天
-            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
-
-
-            //添加回访记录
-            JSONObject visit = new JSONObject();
-            String comment = ""; //回访内容
-            for (int i = 0; i < 10; i++) {
-                comment = comment + "回";
-            }
-            String date = dt.getHistoryDate(1);
-            visit.put("comment", comment);
-            visit.put("next_return_visit_date", date);
-            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
-
-            //查看顾客详情，回访记录条数
-            int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-
-            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
-            //查看顾客详情，回访记录条数
-            int listafter = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-            int change = listafter - listbefore;
-            Preconditions.checkArgument(change == 1, "回访记录数量增加了" + change);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("添加回访，回访记录数量+1");
-        }
-
-    }
-
-    @Ignore
-    @Test
-    public void addVisitChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name, phone);
-            int size = crm.customerDetailPC(customerid).getJSONArray("visit").size();
-
-            //完成接待
-
-            Preconditions.checkArgument(size == 1, "来访记录条数=" + size);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app创建顾客，来访记录数量+1");
-        }
-
-    }
-
-    @Ignore
-    @Test
-    public void customerChkListAndDetail() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            String phone1 = phone.substring(3);
-            int likecar = 1;
-            int buycar = 0;
-            String pretime = dt.getHistoryDate(1);
-            String compare_car = "宾利";
-            int buy_car_attribute = 3;
-            customerid = creatCust(name, phone);
-            //完成接待
-
-            //列表页
-            JSONObject list = crm.customerListPC("", -1, name, phone1, "", "", 1, 1).getJSONArray("list").getJSONObject(0);
-            String list_name = list.getString("customer_name");
-            Long list_level = list.getLong("customer_level");
-            String list_phone = list.getString("customer_phone");
-            String list_sale = list.getString("belongs_sale_id");
-//            int list_like_car = list.getInteger("like_car");
-//            int list_buycar = list.getInteger("buy_car");
-//            String list_time = list.getString("pre_buy_time");
-
-            //详情页
-            JSONObject detail = crm.customerDetailPC(customerid);
-            String detail_name = detail.getString("customer_name");
-            Long detail_level = detail.getLong("customer_level");
-            String detail_phone = detail.getString("customer_phone");
-            String detail_sale = detail.getString("belongs_sale_id");
-//            int detailt_like_car = detail.getInteger("like_car");
-//            int detail_buycar = detail.getInteger("buy_car");
-//            String detail_time = detail.getString("pre_buy_time");
-            Preconditions.checkArgument(name.equals(list_name) && name.equals(detail_name), "姓名不一致");
-            Preconditions.checkArgument(level_id == list_level && level_id == detail_level, "等级不一致");
-            Preconditions.checkArgument(phone1.equals(list_phone) && phone1.equals(detail_phone), "手机号不一致");
-            Preconditions.checkArgument(detail_sale.equals(list_sale), "所属销售不一致");
-//            Preconditions.checkArgument(likecar==list_like_car && likecar==detailt_like_car,"意向车型不一致");
-//            Preconditions.checkArgument(buycar==list_buycar && buycar==detail_buycar,"是否订车不一致");
-//            Preconditions.checkArgument(pretime.equals(list_time) && pretime.equals(detail_time),"预计购车时间不一致");
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("新建客户，新建时信息、列表页信息、详情页信息一致");
-        }
-
-    }
+//    @Ignore
+//    @Test
+//    public void addVisitRemarkChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            String phone1 = phone.substring(3);
+//            customerid = creatCust(name, phone);
+//
+//            //完成接待
+//
+//
+//            //修改创建时间为昨天
+//            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+//
+//            //查看顾客详情，备注条数
+//            int listbefore = crm.customerDetailPC(customerid).getJSONArray("remark").size();
+//
+//            //添加备注
+//            JSONObject visit = new JSONObject();
+//            String comment = ""; //备注内容
+//            for (int i = 0; i < 20; i++) {
+//                comment = comment + "备";
+//            }
+//            crm.customerEditRemarkPC(customerid, name, phone1, level_id, comment);
+//
+//            //查看顾客详情，备注条数
+//            int listafter = crm.customerDetailPC(customerid).getJSONArray("remark").size();
+//            int change = listafter - listbefore;
+//            Preconditions.checkArgument(change == 1, "备注数增加" + change);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("添加备注，备注条数+1");
+//        }
+//
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void addVisitCommentChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String phone1 = phone.substring(3);
+//            String name = phone;
+//            customerid = creatCust(name, phone);
+//
+//            //完成接待
+//
+//
+//            //修改创建时间为昨天
+//            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+//
+//
+//            //添加回访记录
+//            JSONObject visit = new JSONObject();
+//            String comment = ""; //回访内容
+//            for (int i = 0; i < 10; i++) {
+//                comment = comment + "回";
+//            }
+//            String date = dt.getHistoryDate(1);
+//            visit.put("comment", comment);
+//            visit.put("next_return_visit_date", date);
+//            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
+//
+//            //查看顾客详情，回访记录条数
+//            int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
+//
+//            crm.customerEditVisitPC(customerid, name, phone1, level_id, visit);
+//            //查看顾客详情，回访记录条数
+//            int listafter = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
+//            int change = listafter - listbefore;
+//            Preconditions.checkArgument(change == 1, "回访记录数量增加了" + change);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("添加回访，回访记录数量+1");
+//        }
+//
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void addVisitChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            customerid = creatCust(name, phone);
+//            int size = crm.customerDetailPC(customerid).getJSONArray("visit").size();
+//
+//            //完成接待
+//
+//            Preconditions.checkArgument(size == 1, "来访记录条数=" + size);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("app创建顾客，来访记录数量+1");
+//        }
+//
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void customerChkListAndDetail() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            String phone1 = phone.substring(3);
+//            int likecar = 1;
+//            int buycar = 0;
+//            String pretime = dt.getHistoryDate(1);
+//            String compare_car = "宾利";
+//            int buy_car_attribute = 3;
+//            customerid = creatCust(name, phone);
+//            //完成接待
+//
+//            //列表页
+//            JSONObject list = crm.customerListPC("", -1, name, phone1, "", "", 1, 1).getJSONArray("list").getJSONObject(0);
+//            String list_name = list.getString("customer_name");
+//            Long list_level = list.getLong("customer_level");
+//            String list_phone = list.getString("customer_phone");
+//            String list_sale = list.getString("belongs_sale_id");
+////            int list_like_car = list.getInteger("like_car");
+////            int list_buycar = list.getInteger("buy_car");
+////            String list_time = list.getString("pre_buy_time");
+//
+//            //详情页
+//            JSONObject detail = crm.customerDetailPC(customerid);
+//            String detail_name = detail.getString("customer_name");
+//            Long detail_level = detail.getLong("customer_level");
+//            String detail_phone = detail.getString("customer_phone");
+//            String detail_sale = detail.getString("belongs_sale_id");
+////            int detailt_like_car = detail.getInteger("like_car");
+////            int detail_buycar = detail.getInteger("buy_car");
+////            String detail_time = detail.getString("pre_buy_time");
+//            Preconditions.checkArgument(name.equals(list_name) && name.equals(detail_name), "姓名不一致");
+//            Preconditions.checkArgument(level_id == list_level && level_id == detail_level, "等级不一致");
+//            Preconditions.checkArgument(phone1.equals(list_phone) && phone1.equals(detail_phone), "手机号不一致");
+//            Preconditions.checkArgument(detail_sale.equals(list_sale), "所属销售不一致");
+////            Preconditions.checkArgument(likecar==list_like_car && likecar==detailt_like_car,"意向车型不一致");
+////            Preconditions.checkArgument(buycar==list_buycar && buycar==detail_buycar,"是否订车不一致");
+////            Preconditions.checkArgument(pretime.equals(list_time) && pretime.equals(detail_time),"预计购车时间不一致");
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("新建客户，新建时信息、列表页信息、详情页信息一致");
+//        }
+//
+//    }
 
 
     /**
@@ -846,49 +846,49 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================我的工作-我的回访======================
      */
-    @Ignore //3.0取消
-    @Test
-    public void taskListChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-            crm.updateStatus("RECEPTIVE");
-            String today = dt.getHistoryDate(0); //今天日期
-
-            String phone = "1";
-            for (int i = 0; i < 10; i++) {
-                String a = Integer.toString((int) (Math.random() * 10));
-                phone = phone + a;
-            }
-            customerid = creatCust(name, phone);
-            //完成接待
-
-            //修改创建时间为昨天
-            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
-
-            //PC端今日工作-我的回访数量
-            int pctotal = crm.taskList_PC(today, -1, 1, 50, phone).getInteger("total");
-
-            //app端 已联系+未联系数量
-            int apptotal = crm.taskList_APP(today, 1, 50, phone).getInteger("total");
-
-
-            Preconditions.checkArgument(pctotal == apptotal, "PC" + pctotal + "条，app" + apptotal + "条");
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            try {
-                clearCustomer(customerid);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            saveData("（app）未联系+已联系数量 == （PC）我的回访数量");
-        }
-
-    }
+//    @Ignore //3.0取消
+//    @Test
+//    public void taskListChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//            crm.updateStatus("RECEPTIVE");
+//            String today = dt.getHistoryDate(0); //今天日期
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//            customerid = creatCust(name, phone);
+//            //完成接待
+//
+//            //修改创建时间为昨天
+//            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+//
+//            //PC端今日工作-我的回访数量
+//            int pctotal = crm.taskList_PC(today, -1, 1, 50, phone).getInteger("total");
+//
+//            //app端 已联系+未联系数量
+//            int apptotal = crm.taskList_APP(today, 1, 50, phone).getInteger("total");
+//
+//
+//            Preconditions.checkArgument(pctotal == apptotal, "PC" + pctotal + "条，app" + apptotal + "条");
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            try {
+//                clearCustomer(customerid);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            saveData("（app）未联系+已联系数量 == （PC）我的回访数量");
+//        }
+//
+//    }
 
     //http://192.168.50.2:8081/bug-view-2192.html
     //@Ignore //3.0取消
@@ -938,94 +938,94 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Ignore //3.0取消
-    @Test
-    public void taskListChkNum_delcustomer() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-            String today = dt.getHistoryDate(0); //今天日期
-
-            String phone = "1";
-            for (int i = 0; i < 10; i++) {
-                String a = Integer.toString((int) (Math.random() * 10));
-                phone = phone + a;
-            }
-            customerid = creatCust(name, phone);
-            //完成接待
-
-            Thread.sleep(1000);
-            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
-
-            //PC端今日工作-我的回访数量
-            int pctotal_before = crm.taskList_PC(today, -1, 1, 10, phone).getInteger("total");
-
-            clearCustomer(customerid);
-            customerid = -1L;
-            //PC端今日工作-我的回访数量
-            int pctotal_after = crm.taskList_PC(today, -1, 1, 10, phone).getInteger("total");
-
-            int change = pctotal_before - pctotal_after;
-            Preconditions.checkArgument(change == 1, "删除顾客，顾客未在我的回访中消失");
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            try {
-                clearCustomer(customerid);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            saveData("删除顾客，当天我的回访数量-1");
-        }
-
-    }
+//    @Ignore //3.0取消
+//    @Test
+//    public void taskListChkNum_delcustomer() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//            String today = dt.getHistoryDate(0); //今天日期
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//            customerid = creatCust(name, phone);
+//            //完成接待
+//
+//            Thread.sleep(1000);
+//            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+//
+//            //PC端今日工作-我的回访数量
+//            int pctotal_before = crm.taskList_PC(today, -1, 1, 10, phone).getInteger("total");
+//
+//            clearCustomer(customerid);
+//            customerid = -1L;
+//            //PC端今日工作-我的回访数量
+//            int pctotal_after = crm.taskList_PC(today, -1, 1, 10, phone).getInteger("total");
+//
+//            int change = pctotal_before - pctotal_after;
+//            Preconditions.checkArgument(change == 1, "删除顾客，顾客未在我的回访中消失");
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            try {
+//                clearCustomer(customerid);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            saveData("删除顾客，当天我的回访数量-1");
+//        }
+//
+//    }
 
     /**
      * ====================我的工作-今日来访======================
      */
 
-    @Ignore //3.0取消
-    @Test
-    public void addCustChkTodayListnum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-            String phone = "1";
-            for (int i = 0; i < 10; i++) {
-                String a = Integer.toString((int) (Math.random() * 10));
-                phone = phone + a;
-            }
-
-            freeFirstLogin();
-
-            //PC端今日工作-今日来访数量
-            int todaylist_before = crm.todayListPC(-1, "", "", "", 0, 0, 1, 200).getInteger("total");
-
-            creatCust(name, phone);
-
-
-            //PC端今日工作-今日来访数量
-            int todaylist_after = crm.todayListPC(-1, "", "", "", 0, 0, 1, 200).getInteger("total");
-
-            int change = todaylist_after - todaylist_before;
-            Preconditions.checkArgument(change == 1, "增加一个顾客，来访量增加" + change);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app创建客户，今日来访+1");
-        }
-
-    }
+//    @Ignore //3.0取消
+//    @Test
+//    public void addCustChkTodayListnum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//
+//            freeFirstLogin();
+//
+//            //PC端今日工作-今日来访数量
+//            int todaylist_before = crm.todayListPC(-1, "", "", "", 0, 0, 1, 200).getInteger("total");
+//
+//            creatCust(name, phone);
+//
+//
+//            //PC端今日工作-今日来访数量
+//            int todaylist_after = crm.todayListPC(-1, "", "", "", 0, 0, 1, 200).getInteger("total");
+//
+//            int change = todaylist_after - todaylist_before;
+//            Preconditions.checkArgument(change == 1, "增加一个顾客，来访量增加" + change);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("app创建客户，今日来访+1");
+//        }
+//
+//    }
 
     //@Test //2.1取消手机号合并 这里不做校验
     public void addCustRePhoneChkTodayListnum() {
@@ -1512,95 +1512,95 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 //
 //    }
 
-    @Ignore //3.0取消
-    @Test
-    public void customerListDelChkTodayList() {
-        logger.logCaseStart(caseResult.getCaseName());
-        long customerid = -1L;
-        try {
-
-            String phone = "1";
-            for (int i = 0; i < 10; i++) {
-                String a = Integer.toString((int) (Math.random() * 10));
-                phone = phone + a;
-            }
-            customerid = creatCust(name, phone);
-            //完成接待
-
-            Thread.sleep(1000);
-
-            //查看今日来访顾客信息存在
-            boolean exist = false;
-            JSONArray list2 = crm.todayListPC(-1, "", "", "", 0, 0, 1, 100).getJSONArray("list");
-            for (int i = 0; i < list2.size(); i++) {
-                JSONObject single = list2.getJSONObject(i);
-                if (single.getString("customer_id").equals(String.valueOf(customerid))) {
-                    exist = true;
-                    break;
-                }
-            }
-            Preconditions.checkArgument(exist == true, "新增顾客后，今日来访中无顾客信息");
-
-            //删除客户
-            crm.login(cstm.xszj, cstm.pwd);
-            crm.customerDeletePC(customerid);
-
-
-            //查看今日接待数量
-            exist = true;
-            JSONArray list3 = crm.todayListPC(-1, "", "", "", 0, 0, 1, 100).getJSONArray("list");
-            for (int i = 0; i < list3.size(); i++) {
-                JSONObject single = list3.getJSONObject(i);
-                if (single.getString("customer_id").equals(String.valueOf(customerid))) {
-                    exist = false;
-                }
-            }
-            Preconditions.checkArgument(exist == true, "未删除");
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            crm.login(cstm.lxqgw, cstm.pwd);
-            saveData("我的客户删除一条，今日来访信息删除");
-        }
-
-    }
-
-
-    @Ignore //3.0取消 手机号不可重复
-    @Test
-    public void addVisitRePhoneChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-            crm.updateStatus("RECEPTIVE");
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name, phone);
-
-            int size1 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
-
-            creatCust(name, phone);
-
-            int size2 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
-
-            int change = size2 - size1;
-
-            Preconditions.checkArgument(change == 1, "来访记录条数增加了" + change);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("V1.1 app销售顾问创建已存在手机号客户，顾客来访记录+1");
-        }
-
-    }
+//    @Ignore //3.0取消
+//    @Test
+//    public void customerListDelChkTodayList() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        long customerid = -1L;
+//        try {
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10; i++) {
+//                String a = Integer.toString((int) (Math.random() * 10));
+//                phone = phone + a;
+//            }
+//            customerid = creatCust(name, phone);
+//            //完成接待
+//
+//            Thread.sleep(1000);
+//
+//            //查看今日来访顾客信息存在
+//            boolean exist = false;
+//            JSONArray list2 = crm.todayListPC(-1, "", "", "", 0, 0, 1, 100).getJSONArray("list");
+//            for (int i = 0; i < list2.size(); i++) {
+//                JSONObject single = list2.getJSONObject(i);
+//                if (single.getString("customer_id").equals(String.valueOf(customerid))) {
+//                    exist = true;
+//                    break;
+//                }
+//            }
+//            Preconditions.checkArgument(exist == true, "新增顾客后，今日来访中无顾客信息");
+//
+//            //删除客户
+//            crm.login(cstm.xszj, cstm.pwd);
+//            crm.customerDeletePC(customerid);
+//
+//
+//            //查看今日接待数量
+//            exist = true;
+//            JSONArray list3 = crm.todayListPC(-1, "", "", "", 0, 0, 1, 100).getJSONArray("list");
+//            for (int i = 0; i < list3.size(); i++) {
+//                JSONObject single = list3.getJSONObject(i);
+//                if (single.getString("customer_id").equals(String.valueOf(customerid))) {
+//                    exist = false;
+//                }
+//            }
+//            Preconditions.checkArgument(exist == true, "未删除");
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            crm.login(cstm.lxqgw, cstm.pwd);
+//            saveData("我的客户删除一条，今日来访信息删除");
+//        }
+//
+//    }
+//
+//
+//    @Ignore //3.0取消 手机号不可重复
+//    @Test
+//    public void addVisitRePhoneChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//            crm.updateStatus("RECEPTIVE");
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            customerid = creatCust(name, phone);
+//
+//            int size1 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
+//
+//            creatCust(name, phone);
+//
+//            int size2 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
+//
+//            int change = size2 - size1;
+//
+//            Preconditions.checkArgument(change == 1, "来访记录条数增加了" + change);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("V1.1 app销售顾问创建已存在手机号客户，顾客来访记录+1");
+//        }
+//
+//    }
 
 
 //    @Test
@@ -1879,60 +1879,60 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ==============展厅接待=================
      */
-    @Ignore //3.0取消
-    @Test
-    public void custTodayListChkToday() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String today = dt.getHistoryDate(0);
-            JSONArray list = crm.customerTodayList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                String list_date = obj.getString("day_date");
-                Preconditions.checkArgument(list_date.equals(today), "接待日期为" + list_date);
-            }
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("展厅接待展示当天记录");
-        }
-    }
-
-    @Ignore //3.0取消
-    @Test
-    public void custTodayListNewCUstChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int before = crm.customerTodayList().getInteger("total");
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            phone = phone.substring(3);
-
-            //获取顾客id
-            Long customerid1 = crm.getCustomerId();
-            int after = crm.customerTodayList().getInteger("total");
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid1, 7, name, phone, "H级客户-----" + System.currentTimeMillis() + "自动化-----");
-            //完成接待
-            crm.finishReception(customerid1, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
-            int after2 = crm.customerTodayList().getInteger("total");
-            int change = after - before;
-            Preconditions.checkArgument(change == 1, "仅点击创建按钮，增加了" + change);
-            int change2 = after2 - after;
-            Preconditions.checkArgument(change2 == 0, "保存后，增加了" + change2);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("仅点击创建按钮，展厅接待记录+1；保存后，记录数不变");
-        }
-    }
+//    @Ignore //3.0取消
+//    @Test
+//    public void custTodayListChkToday() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            String today = dt.getHistoryDate(0);
+//            JSONArray list = crm.customerTodayList().getJSONArray("list");
+//            for (int i = 0; i < list.size(); i++) {
+//                JSONObject obj = list.getJSONObject(i);
+//                String list_date = obj.getString("day_date");
+//                Preconditions.checkArgument(list_date.equals(today), "接待日期为" + list_date);
+//            }
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("展厅接待展示当天记录");
+//        }
+//    }
+//
+//    @Ignore //3.0取消
+//    @Test
+//    public void custTodayListNewCUstChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            int before = crm.customerTodayList().getInteger("total");
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            phone = phone.substring(3);
+//
+//            //获取顾客id
+//            Long customerid1 = crm.getCustomerId();
+//            int after = crm.customerTodayList().getInteger("total");
+//            //创建某级客户
+//            JSONObject customer = crm.customerEdit_onlyNec(customerid1, 7, name, phone, "H级客户-----" + System.currentTimeMillis() + "自动化-----");
+//            //完成接待
+//            crm.finishReception(customerid1, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
+//            int after2 = crm.customerTodayList().getInteger("total");
+//            int change = after - before;
+//            Preconditions.checkArgument(change == 1, "仅点击创建按钮，增加了" + change);
+//            int change2 = after2 - after;
+//            Preconditions.checkArgument(change2 == 0, "保存后，增加了" + change2);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("仅点击创建按钮，展厅接待记录+1；保存后，记录数不变");
+//        }
+//    }
 
 
     //前台点击创建接待按钮创建顾客

@@ -333,46 +333,46 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //----------------------删除--------------------
-    @Ignore
-    @Test
-    public void customerListDel() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            String phone1 = phone.substring(3);
-            customerid = creatCust(name, phone);
-            //完成接待
-
-            //姓名+手机号查询
-            int total = crm.customerListPC("", -1, name, phone1, 0, 0, 1, 1).getInteger("total");
-            Preconditions.checkArgument(total == 1, "删除前查询，期待有一条记录，实际" + total);
-
-            //总经理登陆
-            crm.login(cstm.xszj, cstm.pwd);
-            //删除顾客
-            crm.customerDeletePC(customerid);
-
-            //销售顾问登陆
-            crm.login(cstm.lxqgw, cstm.pwd);
-            //再次查询应无结果
-            int total2 = crm.customerListPC("", -1, name, phone1, 0, 0, 1, 1).getInteger("total");
-            Preconditions.checkArgument(total2 == 0, "删除后查询，期待无结果，实际" + total);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            crm.login(cstm.lxqgw, cstm.pwd);
-            saveData("我的客户页面删除后再查询");
-        }
-
-    }
+//    @Ignore
+//    @Test
+//    public void customerListDel() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            String phone1 = phone.substring(3);
+//            customerid = creatCust(name, phone);
+//            //完成接待
+//
+//            //姓名+手机号查询
+//            int total = crm.customerListPC("", -1, name, phone1, 0, 0, 1, 1).getInteger("total");
+//            Preconditions.checkArgument(total == 1, "删除前查询，期待有一条记录，实际" + total);
+//
+//            //总经理登陆
+//            crm.login(cstm.xszj, cstm.pwd);
+//            //删除顾客
+//            crm.customerDeletePC(customerid);
+//
+//            //销售顾问登陆
+//            crm.login(cstm.lxqgw, cstm.pwd);
+//            //再次查询应无结果
+//            int total2 = crm.customerListPC("", -1, name, phone1, 0, 0, 1, 1).getInteger("total");
+//            Preconditions.checkArgument(total2 == 0, "删除后查询，期待无结果，实际" + total);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            crm.login(cstm.lxqgw, cstm.pwd);
+//            saveData("我的客户页面删除后再查询");
+//        }
+//
+//    }
 
     //@Test
     public void customerListDelInService() {
@@ -402,35 +402,35 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Ignore
-    @Test
-    public void customerListDelServiced() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Long customerid = -1L;
-        try {
-
-            long level_id = 7L;
-            String phone = "" + System.currentTimeMillis();
-            String name = phone;
-            customerid = creatCust(name, phone);
-
-            //总经理登陆
-            crm.login(cstm.xszj, cstm.pwd);
-            //删除顾客
-            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "删除失败");
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            crm.login(cstm.lxqgw, cstm.pwd);
-            saveData("删除已完成接待客户");
-        }
-
-    }
+//    @Ignore
+//    @Test
+//    public void customerListDelServiced() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        Long customerid = -1L;
+//        try {
+//
+//            long level_id = 7L;
+//            String phone = "" + System.currentTimeMillis();
+//            String name = phone;
+//            customerid = creatCust(name, phone);
+//
+//            //总经理登陆
+//            crm.login(cstm.xszj, cstm.pwd);
+//            //删除顾客
+//            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
+//            Preconditions.checkArgument(code == 1000, "删除失败");
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            crm.login(cstm.lxqgw, cstm.pwd);
+//            saveData("删除已完成接待客户");
+//        }
+//
+//    }
 
 
     /**
@@ -1179,7 +1179,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long starttime = dt.getHistoryDateTimestamp(1);
             Long endtime = dt.getHistoryDateTimestamp(2);
-            String car = "辽ZDH" + (int) ((Math.random() * 9 + 1) * 100);
+            String car = "黑ZDH" + (int) ((Math.random() * 9 + 1) * 100);
             String carid = "ZDHZDHZDH" + (long) ((Math.random() * 9 + 1) * 10000000);
             //新增
             crm.login(cstm.xszj, cstm.pwd);
