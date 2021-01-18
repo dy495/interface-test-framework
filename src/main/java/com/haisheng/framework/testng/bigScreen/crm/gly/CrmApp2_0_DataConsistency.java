@@ -657,7 +657,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         crm.appletLoginToken(EnumAppletToken.BSJ_GLY_DAILY.getToken());
         String appointment_time = "09:00";
         long timelist = crm.timeList("REPAIR", date).getJSONArray("list").getJSONObject(0).getLong("id");
-        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time, timelist);
+        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, timelist);
         Long maintain_id = obj.getLong("appointment_id");
         a[1] = Long.toString(maintain_id);
         //保养顾问登陆，点击接待按钮

@@ -625,7 +625,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, date, "", (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
             UserUtil.login(zjl);
             JSONObject response1 = crm.returnVisitRecordAfterSalePage(1, size, "");
             int total1 = response1.getInteger("total");
@@ -1214,7 +1214,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         try {
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, date, "", (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
             //完成接待
             int afterRecordId = method.getAfterRecordId(false, 30);
             method.completeReception(String.valueOf(afterRecordId));

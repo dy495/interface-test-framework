@@ -1681,7 +1681,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约保养
-    public JSONObject appointmentMaintain(Long my_car_id, String customer_name, String customer_phone_number, String appointment_date, String appointment_time, Long time_range_id) throws Exception {
+    public JSONObject appointmentMaintain(Long my_car_id, String customer_name, String customer_phone_number ,Long time_range_id)  {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);

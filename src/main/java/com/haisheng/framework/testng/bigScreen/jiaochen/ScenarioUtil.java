@@ -3767,6 +3767,138 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
+    /**
+     * @description :新建分销员
+     * @date :2021/1/13 11:47
+     **/
+
+    public JSONObject SalesCreate(pccreateStoreSales er) {
+        String url = "/business-jiaochen/pc/store/sales/create";
+        JSONObject json1=new JSONObject();
+        json1.put("sales_phone",er.sales_phone);
+        json1.put("sales_name",er.sales_name);
+        json1.put("shop_id",er.shop_id);
+        json1.put("shop_name",er.shop_name);
+        json1.put("dept_name",er.dept_name);
+        json1.put("job_name",er.job_name);
+
+        return invokeApi(url,json1,er.checkcode);
+    }
+    public JSONObject SalesList(String page,String size,String sales_phone, String shop_id) {
+        String url = "/business-jiaochen/pc/store/sales/create";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("sales_phone",sales_phone);
+        json1.put("shop_id",shop_id);
+
+        return invokeApi(url,json1);
+    }
+    public JSONObject StoreCommodityList(String page,String size,String commodity_name) {
+        String url = "/business-jiaochen/pc/store/commodity/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("commodity_name",commodity_name);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :新建商城套餐
+     * @date :2021/1/13 14:17
+     **/
+    public JSONObject CreateStoreCommodity(pcCreateStoreCommodity er) {
+        String url = "/business-jiaochen/pc/store/commodity/page";
+        JSONObject json1=new JSONObject();
+        json1.put("commodity_name",er.commodity_name);
+        json1.put("commodity_specification",er.commodity_specification);
+        json1.put("affiliation",er.affiliation);
+        json1.put("price",er.price);
+        json1.put("commission",er.commission);
+        json1.put("invitation_payment",er.invitation_payment);
+
+        return invokeApi(url,json1,er.checkcode);
+    }
+    //商品套餐详情
+    public JSONObject StoreCommodityDetail(String id) {
+        String url = "/business-jiaochen/pc/store/commodity/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :修改商城套餐
+     * @date :2021/1/13 14:17
+     **/
+    public JSONObject EditStoreCommodity(pcCreateStoreCommodity er) {
+        String url = "/business-jiaochen/pc/store/commodity/edit";
+        JSONObject json1=new JSONObject();
+        json1.put("id",er.id);
+        json1.put("commodity_name",er.commodity_name);
+        json1.put("commodity_specification",er.commodity_specification);
+        json1.put("affiliation",er.affiliation);
+        json1.put("price",er.price);
+        json1.put("commission",er.commission);
+        json1.put("invitation_payment",er.invitation_payment);
+        json1.put("volume",er.volume);
+
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :订单商城
+     * @date :2021/1/13 15:35
+     **/
+    public JSONObject StoreorderPage(String page,String size,String bind_phone,String commodity_name,String pay_time,String order_number) {
+        String url = "/business-jiaochen/pc/store/order/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("bind_phone",bind_phone);
+        json1.put("commodity_name",commodity_name);
+        json1.put("pay_time",pay_time);
+        json1.put("order_number",order_number);
+
+        return invokeApi(url,json1);
+    }
+    //商品订单详情
+    public JSONObject StoreOrderDetail(String order_number) {
+        String url = "/business-jiaochen/pc/store/order/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("order_number",order_number);
+
+        return invokeApi(url,json1);
+    }
+    //编辑订单
+    public JSONObject EditOrder(pcEditStoreOrder er) {
+        String url = "/business-jiaochen/pc/store/order/edit";
+        JSONObject json1=new JSONObject();
+        json1.put("order_number",er.order_number);
+        json1.put("express_number",er.express_number);
+        json1.put("sales_phone",er.sales_phone);
+        json1.put("bind_phone",er.bind_phone);
+        json1.put("commission",er.commission);
+        json1.put("invitation_payment",er.invitation_payment);
+        json1.put("remark",er.remark);
+
+        return invokeApi(url,json1);
+    }
+
+   /**
+    * @description :智能提醒
+    * @date :2021/1/13 19:45
+    **/
+   public JSONObject remindPage(String page,String size,String item) {
+       String url = "/business-jiaochen/pc/manage/intelligent-remind/page";
+       JSONObject json1=new JSONObject();
+       json1.put("page",page);
+       json1.put("size",size);
+       json1.put("item",item);
+
+       return invokeApi(url,json1);
+   }
+
 
 
 }
