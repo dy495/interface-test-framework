@@ -330,10 +330,10 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
             JSONArray reportlist = xd.downldTaskType().getJSONArray("list");
             for (int i = 0 ; i < reportlist.size();i++){
                 JSONObject obj = reportlist.getJSONObject(i);
-                JSONArray list = xd.downldPage(1,100,null,obj.getString("type"),null,null).getJSONArray("list");
+                JSONArray list = xd.downldPage(1,100,null,obj.getString("value"),null,null).getJSONArray("list");
                 for (int j = 0 ; j < list.size();j++){
-                    String reporttype = list.getJSONObject(j).getString("report_type");
-                    Preconditions.checkArgument(reporttype.equals(obj.getString("type")),"根据"+obj.getString("type")+"查询，结果包含"+reporttype);
+                    String tasktype = list.getJSONObject(j).getString("task_type");
+                    Preconditions.checkArgument(tasktype.equals(obj.getString("type")),"根据"+obj.getString("type")+"查询，结果包含"+tasktype);
                 }
             }
 
