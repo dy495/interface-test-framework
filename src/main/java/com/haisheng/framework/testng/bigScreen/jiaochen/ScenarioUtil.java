@@ -10,11 +10,14 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.util.HttpExecutorUtil;
+import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 轿辰接口类
@@ -3819,6 +3822,8 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1,er.checkcode);
     }
+
+
     //商品套餐详情
     public JSONObject StoreCommodityDetail(String id) {
         String url = "/business-jiaochen/pc/store/commodity/detail";
@@ -3899,6 +3904,18 @@ public class ScenarioUtil extends TestCaseCommon {
        return invokeApi(url,json1);
    }
 
+    public JSONObject createRemindMethod(pccreateRemind er) {
+        String url = "/jiaochen/pc/manage/intelligent-remind/add";
+        JSONObject json1=new JSONObject();
+        json1.put("item",er.item);
+        json1.put("content",er.content);
+        json1.put("vouchers",er.vouchers);
+        json1.put("effective_days",er.effective_days);
+        json1.put("days",er.days);
+        json1.put("mileage",er.mileage);
+
+        return invokeApi(url,json1);
+    }
 
 
 }

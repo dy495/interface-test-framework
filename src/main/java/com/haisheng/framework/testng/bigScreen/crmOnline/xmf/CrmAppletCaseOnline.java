@@ -1119,7 +1119,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             long timelist = pf.appointmentTimeListO("MAINTAIN",dt.getHistoryDate(2)).getLong("time_id");
-            int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, appointment_date, "09:00", timelist).getInteger("code");
+            int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, timelist).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

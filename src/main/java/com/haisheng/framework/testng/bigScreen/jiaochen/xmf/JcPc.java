@@ -35,16 +35,13 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     JsonPathUtil jpu = new JsonPathUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
+
     public int page = 1;
     public int size = 50;
     public String name = "创建角色xia";
     public String email = "";
     public String phone = "";
 
-    Integer status = 1;
-    String type = "PHONE";
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

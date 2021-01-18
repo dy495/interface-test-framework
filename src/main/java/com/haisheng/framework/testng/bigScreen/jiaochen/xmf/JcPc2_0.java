@@ -8,10 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateStoreCommodity;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateStoreSales;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -261,9 +258,31 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             int code=jc.CreateStoreCommodity( er).getInteger("code");
             Preconditions.checkArgument(code==1001,"创建商城套餐异常");
             er.commodity_name="保温杯"+random.nextInt(10);
-            er.affiliation="一二三四五六七八九十一二三四五六七八九十红色";
+            er.affiliation="一二三四五六七八九十一二三四五六七八九十红色";  //规格>20
             int code2=jc.CreateStoreCommodity( er).getInteger("code");
             Preconditions.checkArgument(code2==1001,"创建商城套餐异常");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建商城套餐异常格式验证");
+        }
+    }
+
+    @Test  //编辑商城套餐
+    public void EditCommodity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcCreateStoreCommodity er=new pcCreateStoreCommodity();
+            er.commodity_name="一保温杯"+random.nextInt(10);
+            er.affiliation="红色";    //规格
+            er.price=89.99;       //单价
+            er.commission=99.99;  //佣金
+            er.invitation_payment=1.99;   //邀请奖励金
+            er.id=pp.StoreCommodity;   //编辑的商品套餐id
+
+            int code=jc.EditStoreCommodity( er).getInteger("code");
+
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -284,6 +303,54 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("pc-新建商城套餐单接口");
         }
+    }
+
+    @Test  //新建智能提醒异常情况
+    public void CreateRemindAB() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pccreateRemind er=new pccreateRemind();
+            er.item=pp.String_20+"提醒标题";
+            er.content="提醒内容";
+            er.vouchers=pp.vouchers;    //卡券
+            er.effective_days="1";     //卡券有效期
+//            er.days="1";            //提醒天数
+            er.mileage="200";        //提醒公里数
+            er.checkcode=false;
+            int code=jc.createRemindMethod( er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"创建商城套餐异常");
+            er.item="智能提醒A"+random.nextInt(10);
+            er.content=pp.String_200+"提醒内容";
+            int code2=jc.createRemindMethod( er).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"创建商城套餐异常");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建智能提醒异常格式验证");
+        }
+    }
+
+    @Test  //新建智能提醒
+    public void CreateRemind() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pccreateRemind er=new pccreateRemind();
+            er.item="提醒标题";
+            er.content="提醒内容";
+            er.vouchers=pp.vouchers;    //卡券
+            er.effective_days="1";     //卡券有效期
+//            er.days="1";            //提醒天数
+            er.mileage="200";        //提醒公里数
+           Integer RemindId =jc.createRemindMethod( er).getInteger("id");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建智能提醒");
+        }
+
+
+
     }
 
 

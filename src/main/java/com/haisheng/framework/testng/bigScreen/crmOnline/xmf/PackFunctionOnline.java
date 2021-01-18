@@ -394,8 +394,8 @@ public class PackFunctionOnline {
     public JSONObject appointmentTimeListO(String type, String appointment_date) throws Exception {
         JSONObject result = new JSONObject();
         JSONArray object = crm.timeList(type, appointment_date).getJSONArray("list");
-        for (int i = 0; i < object.size(); i++) {
-            JSONObject data = object.getJSONObject(i);
+        for (int i = 1; i < object.size(); i++) {
+            JSONObject data = object.getJSONObject(object.size()-i);
             int left_num = data.getInteger("left_num");
             if (left_num != 0) {
                 Long id = data.getLong("id");

@@ -16,7 +16,6 @@ public class PublicParm {
     public String name = "";
     public String customerPhone = "15037286013";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/intefer/jcBase64.txt";
-
     public String shichang = "";
     public String shichangPassword = "";
     public String verification_code = "OGWTJK";   //夏夏的核销码
@@ -44,13 +43,26 @@ public class PublicParm {
 
     public String dzphone = "13412010085";   //中关村店长
     public String dzcode = "000000";
+    //---------2.0---------
+    public String String_20="一二三四五六七八九十一二三四五六七八九十";
+    public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+    public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
 
+    //---------2.0---------
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
     public JSONArray roleList = getRoleList();
+    public JSONArray vouchers = getvouchersList();
+
+    public JSONArray getvouchersList() {
+        JSONArray moduleId2 = new JSONArray();
+        moduleId2.add(136);  //TODO:新增卡券名字
+        moduleId2.add(137);
+        return moduleId2;
+    }
 
     public JSONArray getRoleList() {
         JSONArray moduleId2 = new JSONArray();
