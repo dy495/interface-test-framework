@@ -17,6 +17,9 @@
 <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.dzy.StoreDataForDzy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop.StoreDataForHS"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppDataOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppSystemOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianPCSystemOnline"></class>
         </classes>
     </test>
 </suite>
