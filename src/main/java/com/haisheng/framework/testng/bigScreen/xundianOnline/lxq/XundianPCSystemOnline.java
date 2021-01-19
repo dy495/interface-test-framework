@@ -131,7 +131,9 @@ public class XundianPCSystemOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
-    @Test
+
+
+    @Test //bug 6818
     public void myReportFilter1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
