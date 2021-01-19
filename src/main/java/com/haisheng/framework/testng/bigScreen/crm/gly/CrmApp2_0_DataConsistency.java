@@ -75,7 +75,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.gateway = "";
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        commonConfig.produce = EnumProduce.BSJ.name();
+        commonConfig.product = EnumProduce.BSJ.name();
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName() + commonConfig.checklistQaOwner);
         //replace ding push conf

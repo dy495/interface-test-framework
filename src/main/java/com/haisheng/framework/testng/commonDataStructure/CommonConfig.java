@@ -39,5 +39,5 @@ public class CommonConfig {
     public String shopId;
     public String caseName = "login";
     public String referer;
-    public String produce;
+    public String product;
 }

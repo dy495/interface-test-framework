@@ -42,7 +42,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
 
-        commonConfig.produce = EnumProduce.JC.name();
+        commonConfig.product = EnumProduce.JC.name();
 
 
         //replace backend gateway url

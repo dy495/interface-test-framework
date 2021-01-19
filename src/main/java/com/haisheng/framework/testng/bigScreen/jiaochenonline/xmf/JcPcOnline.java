@@ -6,12 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmScenarioUtilOnlineX;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -23,9 +18,7 @@ import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -65,7 +58,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
-        commonConfig.produce = EnumTestProduce.JIAOCHEN_ONLINE.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

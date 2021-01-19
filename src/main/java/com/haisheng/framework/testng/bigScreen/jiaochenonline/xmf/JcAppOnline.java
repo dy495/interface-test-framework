@@ -46,7 +46,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
-        commonConfig.produce = EnumTestProduce.JIAOCHEN_ONLINE.getName();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getName();
 
 //        commonConfig.referer=getJcReferOnline();
 

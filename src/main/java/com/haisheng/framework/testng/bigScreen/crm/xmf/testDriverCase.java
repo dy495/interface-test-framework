@@ -44,7 +44,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce = EnumProduce.BSJ.name();
+        commonConfig.product = EnumProduce.BSJ.name();
         commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
         //replace backend gateway url
         //commonConfig.gateway = "";

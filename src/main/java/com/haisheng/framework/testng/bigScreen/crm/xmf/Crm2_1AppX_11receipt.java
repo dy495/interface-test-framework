@@ -46,7 +46,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce = EnumProduce.BSJ.name();
+        commonConfig.product = EnumProduce.BSJ.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

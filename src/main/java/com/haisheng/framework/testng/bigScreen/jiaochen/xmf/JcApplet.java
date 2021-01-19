@@ -56,7 +56,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce = EnumProduce.JC.name();
+        commonConfig.product = EnumProduce.JC.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

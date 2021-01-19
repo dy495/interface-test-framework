@@ -1,13 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -19,7 +17,6 @@ import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -51,7 +48,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
-        commonConfig.produce = EnumTestProduce.JIAOCHEN_DAILY.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

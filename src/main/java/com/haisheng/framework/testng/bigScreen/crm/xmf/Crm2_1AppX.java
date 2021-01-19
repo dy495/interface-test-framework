@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crm.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.inject.internal.cglib.proxy.$UndeclaredThrowableException;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
@@ -57,7 +56,7 @@ public class Crm2_1AppX extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce = EnumProduce.BSJ.name();
+        commonConfig.product = EnumProduce.BSJ.name();
         commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
 
         //replace backend gateway url

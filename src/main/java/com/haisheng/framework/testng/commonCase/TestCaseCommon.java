@@ -520,7 +520,7 @@ public class TestCaseCommon {
     }
 
     public void setBasicParaToDB(String caseDesc) {
-        String desc = StringUtils.isEmpty(commonConfig.produce) ? caseDesc : commonConfig.produce + "_" + caseDesc;
+        String desc = StringUtils.isEmpty(commonConfig.product) ? caseDesc : commonConfig.product + "_" + caseDesc;
         caseResult.setCaseDescription(desc);
         caseResult.setExpect("见描述");
 

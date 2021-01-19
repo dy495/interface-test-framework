@@ -48,7 +48,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
 
-        commonConfig.produce = EnumProduce.JC.name();
+        commonConfig.product = EnumProduce.JC.name();
         //replace backend gateway url
         //commonConfig.gateway = "";
 

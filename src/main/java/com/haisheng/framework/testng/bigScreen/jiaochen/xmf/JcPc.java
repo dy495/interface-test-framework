@@ -16,14 +16,10 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -59,7 +55,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
-        commonConfig.produce = EnumTestProduce.JIAOCHEN_DAILY.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

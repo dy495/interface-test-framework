@@ -45,7 +45,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.produce = EnumTestProduce.JIAOCHEN_ONLINE.getName();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getName();
 
 
         //replace backend gateway url
