@@ -19,9 +19,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 有问题处请@wangmin
- */
 public class manageCase extends TestCaseCommon implements TestCaseStd {
     Integer page = 1;
     Integer size = 50;
