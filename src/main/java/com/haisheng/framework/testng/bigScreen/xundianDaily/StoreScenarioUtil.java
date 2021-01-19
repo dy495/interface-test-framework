@@ -2130,7 +2130,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     /**
      * @description:2.1 获取卡片列表
-     * @author: zt
+     * @author:
      * @time:
      */
     public JSONObject cardList(String page_type, Integer last_value,Integer size) throws Exception {

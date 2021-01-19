@@ -10,11 +10,15 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -26,10 +30,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    MendianInfo info = new MendianInfo();
-
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
+    MendianInfoOnline info = new MendianInfoOnline();
 
     @BeforeClass
     @Override
@@ -61,7 +64,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("xundian " + xd);
 
-        xd.login("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
+        xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
 
 
     }
@@ -189,18 +192,26 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public void wwcSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取待办列表事项总数totalsum
-            Long totalNum = xd.task_list(1, 50, 0, null).getLong("total");
-            //待办列表长度
-            JSONArray dbList = xd.task_list(1, 50, 0, null).getJSONArray("list");
+            Long lastValue = null;
+            JSONArray jsonArray;
+            int count = 0;
+            do {
+                JSONObject response = xd.task_list(1, 10, 0, lastValue);
+                lastValue = response.getLong("last_value");
+                jsonArray = response.getJSONArray("list");
+                count += jsonArray.size();
+            } while (jsonArray.size() == 10);
 
-            checkArgument(totalNum == dbList.size(), "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + dbList.size());
+            //获取待办列表事项总数totalnum
+            int totalnum = xd.task_list(1,10,0,null).getInteger("total");
+            CommonUtil.valueView(count,totalnum);
+            checkArgument(totalnum == count, "未完成列表数量" + totalnum + "!=未完成的待办事项的展示项" + count);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-                    saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
+            saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
         }
     }
 
@@ -242,37 +253,38 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     }
 
-
-    //[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
-//    @Test
-//    public void todayNum() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray homeList = md.cardList("HOME_BELOW",null,10).getJSONArray("list");
-////            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
-//            JSONArray resultList = homeList.getJSONObject(0).getJSONArray("result");
+    @Test
+    public void todayNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+//            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
+            JSONObject resultList = homeList.getJSONObject(0).getJSONObject("result");
 //            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
-//
-//            int todayUvCount = 0;
-//            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
-//
-//            for(int i=0;i<trendList.size();i++){
-//                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
-//                if(uv==null){
-//                    uv=0;
-//;                }
-//                todayUvCount += uv;
-//            }
-//            checkArgument(todayUv <= todayUvCount, "首页实时客流分析中今日到访人数" + todayUv + "趋势图中各时间段人数" + todayUvCount);
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("首页实时客流分钟中今日到访人数<= 趋势图中今天各时段人数之和");
-//        }
-//
-//    }
+            Integer todayUv = resultList.getJSONObject("total_number").getInteger("today_uv");
+
+            int todayUvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
+                if (uv == null) {
+                    uv = 0;
+                    ;
+                }
+                todayUvCount += uv;
+            }
+            CommonUtil.valueView(todayUv, todayUvCount);
+            checkArgument(todayUv <= todayUvCount, "app首页实时客流分析中今日到访人数" + todayUv + "app趋势图中各时间段人数" + todayUvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
+        }
+
+    }
 
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {

@@ -130,7 +130,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray bgList = xd.shopChecksPage(1,10,info.shop_id_01).getJSONArray("list");
+            JSONArray bgList = xd.shopChecksPage(1, 10, info.shop_id_01).getJSONArray("list");
             Integer bgId = bgList.getJSONObject(0).getInteger("id");
             // 获取报告中不合格不合格项数，合格项数，不适用项数,巡店者，提交说明
             Integer inappropriate_num = xd.shopChecksDetail(bgId, info.shop_id_01).getInteger("inappropriate_num");
@@ -143,7 +143,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONArray shopCHeckStatus = xd.getShopChecksPage(info.shop_id_01, null, null, "", "", "", 10, null).getJSONArray("list");
             Long id2 = shopCHeckStatus.getJSONObject(0).getLong("id");
 //            Long bgId1 = bgId.longValue();
-            JSONArray checkListId = xd.patrol_detail(info.shop_id_01,id2).getJSONArray("list");
+            JSONArray checkListId = xd.patrol_detail(info.shop_id_01, id2).getJSONArray("list");
             Long id3 = checkListId.getJSONObject(0).getLong("id");
             JSONObject shopCheck = xd.getShopChecksDetail(id2, info.shop_id_01, id3, null);
             Integer inappropriate_num1 = shopCheck.getInteger("inappropriate_num");
@@ -170,32 +170,32 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
-//    @Test
-//    public void wwcSum() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //获取待办列表事项总数totalsum
-//            Long totalNum = xd.task_list(1, 10, 0, null).getLong("total");
-//            double number = Math.ceil(totalNum/10);
-//            //待办列表长度
-//            int count = 0;
-//            Long last_value = 1L;
-//            for(int i=0;i<number;i++){
-//                JSONArray dbList = xd.task_list(null, 10, 0, last_value).getJSONArray("list");
-//                Long last_valuedata = xd.
-//                count += dbList.size();
-//            }
-//
-//
-//            checkArgument(totalNum == count, "未完成列表数量" + totalNum + "!=未完成的待办事项的展示项" + count);
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//                    saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
-//        }
-//    }
+    @Test
+    public void wwcSum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long lastValue = null;
+            JSONArray jsonArray;
+            int count = 0;
+            do {
+                JSONObject response = xd.task_list(1, 10, 0, lastValue);
+                lastValue = response.getLong("last_value");
+                jsonArray = response.getJSONArray("list");
+                count += jsonArray.size();
+            } while (jsonArray.size() == 10);
+
+            //获取待办列表事项总数totalnum
+            int totalnum = xd.task_list(1,10,0,null).getInteger("total");
+            CommonUtil.valueView(count,totalnum);
+            checkArgument(totalnum == count, "未完成列表数量" + totalnum + "!=未完成的待办事项的展示项" + count);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
+        }
+    }
 
 
 //    app账号下当前门店数量==pc该账号下巡店中心列表的数量
@@ -213,7 +213,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-                    saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
+            saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
         }
 
     }
@@ -224,7 +224,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
-            Integer pcCustomerNum = md.customerFlowList("","","","","",null,1,10,"").getInteger("total");
+            Integer pcCustomerNum = md.customerFlowList("", "", "", "", "", null, 1, 10, "").getInteger("total");
             checkArgument(appMdNum == pcCustomerNum, "app账号下当前门店数量" + appMdNum + "pc该账号下客流分析列表的数量" + pcCustomerNum);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -242,7 +242,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public void todayNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray homeList = md.cardList("HOME_BELOW",null,10).getJSONArray("list");
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
 //            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
             JSONObject resultList = homeList.getJSONObject(0).getJSONObject("result");
 //            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
@@ -251,11 +251,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int todayUvCount = 0;
             JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
 
-            for(int i=0;i<trendList.size();i++){
+            for (int i = 0; i < trendList.size(); i++) {
                 Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
-                if(uv==null){
-                    uv=0;
-;                }
+                if (uv == null) {
+                    uv = 0;
+                    ;
+                }
                 todayUvCount += uv;
             }
             CommonUtil.valueView(todayUv, todayUvCount);
@@ -269,6 +270,34 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+
+
+    //图片中心总数==展示的数量
+//    @Test
+//    public void picNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            int pictotal = md.picturePage("","","","",null,1,8).getInteger("total");
+//            int pages = md.picturePage("","","","",null,1,8).getInteger("pages");
+//            int count = 0;
+//            for (int i = 1; i < pages; i++) {
+//                Integer listSize = md.picturePage("", "", "", "", null, i, 8).getInteger("page_size");
+//                count += listSize;
+//
+//            }
+//            CommonUtil.valueView(pictotal, count);
+//            checkArgument(pictotal == count, "图片中心总数" + pictotal + "!=搜索出图片的数量" + count);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("图片中心总数==展示的数量");
+//        }
+//    }
+
+
 
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {

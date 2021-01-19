@@ -388,6 +388,24 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 //    String district_code = "110105";
 /**---------------------------------------------------门店相关V3.0新增的接口&修改过的接口-----------------------------------------------------**/
 
+
+    /**
+     * @description:2.1 获取卡片列表
+     * @author:
+     * @time:
+     */
+    public JSONObject cardList(String page_type, Integer last_value,Integer size) throws Exception {
+        String url = "/store/m-app/auth/card/card-list";
+        JSONObject json = new JSONObject();
+        json.put("page_type",page_type);
+        json.put("last_value",last_value);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
     /**
      * @description:8.1.1 门店类型列表V3.0
      * @author: qingqing
@@ -402,6 +420,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
 
     /**
      * @description:8.1.3 实时客流门店列表V3.0
@@ -542,6 +562,21 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * @description:2.6 门店数量查询
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject app_shopNum() throws Exception {
+        String url = "/store/m-app/auth/shop/shop-statistic";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**---------------------------------8.3 历史客流-------------------------**/
     /**
      * @description:8.3.1 到店趋势V3.0---8.3.1.1 获取天气类型列表
@@ -671,6 +706,28 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**-------------------------------------------------------------8.5 会员相关---------------------------------------------**/
+
+
+
+    /**
+     * @description:8.5 客流分析列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject customerFlowList(String district_code, Object shop_type, String shop_name,String shop_manager,String sort_type,Integer sort_type_order,Integer page,Integer size,String district_name) throws Exception {
+        String url = "/patrol/shop/page/passenger-flow";
+        JSONObject json = new JSONObject();
+        json.put("district_code", district_code);
+        json.put("shop_type", shop_type);
+        json.put("shop_manager", shop_manager);
+        json.put("sort_type", sort_type);
+        json.put("sort_type_order", sort_type_order);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("district_name", district_name);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     /**
      * @description:8.5.1 会员类型列表
