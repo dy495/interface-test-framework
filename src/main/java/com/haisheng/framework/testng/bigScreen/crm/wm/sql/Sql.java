@@ -124,10 +124,6 @@ public class Sql {
             return this;
         }
 
-//        public <T> Builder where(Class<T> clazz, String compareTo, T value) {
-//            clazz.getClass().
-//        }
-
         public Builder and(String condition) {
             this.condition.append("and").append(blank).append(condition).append(blank);
             return this;

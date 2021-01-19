@@ -1,22 +1,20 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class InvalidVoucher extends BaseScene {
-    private final Long id;
-
+public class Detail extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("id", id);
+        object.put("subject_key", "BRAND");
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/invalid-voucher";
+        return "/jiaochen/pc/use-range/detail";
     }
 }

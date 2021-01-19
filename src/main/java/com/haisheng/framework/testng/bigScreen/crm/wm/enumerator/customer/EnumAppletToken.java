@@ -37,8 +37,8 @@ public enum EnumAppletToken {
     JC_GLY_ONLINE(EnumProduce.JC.name(), "cjEW0H1AT+uU35ELU+UFbQ==", "Max", false, "", "13373166806"),
     ;
 
-    EnumAppletToken(String produce, String token, String wechatName, boolean isDaily, String wechatId, String phone) {
-        this.produce = produce;
+    EnumAppletToken(String product, String token, String wechatName, boolean isDaily, String wechatId, String phone) {
+        this.product = product;
         this.token = token;
         this.wechatName = wechatName;
         this.isDaily = isDaily;
@@ -47,7 +47,7 @@ public enum EnumAppletToken {
     }
 
     @Getter
-    private final String produce;
+    private final String product;
     @Getter
     private final String token;
     @Getter

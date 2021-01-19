@@ -16,9 +16,9 @@ public class VoucherFormPage extends BaseScene {
     private final Boolean isDiff;
     private final Boolean isSelfVerification;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -37,5 +37,15 @@ public class VoucherFormPage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/voucher-manage/voucher-form/page";
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

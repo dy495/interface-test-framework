@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumArticleStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.Banner;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;

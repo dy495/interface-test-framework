@@ -49,9 +49,4 @@ public class PushMessage extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/message-manage/push-message";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

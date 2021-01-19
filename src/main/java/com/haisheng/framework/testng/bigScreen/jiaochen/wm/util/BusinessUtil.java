@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
@@ -25,8 +26,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -37,8 +36,7 @@ import java.util.stream.Collectors;
 /**
  * 业务场景工具
  */
-public class BusinessUtil {
-    public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
+public class BusinessUtil extends BaseUtil {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     private static final int size = 100;
 

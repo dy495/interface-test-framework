@@ -1,5 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
+/**
+ * 中国区划工具
+ */
 public class AddressUtil {
 
     public static String getNativePlace(int nativePlaceCode) {

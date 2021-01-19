@@ -11,17 +11,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DingPushUtil {
+public class DingPushUtil extends BaseUtil {
     private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.BA.getWebHook();
-    private static final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
 
     public static void sendText(String msg, String sql, String caseName) {
         try {

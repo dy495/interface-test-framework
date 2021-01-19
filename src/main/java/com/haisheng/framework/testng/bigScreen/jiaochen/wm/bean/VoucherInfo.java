@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 优惠券信息
+ */
 @Data
 public class VoucherInfo implements Serializable {
 
@@ -40,13 +43,13 @@ public class VoucherInfo implements Serializable {
      */
     @JSONField(name = "cumulative_overdue")
     private Long cumulativeOverdue;
-    /**
-     *
-     */
+
     @JSONField(name = "if_can_invalid")
     private Boolean ifCanInvalid;
+
     @JSONField(name = "invalid_status_name")
     private String invalidStatusName;
+
     @JSONField(name = "is_additional")
     private Boolean isAdditional;
     /**

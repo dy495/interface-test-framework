@@ -23,16 +23,18 @@ public class CreateVoucher extends BaseScene {
     private final Long subjectId;
     private final String cardType;
     private final Boolean isThreshold;
-    private final Boolean thresholdPrice;
-    private final Boolean parValue;
+    private final Double thresholdPrice;
+    private final Double parValue;
     private final Double discount;
     private final Double mostDiscount;
     private final String exchangeCommodityName;
+    private final Boolean isDefaultPic;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("voucher_pic", voucherPic);
+        object.put("is_default_pic", isDefaultPic);
         object.put("voucher_name", voucherName);
         object.put("voucher_description", voucherDescription);
         object.put("stock", stock);
@@ -55,10 +57,5 @@ public class CreateVoucher extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/voucher-manage/create";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

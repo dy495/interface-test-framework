@@ -246,15 +246,22 @@ public class CommonUtil {
      * 获取随机数
      *
      * @param digitNumber 位数
-     * @return String
+     * @return 结果
      */
     public static String getRandom(int digitNumber) {
         return digitNumber == 0 ? "" : String.valueOf((int) ((Math.random() * 9 + 1) * (Math.pow(10, digitNumber - 1))));
     }
 
-    public static Integer getRandom(int start, int bound) {
+    /**
+     * 获取随机数
+     *
+     * @param initial  初始
+     * @param eventual 结束
+     * @return 结果
+     */
+    public static Integer getRandom(int initial, int eventual) {
         Random random = new Random();
-        return random.nextInt(bound - start) + start;
+        return random.nextInt(eventual - initial) + initial;
     }
 
     /**

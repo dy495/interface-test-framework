@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 小程序报名活动
+ */
 @Data
 public class AppointmentActivity implements Serializable {
     @JSONField(name = "status_name")

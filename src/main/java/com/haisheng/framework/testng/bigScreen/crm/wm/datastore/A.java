@@ -5,8 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
@@ -65,7 +65,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
             saleInfos.forEach(arr -> {
                 CommonUtil.valueView(arr.getUserName());
                 if (arr.getUserName().contains("总经理")) {
-                    UserUtil.login(zjl);
+                    crm.login(arr.getAccount(), zjl.getPassword());
                     JSONObject response = crm.receptionPage(1, 10, "", "");
                     db.setTodayReceptionNum(response.getInteger("today_reception_num"));
                     db.setTodayClueNum(response.getInteger("all_customer_num"));

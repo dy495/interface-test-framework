@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 报名活动审批
+ */
 @Data
 public class OperationApproval implements Serializable {
     @JSONField(name = "id")

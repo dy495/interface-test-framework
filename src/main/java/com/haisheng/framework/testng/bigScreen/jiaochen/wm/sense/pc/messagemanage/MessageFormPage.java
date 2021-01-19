@@ -16,9 +16,9 @@ public class MessageFormPage extends BaseScene {
     private final String customerName;
     private final Long shopId;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -37,5 +37,15 @@ public class MessageFormPage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/message-manage/message-form/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }
