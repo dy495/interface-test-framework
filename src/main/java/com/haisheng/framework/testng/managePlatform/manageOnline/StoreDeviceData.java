@@ -1,19 +1,17 @@
 package com.haisheng.framework.testng.managePlatform.manageOnline;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
+import com.google.common.collect.Lists;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.managePlatform.manageOnline.utilOnline.manageUtilOnline;
-import com.haisheng.framework.testng.managePlatform.manageToOutDaily.util.ToOutUtil;
+import com.haisheng.framework.testng.managePlatform.manageOnline.utilOnline.DeviceMonitorUnit;
+import com.haisheng.framework.testng.managePlatform.manageOnline.utilOnline.ManageUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.HttpExecutorUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -23,12 +21,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class storeDeviceData extends TestCaseCommon implements TestCaseStd {
+public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
     Integer page = 1;
     Integer size = 50;
 
-    manageUtilOnline store = manageUtilOnline.getInstance();
+    ManageUtilOnline store = ManageUtilOnline.getInstance();
 
 
     @BeforeClass
@@ -64,6 +63,8 @@ public class storeDeviceData extends TestCaseCommon implements TestCaseStd {
     public void device_list() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            ConcurrentHashMap<String, List<DeviceMonitorUnit>> deviceMonitorUnitHm = new ConcurrentHashMap<>();
+            ConcurrentHashMap<String, List<DeviceMonitorUnit>> deviceMonitorUnitErrorHm = new ConcurrentHashMap<>();
             int total = store.store_manage(page,size,null,null,null,null,null).getInteger("total");
             int t = CommonUtil.getTurningPage(total, 50);
             for (int l = 1; l < t; l++) {
@@ -71,7 +72,9 @@ public class storeDeviceData extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = res.getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     Long subject_id = list.getJSONObject(i).getLong("subject_id");
-                    if(subject_id !=null){
+                    List<DeviceMonitorUnit> deviceMonitorUnitList = new ArrayList<DeviceMonitorUnit>();
+                    List<DeviceMonitorUnit> deviceMonitorUnitErrorList = new ArrayList<DeviceMonitorUnit>();
+                    if(subject_id !=null && subject_id != 21238l){
                         JSONObject response = store.decice_manage(subject_id);
                         JSONArray device_list = response.getJSONArray("list");
                         String device_id = null;
@@ -79,19 +82,35 @@ public class storeDeviceData extends TestCaseCommon implements TestCaseStd {
                         String subject_name = null;
                         int count = 0;
                         if(device_list.size()!=0){
-                            for(int j=0;j<device_list.size();j++){
+                            for(int j=0;j<device_list.size();j++) {
                                 device_id = device_list.getJSONObject(j).getString("device_id");
                                 status_name = device_list.getJSONObject(j).getString("status_name");
                                 subject_name = device_list.getJSONObject(j).getString("subject_name");
-                                if(!status_name.equals("运行中")){
-                                    count++;
+                                if(status_name.equals("掉线")){
+                                    String finalDevice_id = device_id;
+                                    deviceMonitorUnitErrorHm.compute(String.valueOf(subject_id), (k, v)->{
+                                        DeviceMonitorUnit monitorUnit = new DeviceMonitorUnit();
+                                        monitorUnit.setDeviceID(finalDevice_id);
+                                        if (CollectionUtils.isNotEmpty(v)){
+                                            //如果list集合不为空加入新的id
+                                            v.add(monitorUnit);
+                                        }else {
+                                            //如果为空，那么床一个新的list加入
+                                            v = Lists.newArrayList(monitorUnit);
+                                        }
+                                        return v;
+                                    });
                                 }
-                                Preconditions.checkArgument(status_name.equals("运行中") , "线上共计有："+total+"个门店,设备状态非运行中的门店共计为："+count+"个。"+"门店为:"+subject_name+"的设备ID为："+device_id+"的设备[运行状态]为："+status_name);
+                                DeviceMonitorUnit deviceMonitorUnit = new DeviceMonitorUnit();
+                                deviceMonitorUnit.deviceID = device_id;
+                                deviceMonitorUnitList.add(deviceMonitorUnit);
+                                deviceMonitorUnitHm.put(String.valueOf(subject_id), deviceMonitorUnitList);
                             }
+                            logger.info(JSONObject.toJSONString(deviceMonitorUnitErrorHm));
                         }
                     }
                 }
-                    }
+            }
 
 
             //Preconditions.checkArgument(status_name.equals("运行中") , "线上共计有："+total+"个门店,"+"门店:"+subject_name+"的设备ID为："+device_id+"的设备运行状态为："+status_name);

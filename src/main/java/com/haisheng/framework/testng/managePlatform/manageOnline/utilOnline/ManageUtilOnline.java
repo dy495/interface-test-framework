@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.managePlatform.manageOnline.utilOnline;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
@@ -12,29 +11,26 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class manageUtilOnline extends TestCaseCommon {
+public class ManageUtilOnline extends TestCaseCommon {
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
-    private static volatile manageUtilOnline instance = null;
+    private static volatile ManageUtilOnline instance = null;
 
-    private manageUtilOnline() {
+    private ManageUtilOnline() {
     }
 
-    public static manageUtilOnline getInstance() {
+    public static ManageUtilOnline getInstance() {
         if (null == instance) {
-            synchronized (manageUtilOnline.class) {
+            synchronized (ManageUtilOnline.class) {
                 if (null == instance) {
                     //这里
-                    instance = new manageUtilOnline();
+                    instance = new ManageUtilOnline();
                 }
             }
         }
