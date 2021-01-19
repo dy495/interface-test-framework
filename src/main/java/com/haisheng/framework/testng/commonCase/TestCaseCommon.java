@@ -52,8 +52,7 @@ public class TestCaseCommon {
     public LogMine logger = new LogMine(LoggerFactory.getLogger(this.getClass()));
     public static HttpConfig config;
     public static String response = "";
-    public static String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
-
+    public static String authorization;
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");

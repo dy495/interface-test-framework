@@ -121,7 +121,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void getA() throws Exception {
-        for (int i=0;i<3;i++) {
+        for (int i=0;i<1;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -185,24 +185,24 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"触发规则\",\n" +
+                    "        \"memberName\":\"嘉期狗贼&涛涛22223333333\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"iPhone12ABC\",\n" +
+                    "                \"commodityId\": \"iPhone12ABCDE\",\n" +
                     "                \"commodity_name\":\"苹果12s\",\n" +
                     "                \"unit_price\": 200,\n" +
                     "                \"num\": 4\n" +
                     "            },\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"bananaABC\",\n" +
+                    "                \"commodityId\": \"bananaABCDE\",\n" +
                     "                \"commodity_name\":\"香蕉20根啊\",\n" +
                     "                \"unit_price\": 2,\n" +
                     "                \"num\": 4\n" +
                     "            },\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"AppleABC\",\n" +
+                    "                \"commodityId\": \"AppleABCDE\",\n" +
                     "                \"commodity_name\":\"苹果20ge\",\n" +
                     "                \"unit_price\": 3,\n" +
                     "                \"num\": 4\n" +
@@ -222,7 +222,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      *生成交易订单
      **/
-   // @Test
+    @Test
     public void getA4116() throws Exception {
         for (int i=0;i<1;i++) {
             final String NUMBER = ".";

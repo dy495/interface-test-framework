@@ -73,7 +73,7 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
                 for(int i=0;i<list.size();i++){
                     Long subject_id = list.getJSONObject(i).getLong("subject_id");
                     List<DeviceMonitorUnit> deviceMonitorUnitList = new ArrayList<DeviceMonitorUnit>();
-                    List<DeviceMonitorUnit> deviceMonitorUnitErrorList = new ArrayList<DeviceMonitorUnit>();
+                  //  List<DeviceMonitorUnit> deviceMonitorUnitErrorList = new ArrayList<DeviceMonitorUnit>();
                     if(subject_id !=null && subject_id != 21238l){
                         JSONObject response = store.decice_manage(subject_id);
                         JSONArray device_list = response.getJSONArray("list");

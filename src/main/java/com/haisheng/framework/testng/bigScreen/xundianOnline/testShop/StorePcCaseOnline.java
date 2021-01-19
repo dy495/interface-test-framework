@@ -231,6 +231,113 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             System.out.println(post);
         }
     }
+
+    /**
+     *生成交易订单
+     **/
+    @Test
+    public void getA1() throws Exception {
+
+        for (int i=0;i<1;i++){
+
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+            String uid = "uid_0ba743d8";//13260: uid_0ba743d8,14630:uid_580f244a
+            String appId = "672170545f50";//13260: 672170545f50,14630:c30dcafc59c8
+            String ak = "691ff41137d954f3";//13260: 691ff41137d954f3,14630:0d17651c55595b9b
+            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            String sk = "d76f2d8a7846382f633c1334139767fe";//13260:d76f2d8a7846382f633c1334139767fe,14630:0ebe6128aedb44e0a7bd3f7a5378a7fc
+            // java代码示例
+            // java代码示例
+            String requestUrl = "http://api.winsenseos.com/retail/api/data/biz";
+
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+            String transId = "QAtest_" + CommonUtil.getRandom(5);
+            String transTime = ""+System.currentTimeMillis();
+            String userId = "tester"+ CommonUtil.getRandom(6);
+//        String s = "\"" + transId + "\"";
+//        System.err.println(s);
+            String str = "{\n" +
+                    "  \"uid\": \"uid_0ba743d8\",\n" +
+                    "  \"app_id\": \"672170545f50\",\n" +
+                    "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded377823\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \"13260\",\n" +
+                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"W\"\n" +
+                    "        ],\n" +
+                    "        \"user_id\": \"1378643423349879788\",\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"2387979\",\n" +
+                    "        \"memberName\":\"黑白名单一起11234\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"iPhone122\",\n" +
+                    "                \"commodity_name\":\"苹果派12\",\n" +
+                    "                \"unit_price\": 200,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"banana2\",\n" +
+                    "                \"commodity_name\":\"香蕉2根\",\n" +
+                    "                \"unit_price\": 2,\n" +
+                    "                \"num\": 1\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"Apple2\",\n" +
+                    "                \"commodity_name\":\"苹果16个\",\n" +
+                    "                \"unit_price\": 3,\n" +
+                    "                \"num\": 4\n" +
+                    "            }\n" +
+                    "        ]\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+//        System.err.println(str);
+
+            JSONObject jsonObject = JSON.parseObject(str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+            String post = HttpClientUtil.post(config);
+            System.out.println(post);
+        }
+    }
     /**
      * ====================门店类型（单选、多选、全选、不选）======================
      */
