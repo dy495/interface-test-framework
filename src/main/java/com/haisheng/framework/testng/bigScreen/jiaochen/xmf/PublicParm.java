@@ -47,7 +47,7 @@ public class PublicParm {
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
-
+    public String importFilepath="";
     //---------2.0---------
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();

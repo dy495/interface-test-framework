@@ -269,7 +269,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //编辑商城套餐
+    @Test  //仅编辑商城套餐
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -281,8 +281,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             er.invitation_payment=1.99;   //邀请奖励金
             er.id=pp.StoreCommodity;   //编辑的商品套餐id
 
-            int code=jc.EditStoreCommodity( er).getInteger("code");
-
+            jc.EditStoreCommodity( er);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -331,7 +330,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //新建智能提醒
+    @Test  //新建智能提醒   单接口
     public void CreateRemind() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -353,6 +352,35 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test  //新建智能提醒
+    public void CreateRemindCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //前提新建好一个任务
+            //查询小程序卡券数量
+            jc.appletLoginToken(pp.appletTocken);
+            int total=pf.getVoucherTotal();
+            //导入工单
+            jc.pcWorkOrder(pp.filepath);
+            //查询小程序卡券数量
+            //新建下一个智能提醒
+            pccreateRemind er=new pccreateRemind();
+            er.item="提醒标题";
+            er.content="提醒内容";
+            er.vouchers=pp.vouchers;    //卡券
+            er.effective_days="1";     //卡券有效期
+//            er.days="1";            //提醒天数
+            er.mileage="200";        //提醒公里数
+            Integer RemindId =jc.createRemindMethod( er).getInteger("id");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建智能提醒结果验证");
+        }
+
+
+
+    }
 
 
 
