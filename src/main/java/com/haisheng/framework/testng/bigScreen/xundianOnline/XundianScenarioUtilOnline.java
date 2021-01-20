@@ -1434,6 +1434,24 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * @author qingqing
+     * @description 3.26 获取当前巡店记录详情清单列表（V1.1）
+     */
+    public JSONObject patrol_pic(String patrol_type,String start_time,String end_time,String shop_name,Integer is_abnormal,Integer page,Integer size) throws Exception {
+        String url = "/patrol/shop/remark/picture/page";
+        JSONObject json = new JSONObject();
+        json.put("patrol_type", patrol_type);
+        json.put("start_time", start_time);
+        json.put("end_time", end_time);
+        json.put("shop_name", shop_name);
+        json.put("is_abnormal", is_abnormal);
+        json.put("page", page);
+        json.put("size", size);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**---------------------------------------------------四、账号相关app1.1----------------------------------------------------**/
     /**

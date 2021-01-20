@@ -112,39 +112,109 @@ public class logicLayerUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+
     /**
-     * @author qingqing
-     * @description 1.1. 特殊人物注册、新增人脸
+     * A. 特定人物库查询
      */
+    public JSONObject specialKu_serach(String group_name) throws Exception {
+        String url = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
     /**
-     * app checks submit 1. 特殊人物注册、新增人脸
+     * B. 特定人物查询
      */
-    public JSONObject special_seracher(String group_name, String user_id, JSON shop_user, String business_type,Boolean is_quality_limit,String pic_url
-            ,Boolean is_after_detect,Boolean is_choose_biggest_face,Float face_quality,int[] axis,Float yaw,Float pitch,Float roll,Float sunglasses,Float illumination
-            ,Float blur,Float mask
-    ) throws Exception {
-        String url = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
+    public JSONObject specialMan_serach(String group_name,String user_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         JSONObject json = new JSONObject();
         json.put("group_name", group_name);
         json.put("user_id", user_id);
-        json.put("shop_user", shop_user);
-        json.put("business_type", business_type);
-        json.put("is_quality_limit", is_quality_limit);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+    /**
+     *3. 特殊人物校验（人脸检索）
+     */
+    public JSONObject specialFace_serach(String group_name,Boolean is_threshold,String pic_url,Integer result_num,Float score_threshold,Boolean is_choose_biggest_face) throws Exception {
+        String url = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("is_threshold", is_threshold);
         json.put("pic_url", pic_url);
-        json.put("is_after_detect", is_after_detect);
+        json.put("result_num", result_num);
+        json.put("score_threshold", score_threshold);
         json.put("is_choose_biggest_face", is_choose_biggest_face);
-        json.put("face_quality", face_quality);
-        json.put("axis", axis);
-        json.put("yaw", yaw);
-        json.put("pitch", pitch);
-        json.put("roll", roll);
-        json.put("sunglasses", sunglasses);
-        json.put("illumination", illumination);
-        json.put("blur", blur);
-        json.put("mask", mask);
         String res = httpPost1(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
+    /**
+     *4. 特殊人物删除
+     */
+    public JSONObject delete_man(String group_name,String user_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *5. 特殊人物人脸删除
+     */
+    public JSONObject specialFace_delete(String group_name,String user_id,String face_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        json.put("face_id", face_id);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *6. 自定义组删除
+     */
+    public JSONObject self_delete(String group_name) throws Exception {
+        String url = "/scenario/gate/SYSTEM_DELETE_GROUP/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *7. 消费者身份转变
+     */
+    public JSONObject changeUser(String shop_id,Integer from_user_id,String to_group_name,String to_user_id,String is_check_same) throws Exception {
+        String url = "/scenario/gate/SYSTEM_CHANGE_USER/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("from_user_id", from_user_id);
+        json.put("to_group_name", to_group_name);
+        json.put("to_user_id", to_user_id);
+        json.put("is_check_same", is_check_same);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *三. 客流人物管理
+     * 1. 默认组人脸检索
+     */
+    public JSONObject default_seearch(String shop_id,Integer from_user_id,String to_group_name,String to_user_id,String is_check_same) throws Exception {
+        String url = "/scenario/gate/SYSTEM_SEARCH_DEFAULT/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("from_user_id", from_user_id);
+        json.put("to_group_name", to_group_name);
+        json.put("to_user_id", to_user_id);
+        json.put("is_check_same", is_check_same);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
 
 }

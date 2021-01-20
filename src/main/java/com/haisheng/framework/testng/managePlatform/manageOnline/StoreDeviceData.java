@@ -95,7 +95,7 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
                                             //如果list集合不为空加入新的id
                                             v.add(monitorUnit);
                                         }else {
-                                            //如果为空，那么床一个新的list加入
+                                            //如果为空，那么传一个新的list加入
                                             v = Lists.newArrayList(monitorUnit);
                                         }
                                         return v;
@@ -111,8 +111,6 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
                     }
                 }
             }
-
-
             //Preconditions.checkArgument(status_name.equals("运行中") , "线上共计有："+total+"个门店,"+"门店:"+subject_name+"的设备ID为："+device_id+"的设备运行状态为："+status_name);
         } catch (AssertionError | Exception e) {
             collectMessage(e);

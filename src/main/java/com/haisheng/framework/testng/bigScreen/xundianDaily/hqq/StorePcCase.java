@@ -183,6 +183,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
+                    "        \"openid\": \"823849023iidijdiwiodede323\",\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
                     "        \"memberName\":\"嘉期狗贼&涛涛22223333333\",\n" +
