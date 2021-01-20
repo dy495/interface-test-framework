@@ -12,7 +12,6 @@ public class DeteleData {
     @Test
     public void delete(){
         try {
-
             String fromFilePath = "src/main/java/com/haisheng/framework/testng/demo/orifile/from.trans";
             fromFilePath= fromFilePath.replace("/",File.separator);
             String toFilePath = "src/main/java/com/haisheng/framework/testng/demo/orifile/to.trans";

@@ -108,7 +108,7 @@ public class JcFunction {
         return result;
     }
 
-    //app开始接待，并返回接待id
+    //pc开始接待，并返回接待id
     public Long pcstartReception(String carPlate) throws Exception {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
         appStartReception sr = new appStartReception();
@@ -340,6 +340,7 @@ public class JcFunction {
      **/
 
     public Integer getVoucherTotal() {
+        jc.appletLoginToken(pp.appletTocken);
         JSONObject data = jc.appletVoucherList(null, "GENERAL", 20);
         JSONObject lastValue = data.getJSONObject("last_value");
         JSONArray list = data.getJSONArray("list");

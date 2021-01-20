@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.PoiUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -349,17 +350,22 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test  //新建智能提醒
+    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String maile="2000";
             //前提新建好一个任务
             //查询小程序卡券数量
-            jc.appletLoginToken(pp.appletTocken);
             int total=pf.getVoucherTotal();
+            //新建一个excel,里程数=智能提醒公里数
+            PoiUtils.importCustomer(maile);
             //导入工单
-            jc.pcWorkOrder(pp.filepath);
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             //查询小程序卡券数量
+            int totalAfter=pf.getVoucherTotal();
+
             //新建下一个智能提醒
             pccreateRemind er=new pccreateRemind();
             er.item="提醒标题";
@@ -367,17 +373,60 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             er.vouchers=pp.vouchers;    //卡券
             er.effective_days="1";     //卡券有效期
 //            er.days="1";            //提醒天数
-            er.mileage="200";        //提醒公里数
+            er.mileage=maile;        //提醒公里数
             Integer RemindId =jc.createRemindMethod( er).getInteger("id");
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
+            int totalAfter2=pf.getVoucherTotal();
+
+            Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
+            Preconditions.checkArgument(totalAfter-totalAfter2==0,"公里数同一任务只触发一次智能提醒，小程序收不到卡券");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("pc-新建智能提醒结果验证");
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("pc-新建智能提醒（公里）结果验证");
         }
 
 
 
     }
+    /**
+     * @description :新建一个智能提醒，天数1天，该小程序用户找研发要tocken,隔天接待一次，查询卡券数量
+     * @date :2021/1/20 17:57
+     **/
+    @Test  //新建智能提醒（天数 1天）
+    public void CreateRemindCheck2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //前提新建好一个任务，在奇数星期 接待这个客户
+            //查询小程序卡券数量
+            int total=pf.getVoucherTotal();
+            Calendar calendar=Calendar.getInstance();
+
+            int day=calendar.get(Calendar.DAY_OF_WEEK);
+            if(day%2==1&&day!=Calendar.SATURDAY){  //如果是星期数数是基数且不是周日
+                //导入工单
+                jc.pcLogin(pp.gwphone,pp.gwpassword);
+                jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
+                //查询小程序卡券数量
+                int totalAfter=pf.getVoucherTotal();
+                //接待该客户
+                pf.pcstartReception("");      //虚拟小程序客户，车牌号和手机号只有我知道
+                Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            saveData("pc-新建智能提醒（天数）结果验证");
+        }
+
+
+
+    }
+
 
 
 
