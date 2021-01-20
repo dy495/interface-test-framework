@@ -90,7 +90,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

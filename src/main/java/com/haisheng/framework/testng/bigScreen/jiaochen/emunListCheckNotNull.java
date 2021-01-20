@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.cglib.reflect.$FastConstructor;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -59,7 +58,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

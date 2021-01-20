@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
@@ -17,7 +16,6 @@ import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * @description :运行单个test时，需将inintal中的存储操作函数注释掉
@@ -55,7 +53,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

@@ -45,7 +45,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getName();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getDesc();
 
 
         //replace backend gateway url
@@ -55,7 +55,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "Jjiaochen-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

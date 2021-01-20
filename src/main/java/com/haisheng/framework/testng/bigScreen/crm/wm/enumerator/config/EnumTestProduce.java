@@ -23,8 +23,8 @@ public enum EnumTestProduce {
     MENDIAN_DAILY("门店 日常", "", "", "4116", "XD"),
     ;
 
-    EnumTestProduce(String name, String referer, String address, String shopId, String abbreviation) {
-        this.name = name;
+    EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation) {
+        this.desc = desc;
         this.referer = referer;
         this.address = address;
         this.shopId = shopId;
@@ -32,7 +32,7 @@ public enum EnumTestProduce {
     }
 
     @Getter
-    private final String name;
+    private final String desc;
     @Getter
     private final String referer;
     @Getter

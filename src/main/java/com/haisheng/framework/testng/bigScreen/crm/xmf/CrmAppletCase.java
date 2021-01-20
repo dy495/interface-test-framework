@@ -95,7 +95,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
         commonConfig.product = EnumProduce.BSJ.name();
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

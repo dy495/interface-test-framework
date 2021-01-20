@@ -77,7 +77,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
         commonConfig.product = EnumProduce.BSJ.name();
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;

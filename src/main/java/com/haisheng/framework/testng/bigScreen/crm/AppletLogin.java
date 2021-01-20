@@ -69,7 +69,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void restoreProductInMsg() {
         //还原message
         for (EnumTestProduce item : EnumTestProduce.values()) {
-            commonConfig.message = commonConfig.message.replace(item.getName(), commonConfig.TEST_PRODUCT);
+            commonConfig.message = commonConfig.message.replace(item.getDesc(), commonConfig.TEST_PRODUCT);
         }
     }
 
@@ -78,7 +78,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getName());
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc());
             commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             crm.appletLoginToken(token);
@@ -99,7 +99,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName());
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc());
             commonConfig.referer = EnumTestProduce.CRM_ONLINE.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             crmOnline.appletLoginToken(token);
@@ -120,7 +120,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getName());
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc());
             commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             jc.appletLoginToken(token);
@@ -138,7 +138,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getName());
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc());
             commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             jcOnline.appletLoginToken(token);

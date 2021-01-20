@@ -7,7 +7,6 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.orderCarOnline;
@@ -65,7 +64,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getName() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
