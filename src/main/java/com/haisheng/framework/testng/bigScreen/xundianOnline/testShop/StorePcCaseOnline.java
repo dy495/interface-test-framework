@@ -175,6 +175,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     .build();
             String transId = "QAtest_" + CommonUtil.getRandom(5);
             String transTime = ""+System.currentTimeMillis();
+            String userId = "tester"+ CommonUtil.getRandom(6);
 //        String s = "\"" + transId + "\"";
 //        System.err.println(s);
             String str = "{\n" +
@@ -191,7 +192,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"202010001011\",\n" +
+                    "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
@@ -298,12 +299,12 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "        \"trans_type\": [\n" +
                     "            \"W\"\n" +
                     "        ],\n" +
-                    "        \"user_id\": \"1378643423349879788\",\n" +
+                    "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"2387979\",\n" +
-                    "        \"memberName\":\"黑白名单一起11234\",\n" +
+                    "        \"memberName\":\"立新2\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +

@@ -11,24 +11,22 @@ import com.haisheng.framework.util.CommonUtil;
 import org.apache.http.client.HttpClient;
 import org.testng.annotations.BeforeClass;
 
-import java.util.List;
-
-public class logicLayerUtil extends TestCaseCommon {
+public class LogicLayerUtil extends TestCaseCommon {
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
-    private static volatile logicLayerUtil instance = null;
+    private static volatile LogicLayerUtil instance = null;
 
-    private logicLayerUtil() {
+    private LogicLayerUtil() {
     }
-    public static logicLayerUtil getInstance() {
+    public static LogicLayerUtil getInstance() {
 
         if (null == instance) {
-            synchronized (logicLayerUtil.class) {
+            synchronized (LogicLayerUtil.class) {
                 if (null == instance) {
                     //这里
-                    instance = new logicLayerUtil();
+                    instance = new LogicLayerUtil();
                 }
             }
         }
@@ -214,6 +212,129 @@ public class logicLayerUtil extends TestCaseCommon {
         json.put("to_user_id", to_user_id);
         json.put("is_check_same", is_check_same);
         String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *2. 默认组用户查询
+     * 只返回最优结果
+     */
+    public JSONObject default_userSearch(String shop_id,String user_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_QUERY_DEFAULT_USER/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("user_id", user_id);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *3.  删除默认组用户
+     * 只返回最优结果
+     */
+    public JSONObject delete_default_user(String shop_id,String user_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_DELETE_DEFAULT_USER/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("user_id", user_id);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *4.  删除默认组用户的人脸
+     */
+    public JSONObject delete_default_face(String shop_id,String user_id,String face_id) throws Exception {
+        String url = "/scenario/gate/SYSTEM_DELETE_DEFAULT_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("user_id", user_id);
+        json.put("face_id", face_id);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *5.  人脸检测
+     */
+    public JSONObject face_check(Boolean is_deep_analysis,String pic_url) throws Exception {
+        String url = "/scenario/gate/DETECT_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("is_deep_analysis", is_deep_analysis);
+        json.put("pic_url", pic_url);
+        String res = httpPost1(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *14. 人脸注册（算法能力输出）
+     */
+    public JSONObject face_regin(String group_name,String user_id,String pic_url,String face_url,JSONArray axis,Boolean is_choose_biggest_face,Float yaw
+    ,Float pitch,Float roll,Float sunglasses,Float illumination,Float blur,Float mask,Float quality) throws Exception {
+        String url = "/scenario/gate/REGISTER_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        json.put("face_url", face_url);
+        json.put("axis", axis);
+        json.put("is_choose_biggest_face", is_choose_biggest_face);
+        json.put("yaw", yaw);
+        json.put("pitch", pitch);
+        json.put("roll", roll);
+        json.put("sunglasses", sunglasses);
+        json.put("illumination", illumination);
+        json.put("blur", blur);
+        json.put("mask", mask);
+        json.put("quality", quality);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *15. 人脸查询（算法能力输出）
+     */
+    public JSONObject face_search(String group_name,String user_id,String pic_url,String face_url,JSONArray axis,Boolean is_choose_biggest_face,Float yaw
+            ,Float pitch,Float roll,Float sunglasses,Float illumination,Float blur,Float mask,Float quality) throws Exception {
+        String url = "/scenario/gate/REGISTER_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        json.put("face_url", face_url);
+        json.put("axis", axis);
+        json.put("is_choose_biggest_face", is_choose_biggest_face);
+        json.put("yaw", yaw);
+        json.put("pitch", pitch);
+        json.put("roll", roll);
+        json.put("sunglasses", sunglasses);
+        json.put("illumination", illumination);
+        json.put("blur", blur);
+        json.put("mask", mask);
+        json.put("quality", quality);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     16. 人脸比较（算法能力输出）
+     */
+    public JSONObject face_than(String group_name,String user_id,String pic_url,String face_url,JSONArray axis,Boolean is_choose_biggest_face,Float yaw
+            ,Float pitch,Float roll,Float sunglasses,Float illumination,Float blur,Float mask,Float quality) throws Exception {
+        String url = "/scenario/gate/REGISTER_FACE/v1.0";
+        JSONObject json = new JSONObject();
+        json.put("group_name", group_name);
+        json.put("user_id", user_id);
+        json.put("face_url", face_url);
+        json.put("axis", axis);
+        json.put("is_choose_biggest_face", is_choose_biggest_face);
+        json.put("yaw", yaw);
+        json.put("pitch", pitch);
+        json.put("roll", roll);
+        json.put("sunglasses", sunglasses);
+        json.put("illumination", illumination);
+        json.put("blur", blur);
+        json.put("mask", mask);
+        json.put("quality", quality);
+        String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 

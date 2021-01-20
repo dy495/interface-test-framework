@@ -12,7 +12,6 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.testng.annotations.BeforeClass;
@@ -26,22 +25,22 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-public class dataLayerUtil extends TestCaseCommon {
+public class DataLayerUtil extends TestCaseCommon {
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
-    private static volatile dataLayerUtil instance = null;
+    private static volatile DataLayerUtil instance = null;
 
-    private dataLayerUtil() {
+    private DataLayerUtil() {
     }
-    public static dataLayerUtil getInstance() {
+    public static DataLayerUtil getInstance() {
 
         if (null == instance) {
-            synchronized (dataLayerUtil.class) {
+            synchronized (DataLayerUtil.class) {
                 if (null == instance) {
                     //这里
-                    instance = new dataLayerUtil();
+                    instance = new DataLayerUtil();
                 }
             }
         }

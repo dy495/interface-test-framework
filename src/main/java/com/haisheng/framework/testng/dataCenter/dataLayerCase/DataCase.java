@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.dataCenter.interfaceUtil.dataLayerUtil;
+import com.haisheng.framework.testng.dataCenter.interfaceUtil.DataLayerUtil;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -26,8 +26,8 @@ import java.util.*;
  * @author : qingqing
  * @date :  2020/07/06
  */
-public class dataCase extends TestCaseCommon implements TestCaseStd {
-    dataLayerUtil data = dataLayerUtil.getInstance();
+public class DataCase extends TestCaseCommon implements TestCaseStd {
+    DataLayerUtil data = DataLayerUtil.getInstance();
     String request_id = "8b21f20d-6af6-43ff-8fd3-4251e9";
     String shop_id = "43072";
     String scope = "22728";
