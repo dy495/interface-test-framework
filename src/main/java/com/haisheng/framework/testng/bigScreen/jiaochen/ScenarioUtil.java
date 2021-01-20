@@ -3,21 +3,17 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import com.haisheng.framework.util.HttpExecutorUtil;
-import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 轿辰接口类
@@ -3916,6 +3912,344 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
+
+
+    /**
+     * 积分商城相关开始
+     */
+
+
+    /**
+     * @description :商品品类列表
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryPage(String page,String size,Boolean category_status,Integer first_category,Integer second_category,Integer third_category) {
+        String url = "/car-platform/pc/integral-mall/category-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("category_status",category_status);
+        json1.put("first_category",first_category);
+        json1.put("second_category",second_category);
+        json1.put("third_category",third_category);
+
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :创建商品品类
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,Integer belong_category,String belong_pic,Integer id) {
+        String url = "/car-platform/pc/integral-mall/create-category";
+        JSONObject json1=new JSONObject();
+        json1.put("category_name",category_name);
+        json1.put("category_level",category_level);
+        json1.put("belong_category",belong_category);
+        json1.put("belong_pic",belong_pic);
+        json1.put("id",id);
+        return invokeApi(url,json1,Checkcode);
+    }
+
+    /**
+     * @description :品类下拉列表
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryList(String category_level) {
+        String url = "/car-platform/pc/integral-mall/category-list";
+        JSONObject json1=new JSONObject();
+        json1.put("category_level",category_level);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :所属品类列表
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryBelong(String category_level) {
+        String url = "/car-platform/pc/integral-mall/belongs-category";
+        JSONObject json1=new JSONObject();
+        json1.put("category_level",category_level);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :修改品类状态
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryChgStatus(Integer id, Boolean status) {
+        String url = "/car-platform/pc/integral-mall/change-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("status",status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :查看品类详情
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryDetail(Integer id, Integer page, Integer size) {
+        String url = "/car-platform/pc/integral-mall/category-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :修改商品品类
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryEdit(Boolean Checkcode, Integer id, String category_name,String category_level,Integer belong_category,String belong_pic) {
+        String url = "/car-platform/pc/integral-mall/edit-category";
+        JSONObject json1=new JSONObject();
+        json1.put("category_name",category_name);
+        json1.put("category_level",category_level);
+        json1.put("belong_category",belong_category);
+        json1.put("belong_pic",belong_pic);
+        json1.put("id",id);
+        return invokeApi(url,json1,Checkcode);
+    }
+
+    /**
+     * @description :删除商品品类
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryDel(Integer id, Integer page, Integer size, Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/delete-category";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :商品品牌分页
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandPage(Integer page, Integer size, String brand_name, Boolean brand_status) {
+        String url = "/car-platform/pc/integral-mall/brand-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("brand_name",brand_name);
+        json1.put("brand_status",brand_status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :品牌下拉列表
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandList() {
+        String url = "/car-platform/pc/integral-mall/brand-list";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :创建品牌
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandCreat(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
+        String url = "/car-platform/pc/integral-mall/create-brand";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("brand_name",brand_name);
+        json1.put("brand_description",brand_description);
+        json1.put("brand_pic",brand_pic);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :修改品牌状态
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandChgStatus(Integer id,  Boolean brand_status) {
+        String url = "/car-platform/pc/integral-mall/change-brand-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("brand_status",brand_status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :商品品牌详情
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandDetail(Integer id,  Integer page, Integer size) {
+        String url = "/car-platform/pc/integral-mall/brand-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :修改品牌
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandEdit(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
+        String url = "/car-platform/pc/integral-mall/edit-brand";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("brand_name",brand_name);
+        json1.put("brand_description",brand_description);
+        json1.put("brand_pic",brand_pic);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :删除商品品牌
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject BrandDel(Integer id, Integer page, Integer size, Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/delete-brand";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :创建商品规格
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsCreate(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/create-specifications";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("specifications_name",specifications_name);
+        json1.put("belongs_category",belongs_category);
+        json1.put("category_list",category_list);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :修改规格状态
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsChgStatus(Integer id,  Boolean status) {
+        String url = "/car-platform/pc/integral-mall/change-specifications-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("status",status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :商品规格详情
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsDetail(Integer id,  Integer page, Integer size) {
+        String url = "/car-platform/pc/integral-mall/specifications-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :修改规格
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsEdit(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/edit-specifications";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("specifications_name",specifications_name);
+        json1.put("belongs_category",belongs_category);
+        json1.put("category_list",category_list);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :删除商品规格
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsDel(Integer id, Integer page, Integer size, Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/delete-brand";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :商品管理-品类树
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject categoryTree() {
+        String url = "/car-platform/pc/integral-mall/category-tree";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :商品管理列表
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
+                                      Integer first_category,Integer second_category,Integer third_category) {
+        String url = "/car-platform/pc/integral-mall/goods-manage-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("goods_name",goods_name);
+        json1.put("goods_brand",goods_brand);
+        json1.put("goods_status",goods_status);
+        json1.put("first_category",first_category);
+        json1.put("second_category",second_category);
+        json1.put("third_category",third_category);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :商品导出
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
+                                      Integer first_category,Integer second_category,Integer third_category,
+                                      String export_type, JSONArray ids,Boolean chkcode) {
+        String url = "/car-platform/pc/integral-mall/goods-manage/export";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("goods_name",goods_name);
+        json1.put("goods_brand",goods_brand);
+        json1.put("goods_status",goods_status);
+        json1.put("first_category",first_category);
+        json1.put("second_category",second_category);
+        json1.put("third_category",third_category);
+        json1.put("export_type",export_type);
+        json1.put("ids",ids);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :上架/下架
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject goodsChgStatus(Integer id, String status) {
+        String url = "/car-platform/pc/integral-mall/change-goods-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("status",status);
+        return invokeApi(url,json1);
+    }
+
+
+
+    /**
+     * 积分商城相关结束
+     */
 
 
 }

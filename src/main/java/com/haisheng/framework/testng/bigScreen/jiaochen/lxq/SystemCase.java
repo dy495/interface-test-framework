@@ -90,6 +90,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         jc.pcLogin("15711300001","000000");
     }
 
+    /**
+     *    --------------------- V1.0 --------------------------
+     */
 
     /**
      *    PC 品牌管理-系统测试
@@ -1018,9 +1021,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    /**
+     *    --------------------- V2.0 2020-01-20 --------------------------
+     */
 
-
-
+    /**
+     * PC  商品管理
+     */
 
 
 
