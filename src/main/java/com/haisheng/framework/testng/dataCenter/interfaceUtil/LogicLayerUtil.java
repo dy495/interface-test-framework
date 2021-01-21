@@ -47,7 +47,7 @@ public class LogicLayerUtil extends TestCaseCommon {
 
     public String httpPost1(String path, String json, String IpPort) throws Exception {
         String requestId = "127c81fd-d0b1-4c77-adad"+ CommonUtil.getRandom(5);
-        String res = getRequest(json,requestId,IpPort);
+        String res = getRequest(JSONObject.parseObject(json),requestId,path);
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(res);
@@ -60,7 +60,7 @@ public class LogicLayerUtil extends TestCaseCommon {
         return response;
     }
 
-    public String getRequest(String data, String requestId, String service){
+    public String getRequest(JSONObject data, String requestId, String service){
         JSONObject jsonObject=new JSONObject();
         JSONObject system=new JSONObject();
         JSONArray resource = new JSONArray();
@@ -69,6 +69,7 @@ public class LogicLayerUtil extends TestCaseCommon {
         system.put("app_id","88590052b177");
         system.put("scope",scope);
         system.put("service",service);
+        system.put("source","BIZ");
         jsonObject.put("data",data);
         jsonObject.put("system",system);
         jsonObject.put("request_id",requestId);

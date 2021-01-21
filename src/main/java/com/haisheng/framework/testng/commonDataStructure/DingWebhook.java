@@ -46,4 +46,6 @@ public class DingWebhook {
     //线上巡检-管理后台&门店中心
     //门店
     public static String ONLINE_STORE_MANAGEMENT_PLATFORM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=4beef5484b39755950f469c5c0b09f9cf262c9e7988627da07909862fce54c42";
+    //门店线上设备监控(直播和录播)
+    public static String ONLINE_STORE_MANAGEMENT_VEDIO = "https://oapi.dingtalk.com/robot/send?access_token=869d41e7aa21b2425ed5e4088b57db422c84ad42af0745729a56f6df8b9f50d2";
 }
