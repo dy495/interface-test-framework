@@ -76,15 +76,15 @@ public class SalesVideoOne extends TestCaseCommon implements TestCaseStd {
     }
 //(description = "salesdemo门店得两个设备直播流监控")
     @Test(dataProvider = "DEVICE_ID",dataProviderClass = XdPackageDataOnline.class)
-    public void check_vedio_salesdemo(String device_id) {
+    public void check_vedio_salesdemo(String device_id,String device_name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject res = xd.device_live(device_id,shop_id);
             Integer code = res.getInteger("code");
             JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
             String status_name = list.getJSONObject(0).getString("status_name");
-            Preconditions.checkArgument(code == 1000, "salesdemo门店的直播报错了,设备ID:"+device_id + "code :"+code);
-            Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备ID:"+device_id + "摄像头状态 :"+status_name);
+            Preconditions.checkArgument(code == 1000, "salesdemo门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
+            Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

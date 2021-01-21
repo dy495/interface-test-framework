@@ -98,9 +98,9 @@ public class XdPackageDataOnline extends TestCaseCommon {
     @DataProvider(name = "DEVICE_ID")
     public static Object[] device_id() {
         return new String[][]{
-                {"7566140520039424"},
-                {"8134193718100992"},
-                {"8166364248540160"}
+                {"7566140520039424","门店-进店"},
+                {"8134193718100992","云台全功能"},
+                {"8166364248540160","AI摄像头【151】"}
 
         };
     }
@@ -108,34 +108,34 @@ public class XdPackageDataOnline extends TestCaseCommon {
     @DataProvider(name = "DEVICE_ID1")//小天才宝龙店
     public static Object[] device_id1() {
         return new String[][]{
-                {"7769815058023424"},
-                {"7769766555419648"}
+                {"7769815058023424","小天才-宝龙店-门口"},
+                {"7769766555419648","小天才-巡店广角"}
         };
     }
     @DataProvider(name = "DEVICE_ID2")//小天才西溪店
     public static Object[] device_id2() {
         return new String[][]{
-                {"7772497769825280"},
-                {"7772223449760768"}
+                {"7772497769825280","小天才-巡店广角"},
+                {"7772223449760768","小天才-西溪店-门口"}
         };
     }
 
     @DataProvider(name = "DEVICE_ID3")//德众赢
     public static Object[] device_id3() {
         return new String[][]{
-                {"8155008167379968"},
-                {"7774622989255680"},
-                {"7774557710124032"},
-                {"7774553327797248"}
+                {"8155008167379968","进过店-西"},
+                {"7774622989255680","进过店-东"},
+                {"7774557710124032","巡店-东"},
+                {"7774553327797248","巡店-西"}
         };
     }
 
     @DataProvider(name = "DEVICE_ID4")//雷诺表
     public static Object[] device_id4() {
         return new String[][]{
-                {"7934264226186240"},
-                {"7934225610671104"},
-                {"7934141931160576"}
+                {"7934264226186240","雷诺表-巡店2"},
+                {"7934225610671104","雷诺表-巡店1"},
+                {"7934141931160576","雷诺表-进过店"}
         };
     }
     /**
