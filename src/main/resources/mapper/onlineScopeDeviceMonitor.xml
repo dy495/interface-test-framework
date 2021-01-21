@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlineScopeDeviceDao">
+
+    <resultMap id="OnlineScopeDevice" type="com.haisheng.framework.model.bean.OnlineScopeDevice">
+        <result property="day" column="day" />
+        <result property="scopeId" column="scope_id" />
+        <result property="scopeName" column="scope_name" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="deviceStatus" column="device_status" />
+        <result property="deviceType" column="device_type" />
+        <result property="deviceCreateTime" column="device_create_time" />
+        <result property="createTime" column="create_time" />
+        <result property="editTime" column="edit_time" />
+    </resultMap>
+
+    <!-- update case_total-->
+    <update id="updateDiff"
+            parameterType="com.haisheng.framework.model.bean.OnlineScopeDevice">
+        UPDATE t_monitor_online_scope_device
+        SET
+        scope_name=#{scopeName},
+        device_name=#{deviceName},
+        device_status=#{deviceStatus},
+        device_type=#{deviceType},
+        device_create_time=#{deviceCreateTime}
+        WHERE
+        scope_id=#{scopeId} and `device_id`=#{deviceId} and `day`=#{day}
+    </update>
+
+    <!-- select -->
+    <select id="selectData"
+            resultMap="OnlineScopeDevice">
+        select
+        scope_id,scope_name,device_id,device_name,device_status,device_type,device_create_time,create_time,edit_time
+        from
+        t_monitor_online_scope_device
+        <where>
+            `day`=#{day}
+        </where>
+    </select>
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.OnlineScopeDevice">
+        <![CDATA[
+            insert into t_monitor_online_scope_device (
+                `day`,
+                scope_id,
+                scope_name,
+                device_id,
+                device_name,
+                device_status,
+                device_type,
+                device_create_time
+            ) values (
+                #{day},
+                #{scopeId},
+                #{scopeName},
+                #{deviceId},
+                #{deviceName},
+                #{deviceStatus},
+                #{deviceType},
+                #{deviceCreateTime}
+            ) ON DUPLICATE KEY UPDATE
+            scope_name=#{scopeName},
+            device_name=#{deviceName},
+            device_status=#{deviceStatus},
+            device_type=#{deviceType},
+            device_create_time=#{deviceCreateTime}
+        ]]>
+    </insert>
+
+
+
+</mapper>

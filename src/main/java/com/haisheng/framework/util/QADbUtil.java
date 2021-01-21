@@ -364,4 +364,17 @@ public class QADbUtil {
 
     }
 
+    public void saveDeviceInfo(List<OnlineScopeDevice> list) {
+        if (null == list || list.size() == 0) {
+            return;
+        }
+        getNewSqlSession();
+        IOnlineScopeDeviceDao dao = sqlSession.getMapper(IOnlineScopeDeviceDao.class);
+        for (OnlineScopeDevice data : list) {
+            dao.insert(data);
+        }
+        sqlSession.commit();
+
+    }
+
 }

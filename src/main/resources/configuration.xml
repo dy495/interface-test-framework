@@ -40,5 +40,6 @@
         <mapper resource="mapper/feidanPicSearch.xml"/>
         <mapper resource="mapper/config.xml"/>
         <mapper resource="mapper/DataTemp.xml"/>
+        <mapper resource="mapper/onlineScopeDeviceMonitor.xml"/>
     </mappers>
 </configuration>
