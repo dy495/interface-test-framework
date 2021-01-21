@@ -462,6 +462,7 @@ public class TestCaseCommon {
     public String getXundianShop() {
         return "4116";
     }
+
     public String getXundianShop1() {
         return "43072";
     }
@@ -540,6 +541,10 @@ public class TestCaseCommon {
                 failReason = failReason.replace("java.lang.AssertionError", "异常");
             } else if (failReason.contains("java.lang.IllegalArgumentException")) {
                 failReason = failReason.replace("java.lang.IllegalArgumentException", "异常");
+            } else if (failReason.contains("java.net.UnknownHostException")) {
+                failReason = failReason.replace("com.arronlong.httpclientutil.exception.HttpProcessException: java.net.UnknownHostException", "网络域名解析错误");
+            } else if (failReason.contains("org.apache.http.conn.HttpHostConnectException")) {
+                failReason = failReason.replace("com.arronlong.httpclientutil.exception.HttpProcessException: org.apache.http.conn.HttpHostConnectException", "网络请求被拒绝");
             }
             caseResult.setFailReason(failReason);
         } else {

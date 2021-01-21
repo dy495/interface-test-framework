@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.Driver;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;

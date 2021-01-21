@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppointmentActivity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApproval;
@@ -180,9 +180,9 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             list2.add(ids.get(1));
             //审批通过
             String message1 = jc.invokeApi(Approval.builder().registerIds(list1).status("APPROVAL_CONFIRM").build(), false).getString("message");
-            Preconditions.checkArgument(message1.equals("success"), "第一个审批通过" + CommonUtil.checkResult("success", message1));
+            Preconditions.checkArgument(message1.equals("success"), "第一个审批通过" + CommonUtil.result("success", message1));
             String message2 = jc.invokeApi(Approval.builder().registerIds(list2).status("APPROVAL_CONFIRM").build(), false).getString("message");
-            Preconditions.checkArgument(message2.equals("success"), "第一个审批通过" + CommonUtil.checkResult("success", message2));
+            Preconditions.checkArgument(message2.equals("success"), "第一个审批通过" + CommonUtil.result("success", message2));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

@@ -3,12 +3,15 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.util.BaseUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
@@ -21,7 +24,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.MakeSureBuy;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
@@ -34,11 +37,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 业务场景工具
+ * @author wangmin
+ * @date 2021/1/20 13:36
+ * @desc 业务场景工具
  */
 public class SupporterUtil extends BaseUtil {
-    public Visitor visitor;
+    private final Visitor visitor;
 
+    /**
+     * 构造函数
+     *
+     * @param visitor visitor
+     */
     public SupporterUtil(Visitor visitor) {
         this.visitor = visitor;
     }
@@ -52,8 +62,8 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券名称
      */
     public String createVoucher(Integer stock, VoucherTypeEnum type) {
-        String voucherName = createVoucherName();
-        CreateVoucher.CreateVoucherBuilder builder = createVoucherBuilder().stock((long) stock).cardType(type.name()).voucherName(voucherName);
+        String voucherName = createVoucherName(type);
+        CreateVoucher.CreateVoucherBuilder builder = createVoucherBuilder(true).stock((long) stock).cardType(type.name()).voucherName(voucherName);
         switch (type.name()) {
             case "FULL_DISCOUNT":
                 builder.isThreshold(true).thresholdPrice(999.99);
@@ -66,6 +76,7 @@ public class SupporterUtil extends BaseUtil {
                 break;
             default:
                 builder.isThreshold(false);
+                break;
         }
         visitor.invokeApi(builder.build());
         return voucherName;
@@ -74,11 +85,12 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 构建卡券信息
      *
+     * @param selfVerification 能否核销
      * @return CreateVoucher.CreateVoucherBuilder
      */
-    public CreateVoucher.CreateVoucherBuilder createVoucherBuilder() {
-        return CreateVoucher.builder().isDefaultPic(false).voucherPic(getPicPath()).subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType()))
-                .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList()).selfVerification(true);
+    public CreateVoucher.CreateVoucherBuilder createVoucherBuilder(Boolean selfVerification) {
+        return CreateVoucher.builder().isDefaultPic(false).voucherPic(getPicPath()).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList()).selfVerification(selfVerification);
     }
 
 
@@ -88,15 +100,24 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券名
      */
     public String createVoucherName() {
+        return createVoucherName(VoucherTypeEnum.CUSTOM);
+    }
+
+    /**
+     * 创建一个不重复的卡券名
+     *
+     * @return 卡券名
+     */
+    public String createVoucherName(VoucherTypeEnum typeEnum) {
         int num = CommonUtil.getRandom(1, 100000);
-        String voucherName = "优惠券" + num;
-        IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
-        List<VoucherInfo> voucherInfos = collectBean(scene, VoucherInfo.class);
-        if (voucherInfos.isEmpty()) {
+        String voucherName = typeEnum.getDesc() + num;
+        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        if (vouchers.isEmpty()) {
             return voucherName;
         }
-        for (VoucherInfo voucherInfo : voucherInfos) {
-            if (!voucherInfo.getVoucherName().equals(voucherName)) {
+        for (VoucherPage voucher : vouchers) {
+            if (!voucher.getVoucherName().equals(voucherName)) {
                 return voucherName;
             }
         }
@@ -149,7 +170,7 @@ public class SupporterUtil extends BaseUtil {
      *
      * @return 主体详情
      */
-    public Long getSubjectId(String subjectType) {
+    public Long getSubjectDesc(String subjectType) {
         if (StringUtils.isEmpty(subjectType)) {
             return null;
         }
@@ -186,15 +207,25 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 获取门店id
+     *
+     * @param count 数量
+     * @return 门店id
+     */
+    public List<Long> getShopIdList(Integer count) {
+        return getShopIdList().subList(0, count);
+    }
+
+    /**
      * 获取卡券名称
      *
      * @param voucherId 卡券id
      * @return 卡券名
      */
     public String getVoucherName(long voucherId) {
-        IScene scene = VoucherFormPage.builder().build();
-        List<VoucherInfo> voucherInfos = collectBean(scene, VoucherInfo.class);
-        return voucherInfos.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherInfo::getVoucherName).findFirst().orElse(null);
+        IScene scene = VoucherPageScene.builder().build();
+        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
     }
 
     /**
@@ -204,9 +235,9 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        IScene scene = VoucherFormPage.builder().build();
-        List<VoucherInfo> voucherInfos = collectBean(scene, VoucherInfo.class);
-        return voucherInfos.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherInfo::getVoucherId).findFirst().orElse(null);
+        IScene scene = VoucherPageScene.builder().build();
+        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
     }
 
     /**
@@ -216,7 +247,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public Long getNoInventoryVoucherId() {
         List<Long> voucherLIst = new ArrayList<>();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
         int total = visitor.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
@@ -248,9 +279,9 @@ public class SupporterUtil extends BaseUtil {
      */
     public Long getObsoleteVoucherId() {
         List<Long> voucherList = new ArrayList<>();
-        IScene scene = VoucherFormPage.builder().build();
-        List<VoucherInfo> voucherInfos = collectBean(scene, VoucherInfo.class);
-        Long voucherId = voucherInfos.stream().filter(e -> e.getInvalidStatusName().equals("已作废") && e.getAuditStatusName().equals("已通过") && e.getSurplusInventory() != null && e.getSurplusInventory() != 0).map(VoucherInfo::getVoucherId).findFirst().orElse(null);
+        IScene scene = VoucherPageScene.builder().build();
+        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        Long voucherId = vouchers.stream().filter(e -> e.getInvalidStatusName().equals("已作废") && e.getAuditStatusName().equals("已通过") && e.getSurplusInventory() != null && e.getSurplusInventory() != 0).map(VoucherPage::getVoucherId).findFirst().orElse(null);
         if (voucherId == null) {
             String voucherName = createVoucher(1, VoucherTypeEnum.CUSTOM);
             applyVoucher(voucherName, "1");
@@ -327,10 +358,10 @@ public class SupporterUtil extends BaseUtil {
      * @param voucherName 卡券名称
      * @return 卡券信息
      */
-    public VoucherInfo getVoucherInfo(String voucherName) {
-        IScene scene = VoucherFormPage.builder().voucherName(voucherName).build();
-        List<VoucherInfo> voucherInfos = collectBean(scene, VoucherInfo.class);
-        return voucherInfos.stream().filter(e -> e.getVoucherName().equals(voucherName)).findFirst().orElse(null);
+    public VoucherPage getVoucherInfo(String voucherName) {
+        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).findFirst().orElse(null);
     }
 
     /**
@@ -384,7 +415,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public JSONArray getVoucherInfo(String voucherName, int voucherCount) {
         JSONArray voucherList = new JSONArray();
-        IScene scene = VoucherFormPage.builder().voucherName(voucherName).size(SIZE).build();
+        IScene scene = VoucherPageScene.builder().voucherName(voucherName).size(SIZE).build();
         JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
         JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()).get(0);
         jsonObject.put("voucher_count", voucherCount);
@@ -400,7 +431,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public JSONArray getOneVoucherInfo(String voucherName) throws Exception {
         JSONArray list = new JSONArray();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder().voucherName(voucherName);
         int total = visitor.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
@@ -512,13 +543,25 @@ public class SupporterUtil extends BaseUtil {
 //
 
     /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public VoucherApply getVoucherApplyInfo(String voucherName) {
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.name()).build();
+        List<VoucherApply> voucherApplies = collectBean(scene, VoucherApply.class);
+        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null);
+    }
+
+    /**
      * 卡券审批
      *
      * @param voucherName 卡券名称
      * @param status      通过 1/拒绝2
      */
     public void applyVoucher(String voucherName, String status) {
-        IScene scene = ApplyPage.builder().name(voucherName).build();
+        IScene scene = ApplyPageScene.builder().name(voucherName).build();
         List<VoucherApply> voucherApplies = collectBean(scene, VoucherApply.class);
         Long applyId = voucherApplies.stream().filter(e -> e.getStatusName().equals("审核中") && e.getName().equals(voucherName)).map(VoucherApply::getId).findFirst().orElse(null);
         visitor.invokeApi(Approval.builder().id(applyId).status(status).build());

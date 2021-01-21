@@ -13,7 +13,7 @@ public enum EnumContent {
             "宜付有司论其刑赏，以昭陛下平明之理，不宜偏私，使内外异法也。侍中、侍郎郭攸之、费祎、董允等，此皆良实，志虑忠纯，是以先帝简拔以遗陛下。" +
             "愚以为宫中之事，事无大小，悉以咨之，然后施行，必能裨补阙漏，有所广益。"),
 
-    D("2020马上就要过去"),
+    D("I hope the new covid-19 epidemic will be over."),
     ;
 
     EnumContent(String content) {

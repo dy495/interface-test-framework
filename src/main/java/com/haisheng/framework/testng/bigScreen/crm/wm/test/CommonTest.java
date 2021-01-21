@@ -1,12 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.container.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Activity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.AddressUtil;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;

@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCu
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderMaintainPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderRepairPageScene;

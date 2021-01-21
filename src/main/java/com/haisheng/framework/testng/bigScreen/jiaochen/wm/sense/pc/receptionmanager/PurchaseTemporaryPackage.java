@@ -2,10 +2,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionma
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
-
-import java.util.List;
 
 /**
  * 接待管理 -> 购买临时套餐

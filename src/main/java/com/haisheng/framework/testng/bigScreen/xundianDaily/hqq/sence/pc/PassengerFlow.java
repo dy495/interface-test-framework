@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 import java.util.List;

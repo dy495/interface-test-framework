@@ -1,14 +1,19 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 import java.util.List;
 
+/**
+ * @author wangmin
+ * @date 2021/1/20 14:36
+ * @desc 编辑优惠券
+ */
 @Builder
 public class EditVoucher extends BaseScene {
-    private final Integer id;
+    private final Long id;
     private final String voucherName;
     private final String subjectType;
     private final Long subjectId;

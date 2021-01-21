@@ -5,10 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.util.BaseUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
@@ -21,7 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -63,7 +64,7 @@ public class BusinessUtil extends BaseUtil {
     public String createVoucherName() {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = "立减" + num + "元代金券";
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder().voucherName(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -177,7 +178,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public String getVoucherName(long voucherId) {
         List<String> list = new ArrayList<>();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -195,8 +196,8 @@ public class BusinessUtil extends BaseUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        VoucherInfo voucherInfo = getVoucherInfo(voucherName);
-        return voucherInfo.getVoucherId();
+        VoucherPage voucher = getVoucherInfo(voucherName);
+        return voucher.getVoucherId();
     }
 
     /**
@@ -206,7 +207,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public Long getNoInventoryVoucherId() {
         List<Long> voucherLIst = new ArrayList<>();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -237,7 +238,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public Long getObsoleteVoucherId() {
         List<Long> voucherList = new ArrayList<>();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -319,15 +320,15 @@ public class BusinessUtil extends BaseUtil {
      * @param voucherName 卡券名称
      * @return 卡券信息
      */
-    public VoucherInfo getVoucherInfo(String voucherName) {
-        List<VoucherInfo> list = new ArrayList<>();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
+    public VoucherPage getVoucherInfo(String voucherName) {
+        List<VoucherPage> list = new ArrayList<>();
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder().voucherName(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName))
-                    .map(e -> JSONObject.toJavaObject(e, VoucherInfo.class)).collect(Collectors.toList()));
+                    .map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList()));
         }
         return list.get(0);
     }
@@ -381,7 +382,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public JSONArray getVoucherInfo(String voucherName, int voucherCount) {
         JSONArray voucherList = new JSONArray();
-        IScene scene = VoucherFormPage.builder().voucherName(voucherName).size(size).build();
+        IScene scene = VoucherPageScene.builder().voucherName(voucherName).size(size).build();
         JSONArray array = jc.invokeApi(scene).getJSONArray("list");
         JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()).get(0);
         jsonObject.put("voucher_count", voucherCount);
@@ -397,7 +398,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public JSONArray getOneVoucherInfo(String voucherName) throws Exception {
         JSONArray list = new JSONArray();
-        VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder().voucherName(voucherName);
+        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder().voucherName(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -515,7 +516,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public void applyVoucher(String voucherName, String status) {
         List<Long> list = new ArrayList<>();
-        ApplyPage.ApplyPageBuilder builder = ApplyPage.builder().name(voucherName);
+        ApplyPageScene.ApplyPageSceneBuilder builder = ApplyPageScene.builder().name(voucherName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {

@@ -6,7 +6,7 @@ import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.WechatCustomerPage;
@@ -98,7 +98,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             //购买后套餐购买记录页
             int newTotal = jc.invokeApi(buyPackageRecordScene).getInteger("total");
             CommonUtil.valueView(total, newTotal);
-            Preconditions.checkArgument(newTotal == total + 1, "套餐购买列表" + CommonUtil.checkResult(total + 1, newTotal));
+            Preconditions.checkArgument(newTotal == total + 1, "套餐购买列表" + CommonUtil.result(total + 1, newTotal));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -120,7 +120,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             //购买后套餐购卖数量
             int newNum = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "sold_number");
             CommonUtil.valueView(num, newNum);
-            Preconditions.checkArgument(newNum == num + 1, "套餐购买列表" + CommonUtil.checkResult(num + 1, newNum));
+            Preconditions.checkArgument(newNum == num + 1, "套餐购买列表" + CommonUtil.result(num + 1, newNum));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -142,7 +142,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             //购买后套餐购卖数量
             int newNum = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "give_number");
             CommonUtil.valueView(num, newNum);
-            Preconditions.checkArgument(newNum == num + 1, "套餐购买列表" + CommonUtil.checkResult(num + 1, newNum));
+            Preconditions.checkArgument(newNum == num + 1, "套餐购买列表" + CommonUtil.result(num + 1, newNum));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -166,7 +166,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(appletUser);
             int newListSize = util.getAppletMessageNum();
             CommonUtil.valueView(listSize, newListSize);
-            Preconditions.checkArgument(newListSize == listSize + 1, "我的消息列表" + CommonUtil.checkResult(listSize + 1, newListSize));
+            Preconditions.checkArgument(newListSize == listSize + 1, "我的消息列表" + CommonUtil.result(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -190,7 +190,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(appletUser);
             int newListSize = util.getAppletPackageNum();
             CommonUtil.valueView(listSize, newListSize);
-            Preconditions.checkArgument(newListSize == listSize + 1, "我的套餐列表" + CommonUtil.checkResult(listSize + 1, newListSize));
+            Preconditions.checkArgument(newListSize == listSize + 1, "我的套餐列表" + CommonUtil.result(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -214,7 +214,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(appletUser);
             int newListSize = util.getAppletVoucherNum();
             CommonUtil.valueView(listSize, newListSize);
-            Preconditions.checkArgument(newListSize == listSize + 1, "我的卡券列表" + CommonUtil.checkResult(listSize + 1, newListSize));
+            Preconditions.checkArgument(newListSize == listSize + 1, "我的卡券列表" + CommonUtil.result(listSize + 1, newListSize));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

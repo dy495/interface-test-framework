@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.AppCustomerCreateScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;

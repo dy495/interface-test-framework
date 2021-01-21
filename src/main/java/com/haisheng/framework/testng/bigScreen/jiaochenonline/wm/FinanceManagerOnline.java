@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -71,7 +71,7 @@ public class FinanceManagerOnline extends TestCaseCommon implements TestCaseStd 
     public void voucherApply_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            ApplyPage.ApplyPageBuilder builder = ApplyPage.builder();
+            ApplyPageScene.ApplyPageSceneBuilder builder = ApplyPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -100,7 +100,7 @@ public class FinanceManagerOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.login(administrator);
-            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -109,7 +109,7 @@ public class FinanceManagerOnline extends TestCaseCommon implements TestCaseStd 
                     JSONObject jsonObject = (JSONObject) e;
                     String voucherName = jsonObject.getString("voucher_name");
                     Integer issueInventory = jsonObject.getInteger("issue_inventory");
-                    ApplyPage.ApplyPageBuilder builder1 = ApplyPage.builder().name(voucherName);
+                    ApplyPageScene.ApplyPageSceneBuilder builder1 = ApplyPageScene.builder().name(voucherName);
                     int total1 = jc.invokeApi(builder1.build()).getInteger("total");
                     int s1 = CommonUtil.getTurningPage(total1, size);
                     for (int j = 1; j < s1; j++) {
@@ -140,7 +140,7 @@ public class FinanceManagerOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.login(administrator);
-            VoucherFormPage.VoucherFormPageBuilder builder = VoucherFormPage.builder();
+            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -149,7 +149,7 @@ public class FinanceManagerOnline extends TestCaseCommon implements TestCaseStd 
                     JSONObject jsonObject = (JSONObject) e;
                     String voucherName = jsonObject.getString("voucher_name");
                     double cost = jsonObject.getDouble("cost");
-                    ApplyPage.ApplyPageBuilder builder1 = ApplyPage.builder().name(voucherName);
+                    ApplyPageScene.ApplyPageSceneBuilder builder1 = ApplyPageScene.builder().name(voucherName);
                     int total1 = jc.invokeApi(builder1.build()).getInteger("total");
                     int s1 = CommonUtil.getTurningPage(total1, size);
                     for (int j = 1; j < s1; j++) {

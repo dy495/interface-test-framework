@@ -1,11 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -19,14 +18,13 @@ import java.lang.reflect.Method;
  * 业务管理测试用例
  */
 public class BusinessManage extends TestCaseCommon implements TestCaseStd {
-    public ScenarioUtil jc = ScenarioUtil.getInstance();
-    public Visitor visitor = new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
-    public SupporterUtil util = new SupporterUtil(visitor);
-    public LoginUtil user = new LoginUtil();
-    private static final Integer SIZE = 100;
-    private static final EnumAccount MARKETING = EnumAccount.MARKETING;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR;
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR;
+    private static final Integer SIZE = 100;
+    public Visitor visitor = new Visitor(product);
+    public SupporterUtil util = new SupporterUtil(visitor);
+    public UserUtil user = new UserUtil(visitor);
+
 
     @BeforeClass
     @Override
@@ -47,7 +45,6 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.shopId = product.getShopId();
         beforeClassInit(commonConfig);
-        logger.debug("jc: " + jc);
     }
 
     @AfterClass
@@ -59,11 +56,10 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.login(ADMINISTRATOR);
+        user.loginPc(ADMINISTRATOR);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
 
 }
