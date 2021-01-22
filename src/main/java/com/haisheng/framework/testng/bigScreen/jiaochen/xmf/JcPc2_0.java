@@ -18,10 +18,13 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.QADbProxy;
 import com.haisheng.framework.util.QADbUtil;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -275,11 +278,29 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐
+    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
     public void Commodity2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //固定某一套餐
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建商城套餐单接口");
+        }
+    }
+
+    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
+    public void CommodityUpAndDown() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //固定某一套餐
+             int id=0;  //套餐id
+            String status="up";    //DOWN 下架
+            jc.communityUpAndDown(status,id);
+
 
 
         } catch (AssertionError | Exception e) {
@@ -314,8 +335,38 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void StoreOrderList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-           JSONObject data=jc.StoreorderPage("1","10","","","","");
+            JSONObject data=jc.StoreorderPage("1","10","","","","");
             jpu.spiltString(data.toJSONString(),"$.order_number&&$.commodity_name&&$.pay_time&&$.order_status&&$.commodity_specification&&$.order_money&&$.purchase_number&&$.distribution_manner&&$.shipping_status&&$.consignee&&$.consignee_address&&$.customer_phone&&$.sales_phone&&$.sales_name&&$.sales_shop_name&&$.commission&&$.invitation_payment&&$.express_number");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建商城套餐单接口");
+        }
+    }
+
+    @Test  //商城订单页，作废&发放
+    public void StoreOrderVolumeSend() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //提前创建好订单，写入订单号
+            int total=pf.getpackgeTotal();  //小程序 套餐个数
+           //发放，套餐个数+1
+            jc.volumeSend(pp.ordeId);
+
+            int totalAfter=pf.getpackgeTotal();
+            JSONArray list=jc.appletpackageList(null,"GENERAL",20).getJSONArray("list");
+            Integer id=list.getJSONObject(0).getInteger("id");
+
+            //作废，套餐状态变更 失效
+            jc.volumeCancel(pp.ordeId);
+
+            JSONArray packageList=jc.appletpackageDeatil(id.toString()).getJSONArray("list");
+            for(int i=0;i<packageList.size();i++) {
+                String status_name=packageList.getJSONObject(i).getString("status_name");
+                Preconditions.checkArgument(status_name.equals("已过期"));
+            }
+            Preconditions.checkArgument(totalAfter-total==1,"发放卡券，卡券数+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -424,6 +475,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindCheck2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+
             //前提新建好一个任务，在奇数星期 接待这个客户;奇数天，查询小程序卡券数，存下来，作比较；偶数星期 和周日啥也不干
             Calendar calendar=Calendar.getInstance();
 
@@ -475,6 +527,90 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     * @description :创建积分商品
+     * @date :2021/1/22 18:42
+     **/
+
+    @Test
+    public void createGoods() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total=jc.GoodsList("1","10").getInteger("total");
+            pcCreateGoods er=new pcCreateGoods();
+
+            //品类树
+            JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
+            ReadContext context = JsonPath.parse(category.toJSONString());
+            List<Integer> result = context.read("$..category_id");
+            er.first_category=result.get(0);
+            er.second_category=result.get(1);
+            er.third_category=result.get(2);  //品类
+
+            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getString("id");  //品牌
+            er.price="9.99";  //价格
+            er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
+            jc.createGoodMethod(er);
+
+            JSONObject data=jc.GoodsList("1","10");
+            int totalAfterCreate=data.getInteger("total");
+            String id=data.getJSONArray("list").getJSONObject(0).getString("id");
+            jc.deleteGoodMethod("1","10",id);
+            int totalAfterDelete=jc.GoodsList("1","10").getInteger("total");
+
+            Preconditions.checkArgument(totalAfterCreate-total==1,"新建商品，列表+1");
+            Preconditions.checkArgument(totalAfterCreate-totalAfterDelete==-1,"删除商品，列表-1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("新建/删除积分商品,商品列表+-1");
+        }
+
+    }
+
+    @Test(description = "创建积分商品，名称异常")
+    public void createGoodsAb() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcCreateGoods er=new pcCreateGoods();
+
+            //品类树
+            JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
+            ReadContext context = JsonPath.parse(category.toJSONString());
+            List<Integer> result = context.read("$..category_id");
+            er.first_category=result.get(0);
+            er.second_category=result.get(1);
+            er.third_category=result.get(2);  //品类
+            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getString("id");  //品牌
+            er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
+
+            er.price="10000000000";  //价格
+            int code=jc.createGoodMethod(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"创建商品，价格异常");
+            er.price="9.99";
+
+            er.goods_name=pp.String_20+"1";
+            int code2=jc.createGoodMethod(er).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"创建商品，价格异常");
+
+            er.goods_name=System.currentTimeMillis()+"";
+            er.goods_description=pp.String_20+pp.String_20+"1";
+            int code3=jc.createGoodMethod(er).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"创建商品，价格异常");
+            er.goods_description="商品描述";
+
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("新建/删除积分商品,商品列表+-1");
+        }
+
+    }
 
 
 }

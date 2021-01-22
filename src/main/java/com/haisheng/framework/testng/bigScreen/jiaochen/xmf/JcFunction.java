@@ -357,6 +357,24 @@ public class JcFunction {
         return count;
     }
 
+    public Integer getpackgeTotal() {
+        JSONObject data = jc.appletpackageList(null, "GENERAL", 20);
+        JSONObject lastValue = data.getJSONObject("last_value");
+        JSONArray list = data.getJSONArray("list");
+        int size = list.size();
+        Integer count = size;   //计数器
+        int i = 0;
+        while (size != 0) {
+            JSONObject temp = jc.appletVoucherList(lastValue, "GENERAL", 20);
+            lastValue = temp.getJSONObject("last_value");
+            list = temp.getJSONArray("list");
+            size = list.size();
+            count = count + size;
+            i = i + 1;
+        }
+        return count;
+    }
+
     //获取小程序可用核销码
     public String[] voucherName() throws Exception {
         jc.appletLoginToken(pp.appletTocken);

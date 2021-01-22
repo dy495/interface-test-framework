@@ -189,10 +189,11 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //pc接待管理 -> 完成接待
-    public JSONObject pcFinishReception(Long receptionId) {
+    public JSONObject pcFinishReception(Long receptionId,String shop_id) {
         String path = "/jiaochen/pc/reception-manage/finish-reception";
         JSONObject object = new JSONObject();
-        object.put("reception_id", receptionId);
+        object.put("id", receptionId);
+        object.put("shop_id", shop_id);
         return invokeApi(path, object);
     }
 
@@ -513,6 +514,23 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
+    //小程序我的套餐
+    public JSONObject appletpackageList(JSONObject lastValue, String type, Integer size) {
+        String url = "/jiaochen/applet/granted/package/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("type", type);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+    //小程序我的卡券
+    public JSONObject appletpackageDeatil(String id) {
+        String url = "/jiaochen/applet/granted/package/detail";
+        JSONObject object = new JSONObject();
+
+        object.put("id", id);
+        return invokeApi(url, object);
+    }
     public JSONObject appletMessageList(Long lastValue, Integer size) {
         String url = "/jiaochen/applet/granted/message/list";
         JSONObject object = new JSONObject();
@@ -3886,6 +3904,35 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+    //商品订单，发放
+    public JSONObject volumeSend(int  id) {
+        String url = "/jiaochen/pc/store/order/volume-send";
+        JSONObject json1=new JSONObject();
+
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+    //商品订单，作废
+    public JSONObject volumeCancel(int  id) {
+        String url = "/jiaochen/pc/store/order/volume-cancel";
+        JSONObject json1=new JSONObject();
+
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+
+    //商品套餐下架、上架
+    public JSONObject communityUpAndDown(String status,int  id) {
+        String url = "/jiaochen/pc/store/commodity/up-or-down";
+        JSONObject json1=new JSONObject();
+
+        json1.put("id",id);
+        json1.put("status",status);
+
+        return invokeApi(url,json1);
+    }
    /**
     * @description :智能提醒
     * @date :2021/1/13 19:45
@@ -4344,4 +4391,95 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
+ /**
+  * @description :创建积分商品
+  * @date :2021/1/22 17:07
+  **/
+
+    public JSONObject createGoodMethod(pcCreateGoods  er) {
+        String url = "/jiaochen/applet/granted/member-center/car-wash/shop-list";
+        JSONObject json1=new JSONObject();
+        json1.put("id",er.id);
+        json1.put("goods_name",er.goods_name);
+        json1.put("goods_description",er.goods_description);
+        json1.put("first_category",er.first_category);
+        json1.put("second_category",er.second_category);
+        json1.put("third_category",er.third_category);
+        json1.put("goods_brand",er.goods_brand);
+        json1.put("goods_pic_list",er.goods_pic_list);
+        json1.put("price",er.price);
+        json1.put("select_specifications",er.select_specifications);
+        json1.put("goods_specifications_list",er.goods_specifications_list);
+        json1.put("goods_detail",er.goods_detail);
+
+        return invokeApi(url,json1,er.checkcode);
+    }
+    /**
+     * @description :删除商品
+     * @date :2021/1/22 17:07
+     **/
+
+    public JSONObject deleteGoodMethod(String page,String size,String id) {
+        String url = "/jiaochen/pc/integral-mall/delete-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+        /**
+         * @description :商品管理列表
+         * @date :2021/1/22 17:07
+         **/
+
+    public JSONObject GoodsList(String page,String size) {
+        String url = "/jiaochen/pc/integral-mall/goods-manage-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :品牌列表
+     * @date :2021/1/22 17:20
+     **/
+
+    public JSONObject bandList() {
+        String url = "/jiaochen/pc/integral-mall/brand-list";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url,json1);
+    }
+   //品类
+    public JSONObject categoryList() {
+        String url = "/jiaochen/pc/integral-mall/category-tree";
+        JSONObject json1=new JSONObject();
+
+        return invokeApi(url,json1);
+    }
+
+    //品类规格下拉
+    public JSONObject specifications(Integer first_category) {
+        String url = "/jiaochen/pc/integral-mall/specifications-list";
+        JSONObject json1=new JSONObject();
+        json1.put("first_category",first_category);
+        return invokeApi(url,json1);
+    }
+
+    //道路救援门店列表
+    public JSONObject rescueShopList(JSONArray coordinate,String washingStatus ) {
+        String url = "/jiaochen/applet/granted/rescue/shop/list";
+        JSONObject json1=new JSONObject();
+        if(!coordinate.equals(null)){
+            json1.put("coordinate",coordinate);
+
+        }
+        if(!washingStatus.equals(null)) {
+            json1.put("washingStatus", washingStatus);
+        }
+        return invokeApi(url,json1);
+    }
+
 }

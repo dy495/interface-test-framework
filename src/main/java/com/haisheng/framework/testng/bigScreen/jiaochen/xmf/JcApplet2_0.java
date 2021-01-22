@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
@@ -88,44 +90,99 @@ public class JcApplet2_0 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test()
+    @Test(description = "申请道路救援，pc救援列表+1")
     public void recuse() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int total=jc.pcrescuePage(1,10).getInteger("total");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            int total = jc.pcrescuePage(1, 10).getInteger("total");
 
             jc.appletLoginToken(pp.appletTocken);
-            jc.rescueApply(pp.shopIdZ,pp.coordinate);
+            jc.rescueApply(pp.shopIdZ, pp.coordinate);
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int totalAfter=jc.pcrescuePage(1,10).getInteger("total");
-            Preconditions.checkArgument(totalAfter-total==1,"审批道路救援，pc救援列表+1");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            int totalAfter = jc.pcrescuePage(1, 10).getInteger("total");
+            Preconditions.checkArgument(totalAfter - total == 1, "申请道路救援，pc救援列表+1");
 
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("道路救援");
+            saveData("申请道路救援，pc救援列表+1");
         }
     }
-    @Test(description = "洗车，剩余次数-1")
-    public void washCar() {
+    //获取某种状态的门店数量
+    public Integer getshopNumber(String status){
+        JSONObject data=jc.shopPage(1,10,null);
+        int count=0;
+        int pages=data.getInteger("pages");
+        for(int i=0;i<pages;i++){
+            JSONArray list=jc.shopPage(i,10,null).getJSONArray("list");
+            for(int j=0;i<list.size();j++){
+                String  status1=list.getJSONObject(i).getString(status);
+                if(status1.equals("ENABLE")){
+                    count++;
+                }
+            }
+
+        }
+        return count;
+    }
+
+    @Test(description = "道路救援门店数=门店管理开启的门店")
+    public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int total=jc.pcrescuePage(1,10).getInteger("total");
-
+            int openShoptotal=getshopNumber("status");
             jc.appletLoginToken(pp.appletTocken);
-            jc.rescueApply(pp.shopIdZ,pp.coordinate);
-
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int totalAfter=jc.pcrescuePage(1,10).getInteger("total");
-            Preconditions.checkArgument(totalAfter-total==1,"审批道路救援，pc救援列表+1");
-
+            int total=jc.rescueShopList(null,null).getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
+            Preconditions.checkArgument(openShoptotal==total,"道路救援门店数!=门店管理开启的门店");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("道路救援");
         }
     }
-  }
+
+
+    @Test(description = "免费洗车门店数=门店管理开启的门店")
+    public void washShopList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            int openShoptotal=getshopNumber("washing_status");
+            jc.appletLoginToken(pp.appletTocken);
+            int total=jc.carWashShopList(pp.coordinate).getJSONArray("list").size();    //TODO：接口没有返回门店列表总数，暂取list的size
+            Preconditions.checkArgument(openShoptotal==total,"免费洗车门店数!=门店管理洗车开启的门店");
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("免费洗车门店数=门店管理开启的门店");
+        }
+    }
+    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
+    public void washCar() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.pcLogin(pp.jdgw, pp.gwpassword);
+            int total = jc.washCarManagerPage(pp.shopIdZ, "1", "10").getInteger("total");  //洗车管理数
+
+            jc.appletLoginToken(pp.appletTocken);
+            int washCarTimes = jc.washTimes().getInteger("remainNumber");  //洗车次数
+
+            jc.carWsah(pp.shopIdZ);
+            int washCarTimesAfter = jc.washTimes().getInteger("remainNumber");
+
+            jc.pcLogin(pp.jdgw, pp.gwpassword);
+            int totalAfter = jc.washCarManagerPage(pp.shopIdZ, "1", "10").getInteger("total");
+
+            Preconditions.checkArgument(totalAfter - total == 1, "洗车，洗车管理+1");
+            Preconditions.checkArgument(washCarTimes - washCarTimesAfter == 1, "洗车，洗车次数-1");
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            jc.appletLoginToken(pp.appletTocken);
+            saveData("洗车，洗车管理+1");
+        }
+    }
+}

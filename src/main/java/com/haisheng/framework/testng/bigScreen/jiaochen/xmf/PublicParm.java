@@ -3,8 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class PublicParm {
     public int num = 5;
@@ -54,6 +52,8 @@ public class PublicParm {
     public String userid="uid_f9342ae2"; //xx的userId;
     public String userid2="uid_b05c86e9"; //xx2的userId;
     public String roleid="533"; //拥有接待权限的校色id
+    public int ordeId=10; // 订单Id
+    public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();

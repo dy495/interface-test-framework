@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.commonDs;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
@@ -9,15 +11,42 @@ import java.util.List;
 public class JsonPathUtil {
     public static void main(String[] args) throws Exception{
 
-          String json="{\"code\":1000,\"data\":{\"list\":[{\"role_name\":\"超级管理员\",\"role_id\":9},{\"role_name\":\"总经理\",\"role_id\":10},{\"role_name\":\"销售总监\",\"role_id\":11},{\"role_name\":\"销售经理\",\"role_id\":12},{\"role_name\":\"销售顾问\",\"role_id\":13},{\"role_name\":\"销售前台\",\"role_id\":14},{\"role_name\":\"定损顾问\",\"role_id\":15},{\"role_name\":\"服务顾问\",\"role_id\":16},{\"role_name\":\"服务总监\",\"role_id\":18},{\"role_name\":\"市场总监\",\"role_id\":20},{\"role_name\":\"DCC销售顾问\",\"role_id\":23}]},\"source\":\"BUSINESS_PORSCHE\",\"message\":\"成功\",\"request_id\":\"d462259c-cbec-486f-9072-1d46813b5499\"}";
-        String jsonpath = "$.code==1000&&$.data.list[*].role_name&&$.data.list[*].role_id";
-//          String json="{\"list\":[{\"role_name\":\"超级管理员\",\"role_id\":9},{\"role_name\":\"总经理\",\"role_id\":10},{\"role_name\":\"销售总监\",\"role_id\":11},{\"role_name\":\"销售经理\",\"role_id\":12},{\"role_name\":\"销售顾问\",\"role_id\":13},{\"role_name\":\"销售前台\",\"role_id\":14},{\"role_name\":\"定损顾问\",\"role_id\":15},{\"role_name\":\"服务顾问\",\"role_id\":16},{\"role_name\":\"服务总监\",\"role_id\":18},{\"role_name\":\"市场总监\",\"role_id\":20},{\"role_name\":\"DCC销售顾问\",\"role_id\":23}]}";
-//          String jsonpath = "$.list[*].role_name0&&$.list[*].role_id";
-//          spiltString(json,jsonpath);
-        String json1="{\"er_code\" : \"\"}";
-        String jsonpath1="$.er_code";
-        spiltString(json1,jsonpath1);
+//          String json="{\"code\":1000,\"data\":{\"list\":[{\"role_name\":\"超级管理员\",\"role_id\":9},{\"role_name\":\"总经理\",\"role_id\":10},{\"role_name\":\"销售总监\",\"role_id\":11},{\"role_name\":\"销售经理\",\"role_id\":12},{\"role_name\":\"销售顾问\",\"role_id\":13},{\"role_name\":\"销售前台\",\"role_id\":14},{\"role_name\":\"定损顾问\",\"role_id\":15},{\"role_name\":\"服务顾问\",\"role_id\":16},{\"role_name\":\"服务总监\",\"role_id\":18},{\"role_name\":\"市场总监\",\"role_id\":20},{\"role_name\":\"DCC销售顾问\",\"role_id\":23}]},\"source\":\"BUSINESS_PORSCHE\",\"message\":\"成功\",\"request_id\":\"d462259c-cbec-486f-9072-1d46813b5499\"}";
+//        String jsonpath = "$.code==1000&&$.data.list[*].role_name&&$.data.list[*].role_id";
+////          String json="{\"list\":[{\"role_name\":\"超级管理员\",\"role_id\":9},{\"role_name\":\"总经理\",\"role_id\":10},{\"role_name\":\"销售总监\",\"role_id\":11},{\"role_name\":\"销售经理\",\"role_id\":12},{\"role_name\":\"销售顾问\",\"role_id\":13},{\"role_name\":\"销售前台\",\"role_id\":14},{\"role_name\":\"定损顾问\",\"role_id\":15},{\"role_name\":\"服务顾问\",\"role_id\":16},{\"role_name\":\"服务总监\",\"role_id\":18},{\"role_name\":\"市场总监\",\"role_id\":20},{\"role_name\":\"DCC销售顾问\",\"role_id\":23}]}";
+////          String jsonpath = "$.list[*].role_name0&&$.list[*].role_id";
+////          spiltString(json,jsonpath);
+//        String json1="{\"er_code\" : \"\"}";
+//        String jsonpath1="$.er_code";
+//        spiltString(json1,jsonpath1);
 
+
+       String tt="{\n" +
+               "    \"list\":[\n" +
+               "        {\n" +
+               "            \"category_id\":854,\n" +
+               "            \"category_name\":\"鑫鹏.郑\",\n" +
+               "            \"num\":169,\n" +
+               "            \"child_category_list\":[\n" +
+               "                {\n" +
+               "                    \"category_id\":29,\n" +
+               "                    \"category_name\":\"鑫鹏.郑\",\n" +
+               "                    \"num\":694,\n" +
+               "                    \"child_category_list\":[\n" +
+               "                        {\n" +
+               "                            \"category_id\":9,\n" +
+               "                        }\n" +
+               "                    ]\n" +
+               "                }\n" +
+               "            ]\n" +
+               "        }\n" +
+               "    ]\n" +
+               "}";
+        ReadContext context = JsonPath.parse(tt);
+        List<Integer> result = context.read("$..category_id");
+        for (Integer a:result){
+            System.out.println(a);
+        }
 
 
     }
