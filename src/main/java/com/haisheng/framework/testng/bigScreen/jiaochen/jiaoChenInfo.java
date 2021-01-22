@@ -24,9 +24,6 @@ public class jiaoChenInfo {
     //日常
     public final long BrandID = 16L;//自动化用的品牌id
     public final long CarStyleID = 50L;//自动化用的品牌车系id
-    //线上
-    public final long BrandIDOnline = 33L;//自动化用的品牌id
-    public final long CarStyleIDOnline = 830L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
@@ -217,6 +214,16 @@ public class jiaoChenInfo {
     public final List<String> jiedai234auth_list = Arrays.asList(jiedai234auth_name);
 
 
+
+    //V2.0
+    public final int  first_category= 1; //一级品类id
+    public final String  first_category_chin= ""; //一级品类name
+
+    public final int  second_category= 1; //二级品类id
+    public final String  second_category_chin= ""; //二级品类name
+
+    public final int  third_category= 1; //三级品类id
+    public final String  third_category_chin= ""; //三级品类name
 
 
 

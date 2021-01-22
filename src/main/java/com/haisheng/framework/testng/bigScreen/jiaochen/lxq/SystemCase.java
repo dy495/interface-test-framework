@@ -1026,9 +1026,205 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      */
 
     /**
-     * PC  商品管理
+     * PC  商品管理 - 商品品类
      */
 
+    //2021-01-22
+    //@Test
+    public void categoryFilter1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+           JSONArray list = jc.categoryPage(1,100,null,info.first_category,null,null).getJSONArray("list");
+            JSONArray second = new JSONArray();
+           for (int i=0;i <list.size();i++){
+               JSONObject obj = list.getJSONObject(i);
+
+               if (obj.getString("category_level").equals("二级品类")){
+                   second.add(obj.getString("category_name"));
+                   String parent = obj.getString("parent_category");
+                   Preconditions.checkArgument(parent.equals(info.first_category_chin),"筛选"+info.first_category_chin+"结果中的二级品类包含上级品类为"+parent);
+               }
+           }
+            for (int j=0;j <list.size();j++){
+                JSONObject obj = list.getJSONObject(j);
+                if (obj.getString("category_level").equals("三级品类")){
+                    String parent = obj.getString("parent_category");
+                    Preconditions.checkArgument(second.contains(parent),"三级品类"+obj.getString("category_name")+"对应的二级品类"+parent+"不属于该一级品类");
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】根据一级品类单项筛选,结果期待为该品类下的全部二级/三级品类");
+        }
+    }
+
+    //@Test
+    public void categoryFilter2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = jc.categoryPage(1,100,null,info.first_category,info.second_category,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String parent = obj.getString("parent_category");
+                String level = obj.getString("category_level");
+                Preconditions.checkArgument(parent.equals(info.second_category_chin),"筛选"+info.second_category_chin+"结果包含上级品类为"+parent);
+                Preconditions.checkArgument(level.equals("三级品类"),"结果包含"+level);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】根据一级品类和二级品类筛选,结果期待为该品类下的全部三级品类");
+        }
+    }
+
+    //@Test
+    public void categoryFilter3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = jc.categoryPage(1,100,true,null,null,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                Boolean status = obj.getBoolean("category_status");
+                String name = obj.getString("category_name");
+                Preconditions.checkArgument(status==true,"搜索状态为true，商品"+name+"的状态为false");
+            }
+
+            JSONArray list2 = jc.categoryPage(1,100,false,null,null,null).getJSONArray("list");
+            for (int i=0;i <list2.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                Boolean status = obj.getBoolean("category_status");
+                String name = obj.getString("category_name");
+                Preconditions.checkArgument(status==false,"搜索状态为false，商品"+name+"的状态为true");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】根据品类状态进行筛选");
+        }
+    }
+
+    //@Test
+    public void categoryShow() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = jc.categoryPage(1,50,null,null,null,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                int id = obj.getInteger("id");
+                Preconditions.checkArgument(obj.containsKey("category_pic"),"品类"+id+"无品类图");
+                Preconditions.checkArgument(obj.containsKey("category_name"),"品类"+id+"无品类名称");
+                Preconditions.checkArgument(obj.containsKey("category_level"),"品类"+id+"无品类级别");
+                Preconditions.checkArgument(obj.containsKey("parent_category"),"品类"+id+"无上级品类");
+                Preconditions.checkArgument(obj.containsKey("num"),"品类"+id+"无商品数量");
+                Preconditions.checkArgument(obj.containsKey("category_status"),"品类"+id+"无品类状态");
+                Preconditions.checkArgument(obj.containsKey("last_modify_time"),"品类"+id+"无最新修改时间");
+                Preconditions.checkArgument(obj.containsKey("modify_sale_name"),"品类"+id+"无修改人");
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】列表中展示项校验");
+        }
+    }
+
+    //@Test
+    public void categoryOperate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.categoryPage(1,100,null,null,null,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                int id = obj.getInteger("id");
+                int num = obj.getInteger("num");
+                if (num > 0 ){
+                    Boolean is_edit = obj.getBoolean("is_edit");
+                    Boolean is_delete = obj.getBoolean("is_delete");
+                    Preconditions.checkArgument(is_edit==false,"品类"+id+"应不可编辑");
+                    Preconditions.checkArgument(is_delete==false,"品类"+id+"应不可删除");
+                }
+                Boolean status = obj.getBoolean("category_status");
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】列表中不同状态可操作的按钮校验");
+        }
+    }
+
+    //@Test
+    public void categoryFalse1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.categoryChgStatus(info.first_category,false);
+            JSONArray list = jc.categoryPage(1,50,null,info.first_category,null,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                int id = obj.getInteger("id");
+                Boolean status = obj.getBoolean("category_status");
+                Preconditions.checkArgument(status==false,"品类"+id+"的状态为"+status);
+            }
+
+            jc.categoryChgStatus(info.first_category,true);
+            jc.categoryChgStatus(info.second_category,true);
+            jc.categoryChgStatus(info.third_category,true);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用一级品类，期待所属的二级三级全部停用/品类下拉列表不展示该品类");
+        }
+    }
+
+
+    //@Test
+    public void categoryFalse2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.categoryChgStatus(info.second_category,false);
+            JSONArray list = jc.categoryPage(1,50,null,info.first_category,info.second_category,null).getJSONArray("list");
+            for (int i=0;i <list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                int id = obj.getInteger("id");
+                Boolean status = obj.getBoolean("category_status");
+                Preconditions.checkArgument(status==false,"品类"+id+"的状态为"+status);
+            }
+
+            jc.categoryChgStatus(info.first_category,true);
+            jc.categoryChgStatus(info.second_category,true);
+            jc.categoryChgStatus(info.third_category,true);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用二级品类，期待所属的三级全部停用/品类下拉列表不展示该品类");
+        }
+    }
 
 
 

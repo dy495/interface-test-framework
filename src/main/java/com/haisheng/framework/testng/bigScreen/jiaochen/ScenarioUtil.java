@@ -3948,7 +3948,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :商品品类列表
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryPage(String page,String size,Boolean category_status,Integer first_category,Integer second_category,Integer third_category) {
+    public JSONObject categoryPage(Integer page,Integer size,Boolean category_status,Integer first_category,Integer second_category,Integer third_category) {
         String url = "/car-platform/pc/integral-mall/category-page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
