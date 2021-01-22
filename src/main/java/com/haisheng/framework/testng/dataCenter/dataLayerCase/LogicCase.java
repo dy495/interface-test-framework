@@ -346,7 +346,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
             array.add(obj);
             JSONObject shop_user = new JSONObject();
             shop_user.put("22728",array);
-            logic.special_register("autotester222","1112223333",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
+            logic.special_register("autotester222","7cfa3fe9-96c4-4e65-960b-44edc3hu689",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
 
             JSONObject res = logic.delete_man("autotester222","7cfa3fe9-96c4-4e65-960b-44edc3hu689");
             Integer code = res.getInteger("code");
@@ -357,6 +357,110 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("特殊人物校验（人脸检索）(正确入参&格式)");
+        }
+    }
+
+    /**
+     * ====================4. 特殊人物删除(必填项不传)======================
+     */
+    @Test
+    public void specialMan_delete1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.delete_man("","");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , "特殊人物删除(必填项不传),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物删除(必填项不传)");
+        }
+    }
+
+    /**
+     * ====================4. 特殊人物删除(参数超出【支持的字符范围】)======================
+     */
+    @Test
+    public void specialMan_delete2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.delete_man("&*&（*（","……*&……*……");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , "特殊人物删除(参数超出【支持的字符范围】),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物删除(参数超出【支持的字符范围】)");
+        }
+    }
+
+    /**
+     * ====================5. 特殊人物人脸删除(正确入参&格式)======================
+     */
+    @Test
+    public void specialMan_faceDelete() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("user_id","7cfa3fe9-96c4-4e65-960b-44eJkjl97987");
+            JSONArray array = new JSONArray();
+            array.add(obj);
+            JSONObject shop_user = new JSONObject();
+            shop_user.put("22728",array);
+            JSONObject res = logic.special_register("autotester","7cfa3fe9-96c4-4e65-960b-44eJkjl97987",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
+            String face_id = res.getString("face_id");
+
+            JSONObject res1 = logic.specialFace_delete("autotester222","7cfa3fe9-96c4-4e65-960b-44eJkjl97987",face_id);
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1000  , "特殊人物人脸删除(正确入参&格式),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(正确入参&格式)");
+        }
+    }
+
+    /**
+     * ====================5. 特殊人物人脸删除(必填项不传)======================
+     */
+    @Test
+    public void specialMan_faceDelete1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.specialFace_delete("","","");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , " 特殊人物人脸删除(必填项不传),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 特殊人物人脸删除(必填项不传)");
+        }
+    }
+
+    /**
+     * ====================5. 特殊人物人脸删除(参数超出【支持的字符范围】)======================
+     */
+    @Test
+    public void specialMan_faceDelete2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.specialFace_delete("&*&（*（","……*&……*……","&(*&(&*(");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , "特殊人物人脸删除(参数超出【支持的字符范围】),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(参数超出【支持的字符范围】)");
         }
     }
 }

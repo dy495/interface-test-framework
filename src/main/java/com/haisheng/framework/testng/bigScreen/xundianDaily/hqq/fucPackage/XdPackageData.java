@@ -102,6 +102,15 @@ public class XdPackageData extends TestCaseCommon {
                 "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/鬼脸.jpg",
         };
     }
+
+    @DataProvider(name = "DEVICE_ID")
+    public static Object[] device_id() {
+        return new String[][]{
+                {"8112290559198208","AI摄像头【152】","AI_CAMERA"},
+                {"8075861419983872","152-k8s-1","CAMERA"}
+
+        };
+    }
     /**
      * 获取待办事项列表中三个tab页的数量
      */

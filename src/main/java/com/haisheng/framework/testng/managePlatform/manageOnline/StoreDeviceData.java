@@ -91,7 +91,6 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
                         String deviceName;
                         String deviceType;
                         Timestamp deviceCreateTime;
-                        int count = 0;
                         if(device_list.size() > 0){
                             for(int j=0;j<device_list.size();j++) {
                                 deviceId = device_list.getJSONObject(j).getString("device_id");

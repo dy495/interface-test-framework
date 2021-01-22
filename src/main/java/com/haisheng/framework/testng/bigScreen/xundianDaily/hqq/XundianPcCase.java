@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -101,7 +102,37 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+     @Test()
+    public void yushiPic() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String start_time = dt.getHistoryDate(0);
+            String end_time = dt.getHistoryDate(0);
+            JSONObject res = xd.patrol_pic("SCHEDULED",start_time,end_time,"中关村1号店(展示)",0,1,50);
+            Integer total = res.getInteger("total");
+            int t = CommonUtil.getTurningPage(total, 50);
+            for (int l = 1; l < t; l++) {
+                JSONArray list =res.getJSONArray("list");
+                int count = 0;
+                for(int i=0;i<list.size();i++){
+                    String pic_path = list.getJSONObject(i).getString("pic_path");
+                    String pic_path1 =pic_path.substring(79,95);
+                    if(pic_path1.equals("8134193718100992")){
+                        count++;
+                    }
+                }
+                Preconditions.checkArgument(count >=24, "宇视全功能，每小时截屏一次，有缺少，应为24张，实际"+count);
+            }
 
+            //  Preconditions.checkArgument(status_name.equals("运行中") , "salesdemo门店的直播报错了,设备ID:"+device_id + "摄像头状态 :"+status_name);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("salesdemo门店的直播情况");
+        }
+    }
     /**
      * ====================执行清单======================
      */
