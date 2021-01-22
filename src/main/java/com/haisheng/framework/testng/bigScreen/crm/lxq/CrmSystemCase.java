@@ -853,7 +853,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray array = crm.userPage(1, 100).getJSONArray("list");
             for (int i = 0; i < array.size(); i++) {
                 JSONObject obj = array.getJSONObject(i);
-                if (obj.getString("user_name").contains("160")) {
+                if (obj.getString("user_name").contains("161") || obj.getString("user_name").contains("162")) {
                     crm.userDel(obj.getString("user_id"));
                 }
             }
