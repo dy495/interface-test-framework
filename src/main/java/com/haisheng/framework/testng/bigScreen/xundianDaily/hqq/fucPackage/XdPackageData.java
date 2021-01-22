@@ -106,8 +106,8 @@ public class XdPackageData extends TestCaseCommon {
     @DataProvider(name = "DEVICE_ID")
     public static Object[] device_id() {
         return new String[][]{
-                {"8112290559198208","AI摄像头【152】","AI_CAMERA"},
-                {"8075861419983872","152-k8s-1","CAMERA"}
+                {"8171502869873664","AI摄像头_180","AI_CAMERA"},
+                {"8111948426380288","网络摄像头【67】","CAMERA"}
 
         };
     }
