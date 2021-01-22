@@ -4,6 +4,7 @@
 
     <listeners>
         <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+        <listener class-name="com.haisheng.framework.testng.service.RePrioritizingListener"/>
     </listeners>
 
     <test name="online-monitor" preserve-order="true">
