@@ -1413,7 +1413,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             shopList.add(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()).get(0));
             //发送消息
             IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopList)
-                    .messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .ifSendImmediately(true).build();
             jc.invokeApi(scene);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -2850,7 +2850,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //发消息
             long voucherId = util.getObsoleteVoucherId();
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废, 请重新选择！";
@@ -2870,7 +2870,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             long voucherId = util.getNoInventoryVoucherId();
             CommonUtil.valueView(util.getVoucherName(voucherId));
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足";
@@ -2891,7 +2891,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             jc.pcSwitchPackageStatus(false, packageId);
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐不允许发送，请重新选择";
@@ -2911,7 +2911,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //发消息
             long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐【" + util.getPackageName(packageId) + "】中卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";

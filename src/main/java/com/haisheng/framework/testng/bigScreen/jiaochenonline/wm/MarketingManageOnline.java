@@ -966,7 +966,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
                 JSONObject jsonObject = (JSONObject) e;
                 String packageName = jsonObject.getString("package_name");
                 String price = jsonObject.getString("price");
-                String listPrice =  util.getPackageInfo(packageName).getPrice();
+                String listPrice = util.getPackageInfo(packageName).getPrice();
                 CommonUtil.valueView(price, listPrice);
                 Preconditions.checkArgument(listPrice.equals(price), packageName + "购买套餐时套餐价格为：" + price + "此套餐列表展示套餐价格为：" + listPrice);
                 CommonUtil.logger(packageName);
@@ -1239,7 +1239,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
             //消息发送一张卡券
             IScene sendMesScene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(phoneList).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true).build();
             jc.invokeApi(sendMesScene);
             long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
@@ -1412,7 +1412,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             shopList.add(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()).get(0));
             //发送消息
             IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopList)
-                    .messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .ifSendImmediately(true).build();
             jc.invokeApi(scene);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -2849,7 +2849,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //发消息
             long voucherId = util.getObsoleteVoucherId();
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废, 请重新选择！";
@@ -2869,7 +2869,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             long voucherId = util.getNoInventoryVoucherId();
             CommonUtil.valueView(util.getVoucherName(voucherId));
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足";
@@ -2890,7 +2890,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             jc.pcSwitchPackageStatus(false, packageId);
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐不允许发送，请重新选择";
@@ -2910,7 +2910,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //发消息
             long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐【" + util.getPackageName(packageId) + "】中卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";

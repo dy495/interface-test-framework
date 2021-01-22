@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
@@ -16,10 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.EditVoucher;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.RecallVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -119,7 +117,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "优惠券管理--优惠券详情--优惠券详情与创建时相同")
-    public void voucherManage_data_12() {
+    public void voucherManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
@@ -155,7 +153,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "优惠券管理--编辑待审核优惠券--卡券信息更新")
-    public void voucherManage_data_13() {
+    public void voucherManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审核的优惠券id
@@ -185,7 +183,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "优惠券管理--撤回优惠券--优惠券状态=已撤回&此优惠券在审核列表状态=已取消")
-    public void voucherManage_data_14() {
+    public void voucherManage_data_4() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildGenerator().getVoucherId();
             //撤回
@@ -205,24 +203,59 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "优惠券管理--删除优惠券--此券记录消失")
-    public void voucherManage_data_15() {
+    @Test(description = "优惠券管理--删除已撤回优惠券--此券记录消失")
+    public void voucherManage_data_5() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.RECALL).buildGenerator().getVoucherId();
-            //撤回
-            IScene recallVoucherScene = RecallVoucherScene.builder().id(voucherId).build();
-            visitor.invokeApi(recallVoucherScene);
+            //删除
+            IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
+            visitor.invokeApi(deleteVoucherScene);
             //校验
             String voucherName = util.getVoucherName(voucherId);
-            VoucherPage voucherPage = util.getVoucherInfo(voucherName);
-            CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.RECALL.getName(), voucherPage.getVoucherStatus());
-            //审核列表
-            VoucherApply voucherApply = util.getVoucherApplyInfo(voucherName);
-            CommonUtil.checkResult("此优惠券在审核列表状态", ApplyStatusEnum.CANCEL.getName(), voucherApply.getStatusName());
+            IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
+            JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
+            CommonUtil.checkResult("结果列表", 0, list.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("优惠券管理-撤回优惠券--优惠券状态=已撤回&此优惠券在审核列表状态=已取消");
+            saveData("优惠券管理--删除已撤回优惠券--此券记录消失");
+        }
+    }
+
+    @Test(description = "优惠券管理--删除审核未通过优惠券--此券记录消失")
+    public void voucherManage_data_6() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildGenerator().getVoucherId();
+            //删除
+            IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
+            visitor.invokeApi(deleteVoucherScene);
+            //校验
+            String voucherName = util.getVoucherName(voucherId);
+            IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
+            JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
+            CommonUtil.checkResult("结果列表", 0, list.size());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--删除审核未通过优惠券--此券记录消失");
+        }
+    }
+
+    @Test(description = "优惠券管理--暂停发放优惠券--优惠券状态=暂停发放")
+    public void voucherManage_data_7() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildGenerator().getVoucherId();
+            //暂停发放
+            IScene changeProvideStatusScene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
+            visitor.invokeApi(changeProvideStatusScene);
+            //校验
+            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = util.getVoucherInfo(voucherName);
+            CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.STOP, voucherPage.getVoucherStatus());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--暂停发放优惠券--优惠券状态=暂停发放");
         }
     }
 

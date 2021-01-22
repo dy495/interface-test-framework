@@ -8,8 +8,8 @@ import lombok.Builder;
  * 开始/结束发放
  */
 @Builder
-public class ChangeProvideStatus extends BaseScene {
-    private final Integer id;
+public class ChangeProvideStatusScene extends BaseScene {
+    private final Long id;
     private final Boolean isStart;
 
     @Override

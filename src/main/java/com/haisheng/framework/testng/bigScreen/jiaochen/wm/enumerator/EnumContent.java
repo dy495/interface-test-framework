@@ -14,6 +14,8 @@ public enum EnumContent {
             "愚以为宫中之事，事无大小，悉以咨之，然后施行，必能裨补阙漏，有所广益。"),
 
     D("I hope the new covid-19 epidemic will be over."),
+
+    MESSAGE_TITLE("高端大气上档次"),
     ;
 
     EnumContent(String content) {

@@ -31,23 +31,26 @@ public enum VoucherStatusEnum {
      * 进行中
      */
     WORKING(3, "进行中", new WorkingGenerator.Builder()),
-//    /**
-//     * 暂停发放
-//     */
-//    STOP(4, "暂停发放"),
-//    /**
-//     * 已作废
-//     */
-//    INVALIDED(5, "已作废"),
-//    /**
-//     * 已售罄
-//     */
-//    SELL_OUT(6, "已售罄"),
-//    /**
-//     * 已过期
-//     */
-//    EXPIRED(7, "已过期"),
+    /**
+     * 暂停发放
+     */
+    STOP(4, "暂停发放", null),
+    /**
+     * 已作废
+     */
+    INVALIDED(5, "已作废", null),
+    /**
+     * 已售罄
+     */
+    SELL_OUT(6, "已售罄", null),
+    /**
+     * 已过期
+     */
+    EXPIRED(7, "已过期", null),
 
+    /**
+     * 无用处，标记使用
+     */
     CREATE(-1, "初始状态", new VoucherGenerator.Builder());;
 
     @Getter

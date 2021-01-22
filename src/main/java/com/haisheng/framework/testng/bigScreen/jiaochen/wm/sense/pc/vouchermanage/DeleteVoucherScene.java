@@ -8,8 +8,8 @@ import lombok.Builder;
  * 卡券管理 -> 删除卡券
  */
 @Builder
-public class DeleteVoucher extends BaseScene {
-    private final Integer id;
+public class DeleteVoucherScene extends BaseScene {
+    private final Long id;
 
     @Override
     public JSONObject getJSONObject() {
@@ -23,8 +23,4 @@ public class DeleteVoucher extends BaseScene {
         return "/jiaochen/pc/voucher-manage/delete-voucher";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }
