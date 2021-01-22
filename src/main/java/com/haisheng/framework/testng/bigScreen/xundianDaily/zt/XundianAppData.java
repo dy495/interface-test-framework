@@ -274,30 +274,106 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //图片中心总数==展示的数量
-//    @Test
-//    public void picNum() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            int pictotal = md.picturePage("","","","",null,1,8).getInteger("total");
-//            int pages = md.picturePage("","","","",null,1,8).getInteger("pages");
-//            int count = 0;
-//            for (int i = 1; i < pages; i++) {
-//                Integer listSize = md.picturePage("", "", "", "", null, i, 8).getInteger("page_size");
-//                count += listSize;
-//
-//            }
-//            CommonUtil.valueView(pictotal, count);
-//            checkArgument(pictotal == count, "图片中心总数" + pictotal + "!=搜索出图片的数量" + count);
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("图片中心总数==展示的数量");
-//        }
-//    }
+    @Test
+    public void picNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int pictotal = md.picturePage("","","","",null,1,8).getInteger("total");
+            int pages = md.picturePage("","","","",null,1,8).getInteger("pages");
+            int pagesize = (pages-1)*8;
+            int pages_size = md.picturePage("","","","",null,pages,8).getInteger("page_size");
+
+            CommonUtil.valueView(pictotal, pagesize+pages_size);
+            checkArgument(pictotal == pagesize+pages_size, "图片中心总数" + pictotal + "!=搜索出图片的数量" + pagesize+pages_size);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("图片中心总数==展示的数量");
+        }
+    }
 
 
+    //定检巡查展示图片个数==返回的数量
+    @Test
+    public void picScheduled() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
+            int pages = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("pages");
+            int pagesize = (pages-1)*8;
+            int pages_size = md.picturePage("SCHEDULED","","","",null,pages,8).getInteger("page_size");
+
+            CommonUtil.valueView(pictotal, pagesize+pages_size);
+            checkArgument(pictotal == pagesize+pages_size, "图片中心总数" + pictotal + "!=搜索出图片的数量" + pagesize+pages_size);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("定检巡查展示图片个数==返回的数量");
+        }
+    }
+
+
+    //定检巡查展示图片类型==返回的图片类型
+    @Test
+    public void picScheduled1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
+            int pages = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("pages");
+            for(int i=1;i<=pages;i++){
+                JSONArray list = md.picturePage("SCHEDULED","","","",null,i,8).getJSONArray("list");
+                for(int j=0;j<list.size();j++){
+                    String tips = list.getJSONObject(j).getString("tips");
+//                    int a = tips.indexOf("定检巡店");
+                    checkArgument(tips.contains("定检巡店"), "定检巡查" + "!=图片返回的类型" + tips);
+                }
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("定检巡查展示图片类型==返回的图片类型");
+        }
+    }
+
+    //定检巡查展示图片类型+日期==返回的图片类型+日期
+    @Test
+    public void picScheduled2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String start_time = "2021-01-19";
+            String end_time = "2021-01-22";
+            int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("total");
+            int pages = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("pages");
+            for(int i=1;i<=pages;i++){
+                JSONArray list = md.picturePage("SCHEDULED",start_time,end_time,"",null,i,8).getJSONArray("list");
+                for(int j=0;j<list.size();j++){
+                    String tips = list.getJSONObject(j).getString("tips");
+                    String date_time = list.getJSONObject(j).getString("date_time");
+                    String s = date_time.substring(0,10);
+                    int a = s.compareTo(start_time);
+                    int b = s.compareTo(end_time);
+                    checkArgument(tips.contains("定检巡店"), "定检巡查" + "!=图片返回的类型" + tips);
+                    checkArgument(a>=0&&b<=0, "定检巡查+日期" + "!=图片返回日期" + date_time);
+                }
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("//定检巡查展示图片类型+日期==返回的图片类型+日期");
+        }
+    }
 
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {
