@@ -552,6 +552,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void BtimeListFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_DAILY.getToken());
 //            String type = "REPAIR";
             String type = "MAINTAIN";
 //            JSONArray list = crm.timeList(type, appointment_date).getJSONArray("list");

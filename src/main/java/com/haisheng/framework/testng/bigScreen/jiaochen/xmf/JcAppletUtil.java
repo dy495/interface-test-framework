@@ -1,20 +1,20 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
+import com.haisheng.framework.model.bean.AppletCustomer;
+import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.QADbProxy;
+import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -22,27 +22,30 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-import static com.google.common.base.Preconditions.checkArgument;
+/**
+ * @description :运行单个test时，需将inintal中的存储操作函数注释掉
+ * @date :2020/12/18 16:45
+ **/
 
-public class JcApplet2_0 extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = new ScenarioUtil();
-    PublicParm pp = new PublicParm();
-    CommonConfig commonConfig = new CommonConfig();
+public class JcAppletUtil extends TestCaseCommon implements TestCaseStd {
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
-    @BeforeClass
-    @Override
-    public void initial() {
+    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
+
+
+
+    public void initial1() {
         logger.debug("before classs initial");
+        CommonConfig commonConfig = new CommonConfig();
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+//        commonConfig.referer=getJcReferdaily();
+
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -53,27 +56,36 @@ public class JcApplet2_0 extends TestCaseCommon implements TestCaseStd {
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
-        //replace ding push conf
+        //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = "https://servicewechat.com/wx4071a91527930b48/";
-
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "45973";
+        commonConfig.shopId = "-1";
         beforeClassInit(commonConfig);
-        jc.appletLoginToken(pp.appletTocken);
-        logger.debug("jc: " + jc);
 
 
+
+    }
+
+
+    /**
+     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+     */
+    @BeforeClass
+    @Override
+    public void initial() {
+        initial1();
+        qaDbUtil.openConnectionRdDaily();
     }
 
     @AfterClass
     @Override
     public void clean() {
         afterClassClean();
+        qaDbUtil.closeConnectionRdDaily();
     }
 
     /**
@@ -81,51 +93,25 @@ public class JcApplet2_0 extends TestCaseCommon implements TestCaseStd {
      */
     @BeforeMethod
     @Override
-
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
+
+
     @Test()
-    public void recuse() {
+    public void AppAppointmentTodayTask45() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int total=jc.pcrescuePage(1,10).getInteger("total");
-
-            jc.appletLoginToken(pp.appletTocken);
-            jc.rescueApply(pp.shopIdZ,pp.coordinate);
-
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int totalAfter=jc.pcrescuePage(1,10).getInteger("total");
-            Preconditions.checkArgument(totalAfter-total==1,"审批道路救援，pc救援列表+1");
-
+            AppletCustomer aa=qaDbUtil.selectAppletCustomer("oBG1v5TXqcugtyGQeidgkBv_Bj0A");
+            System.out.println(aa.getCustomerName());
         } catch (AssertionError | Exception e) {
-            collectMessage(e);
+            appendFailReason(e.toString());
         } finally {
-            saveData("道路救援");
+//            saveData("接待后，app今日任务分子分母+1");
         }
     }
-    @Test(description = "洗车，剩余次数-1")
-    public void washCar() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int total=jc.pcrescuePage(1,10).getInteger("total");
 
-            jc.appletLoginToken(pp.appletTocken);
-            jc.rescueApply(pp.shopIdZ,pp.coordinate);
-
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            int totalAfter=jc.pcrescuePage(1,10).getInteger("total");
-            Preconditions.checkArgument(totalAfter-total==1,"审批道路救援，pc救援列表+1");
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("道路救援");
-        }
-    }
-  }
+}

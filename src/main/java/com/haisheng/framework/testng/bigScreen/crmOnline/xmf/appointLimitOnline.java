@@ -318,6 +318,7 @@ public class appointLimitOnline extends TestCaseCommon implements TestCaseStd {
     public void BtimeListFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String type = "MAINTAIN";
             long timelist2 = pf.appointmentTimeListO(type, appointment_date).getLong("time_id");
             JSONObject res = crm.appointmentMaintainCode((pp.mycarId), customer_name, customer_phone_number,  timelist2);

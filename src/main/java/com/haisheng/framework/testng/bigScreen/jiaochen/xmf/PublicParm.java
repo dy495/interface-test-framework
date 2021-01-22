@@ -37,7 +37,7 @@ public class PublicParm {
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码
 
     public String jdgw = "13412010080";  //xx ,属于中关村店
-    public String jdgw2 = "13412010089";  //xx ,属于中关村店
+    public String jdgw2 = "13412010089";  //xx2 ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
     public String jdgwName = "xx"; //单个店的客户的数据  登录密码
 
@@ -48,6 +48,12 @@ public class PublicParm {
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
+    //其他小程序用户tocken和车牌号信息
+    public String getAppletTockenOther="";
+    public  String CarplateOther="豫AJSHD12";
+    public String userid="uid_f9342ae2"; //xx的userId;
+    public String userid2="uid_b05c86e9"; //xx2的userId;
+    public String roleid="533"; //拥有接待权限的校色id
     //---------2.0---------
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();

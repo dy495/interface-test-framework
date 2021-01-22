@@ -3912,7 +3912,32 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
+    /**
+     * @description :app变更接待
+     * @date :2021/1/21 14:43
+     **/
 
+    public JSONObject receptorChange(Long id,Long shop_id,String receptor_id) {
+        String url = "/jiaochen/m-app/task/reception/receptor/change";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("shop_id",shop_id);
+        json1.put("receptor_id",receptor_id);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :app接待人员列表
+     * @date :2021/1/21 14:48
+     **/
+
+    public JSONObject receptorList(Long shop_id) {
+        String url = "/jiaochen/m-app/task/reception/receptor/list";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+
+        return invokeApi(url,json1);
+    }
 
     /**
      * 积分商城相关开始
@@ -4245,11 +4270,78 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
-
-
     /**
      * 积分商城相关结束
      */
+    /**
+     * @description :applet道路救援
+     * @date :2021/1/21 16:14
+     **/
 
+    public JSONObject rescueApply(String shop_id, JSONArray coordinate) {
+        String url = "/jiaochen/applet/granted/rescue/apply";
+        JSONObject json1=new JSONObject();
+        json1.put("shop_id",shop_id);
+        json1.put("coordinate",coordinate);
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :pc道路救援
+     * @date :2021/1/21 16:14
+     **/
+    public JSONObject pcrescuePage(int page,int size) {
+        String url = "/jiaochen/pc/manage/rescue/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :小程序授权手机号
+     * @date :2021/1/21 19:20
+     **/
 
+    public JSONObject grantPhone(String phone,String verification_code,String recommend_customer_id,String business_type) {
+        String url = "/jiaochen/applet/grant/phone";
+        JSONObject json1=new JSONObject();
+        json1.put("phone",phone);
+        json1.put("verification_code",verification_code);
+        json1.put("recommend_customer_id",recommend_customer_id);
+        json1.put("business_type",business_type);
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :洗车次数
+     * @date :2021/1/21 19:20
+     **/
+
+    public JSONObject washTimes() {
+        String url = "/jiaochen/applet/granted/member-center/car-wash/remain-number";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :开始洗车
+     * @date :2021/1/21 19:20
+     **/
+
+    public JSONObject carWsah(String car_wash_shop_id) {
+        String url = "/jiaochen/applet/granted/member-center/car-wash/start";
+        JSONObject json1=new JSONObject();
+        json1.put("car_wash_shop_id",car_wash_shop_id);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :免费洗车列表
+     * @date :2021/1/21 19:29
+     **/
+
+    public JSONObject carWashShopList(JSONArray coordinate) {
+        String url = "/jiaochen/applet/granted/member-center/car-wash/shop-list";
+        JSONObject json1=new JSONObject();
+        json1.put("coordinate",coordinate);
+
+        return invokeApi(url,json1);
+    }
 }

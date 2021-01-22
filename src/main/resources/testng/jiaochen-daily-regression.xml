@@ -18,6 +18,10 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.Jc_Pc_CustomerManage"/>
+<!--            以下case一天运行一次-->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
 
         </classes>
     </test>

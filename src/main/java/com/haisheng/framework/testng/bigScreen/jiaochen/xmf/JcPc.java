@@ -271,8 +271,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
 
             //删除账号以后，再查询列表
-            Integer code1 = jc.organizationAccountDelete(account).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "删除emial的账号:" + email + "失败了");
+           jc.organizationAccountDelete(account);
+
             Integer total2 = jc.pcStaffPage("", page, size).getInteger("total");
             int result1 = total1 - total2;
             Preconditions.checkArgument(result1 == 1, "删除1个账号，账号列表的数量却减了：" + result);

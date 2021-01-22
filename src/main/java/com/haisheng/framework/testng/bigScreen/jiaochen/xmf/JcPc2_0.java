@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
@@ -15,6 +16,8 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.haisheng.framework.util.QADbProxy;
+import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -33,6 +36,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     JcFunction pf = new JcFunction();
     FileUtil file = new FileUtil();
     Random random = new Random();
+    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -74,6 +79,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("jc: " + jc);
         jc.pcLogin(pp.gwname, pp.gwpassword);
+        qaDbUtil.openConnection();
 
 
     }
@@ -82,6 +88,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     @Override
     public void clean() {
         afterClassClean();
+        qaDbUtil.closeConnection();
     }
 
     /**
@@ -132,7 +139,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             saveData("pc-新建分销员单接口");
         }
     }
-    @Test  //新建分销员（仅必填项）
+    @Test  //新建分销员（必填项不填）
     public void CreateSaleAb0() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -151,7 +158,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             saveData("pc-新建分销员单接口，必填项不填");
         }
     }
-    @Test  //新建分销员
+    @Test  //新建分销员参数长度异常
     public void CreateSaleAb1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -268,6 +275,20 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐
+    public void Commodity2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //固定某一套餐
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建商城套餐单接口");
+        }
+    }
+
     @Test  //仅编辑商城套餐
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -358,6 +379,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String maile="2000";
             //前提新建好一个任务
             //查询小程序卡券数量
+            jc.appletLoginToken(pp.appletTocken);
             int total=pf.getVoucherTotal();
             //新建一个excel,里程数=智能提醒公里数
             PoiUtils.importCustomer(maile);
@@ -365,6 +387,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             //查询小程序卡券数量
+            jc.appletLoginToken(pp.appletTocken);
             int totalAfter=pf.getVoucherTotal();
 
             //新建下一个智能提醒
@@ -378,6 +401,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             Integer RemindId =jc.createRemindMethod( er).getInteger("id");
             jc.pcLogin(pp.gwphone,pp.gwpassword);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
+            jc.appletLoginToken(pp.appletTocken);
             int totalAfter2=pf.getVoucherTotal();
 
             Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
@@ -400,21 +424,19 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindCheck2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //前提新建好一个任务，在奇数星期 接待这个客户
-            //查询小程序卡券数量
-            int total=pf.getVoucherTotal();
+            //前提新建好一个任务，在奇数星期 接待这个客户;奇数天，查询小程序卡券数，存下来，作比较；偶数星期 和周日啥也不干
             Calendar calendar=Calendar.getInstance();
 
             int day=calendar.get(Calendar.DAY_OF_WEEK);
             if(day%2==1&&day!=Calendar.SATURDAY){  //如果是星期数数是基数且不是周日
-                //导入工单
-                jc.pcLogin(pp.gwphone,pp.gwpassword);
-                jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
                 //查询小程序卡券数量
+                jc.appletLoginToken(pp.getAppletTockenOther);
                 int totalAfter=pf.getVoucherTotal();
+                int historyData=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","Applet");  //取数据库存好的数
                 //接待该客户
-                pf.pcstartReception("");      //虚拟小程序客户，车牌号和手机号只有我知道
-                Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
+                pf.pcstartReception(pp.CarplateOther);      //虚拟小程序客户，车牌号和手机号只有我知道
+                Preconditions.checkArgument(totalAfter-historyData==1,"触发智能提醒，小程序收到卡券");
+                qaDbUtil.updateDataNum("Applet",totalAfter);  //把新的卡券数存到数据库
             }
 
         } catch (AssertionError | Exception e) {
@@ -428,7 +450,30 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //人员管理
+    @Test
+    public void accountInfoData_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.organizationRolePage("", 1, 10).getJSONArray("list");
 
+            for (int i = 1; i < list.size(); i++) {
+                String role_name = list.getJSONObject(i).getString("role_name");
+                JSONArray list1 = jc.organizationRolePage(role_name, 1, 10).getJSONArray("list");
+                int account_num = list1.getJSONObject(0).getInteger("account_number");
+                //TODO:角色使用账户列表接口未给出
+//                Integer Total = jc.organizationAccountPage("", "", "", "", role_name, "", 1, 10).getInteger("total");
+//                Preconditions.checkArgument(account_num == Total, "角色名为:" + role_name + "的使用账户数量：" + account_num + "！=【账户列表】中该角色的账户数量：" + Total);
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("角色的使用账号数量==账号列表中该角色的数量");
+        }
+
+    }
 
 
 

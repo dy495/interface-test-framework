@@ -359,8 +359,21 @@ public class QADbUtil {
         getNewSqlSession();
         IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
         dao.updateDataAll(dataTemp);
-        System.out.println(dataTemp.getPcAppointmentRecordNum());
+//        System.out.println(dataTemp.getPcAppointmentRecordNum());
         sqlSession.commit();
+
+    }
+    public void updateAppletCustomer(AppletCustomer appletcustomer) {
+        getNewRdSqlSession();
+        IAppletReturnNewDao AppletReturnNewDao = rdDailySqlSession.getMapper(IAppletReturnNewDao.class);
+        AppletReturnNewDao.updateAppletCustomer(appletcustomer);
+        rdDailySqlSession.commit();
+    }
+
+    public AppletCustomer selectAppletCustomer(String  wechatId) {
+        getNewRdSqlSession();
+        IAppletReturnNewDao AppletReturnNewDao = rdDailySqlSession.getMapper(IAppletReturnNewDao.class);
+        return AppletReturnNewDao.selectAppletCustomer(wechatId);
 
     }
 

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -16,6 +17,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -28,9 +30,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
-
+    JsonPathUtil jp=new JsonPathUtil();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -331,7 +331,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int total = jc.appreceptionPage(null, 10).getInteger("total");
 
             //开始接待
-            Long id[] = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate7);
 
             JSONObject dd = jc.appreceptionPage(null, 10);
             int totalA = dd.getInteger("total");
@@ -351,7 +351,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app接待车牌号7位，汉字+字母")
+    @Test(description = "app接待车牌号7位，汉字+字母",enabled = false)  //受接待车牌次数限制，此 case与上一个case合并
     public void Jc_reception2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -367,7 +367,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")
+    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")    //一次
     public void Jc_receptionTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -394,8 +394,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "app接待,pc接待管理列表+1")
-    public void Jc_receptionPcPage() {
+    @Test(description = "app接待,pc接待管理列表+1")   //二次
+    public void AJc_receptionPcPage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc登录
@@ -412,8 +412,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
 
             //完成接待
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            jc.finishReception(id[0], id[1]);
+//            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+//            jc.finishReception(id[0], id[1]);
 
             //pc登录
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
@@ -430,12 +430,15 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1")
-    public void Jc_canclereception() {
+    @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1" )
+    public void BJc_canclereception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //开始接待
-            Long id[] = pf.startReception(pp.carplate);
+            Long id[] = new Long[2];
+            JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
+            id[0] = dd.getLong("id");
+            id[1] = dd.getLong("shop_id");
 
             int total = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknum[] = pf.appTask();
@@ -457,7 +460,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     //**************************今日数据******************************
-    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")
+    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")   //三次
     public void Jc_receptionTodayDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -503,7 +506,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
     //核销码异常验证  ok
     @Test(description = "app核销码异常验证", dataProvider = "HEXIAONUM")
-    public void Jc_ApphexiaoAB(String num) {
+    public void Jc_hexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.verification(num, false).getInteger("code");
@@ -517,7 +520,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
     //车牌号异常验证  ok
     @Test(description = "app接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
-    public void Jc_AppReceiptAb(String plate) {
+    public void Jc_ReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.appReceptionAdmitcode(plate).getInteger("code");
@@ -570,7 +573,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "登录登出验证")
-    public void apploginNor() {
+    public void Jc_apploginNor() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin2(pp.jdgw, pp.jdgwpassword, true);
@@ -587,7 +590,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/17 11:45
      **/
     @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
-    public void apploginAb(String phone) {
+    public void Jc_apploginAb(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.appLogin2(phone, "000000", false).getInteger("code");
@@ -600,7 +603,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "CODE", dataProviderClass = DataAbnormal.class)
-    public void apploginAb2(String code) {
+    public void Jc_apploginAb2(String code) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code1 = jc.appLogin2(pp.jdgw, code, false).getInteger("code");
@@ -656,4 +659,98 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             saveData("app核销记录数据一致校验");
         }
     }
+
+    //2.0 变更接待  调试时需注意账号登录登出顺序
+//    @Test(description = "app变更接待,接待任务变更")
+    public void Jc_recepchangetion() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //开始接待
+            Long id[] = pf.startReception(pp.carplate7);
+            //变更接待前
+            int total = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknum[] = pf.appTask();
+
+            jc.receptorChange(id[0], id[1],pp.userid2);    //变更接待
+
+            //变更接待后
+            int total2 = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknumA[] = pf.appTask();
+
+            jc.receptorChange(id[0], id[1],pp.userid);    //变更接待，变回来
+            int total3 = jc.appreceptionPage(null, 10).getInteger("total");
+
+            //完成接待
+            jc.finishReception(id[0], id[1]);
+
+            Preconditions.checkArgument(total - total2 == 1, "变更接待后接待列表未-1,接待前：" + total + "，接待后：" + total2);
+            Preconditions.checkArgument(total3 - total2 == 1, "变更接待后接待列表未-1,接待前：" + total2 + "，接待后：" + total3);
+
+            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "变更接待后今日任务-分子+1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "变更接待后今日任务-分母+1");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-appapp变更接待,接待任务变更");
+        }
+    }
+
+    //2.0 变更接待
+//    @Test(description = "变更接待列表")
+    public void receptorOnlyList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.receptorList(Long.parseLong(pp.shopIdZ));
+            jp.spiltString(data.toJSONString(),"$.list[*].uid&&$.list[*].name&&$.list[*].phone");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("变更接待列表返回值校验");
+        }
+    }
+    /**
+     * @description :新增一个接待权限账户，接待人员列表+1
+     * @date :2021/1/21 14:56
+     **/
+//    @Test(description = "新增一个接待权限账户，接待人员列表+1")
+    public void receptorListAndCreateAccount() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建账户前，接待列表人数
+            Integer total=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+            //创建账户
+            JSONArray r_dList = new JSONArray();
+            r_dList.add(pp.roleId);
+
+            JSONArray shop_list = new JSONArray();
+            shop_list.add(pp.shopIdZ);
+            String name=""+System.currentTimeMillis();
+            String phone=pf.genPhoneNum();
+
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+             jc.organizationAccountAdd(name, phone, r_dList, shop_list,true);
+
+            JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("id");
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            Integer totalAfterAdd=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+
+            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.organizationAccountDelete(account);
+
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            Integer totalAfterDelate=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+            Preconditions.checkArgument(totalAfterAdd-total==1,"新增接待权限账户，接待人原列表+1");
+            Preconditions.checkArgument(totalAfterDelate-totalAfterAdd==-1,"删除接待权限账户，接待人原列表-1");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增/删除接待权限账户，接待人原列表+-1");
+        }
+    }
+
 }

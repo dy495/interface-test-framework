@@ -23,5 +23,6 @@
         <mapper resource="mapper/reportTime.xml"/>
         <mapper resource="mapper/protectTime.xml"/>
         <mapper resource="mapper/returnVisitTime.xml"/>
+        <mapper resource="mapper/AppletCustomerReturn.xml"/>
     </mappers>
 </configuration>

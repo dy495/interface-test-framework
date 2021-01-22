@@ -340,7 +340,6 @@ public class JcFunction {
      **/
 
     public Integer getVoucherTotal() {
-        jc.appletLoginToken(pp.appletTocken);
         JSONObject data = jc.appletVoucherList(null, "GENERAL", 20);
         JSONObject lastValue = data.getJSONObject("last_value");
         JSONArray list = data.getJSONArray("list");
