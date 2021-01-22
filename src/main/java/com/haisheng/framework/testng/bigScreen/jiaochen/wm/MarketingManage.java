@@ -966,7 +966,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 JSONObject jsonObject = (JSONObject) e;
                 String packageName = jsonObject.getString("package_name");
                 String price = jsonObject.getString("price");
-                String listPrice =  util.getPackageInfo(packageName).getPrice();
+                String listPrice = util.getPackageInfo(packageName).getPrice();
                 CommonUtil.valueView(price, listPrice);
                 Preconditions.checkArgument(listPrice.equals(price), packageName + "购买套餐时套餐价格为：" + price + "此套餐列表展示套餐价格为：" + listPrice);
                 CommonUtil.logger(packageName);
@@ -1239,7 +1239,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
             //消息发送一张卡券
             IScene sendMesScene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(phoneList).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
                     .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true).build();
             jc.invokeApi(sendMesScene);
             long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
