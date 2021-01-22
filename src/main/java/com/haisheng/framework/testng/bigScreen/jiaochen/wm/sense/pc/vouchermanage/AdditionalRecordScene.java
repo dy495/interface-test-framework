@@ -5,8 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class AdditionalRecord extends BaseScene {
-    private final Integer voucherId;
+public class AdditionalRecordScene extends BaseScene {
+    private final Long voucherId;
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

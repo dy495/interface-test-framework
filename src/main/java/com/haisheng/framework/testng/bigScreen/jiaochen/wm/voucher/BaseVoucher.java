@@ -32,7 +32,8 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         logger("FIND " + voucherStatus.name());
         IScene scene = VoucherPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        VoucherPage voucher = vouchers.stream().filter(e -> e.getAuditStatusName().equals(voucherStatus.getName())).findFirst().orElse(null);
+        VoucherPage voucher = vouchers.stream().filter(e -> e.getAuditStatusName().equals(voucherStatus.getName())
+                || e.getInvalidStatusName().equals(voucherStatus.getName())).findFirst().orElse(null);
         if (voucher != null) {
             logger("voucherId is: " + voucher.getVoucherId());
             return voucher.getVoucherId();

@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherDetail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -58,7 +59,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = "47944";
+        commonConfig.shopId = product.getShopId();
         beforeClassInit(commonConfig);
     }
 
@@ -94,23 +95,23 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 //优惠券状态=待审核
                 VoucherPage voucher = util.getVoucherInfo(voucherName);
                 Integer auditStatusName = voucher.getVoucherStatus();
-                CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.getNameById(auditStatusName), VoucherStatusEnum.WAITING.getName());
+                CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.getNameById(auditStatusName), VoucherStatusEnum.WAITING.getName());
                 //优惠券变更记录+1
                 Long voucherId = util.getVoucherId(voucherName);
                 IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
                 JSONObject response = visitor.invokeApi(changeRecordScene);
                 int total = response.getInteger("total");
-                CommonUtil.checkResult("优惠券变更记录数", 1, total);
+                CommonUtil.checkResult(voucherName + " 变更记录数", 1, total);
                 String changeItem = response.getJSONArray("list").getJSONObject(0).getString("change_item");
-                CommonUtil.checkResult("变更事项", ChangeItemEnum.CREATE.getName(), changeItem);
+                CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.CREATE.getName(), changeItem);
                 //审核列表+1
                 int newApplyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
-                CommonUtil.checkResult("优惠券审批列表数", applyTotal + 1, newApplyTotal);
+                CommonUtil.checkResult(voucherName + " 审批列表数", applyTotal + 1, newApplyTotal);
                 //审核状态=审核中
                 VoucherApply voucherApply = util.getVoucherApplyInfo(voucherName);
-                CommonUtil.checkResult("优惠券审核状态", ApplyStatusEnum.AUDITING.getName(), voucherApply.getStatusName());
+                CommonUtil.checkResult(voucherName + " 审核列表状态", ApplyStatusEnum.AUDITING.getName(), voucherApply.getStatusName());
                 //申请类型=首发
-                CommonUtil.checkResult("优惠券申请类型", "首发", voucherApply.getApplyTypeName());
+                CommonUtil.checkResult(voucherName + " 审核申请类型", ApplyTypeEnum.VOUCHER.getName(), voucherApply.getApplyTypeName());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -128,23 +129,24 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 List<Long> voucherIds = util.collectBean(scene, VoucherPage.class).stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
                 List<VoucherDetail> voucherDetails = voucherIds.stream().map(id -> visitor.invokeApi(VoucherDetailScene.builder().id(id).build())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, VoucherDetail.class)).collect(Collectors.toList());
                 voucherDetails.forEach(e -> {
-                    CommonUtil.checkResult("卡券描述", EnumContent.B.getContent(), e.getVoucherDescription());
-                    CommonUtil.checkResult("卡券主体类型", util.getSubjectType(), e.getSubjectType());
-                    CommonUtil.checkResult("卡券主体类型id", util.getSubjectDesc(util.getSubjectType()), e.getSubjectId());
-                    CommonUtil.checkResult("卡券面值", 49.99, e.getParValue());
-                    CommonUtil.checkResult("卡券类型", anEnum.name(), e.getCardType());
-                    CommonUtil.checkResult("卡券类型名称", anEnum.getDesc(), e.getCardTypeName());
+                    String voucherName = e.getVoucherName();
+                    CommonUtil.checkResult(voucherName + " 描述", EnumContent.B.getContent(), e.getVoucherDescription());
+                    CommonUtil.checkResult(voucherName + " 主体类型", util.getSubjectType(), e.getSubjectType());
+                    CommonUtil.checkResult(voucherName + " 主体类型id", util.getSubjectDesc(util.getSubjectType()), e.getSubjectId());
+                    CommonUtil.checkResult(voucherName + " 面值", 49.99, e.getParValue());
+                    CommonUtil.checkResult(voucherName + " 类型", anEnum.name(), e.getCardType());
+                    CommonUtil.checkResult(voucherName + " 类型名称", anEnum.getDesc(), e.getCardTypeName());
                     if (anEnum.getDesc().equals(VoucherTypeEnum.COMMODITY_EXCHANGE.getDesc())) {
-                        CommonUtil.checkResult("满足金额", 999.99, e.getThresholdPrice());
-                        CommonUtil.checkResult("兑换商品", "兑换布加迪威龙一辆", e.getExchangeCommodityName());
+                        CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 商品", "兑换布加迪威龙一辆", e.getExchangeCommodityName());
                     }
                     if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
-                        CommonUtil.checkResult("满足金额", 999.99, e.getThresholdPrice());
-                        CommonUtil.checkResult("折扣", 2.5, e.getDiscount());
-                        CommonUtil.checkResult("最对减", 100.00, e.getMostDiscount());
+                        CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 折扣", 2.5, e.getDiscount());
+                        CommonUtil.checkResult(voucherName + " 最对减", 100.00, e.getMostDiscount());
                     }
                     if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
-                        CommonUtil.checkResult("满足金额", 999.99, e.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
                     }
                 });
             });
@@ -173,20 +175,20 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             VoucherDetail voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetail.class);
             //优惠券变更记录+1
             int newChangeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
-            CommonUtil.checkResult("变更记录数量", changeRecordTotal + 1, newChangeRecordTotal);
+            CommonUtil.checkResult(newVoucherName + " 变更记列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //变更事项为编辑优惠券
             String changeItem = visitor.invokeApi(changeRecordScene).getJSONArray("list").getJSONObject(0).getString("change_item");
-            CommonUtil.checkResult("变更事项", ChangeItemEnum.EDIT.getName(), changeItem);
+            CommonUtil.checkResult(newVoucherName + " 变更记录变更事项", ChangeItemEnum.EDIT.getName(), changeItem);
             //卡券列表
-            CommonUtil.checkResult("优惠券名称", newVoucherName, voucherDetail.getVoucherName());
-            CommonUtil.checkResult("卡券详情", EnumContent.D.getContent(), voucherDetail.getVoucherDescription());
-            CommonUtil.checkResult("适用门店", shopIds, voucherDetail.getShopIds());
-            CommonUtil.checkResult("业务类型", ShopTypeEnum.DIFF.getId(), voucherDetail.getShopType());
-            CommonUtil.checkResult("是否自助核销", false, voucherDetail.getSelfVerification());
+            CommonUtil.checkResult(newVoucherName + " 名称", newVoucherName, voucherDetail.getVoucherName());
+            CommonUtil.checkResult(newVoucherName + " 详情", EnumContent.D.getContent(), voucherDetail.getVoucherDescription());
+            CommonUtil.checkResult(newVoucherName + " 适用门店", shopIds, voucherDetail.getShopIds());
+            CommonUtil.checkResult(newVoucherName + " 业务类型", ShopTypeEnum.DIFF.getId(), voucherDetail.getShopType());
+            CommonUtil.checkResult(newVoucherName + " 是否自助核销", false, voucherDetail.getSelfVerification());
             //审核列表
             VoucherApply voucherApply = util.getVoucherApplyInfo(newVoucherName);
-            CommonUtil.checkResult("此卡券审核列表名称", newVoucherName, voucherApply.getName());
-            CommonUtil.checkResult("此卡券审核列表状态", ApplyStatusEnum.AUDITING.getName(), voucherApply.getStatusName());
+            CommonUtil.checkResult(newVoucherName + " 审核列表名称", newVoucherName, voucherApply.getName());
+            CommonUtil.checkResult(newVoucherName + " 审核列表状态", ApplyStatusEnum.AUDITING.getName(), voucherApply.getStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -204,10 +206,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //校验
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherInfo(voucherName);
-            CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.RECALL.getName(), voucherPage.getVoucherStatus());
+            CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.RECALL.getName(), voucherPage.getVoucherStatus());
             //审核列表
             VoucherApply voucherApply = util.getVoucherApplyInfo(voucherName);
-            CommonUtil.checkResult("此优惠券在审核列表状态", ApplyStatusEnum.CANCEL.getName(), voucherApply.getStatusName());
+            CommonUtil.checkResult(voucherName + " 审核列表状态", ApplyStatusEnum.CANCEL.getName(), voucherApply.getStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -220,13 +222,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
             //删除
-            IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
-            visitor.invokeApi(deleteVoucherScene);
+            visitor.invokeApi(DeleteVoucherScene.builder().id(voucherId).build());
             //校验
             String voucherName = util.getVoucherName(voucherId);
             IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
             JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
-            CommonUtil.checkResult("结果列表", 0, list.size());
+            CommonUtil.checkResult(voucherName + " 结果列表", 0, list.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -239,13 +240,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
             //删除
-            IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
-            visitor.invokeApi(deleteVoucherScene);
+            visitor.invokeApi(DeleteVoucherScene.builder().id(voucherId).build());
             //校验
             String voucherName = util.getVoucherName(voucherId);
             IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
             JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
-            CommonUtil.checkResult("结果列表", 0, list.size());
+            CommonUtil.checkResult(voucherName + " 结果列表", 0, list.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -263,7 +263,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //校验
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherInfo(voucherName);
-            CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.STOP, voucherPage.getVoucherStatus());
+            CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.STOP, voucherPage.getVoucherStatus());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -271,7 +271,76 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(description = "优惠券管理--进行中优惠券作废--状态=已作废&变更记录+1变更事项=作废优惠券")
+    public void voucherManage_data_8() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            int changeRecordTotal = visitor.invokeApi(ChangeRecordScene.builder().voucherId(voucherId).build()).getInteger("total");
+            //作废优惠券
+            visitor.invokeApi(InvalidVoucher.builder().id(voucherId).build());
+            //校验优惠券状态
+            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = util.getVoucherInfo(voucherName);
+            CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.INVALIDED.getName(), voucherPage.getVoucherStatus());
+            JSONObject response = visitor.invokeApi(ChangeRecordScene.builder().voucherId(voucherId).build());
+            //校验变更记录列表数
+            int newChangeRecordTotal = response.getInteger("total");
+            CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
+            //校验变更记录变更事项
+            String changeItem = response.getJSONArray("list").getJSONObject(0).getString("change_item");
+            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), changeItem);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--进行中优惠券作废--状态=已作废&变更记录+1变更事项=作废优惠券");
+        }
+    }
+
+    @Test(description = "优惠券管理--进行中优惠券增发--审核通过状态")
+    public void voucherManage_data_9() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            Long surplusInventory = util.getVoucherInfo(voucherName).getSurplusInventory();
+            IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
+            int addTotal = visitor.invokeApi(additionalRecordScene).getInteger("total");
+            IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
+            int changeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
+            //增发优惠券
+            visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(10).build());
+            //优惠券审核列表卡券状态=增发
+            VoucherApply voucherApply = util.getVoucherApplyInfo(voucherName);
+            CommonUtil.checkResult(voucherName + " 审核申请类型", ApplyTypeEnum.ADDITIONAL.getName(), voucherApply.getApplyTypeName());
+            CommonUtil.checkResult(voucherName + " 审核列表状态", ApplyStatusEnum.AUDITING.getName(), voucherApply.getStatusName());
+            //增发记录数量+1
+            JSONObject response = visitor.invokeApi(additionalRecordScene);
+            int newAddTotal = response.getInteger("total");
+            CommonUtil.checkResult(voucherName + " 增发记录列表数", addTotal + 1, newAddTotal);
+            //增发记录状态
+            String statusName = response.getJSONArray("list").getJSONObject(0).getString("status_name");
+            CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.WAITING, statusName);
+            //审核通过优惠券剩余库存+10
+            util.applyVoucher(voucherName, "1");
+            Long newSurplusInventory = util.getVoucherInfo(voucherName).getSurplusInventory();
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory + 10, newSurplusInventory);
+            //变更记录变更事项
+            JSONObject changeResponse = visitor.invokeApi(changeRecordScene);
+            int newChangeRecordTotal = changeResponse.getInteger("total");
+            CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
+            String changeItem = changeResponse.getJSONArray("list").getJSONObject(0).getString("change_item");
+            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), changeItem);
+            //增发记录状体=已通过
+            JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
+            String newStatusName = newResponse.getJSONArray("list").getJSONObject(0).getString("status_name");
+            CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.WORKING, newStatusName);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--进行中优惠券增发--审核通过状态");
+        }
+    }
+
+    @Test()
     public void test() {
         Long getVoucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         System.err.println(getVoucherId);

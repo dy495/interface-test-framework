@@ -278,7 +278,6 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券id
      */
     public Long getObsoleteVoucherId() {
-        List<Long> voucherList = new ArrayList<>();
         IScene scene = VoucherPageScene.builder().build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         Long voucherId = vouchers.stream().filter(e -> e.getInvalidStatusName().equals("已作废") && e.getAuditStatusName().equals("已通过") && e.getSurplusInventory() != null && e.getSurplusInventory() != 0).map(VoucherPage::getVoucherId).findFirst().orElse(null);
@@ -299,7 +298,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public void addVoucher(String voucherName, Integer number) {
         Long voucherId = getVoucherId(voucherName);
-        IScene scene = AddVoucher.builder().id(voucherId).addNumber(number).build();
+        IScene scene = AddVoucherScene.builder().id(voucherId).addNumber(number).build();
         visitor.invokeApi(scene);
     }
 

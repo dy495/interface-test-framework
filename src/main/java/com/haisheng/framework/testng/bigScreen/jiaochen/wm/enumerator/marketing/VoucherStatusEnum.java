@@ -46,7 +46,7 @@ public enum VoucherStatusEnum {
     /**
      * 已作废
      */
-    INVALIDED(5, "已作废", null),
+    INVALIDED(5, "已作废", new InvalidVoucher.Builder()),
 
     /**
      * 已售罄

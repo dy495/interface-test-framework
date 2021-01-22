@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public class AddVoucher extends BaseScene {
+public class AddVoucherScene extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

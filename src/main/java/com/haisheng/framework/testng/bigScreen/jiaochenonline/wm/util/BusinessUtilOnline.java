@@ -268,7 +268,7 @@ public class BusinessUtilOnline {
      */
     public void addVoucher(String voucherName, Integer num) {
         Long voucherId = getVoucherId(voucherName);
-        IScene scene = AddVoucher.builder().id(voucherId).addNumber(num).build();
+        IScene scene = AddVoucherScene.builder().id(voucherId).addNumber(num).build();
         jc.invokeApi(scene);
     }
 

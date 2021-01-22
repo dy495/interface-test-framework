@@ -1795,7 +1795,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Integer[] integers = {1, 100, 100000000};
             Arrays.stream(integers).forEach(count -> {
                 long id = util.getVoucherId(EnumVP.ONE.getVoucherName());
-                jc.invokeApi(AddVoucher.builder().id(id).addNumber(count).build());
+                jc.invokeApi(AddVoucherScene.builder().id(id).addNumber(count).build());
                 IScene scene = ApplyPageScene.builder().name(EnumVP.ONE.getVoucherName()).build();
                 JSONObject object = jc.invokeApi(scene).getJSONArray("list").getJSONObject(0);
                 String statusName = object.getString("status_name");
@@ -1818,7 +1818,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             Integer[] integers = {null, 100000001};
             Arrays.stream(integers).forEach(count -> {
                 long id = util.getVoucherId(EnumVP.ONE.getVoucherName());
-                jc.invokeApi(AddVoucher.builder().id(id).addNumber(count).build(), false);
+                jc.invokeApi(AddVoucherScene.builder().id(id).addNumber(count).build(), false);
                 IScene scene = ApplyPageScene.builder().name(EnumVP.ONE.getVoucherName()).build();
                 JSONObject object = jc.invokeApi(scene).getJSONArray("list").getJSONObject(0);
                 String statusName = object.getString("status_name");
@@ -1839,7 +1839,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         try {
             long id = util.getObsoleteVoucherId();
-            String message = jc.invokeApi(AddVoucher.builder().id(id).addNumber(1).build(), false).getString("message");
+            String message = jc.invokeApi(AddVoucherScene.builder().id(id).addNumber(1).build(), false).getString("message");
             String err = "";
             CommonUtil.checkResult("增发卡券", "过期卡券", err, message);
         } catch (Exception | AssertionError e) {

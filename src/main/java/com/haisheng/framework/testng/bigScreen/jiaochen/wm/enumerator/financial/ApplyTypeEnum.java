@@ -21,9 +21,9 @@ public enum ApplyTypeEnum {
     ADDITIONAL(1, "增发"),
     ;
 
-    private Integer id;
+    private final Integer id;
 
-    private String name;
+    private final String name;
 
     ApplyTypeEnum(Integer id, String name) {
         this.id = id;
