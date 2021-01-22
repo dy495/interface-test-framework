@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception;
 
 /**
- * @author ：Created by yanghang on 2020/5/28.  18:05
+ * @author wangmin
  */
 public enum  ManagerRoleType {
 

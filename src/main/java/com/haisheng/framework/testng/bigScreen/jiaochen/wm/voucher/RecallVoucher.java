@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -11,18 +11,18 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author wangmin
  * @date 2021/1/20 16:41
- * @desc 撤销卡券
+ * @desc 撤销状态
  */
-public class RecallGenerator extends BaseGenerator {
+public class RecallVoucher extends BaseVoucher {
 
-    public RecallGenerator(Builder builder) {
+    public RecallVoucher(Builder builder) {
         super(builder);
     }
 
     @Override
     public void execute(@NotNull Visitor visitor) {
         logger("CREATE RECALL START");
-        Long voucherId = new WaitingVoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildGenerator().getVoucherId();
+        Long voucherId = new WaitingVoucher.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
         logger("DO RECALL");
         recallVoucher(voucherId);
@@ -34,16 +34,15 @@ public class RecallGenerator extends BaseGenerator {
     public static class Builder extends BaseBuilder {
 
         @Override
-        public IGenerator buildGenerator() {
-            return new RecallGenerator(this);
+        public IVoucher buildVoucher() {
+            return new RecallVoucher(this);
         }
     }
 
     /**
      * 卡券撤销
      *
-     * @param voucherName 卡券名称
-     * @param status      通过 1/拒绝2
+     * @param voucherId 卡券id
      */
     public void recallVoucher(Long voucherId) {
         IScene scene = RecallVoucherScene.builder().id(voucherId).build();

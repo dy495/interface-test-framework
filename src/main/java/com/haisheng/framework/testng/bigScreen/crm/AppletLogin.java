@@ -90,7 +90,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("保时捷小程序每4小时登陆一次，防止失效");
+            saveData("保时捷小程序每小时登陆一次，防止失效");
         }
     }
 
@@ -111,7 +111,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("保时捷小程序每4小时登陆一次，防止失效");
+            saveData("保时捷小程序每小时登陆一次，防止失效");
         }
     }
 
@@ -129,7 +129,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("轿辰小程序每4小时登陆一次，防止失效");
+            saveData("轿辰小程序每小时登陆一次，防止失效");
         }
     }
 
@@ -147,7 +147,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("轿辰小程序每4小时登陆一次，防止失效");
+            saveData("轿辰小程序每小时登陆一次，防止失效");
         }
     }
 

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.*;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -14,56 +14,63 @@ import java.util.Optional;
  */
 public enum VoucherStatusEnum {
     /**
+     * 无用处，标记使用
+     */
+    CREATE(-1, "初始状态", new VoucherGenerator.Builder()),
+
+    /**
      * 待审核
      */
-    WAITING(0, "审核中", new WaitingVoucherGenerator.Builder()),
+    WAITING(0, "审核中", new WaitingVoucher.Builder()),
 
     /**
      * 已撤回
      */
-    RECALL(1, "已撤回", new RecallGenerator.Builder()),
+    RECALL(1, "已撤回", new RecallVoucher.Builder()),
 
     /**
      * 审核未通过
      */
-    REJECT(2, "已拒绝", new RejectGenerator.Builder()),
+    REJECT(2, "已拒绝", new RejectVoucher.Builder()),
+
     /**
      * 进行中
      */
-    WORKING(3, "进行中", new WorkingGenerator.Builder()),
+    WORKING(3, "已通过", new WorkingVoucher.Builder()),
+
     /**
      * 暂停发放
      */
     STOP(4, "暂停发放", null),
+
     /**
      * 已作废
      */
     INVALIDED(5, "已作废", null),
+
     /**
      * 已售罄
      */
     SELL_OUT(6, "已售罄", null),
+
     /**
      * 已过期
      */
     EXPIRED(7, "已过期", null),
 
-    /**
-     * 无用处，标记使用
-     */
-    CREATE(-1, "初始状态", new VoucherGenerator.Builder());;
+    ;
 
     @Getter
     private final Integer id;
     @Getter
     private final String name;
     @Getter
-    private final BaseGenerator.BaseBuilder generateBuilder;
+    private final BaseVoucher.BaseBuilder voucherBuilder;
 
-    VoucherStatusEnum(Integer id, String name, BaseGenerator.BaseBuilder generateBuilder) {
+    VoucherStatusEnum(Integer id, String name, BaseVoucher.BaseBuilder voucherBuilder) {
         this.id = id;
         this.name = name;
-        this.generateBuilder = generateBuilder;
+        this.voucherBuilder = voucherBuilder;
     }
 
     public static VoucherStatusEnum findById(Integer id) {

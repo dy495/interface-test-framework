@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer;
 
 /**
- * @author ：Created by yanghang on 2020/6/18.  14:53
+ * @author wangmin
  */
 public enum SexEnum {
 

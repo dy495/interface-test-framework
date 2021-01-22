@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * 文章卡券状态
  *
- * @author huachengyu
+ * @author wangmin
  * @date  2020/7/6  14:56
  */
 public enum ArticleVoucherReceiveTypeEnum {

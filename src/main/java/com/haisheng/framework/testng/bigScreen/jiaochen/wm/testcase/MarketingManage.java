@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
@@ -11,15 +10,12 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherDetail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ShopTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -62,7 +58,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = "48065";
+        commonConfig.shopId = "47944";
         beforeClassInit(commonConfig);
     }
 
@@ -85,10 +81,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int voucherTotal = visitor.invokeApi(VoucherPageScene.builder().build()).getInteger("total");
-            int applyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
-            //创建优惠券
             Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
+                int voucherTotal = visitor.invokeApi(VoucherPageScene.builder().build()).getInteger("total");
+                int applyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
+                //创建优惠券
                 String voucherName = util.createVoucher(1, anEnum);
                 IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
                 visitor.invokeApi(scene);
@@ -99,7 +95,14 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 VoucherPage voucher = util.getVoucherInfo(voucherName);
                 Integer auditStatusName = voucher.getVoucherStatus();
                 CommonUtil.checkResult("优惠券状态", VoucherStatusEnum.getNameById(auditStatusName), VoucherStatusEnum.WAITING.getName());
-                Preconditions.checkArgument(VoucherStatusEnum.getNameById(auditStatusName).equals(VoucherStatusEnum.WAITING.getName()), "新增优惠券状态为审核中,实际状态");
+                //优惠券变更记录+1
+                Long voucherId = util.getVoucherId(voucherName);
+                IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
+                JSONObject response = visitor.invokeApi(changeRecordScene);
+                int total = response.getInteger("total");
+                CommonUtil.checkResult("优惠券变更记录数", 1, total);
+                String changeItem = response.getJSONArray("list").getJSONObject(0).getString("change_item");
+                CommonUtil.checkResult("变更事项", ChangeItemEnum.CREATE.getName(), changeItem);
                 //审核列表+1
                 int newApplyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
                 CommonUtil.checkResult("优惠券审批列表数", applyTotal + 1, newApplyTotal);
@@ -157,14 +160,23 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审核的优惠券id
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildGenerator().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
+            int changeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
             String voucherName = util.getVoucherName(voucherId);
             String newVoucherName = voucherName + "改";
             List<Long> shopIds = util.getShopIdList(2);
             IScene scene = EditVoucher.builder().id(voucherId).voucherName(newVoucherName).voucherDescription(EnumContent.D.getContent()).shopIds(shopIds).shopType(1).selfVerification(false).build();
             visitor.invokeApi(scene);
+            //编辑
             IScene voucherDetailScene = VoucherDetailScene.builder().id(voucherId).build();
             VoucherDetail voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetail.class);
+            //优惠券变更记录+1
+            int newChangeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
+            CommonUtil.checkResult("变更记录数量", changeRecordTotal + 1, newChangeRecordTotal);
+            //变更事项为编辑优惠券
+            String changeItem = visitor.invokeApi(changeRecordScene).getJSONArray("list").getJSONObject(0).getString("change_item");
+            CommonUtil.checkResult("变更事项", ChangeItemEnum.EDIT.getName(), changeItem);
             //卡券列表
             CommonUtil.checkResult("优惠券名称", newVoucherName, voucherDetail.getVoucherName());
             CommonUtil.checkResult("卡券详情", EnumContent.D.getContent(), voucherDetail.getVoucherDescription());
@@ -185,7 +197,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券管理--撤回优惠券--优惠券状态=已撤回&此优惠券在审核列表状态=已取消")
     public void voucherManage_data_4() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildGenerator().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             //撤回
             IScene recallVoucherScene = RecallVoucherScene.builder().id(voucherId).build();
             visitor.invokeApi(recallVoucherScene);
@@ -206,7 +218,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券管理--删除已撤回优惠券--此券记录消失")
     public void voucherManage_data_5() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.RECALL).buildGenerator().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
             //删除
             IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
             visitor.invokeApi(deleteVoucherScene);
@@ -225,7 +237,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券管理--删除审核未通过优惠券--此券记录消失")
     public void voucherManage_data_6() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildGenerator().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
             //删除
             IScene deleteVoucherScene = DeleteVoucherScene.builder().id(voucherId).build();
             visitor.invokeApi(deleteVoucherScene);
@@ -244,7 +256,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券管理--暂停发放优惠券--优惠券状态=暂停发放")
     public void voucherManage_data_7() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildGenerator().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
             //暂停发放
             IScene changeProvideStatusScene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
             visitor.invokeApi(changeProvideStatusScene);
@@ -257,6 +269,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("优惠券管理--暂停发放优惠券--优惠券状态=暂停发放");
         }
+    }
+
+    @Test
+    public void test() {
+        Long getVoucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        System.err.println(getVoucherId);
     }
 
 

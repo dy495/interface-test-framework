@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
  * @date 2021/1/20 14:54
  * @desc 卡券生成
  */
-public class VoucherGenerator extends BaseGenerator {
+public class VoucherGenerator extends BaseVoucher {
 
     public VoucherGenerator(Builder builder) {
         super(builder);
@@ -23,10 +23,10 @@ public class VoucherGenerator extends BaseGenerator {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseBuilder {
+    public static class Builder extends BaseVoucher.BaseBuilder {
 
         @Override
-        public IGenerator buildGenerator() {
+        public IVoucher buildVoucher() {
             return new VoucherGenerator(this);
         }
     }

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -17,6 +17,9 @@ import com.haisheng.framework.util.ImageUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,11 +28,11 @@ import java.util.stream.Collectors;
 /**
  * @author wangmin
  * @date 2021/1/20 15:35
- * @desc 审核中卡券生成器
+ * @desc 审核中状态
  */
-public class WaitingVoucherGenerator extends BaseGenerator {
+public class WaitingVoucher extends BaseVoucher {
 
-    public WaitingVoucherGenerator(Builder builder) {
+    public WaitingVoucher(Builder builder) {
         super(builder);
     }
 
@@ -46,8 +49,8 @@ public class WaitingVoucherGenerator extends BaseGenerator {
     public static class Builder extends BaseBuilder {
 
         @Override
-        public IGenerator buildGenerator() {
-            return new WaitingVoucherGenerator(this);
+        public IVoucher buildVoucher() {
+            return new WaitingVoucher(this);
         }
     }
 
@@ -66,44 +69,6 @@ public class WaitingVoucherGenerator extends BaseGenerator {
         return voucherName;
     }
 
-//    /**
-//     * 创建4种优惠券
-//     *
-//     * @param stock 卡券库存
-//     * @param type  卡券类型
-//     * @return 卡券名称
-//     */
-//    private String createVoucher(Integer stock, VoucherTypeEnum type) {
-//        String voucherName = createVoucherName();
-//        CreateVoucher.CreateVoucherBuilder builder = createVoucherBuilder().stock((long) stock).cardType(type.name()).voucherName(voucherName);
-//        switch (type.name()) {
-//            case "FULL_DISCOUNT":
-//                builder.isThreshold(true).thresholdPrice(999.99);
-//                break;
-//            case "COUPON":
-//                builder.isThreshold(true).thresholdPrice(999.99).discount(2.5).mostDiscount(100.00);
-//                break;
-//            case "COMMODITY_EXCHANGE":
-//                builder.isThreshold(true).thresholdPrice(999.99).exchangeCommodityName("兑换布加迪威龙一辆");
-//                break;
-//            default:
-//                builder.isThreshold(false);
-//                break;
-//        }
-//        visitor.invokeApi(builder.build());
-//        return voucherName;
-//    }
-
-//    /**
-//     * 构建卡券信息
-//     *
-//     * @return CreateVoucher.CreateVoucherBuilder
-//     */
-//    private CreateVoucher.CreateVoucherBuilder createVoucherBuilder() {
-//        return CreateVoucher.builder().isDefaultPic(false).voucherPic(getPicPath()).subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType()))
-//                .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList()).selfVerification(true);
-//    }
-
     /**
      * 创建一个不重复的卡券名
      *
@@ -113,7 +78,7 @@ public class WaitingVoucherGenerator extends BaseGenerator {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = "优惠券" + num;
         IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
         }
@@ -139,6 +104,8 @@ public class WaitingVoucherGenerator extends BaseGenerator {
      *
      * @return 卡券成本
      */
+    @NotNull
+    @Contract(pure = true)
     private Double getParValue() {
         return 49.99;
     }
@@ -171,6 +138,7 @@ public class WaitingVoucherGenerator extends BaseGenerator {
      *
      * @return 主体详情
      */
+    @Nullable
     private Long getSubjectId(String subjectType) {
         if (StringUtils.isEmpty(subjectType)) {
             return null;

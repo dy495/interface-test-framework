@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author ：Created by yanghang on 2020/7/6.  15:14
+ * @author wangmin
  */
 public enum ArticleLabelEnum {
 
