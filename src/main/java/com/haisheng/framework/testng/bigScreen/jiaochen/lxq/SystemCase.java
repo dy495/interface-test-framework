@@ -1435,7 +1435,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //商品品牌
-    @Test(dataProvider = "BRANDNAME")
+    //@Test(dataProvider = "BRANDNAME")
     public void brandFilter1(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1467,7 +1467,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test
+    //@Test
     public void brandFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1489,7 +1489,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void brandFilter3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1511,7 +1511,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void brandShow() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1540,7 +1540,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(dataProvider = "BRANDADD") //必填项/非必填项没写 脑图没有
+    //@Test(dataProvider = "BRANDADD") //必填项/非必填项没写 脑图没有
     public void brandAdd(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1567,7 +1567,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test(dataProvider = "BRANDADDERR")
+    //@Test(dataProvider = "BRANDADDERR")
     public void brandAddErr(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1595,7 +1595,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
+    //@Test
     public void brandAddErr1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
