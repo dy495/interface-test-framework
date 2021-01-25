@@ -16,16 +16,16 @@ public class FissionVoucherAddScene extends BaseScene {
     private final Integer participationLimitType;
     private final List<Integer> chooseLabels;
     private final Integer receiveLimitType;
-    private final Integer receiveLimitTimes;
+    private final String receiveLimitTimes;
     private final String title;
     private final String  rule;
     private final String startDate;
     private final String endDate;
     private final String subjectType;
-    private final Integer subjectId;
+    private final Long subjectId;
     private final String label;
-    private final Array picList;
-    private final Integer shareNum;
+    private final List<String> picList;
+    private final String shareNum;
     private final JSONObject shareVoucher;
     private final JSONObject invitedVoucher;
 
