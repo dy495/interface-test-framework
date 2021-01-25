@@ -867,6 +867,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             //休息日
             System.out.println(afternoonAfterend.equals(afternoon1));
             System.out.println(morningAfterend.equals(morning1));
+            //TODO:此处有bug，体测后，将以上四个输出语句修改为checkArgument
 
 
 

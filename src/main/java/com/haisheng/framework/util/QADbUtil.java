@@ -363,10 +363,10 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
-    public void updateAppletCustomer(AppletCustomer appletcustomer) {
+    public void updateAppletCustomer(String  wechatId) {
         getNewRdSqlSession();
         IAppletReturnNewDao AppletReturnNewDao = rdDailySqlSession.getMapper(IAppletReturnNewDao.class);
-        AppletReturnNewDao.updateAppletCustomer(appletcustomer);
+        AppletReturnNewDao.updateAppletCustomer(wechatId);
         rdDailySqlSession.commit();
     }
 

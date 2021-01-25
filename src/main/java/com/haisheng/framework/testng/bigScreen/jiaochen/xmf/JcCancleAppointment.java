@@ -174,6 +174,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             int result1 = qaDbUtil.selsetDataTempOne("pc_appointment_times", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 0, "取消预约后,该小程序客户预约次数没+1，预约前：" + result1 + "取消预约后：" + result2);
+            //TODO:该处产品有bug,提测后应将预期改为-1
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

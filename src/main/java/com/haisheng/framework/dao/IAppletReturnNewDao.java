@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IAppletReturnNewDao {
-    int updateAppletCustomer(AppletCustomer appletCustomer);
+    void updateAppletCustomer(String id);
     AppletCustomer selectAppletCustomer(String id);
 }

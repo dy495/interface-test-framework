@@ -22,6 +22,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcReceptionRelate"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcAffirmReception"/>
 
         </classes>

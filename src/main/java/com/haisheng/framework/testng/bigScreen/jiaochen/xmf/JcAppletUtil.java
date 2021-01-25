@@ -110,7 +110,19 @@ public class JcAppletUtil extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("接待后，app今日任务分子分母+1");
+//            saveData("查询指定微信id用户名);
+        }
+    }
+
+    @Test()
+    public void appletCustomerReturnNew() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            qaDbUtil.updateAppletCustomer("oBG1v5TXqcugtyGQeidgkBv_Bj0A");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+//            saveData("更新指定微信id 用户为新用户");
         }
     }
 
