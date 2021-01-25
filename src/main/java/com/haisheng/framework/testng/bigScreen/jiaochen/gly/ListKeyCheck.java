@@ -93,7 +93,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
                       Preconditions.checkArgument(obj.containsKey("price"),"保养配置中第 "+num+" 行的信息中的key值：price 为空");
                       Preconditions.checkArgument(obj.containsKey("status"),"保养配置中第 "+num+" 行的信息中的key值：status 为空");
                   }
-                 }
+              }
           }
       }catch(Exception|AssertionError e){
           appendFailReason(e.toString());
@@ -218,7 +218,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.containsKey("award_score"),"签到配置中第 "+num+" 行的信息中的key值：award_score 为空");
                     Preconditions.checkArgument(obj.containsKey("status"),"签到配置中第 "+num+" 行的信息中的key值：status 为空");
                     Preconditions.checkArgument(obj.containsKey("status_name"),"签到配置中第 "+num+" 行的信息中的key值：status_name 为空");
-                     }
+                }
             }
         }catch(Exception|AssertionError e){
             appendFailReason(e.toString());
@@ -251,7 +251,6 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.containsKey("status"),"分享管理中第 "+num+" 行的信息中的key值：status 为空");
                     Preconditions.checkArgument(obj.containsKey("business_type"),"分享管理中第 "+num+" 行的信息中的key值：business_type 为空");
                     Preconditions.checkArgument(obj.containsKey("business_type_name"),"分享管理中第 "+num+" 行的信息中的key值：business_type_name 为空");
-
                 }
             }
         }catch(Exception|AssertionError e){
@@ -289,7 +288,6 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.containsKey("user_account"),"导入记录中第 "+num+" 行的信息中的key值：user_account 为空");
                     Preconditions.checkArgument(obj.containsKey("is_can_download"),"导入记录中第 "+num+" 行的信息中的key值：is_can_download 为空");
                     Preconditions.checkArgument(obj.containsKey("file_upload_url"),"导入记录中第 "+num+" 行的信息中的key值：file_upload_url 为空");
-
                 }
             }
         }catch(Exception|AssertionError e){
@@ -327,7 +325,6 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.containsKey("user_account"),"导出记录中第 "+num+" 行的信息中的key值：user_account 为空");
                     Preconditions.checkArgument(obj.containsKey("status"),"导出记录中第 "+num+" 行的信息中的key值：status 为空");
                     Preconditions.checkArgument(obj.containsKey("file_upload_url"),"导出记录中第 "+num+" 行的信息中的key值：file_upload_url 为空");
-
                 }
             }
         }catch(Exception|AssertionError e){
@@ -442,7 +439,6 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
             saveData("增发记录列表key值不为空校验");
         }
     }
-
 
 
 
