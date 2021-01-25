@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -28,6 +31,7 @@ import java.util.List;
  */
 
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
+
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     jiaoChenInfo info = new  jiaoChenInfo();
@@ -1226,7 +1230,211 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //2021-01-25
+    //@Test(dataProvider = "NAME")
+    public void categoryAddFirst(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = (int) System.currentTimeMillis();
+            int code = jc.categoryCreate(false,name,"一级品类",null,info.logo,id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+
+            //删除品类
+            jc.categoryDel(id,1,1,true);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建一级品类,品类名称1/5/10个字");
+        }
+    }
+
+    @DataProvider(name = "NAME")
+    public  Object[] name() {
+        return new String[]{
+                "a",
+                "12345",
+                "1Aa啊！@#，嗷嗷",
+
+        };
+    }
+
+    //@Test
+    public void categoryAddFirstErr1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = jc.categoryCreate(false,"12345678901","一级品类",null,info.logo,null).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建一级品类,品类名称11个字");
+        }
+    }
+
+    //@Test(dataProvider = "NAME")
+    public void categoryAddSecond(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //启用一级品类
+            jc.categoryChgStatus(info.first_category,true);
+
+            int id = (int) System.currentTimeMillis();
+            int id2 = id+ 1000;
+            int code = jc.categoryCreate(false,name,"二级品类",info.first_category,info.logo,id).getInteger("code");
+
+            //关闭一级品类
+            jc.categoryChgStatus(info.first_category,false);
+            int code2 = jc.categoryCreate(false,name,"二级品类",info.first_category,info.logo,id2).getInteger("code");
+            Preconditions.checkArgument(code==1000,"一级品类状态=开启，状态码为"+code);
+            Preconditions.checkArgument(code2==1000,"一级品类状态=关闭，状态码为"+code);
+            //删除品类
+            jc.categoryDel(id,1,1,true);
+            jc.categoryDel(id2,1,1,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建二级品类,所属一级品类存在");
+        }
+    }
+
+    //@Test
+    public void categoryAddSecondErr() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //启用一级品类
+            jc.categoryChgStatus(info.first_category,true);
+
+            int id = (int) System.currentTimeMillis();
+            int code = jc.categoryCreate(false,info.stringsix,"二级品类",99999999,info.logo,id).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+            //删除品类
+            jc.categoryDel(id,1,1,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建二级品类,所属一级品类不存在");
+        }
+    }
+
+    //@Test(dataProvider =  "CATEGORYID")
+    public void categoryAdd2OR3Err(String level, String fatherid) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String name = info.stringsix +"aa";
+
+            int id = (int) System.currentTimeMillis();
+            int id2 = id+ 9000;
+            jc.categoryCreate(false,name,level,Integer.parseInt(fatherid),info.logo,id);
+
+            int code = jc.categoryCreate(false,name,level,Integer.parseInt(fatherid),info.logo,id2).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+            //删除品类
+            jc.categoryDel(id,1,1,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建二级/三级品类,品类名称重复");
+        }
+    }
+    @DataProvider(name = "CATEGORYID")
+    public  Object[] categroyid() {
+        return new String[][]{
+                {"二级品类",Integer.toString(info.first_category)},
+                {"三级品类",Integer.toString(info.second_category)},
+
+        };
+    }
+
+    //@Test
+    public void categoryAddSecondErr2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int id = (int) System.currentTimeMillis();
+            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",info.first_category,info.logo,id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+
+            //删除品类
+            jc.categoryDel(id,1,1,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建二级品类,品类名称与已存在的一级品类重复");
+        }
+    }
+
+
+    //@Test
+    public void categoryAddErr() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int id = (int) System.currentTimeMillis();
+            //不填写品类名称
+            int code = jc.categoryCreate(false,null,"一级品类",null,info.logo,id+1).getInteger("code");
+            Preconditions.checkArgument(code==1001,"不填写品类名称,状态码期待1001，实际"+code);
+
+
+            //不填写所属分类
+
+            int code2 = jc.categoryCreate(false,"不填写所属品类","二级品类",null,info.logo,id+2).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"不填写所属品类,状态码期待1001，实际"+code);
+
+            //不选择logo
+            int code3 = jc.categoryCreate(false,"不选择logo","一级品类",null,null,id+3).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"不选择logo,状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】新建品类,不填写必填项");
+        }
+    }
 
 
 
+
+
+
+
+
+    //@Test
+    public void show() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Visitor visitor =new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
+
+            Long voucherId=new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("卡券用法示例");
+        }
+    }
 }
