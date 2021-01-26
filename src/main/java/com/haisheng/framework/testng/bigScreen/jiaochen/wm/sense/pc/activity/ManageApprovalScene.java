@@ -5,27 +5,25 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
- * 活动管理-活动报名列表
+ * 活动管理-活动审批
  */
 @Builder
-public class RegisterScene extends BaseScene {
+public class ManageApprovalScene extends BaseScene {
     private final Integer  status;
-    private final Integer page;
-    private final Integer  size;
-    private final Integer activityId;
+    private final List<Long> ids;
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("page",page );
-        object.put("size",size );
         object.put("status",status );
-        object.put("activity_id",activityId );
+        object.put("ids",ids );
         return object;
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/register/page";
+        return "/jiaochen/pc/activity/manage/approval";
     }
 
     @Override

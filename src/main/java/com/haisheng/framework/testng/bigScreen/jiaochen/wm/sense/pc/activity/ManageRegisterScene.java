@@ -1,24 +1,31 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 活动管理-推广活动
+ * 活动管理-活动报名列表
  */
 @Builder
-public class PromotionScene extends BaseScene {
-    private final Long  id;
+public class ManageRegisterScene extends BaseScene {
+    private final Integer  status;
+    private final Integer page;
+    private final Integer  size;
+    private final Integer activityId;
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("id",id );
+        object.put("page",page );
+        object.put("size",size );
+        object.put("status",status );
+        object.put("activity_id",activityId );
         return object;
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/promotion";
+        return "/jiaochen/pc/activity/manage/register/page";
     }
 
     @Override

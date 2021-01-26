@@ -10,7 +10,7 @@ import java.util.List;
  * 活动管理-招募活动报名列表
  */
 @Builder
-public class RecruitRegisterInformationScene extends BaseScene {
+public class ManageRecruitRegisterInformationScene extends BaseScene {
     private final Integer code;
     private final String message;
     private final String  requestId;

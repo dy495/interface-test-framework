@@ -1,31 +1,24 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 活动管理-活动报名审批
+ * 活动管理-删除活动
  */
 @Builder
-public class RegisterApprovalScene extends BaseScene {
-    private final Integer activityId;
-    private final Integer  status;
-    private final JSONArray ids;
-
+public class ManageDeleteScene extends BaseScene {
+    private final Long  id;
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("activity_id", activityId);
-        object.put("status", status);
-        object.put("ids", ids);
+        object.put("id",id );
         return object;
     }
-
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/register/approval";
+        return "/jiaochen/pc/activity/manage/delete";
     }
 
     @Override
