@@ -268,7 +268,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("AI-Test(门店订单录像)", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 //获取列表门店的累计风险事件
                 int risk_total = list.getJSONObject(i).getInteger("risk_total");
@@ -309,7 +309,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("AI-Test(门店订单录像)", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int normal_num = list.getJSONObject(i).getInteger("normal_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
@@ -338,7 +338,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack = false;
         try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("AI-Test(门店订单录像)", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int abnormal_num = list.getJSONObject(i).getInteger("abnormal_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
@@ -366,7 +366,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void cashierDataInfo3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("AI-Test(门店订单录像)", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int pending_num = list.getJSONObject(i).getInteger("pending_risks_total");
                 long shop_id = list.getJSONObject(i).getInteger("id");
@@ -394,7 +394,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void cashierDataInfo4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.cashier_page("", "", "", "", null, page, size).getJSONArray("list");
+            JSONArray list = md.cashier_page("AI-Test(门店订单录像)", "", "", "", null, page, size).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 //获取处理结果为正常和异常的数量
                 int normal_num = list.getJSONObject(i).getInteger("normal_total");
