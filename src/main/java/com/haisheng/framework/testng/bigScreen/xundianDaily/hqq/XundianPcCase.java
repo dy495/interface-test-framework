@@ -102,7 +102,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-     @Test()
+   //  @Test()
     public void yushiPic() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
