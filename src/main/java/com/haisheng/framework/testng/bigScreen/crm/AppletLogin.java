@@ -115,7 +115,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class,enabled = false)
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -9,21 +9,21 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.Jc_Pc_CustomerManage"/>
-<!--            以下case一天运行一次-->
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcReceptionRelate"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcAffirmReception"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.Jc_Pc_CustomerManage"/>-->
+<!--&lt;!&ndash;            以下case一天运行一次&ndash;&gt;-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcReceptionRelate"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcAffirmReception"/>-->
 
         </classes>
     </test>

@@ -513,6 +513,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      *活动管理-活动审批通过
      */
+    @Test(description = "活动管理-活动审批通过")
     public void activityApproval(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -524,7 +525,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene2= ManageApprovalScene.builder().status(101).ids(idArray).build();
             visitor.invokeApi(scene2);
             //获取刚才通过的活动的状态
-            int status=businessUtil.getActivitySatus(id);
+            int status=businessUtil.getActivityStatus(id);
             Preconditions.checkArgument(status==101,"审批通过后活动的状态为："+status);
 
         }catch(AssertionError|Exception e){
@@ -534,7 +535,45 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    
+    /**
+     * 活动管理-【待审批】的活动删除
+     */
+    @Test()
+    public void delActivity1(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //获取待审批活动的ID
+            Long id=businessUtil.getActivityApproval();
+            //删除待审批的活动
+            String message=businessUtil.getDelActivity(id);
+            Preconditions.checkArgument(message.equals("成功"),"删除的待审批的活动的message为："+message);
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("活动管理-【待审批】的活动删除");
+        }
+
+    }
+
+    /**
+     * 活动管理-删除【进行中】的活动
+     */
+    @Test(description = "活动管理-删除【进行中】的活动")
+    public void delActivity2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取待审批活动的ID
+            Long id = businessUtil.getActivityApproval();
+            //删除待审批的活动
+            String message = businessUtil.getDelActivity(id);
+            Preconditions.checkArgument(message.equals("成功"), "删除的待审批的活动的message为：" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-删除【进行中】的活动");
+        }
+    }
+
 
 
 
