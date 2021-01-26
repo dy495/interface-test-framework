@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -162,7 +162,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     private Response getJiaoChen(int produceCode) {
-        IScene scene = VoucherList.builder().type("GENERAL").size(20).build();
+        IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).build();
         return getResponseInfo(produceCode, scene);
     }
 

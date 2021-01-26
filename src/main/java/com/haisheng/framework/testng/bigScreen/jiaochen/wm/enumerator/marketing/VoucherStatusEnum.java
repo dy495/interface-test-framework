@@ -41,7 +41,7 @@ public enum VoucherStatusEnum {
     /**
      * 暂停发放
      */
-    STOP(4, "暂停发放", null),
+    STOP(4, "暂停发放", new StopVoucher.Builder()),
 
     /**
      * 已作废
@@ -51,7 +51,7 @@ public enum VoucherStatusEnum {
     /**
      * 已售罄
      */
-    SELL_OUT(6, "已售罄", null),
+    SELL_OUT(6, "已售罄", new SellOutVoucher.Builder()),
 
     /**
      * 已过期

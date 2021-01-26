@@ -17,11 +17,15 @@ public enum EnumAccount {
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name) {
+        this.role = role;
         this.phone = phone;
         this.password = password;
         this.isDaily = isDaily;
         this.name = name;
     }
+
+    @Getter
+    private final String role;
 
     @Getter
     private final String phone;

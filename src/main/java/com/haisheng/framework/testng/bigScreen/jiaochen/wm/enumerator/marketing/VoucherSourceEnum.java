@@ -15,9 +15,6 @@ import java.util.Optional;
  */
 public enum VoucherSourceEnum {
 
-    /**
-     *
-     */
     ACTIVITY("活动"),
 
     TRANSFER("转移"),
@@ -36,7 +33,7 @@ public enum VoucherSourceEnum {
 
     INTEGRAL_PURCHASE("积分购买");
 
-    private String name;
+    private final String name;
 
     VoucherSourceEnum(String name) {
         this.name = name;

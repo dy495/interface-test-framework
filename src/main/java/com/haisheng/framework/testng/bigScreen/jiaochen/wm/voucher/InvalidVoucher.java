@@ -16,7 +16,7 @@ public class InvalidVoucher extends BaseVoucher {
     @Override
     public void execute(Visitor visitor) {
         logger("CREATE INVALID START");
-        Long voucherId = new WaitingVoucher.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
         logger("DO INVALID");
         invalidVoucher(voucherId);

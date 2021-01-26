@@ -1,41 +1,46 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity.BaseActivity;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
  * @author wangmin
- * @date  2020/12/23  16:26
+ * @date 2020/12/23  16:26
  */
 public enum ActivityStatusEnum {
     /**
      * 已撤销
      */
-    REVOKE(0, "已撤销", true, false, true, false, false),
-    PENDING(101, "待审核", false, true, false, false, false),
-    PASSED(201, "进行中", false, false, true, true, true),
-    CANCELED(301, "已取消", false, false, false, false, false),
-    REJECT(401, "审核未通过", true, false, true, false, false),
-    WAITING_START(501, "未开始", false, false, true, true, true),
-    FINISH(601, "已结束", false, false, false, false, false);
+    REVOKE(0, "已撤销", true, false, true, false, false, null),
+    PENDING(101, "待审核", false, true, false, false, false, null),
+    PASSED(201, "进行中", false, false, true, true, true, null),
+    CANCELED(301, "已取消", false, false, false, false, false, null),
+    REJECT(401, "审核未通过", true, false, true, false, false, null),
+    WAITING_START(501, "未开始", false, false, true, true, true, null),
+    FINISH(601, "已结束", false, false, false, false, false, null);
 
-    private Integer id;
+    @Getter
+    private final Integer id;
+    @Getter
+    private final String statusName;
+    @Getter
+    private final boolean isCanDelete;
+    @Getter
+    private final boolean isCanRevoke;
+    @Getter
+    private final boolean isCanEdit;
+    @Getter
+    private final boolean isCanCancel;
+    @Getter
+    private final boolean isCanPromotion;
+    @Getter
+    public final BaseActivity.BaseBuilder activityBuilder;
 
-    private String statusName;
-
-    private boolean isCanDelete;
-
-    private boolean isCanRevoke;
-
-    private boolean isCanEdit;
-
-    private boolean isCanCancel;
-
-    private boolean isCanPromotion;
-
-    ActivityStatusEnum(Integer id, String statusName, boolean isCanDelete, boolean isCanRevoke, boolean isCanEdit, boolean isCanCancel, boolean isCanPromotion) {
+    ActivityStatusEnum(Integer id, String statusName, boolean isCanDelete, boolean isCanRevoke, boolean isCanEdit, boolean isCanCancel, boolean isCanPromotion, BaseActivity.BaseBuilder activityBuilder) {
         this.id = id;
         this.statusName = statusName;
         this.isCanDelete = isCanDelete;
@@ -43,34 +48,7 @@ public enum ActivityStatusEnum {
         this.isCanEdit = isCanEdit;
         this.isCanCancel = isCanCancel;
         this.isCanPromotion = isCanPromotion;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public boolean isCanDelete() {
-        return isCanDelete;
-    }
-
-    public boolean isCanRevoke() {
-        return isCanRevoke;
-    }
-
-    public boolean isCanEdit() {
-        return isCanEdit;
-    }
-
-    public boolean isCanCancel() {
-        return isCanCancel;
-    }
-
-    public boolean isCanPromotion() {
-        return isCanPromotion;
+        this.activityBuilder = activityBuilder;
     }
 
     public static ActivityStatusEnum findById(Integer id) {

@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
@@ -50,7 +50,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         private VoucherStatusEnum voucherStatus;
 
         /**
-         * @param voucherStatus 卡券类型
+         * @param voucherStatus 卡券状态
          * @return BaseBuilder.voucherStatus
          */
         public BaseBuilder voucherStatus(VoucherStatusEnum voucherStatus) {
@@ -80,5 +80,17 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         IScene scene = VoucherPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取卡券id
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券id
+     */
+    protected Long getVoucherId(String voucherName) {
+        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
+        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
     }
 }

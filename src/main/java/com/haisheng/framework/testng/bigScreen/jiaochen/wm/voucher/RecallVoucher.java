@@ -22,7 +22,7 @@ public class RecallVoucher extends BaseVoucher {
     @Override
     public void execute(@NotNull Visitor visitor) {
         logger("CREATE RECALL START");
-        Long voucherId = new WaitingVoucher.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
         logger("DO RECALL");
         recallVoucher(voucherId);

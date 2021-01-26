@@ -13,9 +13,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegiste
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumArticleStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.Banner;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.BannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
@@ -138,7 +138,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             assert files != null;
             List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
             List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
-            IScene scene = BannerEdit.builder()
+            IScene scene = BannerEditScene.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))
                     .bannerImgUrl3(picPaths.get(2)).articleId3(articleIds.get(2))
@@ -147,7 +147,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
                     .build();
             jc.invokeApi(scene);
             user.loginApplet(applet);
-            JSONArray array = jc.invokeApi(Banner.builder().build()).getJSONArray("list");
+            JSONArray array = jc.invokeApi(BannerScene.builder().build()).getJSONArray("list");
             List<Long> appletArticleIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             Preconditions.checkArgument(appletArticleIds.equals(articleIds.subList(0, 5)), "pc端文章为：" + appletArticleIds + " applet端文章为：" + articleIds.subList(0, 5));
         } catch (Exception | AssertionError e) {

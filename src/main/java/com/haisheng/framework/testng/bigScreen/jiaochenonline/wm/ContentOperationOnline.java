@@ -11,10 +11,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationApprova
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.OperationRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumArticleStatus;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.Banner;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.ActivityRegister;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.BannerScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.ActivityRegisterScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -122,7 +122,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
                     .collect(Collectors.toList());
             List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path"))
                     .collect(Collectors.toList());
-            IScene scene = BannerEdit.builder()
+            IScene scene = BannerEditScene.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0)).bannerId1(16)
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(0)).bannerId2(17)
                     .bannerImgUrl3(picPaths.get(2)).articleId3(articleIds.get(0)).bannerId3(18)
@@ -131,7 +131,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
                     .build();
             jc.invokeApi(scene);
             user.loginApplet(applet);
-            JSONArray array = jc.invokeApi(Banner.builder().build()).getJSONArray("list");
+            JSONArray array = jc.invokeApi(BannerScene.builder().build()).getJSONArray("list");
             List<Long> appletArticleIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             appletArticleIds.forEach(e -> Preconditions.checkArgument(e.equals(articleIds.get(0)), "pc端文章为：" + e + " applet端文章为：" + articleIds.get(0)));
         } catch (Exception | AssertionError e) {
@@ -159,7 +159,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             int applyNum = util.getAppletArticleNum();
             int registerNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
             //报名
-            jc.invokeApi(ActivityRegister.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
+            jc.invokeApi(ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
             //我的报名列表消息+1
             int newApplyNum = util.getAppletArticleNum();
             CommonUtil.valueView(applyNum, newApplyNum);

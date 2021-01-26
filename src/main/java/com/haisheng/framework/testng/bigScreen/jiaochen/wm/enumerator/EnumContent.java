@@ -15,7 +15,7 @@ public enum EnumContent {
 
     D("I hope the new covid-19 epidemic will be over."),
 
-    MESSAGE_TITLE("高端大气上档次"),
+    MESSAGE_TITLE("来自于土星的消息"),
     ;
 
     EnumContent(String content) {

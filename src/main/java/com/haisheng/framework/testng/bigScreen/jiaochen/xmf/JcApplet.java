@@ -9,9 +9,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProd
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
@@ -506,7 +506,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //累计发出数
             Long cumulativeDelivery = voucher.getCumulativeDelivery();
             //发卡记录数
-            int sendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            int sendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             //登回
             commonConfig.shopId = "45973";
             JSONArray voucherList = new JSONArray();
@@ -524,7 +524,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             VoucherPage newVoucher = util.getVoucherInfo(voucherName);
             Long newCumulativeDelivery = newVoucher.getCumulativeDelivery();
             //发卡记录数
-            int newSendRecordTotal = jc.invokeApi(SendRecord.builder().build()).getInteger("total");
+            int newSendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery, sendRecordTotal, newSendRecordTotal);
             Preconditions.checkArgument(newCumulativeDelivery == cumulativeDelivery + 1, "领券之前累计发出数：" + cumulativeDelivery + "领券之后累计发出数：" + newCumulativeDelivery);
             Preconditions.checkArgument(newSendRecordTotal == sendRecordTotal + 1, "领券之前发卡记录数：" + sendRecordTotal + "领券之后发卡记录数：" + newSendRecordTotal);

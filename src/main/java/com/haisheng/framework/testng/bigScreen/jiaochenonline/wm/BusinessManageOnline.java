@@ -9,10 +9,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumCarType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseFixedPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
@@ -82,7 +82,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //套餐购买记录列表数
-            IScene buyPackageRecordScene = BuyPackageRecord.builder().build();
+            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int total = jc.invokeApi(buyPackageRecordScene).getInteger("total");
             util.receptionBuyFixedPackage(1);
             //购买后套餐购买记录页
@@ -101,7 +101,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //套餐购卖数量
-            IScene packageFormPageScene = PackageFormPage.builder().packageName(EnumVP.ONE.getPackageName()).build();
+            IScene packageFormPageScene = PackageFormPageScene.builder().packageName(EnumVP.ONE.getPackageName()).build();
             int num = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "sold_number");
             //购买套餐
             util.receptionBuyFixedPackage(1);
@@ -123,7 +123,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //套餐购卖数量
-            IScene packageFormPageScene = PackageFormPage.builder().packageName(EnumVP.ONE.getPackageName()).build();
+            IScene packageFormPageScene = PackageFormPageScene.builder().packageName(EnumVP.ONE.getPackageName()).build();
             int num = CommonUtil.getIntField(jc.invokeApi(packageFormPageScene), 0, "give_number");
             //购买套餐
             util.receptionBuyFixedPackage(0);
@@ -223,12 +223,12 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
             String plateNumber = CommonUtil.getStrField(pageData, 0, "plate_number");
             String customerPhone = CommonUtil.getStrField(pageData, 0, "customer_phone");
             //购买前，售后客户消费频次&总消费
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder afterSaleCustomerBuilder = AfterSaleCustomerPage.builder().customerPhone(customerPhone);
+            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder afterSaleCustomerBuilder = AfterSaleCustomerPageScene.builder().customerPhone(customerPhone);
             JSONObject afterSaleCustomerData = jc.invokeApi(afterSaleCustomerBuilder.build());
             int repairTimes = CommonUtil.getIntField(afterSaleCustomerData, 0, "repair_times");
             long afterSaleTotalPrice = (long) CommonUtil.getIntField(afterSaleCustomerData, 0, "total_price");
             //购买前，小程序客户消费频次&总消费
-            WechatCustomerPage.WechatCustomerPageBuilder wechatCustomerBuilder = WechatCustomerPage.builder().customerPhone(customerPhone);
+            WechatCustomerPageScene.WechatCustomerPageSceneBuilder wechatCustomerBuilder = WechatCustomerPageScene.builder().customerPhone(customerPhone);
             JSONObject wechatCustomerData = jc.invokeApi(wechatCustomerBuilder.build());
             int consumeTimes = CommonUtil.getIntField(wechatCustomerData, 0, "consume_times");
             long wechatTotalPrice = (long) CommonUtil.getIntField(wechatCustomerData, 0, "total_price");
@@ -270,7 +270,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
     public void customerManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder builder = AfterSaleCustomerPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -298,7 +298,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
     public void customerManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder builder = AfterSaleCustomerPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -332,7 +332,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
     public void customerManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AfterSaleCustomerPage.AfterSaleCustomerPageBuilder builder = AfterSaleCustomerPage.builder();
+            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder builder = AfterSaleCustomerPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {

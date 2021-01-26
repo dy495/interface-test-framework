@@ -7,21 +7,18 @@ import java.util.Optional;
 
 /**
  * @author wangmin
- * @date  2021/1/19  16:36
+ * @date 2021/1/19  16:36
  */
 public enum CustomerLabelTypeEnum {
-    /**
-     * vip会员
-     */
     COMMON(0, "普通会员"),
     VIP(100, "vip会员"),
     APPLET(1000, "小程序用户"),
     PRE_SALES(2000, "售前用户"),
     AFTER_SALES(3000, "售后用户");
 
-    private Integer id;
+    private final Integer id;
 
-    private String typeName;
+    private final String typeName;
 
     public String getTypeName() {
         return typeName;

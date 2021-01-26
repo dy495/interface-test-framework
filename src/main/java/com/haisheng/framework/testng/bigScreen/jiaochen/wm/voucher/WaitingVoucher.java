@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucher;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -40,7 +40,7 @@ public class WaitingVoucher extends BaseVoucher {
     public void execute(Visitor visitor) {
         logger("CREATE WAITING START");
         super.visitor = visitor;
-        createVoucher(10L);
+        createVoucher(10);
         logger("CREATE WAITING FINISH");
     }
 
@@ -60,9 +60,9 @@ public class WaitingVoucher extends BaseVoucher {
      * @param stock 创建数量
      * @return 创建完成的卡券名
      */
-    public String createVoucher(Long stock) {
+    public String createVoucher(Integer stock) {
         String voucherName = createVoucherName();
-        IScene scene = CreateVoucher.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
+        IScene scene = CreateVoucherScene.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
                 .voucherDescription(getDesc()).subjectId(getSubjectId(getSubjectType())).stock(stock).cost(getParValue())
                 .shopType(0).shopIds(getShopIdList()).selfVerification(true).build();
         visitor.invokeApi(scene);

@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * 卡券使用状态
+ *
  * @author wangmin
  * @date 2020/11/23 2:31 PM
- * @desc
  */
 public enum VoucherUseStatusEnum {
     NORMAL("未使用"),
@@ -17,7 +18,7 @@ public enum VoucherUseStatusEnum {
     NEAR_EXPIRED("快过期"),
     EXPIRED("已过期"),
     ;
-    private String name;
+    private final String name;
 
     VoucherUseStatusEnum(String name) {
         this.name = name;

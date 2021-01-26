@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
@@ -17,10 +17,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.Ap
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.RegisterPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -47,9 +47,9 @@ public class BusinessUtil extends BaseUtil {
      * @param stock 创建数量
      * @return 创建完成的卡券名
      */
-    public String createVoucher(Long stock) {
+    public String createVoucher(Integer stock) {
         String voucherName = createVoucherName();
-        IScene scene = CreateVoucher.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
+        IScene scene = CreateVoucherScene.builder().voucherPic(getPicPath()).voucherName(voucherName).subjectType(getSubjectType())
                 .voucherDescription(getDesc()).subjectId(getSubjectId(getSubjectType())).stock(stock).cost(getCost(stock))
                 .shopType(0).shopIds(getShopIdList()).selfVerification(true).build();
         jc.invokeApi(scene);
@@ -97,7 +97,7 @@ public class BusinessUtil extends BaseUtil {
      * @param stock 卡券数量
      * @return 卡券成本
      */
-    public Double getCost(Long stock) {
+    public Double getCost(Integer stock) {
         if (StringUtils.isEmpty(stock)) {
             return null;
         }
@@ -217,7 +217,7 @@ public class BusinessUtil extends BaseUtil {
                     && e.getString("audit_status_name").equals("已通过")).map(e -> e.getLong("voucher_id")).collect(Collectors.toList()));
         }
         if (voucherLIst.size() == 0) {
-            String voucherName = createVoucher(1L);
+            String voucherName = createVoucher(1);
             applyVoucher(voucherName, "1");
             voucherLIst.add(getVoucherId(voucherName));
             List<String> phoneList = new ArrayList<>();
@@ -248,7 +248,7 @@ public class BusinessUtil extends BaseUtil {
                     .map(e -> e.getLong("voucher_id")).collect(Collectors.toList()));
         }
         if (voucherList.size() == 0) {
-            String voucherName = createVoucher(1L);
+            String voucherName = createVoucher(1);
             applyVoucher(voucherName, "1");
             invalidVoucher(voucherName);
             voucherList.add(getVoucherId(voucherName));
@@ -296,7 +296,7 @@ public class BusinessUtil extends BaseUtil {
     public String createPackageName() {
         int num = CommonUtil.getRandom(1, 10000);
         String packageName = "立减套餐" + num;
-        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder().packageName(packageName);
+        PackageFormPageScene.PackageFormPageSceneBuilder builder = PackageFormPageScene.builder().packageName(packageName);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -343,7 +343,7 @@ public class BusinessUtil extends BaseUtil {
         JSONObject object = new JSONObject();
         JSONArray list = jc.pcVoucherList().getJSONArray("list");
         if (list.isEmpty()) {
-            String voucherName = createVoucher(1L);
+            String voucherName = createVoucher(1);
             applyVoucher(voucherName, "1");
         }
         long id = jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
@@ -419,7 +419,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public Long getModifyPackageId() {
         List<Long> list = new ArrayList<>();
-        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+        PackageFormPageScene.PackageFormPageSceneBuilder builder = PackageFormPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -437,7 +437,7 @@ public class BusinessUtil extends BaseUtil {
      * @return 套餐id
      */
     public Long getPackageId(String packageName) {
-        IScene scene = PackageFormPage.builder().packageName(packageName).page(1).size(size).build();
+        IScene scene = PackageFormPageScene.builder().packageName(packageName).page(1).size(size).build();
         JSONArray array = jc.invokeApi(scene).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName))
                 .map(e -> e.getLong("package_id")).collect(Collectors.toList()).get(0);
@@ -451,7 +451,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public String getPackageName(long packageId) {
         List<String> list = new ArrayList<>();
-        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+        PackageFormPageScene.PackageFormPageSceneBuilder builder = PackageFormPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -468,15 +468,15 @@ public class BusinessUtil extends BaseUtil {
      * @param packageName 套餐名
      * @return 套餐信息
      */
-    public PackageInfo getPackageInfo(String packageName) {
-        List<PackageInfo> list = new ArrayList<>();
-        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
+    public PackagePage getPackageInfo(String packageName) {
+        List<PackagePage> list = new ArrayList<>();
+        PackageFormPageScene.PackageFormPageSceneBuilder builder = PackageFormPageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName))
-                    .map(e -> JSON.parseObject(JSON.toJSONString(e), PackageInfo.class)).collect(Collectors.toList()));
+                    .map(e -> JSON.parseObject(JSON.toJSONString(e), PackagePage.class)).collect(Collectors.toList()));
         }
         return list.get(0);
     }
@@ -534,7 +534,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public void makeSureBuyPackage(String packageName) {
         //获取确认支付id
-        IScene scene = BuyPackageRecord.builder().packageName(packageName).size(size).build();
+        IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(size).build();
         JSONArray list = jc.invokeApi(scene).getJSONArray("list");
         long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName))
                 .map(e -> e.getLong("id")).collect(Collectors.toList()).get(0);
@@ -588,7 +588,7 @@ public class BusinessUtil extends BaseUtil {
         EnumAccount marketing = EnumAccount.MARKETING;
         JSONArray voucherList = getVoucherInfo(1);
         String platNumber = getPlatNumber(marketing.getPhone());
-        IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
+        IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                 .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
                 .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
                 .subjectId(getSubjectId(getSubjectType())).extendedInsuranceYear("1")
@@ -739,7 +739,7 @@ public class BusinessUtil extends BaseUtil {
         Integer status = null;
         JSONArray list;
         do {
-            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            AppletVoucherListScene.AppletVoucherListSceneBuilder builder = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
@@ -766,7 +766,7 @@ public class BusinessUtil extends BaseUtil {
         Integer status = null;
         JSONArray list;
         do {
-            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(size).id(id).status(status);
+            AppletVoucherListScene.AppletVoucherListSceneBuilder builder = AppletVoucherListScene.builder().type("GENERAL").size(size).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
@@ -791,7 +791,7 @@ public class BusinessUtil extends BaseUtil {
         Integer status = null;
         JSONArray list;
         do {
-            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            AppletVoucherListScene.AppletVoucherListSceneBuilder builder = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
@@ -815,7 +815,7 @@ public class BusinessUtil extends BaseUtil {
         Integer status = null;
         JSONArray array;
         do {
-            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
+            AppletVoucherListScene.AppletVoucherListSceneBuilder builder = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status);
             JSONObject response = jc.invokeApi(builder.build());
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
@@ -846,7 +846,7 @@ public class BusinessUtil extends BaseUtil {
         JSONArray array;
         int listSize = 0;
         do {
-            IScene scene = VoucherList.builder().type("GENERAL").size(20).id(id).status(status).build();
+            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
             JSONObject response = jc.invokeApi(scene);
             JSONObject lastValue = response.getJSONObject("last_value");
             id = lastValue.getInteger("id");
@@ -867,7 +867,7 @@ public class BusinessUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            IScene scene = PackageList.builder().lastValue(lastValue).type("type").size(20).build();
+            IScene scene = PackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
             JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -886,7 +886,7 @@ public class BusinessUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            IScene scene = MessageList.builder().lastValue(lastValue).size(20).build();
+            IScene scene = MessageListScene.builder().lastValue(lastValue).size(20).build();
             JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -905,7 +905,7 @@ public class BusinessUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            AppointmentActivityList.AppointmentActivityListBuilder builder = AppointmentActivityList.builder().lastValue(lastValue).size(20);
+            AppointmentActivityListScene.AppointmentActivityListSceneBuilder builder = AppointmentActivityListScene.builder().lastValue(lastValue).size(20);
             JSONObject response = jc.invokeApi(builder.build());
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -919,7 +919,7 @@ public class BusinessUtil extends BaseUtil {
         Long lastValue = null;
         JSONArray array;
         do {
-            AppointmentActivityList.AppointmentActivityListBuilder builder = AppointmentActivityList.builder().lastValue(lastValue).size(20);
+            AppointmentActivityListScene.AppointmentActivityListSceneBuilder builder = AppointmentActivityListScene.builder().lastValue(lastValue).size(20);
             JSONObject response = jc.invokeApi(builder.build());
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -1036,7 +1036,7 @@ public class BusinessUtil extends BaseUtil {
      * @param articleId 活动id
      */
     public void applyArticle(Long articleId) {
-        jc.invokeApi(ActivityRegister.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
+        jc.invokeApi(ActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
     }
 
     /**
