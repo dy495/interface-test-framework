@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -4326,6 +4326,7 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject json1=new JSONObject();
         return invokeApi(url,json1);
     }
+
     /**
      * @description :小程序积分商城首页
      * @date :2021/1/27 14:00
@@ -4336,6 +4337,46 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+    /**
+     * @description :小程序积分商城商品列表
+     * @date :2021/1/27 14:00
+     **/
+    public JSONObject appletMallCommidityList(Integer size, JSONObject last_value, String integral_sort, String integral_num, Boolean status) {
+        String url = "/jiaochen/applet/granted/integral-mall/commodity-list";
+        JSONObject json1=new JSONObject();
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+        json1.put("integral_sort",integral_sort);
+        json1.put("integral_num",integral_num);
+        json1.put("status",status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :小程序积分商城商品详情
+     * @date :2021/1/27 14:00
+     **/
+    public JSONObject appletMallCommidityDetail(Integer id) {
+        String url = "/jiaochen/applet/granted/integral-mall/commodity-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :小程序积分商城创建收货地址
+     * @date :2021/1/27 14:00
+     **/
+    public JSONObject appletMallCreateAddr(String name,String phone,String district_code,String address,String postal_code) {
+        String url = "/jiaochen/applet/granted/integral-mall/create-address";
+        JSONObject json1=new JSONObject();
+        json1.put("name",name);
+        json1.put("phone",phone);
+        json1.put("district_code",district_code);
+        json1.put("address",address);
+        json1.put("postal_code",postal_code);
+        return invokeApi(url,json1);
+    }
 
 
     /**
