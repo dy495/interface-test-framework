@@ -5,14 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 活动管理-活动报名审批
  */
 @Builder
 public class ManageRegisterApprovalScene extends BaseScene {
-    private final Integer activityId;
+    private final Long activityId;
     private final Integer  status;
-    private final JSONArray ids;
+    private final List<Long> ids;
 
     @Override
     public JSONObject getJSONObject() {

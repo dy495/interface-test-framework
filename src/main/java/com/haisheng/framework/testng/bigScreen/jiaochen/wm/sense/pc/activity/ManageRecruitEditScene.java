@@ -10,7 +10,7 @@ import java.util.List;
  * 活动管理-编辑招募活动
  */
 @Builder
-public class ManageRecruitEditSence extends BaseScene {
+public class ManageRecruitEditScene extends BaseScene {
     private final Integer type;
     private final Integer participationLimitType;
     private final List<Integer> chooseLabels;

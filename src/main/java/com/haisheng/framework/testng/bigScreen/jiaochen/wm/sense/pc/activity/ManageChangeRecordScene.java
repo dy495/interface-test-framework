@@ -12,7 +12,7 @@ import lombok.Builder;
 public class ManageChangeRecordScene extends BaseScene {
     private final Integer page;
     private final Integer  size;
-    private final JSONArray id;
+    private final Long id;
 
     @Override
     public JSONObject getJSONObject() {
