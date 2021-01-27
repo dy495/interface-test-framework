@@ -10,9 +10,9 @@ public class pcCreateGoods {
     public static DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file = new FileUtil();
-    public String id;
-    public String goods_name="积分商品"+System.currentTimeMillis();
-    public String goods_description="积分商品描述"+System.currentTimeMillis();
+    public Integer id;
+    public String goods_name="商品"+System.currentTimeMillis();
+    public String goods_description="商品描述"+System.currentTimeMillis();
     public Integer first_category;
     public Integer second_category;
     public Integer third_category;

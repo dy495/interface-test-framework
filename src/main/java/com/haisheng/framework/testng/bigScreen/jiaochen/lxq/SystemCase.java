@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -1618,7 +1619,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //商品品牌
-    //2021-01-26
+    //2021-01-27
     @Test(dataProvider = "BRANDNAME")
     public void goodFilter1(String name) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1720,7 +1721,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void goodUp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.goodsChgStatus(info.goods_id,"true"); //启用商品
+            jc.goodsChgStatus(info.goods_id,"true",true); //启用商品
             //查看商品列表该商品状态
             JSONArray list = jc.goodsManagePage(1,10,info.goods_name,null,null,null,null,null).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
@@ -1729,18 +1730,132 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.getString("goods_status_name").equals("启用"),"启用后列表商品状态不是启用");
                 }
             }
-            //查看小程序是否有该商品
-            // TODO: 小程序登陆后的影响
-
+//            //查看小程序是否有该商品
+//
+//            JSONArray appletlist = jc.appletMallCommidityList(100,null,null,null,true).getJSONArray("list");
+//            Boolean isexist = false;
+//            for (int j = 0 ; j < appletlist.size();j++){
+//                JSONObject obj = list.getJSONObject(j);
+//                if (obj.getInteger("id")==info.goods_id){
+//                    isexist = true;
+//                    break;
+//                }
+//            }
+//            Preconditions.checkArgument(isexist==true,"小程序未展示该商品");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【商品管理】上架商品");
+            saveData("PC【商品管理】上架存在的商品");
         }
     }
+
+    //@Test
+    public void goodUp2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = jc.goodsChgStatus(info.goods_id,"true",false).getInteger("code"); //启用商品
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】A删除商品，B不刷新页面启用商品");
+        }
+    }
+
+    //@Test
+    public void goodDown() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.goodsChgStatus(info.goods_id,"false",true); //启用商品
+            //查看商品列表该商品状态
+            JSONArray list = jc.goodsManagePage(1,10,info.goods_name,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                if (obj.getInteger("id")==info.goods_id){
+                    Preconditions.checkArgument(obj.getString("goods_status_name").equals("下架"),"下架后列表商品状态不是停用");
+                }
+            }
+//            //查看小程序是否有该商品
+//
+//            JSONArray appletlist = jc.appletMallCommidityList(100,null,null,null,true).getJSONArray("list");
+//            Boolean isexist = false;
+//            for (int j = 0 ; j < appletlist.size();j++){
+//                JSONObject obj = list.getJSONObject(j);
+//                if (obj.getInteger("id")==info.goods_id){
+//                    isexist = true;
+//                    break;
+//                }
+//            }
+//            Preconditions.checkArgument(isexist==true,"小程序展示了该商品");
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】下架商品");
+        }
+    }
+
+    //@Test
+    public void goodEdit1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcCreateGoods er=new pcCreateGoods();
+            er.checkcode=false;
+            er.id=9999;
+
+            int code = jc.editGoodMethod(er).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】编辑中的商品被删除");
+        }
+    }
+
+    //TODO 创建商品的各种长度
+
+
+    /**
+     * 积分中心
+     */
+
+    //积分兑换
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

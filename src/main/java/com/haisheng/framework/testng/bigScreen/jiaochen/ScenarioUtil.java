@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -3987,7 +3988,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * 积分商城相关开始
+     * ----------------------------积分商城相关开始-----------------------------
      */
 
 
@@ -4309,18 +4310,400 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :上架/下架
      * @date :2021/1/20 14:00
      **/
-    public JSONObject goodsChgStatus(Integer id, String status) {
+    public JSONObject goodsChgStatus(Integer id, String status,Boolean checkCode) {
         String url = "/jiaochen/pc/integral-mall/change-goods-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("status",status);
+        return invokeApi(url,json1,checkCode);
+    }
+
+    /**
+     * @description :创建商品
+     * @date :2021/1/22 17:07
+     **/
+
+    public JSONObject createGoodMethod(pcCreateGoods  er) {
+        String url = "/jiaochen/pc/integral-mall/create-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("id",er.id);
+        json1.put("goods_name",er.goods_name);
+        json1.put("goods_description",er.goods_description);
+        json1.put("first_category",er.first_category);
+        json1.put("second_category",er.second_category);
+        json1.put("third_category",er.third_category);
+        json1.put("goods_brand",er.goods_brand);
+        json1.put("goods_pic_list",er.goods_pic_list);
+        json1.put("price",er.price);
+        json1.put("select_specifications",er.select_specifications);
+        json1.put("goods_specifications_list",er.goods_specifications_list);
+        json1.put("goods_detail",er.goods_detail);
+
+        return invokeApi(url,json1,er.checkcode);
+    }
+    /**
+     * @description :删除商品
+     * @date :2021/1/22 17:07
+     **/
+
+    public JSONObject deleteGoodMethod(String page,String size,String id) {
+        String url = "/jiaochen/pc/integral-mall/delete-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :商品管理列表
+     * @date :2021/1/22 17:07
+     **/
+
+    public JSONObject GoodsList(String page,String size) {
+        String url = "/jiaochen/pc/integral-mall/goods-manage-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :编辑商品
+     * @date :2021/1/22 17:07
+     **/
+
+    public JSONObject editGoodMethod(pcCreateGoods  er) {
+        String url = "/jiaochen/pc/integral-mall/edit-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("id",er.id);
+        json1.put("goods_name",er.goods_name);
+        json1.put("goods_description",er.goods_description);
+        json1.put("first_category",er.first_category);
+        json1.put("second_category",er.second_category);
+        json1.put("third_category",er.third_category);
+        json1.put("goods_brand",er.goods_brand);
+        json1.put("goods_pic_list",er.goods_pic_list);
+        json1.put("price",er.price);
+        json1.put("select_specifications",er.select_specifications);
+        json1.put("goods_specifications_list",er.goods_specifications_list);
+        json1.put("goods_detail",er.goods_detail);
+
+        return invokeApi(url,json1,er.checkcode);
+    }
+
+    /**
+     * @description :积分兑换列表
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangePage(Integer page,Integer size, String exchange_goods,String exchange_type,String status) {
+        String url = "/jiaochen/pc/integral-center/exchange-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("exchange_goods",exchange_goods);
+        json1.put("exchange_type",exchange_type);
+        json1.put("status",status);
+
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换列表--导出
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeExport(Integer page,Integer size, String exchange_goods,String exchange_type,String status,String export_type,JSONArray ids,Boolean chkcode) {
+        String url = "/jiaochen/pc/integral-center/exchange/export";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("exchange_goods",exchange_goods);
+        json1.put("exchange_type",exchange_type);
+        json1.put("status",status);
+        json1.put("export_type",export_type);
+        json1.put("ids",ids);
+
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :创建积分兑换商品
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodCreat(pcCreateExchangeGoods ex) {
+        String url = "/jiaochen/pc/integral-center/create-exchange-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("id",ex.id);
+        json1.put("exchange_goods_type",ex.exchange_goods_type);
+        json1.put("goods_id",ex.goods_id);
+        json1.put("exchange_start_time",ex.exchange_start_time);
+        json1.put("exchange_end_time",ex.exchange_end_time);
+        json1.put("exchange_price",ex.exchange_price);
+        json1.put("exchange_num",ex.exchange_num);
+        json1.put("is_limit",ex.is_limit);
+        json1.put("exchange_people_num",ex.exchange_people_num);
+        json1.put("specification_list",ex.specification_list);
+
+        return invokeApi(url,json1,ex.chkcode);
+    }
+
+    /**
+     * @description :编辑积分兑换商品
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodEdit(pcCreateExchangeGoods ex) {
+        String url = "/jiaochen/pc/integral-center/edit-exchange-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("id",ex.id);
+        json1.put("exchange_goods_type",ex.exchange_goods_type);
+        json1.put("goods_id",ex.goods_id);
+        json1.put("exchange_start_time",ex.exchange_start_time);
+        json1.put("exchange_end_time",ex.exchange_end_time);
+        json1.put("exchange_price",ex.exchange_price);
+        json1.put("exchange_num",ex.exchange_num);
+        json1.put("is_limit",ex.is_limit);
+        json1.put("exchange_people_num",ex.exchange_people_num);
+        json1.put("specification_list",ex.specification_list);
+
+        return invokeApi(url,json1,ex.chkcode);
+    }
+
+
+    /**
+     * @description :积分兑换商品详情
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodDetail(Integer id) {
+        String url = "/jiaochen/pc/integral-center/exchange-goods-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换开关
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodChgStatus(Integer id,Boolean status) {
+        String url = "/jiaochen/pc/integral-center/change-switch-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("status",status);
         return invokeApi(url,json1);
     }
 
+
     /**
-     * @description :小程序积分商城首页
-     * @date :2021/1/27 14:00
+     * @description :积分兑换置顶
+     * @date :2021/1/27 16:00
      **/
+
+    public JSONObject exchangeGoodTop(Integer id) {
+        String url = "/jiaochen/pc/integral-center/make-top";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换删除
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodDel(Integer id) {
+        String url = "/jiaochen/pc/integral-center/delete-exchange-goods";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换库存
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodStock(Integer id) {
+        String url = "/jiaochen/pc/integral-center/exchange-goods-stock";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :编辑积分兑换库存
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeGoodStockEdit(Integer id,String goods_name,String change_stock_type,Integer num) {
+        String url = "/jiaochen/pc/integral-center/edit-exchange-stock";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("goods_name",goods_name);
+        json1.put("change_stock_type",change_stock_type);
+        json1.put("num",num);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :兑换商品规格详情列表
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject commodityList(Integer id) {
+        String url = "/jiaochen/pc/integral-center/commodity-specifications-list";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :兑换商品库存明细
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeStockPage(Integer page, Integer size,Integer id) {
+        String url = "/jiaochen/pc/integral-center/exchange-stock-page";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换明细
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeDetail(Integer page, Integer size,Integer id,String exchange_customer_name,String exchange_type,
+                                     String exchange_start_time,String exchange_end_time) {
+        String url = "/jiaochen/pc/integral-center/exchange-detailed";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("exchange_customer_name",exchange_customer_name);
+        json1.put("exchange_type",exchange_type);
+        json1.put("exchange_start_time",exchange_start_time);
+        json1.put("exchange_end_time",exchange_end_time);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换明细导出
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeDetailExport(Integer page, Integer size,Integer id,String exchange_customer_name,String exchange_type,
+                                     String exchange_start_time,String exchange_end_time,String export_type,JSONArray ids) {
+        String url = "/jiaochen/pc/integral-center/exchange-detailed";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("exchange_customer_name",exchange_customer_name);
+        json1.put("exchange_type",exchange_type);
+        json1.put("exchange_start_time",exchange_start_time);
+        json1.put("exchange_end_time",exchange_end_time);
+        json1.put("export_type",export_type);
+        json1.put("ids",ids);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换订单
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeOrder(Integer page, Integer size,String order_id, String start_time,String end_time,String order_status,
+                                           String member,String goods_name) {
+        String url = "/jiaochen/pc/integral-center/exchange-order";
+        JSONObject json1=new JSONObject();
+        json1.put("order_id",order_id);
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("member",member);
+        json1.put("goods_name",goods_name);
+        json1.put("start_time",start_time);
+        json1.put("end_time",end_time);
+        json1.put("order_status",order_status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换订单导出
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeOrder(Integer page, Integer size,String order_id, String start_time,String end_time,String order_status,
+                                    String member,String goods_name,String export_type,JSONArray ids,Boolean chkcode) {
+        String url = "/jiaochen/pc/integral-center/exchange-order/export";
+        JSONObject json1=new JSONObject();
+        json1.put("order_id",order_id);
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("member",member);
+        json1.put("goods_name",goods_name);
+        json1.put("start_time",start_time);
+        json1.put("end_time",end_time);
+        json1.put("order_status",order_status);
+        json1.put("export_type",export_type);
+        json1.put("ids",ids);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :取消订单
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject exchangeOrderCancel(Integer id) {
+        String url = "/jiaochen/pc/integral-center/cancel-order";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :确认发货
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject confirmShipment(Integer id,String odd_numbers,Boolean chkcode) {
+        String url = "/jiaochen/pc/integral-center/confirm_shipment";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("odd_numbers",odd_numbers);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :订单明细
+     * @date :2021/1/27 16:00
+     **/
+
+    public JSONObject orderDetail(Integer id) {
+        String url = "/jiaochen/pc/integral-center/order-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+
+    //-------------小程序部分------------------------
+
+
+        /**
+         * @description :小程序积分商城首页
+         * @date :2021/1/27 14:00
+         **/
     public JSONObject appletHomePage() {
         String url = "/jiaochen/applet/granted/integral-mall/home-page";
         JSONObject json1=new JSONObject();
@@ -4380,7 +4763,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * 积分商城相关结束
+     * ---------------------------------积分商城相关结束--------------------------------
      */
 
     /**
@@ -4454,56 +4837,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
- /**
-  * @description :创建积分商品
-  * @date :2021/1/22 17:07
-  **/
 
-    public JSONObject createGoodMethod(pcCreateGoods  er) {
-        String url = "/jiaochen/applet/granted/member-center/car-wash/shop-list";
-        JSONObject json1=new JSONObject();
-        json1.put("id",er.id);
-        json1.put("goods_name",er.goods_name);
-        json1.put("goods_description",er.goods_description);
-        json1.put("first_category",er.first_category);
-        json1.put("second_category",er.second_category);
-        json1.put("third_category",er.third_category);
-        json1.put("goods_brand",er.goods_brand);
-        json1.put("goods_pic_list",er.goods_pic_list);
-        json1.put("price",er.price);
-        json1.put("select_specifications",er.select_specifications);
-        json1.put("goods_specifications_list",er.goods_specifications_list);
-        json1.put("goods_detail",er.goods_detail);
-
-        return invokeApi(url,json1,er.checkcode);
-    }
-    /**
-     * @description :删除商品
-     * @date :2021/1/22 17:07
-     **/
-
-    public JSONObject deleteGoodMethod(String page,String size,String id) {
-        String url = "/jiaochen/pc/integral-mall/delete-goods";
-        JSONObject json1=new JSONObject();
-        json1.put("page",page);
-        json1.put("size",size);
-        json1.put("id",id);
-
-        return invokeApi(url,json1);
-    }
-        /**
-         * @description :商品管理列表
-         * @date :2021/1/22 17:07
-         **/
-
-    public JSONObject GoodsList(String page,String size) {
-        String url = "/jiaochen/pc/integral-mall/goods-manage-page";
-        JSONObject json1=new JSONObject();
-        json1.put("page",page);
-        json1.put("size",size);
-
-        return invokeApi(url,json1);
-    }
     /**
      * @description :品牌列表
      * @date :2021/1/22 17:20
