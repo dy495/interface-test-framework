@@ -3996,7 +3996,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryPage(Integer page,Integer size,Boolean category_status,Integer first_category,Integer second_category,Integer third_category) {
-        String url = "/car-platform/pc/integral-mall/category-page";
+        String url = "/jiaochen/pc/integral-mall/category-page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -4013,7 +4013,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,Integer belong_category,String belong_pic,Integer id) {
-        String url = "/car-platform/pc/integral-mall/create-category";
+        String url = "/jiaochen/pc/integral-mall/create-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);
         json1.put("category_level",category_level);
@@ -4028,7 +4028,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryList(String category_level) {
-        String url = "/car-platform/pc/integral-mall/category-list";
+        String url = "/jiaochen/pc/integral-mall/category-list";
         JSONObject json1=new JSONObject();
         json1.put("category_level",category_level);
         return invokeApi(url,json1);
@@ -4039,7 +4039,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryBelong(String category_level) {
-        String url = "/car-platform/pc/integral-mall/belongs-category";
+        String url = "/jiaochen/pc/integral-mall/belongs-category";
         JSONObject json1=new JSONObject();
         json1.put("category_level",category_level);
         return invokeApi(url,json1);
@@ -4050,7 +4050,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryChgStatus(Integer id, Boolean status) {
-        String url = "/car-platform/pc/integral-mall/change-status";
+        String url = "/jiaochen/pc/integral-mall/change-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("status",status);
@@ -4062,7 +4062,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryDetail(Integer id, Integer page, Integer size) {
-        String url = "/car-platform/pc/integral-mall/category-detail";
+        String url = "/jiaochen/pc/integral-mall/category-detail";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4075,7 +4075,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryEdit(Boolean Checkcode, Integer id, String category_name,String category_level,Integer belong_category,String belong_pic) {
-        String url = "/car-platform/pc/integral-mall/edit-category";
+        String url = "/jiaochen/pc/integral-mall/edit-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);
         json1.put("category_level",category_level);
@@ -4090,7 +4090,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryDel(Integer id, Integer page, Integer size, Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/delete-category";
+        String url = "/jiaochen/pc/integral-mall/delete-category";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4103,7 +4103,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandPage(Integer page, Integer size, String brand_name, Boolean brand_status) {
-        String url = "/car-platform/pc/integral-mall/brand-page";
+        String url = "/jiaochen/pc/integral-mall/brand-page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -4117,7 +4117,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandList() {
-        String url = "/car-platform/pc/integral-mall/brand-list";
+        String url = "/jiaochen/pc/integral-mall/brand-list";
         JSONObject json1=new JSONObject();
         return invokeApi(url,json1);
     }
@@ -4127,7 +4127,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandCreat(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
-        String url = "/car-platform/pc/integral-mall/create-brand";
+        String url = "/jiaochen/pc/integral-mall/create-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("brand_name",brand_name);
@@ -4141,7 +4141,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandChgStatus(Integer id,  Boolean brand_status) {
-        String url = "/car-platform/pc/integral-mall/change-brand-status";
+        String url = "/jiaochen/pc/integral-mall/change-brand-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("brand_status",brand_status);
@@ -4153,7 +4153,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandDetail(Integer id,  Integer page, Integer size) {
-        String url = "/car-platform/pc/integral-mall/brand-detail";
+        String url = "/jiaochen/pc/integral-mall/brand-detail";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4166,7 +4166,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandEdit(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
-        String url = "/car-platform/pc/integral-mall/edit-brand";
+        String url = "/jiaochen/pc/integral-mall/edit-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("brand_name",brand_name);
@@ -4180,7 +4180,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject BrandDel(Integer id, Integer page, Integer size, Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/delete-brand";
+        String url = "/jiaochen/pc/integral-mall/delete-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4193,7 +4193,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject specificationsCreate(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/create-specifications";
+        String url = "/jiaochen/pc/integral-mall/create-specifications";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("specifications_name",specifications_name);
@@ -4207,7 +4207,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject specificationsChgStatus(Integer id,  Boolean status) {
-        String url = "/car-platform/pc/integral-mall/change-specifications-status";
+        String url = "/jiaochen/pc/integral-mall/change-specifications-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("status",status);
@@ -4219,7 +4219,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject specificationsDetail(Integer id,  Integer page, Integer size) {
-        String url = "/car-platform/pc/integral-mall/specifications-detail";
+        String url = "/jiaochen/pc/integral-mall/specifications-detail";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4232,7 +4232,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject specificationsEdit(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/edit-specifications";
+        String url = "/jiaochen/pc/integral-mall/edit-specifications";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("specifications_name",specifications_name);
@@ -4246,7 +4246,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject specificationsDel(Integer id, Integer page, Integer size, Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/delete-brand";
+        String url = "/jiaochen/pc/integral-mall/delete-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);
@@ -4259,7 +4259,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject categoryTree() {
-        String url = "/car-platform/pc/integral-mall/category-tree";
+        String url = "/jiaochen/pc/integral-mall/category-tree";
         JSONObject json1=new JSONObject();
         return invokeApi(url,json1);
     }
@@ -4270,7 +4270,7 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
     public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
                                       Integer first_category,Integer second_category,Integer third_category) {
-        String url = "/car-platform/pc/integral-mall/goods-manage-page";
+        String url = "/jiaochen/pc/integral-mall/goods-manage-page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -4287,10 +4287,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :商品导出
      * @date :2021/1/20 14:00
      **/
-    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
+    public JSONObject goodsManageExport(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
                                       Integer first_category,Integer second_category,Integer third_category,
                                       String export_type, JSONArray ids,Boolean chkcode) {
-        String url = "/car-platform/pc/integral-mall/goods-manage/export";
+        String url = "/jiaochen/pc/integral-mall/goods-manage/export";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -4310,12 +4310,33 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/20 14:00
      **/
     public JSONObject goodsChgStatus(Integer id, String status) {
-        String url = "/car-platform/pc/integral-mall/change-goods-status";
+        String url = "/jiaochen/pc/integral-mall/change-goods-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("status",status);
         return invokeApi(url,json1);
     }
+
+    /**
+     * @description :小程序积分商城首页
+     * @date :2021/1/27 14:00
+     **/
+    public JSONObject appletHomePage() {
+        String url = "/jiaochen/applet/granted/integral-mall/home-page";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+    /**
+     * @description :小程序积分商城首页
+     * @date :2021/1/27 14:00
+     **/
+    public JSONObject appletIntegralRule(Integer id, String status) {
+        String url = "/jiaochen/applet/granted/integral-mall/integral-rule";
+        JSONObject json1=new JSONObject();
+        return invokeApi(url,json1);
+    }
+
+
 
     /**
      * 积分商城相关结束

@@ -225,6 +225,8 @@ public class jiaoChenInfo {
     public final int  third_category= 1; //三级品类id
     public final String  third_category_chin= ""; //三级品类name
 
-
+    public final int  goods_brand= 1; //商品品牌
+    public final int  goods_id= 1; //商品id
+    public final String  goods_name= "1"; //商品名称
 
 }

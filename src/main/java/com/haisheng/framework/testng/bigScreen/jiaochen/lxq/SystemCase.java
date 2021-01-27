@@ -1617,7 +1617,130 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
+    //商品品牌
+    //2021-01-26
+    @Test(dataProvider = "BRANDNAME")
+    public void goodFilter1(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.goodsManagePage(1,50,name,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchname = obj.getString("goods_name");
+                Preconditions.checkArgument(searchname.contains(name),"搜索"+name+", 结果中包含"+searchname);
+            }
 
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】根据筛选栏-商品名称搜索");
+        }
+    }
+
+
+    //@Test
+    public void goodFilter2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //todo
+            //要去下拉框的接口
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】根据筛选栏-商品品牌搜索");
+        }
+    }
+
+    //@Test
+    public void goodFilter3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //todo
+            //要去下拉框的接口
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】根据筛选栏-商品状态搜索");
+        }
+    }
+
+    //@Test
+    public void goodFilter4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray list = jc.categoryTree().getJSONArray("list");
+            if (list.size()>0){
+                int id = list.getJSONObject(0).getInteger("category_id");
+
+                //todo 没补充完
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】根据一级品类搜索");
+        }
+    }
+
+    //@Test
+    public void goodShow() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.goodsManagePage(1,50,null,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                Preconditions.checkArgument(obj.containsKey("goods_pic"),"未展示商品图片");
+                Preconditions.checkArgument(obj.containsKey("goods_name"),"未展示商品名称");
+                Preconditions.checkArgument(obj.containsKey("belongs_brand"),"未展示所属品牌");
+                Preconditions.checkArgument(obj.containsKey("goods_category"),"未展示商品分类");
+                Preconditions.checkArgument(obj.containsKey("price"),"未展示市场价");
+                Preconditions.checkArgument(obj.containsKey("goods_status"),"未展示商品状态");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】列表展示项校验");
+        }
+    }
+
+    //@Test
+    public void goodUp() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.goodsChgStatus(info.goods_id,"true"); //启用商品
+            //查看商品列表该商品状态
+            JSONArray list = jc.goodsManagePage(1,10,info.goods_name,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                if (obj.getInteger("id")==info.goods_id){
+                    Preconditions.checkArgument(obj.getString("goods_status_name").equals("启用"),"启用后列表商品状态不是启用");
+                }
+            }
+            //查看小程序是否有该商品
+            // TODO: 小程序登陆后的影响
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】上架商品");
+        }
+    }
 
 
 
