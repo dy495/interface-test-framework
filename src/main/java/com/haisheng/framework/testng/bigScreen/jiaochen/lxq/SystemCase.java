@@ -1880,8 +1880,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "exchangeStatus")
     public Object[] exchangeStatus(){
         return new String[]{
-                "",// 状态1
-                "", // 状态2
+                "NOT_START",//未开始
+                "WORKING", // 进行中
+                "CLOSE", // 已关闭
+                "EXPIRED", // 已过期
+
         };
     }
 
@@ -1900,6 +1903,165 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【积分兑换】根据商品名称筛选");
+        }
+    }
+
+    //2021-01-28
+
+    //@Test(dataProvider = "exchangeStatus")
+    public void exchangeTop(String status) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = info.getStatusGoodId(status);
+            if (id!=-1){
+                int code = jc.exchangeGoodTop(id,false).getInteger("code");
+                Preconditions.checkArgument(code==1000,"置顶"+status+"状态码"+code);
+                //列表置顶
+                int listID = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getInteger("id");
+                Preconditions.checkArgument(listID==id,status+"置顶后未再列表首位");
+                //状态为进行中的话 小程序要置顶
+                if (status.equals("WORKING")){
+                    Preconditions.checkArgument(info.showInApplet(id,true) == true,"商品"+id+"小程序未展示/未置顶");
+                }
+            }
+            else {
+                Preconditions.checkArgument(1==0,"无"+status+"商品，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】置顶各状态的积分兑换商品");
+        }
+    }
+
+    //@Test
+    public void exchangeOpenCLOSE() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = info.getStatusGoodId("CLOSE");
+            if (id!=-1){
+                //开启
+                int code = jc.exchangeGoodChgStatus(id,true,false).getInteger("code");
+                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+                //列表中状态=进行中，为了方便的获取状态 先置顶
+                jc.exchangeGoodTop(id,true);
+                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
+                Preconditions.checkArgument(status.equals("WORKING"),"开启后状态为"+status);
+                //小程序-人气推荐展示此商品
+                Preconditions.checkArgument(info.showInApplet(id,false)==true,"小程序未展示此积分兑换品");
+
+            }
+            else {
+                Preconditions.checkArgument(1==0,"无已关闭商品，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】开启 状态为已关闭的积分兑换商品");
+        }
+    }
+
+    //@Test(dataProvider = "exchangeStatus2")
+    public void exchangeOpenNOTShow(String status1) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = info.getStatusGoodId(status1);
+            if (id!=-1){
+                //开启
+                int code = jc.exchangeGoodChgStatus(id,true,false).getInteger("code");
+                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+                //列表中状态=原状态，为了方便的获取状态 先置顶
+                jc.exchangeGoodTop(id,true);
+                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
+                Preconditions.checkArgument(status.equals(status1),"开启后状态为"+status);
+                //小程序-人气推荐不展示此商品
+                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
+
+            }
+            else {
+                Preconditions.checkArgument(1==0,"无"+status1+"商品，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】开启 状态为"+status1+"的积分兑换商品");
+        }
+    }
+    @DataProvider(name = "exchangeStatus2")
+    public Object[] exchangeStatus2(){
+        return new String[]{
+                "NOT_START",//未开始
+                "EXPIRED", // 已过期
+
+        };
+    }
+
+    //@Test(dataProvider = "exchangeStatus2")
+    public void exchangeCloseNOTShow(String status1) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = info.getStatusGoodId(status1);
+            if (id!=-1){
+                //关闭
+                int code = jc.exchangeGoodChgStatus(id,false,false).getInteger("code");
+                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+                //列表中状态=原状态，为了方便的获取状态 先置顶
+                jc.exchangeGoodTop(id,true);
+                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
+                Preconditions.checkArgument(status.equals(status1),"关闭后状态为"+status);
+                //小程序-人气推荐不展示此商品
+                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
+
+            }
+            else {
+                Preconditions.checkArgument(1==0,"无"+status1+"商品，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】关闭 状态为"+status1+"的积分兑换商品");
+        }
+    }
+
+    //@Test
+    public void exchangeCloseWorking() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = info.getStatusGoodId("WORKING");
+            if (id!=-1){
+                //关闭
+                int code = jc.exchangeGoodChgStatus(id,false,false).getInteger("code");
+                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+                //列表中状态=进行中，为了方便的获取状态 先置顶
+                jc.exchangeGoodTop(id,true);
+                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
+                Preconditions.checkArgument(status.equals("CLOSE"),"关闭后状态为"+status);
+                //小程序-人气推荐不展示此商品
+                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
+
+            }
+            else {
+                Preconditions.checkArgument(1==0,"无进行中商品，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】关闭 状态为进行中的积分兑换商品");
         }
     }
 

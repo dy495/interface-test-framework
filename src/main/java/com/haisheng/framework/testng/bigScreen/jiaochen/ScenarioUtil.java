@@ -4491,12 +4491,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/27 16:00
      **/
 
-    public JSONObject exchangeGoodChgStatus(Integer id,Boolean status) {
+    public JSONObject exchangeGoodChgStatus(Integer id,Boolean status,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-center/change-switch-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("status",status);
-        return invokeApi(url,json1);
+        return invokeApi(url,json1,chkcode);
     }
 
 
@@ -4505,11 +4505,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/27 16:00
      **/
 
-    public JSONObject exchangeGoodTop(Integer id) {
+    public JSONObject exchangeGoodTop(Integer id,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-center/make-top";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        return invokeApi(url,json1);
+        return invokeApi(url,json1,chkcode);
     }
 
     /**

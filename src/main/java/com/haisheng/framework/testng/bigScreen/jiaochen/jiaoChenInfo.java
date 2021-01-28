@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
 
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
+    PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     public final String logo = "general_temp/16de43e8-e98f-44d2-a005-62cab62b26ef";//120*120 品牌logo
     public final String logo2 = "general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04";
@@ -228,5 +230,41 @@ public class jiaoChenInfo {
     public final int  goods_brand= 1; //商品品牌
     public final int  goods_id= 1; //商品id
     public final String  goods_name= "1"; //商品名称
+
+    public int getStatusGoodId(String status){ //PC【积分兑换】-获取各状态的商品id
+        JSONArray list = jc.exchangePage(1,50,null,null,status).getJSONArray("list");
+        if (list.size()>0){
+            return list.getJSONObject(0).getInteger("id");
+        }
+        else {
+            return -1;
+        }
+    }
+
+    public Boolean showInApplet(int id, Boolean atFirst){
+        //登陆小程序
+        jc.appletLoginToken(pp.appletTocken);
+        JSONArray list = jc.appletHomePage().getJSONArray("recommend_list");
+
+        if (atFirst==true){
+            int listID = list.getJSONObject(0).getInteger("id");
+            if (listID==id){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            Boolean exist = false;
+            for (int i = 0 ; i < list.size(); i++){
+                int listID = list.getJSONObject(i).getInteger("id");
+                if (listID==id){
+                    exist = true;
+                }
+            }
+            return exist;
+        }
+    }
 
 }
