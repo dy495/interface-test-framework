@@ -44,6 +44,22 @@ public class LogicLayerUtil extends TestCaseCommon {
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
     public String IpPort = "http://47.95.69.163";
+    public String IpPort2 = "http://47.95.71.16";
+    public String httpGet1(String path, String json1,String json2,String json3, String IpPort) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path+"?"+"appKey="+json1+"&groupName="+json2+"&request_id="+json3;
+        config.url(queryUrl);
+        logger.info("{} json param: {}", path);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.get(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
 
     public String httpPost1(String path, String json, String IpPort) throws Exception {
         String requestId = "127c81fd-d0b1-4c77-adad"+ CommonUtil.getRandom(5);
@@ -204,14 +220,16 @@ public class LogicLayerUtil extends TestCaseCommon {
      *三. 客流人物管理
      * 1. 默认组人脸检索
      */
-    public JSONObject default_seearch(String shop_id,Integer from_user_id,String to_group_name,String to_user_id,String is_check_same) throws Exception {
+    public JSONObject default_search(String pic_url,Integer result_num,Boolean is_threshold,Boolean is_after_detect,Float score_threshold,String result_type,Boolean is_need_temp) throws Exception {
         String url = "/scenario/gate/SYSTEM_SEARCH_DEFAULT/v1.0";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shop_id);
-        json.put("from_user_id", from_user_id);
-        json.put("to_group_name", to_group_name);
-        json.put("to_user_id", to_user_id);
-        json.put("is_check_same", is_check_same);
+        json.put("pic_url", pic_url);
+        json.put("result_num", result_num);
+        json.put("is_threshold", is_threshold);
+        json.put("is_after_detect", is_after_detect);
+        json.put("score_threshold", score_threshold);
+        json.put("result_type", result_type);
+        json.put("is_need_temp", is_need_temp);
         String res = httpPost1(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -336,6 +354,18 @@ public class LogicLayerUtil extends TestCaseCommon {
         json.put("mask", mask);
         json.put("quality", quality);
         String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+    /**
+     13.查询组下所有人脸接口，返回每个人脸的Feature
+     */
+    public JSONObject allFace_search(String request_id,String app_key,String group_name) throws Exception {
+        String url = "/group/readAll";
+        String json1 = app_key;
+        String json2 = group_name;
+        String json3 = request_id;
+        String res = httpGet1(url, json1,json2,json3, IpPort2);
         return JSON.parseObject(res);
     }
 

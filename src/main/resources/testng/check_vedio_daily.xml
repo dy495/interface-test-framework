@@ -8,7 +8,7 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.videoDaily"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.videoDaily"></class>-->
         </classes>
     </test>
 </suite>

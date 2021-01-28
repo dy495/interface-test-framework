@@ -32,7 +32,8 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     String request_id = "8b21f20d-6af6-43ff-8fd3-4251e9";
 
     String face_url = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=381876729,1649964117&fm=26&gp=0.jpg";
-
+    String userId = "";
+    String imgUrl = "";
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -461,6 +462,197 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("特殊人物人脸删除(参数超出【支持的字符范围】)");
+        }
+    }
+
+    /**
+     * ====================6. 自定义组删除(正确入参&格式)======================
+     */
+    @Test
+    public void system_Delete() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("user_id","7cfa3fe9-96c4-4e65-960b-44edc3f18b68");
+            JSONArray array = new JSONArray();
+            array.add(obj);
+            JSONObject shop_user = new JSONObject();
+            shop_user.put("22728",array);
+            logic.special_register("autotesterss","111224534535",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
+
+            JSONObject res = logic.self_delete("autotesterss");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1000  , "自定义组删除(正确入参&格式),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(正确入参&格式)");
+        }
+    }
+
+    /**
+     * ====================6. 自定义组删除(必填项不传)======================
+     */
+    @Test
+    public void system_Delete1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.self_delete("");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1000  , "自定义组删除(必填项不传),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(必填项不传)");
+        }
+    }
+
+    /**
+     * ====================6. 自定义组删除(参数超出【支持的字符范围】)======================
+     */
+    @Test
+    public void system_Delete2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.self_delete("&&*^*&^^^*^*^*^*&^*");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , "自定义组删除(参数超出【支持的字符范围】),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(参数超出【支持的字符范围】)");
+        }
+    }
+
+
+    /**
+     * ====================7. 消费者身份转变(正确入参&格式)======================
+     */
+//    @Test
+//    public void change_user() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONObject obj = new JSONObject();
+//            obj.put("user_id","7cfa3fe9-96c4-4e65-960b-44eJkjl97987");
+//            JSONArray array = new JSONArray();
+//            array.add(obj);
+//            JSONObject shop_user = new JSONObject();
+//            shop_user.put("22728",array);
+//            String face_url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattachbak.dataguru.cn%2Fattachments%2Fportal%2F201812%2F29%2F161729gqqfq4qa4oli51oi.jpg&refer=http%3A%2F%2Fattachbak.dataguru.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614309271&t=70335c668b3981828084589637d0b3f0";
+//            JSONObject res = logic.special_register("oldUser","7cfa3fe9-96c4-4e65-960b-44eJkjluiu9897",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
+//            String face_id = res.getString("face_id");
+//
+//            JSONObject res1 = logic.changeUser("22728","7cfa3fe9-96c4-4e65-960b-44eJkjluiu9897","oldUser","878839128391yy",face_id);
+//            Integer code = res.getInteger("code");
+//            checkArgument(code == 1000  , "特殊人物人脸删除(正确入参&格式),code="+code);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("特殊人物人脸删除(正确入参&格式)");
+//        }
+//    }
+    /**
+     * ====================3.11. 查询组下所有人脸接口，返回每个人脸的Feature======================
+     */
+    @Test
+    public void default_search() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+             JSONObject res = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d3342342jk3","gate","22728--DEFAULT--20210127");
+             JSONArray data= res.getJSONArray("data");
+              userId = data.getJSONObject(0).getString("userId");
+              imgUrl = data.getJSONObject(0).getString("imgUrl");
+             checkArgument(data.size()!=0  , "特殊人物人脸删除(正确入参&格式),data:"+data.size());
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊人物人脸删除(正确入参&格式)");
+        }
+    }
+
+
+    /**
+     * ====================3.1. 默认组人脸检索======================
+     */
+    @Test
+    public void default_search1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+              JSONObject res = logic.default_search(imgUrl,1,true,false,null,"FACE",false);
+              Integer code = res.getInteger("code");
+              JSONArray faces = res.getJSONArray("faces");
+              checkArgument(code == 1000&& faces.size()!=0  , "默认组人脸检索(正确入参&格式),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("默认组人脸检索(正确入参&格式)");
+        }
+    }
+    /**
+     * ====================3.1. 默认组人脸检索(必填项不填写)======================
+     */
+    @Test
+    public void default_search2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.default_search("",1,true,false,null,"FACE",false);
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , "默认组人脸检索(必填项不填写),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("默认组人脸检索(必填项不填写)");
+        }
+    }
+    /**
+    * ====================3.2. 默认组用户查询======================
+    */
+    @Test
+    public void defaultUser_search() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.default_userSearch("22728",userId);
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1000  , " 默认组用户查询(正确入参&格式),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 默认组用户查询(正确入参&格式)");
+        }
+    }
+
+    /**
+     * ====================3.2. 默认组用户查询======================
+     */
+    @Test
+    public void defaultUser_search1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.default_userSearch("","");
+            Integer code = res.getInteger("code");
+            checkArgument(code == 1001  , " 默认组用户查询(必填项不填写),code="+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 默认组用户查询(必填项不填写)");
         }
     }
 }
