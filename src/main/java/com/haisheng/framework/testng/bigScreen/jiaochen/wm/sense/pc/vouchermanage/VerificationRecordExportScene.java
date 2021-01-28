@@ -4,19 +4,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
- * 卡券管理-核销记录
+ * 卡券管理-核销记录导入
  */
 @Builder
-public class VerificationRecord extends BaseScene {
+public class VerificationRecordExportScene extends BaseScene {
     private final String voucherName;
     private final String sender;
     private final Long startTime;
     private final Long endTime;
+    private final String exportType;
+    private final List<Long> ids;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -27,11 +31,23 @@ public class VerificationRecord extends BaseScene {
         object.put("end_time", endTime);
         object.put("page", page);
         object.put("size", size);
+        object.put("export_type", exportType);
+        object.put("ids", ids);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/verification-record";
+        return "/jiaochen/pc/voucher-manage/verification-record/export";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

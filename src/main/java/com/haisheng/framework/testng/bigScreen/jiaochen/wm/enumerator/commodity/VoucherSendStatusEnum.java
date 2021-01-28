@@ -24,7 +24,7 @@ public enum VoucherSendStatusEnum {
 
 
 
-    private String name;
+    private final String name;
 
     VoucherSendStatusEnum(String name) {
         this.name = name;

@@ -8,8 +8,8 @@ import lombok.Builder;
  * 作废用户卡券
  */
 @Builder
-public class InvalidCustomerVoucher extends BaseScene {
-    private final Integer id;
+public class InvalidCustomerVoucherScene extends BaseScene {
+    private final Long id;
     private final String invalidReason;
 
     @Override

@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.apply.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
@@ -18,7 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Sub
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -39,14 +39,11 @@ public class SellOutVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor) {
+    public void execute(Visitor visitor, IScene scene) {
         logger("CREATE SELL OUT START");
         super.visitor = visitor;
-        logger("DO CREATE");
         String voucherName = createVoucher(VoucherTypeEnum.CUSTOM);
-        logger("DO APPLY");
         applyVoucher(voucherName);
-        logger("DO SEND");
         pushMessage(getVoucherId(voucherName));
         logger("CREATE SELL OUT FINISH");
     }
@@ -114,7 +111,7 @@ public class SellOutVoucher extends BaseVoucher {
     private String createVoucherName(VoucherTypeEnum typeEnum) {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = typeEnum.getDesc() + num;
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
@@ -133,7 +130,7 @@ public class SellOutVoucher extends BaseVoucher {
      * @return 描述
      */
     private String getDesc() {
-        return EnumContent.B.getContent();
+        return EnumDesc.VOUCHER_DESC.getDesc();
     }
 
     /**
@@ -232,7 +229,7 @@ public class SellOutVoucher extends BaseVoucher {
         List<Long> voucherList = new ArrayList<>();
         voucherList.add(voucherId);
         PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                .telList(phoneList).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.D.getContent())
+                .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                 .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true);
         visitor.invokeApi(builder.build());
     }

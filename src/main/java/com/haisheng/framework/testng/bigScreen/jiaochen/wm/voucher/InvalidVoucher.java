@@ -14,7 +14,7 @@ public class InvalidVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor) {
+    public void execute(Visitor visitor, IScene scene) {
         logger("CREATE INVALID START");
         Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;

@@ -8,12 +8,12 @@ import lombok.Builder;
  * 作废记录
  */
 @Builder
-public class VoucherInvalidPage extends BaseScene {
+public class VoucherInvalidPageScene extends BaseScene {
     @Builder.Default
     private Integer size;
     @Builder.Default
     private Integer page;
-    private final Integer id;
+    private final Long id;
     private final String receiver;
     private final String receivePhone;
     private final String startTime;
@@ -42,7 +42,7 @@ public class VoucherInvalidPage extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/invalid-customer-voucher";
+        return "/jiaochen/pc/voucher-manage/voucher-invalid-page";
     }
 
     @Override

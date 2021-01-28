@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.apply.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -24,12 +24,11 @@ public class RejectVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor) {
+    public void execute(Visitor visitor, IScene scene) {
         logger("CREATE REJECT START");
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
         super.visitor = visitor;
         String voucherName = getVoucherName(voucherId);
-        logger("DO APPLY");
         applyVoucher(voucherName, "2");
         logger("CREATE REJECT FINISH");
     }

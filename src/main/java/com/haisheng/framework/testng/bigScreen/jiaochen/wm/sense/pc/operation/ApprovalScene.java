@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public class Approval extends BaseScene {
+public class ApprovalScene extends BaseScene {
     private final List<Long> registerIds;
     private final String status;
 

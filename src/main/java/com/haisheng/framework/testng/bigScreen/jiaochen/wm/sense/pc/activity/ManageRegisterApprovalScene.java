@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -13,8 +12,8 @@ import java.util.List;
 @Builder
 public class ManageRegisterApprovalScene extends BaseScene {
     private final Long activityId;
-    private final Integer  status;
-    private final List<Long> ids;
+    private final Integer status;
+    private final List<Integer> ids;
 
     @Override
     public JSONObject getJSONObject() {

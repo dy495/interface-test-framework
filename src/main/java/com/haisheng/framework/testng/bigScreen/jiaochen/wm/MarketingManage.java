@@ -7,8 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AppletVoucherList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerificationScene;
@@ -101,7 +101,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             int stock = 1000;
             //获取列表数据
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             //创建卡券
             String voucherName = util.createVoucher(stock);
@@ -133,7 +133,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.createVoucher(1000);
             //作废此卡券
             util.invalidVoucher(voucherName);
-            IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
             JSONObject response = jc.invokeApi(scene);
             String invalidTime = CommonUtil.getStrField(response, 0, "create_time");
             String invalidAccount = CommonUtil.getStrField(response, 0, "invalid_account");
@@ -158,7 +158,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int surplusInventory = 0;
             int additionalInventory = 0;
             String voucherName = null;
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -200,7 +200,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int surplusInventory = 0;
             int additionalInventory = 0;
             String voucherName = null;
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -246,7 +246,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int surplusInventory = 0;
             int additionalInventory = 0;
             String voucherName = null;
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -288,7 +288,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -321,7 +321,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -346,7 +346,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -374,7 +374,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = "2020-12-09";
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -414,7 +414,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherName(voucherId);
             CommonUtil.valueView(voucherName);
             //累计使用
-            IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
             int cumulativeUse = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_use");
             //核销
             user.loginApplet(appletUser);
@@ -440,13 +440,13 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             JSONArray voucherList = util.getVoucherInfo(1);
             String voucherName = voucherList.getJSONObject(0).getString("voucher_name");
-            IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
             long cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //购买临时套餐
             String platNumber = util.getPlatNumber(marketing.getPhone());
             IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
-                    .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                    .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                     .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
                     .extendedInsuranceCopies("1").type(1).build();
             jc.invokeApi(temporaryScene);
@@ -474,12 +474,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getPackageId("凯迪拉克无限套餐");
             long voucherId = util.getPackageContainVoucher(packageId).get(0);
             String voucherName = util.getVoucherName(voucherId);
-            IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
             int cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(phone)
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(phone))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(0).build();
             jc.invokeApi(purchaseFixedPackageScene);
@@ -507,12 +507,12 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getPackageId("凯迪拉克无限套餐");
             long voucherId = util.getPackageContainVoucher(packageId).get(0);
             String voucherName = util.getVoucherName(voucherId);
-            IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
             int cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(phone)
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(phone))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(0).build();
             jc.invokeApi(purchaseFixedPackageScene);
@@ -538,7 +538,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -30), format);
             long time = Long.parseLong(DateTimeUtil.dateToStamp(date, format));
             user.login(administrator);
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -573,7 +573,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String format = "yyyy-MM-dd HH:mm";
             String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), format);
             long time = Long.parseLong(DateTimeUtil.dateToStamp(date, format));
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -584,7 +584,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                         String voucherName = array.getJSONObject(j).getString("voucher_name");
                         //累计使用
                         long cumulativeUse = array.getJSONObject(j).getLong("cumulative_use");
-                        IScene scene = VerificationRecord.builder().voucherName(voucherName).build();
+                        IScene scene = VerificationRecordScene.builder().voucherName(voucherName).build();
                         //核销数量
                         long verificationRecordTotal = jc.invokeApi(scene).getLong("total");
                         CommonUtil.valueView(cumulativeUse, verificationRecordTotal);
@@ -605,7 +605,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -668,7 +668,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Long applyTotal = jc.invokeApi(applyBuild.build()).getLong("total");
             //增发一种卡券
             String voucherName = null;
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
@@ -700,7 +700,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = jc.pcVoucherList().getJSONArray("list");
-            VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
+            VoucherFormPageScene.VoucherFormPageSceneBuilder builder = VoucherFormPageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             int listSize = 0;
@@ -757,7 +757,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = VerificationPeople.builder().build();
+            IScene scene = VerificationPeopleScene.builder().build();
             //查询列表数
             int total = jc.invokeApi(scene).getInteger("total");
             String phone = util.getDistinctPhone();
@@ -781,10 +781,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取核销码
             String code = util.getVerificationCode("本司员工");
-            IScene scene = VerificationPeople.builder().verificationCode(code).build();
+            IScene scene = VerificationPeopleScene.builder().verificationCode(code).build();
             int num = CommonUtil.getIntField(jc.invokeApi(scene), 0, "verification_number");
             //核销列表
-            VerificationRecord.VerificationRecordBuilder builder = VerificationRecord.builder();
+            VerificationRecordScene.VerificationRecordSceneBuilder builder = VerificationRecordScene.builder();
             int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
             //核销
             user.loginApplet(appletUser);
@@ -825,7 +825,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = VerificationPeople.builder().build();
+            IScene scene = VerificationPeopleScene.builder().build();
             //查询列表数
             int total = jc.invokeApi(scene).getInteger("total");
             String phone = util.getStaffPhone();
@@ -1233,13 +1233,13 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             voucherList.add(voucherId);
             String name = util.getVoucherName(voucherId);
             //获取卡券累计发出
-            IScene scene = VoucherPageScene.builder().voucherName(name).build();
+            IScene scene = VoucherFormPageScene.builder().voucherName(name).build();
             long cumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
             //发卡记录页列表数
             int sendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             //消息发送一张卡券
             IScene sendMesScene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(phoneList).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true).build();
             jc.invokeApi(sendMesScene);
             long newCumulativeDelivery = CommonUtil.getIntField(jc.invokeApi(scene), 0, "cumulative_delivery");
@@ -1289,9 +1289,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                                 , "消息状态为：" + CommonUtil.result(EnumSendStatusName.SENT.getName(), sendStatusName));
                         //消息内容校验
                         String content = jsonObject.getString("content");
-                        CommonUtil.valueView(content, EnumContent.C.getContent());
-                        Preconditions.checkArgument(content.equals(EnumContent.C.getContent()),
-                                "消息内容：" + CommonUtil.result(EnumContent.C.getContent(), content));
+                        CommonUtil.valueView(content, EnumDesc.ARTICLE_DESC.getDesc());
+                        Preconditions.checkArgument(content.equals(EnumDesc.ARTICLE_DESC.getDesc()),
+                                "消息内容：" + CommonUtil.result(EnumDesc.ARTICLE_DESC.getDesc(), content));
                     }
                 });
             }
@@ -1413,7 +1413,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             shopList.add(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()).get(0));
             //发送消息
             IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopList)
-                    .messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .ifSendImmediately(true).build();
             jc.invokeApi(scene);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -1506,9 +1506,9 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             JSONObject response = jc.invokeApi(scene);
             int id = CommonUtil.getIntField(response, 0, "id");
             String content = jc.appletMessageDetail(String.valueOf(id)).getString("content");
-            CommonUtil.valueView(content, EnumContent.C.getContent());
-            Preconditions.checkArgument(content.equals(EnumContent.C.getContent()),
-                    "消息内容" + CommonUtil.result(EnumContent.C.getContent(), content));
+            CommonUtil.valueView(content, EnumDesc.ARTICLE_DESC.getDesc());
+            Preconditions.checkArgument(content.equals(EnumDesc.ARTICLE_DESC.getDesc()),
+                    "消息内容" + CommonUtil.result(EnumDesc.ARTICLE_DESC.getDesc(), content));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1521,7 +1521,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int stock = 1000;
-            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
+            String[] strings = {EnumDesc.VOUCHER_DESC.getDesc(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(name).subjectType(util.getSubjectType())
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
@@ -1544,7 +1544,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int stock = 1000;
-            String[] strings = {null, "", EnumContent.C.getContent()};
+            String[] strings = {null, "", EnumDesc.ARTICLE_DESC.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName()).subjectType(util.getSubjectType())
                         .voucherDescription(desc).subjectId(util.getSubjectId(util.getSubjectType())).stock(stock).cost(util.getCost(stock))
@@ -1893,7 +1893,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {null, EnumContent.B.getContent()};
+            String[] strings = {null, EnumDesc.VOUCHER_DESC.getDesc()};
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName(name)
                         .verificationPersonPhone("13663366788").status(1).type(1).build();
@@ -1915,7 +1915,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_37() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {null, EnumContent.B.getContent()};
+            String[] strings = {null, EnumDesc.VOUCHER_DESC.getDesc()};
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName(name)
                         .verificationPersonPhone("13663366788").status(1).type(1).build();
@@ -1979,7 +1979,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {EnumContent.B.getContent(), "1", null, ""};
+            String[] strings = {EnumDesc.VOUCHER_DESC.getDesc(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreatePackageScene.builder().packageName(name).validity("30").packageDescription(util.getDesc())
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
@@ -2002,7 +2002,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {null, "", EnumContent.C.getContent()};
+            String[] strings = {null, "", EnumDesc.ARTICLE_DESC.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName()).validity("30").packageDescription(desc)
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
@@ -2183,7 +2183,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(phones).forEach(phone -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(phone)
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
                         .extendedInsuranceCopies("1").type(1).build();
                 String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2207,7 +2207,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(plateNumbers).forEach(plateNumber -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
                         .extendedInsuranceCopies("1").type(1).build();
                 String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2239,7 +2239,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             voucherLists.forEach(voucherList -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone())).voucherList(voucherList)
-                        .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(util.getSubjectType())
+                        .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear("1")
                         .extendedInsuranceCopies("1").type(1).build();
                 String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2264,7 +2264,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(packagePrices).forEach(packagePrice -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice(packagePrice).expiryDate("1").remark(EnumContent.B.getContent())
+                        .packageId(packageId).packagePrice(packagePrice).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                         .extendedInsuranceCopies(10).type(1).build();
                 String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2289,7 +2289,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(expiryDates).forEach(expiryDate -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.11").expiryDate(expiryDate).remark(EnumContent.B.getContent())
+                        .packageId(packageId).packagePrice("1.11").expiryDate(expiryDate).remark(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                         .extendedInsuranceCopies(10).type(1).build();
                 String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2310,7 +2310,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String subjectType = util.getSubjectType();
             long packageId = util.getPackageId("凯迪拉克无限套餐");
             //购买固定套餐
-            String[] remarks = {EnumContent.C.getContent()};
+            String[] remarks = {EnumDesc.ARTICLE_DESC.getDesc()};
             Arrays.stream(remarks).forEach(remark -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
@@ -2338,7 +2338,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(subjectTypes).forEach(subjectType -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
+                        .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                         .extendedInsuranceCopies(10).type(1).build();
                 String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2361,7 +2361,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.11").expiryDate("10").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(subjectType).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(1).build();
             String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2385,7 +2385,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
                 //购买固定套餐
                 IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                         .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                        .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                        .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                         .extendedInsuranceCopies(10).type(1).build();
                 String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2409,7 +2409,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //后买临时套餐
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
+                    .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(subjectType)
                     .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
                     .extendedInsuranceCopies("1").type(1).build();
             String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2432,7 +2432,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //购买临时套餐
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .voucherList(voucherList).expiryDate("1").remark(EnumContent.B.getContent()).subjectType(subjectType)
+                    .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(subjectType)
                     .subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear("1")
                     .extendedInsuranceCopies("1").type(1).build();
             String message = jc.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2454,7 +2454,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(1).build();
             String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2479,7 +2479,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(1).build();
             String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2503,7 +2503,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
                     .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
+                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
                     .extendedInsuranceCopies(10).type(1).build();
             jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2518,10 +2518,10 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] packageNames = {EnumVP.ONE.getPackageName(), EnumContent.A.getContent(), null, ""};
+            String[] packageNames = {EnumVP.ONE.getPackageName(), EnumDesc.PACKAGE_DESC.getDesc(), null, ""};
             long packageId = util.getModifyPackageId();
             Arrays.stream(packageNames).forEach(packageName -> {
-                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
                         .voucherList(util.getVoucherInfo()).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
                         .id(String.valueOf(packageId)).build();
@@ -2540,7 +2540,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] contents = {EnumContent.C.getContent(), null, ""};
+            String[] contents = {EnumDesc.ARTICLE_DESC.getDesc(), null, ""};
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             Arrays.stream(contents).forEach(content -> {
@@ -2567,7 +2567,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
             Arrays.stream(subjectTypes).forEach(subjectType -> {
-                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).validity(2000)
                         .voucherList(util.getVoucherInfo()).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
                         .id(String.valueOf(packageId)).build();
@@ -2588,7 +2588,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
-            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(util.getVoucherInfo()).packagePrice("1.11")
                     .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
             String message = jc.invokeApi(scene, false).getString("message");
@@ -2611,7 +2611,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             voucherList.add(util.getVoucherInfo(11));
             voucherList.add(null);
             voucherList.forEach(voucher -> {
-                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(voucher)
                         .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -2633,7 +2633,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             String packageName = util.getPackageName(packageId);
             String[] prices = {"100000000.01", "10000000001", null, ""};
             Arrays.stream(prices).forEach(price -> {
-                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                         .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(util.getVoucherInfo())
                         .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
                 String message = jc.invokeApi(scene, false).getString("message");
@@ -2653,7 +2653,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         try {
             long packageId = util.getModifyPackageId();
             String packageName = util.getPackageName(packageId);
-            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(util.getVoucherInfo())
                     .status(true).id(String.valueOf(packageId)).build();
             String message = jc.invokeApi(scene, false).getString("message");
@@ -2699,11 +2699,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] titles = {null, "", EnumContent.A.getContent()};
+            String[] titles = {null, "", EnumDesc.PACKAGE_DESC.getDesc()};
             long packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             Arrays.stream(titles).forEach(title -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(title).messageContent(EnumContent.C.getContent())
+                        .telList(getList(marketing.getPhone())).messageName(title).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                         .type(1).voucherOrPackageList(getList(packageId)).useDays(10);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = StringUtils.isEmpty(title) ? "消息名称不能为空" : "消息名称不能超过20个字";
@@ -2720,11 +2720,11 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
     public void messageManager_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] contents = {null, "", EnumContent.C.getContent()};
+            String[] contents = {null, "", EnumDesc.ARTICLE_DESC.getDesc()};
             long packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             Arrays.stream(contents).forEach(content -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(content)
+                        .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(content)
                         .type(1).voucherOrPackageList(getList(packageId)).useDays(10);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = StringUtils.isEmpty(content) ? "消息内容不能为空" : "消息内容不能超过200个字";
@@ -2744,7 +2744,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int[] types = {0, 1};
             Arrays.stream(types).forEach(type -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.A.getContent())
+                        .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.PACKAGE_DESC.getDesc())
                         .type(type).useDays(10);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = "系统错误,请联系技术支持";
@@ -2765,7 +2765,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int[] types = {0, 1};
             Arrays.stream(types).forEach(type -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                        .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                         .type(0).voucherOrPackageList(getList(packageId));
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = "系统错误,请联系技术支持";
@@ -2786,7 +2786,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int[] types = {0, 1};
             Arrays.stream(types).forEach(type -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                        .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                         .type(0).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(null);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = "系统错误,请联系技术支持";
@@ -2809,7 +2809,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int[] types = {0, 1};
             Arrays.stream(types).forEach(type -> lists.forEach(list -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(list).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                        .telList(list).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                         .type(type).voucherOrPackageList(getList(packageId)).useDays(10);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = "输入手机号【" + list.get(0) + "】格式不正确";
@@ -2830,7 +2830,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             int[] types = {0, 1};
             Arrays.stream(types).forEach(type -> {
                 PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
+                        .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                         .type(0).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(null);
                 String message = jc.invokeApi(builder.build(), false).getString("message");
                 String err = "系统错误,请联系技术支持";
@@ -2850,7 +2850,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //发消息
             long voucherId = util.getObsoleteVoucherId();
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废, 请重新选择！";
@@ -2870,7 +2870,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             long voucherId = util.getNoInventoryVoucherId();
             CommonUtil.valueView(util.getVoucherName(voucherId));
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足";
@@ -2891,7 +2891,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             packageId = util.getPackageId(EnumVP.ONE.getPackageName());
             jc.pcSwitchPackageStatus(false, packageId);
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐不允许发送，请重新选择";
@@ -2911,7 +2911,7 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
             //发消息
             long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
             PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                    .telList(getList(marketing.getPhone())).messageName(EnumContent.MESSAGE_TITLE.getContent()).messageContent(EnumContent.C.getContent())
+                    .telList(getList(marketing.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
             String message = jc.invokeApi(builder.build(), false).getString("message");
             String err = "套餐【" + util.getPackageName(packageId) + "】中卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";

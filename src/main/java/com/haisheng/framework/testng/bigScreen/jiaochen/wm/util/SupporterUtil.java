@@ -6,24 +6,24 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.PackagePage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.apply.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherSendRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.ActivityRegisterScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.PackageListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
@@ -31,16 +31,15 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInvalidPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -118,7 +117,7 @@ public class SupporterUtil extends BaseUtil {
     public String createVoucherName(VoucherTypeEnum typeEnum) {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = typeEnum.getDesc() + num;
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
@@ -137,7 +136,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 描述
      */
     public String getDesc() {
-        return EnumContent.B.getContent();
+        return EnumDesc.VOUCHER_DESC.getDesc();
     }
 
     /**
@@ -156,7 +155,12 @@ public class SupporterUtil extends BaseUtil {
      */
     public String getPicPath() {
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/卡券图.jpg";
-        String picture = new ImageUtil().getImageBinary(path);
+        return getPicPath(path);
+    }
+
+
+    public String getPicPath(String picPath) {
+        String picture = new ImageUtil().getImageBinary(picPath);
         IScene scene = FileUpload.builder().isPermanent(false).pic(picture).ratio(1.5).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
@@ -230,7 +234,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券名
      */
     public String getVoucherName(long voucherId) {
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormPageScene.builder().build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
     }
@@ -242,7 +246,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormPageScene.builder().build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
     }
@@ -251,7 +255,7 @@ public class SupporterUtil extends BaseUtil {
      * 获取卡券领取记录
      *
      * @param voucherId 卡券id
-     * @return 领取记录集合
+     * @return 领取记录列表
      */
     public List<VoucherSendRecord> getVoucherSendRecordList(Long voucherId) {
         IScene scene = SendRecordScene.builder().id(voucherId).build();
@@ -262,11 +266,33 @@ public class SupporterUtil extends BaseUtil {
      * 获取卡券领取记录
      *
      * @param voucherName 卡券名称
-     * @return 领取记录集合
+     * @return 领取记录列表
      */
     public List<VoucherSendRecord> getVoucherSendRecordList(String voucherName) {
         Long voucherId = getVoucherId(voucherName);
         return getVoucherSendRecordList(voucherId);
+    }
+
+    /**
+     * 获取卡券作废记录
+     *
+     * @param voucherId 卡券id
+     * @return 作废记录列表
+     */
+    public List<VoucherInvalidPage> getVoucherInvalidList(Long voucherId) {
+        IScene scene = VoucherInvalidPageScene.builder().id(voucherId).build();
+        return collectBean(scene, VoucherInvalidPage.class);
+    }
+
+    /**
+     * 获取卡券作废记录
+     *
+     * @param voucherName 卡券名称
+     * @return 作废记录列表
+     */
+    public List<VoucherInvalidPage> getVoucherInvalidList(String voucherName) {
+        Long voucherId = getVoucherId(voucherName);
+        return getVoucherInvalidList(voucherId);
     }
 
 //    /**
@@ -360,7 +386,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 卡券页信息
      */
     public VoucherPage getVoucherPage(String voucherName) {
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).findFirst().orElse(null);
     }
@@ -429,6 +455,23 @@ public class SupporterUtil extends BaseUtil {
     public JSONArray getVoucherArray(String voucherName, Integer voucherCount) {
         Long voucherId = getVoucherId(voucherName);
         return getVoucherArray(voucherId, voucherCount);
+    }
+
+    /**
+     * 获取卡券集合
+     *
+     * @param voucherName  卡券名
+     * @param voucherCount 卡券数量
+     * @return 卡券信息集合
+     */
+    public JSONArray getVoucherInfoArray(String voucherName, Integer voucherCount) {
+        JSONArray voucherList = new JSONArray();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
+        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
+        JSONObject jsonObject = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).findFirst().orElse(null));
+        jsonObject.put("voucher_count", voucherCount);
+        voucherList.add(jsonObject);
+        return voucherList;
     }
 
 //    /**
@@ -641,6 +684,16 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 套餐确认支付
+     *
+     * @param packageId 套餐id
+     */
+    public void makeSureBuyPackage(Long packageId) {
+        String packageName = getPackageName(packageId);
+        makeSureBuyPackage(packageName);
+    }
+
+    /**
      * 创建一个套餐名
      *
      * @return 套餐名
@@ -710,7 +763,7 @@ public class SupporterUtil extends BaseUtil {
         List<PackagePage> packagePages = collectBean(packageFormPageScene, PackagePage.class);
         Long packageId = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).map(PackagePage::getPackageId).findFirst().orElse(null);
         String packageName = getPackageName(packageId);
-        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
+        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
                 .validity(2000).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
                 .id(String.valueOf(packageId)).build();
@@ -718,8 +771,160 @@ public class SupporterUtil extends BaseUtil {
         return packageName;
     }
 
+    /**
+     * 编辑套餐
+     *
+     * @param voucherId    卡券id
+     * @param voucherCount 卡券数量
+     * @return 套餐名
+     */
+    public Long editPackage(Long voucherId, int voucherCount) {
+        JSONArray voucherList = getVoucherArray(voucherId, voucherCount);
+        String packageName = editPackage(voucherList);
+        return getPackageId(packageName);
+    }
 
-//
+    /**
+     * 购买临时套餐
+     *
+     * @param voucherList 包含的卡券名称列表
+     * @param type        0赠送/1购买
+     */
+    public void buyTemporaryPackage(JSONArray voucherList, int type) {
+        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+                .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
+        visitor.invokeApi(temporaryScene);
+    }
+
+    /**
+     * 购买临时套餐
+     *
+     * @param voucherName 包含的卡券名称
+     * @param type        0赠送/1购买
+     */
+    public void buyTemporaryPackage(String voucherName, int type) {
+        JSONArray voucherList = getVoucherArray(voucherName, 1);
+        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+                .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
+        visitor.invokeApi(temporaryScene);
+    }
+
+    /**
+     * 购买固定套餐
+     *
+     * @param packageId 包含的固定套餐
+     * @param type      0赠送/1购买
+     */
+    public void buyFixedPackage(Long packageId, int type) {
+        IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(EnumAccount.MARKETING.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+                .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
+        visitor.invokeApi(purchaseFixedPackageScene);
+    }
+
+    /**
+     * 接待时购买固定套餐
+     *
+     * @param packageId 包含的固定套餐
+     * @param type      0赠送/1购买
+     */
+    public void receptionBuyFixedPackage(Long packageId, int type) {
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
+        //购买套餐
+        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
+                .PurchaseFixedPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(receptionPage.getPlateNumber()).packageId(packageId)
+                .packagePrice("1.11").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .extendedInsuranceYear("").extendedInsuranceCopies("").type(type).receptionId(receptionPage.getId())
+                .customerId(receptionPage.getCustomerId()).build();
+        visitor.invokeApi(purchaseScene);
+    }
+
+    /**
+     * 接待时购买临时套餐
+     *
+     * @param voucherName 包含卡券名称
+     * @param type        0赠送/1购买
+     */
+    public void receptionBuyTemporaryPackage(String voucherName, int type) {
+        JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
+        //购买套餐
+        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
+                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
+                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
+                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
+                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
+        visitor.invokeApi(purchaseScene);
+    }
+
+    /**
+     * 接待时购买临时套餐
+     *
+     * @param voucherList 包含的卡券列表
+     * @param type        0赠送/1购买
+     */
+    public void receptionBuyTemporaryPackage(JSONArray voucherList, int type) {
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
+        //购买套餐
+        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
+                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
+                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
+                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
+                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
+        visitor.invokeApi(purchaseScene);
+    }
+
+
+    //-------------------------------------------------消息----------------------------------------------------------
+
+    /**
+     * 消息推送
+     *
+     * @param immediately 是否立即发送
+     * @return 发出去的卡券id
+     */
+    public Long pushMessage() {
+        Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
+        pushMessage(0, true, voucherId);
+        return voucherId;
+    }
+
+    /**
+     * 消息推送
+     *
+     * @param type               推送优惠类型 0：卡券，1：套餐
+     * @param voucherOrPackageId 卡券id
+     * @param immediately        是否立即发送
+     * @return 发出去的卡券id
+     */
+    public void pushMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
+        List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
+        List<String> phoneList = new ArrayList<>();
+        phoneList.add(EnumAccount.MARKETING.getPhone());
+        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+                .telList(phoneList).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDays(10);
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        visitor.invokeApi(builder.build());
+    }
+
 //    /**
 //     * 获取非重复电话号
 //     *
@@ -757,108 +962,8 @@ public class SupporterUtil extends BaseUtil {
 //        return null;
 //
 //
-//    /**
-//     * 购买临时套餐
-//     *
-//     * @param type 0赠送/1购买
-//     */
-//    public void buyTemporaryPackage(int type) {
-//        EnumAccount marketing = EnumAccount.MARKETING;
-//        JSONArray voucherList = getVoucherInfo(1);
-//        String platNumber = getPlatNumber(marketing.getPhone());
-//        IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackage.builder().customerPhone(marketing.getPhone())
-//                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(platNumber).voucherList(voucherList)
-//                .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
-//                .subjectId(getSubjectId(getSubjectType())).extendedInsuranceYear("1")
-//                .extendedInsuranceCopies("1").type(type).build();
-//        jc.invokeApi(purchaseTemporaryPackageScene);
-//    }
-//
-//    /**
-//     * 购买固定套餐
-//     *
-//     * @param type 0赠送/1购买
-//     */
-//    public void buyFixedPackage(int type) {
-//        EnumAccount marketing = EnumAccount.MARKETING;
-//        String subjectType = getSubjectType();
-//        long packageId = getPackageId(EnumVP.ONE.getPackageName());
-//        //购买固定套餐
-//        IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-//                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(marketing.getPhone()))
-//                .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-//                .subjectType(subjectType).subjectId(getSubjectId(subjectType)).extendedInsuranceYear(10)
-//                .extendedInsuranceCopies(10).type(type).build();
-//        jc.invokeApi(purchaseFixedPackageScene);
-//    }
-//
-//    /**
-//     * 接待时购买固定套餐
-//     *
-//     * @param type 0赠送/1购买
-//     */
-//    public void receptionBuyFixedPackage(int type) {
-//        IScene pageScene = Page.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
-//        JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
-//        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
-//        Long customerId = jsonObject.getLong("customer_id");
-//        Long receptionId = jsonObject.getLong("reception_id");
-//        String plateNumber = jsonObject.getString("plate_number");
-//        //购买套餐
-//        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
-//                .PurchaseFixedPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
-//                .plateNumber(plateNumber).packageId(getPackageId(EnumVP.ONE.getPackageName()))
-//                .packagePrice("1.11").expiryDate("1").remark(EnumContent.B.getContent())
-//                .subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType()))
-//                .extendedInsuranceYear("").extendedInsuranceCopies("").type(type).receptionId(receptionId)
-//                .customerId(customerId).build();
-//        jc.invokeApi(purchaseScene);
-//    }
-//
-//    /**
-//     * 接待时购买临时套餐
-//     *
-//     * @param type 0赠送/1购买
-//     */
-//    public void receptionBuyTemporaryPackage(int type) {
-//        IScene pageScene = Page.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
-//        JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
-//        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
-//        Long customerId = jsonObject.getLong("customer_id");
-//        Long receptionId = jsonObject.getLong("reception_id");
-//        String plateNumber = jsonObject.getString("plate_number");
-//        //购买套餐
-//        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
-//                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
-//                .plateNumber(plateNumber).voucherList(getVoucherInfo(EnumVP.ONE.getVoucherName(), 1))
-//                .expiryDate("1").remark(EnumContent.B.getContent()).subjectType(getSubjectType())
-//                .subjectId(getSubjectId(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
-//                .type(type).receptionId(receptionId).customerId(customerId).build();
-//        jc.invokeApi(purchaseScene);
-//    }
-//
 
-    /**
-     * 消息推送
-     *
-     * @param immediately 是否立即发送
-     * @return 发出去的卡券id
-     */
-    public Long pushMessage(boolean immediately) {
-        List<String> phoneList = new ArrayList<>();
-        phoneList.add(EnumAccount.MARKETING.getPhone());
-        List<Long> voucherList = new ArrayList<>();
-        Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
-        voucherList.add(voucherId);
-        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-                .type(0).voucherOrPackageList(voucherList).useDays(10);
-        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
-        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
-        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
-        visitor.invokeApi(builder.build());
-        return voucherId;
-    }
+
 //
 //    /**
 //     * 获取核销码
@@ -908,6 +1013,8 @@ public class SupporterUtil extends BaseUtil {
 //    }
 //
 
+    //-------------------------------------------------小程序----------------------------------------------------------
+
     /**
      * 获取小程序卡券编号
      *
@@ -929,6 +1036,29 @@ public class SupporterUtil extends BaseUtil {
             logger.info("id:{},status:{}", id, status);
         } while (list.size() == 20);
         return voucherList.get(0);
+    }
+
+    /**
+     * 获取小程序卡券信息
+     *
+     * @param voucherCode 卡券码
+     */
+    public AppletVoucherInfo getAppletVoucherInfo(String voucherCode) {
+        AppletVoucherInfo appletVoucherInfo;
+        Integer id = null;
+        Integer status = null;
+        JSONArray list;
+        do {
+            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
+            JSONObject response = visitor.invokeApi(scene);
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            list = response.getJSONArray("list");
+            appletVoucherInfo = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_code").equals(voucherCode))
+                    .map(e -> JSONObject.toJavaObject(e, AppletVoucherInfo.class)).findFirst().orElse(null);
+        } while (list.size() == 20);
+        return appletVoucherInfo;
     }
 //
 //    /**
@@ -1206,15 +1336,16 @@ public class SupporterUtil extends BaseUtil {
 //        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
 //    }
 //
-//    /**
-//     * 活动报名
-//     *
-//     * @param articleId 活动id
-//     */
-//    public void applyArticle(Long articleId) {
-//        IScene scene = ActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build();
-//        visitor.invokeApi(scene, false);
-//    }
+
+    /**
+     * 活动报名
+     *
+     * @param activityId 活动id
+     */
+    public void activityRegister(Long activityId) {
+        IScene scene = ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build();
+        visitor.invokeApi(scene, false);
+    }
 
     /**
      * 收集结果
@@ -1236,5 +1367,248 @@ public class SupporterUtil extends BaseUtil {
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
         }
         return list;
+    }
+    //-------------------------------------------------------活动---------------------------------------------------
+
+    /**
+     * 活动审批
+     *
+     * @param status     201通过/301不通过
+     * @param activityId 活动id
+     */
+    public void approvalActivity(Integer status, Long... activityId) {
+        List<Long> ids = new ArrayList<>(Arrays.asList(activityId));
+        IScene manageApprovalScene = ManageApprovalScene.builder().ids(ids).status(status).build();
+        visitor.invokeApi(manageApprovalScene);
+    }
+
+    /**
+     * 创建裂变活动-分享者奖励
+     **/
+    public JSONObject getShareVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String voucherEnd, Integer voucherEffectiveDays) {
+        JSONObject shareVoucher = new JSONObject();
+        shareVoucher.put("id", id);
+        shareVoucher.put("type", type);
+        shareVoucher.put("num", num);
+        JSONObject voucherValid = new JSONObject();
+        voucherValid.put("expire_type", expireType);
+        if (expireType == 1) {
+            voucherValid.put("voucher_start", voucherStart);
+            voucherValid.put("voucher_end", voucherEnd);
+        } else {
+            voucherValid.put("voucher_effective_days", voucherEffectiveDays);
+        }
+        shareVoucher.put("voucher_valid", voucherValid);
+        return shareVoucher;
+    }
+
+    /**
+     * 创建裂变活动-被邀请者奖励
+     **/
+    public JSONObject getInvitedVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String voucherEnd, Integer voucherEffectiveDays) {
+        JSONObject invitedVoucher = new JSONObject();
+        invitedVoucher.put("id", id);
+        invitedVoucher.put("type", type);
+        invitedVoucher.put("num", num);
+        JSONObject voucherValid = new JSONObject();
+        if (expireType == 1) {
+            voucherValid.put("voucher_start", voucherStart);
+            voucherValid.put("voucher_end", voucherEnd);
+        } else {
+            voucherValid.put("voucher_effective_days", voucherEffectiveDays);
+        }
+        invitedVoucher.put("voucher_valid", voucherValid);
+        return invitedVoucher;
+    }
+
+    /**
+     * 创建招募活动-报名所需信息
+     **/
+    public JSONArray getRegisterInformationList(List<Boolean> isShow, List<Boolean> isRequired) {
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < RegisterInfoEnum.values().length; i++) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", RegisterInfoEnum.values()[i].getId());
+            jsonObject.put("name", RegisterInfoEnum.values()[i].getName());
+            jsonObject.put("is_show", isShow.get(i));
+            jsonObject.put("is_required", isRequired.get(i));
+            array.add(jsonObject);
+        }
+        return array;
+    }
+
+    /**
+     * 创建招募活动-卡券奖励
+     **/
+    public JSONArray getRewardVouchers(Long id, int type, int num) {
+        JSONArray rewardVouchers = new JSONArray();
+        JSONObject voucherValid = new JSONObject();
+        voucherValid.put("id", id);
+        voucherValid.put("type", type);
+        voucherValid.put("num", num);
+        rewardVouchers.add(voucherValid);
+        return rewardVouchers;
+    }
+
+    /**
+     * 创建招募活动-奖励有效期
+     *
+     * @param expireType           卡券有效期类型 1：时间段，2：有效天数
+     * @param voucherStart         卡券有效开始日期 卡券有效期类型为1（时间段）必填
+     * @param voucherEnd           卡券有效结束日期 卡券有效期类型为1（时间段）必填
+     * @param voucherEffectiveDays 卡券有效天数 卡券有效期类型为2（有效天数）必填
+     **/
+    public JSONObject getVoucherValid(int expireType, String voucherStart, String voucherEnd, int voucherEffectiveDays) {
+        JSONObject voucherValid = new JSONObject();
+        voucherValid.put("expire_type", expireType);
+        if (expireType == 1) {
+            voucherValid.put("voucher_start", voucherStart);
+            voucherValid.put("voucher_end", voucherEnd);
+        } else {
+            voucherValid.put("voucher_effective_days", voucherEffectiveDays);
+        }
+        return voucherValid;
+    }
+
+
+    /**
+     * 获取开始时间
+     */
+    public String getStartDate() {
+        return DateTimeUtil.getFormat(new Date());
+    }
+
+    /**
+     * 获取结束时间
+     */
+    public String getEndDate() {
+        return DateTimeUtil.addDayFormat(new Date(), 10);
+    }
+
+    /**
+     * 活动管理-创建裂变活动
+     */
+    public void createFissionActivity() {
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        visitor.invokeApi(createFissionActivityScene(voucherId));
+    }
+
+    /**
+     * 构建裂变活动
+     *
+     * @param voucherId 包含卡券信息
+     * @return IScene
+     */
+    public IScene createFissionActivityScene(Long voucherId) {
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        //获取优惠券ID
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, getVoucherSurplusInventory(voucherId), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 2, getVoucherSurplusInventory(voucherId), 2, "", "", 3);
+        return FissionVoucherAddScene.builder()
+                .type(0)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
+                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+    }
+
+    /**
+     * 创建招募活动
+     *
+     * @return 活动id
+     */
+    public Long createRecruitActivity() {
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        return createRecruitActivity(voucherId, true, 0, true);
+    }
+
+    /**
+     * 活动管理-创建招募活动
+     *
+     * @param voucherId         奖励卡券信息
+     * @param award             是否包含奖励
+     * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
+     * @param isNeedApproval    报名后是否需要审批
+     */
+    public Long createRecruitActivity(Long voucherId, boolean award, int rewardReceiveType, boolean isNeedApproval) {
+        IScene scene = createRecruitActivityScene(voucherId, award, rewardReceiveType, isNeedApproval);
+        return visitor.invokeApi(scene).getLong("id");
+    }
+
+    /**
+     * 活动管理-创建招募活动
+     *
+     * @param voucherId         奖励卡券信息
+     * @param award             是否包含奖励
+     * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
+     * @param isNeedApproval    报名后是否需要审批
+     */
+    public IScene createRecruitActivityScene(Long voucherId, boolean award, int rewardReceiveType, boolean isNeedApproval) {
+        List<String> picList = new ArrayList<>();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        picList.add(supporterUtil.getPicPath());
+        //填写报名所需要信息
+        List<Boolean> isShow = new ArrayList<>();
+        isShow.add(true);
+        isShow.add(true);
+        isShow.add(true);
+        isShow.add(true);
+        List<Boolean> isRequired = new ArrayList<>();
+        isRequired.add(true);
+        isRequired.add(true);
+        isRequired.add(true);
+        isRequired.add(true);
+        JSONArray registerInformationList = getRegisterInformationList(isShow, isRequired);
+        //报名成功奖励
+
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        //卡券有效期
+        JSONObject voucherValid = getVoucherValid(1, "", "", 10);
+        //创建招募活动-共有的--基础信息
+        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
+                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .applyStart(getStartDate())
+                .applyEnd(getEndDate())
+                .isLimitQuota(true)
+                .quota(2)
+                .address(EnumDesc.MESSAGE_TITLE.getDesc())
+                .registerInformationList(registerInformationList)
+                .successReward(true)
+                .rewardReceiveType(rewardReceiveType)
+                .isNeedApproval(isNeedApproval);
+        if (award) {
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
+        }
+        return builder.build();
+    }
+
+    private int getVoucherSurplusInventory(Long voucherId) {
+        Long surplusInventory = getVoucherPage(voucherId).getSurplusInventory();
+        return (int) (surplusInventory == 1 ? surplusInventory : surplusInventory - 1);
+
     }
 }

@@ -337,6 +337,11 @@ public class CommonUtil {
         check(expect, actual, reason);
     }
 
+    public static <T> void checkResultPlus(String key1, T value1, String key2, T value2) {
+        String reason = key1 + ": " + value1 + " " + key2 + ": " + value2;
+        check(value1, value2, reason);
+    }
+
     private static <T> void check(T expect, T actual, String reason) {
         Preconditions.checkArgument(expect.equals(actual), reason);
     }

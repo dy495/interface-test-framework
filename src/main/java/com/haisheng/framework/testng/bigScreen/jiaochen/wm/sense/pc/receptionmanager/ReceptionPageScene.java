@@ -8,7 +8,7 @@ import lombok.Builder;
  * 接待管理 -> 列表
  */
 @Builder
-public class Page extends BaseScene {
+public class ReceptionPageScene extends BaseScene {
     private final String plateNumber;
     private final String receptionSaleId;
     private final String receptionDate;

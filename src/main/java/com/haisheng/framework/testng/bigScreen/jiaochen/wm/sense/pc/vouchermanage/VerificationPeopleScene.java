@@ -8,14 +8,14 @@ import lombok.Builder;
  * 卡券管理 -> 核销人员
  */
 @Builder
-public class VerificationPeople extends BaseScene {
+public class VerificationPeopleScene extends BaseScene {
     private final String verificationPerson;
     private final String verificationPhone;
     private final String verificationCode;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -31,5 +31,15 @@ public class VerificationPeople extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/voucher-manage/verification-people";
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

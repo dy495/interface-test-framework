@@ -2,6 +2,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity.BaseActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity.PendingActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity.PassedActivity;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -16,8 +18,8 @@ public enum ActivityStatusEnum {
      * 已撤销
      */
     REVOKE(0, "已撤销", true, false, true, false, false, null),
-    PENDING(101, "待审核", false, true, false, false, false, null),
-    PASSED(201, "进行中", false, false, true, true, true, null),
+    PENDING(101, "待审核", false, true, false, false, false, new PendingActivity.Builder()),
+    PASSED(201, "进行中", false, false, true, true, true, new PassedActivity.Builder()),
     CANCELED(301, "已取消", false, false, false, false, false, null),
     REJECT(401, "审核未通过", true, false, true, false, false, null),
     WAITING_START(501, "未开始", false, false, true, true, true, null),

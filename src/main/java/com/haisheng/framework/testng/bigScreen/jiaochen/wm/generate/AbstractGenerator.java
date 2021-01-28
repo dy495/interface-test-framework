@@ -36,7 +36,7 @@ public abstract class AbstractGenerator implements IGenerator {
     }
 
     @Override
-    public abstract void execute(Visitor visitor);
+    public abstract void execute(Visitor visitor, IScene scene);
 
     public static abstract class AbstractBuilder<T extends AbstractBuilder<?>> {
         private Visitor visitor;
@@ -52,6 +52,14 @@ public abstract class AbstractGenerator implements IGenerator {
             this.visitor = visitor;
             return (T) this;
         }
+
+        /**
+         * 初始产品的类型
+         *
+         * @param scene 构建初始产品的场景
+         * @return T
+         */
+        protected abstract T createScene(IScene scene);
 
         /**
          * 构建产品

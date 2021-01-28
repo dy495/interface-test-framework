@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.activity.ManagerPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ManagerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManagerPageScene;
@@ -17,10 +17,12 @@ import java.util.List;
  */
 public abstract class BaseActivity extends AbstractGenerator implements IActivity {
     protected ActivityStatusEnum activityStatus;
+    protected final IScene activityScene;
 
     protected BaseActivity(BaseBuilder baseBuilder) {
         super(baseBuilder);
         this.activityStatus = baseBuilder.activityStatus;
+        this.activityScene = baseBuilder.activityScene;
     }
 
     @Override
@@ -33,15 +35,16 @@ public abstract class BaseActivity extends AbstractGenerator implements IActivit
             return managerPage.getId();
         }
         logger(activityStatus.name() + " DIDN'T FIND ");
-        activityStatus.getActivityBuilder().buildActivity().execute(visitor);
+        activityStatus.getActivityBuilder().buildActivity().execute(visitor, activityScene);
         return getActivityId();
     }
 
     @Override
-    public abstract void execute(Visitor visitor);
+    public abstract void execute(Visitor visitor, IScene scene);
 
     public static abstract class BaseBuilder extends AbstractBuilder<BaseBuilder> {
         private ActivityStatusEnum activityStatus;
+        private IScene activityScene;
 
         /**
          * @param activityStatus 活动状态
@@ -49,6 +52,17 @@ public abstract class BaseActivity extends AbstractGenerator implements IActivit
          */
         public BaseBuilder activityStatusEnum(ActivityStatusEnum activityStatus) {
             this.activityStatus = activityStatus;
+            return this;
+        }
+
+        /**
+         * 创建活动的场景
+         *
+         * @param activityScene 活动场景
+         * @return BaseBuilder.activityScene
+         */
+        public BaseBuilder createScene(IScene activityScene) {
+            this.activityScene = activityScene;
             return this;
         }
 

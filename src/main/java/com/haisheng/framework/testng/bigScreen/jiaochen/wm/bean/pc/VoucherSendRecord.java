@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
@@ -13,6 +13,12 @@ import java.io.Serializable;
  */
 @Data
 public class VoucherSendRecord implements Serializable {
+    /**
+     * 领取记录id
+     */
+    @JSONField(name = "id")
+    private Long id;
+
     /**
      * 优惠券使用状态
      */
@@ -66,6 +72,12 @@ public class VoucherSendRecord implements Serializable {
      */
     @JSONField(name = "customer_label_name")
     private String customerLabelName;
+
+    /**
+     * 卡券码
+     */
+    @JSONField(name = "voucher_code")
+    private String voucherCode;
 
 
 }

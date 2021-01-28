@@ -3,10 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 
 import java.util.List;
 
@@ -17,12 +17,13 @@ import java.util.List;
  * @date 2021/1/20 14:38
  */
 public abstract class BaseVoucher extends AbstractGenerator implements IVoucher {
-
     protected VoucherStatusEnum voucherStatus;
+    private final IScene voucherScene;
 
     public BaseVoucher(BaseBuilder baseBuilder) {
         super(baseBuilder);
         this.voucherStatus = baseBuilder.voucherStatus;
+        this.voucherScene = baseBuilder.voucherScene;
     }
 
     @Override
@@ -30,7 +31,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         VoucherStatusEnum.findById(voucherStatus.getId());
         Preconditions.checkArgument(!isEmpty(), "visitor is null");
         logger("FIND " + voucherStatus.name());
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         VoucherPage voucher = vouchers.stream().filter(e -> e.getAuditStatusName().equals(voucherStatus.getName())
                 || e.getInvalidStatusName().equals(voucherStatus.getName())).findFirst().orElse(null);
@@ -39,15 +40,17 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             return voucher.getVoucherId();
         }
         logger(voucherStatus.name() + " DIDN'T FIND ");
-        voucherStatus.getVoucherBuilder().buildVoucher().execute(visitor);
+        voucherStatus.getVoucherBuilder().buildVoucher().execute(visitor, voucherScene);
         return getVoucherId();
     }
 
     @Override
-    public abstract void execute(Visitor visitor);
+    public abstract void execute(Visitor visitor, IScene scene);
+
 
     public static abstract class BaseBuilder extends AbstractBuilder<BaseBuilder> {
         private VoucherStatusEnum voucherStatus;
+        private IScene voucherScene;
 
         /**
          * @param voucherStatus 卡券状态
@@ -55,6 +58,11 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
          */
         public BaseBuilder voucherStatus(VoucherStatusEnum voucherStatus) {
             this.voucherStatus = voucherStatus;
+            return this;
+        }
+
+        public BaseBuilder createScene(IScene scene) {
+            this.voucherScene = scene;
             return this;
         }
 
@@ -77,7 +85,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      * @return 卡券名
      */
     protected String getVoucherName(Long voucherId) {
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
     }
@@ -89,7 +97,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      * @return 卡券id
      */
     protected Long getVoucherId(String voucherName) {
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
     }

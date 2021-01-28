@@ -20,11 +20,10 @@ public class StopVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor) {
+    public void execute(@NotNull Visitor visitor, IScene scene) {
         logger("CREATE STOP START");
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         super.visitor = visitor;
-        logger("DO CHANGE");
         changeProvideStatus(voucherId);
         logger("CREATE STOP FINISH");
     }

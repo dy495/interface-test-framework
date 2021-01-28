@@ -18,7 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermana
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.Page;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseFixedPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
@@ -229,7 +229,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //接待页接待
-            JSONObject pageData = jc.invokeApi(Page.builder().receptionStatus(0).build());
+            JSONObject pageData = jc.invokeApi(ReceptionPageScene.builder().receptionStatus(0).build());
             Long receptionId = (long) CommonUtil.getIntField(pageData, 0, "reception_id");
             Long customerId = (long) CommonUtil.getIntField(pageData, 0, "customer_id");
             String plateNumber = CommonUtil.getStrField(pageData, 0, "plate_number");
@@ -294,7 +294,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
                     //频次
                     int repairTimes = array.getJSONObject(j).getInteger("repair_times");
                     //按车牌号搜索接待记录
-                    IScene scene = Page.builder().plateNumber(platNumber).receptionStatus(1).build();
+                    IScene scene = ReceptionPageScene.builder().plateNumber(platNumber).receptionStatus(1).build();
                     int receptionTotal = jc.invokeApi(scene).getInteger("total");
                     Preconditions.checkArgument(repairTimes == receptionTotal, "");
                 }

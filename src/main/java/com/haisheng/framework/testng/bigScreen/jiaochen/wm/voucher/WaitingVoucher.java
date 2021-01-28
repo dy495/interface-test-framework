@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.voucher.VoucherPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
 import lombok.Setter;
@@ -37,7 +37,7 @@ public class WaitingVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor) {
+    public void execute(Visitor visitor, IScene scene) {
         logger("CREATE WAITING START");
         super.visitor = visitor;
         createVoucher(10);
@@ -77,7 +77,7 @@ public class WaitingVoucher extends BaseVoucher {
     private String createVoucherName() {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = "优惠券" + num;
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
@@ -96,7 +96,7 @@ public class WaitingVoucher extends BaseVoucher {
      * @return 描述
      */
     private String getDesc() {
-        return EnumContent.B.getContent();
+        return EnumDesc.VOUCHER_DESC.getDesc();
     }
 
     /**

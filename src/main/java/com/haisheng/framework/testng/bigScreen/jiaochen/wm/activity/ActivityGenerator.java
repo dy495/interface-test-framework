@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -8,11 +8,11 @@ import lombok.experimental.Accessors;
 /**
  * @author wangmin
  * @date 2021/1/20 14:54
- * @desc 卡券生成
+ * @desc 活动生成
  */
-public class VoucherGenerator extends BaseVoucher {
+public class ActivityGenerator extends BaseActivity {
 
-    public VoucherGenerator(Builder builder) {
+    public ActivityGenerator(Builder builder) {
         super(builder);
     }
 
@@ -23,11 +23,12 @@ public class VoucherGenerator extends BaseVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseVoucher.BaseBuilder {
+    public static class Builder extends BaseBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
-            return new VoucherGenerator(this);
+        public IActivity buildActivity() {
+            return new ActivityGenerator(this);
         }
+
     }
 }

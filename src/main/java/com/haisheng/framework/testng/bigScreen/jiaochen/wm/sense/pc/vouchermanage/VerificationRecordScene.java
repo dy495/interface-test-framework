@@ -4,14 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+/**
+ * 卡券管理-核销记录
+ */
 @Builder
-public class VoucherPage extends BaseScene {
-    private final String voucherStatus;
-    private final String voucherType;
+public class VerificationRecordScene extends BaseScene {
+    private final Long id;
     private final String voucherName;
-    private final String subjectName;
-    private final String creatorName;
-    private final String creatorAccount;
+    private final String sender;
+    private final Long startTime;
+    private final Long endTime;
     @Builder.Default
     private Integer page = 1;
     @Builder.Default
@@ -20,29 +22,28 @@ public class VoucherPage extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("voucher_status", voucherStatus);
-        object.put("voucher_type", voucherType);
         object.put("voucher_name", voucherName);
-        object.put("subject_name", subjectName);
-        object.put("creator_name", creatorName);
-        object.put("creator_account", creatorAccount);
+        object.put("sender", sender);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
         object.put("page", page);
         object.put("size", size);
+        object.put("id", id);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/voucher-form//voucher-page";
-    }
-
-    @Override
-    public void setPage(Integer page) {
-        this.page = page;
+        return "/jiaochen/pc/voucher-manage/verification-record";
     }
 
     @Override
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.activity;
 
+
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.IGenerator;
 
 /**

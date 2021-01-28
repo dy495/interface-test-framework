@@ -20,11 +20,10 @@ public class RecallVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor) {
+    public void execute(@NotNull Visitor visitor, IScene scene) {
         logger("CREATE RECALL START");
         Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
-        logger("DO RECALL");
         recallVoucher(voucherId);
         logger("CREATE RECALL FINISH");
     }

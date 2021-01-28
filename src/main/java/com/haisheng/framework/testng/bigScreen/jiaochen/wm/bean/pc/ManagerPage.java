@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.activity;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

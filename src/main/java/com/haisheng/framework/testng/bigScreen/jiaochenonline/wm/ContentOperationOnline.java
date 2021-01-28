@@ -256,7 +256,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             //审批通过
             List<Long> list = new ArrayList<>();
             list.add(id);
-            jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
+            jc.invokeApi(ApprovalScene.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
             //审批通过后和数据数量
             List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
             int newApprovalNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
@@ -296,7 +296,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             //审批拒绝
             List<Long> list = new ArrayList<>();
             list.add(id);
-            jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_REJECT").build());
+            jc.invokeApi(ApprovalScene.builder().registerIds(list).status("APPROVAL_REJECT").build());
             //拒绝之后的已拒绝&待审批数量
             List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
             int newRefuseNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();

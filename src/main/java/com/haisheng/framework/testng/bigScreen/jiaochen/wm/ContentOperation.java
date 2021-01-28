@@ -179,9 +179,9 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             List<Long> list2 = new ArrayList<>();
             list2.add(ids.get(1));
             //审批通过
-            String message1 = jc.invokeApi(Approval.builder().registerIds(list1).status("APPROVAL_CONFIRM").build(), false).getString("message");
+            String message1 = jc.invokeApi(ApprovalScene.builder().registerIds(list1).status("APPROVAL_CONFIRM").build(), false).getString("message");
             Preconditions.checkArgument(message1.equals("success"), "第一个审批通过" + CommonUtil.result("success", message1));
-            String message2 = jc.invokeApi(Approval.builder().registerIds(list2).status("APPROVAL_CONFIRM").build(), false).getString("message");
+            String message2 = jc.invokeApi(ApprovalScene.builder().registerIds(list2).status("APPROVAL_CONFIRM").build(), false).getString("message");
             Preconditions.checkArgument(message2.equals("success"), "第一个审批通过" + CommonUtil.result("success", message2));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -293,7 +293,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             //审批通过
             List<Long> list = new ArrayList<>();
             list.add(id);
-            jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
+            jc.invokeApi(ApprovalScene.builder().registerIds(list).status("APPROVAL_CONFIRM").build());
             //审批通过后和数据数量
             List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
             int newApprovalNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).count();
@@ -335,7 +335,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             //审批拒绝
             List<Long> list = new ArrayList<>();
             list.add(id);
-            jc.invokeApi(Approval.builder().registerIds(list).status("APPROVAL_REJECT").build());
+            jc.invokeApi(ApprovalScene.builder().registerIds(list).status("APPROVAL_REJECT").build());
             //拒绝之后的已拒绝&待审批数量
             List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
             int newRefuseNum = (int) newOperationApprovals.stream().filter(approvalVO -> approvalVO.getStatusName().equals("已拒绝")).count();
@@ -453,7 +453,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
             long approvalNum = operationApprovals.stream().filter(e -> e.getStatusName().equals("待审批")).count();
             //批量通过
             List<Long> ids = util.getApprovalList(articleId).stream().filter(approvalVO -> approvalVO.getStatusName().equals("待审批")).map(OperationApproval::getId).collect(Collectors.toList());
-            jc.invokeApi(Approval.builder().registerIds(ids).status("APPROVAL_CONFIRM").build());
+            jc.invokeApi(ApprovalScene.builder().registerIds(ids).status("APPROVAL_CONFIRM").build());
             List<OperationApproval> newOperationApprovals = util.getApprovalList(articleId);
             long newApprovalNum = newOperationApprovals.stream().filter(e -> e.getStatusName().equals("待审批")).count();
             long newPassNum = newOperationApprovals.stream().filter(e -> e.getStatusName().equals("已通过")).count();
