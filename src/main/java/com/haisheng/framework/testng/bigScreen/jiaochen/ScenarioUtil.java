@@ -4603,7 +4603,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject exchangeDetailExport(Integer page, Integer size,Integer id,String exchange_customer_name,String exchange_type,
                                      String exchange_start_time,String exchange_end_time,String export_type,JSONArray ids) {
-        String url = "/jiaochen/pc/integral-center/exchange-detailed";
+        String url = "/jiaochen/pc/integral-center/exchange-detail/export";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("page",page);

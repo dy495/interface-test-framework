@@ -1834,6 +1834,77 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     //积分兑换
 
 
+    //@Test(dataProvider = "exchangeType")
+    public void exchangeFilter1(String type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangePage(1,50,null,type,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size(); i++){
+                JSONObject obj = list.getJSONObject(i);
+                Preconditions.checkArgument(obj.getString("exchange_type").equals(type),"结果包含"+obj.getString("exchange_type_name"));
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】根据积分兑换类型筛选");
+        }
+    }
+
+    @DataProvider(name = "exchangeType")
+    public Object[] exchangeType(){
+        return new String[]{
+                "FICTITIOUS",// 虚拟
+                "REAL", // 实物
+        };
+    }
+
+    //@Test(dataProvider = "exchangeStatus")
+    public void exchangeFilter2(String status) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangePage(1,50,null,null,status).getJSONArray("list");
+            for (int i = 0 ; i < list.size(); i++){
+                JSONObject obj = list.getJSONObject(i);
+                Preconditions.checkArgument(obj.getString("status").equals(status),"结果包含"+obj.getString("status_name"));
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】根据状态筛选");
+        }
+    }
+    @DataProvider(name = "exchangeStatus")
+    public Object[] exchangeStatus(){
+        return new String[]{
+                "",// 状态1
+                "", // 状态2
+        };
+    }
+
+    //@Test(dataProvider = "BRANDNAME")
+    public void exchangeFilter3(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangePage(1,50,name,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size(); i++){
+                JSONObject obj = list.getJSONObject(i);
+                Preconditions.checkArgument(obj.getString("goods_name").contains(name),"结果包含"+obj.getString("goods_name"));
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分兑换】根据商品名称筛选");
+        }
+    }
+
+
+
 
 
 
