@@ -1,26 +1,27 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
-
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-import java.util.List;
-
 /**
- * 活动管理-活动管理列表--gly
+ * 活动管理-活动管理列表-更多--gly
  */
 @Builder
-public class ActivityManageDate extends BaseScene {
+public class AppletArticleList extends BaseScene {
+    private final Integer lastValue;
+    private  final Integer size;
+
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-
+        object.put("last_value",lastValue);
+        object.put("size",size);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/data";
+        return "/jiaochen/applet/article/page";
     }
 
     @Override

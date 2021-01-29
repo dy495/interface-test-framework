@@ -13,7 +13,7 @@ import java.util.List;
 public class ManageRegisterApprovalScene extends BaseScene {
     private final Long activityId;
     private final Integer status;
-    private final List<Integer> ids;
+    private final List<Long> ids;
 
     @Override
     public JSONObject getJSONObject() {

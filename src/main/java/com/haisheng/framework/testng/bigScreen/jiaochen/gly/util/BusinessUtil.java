@@ -1,5 +1,4 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
@@ -10,7 +9,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.wechat.BindTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleActivityRegisterScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
@@ -19,8 +19,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.testng.annotations.Test;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,7 +144,6 @@ public class BusinessUtil {
     /**
      * 获取当前时间+10天
      */
-
     public String getEndDate() {
         //当前时间+10天的日期
         return DateTimeUtil.addDayFormat(new Date(), 10);
@@ -163,6 +160,16 @@ public class BusinessUtil {
     }
 
     /**
+     * 获取优惠券
+     */
+    public Long getVoucherId(){
+
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+
+        return voucherId;
+    }
+
+    /**
      * 构建裂变活动
      *
      * @param voucherId 包含卡券信息
@@ -172,7 +179,6 @@ public class BusinessUtil {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
-        //获取优惠券ID
         // 创建被邀请者和分享者的信息字段
         JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
         JSONObject shareVoucher = getShareVoucher(voucherId, 2, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
@@ -192,6 +198,15 @@ public class BusinessUtil {
                 .shareVoucher(shareVoucher)
                 .invitedVoucher(invitedVoucher)
                 .build();
+    }
+
+    /**
+     * 创建裂变活动
+     */
+    public Long createFissionActivity(Long voucherId){
+        IScene scene=createFissionActivityScene(voucherId);
+        Long activityId=visitor.invokeApi(scene).getLong("id");
+        return activityId;
     }
 
     /**
@@ -333,17 +348,18 @@ public class BusinessUtil {
                     parValue = list.getJSONObject(i).getString("par_value");
                     break;
                 }
-
             }
         }
         return parValue;
     }
-
+/**
+ * --------------------------------活动列表中活动状态--------------------------------------------
+ */
     /**
      * 查询列表中的状态为【待审核的ID】
      */
-    public Long getActivityWaitingApproval() {
-        Long id = 0L;
+    public List<Long> getActivityWaitingApproval() {
+        List<Long> ids =new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -358,21 +374,24 @@ public class BusinessUtil {
             for (int i = 0; i < list.size(); i++) {
                 String status = list.getJSONObject(i).getString("status");
                 if (status.equals(ActivityStatusEnum.PENDING.getStatusName())) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
-        if (id == 0) {
-            id = createRecruitActivityApproval();
+        if (ids.size() == 0) {
+            createRecruitActivityApproval();
+            getActivityWaitingApproval();
         }
-        return id;
+        return ids;
     }
 
     /**
-     * 查询列表中的状态为【进行中的ID】
+     * 查询活动列表中的状态为【进行中的ID】
      */
-    public Long getActivityWorking() {
-        Long id = 0L;
+    public List<Long> getActivityWorking() {
+        List<Long> ids =new ArrayList<>();
+
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -382,24 +401,26 @@ public class BusinessUtil {
             for (int i = 0; i < list.size(); i++) {
                 String status = list.getJSONObject(i).getString("status");
                 if (status.equals(ActivityStatusEnum.PASSED.getStatusName())) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
         //创建活动并审批
-        if (id == 0) {
-            id = createRecruitActivityApproval();
-            getApprovalPassed(id);
+        if (ids.size() == 0) {
+            Long id1 = createRecruitActivityApproval();
+            getApprovalPassed(id1);
+            getActivityWorking();
 
         }
-        return id;
+        return ids;
     }
 
     /**
-     * 裂变活动-查询列表中的状态为【进行中的ID】
+     * 裂变活动-查询活动列表中的状态为【进行中的ID】
      */
-    public Long getFissionActivityWorking() {
-        Long id = 0L;
+    public List<Long> getFissionActivityWorking() {
+        List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -410,24 +431,26 @@ public class BusinessUtil {
                 String status = list.getJSONObject(i).getString("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
                 if (status.equals(ActivityStatusEnum.PASSED.getStatusName()) && activityType == 1) {
-                    id = list.getJSONObject(i).getLong("id");
+                   Long id = list.getJSONObject(i).getLong("id");
+                   ids.add(id);
                 }
             }
         }
         //创建活动并审批
-        if (id == 0) {
-            id = createRecruitActivityApproval();
-            getApprovalPassed(id);
+        if (ids.size() == 0) {
+           Long id1 = createRecruitActivityApproval();
+            getApprovalPassed(id1);
+            getFissionActivityWorking();
 
         }
-        return id;
+        return ids;
     }
 
     /**
      * 招募活动-查询列表中的状态为【进行中的ID】
      */
-    public Long getRecruitActivityWorking() {
-        Long id = 0L;
+    public List<Long> getRecruitActivityWorking() {
+        List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -438,26 +461,28 @@ public class BusinessUtil {
                 String status = list.getJSONObject(i).getString("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
                 if (status.equals(ActivityStatusEnum.PASSED.getStatusName()) && activityType == 2) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
         //创建活动并审批
-        if (id == 0) {
+        if (ids.size() == 0) {
             //创建活动
-            id = createRecruitActivityApproval();
+           Long id1 = createRecruitActivityApproval();
             //审批活动
-            getApprovalPassed(id);
+            getApprovalPassed(id1);
+            getRecruitActivityWorking();
 
         }
-        return id;
+        return ids;
     }
 
     /**
      * 招募活动-查询列表中的状态为【进行中】的活动-存在待审批的人数
      */
-    public Long getRecruitActivityWorkingApproval() {
-        Long id = 0L;
+    public List<Long> getRecruitActivityWorkingApproval() {
+        List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -469,27 +494,29 @@ public class BusinessUtil {
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
                 int waitingAuditNum=list.getJSONObject(i).getInteger("waiting_audit_num");
                 if (status.equals(ActivityStatusEnum.PASSED.getStatusName()) && activityType == 2&&waitingAuditNum>=1) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
         //创建活动并审批
-        if (id == 0) {
+        if (ids.size() == 0) {
             //创建活动
-            id = createRecruitActivityApproval();
+            Long id1 = createRecruitActivityApproval();
             //审批活动
-            getApprovalPassed(id);
-            //todo 小程序报名
-
+            getApprovalPassed(id1);
+            //小程序报名
+            activityRegisterApplet(id1,"13373166806","Max",3,"1513814362@qq.com");
+            getRecruitActivityWorkingApproval();
         }
-        return id;
+        return ids;
     }
 
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public Long getActivityReject() {
-        Long id = 0L;
+    public List<Long> getActivityReject() {
+        List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -499,24 +526,27 @@ public class BusinessUtil {
             for (int i = 0; i < list.size(); i++) {
                 String status = list.getJSONObject(i).getString("status");
                 if (status.equals(ActivityStatusEnum.REJECT.getStatusName())) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
         //创建活动并审批不通过
-        if (id == 0) {
-            id = createRecruitActivityApproval();
+        if (ids.size() > 0) {
+            Long id = createRecruitActivityApproval();
             getApprovalReject(id);
+            getActivityReject();
 
         }
-        return id;
+        return ids;
     }
 
     /**
      * 查询列表中的状态为【待审批的ID】
      */
-    public Long getActivityWait() {
-        Long id = 0L;
+    public List<Long> getActivityWait() {
+
+        List<Long> ids =new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -526,16 +556,17 @@ public class BusinessUtil {
             for (int i = 0; i < list.size(); i++) {
                 String status = list.getJSONObject(i).getString("status");
                 if (status.equals(ActivityStatusEnum.PENDING.getStatusName())) {
-                    id = list.getJSONObject(i).getLong("id");
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
                 }
             }
         }
         //创建活动
-        if (id == 0) {
+        if (ids.size() == 0) {
             createRecruitActivityApproval();
-
+            getActivityWait();
         }
-        return id;
+        return ids;
     }
 
     /**
@@ -564,6 +595,7 @@ public class BusinessUtil {
             getApprovalReject(id);
             //取消活动
             getCancelActivity(id);
+            getActivityCancel();
         }
         return id;
     }
@@ -591,25 +623,51 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取招募活动的返回值
+     * 活动管理-活动报名列表中待审批的ids
      */
-    public JSONObject getActivityRespond(Long id) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
-        JSONObject respondOne = null;
-        for (int page = 1; page <= pages; page++) {
-            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long activityId = list.getJSONObject(i).getLong("id");
-                if (activityId.equals(id)) {
-                    respondOne = list.getJSONObject(i);
+    public List<Long> registerApproval(Long activityId) {
+        //报名列表的中【待审批】的活动
+        JSONObject response = getRegisterPage(activityId);
+        int pages=response.getInteger("pages");
+        List<Long> idArray = new ArrayList<>();
+        for(int page=1;page<=pages;page++){
+            IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
+            JSONArray  list = visitor.invokeApi(scene).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String  statusName=list.getJSONObject(i).getString("status_name");
+                if (list.size() > 0&&statusName.equals(ActivityApprovalStatusEnum.PENDING.getStatusName())) {
+                    //报名列表ID
+                    Long ids= response.getJSONArray("list").getJSONObject(i).getLong("id");
+                    idArray.add(ids);
                 }
             }
         }
-        return respondOne;
+        return idArray;
     }
 
+    /**
+     * 报名审批列表【待审批】ids的合集
+     */
+    public List<Long> RegisterAppletIds(Long activityId){
+        List<Long> ids=new ArrayList<>();
+        IScene scene = ManageRegisterPageScene.builder().page(1).size(10).status(ActivityApprovalStatusEnum.PASSED.getId()).activityId(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        int pages=response.getInteger("pages");
+        for (int page=1;page<=pages;page++){
+            IScene scene1 = ManageRegisterPageScene.builder().page(page).size(10).status(ActivityApprovalStatusEnum.PASSED.getId()).activityId(activityId).build();
+            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                Long id=list.getJSONObject(i).getLong("id");
+                ids.add(id);
+            }
+        }
+        return ids;
+    }
+
+
+    /**
+     * ---------------------------------对于活动的操作------------------------------
+     */
 
     /**
      * 活动管理-删除活动
@@ -649,7 +707,7 @@ public class BusinessUtil {
 
 
     /**
-     * 活动管理-审批活动【通过】
+     * 活动管理-活动审批【通过】
      */
     public String getApprovalPassed(Long... id) {
         List<Long> ids = Arrays.asList(id);
@@ -659,9 +717,8 @@ public class BusinessUtil {
     }
 
 
-
     /**
-     * 活动管理-审批活动【审核不通过】
+     * 活动管理-活动审批【审核不通过】
      */
     public String getApprovalReject(Long... id) {
         List<Long> ids = Arrays.asList(id);
@@ -670,32 +727,31 @@ public class BusinessUtil {
         return message;
     }
 
+    /**
+     * 活动管理-活动报名审批【通过】
+     */
+    public String getRegisterApprovalPassed(Long... id) {
+        List<Long> ids = Arrays.asList(id);
+        IScene scene = ManageRegisterApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
+        String message = visitor.invokeApi(scene,false).getString("message");
+        return message;
+    }
+
 
     /**
-     * 活动管理-活动报名审批
+     * 活动管理-活动报名审批【审核不通过】
      */
-    public List<Long> registerApproval(Long activityId) {
-        //活动审批列表的中【待审批】的活动
-        JSONObject response = getRegisterPage(activityId);
-        int pages=response.getInteger("pages");
-        List<Long> idArray = new ArrayList<>();
-        for(int page=1;page<=pages;page++){
-            IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
-            JSONArray  list = visitor.invokeApi(scene).getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                String  statusName=list.getJSONObject(i).getString("status_name");
-                if (list.size() > 0&&statusName.equals(ActivityApprovalStatusEnum.PENDING.getStatusName())) {
-                    //报名列表ID
-                    Long ids = response.getJSONArray("list").getJSONObject(i).getLong("id");
-                    idArray.add(ids);
-                }
-            }
-        }
-        //审批通过所有活动
-//        IScene scene1 = ManageRegisterApprovalScene.builder().ids(idArray).activityId(activityId).status(status).build();
-//        visitor.invokeApi(scene1);
-        return idArray;
+    public String getRegisterApprovalReject(Long... id) {
+        List<Long> ids = Arrays.asList(id);
+        IScene scene = ManageRegisterApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.REJECT.getId()).build();
+        String message = visitor.invokeApi(scene,false).getString("message");
+        return message;
     }
+
+
+/**
+ * ---------------------------------------------获取也买你返回值---------------------------------------------
+ */
 
 
     /**
@@ -713,6 +769,15 @@ public class BusinessUtil {
     public JSONObject getRecruitActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
         JSONObject response = visitor.invokeApi(scene).getJSONObject("recruit_activity_info").getJSONObject("reward_vouchers");
+        return response;
+    }
+
+    /**
+     * 招募活动详情页返回值
+     */
+    public JSONObject getRecruitActivityDetailDate(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("recruit_activity_info");
         return response;
     }
 
@@ -744,7 +809,7 @@ public class BusinessUtil {
     }
 
     /**
-     * 活动审批数据-data   ActivityManageDate
+     * 活动审批数据-data
      */
     public JSONObject getActivityApprovalDate() {
         IScene scene = ActivityManageDate.builder().build();
@@ -759,6 +824,38 @@ public class BusinessUtil {
         JSONObject response = visitor.invokeApi(scene);
         return response;
     }
+
+
+    /**
+     * 获取招募活动的返回值
+     */
+    public JSONObject getActivityRespond(Long id) {
+        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        int pages = visitor.invokeApi(scene).getInteger("pages");
+        JSONObject respondOne = null;
+        for (int page = 1; page <= pages; page++) {
+            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
+            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long activityId = list.getJSONObject(i).getLong("id");
+                if (activityId.equals(id)) {
+                    respondOne = list.getJSONObject(i);
+                }
+            }
+        }
+        return respondOne;
+    }
+
+    /**
+     * 获取小程序-首页-文章列表-更多的返回值   AppletArticleList
+     */
+    public JSONObject getAppletArticleList(){
+        IScene scene= AppletArticleList.builder().lastValue(1).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        return response;
+    }
+
+
 
     /**
      * 判断客户报名是否重复，获取重复的手机号
@@ -788,6 +885,41 @@ public class BusinessUtil {
 
 
 
+    /**
+     *小程序报名招募活动
+     */
+    public void activityRegisterApplet(Long id,String phone,String name,int registerCount,String eMail){
+        JSONArray registerItems=new JSONArray();
+        //在活动详情中获得招募活动的报名信息
+        JSONObject response=getRecruitActivityDetailDate(id);
+        JSONArray registerInformationList=response.getJSONArray("register_information_list");
+        for(int i=0;i<registerInformationList.size();i++){
+            int type=registerInformationList.getJSONObject(i).getInteger("type");
+            if(type==RegisterInfoEnum.PHONE.getId()){
+                JSONObject jsonObjectPhone=new JSONObject();
+                jsonObjectPhone.put("type",type);
+                jsonObjectPhone.put("value",phone);
+                registerItems.add(jsonObjectPhone);
+            }else if(type==RegisterInfoEnum.NAME.getId()){
+                JSONObject jsonObjectName=new JSONObject();
+                jsonObjectName.put("type",type);
+                jsonObjectName.put("value",name);
+                registerItems.add(jsonObjectName);
+            }else if(type==RegisterInfoEnum.REGISTER_COUNT.getId()){
+                JSONObject jsonObjectRegisterCount=new JSONObject();
+                jsonObjectRegisterCount.put("type",type);
+                jsonObjectRegisterCount.put("value",registerCount);
+                registerItems.add(jsonObjectRegisterCount);
+            }else if(type==RegisterInfoEnum.EMAIL.getId()){
+                JSONObject jsonObjectEMail=new JSONObject();
+                jsonObjectEMail.put("type",type);
+                jsonObjectEMail.put("value",eMail);
+                registerItems.add(jsonObjectEMail);
+            }
+        }
+        IScene scene= ArticleActivityRegisterScene.builder().id(id).registerItems(registerItems).build();
+        visitor.invokeApi(scene);
+    }
 
 
 

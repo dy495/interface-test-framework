@@ -231,8 +231,8 @@ public class SendVoucher extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ADMINISTRATOR);
             IScene manageRegisterScene = ManageRegisterScene.builder().status(ActivityApprovalStatusEnum.PENDING.getId()).activityId(activityId).build();
             JSONArray list = visitor.invokeApi(manageRegisterScene).getJSONArray("list");
-            Integer id = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("customer_phone").equals(MARKETING.getPhone())).findFirst().orElse(null)).getInteger("id");
-            List<Integer> ids = new ArrayList<>();
+            Long id = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("customer_phone").equals(MARKETING.getPhone())).findFirst().orElse(null)).getLong("id");
+            List<Long> ids = new ArrayList<>();
             ids.add(id);
             IScene manageRegisterApprovalScene = ManageRegisterApprovalScene.builder().activityId(activityId).ids(ids).status(101).build();
             visitor.invokeApi(manageRegisterApprovalScene);
