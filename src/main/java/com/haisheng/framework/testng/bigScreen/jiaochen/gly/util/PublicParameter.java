@@ -16,9 +16,9 @@ public class PublicParameter {
     //活动规则
     public String EditRule="编辑后的活动规则";
     //招募活动名称
-    public String RecruitName="招募活动"+businessUtil.nowTimeFormat();
+    public String RecruitName="招募活动"+businessUtil.getStartDate() ;
     //裂变活动名称
-    public String fissionVoucherName="裂变活动"+businessUtil.nowTimeFormat();
+    public String fissionVoucherName="裂变活动"+businessUtil.getEndDate();
     //活动地址
     public String address="北京海淀中关村SOHO-10-16";
     //活动的领取次数限制异常情况
