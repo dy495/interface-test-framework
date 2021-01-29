@@ -1812,7 +1812,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             pcCreateGoods er=new pcCreateGoods();
             er.checkcode=false;
-            er.id=9999;
+            er.id=9999L;
 
             int code = jc.editGoodMethod(er).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
