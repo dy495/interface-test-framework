@@ -14,14 +14,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ApprovalPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.RegisterPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -223,9 +223,9 @@ public class BusinessUtil extends BaseUtil {
             applyVoucher(voucherName, "1");
             voucherLIst.add(getVoucherId(voucherName));
             List<String> phoneList = new ArrayList<>();
-            phoneList.add(EnumAccount.MARKETING.getPhone());
+            phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
             //发出此卡券
-            PushMessage.PushMessageBuilder pushMessageBuilder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+            PushMessageScene.PushMessageSceneBuilder pushMessageBuilder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                     .telList(phoneList).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                     .type(0).voucherOrPackageList(voucherLIst).useDays(10).ifSendImmediately(true);
             jc.invokeApi(pushMessageBuilder.build());
@@ -587,7 +587,7 @@ public class BusinessUtil extends BaseUtil {
      * @param type 0赠送/1购买
      */
     public void buyTemporaryPackage(int type) {
-        EnumAccount marketing = EnumAccount.MARKETING;
+        EnumAccount marketing = EnumAccount.MARKETING_DAILY;
         JSONArray voucherList = getVoucherInfo(1);
         String platNumber = getPlatNumber(marketing.getPhone());
         IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(marketing.getPhone())
@@ -604,11 +604,11 @@ public class BusinessUtil extends BaseUtil {
      * @param type 0赠送/1购买
      */
     public void buyFixedPackage(int type) {
-        EnumAccount marketing = EnumAccount.MARKETING;
+        EnumAccount marketing = EnumAccount.MARKETING_DAILY;
         String subjectType = getSubjectType();
         long packageId = getPackageId(EnumVP.ONE.getPackageName());
         //购买固定套餐
-        IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
+        IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(marketing.getPhone())
                 .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(marketing.getPhone()))
                 .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(subjectType).subjectId(getSubjectId(subjectType)).extendedInsuranceYear(10)
@@ -622,11 +622,11 @@ public class BusinessUtil extends BaseUtil {
      * @param type 0赠送/1购买
      */
     public void receptionBuyFixedPackage(int type) {
-        IScene pageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        IScene pageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
         JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
         Long customerId = jsonObject.getLong("customer_id");
-        Long receptionId = jsonObject.getLong("reception_id");
+        Integer receptionId = jsonObject.getInteger("reception_id");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
@@ -645,11 +645,11 @@ public class BusinessUtil extends BaseUtil {
      * @param type 0赠送/1购买
      */
     public void receptionBuyTemporaryPackage(int type) {
-        IScene pageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        IScene pageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         JSONArray list = jc.invokeApi(pageScene).getJSONArray("list");
         JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).collect(Collectors.toList()).get(0);
         Long customerId = jsonObject.getLong("customer_id");
-        Long receptionId = jsonObject.getLong("reception_id");
+        Integer receptionId = jsonObject.getInteger("reception_id");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
@@ -669,11 +669,11 @@ public class BusinessUtil extends BaseUtil {
      */
     public Long pushMessage(boolean immediately) {
         List<String> phoneList = new ArrayList<>();
-        phoneList.add(EnumAccount.MARKETING.getPhone());
+        phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
         List<Long> voucherList = new ArrayList<>();
         Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
         voucherList.add(voucherId);
-        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.ARTICLE_DESC.getDesc())
                 .type(0).voucherOrPackageList(voucherList).useDays(10);
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
@@ -726,7 +726,7 @@ public class BusinessUtil extends BaseUtil {
     public void switchVerificationStatus(String code, boolean status) {
         IScene scene = VerificationPeopleScene.builder().verificationCode(code).build();
         long id = jc.invokeApi(scene).getJSONArray("list").getJSONObject(0).getLong("id");
-        IScene scene1 = SwitchVerificationStatus.builder().id(id).status(status).build();
+        IScene scene1 = SwitchVerificationStatusScene.builder().id(id).status(status).build();
         jc.invokeApi(scene1);
     }
 
@@ -869,7 +869,7 @@ public class BusinessUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            IScene scene = PackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
+            IScene scene = AppletPackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
             JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -888,7 +888,7 @@ public class BusinessUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            IScene scene = MessageListScene.builder().lastValue(lastValue).size(20).build();
+            IScene scene = AppletMessageListScene.builder().lastValue(lastValue).size(20).build();
             JSONObject response = jc.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -984,7 +984,7 @@ public class BusinessUtil extends BaseUtil {
             articleId = getCanApplyArticleList(1).get(0);
             new LoginUtil().loginApplet(token);
             applyArticle(articleId);
-            new LoginUtil().login(EnumAccount.ADMINISTRATOR);
+            new LoginUtil().login(EnumAccount.ADMINISTRATOR_DAILY);
         } else {
             articleId = operationRegister.getId();
         }
@@ -1038,7 +1038,7 @@ public class BusinessUtil extends BaseUtil {
      * @param articleId 活动id
      */
     public void applyArticle(Long articleId) {
-        jc.invokeApi(ActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build(), false);
+        jc.invokeApi(ActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build(), false);
     }
 
     /**

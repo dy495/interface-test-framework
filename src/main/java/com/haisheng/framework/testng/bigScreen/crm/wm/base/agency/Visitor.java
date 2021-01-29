@@ -10,9 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 
 /**
+ * 调用接口类
+ *
  * @author wangmin
  * @date 2021/1/20 13:36
- * @desc 调用接口类
  */
 public class Visitor extends TestCaseCommon {
 
@@ -76,6 +77,17 @@ public class Visitor extends TestCaseCommon {
     }
 
     /**
+     * 上传
+     *
+     * @param scene 场景接口
+     * @return 返回值
+     */
+    public JSONObject uploadFile(IScene scene) {
+        String response = uploadFile(scene.getJSONObject().getString("filePath"), scene.getPath(), product.getAddress());
+        return JSON.parseObject(response);
+    }
+
+    /**
      * pc登录
      *
      * @param scene 场景
@@ -90,7 +102,7 @@ public class Visitor extends TestCaseCommon {
      *
      * @param token token
      */
-    public void appletLogin(String token) {
+    public void login(String token) {
         authorization = token;
         logger.info("applet authorization is:{}", authorization);
     }
@@ -102,5 +114,15 @@ public class Visitor extends TestCaseCommon {
      */
     public Boolean isEmpty() {
         return product == null;
+    }
+
+
+    /**
+     * 判断是否是线上地址
+     *
+     * @return boolean
+     */
+    public Boolean isOnline() {
+        return product.name().contains("ONLINE");
     }
 }

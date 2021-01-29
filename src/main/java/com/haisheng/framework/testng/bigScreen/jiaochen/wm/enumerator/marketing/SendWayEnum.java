@@ -15,9 +15,9 @@ public enum SendWayEnum {
     SOLD(1, "售出"),
     PUSH(2, "推送");
 
-    private Integer id;
+    private final Integer id;
 
-    private String name;
+    private final String name;
 
     SendWayEnum(Integer id, String name) {
         this.id = id;

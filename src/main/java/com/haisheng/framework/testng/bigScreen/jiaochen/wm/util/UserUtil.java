@@ -29,6 +29,6 @@ public class UserUtil {
      * @param appletToken 小程序token
      */
     public void loginApplet(EnumAppletToken appletToken) {
-        visitor.appletLogin(appletToken.getToken());
+        visitor.login(appletToken.getToken());
     }
 }

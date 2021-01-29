@@ -44,8 +44,8 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
     LoginUtil user = new LoginUtil();
     BusinessUtil util = new BusinessUtil();
     private static final Integer size = 100;
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
-    private static final EnumAccount marketing = EnumAccount.MARKETING;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
+    private static final EnumAccount marketing = EnumAccount.MARKETING_DAILY;
     private static final EnumAppletToken applet = EnumAppletToken.JC_WM_DAILY;
     private static final EnumAppletToken applet1 = EnumAppletToken.JC_GLY_DAILY;
     private static final EnumAppletToken applet2 = EnumAppletToken.JC_XMF_DAILY;

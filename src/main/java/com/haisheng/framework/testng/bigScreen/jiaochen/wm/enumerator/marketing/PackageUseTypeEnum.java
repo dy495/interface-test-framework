@@ -18,9 +18,9 @@ public enum PackageUseTypeEnum {
     ALL_CAR(1, "全部车辆"),
     ;
 
-    private Integer id;
+    private final Integer id;
 
-    private String name;
+    private final String name;
 
     PackageUseTypeEnum(Integer id, String name) {
         this.id = id;

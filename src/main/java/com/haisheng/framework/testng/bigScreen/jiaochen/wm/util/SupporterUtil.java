@@ -6,33 +6,42 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppointmentPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.FollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.MaintainTimeList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.ActivityRegisterScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.PackageListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppletReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.ReceptionReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.VoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.CreateVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInvalidPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -57,6 +66,28 @@ public class SupporterUtil extends BaseUtil {
      */
     public SupporterUtil(Visitor visitor) {
         this.visitor = visitor;
+    }
+
+    /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
+     * @param <T>   T
+     * @return bean的集合
+     */
+    public <T> List<T> collectBean(IScene scene, Class<T> bean) {
+        List<T> list = new ArrayList<>();
+        int total = visitor.invokeApi(scene).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(SIZE);
+            JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
+        }
+        return list;
     }
 
 
@@ -212,7 +243,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 门店id
      */
     public List<Long> getShopIdList() {
-        IScene scene = ShopList.builder().build();
+        IScene scene = ShopListScene.builder().build();
         JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
     }
@@ -474,12 +505,23 @@ public class SupporterUtil extends BaseUtil {
         return voucherList;
     }
 
+    /**
+     * 获取卡券的最新核销码
+     *
+     * @param voucherId 卡券id
+     * @return 核销码
+     */
+    public String getVoucherCode(Long voucherId) {
+        IScene scene = SendRecordScene.builder().id(voucherId).build();
+        return visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getString("voucher_code");
+    }
+
 //    /**
-//     * 获取卡券信息集合
+//     * 获取套餐包含卡券信息集合
 //     *
 //     * @return 卡券信息集合
 //     */
-//    public JSONArray getVoucherInfo() {
+//    public JSONArray getVoucherArray() {
 //        JSONArray array = new JSONArray();
 //        JSONObject object = new JSONObject();
 //        IScene scene = VoucherListScene.builder().build();
@@ -494,6 +536,8 @@ public class SupporterUtil extends BaseUtil {
 //        array.add(object);
 //        return array;
 //    }
+//
+//    public JSONArray
 
 //    /**
 //     * 获取卡券信息集合
@@ -791,8 +835,8 @@ public class SupporterUtil extends BaseUtil {
      * @param type        0赠送/1购买
      */
     public void buyTemporaryPackage(JSONArray voucherList, int type) {
-        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
@@ -807,8 +851,8 @@ public class SupporterUtil extends BaseUtil {
      */
     public void buyTemporaryPackage(String voucherName, int type) {
         JSONArray voucherList = getVoucherArray(voucherName, 1);
-        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
@@ -822,8 +866,8 @@ public class SupporterUtil extends BaseUtil {
      * @param type      0赠送/1购买
      */
     public void buyFixedPackage(Long packageId, int type) {
-        IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(EnumAccount.MARKETING.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING.getPhone()))
+        IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
@@ -837,7 +881,7 @@ public class SupporterUtil extends BaseUtil {
      * @param type      0赠送/1购买
      */
     public void receptionBuyFixedPackage(Long packageId, int type) {
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
@@ -850,6 +894,26 @@ public class SupporterUtil extends BaseUtil {
         visitor.invokeApi(purchaseScene);
     }
 
+
+    /**
+     * 接待时购买临时套餐
+     *
+     * @param voucherName 包含卡券名称
+     * @param type        0赠送/1购买
+     */
+    public void receptionBuyTemporaryPackage(Integer receptionId, String voucherName, int type) {
+        JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
+        ReceptionPage receptionPage = getReceptionPageById(receptionId);
+        //购买套餐
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
+                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
+                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
+                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
+        visitor.invokeApi(purchaseScene);
+    }
+
+
     /**
      * 接待时购买临时套餐
      *
@@ -858,11 +922,10 @@ public class SupporterUtil extends BaseUtil {
      */
     public void receptionBuyTemporaryPackage(String voucherName, int type) {
         JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
-                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
@@ -877,11 +940,10 @@ public class SupporterUtil extends BaseUtil {
      * @param type        0赠送/1购买
      */
     public void receptionBuyTemporaryPackage(JSONArray voucherList, int type) {
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING.getPhone()).build();
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
-                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
@@ -895,7 +957,6 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 消息推送
      *
-     * @param immediately 是否立即发送
      * @return 发出去的卡券id
      */
     public Long pushMessage() {
@@ -915,9 +976,9 @@ public class SupporterUtil extends BaseUtil {
     public void pushMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         List<String> phoneList = new ArrayList<>();
-        phoneList.add(EnumAccount.MARKETING.getPhone());
-        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-                .telList(phoneList).messageName(EnumDesc.MESSAGE_DESC.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
+        phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+                .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                 .type(type).voucherOrPackageList(voucherOrPackageList).useDays(10);
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
@@ -925,95 +986,142 @@ public class SupporterUtil extends BaseUtil {
         visitor.invokeApi(builder.build());
     }
 
-//    /**
-//     * 获取非重复电话号
-//     *
-//     * @return 电话号
-//     */
-//    public String getDistinctPhone() {
-//        String phone = "155" + CommonUtil.getRandom(8);
-//        IScene scene = VerificationPeople.builder().verificationPhone(phone).build();
-//        int total = jc.invokeApi(scene).getInteger("total");
-//        if (total == 0) {
-//            return phone;
-//        }
-//        return getDistinctPhone();
-//    }
-//
-//    /**
-//     * 获取员工电话
-//     *
-//     * @return 电话号
-//     */
-//    public String getStaffPhone() {
-//        int total = jc.pcStaffPage(null, 1, size).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, size);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray array = jc.pcStaffPage(null, i, size).getJSONArray("list");
-//            for (int j = 0; j < array.size(); j++) {
-//                String phone = array.getJSONObject(j).getString("phone");
-//                IScene scene = VerificationPeople.builder().verificationPhone(phone).build();
-//                int phoneNumber = jc.invokeApi(scene).getInteger("total");
-//                if (phoneNumber == 0) {
-//                    return phone;
-//                }
-//            }
-//        }
-//        return null;
-//
-//
+    //----------------------------------------------------接待记录-------------------------------------------------------
 
+    /**
+     * 通过接待id查询接待信息
+     *
+     * @param receptionId 接待id
+     * @return 接待信息
+     */
+    public ReceptionPage getReceptionPageById(Integer receptionId) {
+        IScene receptionPageScene = ReceptionPageScene.builder().build();
+        List<ReceptionPage> receptionPageList = collectBean(receptionPageScene, ReceptionPage.class);
+        return receptionPageList.stream().filter(e -> e.getId().equals(receptionId)).findFirst().orElse(null);
+    }
 
-//
-//    /**
-//     * 获取核销码
-//     *
-//     * @param verificationIdentity 核销员身份
-//     * @return 核销码
-//     */
-//    public String getVerificationCode(String verificationIdentity) {
-//        return getVerificationCode(true, verificationIdentity);
-//    }
-//
-//    /**
-//     * 获取核销码
-//     *
-//     * @param verificationIdentity 核销员身份
-//     * @return 核销码
-//     */
-//    public String getVerificationCode(boolean verificationStatus, String verificationIdentity) {
-//        List<String> list = new ArrayList<>();
-//        VerificationPeople.VerificationPeopleBuilder builder = VerificationPeople.builder();
-//        int total = jc.invokeApi(builder.build()).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, size);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-//            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("verification_status") == verificationStatus
-//                    && e.getString("verification_identity").equals(verificationIdentity)).map(e -> e.getString("verification_code")).collect(Collectors.toList()));
-//        }
-//        if (list.size() == 0) {
-//            String code = getVerificationCode(verificationIdentity);
-//            list.add(code);
-//            switchVerificationStatus(code, false);
-//        }
-//        return list.get(0);
-//    }
-//
-//    /**
-//     * 核销人员状态更改
-//     *
-//     * @param code   核销码
-//     * @param status 状态
-//     */
-//    public void switchVerificationStatus(String code, boolean status) {
-//        IScene scene = VerificationPeople.builder().verificationCode(code).build();
-//        long id = jc.invokeApi(scene).getJSONArray("list").getJSONObject(0).getLong("id");
-//        IScene scene1 = SwitchVerificationStatus.builder().id(id).status(status).build();
-//        jc.invokeApi(scene1);
-//    }
-//
+    //----------------------------------------------------核销人员-------------------------------------------------------
+
+    /**
+     * 获取非重复电话号
+     *
+     * @return 电话号
+     */
+    public String getDistinctPhone() {
+        String phone = "155" + CommonUtil.getRandom(8);
+        IScene scene = VerificationPeopleScene.builder().verificationPhone(phone).build();
+        int total = visitor.invokeApi(scene).getInteger("total");
+        if (total == 0) {
+            return phone;
+        }
+        return getDistinctPhone();
+    }
+
+    /**
+     * 获取员工电话
+     *
+     * @return 电话号
+     */
+    public String getStaffPhone() {
+        IScene staffPageScene = StaffPageScene.builder().build();
+        List<JSONObject> staffPages = collectBean(staffPageScene, JSONObject.class);
+        return staffPages.stream().filter(e -> visitor.invokeApi(VerificationPeopleScene.builder().verificationPhone(e.getString("phone")).build()).getInteger("total") == 0).map(e -> e.getString("phone")).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取核销码
+     *
+     * @param verificationIdentity 核销员身份
+     * @return 核销码
+     */
+    public String getVerificationCode(String verificationIdentity) {
+        return getVerificationCode(true, verificationIdentity);
+    }
+
+    /**
+     * 获取核销码
+     *
+     * @param verificationIdentity 核销员身份
+     * @return 核销码
+     */
+    public String getVerificationCode(boolean verificationStatus, String verificationIdentity) {
+        List<String> list = new ArrayList<>();
+        VerificationPeopleScene.VerificationPeopleSceneBuilder builder = VerificationPeopleScene.builder();
+        int total = visitor.invokeApi(builder.build()).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = visitor.invokeApi(builder.page(i).size(SIZE).build()).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("verification_status") == verificationStatus
+                    && e.getString("verification_identity").equals(verificationIdentity)).map(e -> e.getString("verification_code")).collect(Collectors.toList()));
+        }
+        if (list.size() == 0) {
+            String code = getVerificationCode(verificationIdentity);
+            list.add(code);
+            switchVerificationStatus(code, false);
+        }
+        return list.get(0);
+    }
+
+    /**
+     * 核销人员状态更改
+     *
+     * @param code   核销码
+     * @param status 状态
+     */
+    public void switchVerificationStatus(String code, boolean status) {
+        IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
+        long id = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getLong("id");
+        IScene switchVerificationStatusScene = SwitchVerificationStatusScene.builder().id(id).status(status).build();
+        visitor.invokeApi(switchVerificationStatusScene);
+    }
 
     //-------------------------------------------------小程序----------------------------------------------------------
+
+    //-----------------------------------------------------预约------------------------------------------------------
+
+    /**
+     * 小程序预约
+     *
+     * @param type 预约类型 MAINTAIN：保养，REPAIR：维修
+     * @return id 预约id
+     */
+    public Integer appointment(AppointmentTypeEnum type, String date) {
+        AppointmentSubmitScene.AppointmentSubmitSceneBuilder builder = AppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
+                .shopId(getShopId()).staffId(getStaffId()).timeId(getTimeId(date)).appointmentName("隔壁小王").appointmentPhone("15321527989");
+        if (type.name().equals(AppointmentTypeEnum.MAINTAIN.name())) {
+            builder.faultDescription(EnumDesc.FAULT_DESCRIPTION.getDesc());
+        }
+        return visitor.invokeApi(builder.build()).getInteger("id");
+    }
+
+    /**
+     * 获取预约时间id
+     */
+    public Integer getTimeId(String date) {
+        IScene maintainTimeListScene = MaintainTimeListScene.builder().carId(getCarId()).shopId(getShopId()).day(date).build();
+        JSONArray array = visitor.invokeApi(maintainTimeListScene).getJSONArray("list");
+        List<MaintainTimeList> timeList = array.stream().map(object -> (JSONObject) object).map(object -> JSONObject.toJavaObject(object, MaintainTimeList.class)).collect(Collectors.toList());
+        return timeList.stream().filter(MaintainTimeList::getIsFull).map(MaintainTimeList::getId).findFirst().orElse(null);
+    }
+
+    public Integer getShopId() {
+        return visitor.isOnline() ? 20032 : 0;
+    }
+
+    public String getStaffId() {
+        IScene maintainStaffListScene = MaintainStaffListScene.builder().shopId(getShopId()).build();
+        JSONArray jsonArray = visitor.invokeApi(maintainStaffListScene).getJSONArray("list");
+        return Objects.requireNonNull(jsonArray.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getString("uid");
+    }
+
+    /**
+     * 获取小程序carId
+     */
+    public Integer getCarId() {
+        IScene appletCarListScene = AppletCarListScene.builder().build();
+        JSONArray jsonArray = visitor.invokeApi(appletCarListScene).getJSONArray("list");
+        return Objects.requireNonNull(jsonArray.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getInteger("id");
+    }
 
     /**
      * 获取小程序卡券编号
@@ -1172,7 +1280,7 @@ public class SupporterUtil extends BaseUtil {
         int listSize = 0;
         JSONArray array;
         do {
-            IScene scene = PackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
+            IScene scene = AppletPackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
@@ -1180,25 +1288,25 @@ public class SupporterUtil extends BaseUtil {
         } while (array.size() == 20);
         return listSize;
     }
-//
-//    /**
-//     * 获取小程序我的消息列表数
-//     *
-//     * @return 消息数量
-//     */
-//    public int getAppletMessageNum() {
-//        Long lastValue = null;
-//        int listSize = 0;
-//        JSONArray array;
-//        do {
-//            IScene scene = MessageListScene.builder().lastValue(lastValue).size(20).build();
-//            JSONObject response = visitor.invokeApi(scene);
-//            lastValue = response.getLong("last_value");
-//            array = response.getJSONArray("list");
-//            listSize += array.size();
-//        } while (array.size() == 20);
-//        return listSize;
-//    }
+
+    /**
+     * 获取小程序我的消息列表数
+     *
+     * @return 消息数量
+     */
+    public int getAppletMessageNum() {
+        Long lastValue = null;
+        int listSize = 0;
+        JSONArray array;
+        do {
+            IScene scene = AppletMessageListScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
 //
 //    /**
 //     * 小程序我的报名列表
@@ -1343,31 +1451,99 @@ public class SupporterUtil extends BaseUtil {
      * @param activityId 活动id
      */
     public void activityRegister(Long activityId) {
-        IScene scene = ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build();
+        IScene scene = ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build();
         visitor.invokeApi(scene, false);
     }
 
+    //--------------------------------------------------app------------------------------------------------------------
+
     /**
-     * 收集结果
-     * 结果为bean类型
-     *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param <T>   T
-     * @return bean的集合
+     * 跟进列表
      */
-    public <T> List<T> collectBean(IScene scene, Class<T> bean) {
-        List<T> list = new ArrayList<>();
-        int total = visitor.invokeApi(scene).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
-        }
-        return list;
+    public List<FollowUpPage> getFollowUpPageList() {
+        Integer time = null;
+        Integer id = null;
+        List<FollowUpPage> followUpPageList = new ArrayList<>();
+        JSONArray list;
+        do {
+            IScene appointmentPageScene = FollowUpPageScene.builder().id(id).time(time).size(20).build();
+            JSONObject response = visitor.invokeApi(appointmentPageScene);
+            JSONObject lastValue = response.getJSONObject("last_value");
+            time = lastValue.getInteger("time");
+            id = lastValue.getInteger("id");
+            list = response.getJSONArray("list");
+            followUpPageList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, FollowUpPage.class)).collect(Collectors.toList()));
+        } while (list.size() == 20);
+        return followUpPageList;
     }
+
+    /**
+     * 获取预约页
+     *
+     * @return 预约记表
+     */
+    public List<AppointmentPage> getAppointmentPageList() {
+        Integer lastValue = null;
+        List<AppointmentPage> appointmentPageList = new ArrayList<>();
+        JSONArray list;
+        do {
+            IScene appointmentPageScene = AppointmentPageScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = visitor.invokeApi(appointmentPageScene);
+            lastValue = response.getInteger("last_value");
+            list = response.getJSONArray("list");
+            appointmentPageList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppointmentPage.class)).collect(Collectors.toList()));
+        } while (list.size() == 20);
+        return appointmentPageList;
+    }
+
+    /**
+     * 获取预约页数量
+     *
+     * @return 列表数
+     */
+    public Integer getAppointmentPageNum() {
+        return getAppointmentPageList().size();
+    }
+
+    /**
+     * 获取接待页
+     *
+     * @return 接待页列表
+     */
+    public List<AppletReceptionPage> getReceptionPageList() {
+        Integer lastValue = null;
+        List<AppletReceptionPage> receptionPageList = new ArrayList<>();
+        JSONArray list;
+        do {
+            IScene appointmentPageScene = AppletReceptionPageScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = visitor.invokeApi(appointmentPageScene);
+            lastValue = response.getInteger("last_value");
+            list = response.getJSONArray("list");
+            receptionPageList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletReceptionPage.class)).collect(Collectors.toList()));
+        } while (list.size() == 20);
+        return receptionPageList;
+    }
+
+    /**
+     * 获取预约页数量
+     *
+     * @return 列表数
+     */
+    public Integer getReceptionPageNum() {
+        return getReceptionPageList().size();
+    }
+
+    /**
+     * 获取售后员工列表
+     *
+     * @return 售后员工
+     */
+    public ReceptionReceptorList getReceptorId() {
+        IScene receptorListScene = ReceptionReceptorListScene.builder().shopId(getShopId()).build();
+        JSONArray jsonArray = visitor.invokeApi(receptorListScene).getJSONArray("list");
+        return jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, ReceptionReceptorList.class)).findFirst().orElse(null);
+    }
+
     //-------------------------------------------------------活动---------------------------------------------------
 
     /**
@@ -1385,7 +1561,8 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 创建裂变活动-分享者奖励
      **/
-    public JSONObject getShareVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String voucherEnd, Integer voucherEffectiveDays) {
+    public JSONObject getShareVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String
+            voucherEnd, Integer voucherEffectiveDays) {
         JSONObject shareVoucher = new JSONObject();
         shareVoucher.put("id", id);
         shareVoucher.put("type", type);
@@ -1405,7 +1582,8 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 创建裂变活动-被邀请者奖励
      **/
-    public JSONObject getInvitedVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String voucherEnd, Integer voucherEffectiveDays) {
+    public JSONObject getInvitedVoucher(Long id, int type, int num, Integer expireType, String voucherStart, String
+            voucherEnd, Integer voucherEffectiveDays) {
         JSONObject invitedVoucher = new JSONObject();
         invitedVoucher.put("id", id);
         invitedVoucher.put("type", type);
@@ -1458,7 +1636,8 @@ public class SupporterUtil extends BaseUtil {
      * @param voucherEnd           卡券有效结束日期 卡券有效期类型为1（时间段）必填
      * @param voucherEffectiveDays 卡券有效天数 卡券有效期类型为2（有效天数）必填
      **/
-    public JSONObject getVoucherValid(int expireType, String voucherStart, String voucherEnd, int voucherEffectiveDays) {
+    public JSONObject getVoucherValid(int expireType, String voucherStart, String voucherEnd,
+                                      int voucherEffectiveDays) {
         JSONObject voucherValid = new JSONObject();
         voucherValid.put("expire_type", expireType);
         if (expireType == 1) {
@@ -1556,7 +1735,8 @@ public class SupporterUtil extends BaseUtil {
      * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
      * @param isNeedApproval    报名后是否需要审批
      */
-    public IScene createRecruitActivityScene(Long voucherId, boolean award, int rewardReceiveType, boolean isNeedApproval) {
+    public IScene createRecruitActivityScene(Long voucherId, boolean award, int rewardReceiveType,
+                                             boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         picList.add(supporterUtil.getPicPath());

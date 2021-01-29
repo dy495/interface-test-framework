@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ImportPage extends BaseScene {
+public class ImportPageScene extends BaseScene {
     private final String type;
     private final String user;
     @Builder.Default

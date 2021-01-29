@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class SwitchVerificationStatus extends BaseScene {
+public class SwitchVerificationStatusScene extends BaseScene {
     private final Long id;
     private final Boolean status;
 

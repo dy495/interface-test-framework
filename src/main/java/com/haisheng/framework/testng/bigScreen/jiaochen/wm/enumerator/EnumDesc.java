@@ -15,11 +15,13 @@ public enum EnumDesc {
 
     MESSAGE_DESC("I hope the new covid-19 epidemic will be over."),
 
-    MESSAGE_TITLE("来自于土星的消息"),
+    MESSAGE_TITLE("来自土星的消息"),
 
     INVALID_REASON("不是价值客户，作废卡券"),
 
     ACTIVITY_DESC("I hope the new covid-19 epidemic will be over."),
+
+    FAULT_DESCRIPTION("网线传输能力不足或网络不稳定"),
     ;
 
     EnumDesc(String desc) {

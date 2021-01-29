@@ -218,7 +218,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
         try {
             //接待页接待
             JSONObject pageData = jc.invokeApi(ReceptionPageScene.builder().receptionStatus(0).build());
-            Long receptionId = (long) CommonUtil.getIntField(pageData, 0, "reception_id");
+            Integer receptionId = CommonUtil.getIntField(pageData, 0, "reception_id");
             Long customerId = (long) CommonUtil.getIntField(pageData, 0, "customer_id");
             String plateNumber = CommonUtil.getStrField(pageData, 0, "plate_number");
             String customerPhone = CommonUtil.getStrField(pageData, 0, "customer_phone");

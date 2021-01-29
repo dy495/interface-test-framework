@@ -36,13 +36,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 卡券领取渠道校验
+ *
  * @author wangmin
  * @date 2021/1/26 16:44
  */
 public class SendVoucher extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCT = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
-    private static final EnumAccount MARKETING = EnumAccount.MARKETING;
+    private static final EnumAccount MARKETING = EnumAccount.MARKETING_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public Visitor visitor = new Visitor(PRODUCT);
     public UserUtil user = new UserUtil(visitor);
@@ -242,7 +244,10 @@ public class SendVoucher extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "优惠券管理--裂变活动拉新成功获取优惠券")
+    /**
+     * 拉新做不了
+     */
+    @Test(description = "优惠券管理--裂变活动拉新成功获取优惠券", enabled = false)
     public void sendVoucher_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

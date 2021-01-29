@@ -5,25 +5,25 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 我的套餐列表
+ * 小程序消息详情
+ *
+ * @author wangmin
+ * @date 2021/1/28 19:20
  */
 @Builder
-public class PackageListScene extends BaseScene {
-    private final Long lastValue;
-    private final String type;
-    private final Integer size;
+public class AppletMessageDetailScene extends BaseScene {
+    private final String id;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("last_value", lastValue);
-        object.put("type", type);
-        object.put("size", size);
+        object.put("id", id);
         return object;
+
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/package/list";
+        return "/jiaochen/applet/granted/message/detail";
     }
 }

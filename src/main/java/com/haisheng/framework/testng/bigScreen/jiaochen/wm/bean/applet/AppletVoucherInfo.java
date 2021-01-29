@@ -16,7 +16,7 @@ public class AppletVoucherInfo implements Serializable {
      * 客户卡券id
      */
     @JSONField(name = "id")
-    private String id;
+    private Long id;
 
     /**
      * 卡券名称

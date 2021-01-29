@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     BusinessUtil util = new BusinessUtil();
     LoginUtil user = new LoginUtil();

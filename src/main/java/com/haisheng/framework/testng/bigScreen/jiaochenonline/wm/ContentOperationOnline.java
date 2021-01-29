@@ -159,7 +159,7 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             int applyNum = util.getAppletArticleNum();
             int registerNum = jc.appletArticleDetail(String.valueOf(activityId)).getInteger("register_num");
             //报名
-            jc.invokeApi(ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING.name()).phone(EnumAccount.MARKETING.getPhone()).num(1).build());
+            jc.invokeApi(ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build());
             //我的报名列表消息+1
             int newApplyNum = util.getAppletArticleNum();
             CommonUtil.valueView(applyNum, newApplyNum);

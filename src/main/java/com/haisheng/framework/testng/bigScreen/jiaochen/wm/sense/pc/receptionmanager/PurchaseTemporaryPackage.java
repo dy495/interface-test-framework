@@ -21,7 +21,7 @@ public class PurchaseTemporaryPackage extends BaseScene {
     private final String extendedInsuranceYear;
     private final String extendedInsuranceCopies;
     private final Integer type;
-    private final Long receptionId;
+    private final Integer receptionId;
     private final Long customerId;
 
     @Override

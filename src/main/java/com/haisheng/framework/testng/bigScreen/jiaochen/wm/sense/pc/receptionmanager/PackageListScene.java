@@ -5,21 +5,18 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 接待管理 -> 点击接待
+ * 卡券列表
  */
 @Builder
-public class Reception extends BaseScene {
-    private final String platNumber;
+public class PackageListScene extends BaseScene {
 
     @Override
     public JSONObject getJSONObject() {
-        JSONObject object = new JSONObject();
-        object.put("plate_number", platNumber);
-        return object;
+        return new JSONObject();
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/reception";
+        return "/jiaochen/pc/reception-manage/package-list";
     }
 }

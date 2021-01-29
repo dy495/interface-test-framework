@@ -10,7 +10,7 @@ import java.util.List;
  * 消息管理 -> 推送消息
  */
 @Builder
-public class PushMessage extends BaseScene {
+public class PushMessageScene extends BaseScene {
     private final String pushTarget;
     private final List<Long> shopList;
     private final List<String> telList;

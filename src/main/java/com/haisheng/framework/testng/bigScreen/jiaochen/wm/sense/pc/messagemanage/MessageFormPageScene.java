@@ -8,7 +8,7 @@ import lombok.Builder;
  * 消息管理 -> 消息表单
  */
 @Builder
-public class MessageFormPage extends BaseScene {
+public class MessageFormPageScene extends BaseScene {
     private final String messageType;
     private final String sendAccount;
     private final Long startTime;

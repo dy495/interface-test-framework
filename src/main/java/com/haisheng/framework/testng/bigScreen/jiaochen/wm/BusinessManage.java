@@ -20,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseFixedPackage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
@@ -47,8 +47,8 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     BusinessUtil util = new BusinessUtil();
     LoginUtil user = new LoginUtil();
     private static final Integer size = 100;
-    private static final EnumAccount marketing = EnumAccount.MARKETING;
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
+    private static final EnumAccount marketing = EnumAccount.MARKETING_DAILY;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
     private static final EnumAppletToken appletUser = EnumAppletToken.JC_WM_DAILY;
     private static final EnumAppletToken applet = EnumAppletToken.JC_GLY_DAILY;
 
@@ -230,7 +230,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
         try {
             //接待页接待
             JSONObject pageData = jc.invokeApi(ReceptionPageScene.builder().receptionStatus(0).build());
-            Long receptionId = (long) CommonUtil.getIntField(pageData, 0, "reception_id");
+            Integer receptionId = CommonUtil.getIntField(pageData, 0, "reception_id");
             Long customerId = (long) CommonUtil.getIntField(pageData, 0, "customer_id");
             String plateNumber = CommonUtil.getStrField(pageData, 0, "plate_number");
             String customerPhone = CommonUtil.getStrField(pageData, 0, "customer_phone");
@@ -377,7 +377,7 @@ public class BusinessManage extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = ImportPage.builder().build();
+            IScene scene = ImportPageScene.builder().build();
             int total = jc.invokeApi(scene).getInteger("total");
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/服务单号已存在.xlsx";
             String message = jc.pcWorkOrder(filePath).getString("message");

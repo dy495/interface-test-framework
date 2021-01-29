@@ -8,7 +8,7 @@ import lombok.Builder;
  * 套餐管理 -> 购买固定套餐
  */
 @Builder
-public class PurchaseFixedPackage extends BaseScene {
+public class PurchaseFixedPackageScene extends BaseScene {
     private final String customerPhone;
     private final String customerName;
     private final Long customerId;

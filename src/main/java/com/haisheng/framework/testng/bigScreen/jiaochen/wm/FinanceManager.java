@@ -28,8 +28,8 @@ public class FinanceManager extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     LoginUtil user = new LoginUtil();
     private static final Integer size = 100;
-    private static final EnumAccount marketing = EnumAccount.MARKETING;
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR;
+    private static final EnumAccount marketing = EnumAccount.MARKETING_DAILY;
+    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
 
     @BeforeClass
     @Override

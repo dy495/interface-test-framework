@@ -5,23 +5,22 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 我的消息列表
+ * @author wangmin
+ * @date 2021/1/29 12:09
  */
 @Builder
-public class MessageListScene extends BaseScene {
-    private final Long lastValue;
-    private final Integer size;
+public class MaintainShopListScene extends BaseScene {
+    private final String carId;
 
     @Override
     public JSONObject getJSONObject() {
-        JSONObject object = new JSONObject();
-        object.put("last_value", lastValue);
-        object.put("size", size);
-        return object;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("car_id", carId);
+        return jsonObject;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/message/list";
+        return "/jiaochen/applet/granted/maintain/shop/list";
     }
 }

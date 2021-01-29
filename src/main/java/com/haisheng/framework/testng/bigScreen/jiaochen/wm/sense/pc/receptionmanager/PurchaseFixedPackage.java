@@ -9,7 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class PurchaseFixedPackage extends BaseScene {
-    private final Long receptionId;
+    private final Integer receptionId;
     private final Long customerId;
     private final String customerPhone;
     private final Long packageId;

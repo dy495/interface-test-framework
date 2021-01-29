@@ -343,7 +343,12 @@ public class CommonUtil {
     }
 
     private static <T> void check(T expect, T actual, String reason) {
-        Preconditions.checkArgument(expect.equals(actual), reason);
+        valueView(expect, actual);
+        if (expect == null || actual == null) {
+            Preconditions.checkArgument(actual == expect, reason);
+        } else {
+            Preconditions.checkArgument(expect.equals(actual), reason);
+        }
     }
 
     @NotNull

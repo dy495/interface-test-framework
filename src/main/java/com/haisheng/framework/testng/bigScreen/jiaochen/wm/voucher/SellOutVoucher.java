@@ -11,8 +11,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -201,7 +201,7 @@ public class SellOutVoucher extends BaseVoucher {
      * @return 门店id
      */
     private List<Long> getShopIdList() {
-        IScene scene = ShopList.builder().build();
+        IScene scene = ShopListScene.builder().build();
         JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
     }
@@ -225,10 +225,10 @@ public class SellOutVoucher extends BaseVoucher {
      */
     private void pushMessage(Long voucherId) {
         List<String> phoneList = new ArrayList<>();
-        phoneList.add(EnumAccount.MARKETING.getPhone());
+        phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
         List<Long> voucherList = new ArrayList<>();
         voucherList.add(voucherId);
-        PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                 .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true);
         visitor.invokeApi(builder.build());
