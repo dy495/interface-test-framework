@@ -3997,7 +3997,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :商品品类列表
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryPage(Integer page,Integer size,Boolean category_status,Integer first_category,Integer second_category,Integer third_category) {
+    public JSONObject categoryPage(Integer page,Integer size,Boolean category_status,Long first_category,Long second_category,Long third_category) {
         String url = "/jiaochen/pc/integral-mall/category-page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
@@ -4014,7 +4014,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :创建商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,Integer belong_category,String belong_pic,Integer id) {
+    public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,Long belong_category,String belong_pic,Long id) {
         String url = "/jiaochen/pc/integral-mall/create-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);
@@ -4051,7 +4051,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改品类状态
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryChgStatus(Integer id, Boolean status) {
+    public JSONObject categoryChgStatus(Long id, Boolean status) {
         String url = "/jiaochen/pc/integral-mall/change-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4076,7 +4076,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryEdit(Boolean Checkcode, Integer id, String category_name,String category_level,Integer belong_category,String belong_pic) {
+    public JSONObject categoryEdit(Boolean Checkcode, Long id, String category_name,String category_level,Integer belong_category,String belong_pic) {
         String url = "/jiaochen/pc/integral-mall/edit-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);
@@ -4091,7 +4091,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryDel(Integer id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject categoryDel(Long id, Integer page, Integer size, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-category";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4311,7 +4311,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :上架/下架
      * @date :2021/1/20 14:00
      **/
-    public JSONObject goodsChgStatus(Integer id, String status,Boolean checkCode) {
+    public JSONObject goodsChgStatus(Long id, String status,Boolean checkCode) {
         String url = "/jiaochen/pc/integral-mall/change-goods-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);

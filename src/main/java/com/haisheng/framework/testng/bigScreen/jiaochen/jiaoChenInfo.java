@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
@@ -223,17 +224,17 @@ public class jiaoChenInfo {
 
 
     //V2.0
-    public final int  first_category= 1; //一级品类id
+    public final Long  first_category= 1L; //一级品类id
     public final String  first_category_chin= ""; //一级品类name
 
-    public final int  second_category= 1; //二级品类id
+    public final Long  second_category= 1L; //二级品类id
     public final String  second_category_chin= ""; //二级品类name
 
-    public final int  third_category= 1; //三级品类id
+    public final Long  third_category= 1L; //三级品类id
     public final String  third_category_chin= ""; //三级品类name
 
-    public final int  goods_brand= 1; //商品品牌
-    public final int  goods_id= 1; //商品id
+    public final Long  goods_brand= 1L; //商品品牌
+    public final Long  goods_id= 1L; //商品id
     public final String  goods_name= "1"; //商品名称
 
     public int getStatusGoodId(String status){ //PC【积分兑换】-获取各状态的商品id
@@ -285,6 +286,28 @@ public class jiaoChenInfo {
         ex.exchange_people_num = 1; // 每人只能兑换一次
         jc.exchangeGoodCreat(ex);
         return ex.id;
+    }
+
+    //小程序购买虚拟商品
+    public void appletBuyFictitious(Long fictitiousId){
+        int exRecordPre = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
+        Long minePre = jc.appletHomePage().getLong("integral");
+        int detailPre = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
+
+        //小程序先登录再兑换 应成功
+        jc.appletSubmitExchange(fictitiousId,true);
+
+        //兑换成功结果校验
+        int exRecordAft = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
+        Long mineAft = jc.appletHomePage().getLong("integral");
+        int detailAft = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
+        Preconditions.checkArgument(exRecordAft - exRecordPre ==1,"小程序兑换记录未+1");
+        Preconditions.checkArgument(mineAft - minePre <0 ,"小程序我的积分未减少");
+        Preconditions.checkArgument(detailAft - detailPre ==1,"小程序个人积分详情记录未+1");
+    }
+
+    public void newgood(){
+
     }
 
 }

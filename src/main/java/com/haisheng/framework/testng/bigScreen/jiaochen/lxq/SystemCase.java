@@ -1250,7 +1250,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void categoryAddFirst(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = (int) System.currentTimeMillis();
+            Long id = System.currentTimeMillis();
             int code = jc.categoryCreate(false,name,"一级品类",null,info.logo,id).getInteger("code");
             Preconditions.checkArgument(code==1000,"新建状态码期待1000，实际"+code);
 
@@ -1304,8 +1304,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //启用一级品类
             jc.categoryChgStatus(info.first_category,true);
 
-            int id = (int) System.currentTimeMillis();
-            int id2 = id+ 1000;
+            Long id = System.currentTimeMillis();
+            Long id2 = id+ 1000;
             int code = jc.categoryCreate(false,name,"二级品类",info.first_category,info.logo,id).getInteger("code");
 
             //停用一级品类
@@ -1334,8 +1334,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //启用一级品类
             jc.categoryChgStatus(info.first_category,true);
 
-            int id = (int) System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.stringsix,"二级品类",99999999,info.logo,id).getInteger("code");
+            Long id = System.currentTimeMillis();
+            int code = jc.categoryCreate(false,info.stringsix,"二级品类",99999999L,info.logo,id).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
             //删除品类
             jc.categoryDel(id,1,1,true);
@@ -1356,11 +1356,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             String name = info.stringsix +"aa";
 
-            int id = (int) System.currentTimeMillis();
-            int id2 = id+ 9000;
-            jc.categoryCreate(false,name,level,Integer.parseInt(fatherid),info.logo,id);
+            Long id = System.currentTimeMillis();
+            Long id2 = id+ 9000;
+            jc.categoryCreate(false,name,level,Long.valueOf(fatherid),info.logo,id);
 
-            int code = jc.categoryCreate(false,name,level,Integer.parseInt(fatherid),info.logo,id2).getInteger("code");
+            int code = jc.categoryCreate(false,name,level,Long.valueOf(fatherid),info.logo,id2).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             //删除品类
@@ -1378,8 +1378,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "CATEGORYID")
     public  Object[] categroyid() {
         return new String[][]{
-                {"二级品类",Integer.toString(info.first_category)},
-                {"三级品类",Integer.toString(info.second_category)},
+                {"二级品类",Long.toString(info.first_category)},
+                {"三级品类",Long.toString(info.second_category)},
 
         };
     }
@@ -1389,7 +1389,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int id = (int) System.currentTimeMillis();
+            Long id =  System.currentTimeMillis();
             int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",info.first_category,info.logo,id).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
@@ -1412,7 +1412,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int id = (int) System.currentTimeMillis();
+            Long id =System.currentTimeMillis();
             //不填写品类名称
             int code = jc.categoryCreate(false,null,"一级品类",null,info.logo,id+1).getInteger("code");
             Preconditions.checkArgument(code==1001,"不填写品类名称,状态码期待1001，实际"+code);
@@ -1728,7 +1728,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = jc.goodsManagePage(1,10,info.goods_name,null,null,null,null,null).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                if (obj.getInteger("id")==info.goods_id){
+                if (obj.getLong("id")==info.goods_id){
                     Preconditions.checkArgument(obj.getString("goods_status_name").equals("启用"),"启用后列表商品状态不是启用");
                 }
             }
@@ -1780,7 +1780,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = jc.goodsManagePage(1,10,info.goods_name,null,null,null,null,null).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                if (obj.getInteger("id")==info.goods_id){
+                if (obj.getLong("id")==info.goods_id){
                     Preconditions.checkArgument(obj.getString("goods_status_name").equals("下架"),"下架后列表商品状态不是停用");
                 }
             }
@@ -2237,20 +2237,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
              * 步骤二 小程序兑换
              */
 
-            int exRecordPre = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
-            Long minePre = jc.appletHomePage().getLong("integral");
-            int detailPre = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
-
-            //小程序先登录再兑换 应成功
-            jc.appletSubmitExchange(fictitiousId,true);
-
-            //兑换成功结果校验
-            int exRecordAft = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
-            Long mineAft = jc.appletHomePage().getLong("integral");
-            int detailAft = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
-            Preconditions.checkArgument(exRecordAft - exRecordPre ==1,"小程序兑换记录未+1");
-            Preconditions.checkArgument(mineAft - minePre <0 ,"小程序我的积分未减少");
-            Preconditions.checkArgument(detailAft - detailPre ==1,"小程序个人积分详情记录未+1");
+            info.appletBuyFictitious(fictitiousId);
 
             /**
              * 步骤三 小程序再次兑换
@@ -2267,6 +2254,42 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("PC新建虚拟商品->小程序兑换");
+        }
+    }
+
+    @Test
+    public void newRealAndBuy() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            /**
+             * 步骤一 新建实体积分商品 兑换次数不限
+             */
+
+
+
+            /**
+             * 步骤二 小程序【积分商城】兑换
+             */
+
+
+
+            /**
+             * 步骤三 PC发货
+             */
+
+
+            /**
+             * 步骤四 小程序【积分兑换订单】再次兑换
+             */
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC新建实体商品积分兑换-> 小程序兑换-> 发货");
         }
     }
 
