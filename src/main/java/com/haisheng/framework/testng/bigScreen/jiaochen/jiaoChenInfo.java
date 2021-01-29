@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExcha
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.util.DateTimeUtil;
 
 import java.util.Arrays;
@@ -237,6 +238,12 @@ public class jiaoChenInfo {
     public final Long  goods_id= 1L; //商品id
     public final String  goods_name= "1"; //商品名称
 
+    public final Long specifications_id = 1L;//规格类型id
+    public final String specifications_name = "";//规格类型
+    public final long specifications_detail_id = 1L;//规格参数详情id
+    public final String specifications_detail_name = "";//规格参数详情名称
+
+
     public int getStatusGoodId(String status){ //PC【积分兑换】-获取各状态的商品id
         JSONArray list = jc.exchangePage(1,50,null,null,status).getJSONArray("list");
         if (list.size()>0){
@@ -308,6 +315,32 @@ public class jiaoChenInfo {
 
     public void newgood(){
 
+        String select_specifications_str =
+                "[" +
+                "{" +
+                "\"specifications_id\":"+ specifications_id+","+
+                "\"specifications_name\":\""+specifications_name +"\","+
+                "\"specifications_list\":[" +
+                    "\"specifications_detail_id\":"+specifications_detail_id +"\","+
+                    "\"specifications_detail_name\":\""+specifications_detail_name+"\""+
+                "}]}]";
+        JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
+        String goods_specifications_list_str = "[" +
+                "{" +
+                "\"first_specifications\":"+specifications_detail_id+"," +
+                //"\"second_specifications\":"+null+",\n" +
+                "\"head_pic\":\""+logo+"\"," +
+                "\"price\":69.98" +
+                "}]";
+        JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
+        pcCreateGoods goods = new pcCreateGoods();
+        goods.id = System.currentTimeMillis();
+        goods.price = "99.99";
+        goods.select_specifications = select_specifications;
+        goods.goods_specifications_list = goods_specifications_list;
+        jc.createGoodMethod(goods);
     }
+
+
 
 }

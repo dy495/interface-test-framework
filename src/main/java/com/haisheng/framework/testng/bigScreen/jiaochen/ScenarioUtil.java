@@ -4940,7 +4940,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //品类规格下拉
-    public JSONObject specifications(Integer first_category) {
+    public JSONObject specifications(Long first_category) {
         String url = "/jiaochen/pc/integral-mall/specifications-list";
         JSONObject json1=new JSONObject();
         json1.put("first_category",first_category);

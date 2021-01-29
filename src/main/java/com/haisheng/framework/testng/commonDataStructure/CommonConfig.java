@@ -40,4 +40,5 @@ public class CommonConfig {
     public String caseName = "login";
     public String referer;
     public String product;
+    public String roleId;
 }

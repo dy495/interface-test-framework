@@ -8,7 +8,10 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PoiUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateStoreCommodity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateRemind;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateStoreSales;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -20,14 +23,15 @@ import com.haisheng.framework.util.QADbProxy;
 import com.haisheng.framework.util.QADbUtil;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
@@ -542,12 +546,12 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //品类树
             JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
             ReadContext context = JsonPath.parse(category.toJSONString());
-            List<Integer> result = context.read("$..category_id");
+            List<Long> result = context.read("$..category_id");
             er.first_category=result.get(0);
             er.second_category=result.get(1);
             er.third_category=result.get(2);  //品类
 
-            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getString("id");  //品牌
+            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getLong("id");  //品牌
             er.price="9.99";  //价格
             er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
             jc.createGoodMethod(er);
@@ -579,11 +583,11 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //品类树
             JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
             ReadContext context = JsonPath.parse(category.toJSONString());
-            List<Integer> result = context.read("$..category_id");
+            List<Long> result = context.read("$..category_id");
             er.first_category=result.get(0);
             er.second_category=result.get(1);
             er.third_category=result.get(2);  //品类
-            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getString("id");  //品牌
+            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getLong("id");  //品牌
             er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
 
             er.price="10000000000";  //价格

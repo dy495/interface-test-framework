@@ -423,6 +423,7 @@ public class TestCaseCommon {
         Header[] headers;
         headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .other("shop_id", commonConfig.shopId)
+                .other("role_id", commonConfig.roleId)
                 .userAgent(userAgent)
                 .referer(commonConfig.referer)
                 .authorization(authorization)
