@@ -179,9 +179,8 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void specialMan_listSearch1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject res = logic.specialKu_serach("autotester");
+            JSONObject res = logic.specialKu_serach("");
             Integer code = res.getInteger("code");
-            JSONArray person = res.getJSONArray("person");
             checkArgument(code == 1001 , "特殊人物列表查询(必填项不填写),code="+code);
 
         } catch (AssertionError e) {
@@ -322,8 +321,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject res = logic.specialFace_serach("autotester&&*^&^*",true,"*&&&(&*&(*(&",null,null,null);
             Integer code = res.getInteger("code");
-            JSONArray faces = res.getJSONArray("faces");
-            checkArgument(code == 1000 && faces.size()!= 0 , "特殊人物校验（人脸检索）(参数超出【支持的字符范围】),code="+code+"人脸信息"+faces);
+            checkArgument(code == 1001 , "特殊人物校验（人脸检索）(参数超出【支持的字符范围】),code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -499,9 +497,9 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void system_Delete1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject res = logic.self_delete("");
+            JSONObject res = logic.self_delete(null);
             Integer code = res.getInteger("code");
-            checkArgument(code == 1000  , "自定义组删除(必填项不传),code="+code);
+            checkArgument(code == 1001  , "自定义组删除(必填项不传),code="+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -655,5 +653,133 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
             saveData(" 默认组用户查询(必填项不填写)");
         }
     }
+
+
+    /**
+     * ====================3.  删除默认组用户(正确入参&格式)======================
+     */
+    @Test
+    public void defaultUser_delete() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+                JSONObject res = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d3343e3e3e", "gate", "22728--DEFAULT--20210120");
+                JSONArray data = res.getJSONArray("data");
+                userId = data.getJSONObject(0).getString("userId");
+                imgUrl = data.getJSONObject(0).getString("imgUrl");
+
+                JSONObject res1 = logic.delete_default_user("22728", userId);
+                Integer code = res1.getInteger("code");
+                checkArgument(code == 1000, " 删除默认组用户(正确入参&格式),code=" + code);
+            } catch (AssertionError e) {
+                appendFailReason(e.toString());
+            } catch (Exception e) {
+                appendFailReason(e.toString());
+            } finally {
+                saveData(" 删除默认组用户(正确入参&格式)");
+            }
+        }
+
+
+    /**
+     * ====================3.  删除默认组用户(必填项不填写)======================
+     */
+    @Test
+    public void defaultUser_delete1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res1 = logic.delete_default_user(null, null);
+            Integer code = res1.getInteger("code");
+            checkArgument(code == 1001, " 删除默认组用户(必填项不填写),code=" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 删除默认组用户(必填项不填写)");
+        }
+    }
+    /**
+     * ====================3.  删除默认组用户(超出字符范围)======================
+     */
+    @Test
+    public void defaultUser_delete2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res1 = logic.delete_default_user("……*&……*", "*&*&……");
+            Integer code = res1.getInteger("code");
+            checkArgument(code == 1001, " 删除默认组用户(超出字符范围),code=" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 删除默认组用户(超出字符范围)");
+        }
+    }
+
+
+    /**
+     * ====================4.  删除默认组用户的人脸(正确入参&格式)======================
+     */
+    @Test
+    public void defaultFace_delete1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d3343e3e3e", "gate", "22728--DEFAULT--20210110");
+            String faceId = "";
+            JSONArray data = res.getJSONArray("data");
+            userId = data.getJSONObject(0).getString("userId");
+            faceId = data.getJSONObject(0).getString("faceId");
+
+            JSONObject res1 = logic.delete_default_face("22728", userId,faceId);
+            Integer code = res1.getInteger("code");
+            checkArgument(code == 1000, " 删除默认组用户的人脸(正确入参&格式),code=" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 删除默认组用户的人脸(正确入参&格式)");
+        }
+    }
+
+    /**
+     * ====================4.  删除默认组用户的人脸(必填项不填写)======================
+     */
+    @Test
+    public void defaultFace_delete2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res1 = logic.delete_default_face(null, null,null);
+            Integer code = res1.getInteger("code");
+            checkArgument(code == 1001, " 删除默认组用户的人脸(必填项不填写),code=" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 删除默认组用户的人脸(必填项不填写)");
+        }
+    }
+
+    /**
+     * ====================4.  删除默认组用户的人脸(超出字符范围)======================
+     */
+    @Test
+    public void defaultFace_delete3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject res1 = logic.delete_default_face("*&*^&^*", "%*&&*","&*^&^(");
+            Integer code = res1.getInteger("code");
+            checkArgument(code == 1001, " 删除默认组用户的人脸(超出字符范围),code=" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" 删除默认组用户的人脸(超出字符范围)");
+        }
+    }
+
 }
 

@@ -342,7 +342,6 @@ public class StoreDataConsistentcyBgy extends TestCaseCommon implements TestCase
     @Test(dataProvider = "SHOP_ID",dataProviderClass = StoreScenarioUtilOnline.class)
     public void mpvTotals(long shop_id) {
         logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
         try {
             int pvValues = 0;
             //获取到店趋势数据
@@ -357,16 +356,11 @@ public class StoreDataConsistentcyBgy extends TestCaseCommon implements TestCase
 
                 }
             }
-
             //获取进店客群总人次
             JSONArray ldlist = md.historyShopConversionV3(shop_id,cycle_type,month).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("pv1");
-
-
             Preconditions.checkArgument(pvValues== value1,"消费者到店趋势中各天pv累计=" + pvValues + "到店客群总人次=" + value1);
-
-
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

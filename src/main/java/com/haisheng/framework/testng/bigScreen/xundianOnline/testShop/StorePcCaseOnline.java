@@ -132,7 +132,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
     @Test
     public void getA() throws Exception {
 
-        for (int i=0;i<6;i++){
+        for (int i=0;i<2;i++){
 
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
@@ -148,7 +148,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             String uid = "uid_580f244a";//13260: uid_0ba743d8,14630:uid_580f244a
             String appId = "c30dcafc59c8";//13260: 672170545f50,14630:c30dcafc59c8
             String ak = "0d17651c55595b9b";//13260: 691ff41137d954f3,14630:0d17651c55595b9b
-            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
             String sk = "0ebe6128aedb44e0a7bd3f7a5378a7fc";//13260:d76f2d8a7846382f633c1334139767fe,14630:0ebe6128aedb44e0a7bd3f7a5378a7fc
             // java代码示例
@@ -183,7 +183,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "  \"app_id\": \"c30dcafc59c8\",\n" +
                     "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded373ca6a76\",\n" +
                     "  \"version\": \"v1.0\",\n" +
-                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
                     "        \"shop_id\": \"14630\",\n" +
@@ -239,7 +239,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
     @Test
     public void getA1() throws Exception {
 
-        for (int i=0;i<1;i++){
+        for (int i=0;i<2;i++){
 
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
@@ -255,7 +255,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             String uid = "uid_0ba743d8";//13260: uid_0ba743d8,14630:uid_580f244a
             String appId = "672170545f50";//13260: 672170545f50,14630:c30dcafc59c8
             String ak = "691ff41137d954f3";//13260: 691ff41137d954f3,14630:0d17651c55595b9b
-            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
             String sk = "d76f2d8a7846382f633c1334139767fe";//13260:d76f2d8a7846382f633c1334139767fe,14630:0ebe6128aedb44e0a7bd3f7a5378a7fc
             // java代码示例
@@ -290,7 +290,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "  \"app_id\": \"672170545f50\",\n" +
                     "  \"request_id\": \"5d45a085-3774-4e0f-943e-ded377823\",\n" +
                     "  \"version\": \"v1.0\",\n" +
-                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
                     "        \"shop_id\": \"13260\",\n" +
