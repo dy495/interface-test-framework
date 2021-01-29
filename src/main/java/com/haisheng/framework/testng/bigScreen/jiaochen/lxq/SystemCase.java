@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -36,6 +37,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     jiaoChenInfo info = new  jiaoChenInfo();
+    PublicParm pp = new PublicParm();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -1833,7 +1835,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //积分兑换
 
-
+    //todo 积分兑换筛选栏 ok
     //@Test(dataProvider = "exchangeType")
     public void exchangeFilter1(String type) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1906,7 +1908,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //2021-01-28
+    //2021-01-28 todo 积分兑换列表操作
 
     //@Test(dataProvider = "exchangeStatus")
     public void exchangeTop(String status) {
@@ -2067,11 +2069,206 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
+    @Test
+    public void exchangeDetailFilter1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String name = jc.exchangeDetail(1,1,null,null,null,null,null).getJSONArray("list").getJSONObject(0).getString("exchange_customer_name");
+            JSONArray list = jc.exchangeDetail(1,50,null,name,null,null,null).getJSONArray("list");
+            for (int i = 0  ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchname = obj.getString("exchange_customer_name");
+                Preconditions.checkArgument(searchname.contains(name),"搜索结果包含"+searchname);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分明细】根据存在的兑换客户全称筛选");
+        }
+    }
+
+    @Test(dataProvider = "exchange_type")
+    public void exchangeDetailFilter2(String exchange_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeDetail(1,50,null,null,exchange_type,null,null).getJSONArray("list");
+            for (int i = 0  ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchname = obj.getString("exchange_type");
+                Preconditions.checkArgument(searchname.equals(exchange_type),"搜索结果包含"+searchname);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分明细】根据存在的兑换类型筛选");
+        }
+    }
+    @DataProvider(name = "exchange_type")
+    public Object[] exchange_type(){
+        return new String[]{
+                "ADD",
+                "MINUS",
+
+        };
+    }
+
+    @Test(dataProvider = "exchange_time")
+    public void exchangeDetailFilter3(String start, String end) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeDetail(1,50,null,null,null,start,end).getJSONArray("list");
+            for (int i = 0  ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchname = obj.getString("operate_time");
+                //todo 操作时间在选择时间段内
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分明细】根据存在的兑换类型筛选");
+        }
+    }
+
+    @DataProvider(name = "exchange_time")
+    public Object[] exchange_time(){
+        return new String[][]{
+                {dt.getHistoryDate(0),dt.getHistoryDate(0)},
+                {dt.getHistoryDate(-2),dt.getHistoryDate(-1)},
+
+        };
+    }
+
+    @Test
+    public void exchangeDetailShow() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeDetail(1,50,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                Preconditions.checkArgument(obj.containsKey("exchange_customer_name"),"未展示客户名称");
+                Preconditions.checkArgument(obj.containsKey("phone"),"未展示客户手机号");
+                Preconditions.checkArgument(obj.containsKey("exchange_type"),"未展示兑换类型");
+                Preconditions.checkArgument(obj.containsKey("stock_detail"),"未展示库存明细");
+                Preconditions.checkArgument(obj.containsKey("order_code"),"未展示订单号");
+                Preconditions.checkArgument(obj.containsKey("operate_time"),"未展示操作时间");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分明细】列表展示项校验");
+        }
+    }
+
+    @Test
+    public void exchangeDetailOrder() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List time = new ArrayList();
 
 
+            JSONArray list = jc.exchangeDetail(1,50,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String date = obj.getString("operate_time")+":000";
+                time.add(dt.dateToTimestamp(date));
+            }
+            List timecopy = time;
+            Collections.sort(time);
+            Preconditions.checkArgument(Iterators.elementsEqual(time.iterator(),timecopy.iterator()),"未倒序排列");
 
 
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分明细】列表根据兑换时间倒序排列");
+        }
+    }
 
+
+    //todo 积分订单筛选栏 接口状态要改
+
+
+    //todo 积分订单确认发货
+
+    //todo 新建商品-新建实体商品积分兑换- 小程序兑换- 发货
+
+    //todo 新建商品-新建虚拟商品积分兑换- 小程序兑换 ok
+
+    @Test
+    public void newFictitiousAndBuy() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            /**
+             * 步骤一 新建虚拟积分商品 兑换次数限制=1
+             */
+            //新建虚拟商品前记录数据
+            int PCtotalPre = jc.exchangePage(1,1,null,null,null).getInteger("total");
+            jc.appletLoginToken(pp.appletTocken);
+            int applettotalPre = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
+
+            //新建虚拟积分商品 兑换次数限制=1
+            jc.pcLogin("15711300001","000000");
+            Long fictitiousId = info.newFictitious();
+
+            //PC积分兑换列表+1
+            //小程序积分商城 积分兑换商品+1
+            int PCtotalAft = jc.exchangePage(1,1,null,null,null).getInteger("total");
+            jc.appletLoginToken(pp.appletTocken);
+            int applettotalAft = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
+
+            Preconditions.checkArgument(PCtotalAft-PCtotalPre == 1, "新建虚拟积分商品后，PC积分兑换未增加1" );
+            Preconditions.checkArgument(applettotalAft-applettotalPre == 1, "新建虚拟积分商品后，小程序积分商城的积分兑换商品未增加1" );
+
+
+            /**
+             * 步骤二 小程序兑换
+             */
+
+            int exRecordPre = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
+            Long minePre = jc.appletHomePage().getLong("integral");
+            int detailPre = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
+
+            //小程序先登录再兑换 应成功
+            jc.appletSubmitExchange(fictitiousId,true);
+
+            //兑换成功结果校验
+            int exRecordAft = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
+            Long mineAft = jc.appletHomePage().getLong("integral");
+            int detailAft = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
+            Preconditions.checkArgument(exRecordAft - exRecordPre ==1,"小程序兑换记录未+1");
+            Preconditions.checkArgument(mineAft - minePre <0 ,"小程序我的积分未减少");
+            Preconditions.checkArgument(detailAft - detailPre ==1,"小程序个人积分详情记录未+1");
+
+            /**
+             * 步骤三 小程序再次兑换
+             */
+            //小程序再次兑换 应失败
+            int code = jc.appletSubmitExchange(fictitiousId,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"期待兑换失败1001，实际"+code);
+
+
+            jc.pcLogin("15711300001","000000");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC新建虚拟商品->小程序兑换");
+        }
+    }
 
 
 

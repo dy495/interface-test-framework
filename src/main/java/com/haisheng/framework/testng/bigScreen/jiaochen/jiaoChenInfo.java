@@ -1,6 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
 
@@ -265,6 +270,21 @@ public class jiaoChenInfo {
             }
             return exist;
         }
+    }
+
+    //新建虚拟积分商品
+    public Long newFictitious(){
+        Visitor visitor =new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
+
+        pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
+        ex.chkcode=true;
+        ex.id  = System.currentTimeMillis();
+        ex.exchange_goods_type = "FICTITIOUS";
+        ex.goods_id = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+        ex.is_limit=true;
+        ex.exchange_people_num = 1; // 每人只能兑换一次
+        jc.exchangeGoodCreat(ex);
+        return ex.id;
     }
 
 }

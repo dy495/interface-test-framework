@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -4445,7 +4446,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("exchange_price",ex.exchange_price);
         json1.put("exchange_num",ex.exchange_num);
         json1.put("is_limit",ex.is_limit);
-        json1.put("exchange_people_num",ex.exchange_people_num);
+        json1.put("exchange_people_num",ex.exchange_people_num); // 接口有问题
         json1.put("specification_list",ex.specification_list);
 
         return invokeApi(url,json1,ex.chkcode);
@@ -4760,6 +4761,87 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("postal_code",postal_code);
         return invokeApi(url,json1);
     }
+
+    /**
+     * @description :小程序实体商品提交订单
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletSubmitOrder(submitOrder or) {
+        String url = "/jiaochen/applet/granted/integral-mall/submit-order";
+        JSONObject json1=new JSONObject();
+        json1.put("commodity_id",or.commodity_id);
+        json1.put("specification_id",or.specification_id);
+        json1.put("buyer_message",or.buyer_message);
+        json1.put("sms_notify",or.sms_notify);
+        json1.put("commodity_num",or.commodity_num);
+        json1.put("district_code",or.district_code);
+        json1.put("address",or.address);
+        json1.put("receiver",or.receiver);
+        json1.put("receive_phone",or.receive_phone);
+        return invokeApi(url,json1,or.chkcode);
+    }
+
+    /**
+     * @description :小程序虚拟商品提交订单
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletSubmitExchange(Long id,Boolean chkcode) {
+        String url = "/jiaochen/applet/granted/integral-mall/integral-exchange";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1,chkcode);
+    }
+
+    /**
+     * @description :小程序 个人积分详情记录
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletIntegralRecord(Integer size,Object last_value,String type,String start_time,String end_time) {
+        String url = "/jiaochen/applet/granted/integral-mall/integral-record";
+        JSONObject json1=new JSONObject();
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+        json1.put("type",type);
+        json1.put("start_time",start_time);
+        json1.put("end_time",end_time);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :小程序 兑换记录
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletExchangeRecord(Integer size,Object last_value,String status) {
+        String url = "/jiaochen/applet/granted/integral-mall/exchange-record";
+        JSONObject json1=new JSONObject();
+        json1.put("size",size);
+        json1.put("last_value",last_value);
+        json1.put("status",status);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :小程序 订单详情
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletExchangeRecordDetail(Long id) {
+        String url = "/jiaochen/applet/granted/integral-mall/exchange-record-detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :小程序 确认收货
+     * @date :2021/1/29 14:00
+     **/
+    public JSONObject appletconfirmReceive(Long id) {
+        String url = "/jiaochen/applet/granted/integral-mall/confirm-receive";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        return invokeApi(url,json1);
+    }
+
 
 
     /**
