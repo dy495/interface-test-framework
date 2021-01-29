@@ -94,7 +94,12 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
-            appendFailReason(e.toString());
+            String failure = e.toString();
+            if (failure.contains("java.lang.NullPointerException")) {
+                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
+                failure = failure.replaceAll("java.lang.NullPointerException", "");
+            }
+            appendFailReason(failure);
         } finally {
             saveData("salesdemo门店的回放情况");
         }
