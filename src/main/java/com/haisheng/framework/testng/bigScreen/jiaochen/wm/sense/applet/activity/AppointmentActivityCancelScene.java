@@ -14,14 +14,14 @@ public class AppointmentActivityCancelScene extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-
+        object.put("id",id);
+        object.put("type",type);
         return object;
     }
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/voucher/detail";
+        return "/jiaochen/applet/granted/appointment/activity/cancel";
     }
-
     @Override
     public String getIpPort() {
         return null;

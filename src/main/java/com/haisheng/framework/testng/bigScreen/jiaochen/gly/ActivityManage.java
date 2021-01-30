@@ -697,20 +697,53 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<Long> ids=businessUtil.RegisterAppletIds(activityId);
             IScene scene = ManageRegisterApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
             visitor.invokeApi(scene,false).getString("message");
-            //查询是否获得此卡券(通过卡券码查询，看看能否有返回值)
+            //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher=su.getAppletVoucherInfo(voucherCode);
-            //小程序取消报名
+            //小程序取消报名 todo 活动中的type类型是什么呢？
+            businessUtil.activityCancelScene("",activityId);
+            //报名取消后获得此报名的状态
+            String activityStatus=businessUtil.appointmentActivityStatus(activityId);
+            //取消报名后卡券的状态为【已失效】
+            String voucherStatus=su.getAppletVoucherInfo(voucherCode).getStatus();
 
             Preconditions.checkArgument(status==ActivityStatusEnum.PASSED.getId(),"待审核的活动状态为："+ActivityStatusEnum.PASSED.getStatusName());
             Preconditions.checkArgument(statusPassed==ActivityStatusEnum.PASSED.getId(),"审核通过的活动状态为："+ActivityStatusEnum.PASSED.getStatusName());
             Preconditions.checkArgument(voucher!=null,"小程序报名通过没有获得此卡券");
+            Preconditions.checkArgument(activityStatus.equals(ActivityStatusEnum.CANCELED.getStatusName()),"小程序报名通过取消以后此卡券的状态为："+activityStatus);
+            Preconditions.checkArgument(voucherStatus.equals("已失效"),"取消活动以后此卡券的状态为："+voucherStatus);
+
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("");
+            saveData("创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动");
         }
     }
 
+
+    @Test
+    public void test(){
+        try{
+//            //获取一个卡券
+            List<Long> voucherId=businessUtil.getVoucherIds();
+            System.out.println("-----"+voucherId);
+//            //创建招募活动
+////            Long activityId=businessUtil.createRecruitActivity(278L,true,0,true);
+//            //创建裂变活动
+//            Long activityId=businessUtil.createFissionActivity(voucherId.get(0));
+//            System.err.println("----创建活动的ID为："+activityId);
+            //活动列表
+//            IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+//            JSONObject respon=visitor.invokeApi(scene);
+//            System.err.println("---------"+respon);
+
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+
+        }
+
+
+    }
 
 
 

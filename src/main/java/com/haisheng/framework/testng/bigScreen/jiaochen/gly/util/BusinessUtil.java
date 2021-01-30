@@ -10,15 +10,20 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleActivityRegisterScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.apache.commons.collections.list.TransformedList;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,13 +165,64 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取优惠券
+     * 获取进行中的优惠券
      */
     public Long getVoucherId(){
-
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 
         return voucherId;
+    }
+    /**
+     * 获取进行中的优惠券合集
+     */
+    public  List<Long> getWaitingWorkingVoucherIds(){
+        List<Long> voucherIds=new ArrayList<>();
+        List<String> name=new ArrayList<>();
+        IScene scene= VoucherFormPageScene.builder().page(1).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        System.err.println("======="+response);
+        int pages=response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            IScene scene1= VoucherFormPageScene.builder().page(page).size(10).build();
+            JSONArray list=visitor.invokeApi(scene1).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                Long voucherId=list.getJSONObject(i).getLong("id");
+                String voucherStatus=list.getJSONObject(i).getString("audit_status_name");
+                String invalidStatusName=list.getJSONObject(i).getString("invalid_status_name");
+                String voucherName=list.getJSONObject(i).getString("voucher_name");
+                System.err.println(voucherId+"---------"+voucherStatus+"---------"+invalidStatusName);
+                if(invalidStatusName.equals(VoucherStatusEnum.WORKING.getName())&&voucherStatus.equals("进行中")){
+                    voucherIds.add(voucherId);
+                }
+            }
+        }
+        return voucherIds;
+    }
+
+    /**
+     * 获取待审批的优惠券合集
+     */
+    public  List<Long> getVoucherIds(){
+        SupporterUtil su=new SupporterUtil(visitor);
+        List<Long> voucherIds=new ArrayList<>();
+        IScene scene= VoucherFormPageScene.builder().page(1).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        int pages=response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            IScene scene1= VoucherFormPageScene.builder().page(page).size(10).build();
+            JSONArray list=visitor.invokeApi(scene1).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                Long voucherId=list.getJSONObject(i).getLong("id");
+                String voucherStatus=list.getJSONObject(i).getString("audit_status_name");
+                String invalidStatusName=list.getJSONObject(i).getString("invalid_status_name");
+                String voucherName=list.getJSONObject(i).getString("voucher_name");
+                System.err.println(voucherId+"---------"+voucherStatus+"---------"+invalidStatusName);
+                if(voucherStatus.equals("审核中")&&invalidStatusName.equals("待审核")){
+                    voucherIds.add(voucherId);
+                }
+            }
+        }
+        return voucherIds;
     }
 
     /**
@@ -177,17 +233,18 @@ public class BusinessUtil {
      */
     public IScene createFissionActivityScene(Long voucherId) {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp=new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
         JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 2, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
         return FissionVoucherAddScene.builder()
-                .type(0)
+                .type(1)
                 .participationLimitType(0)
                 .receiveLimitType(0)
-                .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
-                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .title(pp.fissionVoucherName)
+                .rule(pp.rule)
                 .startDate(getStartDate())
                 .endDate(getEndDate())
                 .subjectType(supporterUtil.getSubjectType())
@@ -253,6 +310,7 @@ public class BusinessUtil {
     public IScene createRecruitActivityScene(Long voucherId, boolean award, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp=new PublicParameter();
         picList.add(supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -272,11 +330,10 @@ public class BusinessUtil {
         JSONObject voucherValid = getVoucherValid(1, "", "", 10);
         //创建招募活动-共有的--基础信息
         ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
-                .type(1)
+                .type(2)
                 .participationLimitType(0)
-                .receiveLimitType(0)
-                .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
-                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .title(pp.RecruitName)
+                .rule(pp.rule)
                 .startDate(getStartDate())
                 .endDate(getEndDate())
                 .subjectType(supporterUtil.getSubjectType())
@@ -287,7 +344,7 @@ public class BusinessUtil {
                 .applyEnd(getEndDate())
                 .isLimitQuota(true)
                 .quota(2)
-                .address(EnumDesc.MESSAGE_TITLE.getDesc())
+                .address(pp.address)
                 .registerInformationList(registerInformationList)
                 .successReward(true)
                 .rewardReceiveType(rewardReceiveType)
@@ -748,6 +805,48 @@ public class BusinessUtil {
         return message;
     }
 
+    /**
+     * 小程序-活动报名-取消报名
+     */
+    public void activityCancelScene(String type,Long id){
+        IScene scene = AppointmentActivityCancelScene.builder().id(id).type(type).build();
+        visitor.invokeApi(scene);
+    }
+
+    /**
+     * 根据活动ID返回活动的状态
+     */
+    public String appointmentActivityStatus(Long activityId){
+        JSONObject lastValue=null;
+        IScene scene= AppointmentActivityListScene.builder().lastValue(lastValue).size(100).build();
+        JSONObject response=visitor.invokeApi(scene);
+        String status="";
+        int total=response.getInteger("total");
+        int pages=total/100+1;
+        for(int page=0;page<pages;page++){
+            IScene scene1= AppointmentActivityListScene.builder().lastValue(lastValue).size(100).build();
+            JSONObject response1=visitor.invokeApi(scene1);
+            JSONArray list=response1.getJSONArray("list");
+           if(pages<=1){
+               for(int i=0;i<list.size();i++){
+                   Long id=list.getJSONObject(i).getLong("id");
+                   if(activityId.equals(id)){
+                       status=list.getJSONObject(i).getString("status");
+                   }
+
+               }
+           }else{
+               lastValue=response1.getJSONObject("last_value");
+               for(int i=0;i<list.size();i++){
+                   Long id=list.getJSONObject(i).getLong("id");
+                   if(activityId.equals(id)){
+                       status=list.getJSONObject(i).getString("status");
+                   }
+               }
+           }
+        }
+        return status;
+    }
 
 /**
  * ---------------------------------------------获取也买你返回值---------------------------------------------
