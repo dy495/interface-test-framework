@@ -521,7 +521,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                     int a = s.compareTo(start_time);
                     int b = s.compareTo(end_time);
                     checkArgument(tips.contains("现场巡店")||tips.contains("远程巡店"), "定检巡查" + "!=图片返回的类型" + tips);
-                    checkArgument(a>=0&&b<=0, "定检巡查+日期" + "!=图片返回日期" + date_time);
+                    checkArgument(a>=0&&b<=0, "手动留痕+日期" + "!=图片返回日期" + date_time);
                     checkArgument(title.contains(info.shop_id_01_chin), "输入的门店名称" + "!=返回的门店名称" + title);
                     checkArgument(isAbnormal==0, "异常图片" + "!=图片返回的状态" + isAbnormal);
                 }
