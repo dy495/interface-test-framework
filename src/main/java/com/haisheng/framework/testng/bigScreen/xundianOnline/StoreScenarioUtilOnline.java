@@ -1683,6 +1683,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
     /**
      * @description: 20.2 获取新增风控规则树结构
      * @author: qingqing
@@ -1923,6 +1925,9 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
+
     /**
      * @description:13.4.1 风控告警事件列表
      * @author: qingqing
@@ -1950,4 +1955,44 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * @description:23.2 图片中心列表
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject picturePage(String patrol_type, String start_time, String end_time, String shop_name, Integer is_abnormal, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/remark/picture/page";
+        String json =
+                "{";
+        if (patrol_type != "") {
+            json = json + "\"patrol_type\" :\"" + patrol_type + "\",\n";
+        }
+        if (start_time != "") {
+            json = json + "\"start_time\" :\"" + start_time + "\",\n";
+        }
+        if (end_time != "") {
+            json = json + "\"end_time\" :\"" + end_time + "\",\n";
+        }
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (is_abnormal != null) {
+            json = json + "\"is_abnormal\" :" + is_abnormal + ",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
 }
+
+
