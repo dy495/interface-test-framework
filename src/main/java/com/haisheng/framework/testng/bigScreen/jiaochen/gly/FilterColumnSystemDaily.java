@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -574,7 +575,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :小程序客户查询-筛选栏单项查询
+     * @description :小程序客户查询-筛选栏单项查询--增加vip_type筛选项
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_weChatSleCustomerManageFilter", dataProviderClass = Constant.class)
@@ -643,12 +644,15 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.customer_phone = data.getString(flag[0][1].toString());
+                variable.vip_type = data.getString(flag[1][1].toString());
                 variable.page = "1";
                 variable.size = "10";
                 variable.shop_id = "-1";
                 //全部筛选之后的结果
                 JSONObject result = jc.weChatSleCustomerManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.vip_type), "参数全部输入的查询的" + variable.vip_type + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+
             } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
             }
@@ -711,7 +715,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :预约记录-筛选栏单项查询
+     * @description :V2.0预约记录-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class)
@@ -802,19 +806,20 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.plate_number = data.getString(flag[0][1].toString());
-                variable.customer_manager = data.getString(flag[1][1].toString());
+                variable.service_sale_id = data.getString(flag[1][1].toString());
                 variable.shop_id = data.getString(flag[2][1].toString());
                 variable.customer_name = data.getString(flag[3][1].toString());
                 variable.confirm_status = status;
                 variable.customer_phone = data.getString(flag[5][1].toString());
                 variable.is_overtime = data.getString(flag[6][1].toString());
+                variable.type= data.getString(flag[7][1].toString());
                 variable.page = "1";
                 variable.size = "10";
 
                 //全部筛选之后的结果
                 JSONObject result = jc.appointmentRecordManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.plate_number), "参数全部输入的查询的" + variable.plate_number + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_manager), "参数全部输入的查询的" + variable.customer_manager + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.service_sale_id), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(variable.shop_id), "参数全部输入的查询的" + variable.shop_id + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[3][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[4][1].toString()).contains(confirmStatus), "参数全部输入的查询的" + result.getString(flag[4][1].toString()) + "与列表信息的第一行的" + confirmStatus + "不一致");
@@ -846,7 +851,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.plate_number = data.getString(flag[0][1].toString());
-                variable.customer_manager = data.getString(flag[1][1].toString());
+                variable.service_sale_id = data.getString(flag[1][1].toString());
                 variable.shop_id = data.getString(flag[2][1].toString());
                 variable.customer_name = data.getString(flag[3][1].toString());
                 variable.confirm_status = status;
@@ -856,7 +861,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 //全部筛选之后的结果
                 JSONObject result = jc.appointmentRecordManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.plate_number), "参数全部输入的查询的" + variable.plate_number + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_manager), "参数全部输入的查询的" + variable.customer_manager + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.service_sale_id), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(variable.shop_id), "参数全部输入的查询的" + variable.shop_id + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[3][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[4][1].toString()).contains(confirmStatus), "参数全部输入的查询的" + result.getString(flag[4][1].toString()) + "与列表信息的第一行的" + confirmStatus + "不一致");
@@ -1055,22 +1060,22 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
-//                variable.subject_name=data.getString(flag[0][1].toString());
+                variable.subject_name = data.getString(flag[0][1].toString());
                 variable.voucher_name = data.getString(flag[1][1].toString());
-                variable.creator = data.getString(flag[2][1].toString());
-                variable.is_diff = data.getString(flag[3][1].toString());
-                variable.is_self_verification = data.getString(flag[4][1].toString());
-                variable.voucher_status = data.getString(flag[5][1].toString());
+                variable.creator_name = data.getString(flag[2][1].toString());
+                variable.creator_account = data.getString(flag[3][1].toString());
+                variable.voucher_status = data.getString(flag[4][1].toString());
+                variable.voucher_type = data.getString(flag[5][1].toString());
                 variable.page = "1";
                 variable.size = "10";
                 //全部筛选之后的结果
                 JSONObject result = jc.voucherFormFilterManage(variable).getJSONArray("list").getJSONObject(0);
-//                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.subject_name),"参数全部输入的查询的"+variable.subject_name+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.subject_name),"参数全部输入的查询的"+variable.subject_name+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.voucher_name), "参数全部输入的查询的" + variable.voucher_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.creator), "参数全部输入的查询的" + variable.creator + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.is_diff), "参数全部输入的查询的" + variable.is_diff + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.is_self_verification), "参数全部输入的查询的" + variable.is_self_verification + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_status), "参数全部输入的查询的" + variable.voucher_status + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.creator_name), "参数全部输入的查询的" + variable.creator_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.creator_account), "参数全部输入的查询的" + variable.creator_account + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.voucher_status), "参数全部输入的查询的" + variable.voucher_status + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_type), "参数全部输入的查询的" + variable.voucher_type + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
             } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
             }
@@ -1094,19 +1099,22 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
-//                variable.subject_name=data.getString(flag[0][1].toString());
+//                variable.subject_name = data.getString(flag[0][1].toString());
                 variable.voucher_name = data.getString(flag[1][1].toString());
-                variable.creator = data.getString(flag[2][1].toString());
-                variable.is_self_verification = data.getString(flag[4][1].toString());
+                variable.creator_name = data.getString(flag[2][1].toString());
+                variable.creator_account = data.getString(flag[3][1].toString());
+//                variable.voucher_status = data.getString(flag[4][1].toString());
+//                variable.voucher_type = data.getString(flag[5][1].toString());
                 variable.page = "1";
                 variable.size = "10";
                 //全部筛选之后的结果
                 JSONObject result = jc.voucherFormFilterManage(variable).getJSONArray("list").getJSONObject(0);
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.subject_name),"参数全部输入的查询的"+variable.subject_name+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.voucher_name), "参数全部输入的查询的" + variable.voucher_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.creator), "参数全部输入的查询的" + variable.creator + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.is_self_verification), "参数全部输入的查询的" + variable.is_diff + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
-            } else {
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.creator_name), "参数全部输入的查询的" + variable.creator_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.creator_account), "参数全部输入的查询的" + variable.creator_account + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.voucher_status), "参数全部输入的查询的" + variable.voucher_status + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_type), "参数全部输入的查询的" + variable.voucher_type + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致"); } else {
                 Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
             }
 
@@ -3371,31 +3379,795 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :小程序预约保养.取消保养,确认保养,数据一致性比较
-     * @date :2020/11/27
+     * @description :V2.0-智能提醒列表
+     *  item 提醒类型
+     * @date :2021-2-1
      **/
-    @Test(enabled = false)
-    public void appletAppointmentMaintain() {
+    @Test
+    public void intelligentRemindList(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response=jc.remindPage("1","10","","","");
+            String item=response.getJSONArray("list").getJSONObject(0).getString("item");
+            JSONObject response1=jc.remindPage("1","10","","item",item);
+            int pages=response1.getInteger("pages");
+            JSONArray list1=response1.getJSONArray("list");
+           if(list1.size()>0){
+               for(int page=1;page<=pages;page++){
+                   JSONArray list=jc.remindPage(String.valueOf(page),"10","","item",item).getJSONArray("list");
+                   for(int i=0;i<list.size();i++){
+                           String itemCheck=list.getJSONObject(i).getString("item");
+                           Preconditions.checkArgument(itemCheck.equals(item),"智能提醒列表中的第"+(i+1)+"行的提醒类型与搜索的内容不一致，为："+itemCheck);
+                   }
+               }
+           }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-智能提醒筛选栏校验");
+        }
+    }
+
+    /**
+     * @description :V2.0-洗车管理列表--单项搜索
+     * @date :2021-2-1
+     **/
+    @Test(dataProvider = "SELECT_washCarManagerFilter", dataProviderClass = Constant.class)
+    public void washCarManagerPageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response = jc.washCarManagerPage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.washCarManagerPage(shopId, "1", "10", pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.washCarManagerPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "洗车管理列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "洗车管理列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-智能提醒筛选栏校验");
+        }
+    }
+
+    /**
+     * @description :V2.0-洗车管理列表--筛选栏全部填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void washCarManagerPageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.washCarManagerListFilter_pram();
+            WashCarManagerVariable washCarManagerVariable=new WashCarManagerVariable();
+            JSONArray res = jc.washCarManagerPage("","1","10","","").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                washCarManagerVariable.customerName = data.getString(flag[0][1].toString());
+                washCarManagerVariable.customerVipType = data.getString(flag[1][1].toString());
+                washCarManagerVariable.shopId = data.getString(flag[2][1].toString());
+                washCarManagerVariable.phone = data.getString(flag[3][1].toString());
+                washCarManagerVariable.page = "1";
+                washCarManagerVariable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result =  jc.washCarManagerPage(washCarManagerVariable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(washCarManagerVariable.customerName), "参数全部输入的查询的" + washCarManagerVariable.customerName + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(washCarManagerVariable.customerVipType), "参数全部输入的查询的" + washCarManagerVariable.customerVipType + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(washCarManagerVariable.shopId), "参数全部输入的查询的" + washCarManagerVariable.shopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(washCarManagerVariable.phone), "参数全部输入的查询的" + washCarManagerVariable.phone + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
+                 } else {
+                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-洗车管理列表，筛选栏全部填写查询");
+        }
+    }
+
+    /**
+     * @description :V2.0-洗车管理列表--筛选栏多选查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void washCarManagerPageAllFielter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.washCarManagerListFilter_pram();
+            WashCarManagerVariable washCarManagerVariable=new WashCarManagerVariable();
+            JSONArray res = jc.washCarManagerPage("","1","10","","").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                washCarManagerVariable.customerName = data.getString(flag[0][1].toString());
+//                washCarManagerVariable.customerVipType = data.getString(flag[1][1].toString());
+//                washCarManagerVariable.shopId = data.getString(flag[2][1].toString());
+                washCarManagerVariable.phone = data.getString(flag[3][1].toString());
+                washCarManagerVariable.page = "1";
+                washCarManagerVariable.size = "10";
+                //多选后筛选之后的结果
+                JSONObject result =  jc.washCarManagerPage(washCarManagerVariable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(washCarManagerVariable.customerName), "参数全部输入的查询的" + washCarManagerVariable.customerName + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
+//                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(washCarManagerVariable.customerVipType), "参数全部输入的查询的" + washCarManagerVariable.customerVipType + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
+//                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(washCarManagerVariable.shopId), "参数全部输入的查询的" + washCarManagerVariable.shopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(washCarManagerVariable.phone), "参数全部输入的查询的" + washCarManagerVariable.phone + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-洗车管理列表，筛选栏多选填写查询");
+        }
+    }
+
+    /**
+     * @description :V2.0-洗车管理列表--筛选栏不填写查询
+     * @date :2021-2-2
+     **/
+    @Test()
+    public void washCarManagerPageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.washCarManagerPage("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-洗车管理列表，筛选栏不填写校验");
+        }
+    }
+
+    /**
+     * @description :V2.0-调整洗车次数--单项搜索
+     * @date :2021-2-2
+     **/
+    @Test(dataProvider = "SELECT_adjustNumberRecordFilter", dataProviderClass = Constant.class)
+    public void AdjustNumberRecordOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response = jc.adjustNumberRecord(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.adjustNumberRecord(shopId, "1", "10", pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.adjustNumberRecord("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "调整洗车次数按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-调整洗车次数--单项搜索");
+        }
+    }
+
+    /**
+     * @description :V2.0-调整洗车次数--筛选栏全部填写查询
+     * @date :2021-2-2
+     **/
+    @Test()
+    public void AdjustNumberRecordAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.adjustNumberRecordFilter_pram();
+            AdjustNumberRecordVariable adjustNumberRecordVariable=new AdjustNumberRecordVariable();
+            JSONArray res = jc.adjustNumberRecord("","1","10","","").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                adjustNumberRecordVariable.customerName = data.getString(flag[0][1].toString());
+                adjustNumberRecordVariable.customerPhone = data.getString(flag[1][1].toString());
+                adjustNumberRecordVariable.adjustShopId = data.getString(flag[2][1].toString());
+                adjustNumberRecordVariable.customerType = data.getString(flag[3][1].toString());
+                adjustNumberRecordVariable.page = "1";
+                adjustNumberRecordVariable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result =  jc.adjustNumberRecord(adjustNumberRecordVariable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(adjustNumberRecordVariable.customerName), "参数全部输入的查询的" + adjustNumberRecordVariable.customerName + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(adjustNumberRecordVariable.customerPhone), "参数全部输入的查询的" + adjustNumberRecordVariable.customerPhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(adjustNumberRecordVariable.adjustShopId), "参数全部输入的查询的" + adjustNumberRecordVariable.adjustShopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(adjustNumberRecordVariable.customerType), "参数全部输入的查询的" + adjustNumberRecordVariable.customerType + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-洗车管理列表，筛选栏全部填写查询");
+        }
+    }
+
+    /**
+     * @description :V2.0-调整洗车次数--筛选栏多项填写查询
+     * @date :2021-2-2
+     **/
+    @Test()
+    public void AdjustNumberRecordSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            Object[][] flag = Constant.adjustNumberRecordFilter_pram();
+            AdjustNumberRecordVariable adjustNumberRecordVariable=new AdjustNumberRecordVariable();
+            JSONArray res = jc.adjustNumberRecord("","1","10","","").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                adjustNumberRecordVariable.customerName = data.getString(flag[0][1].toString());
+                adjustNumberRecordVariable.customerPhone = data.getString(flag[1][1].toString());
+//                adjustNumberRecordVariable.adjustShopId = data.getString(flag[2][1].toString());
+//                adjustNumberRecordVariable.customerType = data.getString(flag[3][1].toString());
+                adjustNumberRecordVariable.page = "1";
+                adjustNumberRecordVariable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result =  jc.adjustNumberRecord(adjustNumberRecordVariable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(adjustNumberRecordVariable.customerName), "参数全部输入的查询的" + adjustNumberRecordVariable.customerName + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
+                Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(adjustNumberRecordVariable.customerPhone), "参数全部输入的查询的" + adjustNumberRecordVariable.customerPhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
+//                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(adjustNumberRecordVariable.adjustShopId), "参数全部输入的查询的" + adjustNumberRecordVariable.adjustShopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(adjustNumberRecordVariable.customerType), "参数全部输入的查询的" + adjustNumberRecordVariable.customerType + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-洗车管理列表，筛选栏多项填写查询");
+        }
+    }
+
+    /**
+     * @description :V2.0-调整次数记录-筛选栏不填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void AdjustNumberRecordEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.adjustNumberRecord("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-调整次数记录-筛选栏不填写查询");
+        }
+    }
+
+    /**
+     * @deprecated V2.0-优惠券领取记录--筛选栏单项搜索
+     * @date :2021-2-2
+     */
+    @Test(dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
+    public void voucherManageSendRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取APP的今日任务－全部预约
-            Long allAppointmentBefore = jc.appTodayTask().getLong("all_appointment");
-            //小程序预约保养
-            JSONObject respon = jc.appointmentMaintain(123L, "", 123, 123, "", "");
-            //获取APP的今日任务－全部预约,数据应该+1
-            Long allAppointmentAfter1 = jc.appTodayTask().getLong("all_appointment");
-
-            Preconditions.checkArgument(allAppointmentAfter1 == allAppointmentBefore + 1, "预约保养前APP全部预约为" + allAppointmentBefore + "  预约保养后的全部预约为" + allAppointmentAfter1 + "  数据有问题");
-            //取消预约保养
-            jc.appointmentHandle(123L, 10,10L);
-            //获取APP的今日任务－全部预约,数据应该-1
-            Long allAppointmentAfter2 = jc.appTodayTask().getLong("all_appointment");
-
-            Preconditions.checkArgument(allAppointmentAfter2 == allAppointmentAfter1 - 1, "保养取消前APP全部预约为" + allAppointmentAfter1 + "  取消保养后的全部预约为" + allAppointmentAfter2 + "  数据有问题");
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject response = jc.voucherManageSendRecord(shopId, "1", "10",id, "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.voucherManageSendRecord(shopId, "1", "10",id, pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.voucherManageSendRecord("", String.valueOf(page),"10",id, pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "优惠券领取记录按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+            }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序预约保养.取消保养,确认保养,数据一致性比较");
+            saveData("V2.0-优惠券领取记录单项查询，结果校验");
         }
     }
+
+    /**
+     *@deprecated V2.0-优惠券领取记录--筛选栏全部填写搜索
+     *  @date :2021-2-2
+     */
+    public void voucherManageSendRecordAllFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
+            VoucherManageSendVariable variable = new VoucherManageSendVariable();
+            JSONArray res = jc.voucherManageSendRecord("", "1", "10", "","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.receiver = data.getString(flag[0][1].toString());
+                variable.receivePhone = data.getString(flag[1][1].toString());
+                variable.useStatus = data.getString(flag[2][1].toString());
+                variable.customerLabel = data.getString(flag[3][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                variable.id=id;
+                //全部筛选之后的结果
+                JSONObject result = jc.voucherManageSendRecord(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数全部输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.receivePhone), "参数全部输入的查询的" + variable.receivePhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.useStatus), "参数全部输入的查询的" + variable.useStatus + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.customerLabel), "参数全部输入的查询的" + variable.customerLabel + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+               } else {
+                Preconditions.checkArgument(res.size() == 0, "优惠券领取记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0-优惠券领取记录全部查询，结果校验");
+        }
+    }
+
+    /**
+     * @deprecated V2.0-优惠券领取记录--筛选栏多项填写搜索
+     *  @date :2021-2-2
+     */
+    public void voucherManageSendRecordSomeFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
+            VoucherManageSendVariable variable = new VoucherManageSendVariable();
+            JSONArray res = jc.voucherManageSendRecord("", "1", "10","", "", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.receiver = data.getString(flag[0][1].toString());
+                variable.receivePhone = data.getString(flag[1][1].toString());
+//                variable.useStatus = data.getString(flag[2][1].toString());
+//                variable.customerLabel = data.getString(flag[7][1].toString());
+                variable.id=id;
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.voucherManageSendRecord(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数全部输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.receivePhone), "参数全部输入的查询的" + variable.receivePhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.useStatus), "参数全部输入的查询的" + variable.useStatus + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[7][1])).contains(variable.customerLabel), "参数全部输入的查询的" + variable.customerLabel + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "优惠券领取记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0-优惠券领取记录全部查询，结果校验");
+        }
+    }
+    /**
+     * @description :V2.0-优惠券领取记录--筛选栏不填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void voucherManageSendRecordEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray res = jc.voucherManageSendRecord("","1","10",id,"","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-优惠券领取记录--筛选栏不填写查询");
+        }
+    }
+
+    /**
+     * @deprecated V2.0-优惠券作废记录--筛选栏单项搜索
+     * @date :2021-2-2
+     */
+    @Test(dataProvider = "SELECT_voucherInvalidPageFilter", dataProviderClass = Constant.class)
+    public void voucherInvalidPageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject response = jc.voucherInvalidPage(shopId, "1", "10",id, "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.voucherInvalidPage(shopId, "1", "10",id,pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.voucherInvalidPage("", String.valueOf(page),"10",id, pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "优惠券作废记录按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0-优惠券作废记录--筛选栏单项搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0-优惠券作废记录--筛选栏全部填写搜索
+     * @date :2021-2-2
+     */
+    public void voucherInvalidPageAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            Object[][] flag = Constant.voucherInvalidPageFilter_pram();
+            VoucherInvalidPageVariable variable = new VoucherInvalidPageVariable();
+            JSONArray res = jc.voucherInvalidPage("", "1", "10", "","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.receiver = data.getString(flag[0][1].toString());
+                variable.receivePhone = data.getString(flag[1][1].toString());
+                variable.invalidName = data.getString(flag[2][1].toString());
+                variable.invalidPhone = data.getString(flag[3][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                variable.id=id;
+                //全部筛选之后的结果
+                JSONObject result = jc.voucherInvalidPage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.receivePhone), "参数输入的查询的" + variable.receivePhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.invalidName), "参数输入的查询的" + variable.invalidName + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.invalidPhone), "参数输入的查询的" + variable.invalidPhone + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0-优惠券作废记录--筛选栏全部填写搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0-优惠券作废记录--筛选栏多项填写搜索
+     * @date :2021-2-2
+     */
+    public void voucherInvalidPageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            Object[][] flag = Constant.voucherInvalidPageFilter_pram();
+            VoucherInvalidPageVariable variable = new VoucherInvalidPageVariable();
+            JSONArray res = jc.voucherInvalidPage("", "1", "10", "","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+//                variable.receiver = data.getString(flag[0][1].toString());
+//                variable.receivePhone = data.getString(flag[1][1].toString());
+                variable.invalidName = data.getString(flag[2][1].toString());
+                variable.invalidPhone = data.getString(flag[3][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                variable.id=id;
+                //全部筛选之后的结果
+                JSONObject result = jc.voucherInvalidPage(variable).getJSONArray("list").getJSONObject(0);
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.receivePhone), "参数输入的查询的" + variable.receivePhone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.invalidName), "参数输入的查询的" + variable.invalidName + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.invalidPhone), "参数输入的查询的" + variable.invalidPhone + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0-优惠券作废记录--筛选栏多项填写搜索");
+        }
+    }
+
+    /**
+     * @description :V2.0-优惠券作废记录--筛选栏不填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void voucherInvalidPageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
+            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONArray res = jc.voucherInvalidPage("","1","10",id,"","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0-优惠券作废记录--筛选栏不填写查询");
+        }
+    }
+
+    /**
+     * @deprecated V2.0道路救援--筛选栏单项搜索
+     * @date :2021-2-2
+     */
+    @Test(dataProvider = "SELECT_rescuePageFilter", dataProviderClass = Constant.class)
+    public void rescuePageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.rescuePage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.rescuePage(shopId, "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.rescuePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "道路救援列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "道路救援列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0道路救援--筛选栏单项搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0道路救援列表记录--筛选栏全部填写搜索
+     * @date :2021-2-2
+     */
+    public void rescuePageAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.rescuePageFilter_pram();
+            RescuePageVariable variable = new RescuePageVariable();
+            JSONArray res = jc.rescuePage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.customerName = data.getString(flag[0][1].toString());
+                variable.vipType = data.getString(flag[1][1].toString());
+                variable.customerPhone = data.getString(flag[2][1].toString());
+                variable.shopId = data.getString(flag[3][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.rescuePage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.customerName),"参数输入的查询的"+ variable.customerName+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.vipType), "参数输入的查询的" + variable.vipType + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "道路救援列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0道路救援列表记录--筛选栏全部填写搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0道路救援列表记录--筛选栏多项填写搜索
+     * @date :2021-2-2
+     */
+    public void rescuePageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.rescuePageFilter_pram();
+            RescuePageVariable variable = new RescuePageVariable();
+            JSONArray res = jc.rescuePage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.customerName = data.getString(flag[0][1].toString());
+                variable.vipType = data.getString(flag[1][1].toString());
+//                variable.customerPhone = data.getString(flag[2][1].toString());
+//                variable.shopId = data.getString(flag[3][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.rescuePage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.customerName),"参数输入的查询的"+ variable.customerName+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.vipType), "参数输入的查询的" + variable.vipType + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0道路救援列表记录--筛选栏多项填写搜索");
+        }
+    }
+    /**
+     * @description :V2.0道路救援列表记录--筛选栏不填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void rescuePageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.rescuePage("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0道路救援列表记录--筛选栏不填写查询");
+        }
+    }
+
+    /**
+     * @deprecated V2.0评价列表--筛选栏单项搜索
+     * @date :2021-2-2
+     */
+    @Test(dataProvider = "SELECT_evaluatePageFilter", dataProviderClass = Constant.class)
+    public void evaluatePageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.evaluatePage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.evaluatePage(shopId, "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "评价列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "评价列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0评价列表--筛选栏单项搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0评价列表--筛选栏全部填写搜索
+     * @date :2021-2-2
+     */
+    public void evaluatePageAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.evaluatePageFilter_pram();
+            EvaluatePageVariable variable = new EvaluatePageVariable();
+            JSONArray res = jc.evaluatePage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.plateNumber = data.getString(flag[0][1].toString());
+                variable.serviceSaleId = data.getString(flag[1][1].toString());
+                variable.evaluateType = data.getString(flag[2][1].toString());
+                variable.shopId = data.getString(flag[3][1].toString());
+                variable.customerName = data.getString(flag[4][1].toString());
+                variable.score = data.getString(flag[5][1].toString());
+                variable.isFollowUp = data.getString(flag[6][1].toString());
+                variable.customerPhone = data.getString(flag[7][1].toString());
+                variable.isHaveMsg = data.getString(flag[8][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.evaluatePage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.plateNumber),"参数输入的查询的"+ variable.plateNumber+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.serviceSaleId), "参数输入的查询的" + variable.serviceSaleId + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.evaluateType), "参数输入的查询的" + variable.evaluateType + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(  variable.customerName),"参数输入的查询的"+ variable.customerName+"与列表信息的第一行的"+result.getString(flag[4][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.score), "参数输入的查询的" + variable.score + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[6][1])).contains(variable.isFollowUp), "参数输入的查询的" + variable.isFollowUp + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[7][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[7][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[8][1])).contains(variable.isHaveMsg), "参数输入的查询的" + variable.isHaveMsg + "与列表信息的第一行的" + result.getString(flag[8][1].toString()) + "不一致");
+
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "道路救援列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0评价列表--筛选栏全部填写搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0评价列表--筛选栏多项填写搜索
+     * @date :2021-2-2
+     */
+    public void evaluatePageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.evaluatePageFilter_pram();
+            EvaluatePageVariable variable = new EvaluatePageVariable();
+            JSONArray res = jc.evaluatePage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.plateNumber = data.getString(flag[0][1].toString());
+                variable.serviceSaleId = data.getString(flag[1][1].toString());
+                variable.evaluateType = data.getString(flag[2][1].toString());
+                variable.shopId = data.getString(flag[3][1].toString());
+                variable.customerName = data.getString(flag[4][1].toString());
+                variable.score = data.getString(flag[5][1].toString());
+//                variable.isFollowUp = data.getString(flag[6][1].toString());
+//                variable.customerPhone = data.getString(flag[7][1].toString());
+//                variable.isHaveMsg = data.getString(flag[8][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //筛选之后的结果
+                JSONObject result = jc.evaluatePage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.plateNumber),"参数输入的查询的"+ variable.plateNumber+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.serviceSaleId), "参数输入的查询的" + variable.serviceSaleId + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.evaluateType), "参数输入的查询的" + variable.evaluateType + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(  variable.customerName),"参数输入的查询的"+ variable.customerName+"与列表信息的第一行的"+result.getString(flag[4][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.score), "参数输入的查询的" + variable.score + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[6][1])).contains(variable.isFollowUp), "参数输入的查询的" + variable.isFollowUp + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[7][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[7][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[8][1])).contains(variable.isHaveMsg), "参数输入的查询的" + variable.isHaveMsg + "与列表信息的第一行的" + result.getString(flag[8][1].toString()) + "不一致");
+
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "评价列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0评价列表--筛选栏多项填写搜索");
+        }
+    }
+
+    /**
+     * @description :V2.0评价列表记录--筛选栏不填写查询
+     * @date :2021-2-1
+     **/
+    @Test()
+    public void evaluatePageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.evaluatePage("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0评价列表记录--筛选栏不填写查询");
+        }
+    }
+
+    /**
+     * @deprecated V2.0商城套餐列表--筛选栏单项搜索
+     * @date :2021-2-2
+     */
+    @Test(dataProvider = "SELECT_storeCommodityPageFilter", dataProviderClass = Constant.class)
+    public void storeCommodityPageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.storeCommodityPage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.storeCommodityPage(shopId, "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.storeCommodityPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "商城套餐列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "商城套餐列表-系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0商城套餐列表--筛选栏单项搜索");
+        }
+    }
+
+
+
+
+
 }

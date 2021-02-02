@@ -60,11 +60,12 @@ public class Constant {
     public static Object[][] weChatSleCustomerManage_pram() {
         return new String[][]{
                 {"customer_phone","customer_phone"},
+                {"vip_type","vip_type"}
         };
     }
 
     /**
-     * @description:预约记录列表-筛选栏
+     * @description:V2.0预约记录列表-筛选栏
      * @author: gly
      * @time: 2020-11-24
      */
@@ -72,7 +73,7 @@ public class Constant {
     public static Object[][] appointmentRecordFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
-                {"customer_manager", "customer_manager"},
+                {"service_sale_id", "service_sale_id"},
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"confirm_status", "appointment_status_name"},
@@ -106,10 +107,10 @@ public class Constant {
         return new String[][]{
                 {"subject_name", "subject_name"},
                 {"voucher_name", "voucher_name"},
-                {"creator", "creator"},
-                {"is_diff", "is_diff"},
-                {"is_self_verification","is_self_verification"},
-                {"voucher_status","invalid_status"}
+                {"creator_name", "creator_name"},
+                {"creator_account", "creator_account"},
+                {"voucher_status","voucher_status"},
+                {"voucher_type","voucher_type"}
 
         };
     }
@@ -371,5 +372,152 @@ public class Constant {
 
         };
     }
+    /**
+     * @description:v2.0-洗车管理列表-筛选栏
+     * @author: gly
+     * @time: 2020-2-1
+     */
+    @DataProvider(name = "SELECT_washCarManagerFilter")
+    public static Object[][] washCarManagerListFilter_pram(){
+        return new String[][]{
+                {"customer_name", "customer_name"},
+                {"customer_vip_type", "customer_vip_type"},
+//                {"wash_start_time", "wash_car_date"},
+//                {"wash_end_time", "wash_car_date"},
+                {"shop_id", "shop_name"},
+                {"phone", "phone"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-调整洗车记录-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_adjustNumberRecordFilter")
+    public static Object[][] adjustNumberRecordFilter_pram(){
+        return new String[][]{
+                {"customer_name", "customer_name"},
+                {"customer_phone", "customer_phone"},
+//                {"adjust_start_time", "adjust_start_time"},
+//                {"adjust_end_time", "adjust_end_time"},
+                {"adjust_shop_id", "adjust_shop_id"},
+                {"customer_type", "customer_type"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-优惠券领取记录-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_voucherManageSendRecordFilter")
+    public static Object[][] voucherManageSendRecordFilter_pram(){
+        return new String[][]{
+                {"receiver", "receiver"},
+                {"receive_phone", "receive_phone"},
+                {"use_status", "use_status"},
+//                {"start_time", "start_time"},
+//                {"end_time", "end_time"},
+//                {"use_start_time", "use_start_time"},
+//                {"use_end_time", "use_end_time"},
+                {"customer_label", "customer_label"},
+                {"id","id"},
+
+
+        };
+    }
+
+    /**
+     * @description:v2.0-优惠券作废记录-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_voucherInvalidPageFilter")
+    public static Object[][] voucherInvalidPageFilter_pram(){
+        return new String[][]{
+                {"receiver", "receiver"},
+                {"receive_phone", "receive_phone"},
+//                {"start_time", "start_time"},
+//                {"end_time", "end_time"},
+                {"invalid_name", "invalid_name"},
+                {"invalid_phone", "invalid_phone"},
+//                {"invalid_start_time", "invalid_start_time"},
+//                {"invalid_end_time", "invalid_end_time"},
+                {"id","id"},
+
+
+        };
+    }
+    /**
+     * @description:v2.0-PC道路救援-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_rescuePageFilter")
+    public static Object[][] rescuePageFilter_pram(){
+        return new String[][]{
+                {"customer_name", "customer_name"},
+                {"vip_type", "vip_type"},
+                {"customer_phone", "customer_phone"},
+                {"shop_id", "shop_id"},
+//                {"dial_start", "dial_start"},
+//                {"dial_end", "dial_end"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC评价列表-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_evaluatePageFilter")
+    public static Object[][] evaluatePageFilter_pram(){
+        return new String[][]{
+                {"plate_number", "plate_number"},
+                {"service_sale_id", "service_sale_id"},
+                {"evaluate_type", "evaluate_type"},
+                {"shop_id", "shop_id"},
+                {"customer_name", "customer_name"},
+                {"score", "score"},
+                {"is_follow_up", "is_follow_up"},
+                {"customer_phone", "customer_phone"},
+                {"is_have_msg", "is_have_msg"},
+//                {"source_create_start", "source_create_start"},
+//                {"source_create_end", "source_create_end"},
+//                {"evaluate_start", "evaluate_start"},
+//                {"evaluate_end", "evaluate_end"},
+
+
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC商城套餐-筛选栏
+     * @author: gly
+     * @time: 2020-2-2
+     */
+    @DataProvider(name = "SELECT_storeCommodityPageFilter")
+    public static Object[][] storeCommodityPageFilter_pram(){
+        return new String[][]{
+                {"commodity_name", "commodity_name"},
+                {"start_create_date", "start_create_date"},
+                {"end_create_date", "end_create_date"},
+
+        };
+    }
+
+
+
+
+
+
+
+
+
 
 }

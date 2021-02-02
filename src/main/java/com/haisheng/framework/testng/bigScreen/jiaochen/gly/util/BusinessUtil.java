@@ -808,8 +808,8 @@ public class BusinessUtil {
     /**
      * 小程序-活动报名-取消报名
      */
-    public void activityCancelScene(String type,Long id){
-        IScene scene = AppointmentActivityCancelScene.builder().id(id).type(type).build();
+    public void activityCancelScene(Long id){
+        IScene scene = AppointmentActivityCancelScene.builder().id(id).build();
         visitor.invokeApi(scene);
     }
 

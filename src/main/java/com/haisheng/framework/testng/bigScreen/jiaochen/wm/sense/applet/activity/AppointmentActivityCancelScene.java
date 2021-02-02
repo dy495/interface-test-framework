@@ -9,13 +9,11 @@ import lombok.Builder;
 @Builder
 public class AppointmentActivityCancelScene extends BaseScene {
     private  final Long id;
-    private  final String type;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("id",id);
-        object.put("type",type);
         return object;
     }
     @Override

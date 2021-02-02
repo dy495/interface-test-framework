@@ -2089,7 +2089,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:小程序客户管理列表
+     * @description:V2.0小程序客户管理列表
      * @time: 2020-11-25
      */
     public JSONObject weChatSleCustomerManage(weChatSleCustomerVariable variable) {
@@ -2101,6 +2101,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("create_date", variable.end_time);
         json.put("active_type", variable.start_time);
         json.put("customer_phone", variable.customer_phone);
+        json.put("vip_type", variable.vip_type);
 
         return invokeApi(url, json);
     }
@@ -2154,15 +2155,13 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("plate_number", variable.plate_number);
-        json.put("customer_manager", variable.customer_manager);
+        json.put("service_sale_id", variable.service_sale_id);
         json.put("shop_id", variable.shop_id);
         json.put("customer_name", variable.customer_name);
         json.put("confirm_status", variable.confirm_status);
         json.put("customer_phone", variable.customer_phone);
         json.put("is_overtime", variable.is_overtime);
-//        json.put("confirm_time", variable.confirm_time);
         json.put("appointment_date", variable.appointment_date);
-//        json.put("create_date", variable.create_date);
 
         return invokeApi(url, json);
     }
@@ -2216,10 +2215,10 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", variable.size);
         json.put("subject_name", variable.subject_name);
         json.put("voucher_status", variable.voucher_status);
-        json.put("creator", variable.creator);
-        json.put("is_diff", variable.is_diff);
-        json.put("is_self_verification", variable.is_self_verification);
-        json.put("voucher_status", variable.voucher_status);
+        json.put("voucher_name", variable.creator_name);
+        json.put("voucher_type", variable.voucher_type);
+        json.put("creator_name", variable.creator_name);
+        json.put("creator_account", variable.creator_account);
 
         return invokeApi(url, json);
     }
@@ -5001,5 +5000,276 @@ public class ScenarioUtil extends TestCaseCommon {
         }
         return invokeApi(url,json1);
     }
+
+    /**
+     * @description :V2.0智能提醒
+     * @date :2021/2/1
+     **/
+    public JSONObject remindPage(String page,String size,String item,String pram, String result) {
+        String url = "/business-jiaochen/pc/manage/intelligent-remind/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("item",item);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0洗车管理列表
+     * @date :2021/2/1
+     **/
+    public JSONObject washCarManagerPage(WashCarManagerVariable washCarManagerVariable) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/page";
+        JSONObject json=new JSONObject();
+        json.put("page",washCarManagerVariable.page);
+        json.put("size",washCarManagerVariable.size);
+        json.put("customer_name",washCarManagerVariable.customerName);
+        json.put("customer_vip_type",washCarManagerVariable.customerVipType);
+        json.put("wash_start_time",washCarManagerVariable.washStartTime);
+        json.put("wash_end_time",washCarManagerVariable.washEndTime);
+        json.put("shop_id",washCarManagerVariable.shopId);
+        json.put("phone",washCarManagerVariable.phone);
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0洗车管理列表
+     * @date :2021/2/1
+     **/
+    public JSONObject washCarManagerPage(String shopId,String page,String size,String param,String result) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (param != null){
+            json.put(param, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0调整记录次数
+     * @date :2021/2/2
+     **/
+    public JSONObject adjustNumberRecord(String shopId,String page,String size,String param,String result) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/record";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (param != null){
+            json.put(param, result);
+        }
+        return invokeApi(url,json);
+    }
+    /**
+     * @description :V2.0调整记录次数
+     * @date :2021/2/2
+     **/
+    public JSONObject adjustNumberRecord(AdjustNumberRecordVariable adjustNumberRecordVariable) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/record";
+        JSONObject json=new JSONObject();
+        json.put("page",adjustNumberRecordVariable.page);
+        json.put("size",adjustNumberRecordVariable.size);
+        json.put("customer_name",adjustNumberRecordVariable.customerName);
+        json.put("customer_phone",adjustNumberRecordVariable.customerPhone);
+        json.put("adjust_shop_id",adjustNumberRecordVariable.adjustShopId);
+        json.put("adjust_start_time",adjustNumberRecordVariable.adjustStartTime);
+        json.put("adjust_end_time",adjustNumberRecordVariable.adjustEndTime);
+        json.put("customer_type",adjustNumberRecordVariable.customerType);
+
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0优惠券领取记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherManageSendRecord(VoucherManageSendVariable variable) {
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.page);
+        json.put("size",variable.size);
+        json.put("id" ,variable.id);
+        json.put("receiver",variable.receiver);
+        json.put("receive_phone",variable.receivePhone);
+        json.put("use_status",variable.useStatus);
+        json.put("start_time",variable.startTime);
+        json.put("end_time",variable.endTime);
+        json.put("use_start_time",variable.useStartTime);
+        json.put("use_end_time",variable.useEndTime);
+        json.put("customer_label",variable.customerLabel);
+
+        return invokeApi(url,json);
+    }
+    /**
+     * @description :V2.0优惠券领取记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherManageSendRecord(String shopId,String page,String size,String id ,String param,String result) {
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        json.put("id",id);
+        if (param != null){
+            json.put(param, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0优惠券作废记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherInvalidPage(VoucherInvalidPageVariable variable) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-invalid-page";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.page);
+        json.put("size",variable.size);
+        json.put("id",variable.id);
+        json.put("receiver",variable.receiver);
+        json.put("receive_phone",variable.receivePhone);
+        json.put("start_time",variable.startTime);
+        json.put("end_time",variable.endTime);
+        json.put("invalid_name",variable.invalidName);
+        json.put("invalid_phone",variable.invalidPhone);
+        json.put("invalid_start_time",variable.invalidStartTime);
+        json.put("invalid_end_time",variable.invalidEndTime);
+
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :V2.0优惠券作废记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherInvalidPage(String shopId,String page,String size,String id ,String param,String result) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-invalid-page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        json.put("id",id);
+        if (param != null){
+            json.put(param, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :pc道路救援
+     * @date :2021/2/2
+     **/
+    public JSONObject rescuePage(String shopId,String page,String size,String pram,String result) {
+        String url = "/jiaochen/pc/manage/rescue/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (pram != null){
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :pc道路救援
+     * @date :2021/2/2
+     **/
+    public JSONObject rescuePage(RescuePageVariable variable) {
+        String url = "/jiaochen/pc/manage/rescue/page";
+        JSONObject json=new JSONObject();
+        json.put("customer_name",variable.customerName);
+        json.put("vip_type",variable.vipType);
+        json.put("customer_phone",variable.customerPhone);
+        json.put("shop_id",variable.shopId);
+        json.put("dial_start",variable.dialStart);
+        json.put("dial_end",variable.dialEnd);
+
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC评价列表
+     * @date :2021/2/2
+     **/
+    public JSONObject evaluatePage(String shopId,String page,String size,String pram,String result) {
+        String url = "/jiaochen/pc/manage/evaluate/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (pram != null){
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC评价列表
+     * @date :2021/2/2
+     **/
+    public JSONObject evaluatePage(EvaluatePageVariable variable) {
+        String url = "/jiaochen/pc/manage/evaluate/page";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.customerName);
+        json.put("size",variable.customerName);
+        json.put("plate_number",variable.customerName);
+        json.put("service_sale_id",variable.customerName);
+        json.put("evaluate_type",variable.customerName);
+        json.put("shop_id",variable.customerName);
+        json.put("customer_name",variable.customerName);
+        json.put("score",variable.customerName);
+        json.put("evaluate_start",variable.customerName);
+        json.put("evaluate_end",variable.customerName);
+        json.put("is_follow_up",variable.customerName);
+        json.put("customer_phone",variable.customerName);
+        json.put("source_create_start",variable.customerName);
+        json.put("source_create_end",variable.customerName);
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC精品商城-商城套餐
+     * @date :2021/2/2
+     **/
+    public JSONObject storeCommodityPage(String shopId,String page,String size,String pram,String result) {
+        String url = "/jiaochen/pc/store/commodity/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (pram != null){
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC精品商城-商城套餐
+     * @date :2021/2/2
+     **/
+    public JSONObject storeCommodityPage(StoreCommodityPageVariable variable) {
+        String url = "/jiaochen/pc/manage/evaluate/page";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.page);
+        json.put("size",variable.size);
+        json.put("commodity_name",variable.commodityName);
+        json.put("start_create_date",variable.startCreateDate);
+        json.put("end_create_date",variable.endCreateDate);
+
+        return invokeApi(url,json);
+    }
+
+
+
+
+
 
 }

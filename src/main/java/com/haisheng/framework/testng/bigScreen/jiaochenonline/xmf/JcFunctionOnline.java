@@ -2,9 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.registerListVariable;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.lang.ArrayUtils;
 

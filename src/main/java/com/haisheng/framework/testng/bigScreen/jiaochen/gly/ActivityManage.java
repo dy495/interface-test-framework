@@ -693,14 +693,14 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int statusPassed=businessUtil.getActivityStatus(activityId);
             //小程序报名此活动
             businessUtil.activityRegisterApplet(activityId,"13373166806","max",3,"1513184362@qq.com");
-            //审批通过小活动报名
+            //审批通过小程序活动报名
             List<Long> ids=businessUtil.RegisterAppletIds(activityId);
             IScene scene = ManageRegisterApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
             visitor.invokeApi(scene,false).getString("message");
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher=su.getAppletVoucherInfo(voucherCode);
-            //小程序取消报名 todo 活动中的type类型是什么呢？
-            businessUtil.activityCancelScene("",activityId);
+            //小程序取消报名
+            businessUtil.activityCancelScene(activityId);
             //报名取消后获得此报名的状态
             String activityStatus=businessUtil.appointmentActivityStatus(activityId);
             //取消报名后卡券的状态为【已失效】
@@ -724,13 +724,13 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     public void test(){
         try{
 //            //获取一个卡券
-            List<Long> voucherId=businessUtil.getVoucherIds();
-            System.out.println("-----"+voucherId);
+//            List<Long> voucherId=businessUtil.getVoucherIds();
+//            System.out.println("-----"+voucherId);
 //            //创建招募活动
-////            Long activityId=businessUtil.createRecruitActivity(278L,true,0,true);
-//            //创建裂变活动
-//            Long activityId=businessUtil.createFissionActivity(voucherId.get(0));
-//            System.err.println("----创建活动的ID为："+activityId);
+//            Long activityId=businessUtil.createRecruitActivity(293L,false,0,true);
+            //创建裂变活动
+            Long activityId=businessUtil.createFissionActivity(293L);
+            System.err.println("----创建活动的ID为："+activityId);
             //活动列表
 //            IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
 //            JSONObject respon=visitor.invokeApi(scene);
