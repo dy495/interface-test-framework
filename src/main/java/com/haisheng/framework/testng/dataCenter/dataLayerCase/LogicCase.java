@@ -220,7 +220,16 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void specialMan_alSearch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject res = logic.specialMan_serach("autotester","7cfa3fe9-96c4-4e65-960b-44edc3f18b68");
+            JSONObject obj = new JSONObject();
+            obj.put("user_id","7cfa3fe9-96c4-4e65-960b-44eduhuh99");
+            JSONArray array = new JSONArray();
+            array.add(obj);
+            JSONObject shop_user = new JSONObject();
+            shop_user.put("22728",array);
+            logic.special_register("autoUser","7cfa3fe9-96c4-4e65-960b-44eduhuh99",shop_user,"NORMAL",true,face_url,false,true,null,null,null,null,null,null,null,null,null);
+
+
+            JSONObject res = logic.specialMan_serach("autoUser","7cfa3fe9-96c4-4e65-960b-44eduhuh99");
             Integer code = res.getInteger("code");
             JSONArray faces = res.getJSONArray("faces");
             checkArgument(code == 1000 && faces.size()!=0 , "查询已注册的特定人物(正确入参&格式),code="+code+"人脸ID："+faces.size());
