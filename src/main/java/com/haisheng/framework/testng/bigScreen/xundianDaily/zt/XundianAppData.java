@@ -537,6 +537,82 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+
+    //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
+    @Test
+    public void createPreset() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取预置位列表
+            JSONArray list = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            int num = list.size();
+
+            //新建一个预置位
+            String name = "预置位_" + CommonUtil.getRandom(2);
+            JSONObject a = md.creatPreset("8097818264503296",name,60,info.shop_id);
+            String message = a.getString("message");
+            JSONObject data = a.getJSONObject("data");
+            String waring = data.getString("waring");
+            checkArgument(message.equals("success"), "创建不成功原因" + waring);
+
+
+            //获取创建预置位后的预置位列表
+            JSONArray list1 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            int num1 = list1.size();
+            int s = num1-num;
+            checkArgument(s==1, "新建一个预置位列表实际增加的" + s);
+
+
+            //创建名称为空的预置位
+            JSONObject kong = md.creatPreset("8097818264503296","",60,info.shop_id);
+            String m = kong.getString("message");
+            checkArgument(m.equals("success"), "没有名称却创建成功了" + m);
+
+            //创建时间为0的预置位
+            JSONObject s1 = md.creatPreset("8097818264503296",name,0,info.shop_id);
+            String m2 = s1.getString("message");
+            checkArgument(m2.equals("success"), "没有时间却创建成功了" + m2);
+
+
+            //获取第一个预置位并删除预置位
+            JSONArray list2 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            int num2 = list2.size();
+
+            int preset = list.getJSONObject(0).getInteger("preset_index");
+            JSONObject b = md.deletePreset("8097818264503296",preset,info.shop_id);
+            String message1 = b.getString("message");
+            JSONObject data1 = b.getJSONObject("data");
+            String waring1 = data1.getString("waring");
+            checkArgument(message1.equals("success"), "删除不成功原因" + waring1);
+
+            //获取删除预置位后的预置位列表
+            JSONArray list3 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            int num3 = list3.size();
+            int d = num2-num3;
+            checkArgument(d==1, "删除一个预置位列表实际减少了" + d);
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1");
+        }
+    }
+
+
+
+
+
+
+    //新建看守位
+
+
+
+
     @DataProvider(name = "CHKRESULT")
     public Object[] chkResult() {
 

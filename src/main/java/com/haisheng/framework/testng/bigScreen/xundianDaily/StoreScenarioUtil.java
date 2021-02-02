@@ -1929,7 +1929,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject cameraList(String terminal_device_id,String type,int shopId) throws Exception {
+    public JSONObject cameraList(String terminal_device_id,String type,Long shopId) throws Exception {
         String url = "/patrol/ptz/control/preset/list";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
@@ -1944,7 +1944,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject creatPreset(String terminal_device_id,String name,int time,int shopId) throws Exception {
+    public JSONObject creatPreset(String terminal_device_id,String name,int time,Long shopId) throws Exception {
         String url = "/patrol/ptz/control/preset/add";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
@@ -1978,7 +1978,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject deletePreset(String terminal_device_id,int preset_index,int shopId) throws Exception {
+    public JSONObject deletePreset(String terminal_device_id,int preset_index,Long shopId) throws Exception {
         String url = "/patrol/ptz/control/preset/delete";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
