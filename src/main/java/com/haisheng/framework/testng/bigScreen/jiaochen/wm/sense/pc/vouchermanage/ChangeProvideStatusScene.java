@@ -10,6 +10,10 @@ import lombok.Builder;
 @Builder
 public class ChangeProvideStatusScene extends BaseScene {
     private final Long id;
+
+    /**
+     * 是否开始发放
+     */
     private final Boolean isStart;
 
     @Override

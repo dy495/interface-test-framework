@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 
 import java.util.List;
 
@@ -31,12 +32,12 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         VoucherStatusEnum.findById(voucherStatus.getId());
         Preconditions.checkArgument(!isEmpty(), "visitor is null");
         logger("FIND " + voucherStatus.name());
-        IScene scene = VoucherFormPageScene.builder().build();
+        IScene scene = VoucherPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        VoucherPage voucher = vouchers.stream().filter(e -> e.getAuditStatusName().equals(voucherStatus.getName())
-                || e.getInvalidStatusName().equals(voucherStatus.getName())).findFirst().orElse(null);
+        VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
         if (voucher != null) {
             logger("voucherId is: " + voucher.getVoucherId());
+            logger("voucherName is：" + getVoucherName(voucher.getVoucherId()));
             return voucher.getVoucherId();
         }
         logger(voucherStatus.name() + " DIDN'T FIND ");
@@ -61,6 +62,10 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             return this;
         }
 
+        /**
+         * @param scene 构建初始产品的场景
+         * @return BaseBuilder.createScene
+         */
         public BaseBuilder createScene(IScene scene) {
             this.voucherScene = scene;
             return this;

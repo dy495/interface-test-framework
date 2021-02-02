@@ -3,21 +3,25 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing
 import lombok.Getter;
 
 /**
+ * 卡券审核状态
+ *
  * @author wangmin
  * @date 2021/1/20 13:36
- * @desc 卡券审核状态
  */
 public enum ApplyStatusEnum {
-    AUDITING("审核中"),
-    AGREE("已通过"),
-    REFUSAL("已拒绝"),
-    CANCEL("已取消"),
+    AUDITING(0, "审核中"),
+    AGREE(1, "已通过"),
+    REFUSAL(2, "已拒绝"),
+    CANCEL(3, "已取消"),
     ;
 
-    ApplyStatusEnum(String name) {
+    ApplyStatusEnum(Integer id, String name) {
         this.name = name;
+        this.id = id;
     }
 
+    @Getter
+    private final Integer id;
     @Getter
     private final String name;
 

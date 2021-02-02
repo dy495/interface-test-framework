@@ -78,7 +78,13 @@ public class VoucherPage implements Serializable {
      * 状态
      */
     @JSONField(name = "voucher_status")
-    private Integer voucherStatus;
+    private String voucherStatus;
+
+    /**
+     * 卡券状态名称
+     */
+    @JSONField(name = "voucher_status_name")
+    private String voucherStatusName;
 
     /**
      * 卡券名称

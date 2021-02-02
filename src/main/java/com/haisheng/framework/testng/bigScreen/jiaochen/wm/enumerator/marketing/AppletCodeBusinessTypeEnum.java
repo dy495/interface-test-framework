@@ -103,9 +103,9 @@ public enum AppletCodeBusinessTypeEnum {
     NEW_CAR_TEST_DRIVER_PRIORITY("0G","新车试驾优先");
 
 
-    private String key;
+    private final String key;
 
-    private String typeName;
+    private final String typeName;
 
     AppletCodeBusinessTypeEnum(String key, String typeName) {
         this.key = key;

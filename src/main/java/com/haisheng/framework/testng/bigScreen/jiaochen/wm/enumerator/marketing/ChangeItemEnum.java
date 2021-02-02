@@ -11,13 +11,13 @@ import java.util.Optional;
  * @date 2021/1/22 14:31
  */
 public enum ChangeItemEnum {
-    CREATE("创建优惠券"),
+    CREATE("创建"),
 
     EDIT("编辑优惠券"),
 
-    ADD("增发优惠券"),
+    ADD("增发"),
 
-    INVALIDED("作废优惠券"),
+    INVALIDED("作废"),
     ;
 
     ChangeItemEnum(String name) {

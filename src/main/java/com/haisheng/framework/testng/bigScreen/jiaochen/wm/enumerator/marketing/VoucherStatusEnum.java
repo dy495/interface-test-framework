@@ -21,7 +21,7 @@ public enum VoucherStatusEnum {
     /**
      * 待审核
      */
-    WAITING(0, "审核中", new WaitingVoucher.Builder()),
+    WAITING(0, "待审核", new WaitingVoucher.Builder()),
 
     /**
      * 已撤回
@@ -36,7 +36,7 @@ public enum VoucherStatusEnum {
     /**
      * 进行中
      */
-    WORKING(3, "已通过", new WorkingVoucher.Builder()),
+    WORKING(3, "进行中", new WorkingVoucher.Builder()),
 
     /**
      * 暂停发放

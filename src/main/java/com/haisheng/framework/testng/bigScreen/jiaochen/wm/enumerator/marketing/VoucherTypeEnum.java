@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * 卡券类型
+ *
  * @author wangmin
  * @date 2021/1/20 11:53
- * @desc 卡券类型
  */
 public enum VoucherTypeEnum {
     /**

@@ -22,6 +22,11 @@ public class ApplyPageScene extends BaseScene {
     private final String applyTime;
     private final String applyItem;
 
+    /**
+     * 2.0
+     */
+    private final Integer state;
+
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
@@ -29,12 +34,16 @@ public class ApplyPageScene extends BaseScene {
         object.put("name", name);
         object.put("send_time", sendTime);
         object.put("apply_name", applyName);
-        object.put("status", status);
         object.put("apply_group", applyGroup);
         object.put("cost_center", costCenter);
         object.put("apply_time", applyTime);
         object.put("applyItem", applyItem);
         object.put("size", size);
+        if (status != null) {
+            object.put("status", status);
+        } else {
+            object.put("status", state);
+        }
         return object;
     }
 

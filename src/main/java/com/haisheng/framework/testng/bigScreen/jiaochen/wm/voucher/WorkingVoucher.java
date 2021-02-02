@@ -15,9 +15,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 进行中状态
+ *
  * @author wangmin
  * @date 2021/1/20 16:41
- * @desc 进行中状态
  */
 public class WorkingVoucher extends BaseVoucher {
 
