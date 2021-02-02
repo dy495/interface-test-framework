@@ -4,25 +4,27 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+/**
+ * 我的预约分页
+ *
+ * @author 王敏
+ * @date 2021-02-01
+ */
 @Builder
-public class ActivityRegisterScene extends BaseScene {
-    private final Long id;
-    private final String name;
-    private final String phone;
-    private final Integer num;
+public class AppointmentListScene extends BaseScene {
+    private final Integer size;
+    private final Integer lastValue;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("name", name);
-        object.put("phone", phone);
-        object.put("num", num);
+        object.put("size", size);
+        object.put("last_value", lastValue);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/article/activity/register";
+        return "/jiaochen/applet/granted/appointment/list";
     }
 }

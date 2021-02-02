@@ -19,8 +19,10 @@ public class AppointmentPageScene extends BaseScene {
     private final String confirmTime;
     private final String customerPhone;
     private final boolean isOvertime;
-    private final Integer page;
-    private final Integer size;
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -46,7 +48,12 @@ public class AppointmentPageScene extends BaseScene {
     }
 
     @Override
-    public String getIpPort() {
-        return null;
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

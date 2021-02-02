@@ -105,15 +105,15 @@ public enum AppletCodeBusinessTypeEnum {
 
     private String key;
 
-    private String value;
+    private String typeName;
 
-    AppletCodeBusinessTypeEnum(String key, String value) {
+    AppletCodeBusinessTypeEnum(String key, String typeName) {
         this.key = key;
-        this.value = value;
+        this.typeName = typeName;
     }
 
-    public String getValue() {
-        return value;
+    public String getTypeName() {
+        return typeName;
     }
 
     public String getKey() {

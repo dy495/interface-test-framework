@@ -709,6 +709,18 @@ public class DateTimeUtil {
     }
 
     /**
+     * 获取当前时间属于本月第几天
+     *
+     * @param data 日期
+     * @return 第几天
+     */
+    public static Integer getDayOnMonth(Date data) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(data);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
      * 当前时间的前后多少秒
      *
      * @description :
@@ -726,18 +738,20 @@ public class DateTimeUtil {
 
         return format.format(m);
     }
+
     //获取日期在当月第几天
-    public int getDay(int num_day){
+    public int getDay(int num_day) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE,num_day);
+        calendar.add(Calendar.DATE, num_day);
         int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
         return monthDay;
     }
+
     //获取日期的年月
-    public String  getMounth(int num_day){
+    public String getMounth(int num_day) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE,num_day);
-        String month=new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
+        calendar.add(Calendar.DATE, num_day);
+        String month = new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
         return month;
     }
 

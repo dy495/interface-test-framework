@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2021/1/29 15:20
  */
 @Data
-public class AppointmentPage implements Serializable {
+public class AppAppointmentPage implements Serializable {
     @JSONField(name = "id")
     private Integer id;
     @JSONField(name = "shop_id")

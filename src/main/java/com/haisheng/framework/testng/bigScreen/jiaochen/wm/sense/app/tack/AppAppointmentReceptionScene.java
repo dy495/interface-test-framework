@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021/1/29 15:11
  */
 @Builder
-public class AppointmentReceptionScene extends BaseScene {
+public class AppAppointmentReceptionScene extends BaseScene {
     private final Integer id;
     private final Integer shopId;
 

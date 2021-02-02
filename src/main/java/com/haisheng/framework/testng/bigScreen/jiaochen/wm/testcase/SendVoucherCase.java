@@ -41,7 +41,7 @@ import java.util.Objects;
  * @author wangmin
  * @date 2021/1/26 16:44
  */
-public class SendVoucher extends TestCaseCommon implements TestCaseStd {
+public class SendVoucherCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCT = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final EnumAccount MARKETING = EnumAccount.MARKETING_DAILY;

@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,19 +22,17 @@ public enum VipTypeEnum {
      */
     VIP(10, "vip会员");
 
+    @Getter
+    private final Integer id;
 
-    private Integer id;
+    @Getter
+    private final String typeName;
 
-    private String value;
-
-    VipTypeEnum(Integer id, String value) {
+    VipTypeEnum(Integer id, String typeName) {
         this.id = id;
-        this.value = value;
+        this.typeName = typeName;
     }
 
-    public String getValue() {
-        return value;
-    }
 
     public Integer getId() {
         return id;

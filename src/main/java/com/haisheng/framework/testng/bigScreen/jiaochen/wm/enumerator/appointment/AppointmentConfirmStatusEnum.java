@@ -24,13 +24,13 @@ public enum AppointmentConfirmStatusEnum {
         this.repairStatusEnum = repairStatusEnum;
     }
 
-    private Integer id;
+    private final Integer id;
 
-    private String statusName;
+    private final String statusName;
 
-    private MaintainStatusEnum maintainStatusEnum;
+    private final MaintainStatusEnum maintainStatusEnum;
 
-    private RepairStatusEnum repairStatusEnum;
+    private final RepairStatusEnum repairStatusEnum;
 
     public MaintainStatusEnum getMaintainStatusEnum() {
         return maintainStatusEnum;

@@ -1083,6 +1083,6 @@ public class BusinessUtilOnline {
      * @param articleId 活动id
      */
     public void applyArticle(Long articleId) {
-        jc.invokeApi(ActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build(), false);
+        jc.invokeApi(AppletActivityRegisterScene.builder().id(articleId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build(), false);
     }
 }

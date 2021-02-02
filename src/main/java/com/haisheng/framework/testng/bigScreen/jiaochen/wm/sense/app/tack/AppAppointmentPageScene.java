@@ -5,28 +5,24 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 变更接待
- *
  * @author wangmin
  * @date 2021/1/29 15:11
  */
 @Builder
-public class ReceptionReceptorChangePageScene extends BaseScene {
-    private final Integer id;
-    private final Integer shopId;
-    private final String receptorId;
+public class AppAppointmentPageScene extends BaseScene {
+    private final Integer size;
+    private final Integer lastValue;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("shop_id", shopId);
-        jsonObject.put("receptor_id", receptorId);
+        jsonObject.put("size", size);
+        jsonObject.put("last_value", lastValue);
         return jsonObject;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/reception/receptor/change";
+        return "/jiaochen/m-app/task/appointment/page";
     }
 }

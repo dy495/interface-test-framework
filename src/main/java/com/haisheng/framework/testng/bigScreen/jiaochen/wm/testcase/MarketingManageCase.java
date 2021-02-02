@@ -11,12 +11,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumApplyTypeName;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.UseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomMessageStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MemberCenterEquityListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerificationScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
@@ -28,10 +30,12 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.IVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -46,13 +50,12 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
  * 营销管理模块测试用例
  */
-public class MarketingManage extends TestCaseCommon implements TestCaseStd {
+public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final EnumAccount MARKETING = EnumAccount.MARKETING_DAILY;
@@ -1243,28 +1246,26 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @Test(description = "消息管理--发送成功率=发出条数/收到条数，结果x=100%时为全部成功，结果0%<=x<100%显示成功百分比")
     public void messageManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            AtomicInteger i = new AtomicInteger();
             IScene scene = MessageFormPageScene.builder().build();
             List<JSONObject> jsonObjectList = util.collectBean(scene, JSONObject.class);
-            jsonObjectList.forEach(jsonObject -> {
-                int sendCount = jsonObject.getInteger("send_count");
-                int receiveCount = jsonObject.getInteger("receive_count");
+            for (int i = 0; i < jsonObjectList.size(); i++) {
+                int sendCount = jsonObjectList.get(i).getInteger("send_count");
+                int receiveCount = jsonObjectList.get(i).getInteger("receive_count");
                 String percent = CommonUtil.getPercent(sendCount, receiveCount);
                 String result = percent.equals("0.0%") ? "成功0%" : "全部成功";
-                String statusName = jsonObject.getString("status_name");
-                int page = (i.getAndIncrement() / 10) + 1;
-                int size = (i.getAndIncrement() % 10) + 1;
-                CommonUtil.valueView(page + "页" + size + "条" + "发出条数/收到条数");
-            });
+                String statusName = jsonObjectList.get(i).getString("status_name");
+                int page = (i / 10) + 1;
+                int size = (i % 10) + 1;
+                CommonUtil.checkResultPlus(page + "页第" + size + "条" + " 发出条数/收到条数", result, "显示百分比", statusName);
+            }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-//            saveData("消息管理--发送成功率=发出条数/收到条数，结果x=100%时为全部成功，结果0%<=x<100%显示成功百分比");
+            saveData("消息管理--发送成功率=发出条数/收到条数，结果x=100%时为全部成功，结果0%<=x<100%显示成功百分比");
         }
     }
 
@@ -2724,6 +2725,115 @@ public class MarketingManage extends TestCaseCommon implements TestCaseStd {
         list.add(str);
         return list;
     }
+
+    @Test(description = "修改权益，applet与pc所见内容一致")
+    public void vipMarketIng_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
+            IScene equityEditScene = EquityEditScene.builder().awardCount(1000).equityId(equityId).description(EnumDesc.ARTICLE_DESC.getDesc()).build();
+            visitor.invokeApi(equityEditScene);
+            user.loginApplet(APPLET_USER_ONE);
+            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
+            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
+            String serviceTypeName = jsonObject.getString("service_type_name");
+            String equityName = jsonObject.getString("equity_name");
+            Integer awardCount = jsonObject.getInteger("award_count");
+            String description = jsonObject.getString("description");
+            String status = jsonObject.getString("status");
+            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
+            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
+            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
+            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
+            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.ENABLE.getName(), "applet权益状态", status);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("修改权益，applet与pc所见内容一致");
+        }
+    }
+
+    @Test(description = "关闭权益，applet与pc所见内容一致")
+    public void vipMarketIng_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
+            //关闭权益
+            IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build();
+            visitor.invokeApi(equityStartOrCloseScene);
+            user.loginApplet(APPLET_USER_ONE);
+            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
+            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
+            String serviceTypeName = jsonObject.getString("service_type_name");
+            String equityName = jsonObject.getString("equity_name");
+            Integer awardCount = jsonObject.getInteger("award_count");
+            String description = jsonObject.getString("description");
+            String status = jsonObject.getString("status");
+            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
+            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
+            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
+            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
+            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.DISABLE.getName(), "applet权益状态", status);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("关闭权益，applet与pc所见内容一致");
+        }
+    }
+
+    @Test(description = "开启权益，applet与pc所见内容一致")
+    public void vipMarketIng_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
+            //关闭权益
+            IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build();
+            visitor.invokeApi(equityStartOrCloseScene);
+            user.loginApplet(APPLET_USER_ONE);
+            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
+            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
+            String serviceTypeName = jsonObject.getString("service_type_name");
+            String equityName = jsonObject.getString("equity_name");
+            Integer awardCount = jsonObject.getInteger("award_count");
+            String description = jsonObject.getString("description");
+            String status = jsonObject.getString("status");
+            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
+            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
+            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
+            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
+            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.ENABLE.getName(), "applet权益状态", status);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("开启权益，applet与pc所见内容一致");
+        }
+    }
+
+    @Test(description = "修改分享内容，applet与pc所见内容一致")
+    public void vipMarketIng_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
+            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
+            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
+            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
+            List<Integer> ids = list.stream().map(e -> (JSONObject) e).map(e -> e.getInteger("id")).collect(Collectors.toList());
+            ids.forEach(id -> {
+                IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_DESC.getDesc())
+                        .awardScore(1000).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
+                        .awardCardVolumeId(voucherId).takeEffectType(VoucherExpireTypeEnum.EXPIRE_DAYS.name()).build();
+                visitor.invokeApi(shareManagerEditScene);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("修改分享内容，applet与pc所见内容一致");
+        }
+    }
+
 }
 
 

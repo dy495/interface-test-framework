@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppointmentPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.FollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.MaintainTimeList;
@@ -22,13 +22,15 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppletReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppointmentPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.ReceptionReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
@@ -986,6 +988,20 @@ public class SupporterUtil extends BaseUtil {
         visitor.invokeApi(builder.build());
     }
 
+    //----------------------------------------------------预约记录-------------------------------------------------------
+
+    /**
+     * 通过接待id查询接待信息
+     *
+     * @param appointment 预约id
+     * @return 接待信息
+     */
+    public AppointmentPage getAppointmentPageById(Integer appointment) {
+        IScene appointmentPageScene = AppointmentPageScene.builder().build();
+        List<AppointmentPage> appointmentPageList = collectBean(appointmentPageScene, AppointmentPage.class);
+        return appointmentPageList.stream().filter(e -> e.getId().equals(appointment)).findFirst().orElse(null);
+    }
+
     //----------------------------------------------------接待记录-------------------------------------------------------
 
     /**
@@ -1026,6 +1042,17 @@ public class SupporterUtil extends BaseUtil {
         IScene staffPageScene = StaffPageScene.builder().build();
         List<JSONObject> staffPages = collectBean(staffPageScene, JSONObject.class);
         return staffPages.stream().filter(e -> visitor.invokeApi(VerificationPeopleScene.builder().verificationPhone(e.getString("phone")).build()).getInteger("total") == 0).map(e -> e.getString("phone")).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取员工信息
+     *
+     * @return 员工信息
+     */
+    public StaffPage getStaffPage(String staffId) {
+        IScene staffPageScene = StaffPageScene.builder().build();
+        List<StaffPage> staffPageList = collectBean(staffPageScene, StaffPage.class);
+        return staffPageList.stream().filter(e -> e.getUid().equals(staffId)).findFirst().orElse(null);
     }
 
     /**
@@ -1081,6 +1108,7 @@ public class SupporterUtil extends BaseUtil {
 
     /**
      * 小程序预约
+     * 需要给个固定门店的顾问，需要shopId固定、staffId固定
      *
      * @param type 预约类型 MAINTAIN：保养，REPAIR：维修
      * @return id 预约id
@@ -1104,10 +1132,20 @@ public class SupporterUtil extends BaseUtil {
         return timeList.stream().filter(MaintainTimeList::getIsFull).map(MaintainTimeList::getId).findFirst().orElse(null);
     }
 
+    /**
+     * 获取门店id
+     *
+     * @return 门店id
+     */
     public Integer getShopId() {
         return visitor.isOnline() ? 20032 : 0;
     }
 
+    /**
+     * 获取员工id
+     *
+     * @return 员工id
+     */
     public String getStaffId() {
         IScene maintainStaffListScene = MaintainStaffListScene.builder().shopId(getShopId()).build();
         JSONArray jsonArray = visitor.invokeApi(maintainStaffListScene).getJSONArray("list");
@@ -1307,6 +1345,25 @@ public class SupporterUtil extends BaseUtil {
         } while (array.size() == 20);
         return listSize;
     }
+
+    /**
+     * 获取小程序我的预约数量
+     *
+     * @return 预约数量
+     */
+    public int getAppletAppointmentNum() {
+        Integer lastValue = null;
+        int listSize = 0;
+        JSONArray array;
+        do {
+            IScene scene = AppointmentListScene.builder().size(20).lastValue(lastValue).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
 //
 //    /**
 //     * 小程序我的报名列表
@@ -1451,7 +1508,7 @@ public class SupporterUtil extends BaseUtil {
      * @param activityId 活动id
      */
     public void activityRegister(Long activityId) {
-        IScene scene = ActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build();
+        IScene scene = AppletActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build();
         visitor.invokeApi(scene, false);
     }
 
@@ -1482,18 +1539,18 @@ public class SupporterUtil extends BaseUtil {
      *
      * @return 预约记表
      */
-    public List<AppointmentPage> getAppointmentPageList() {
+    public List<AppAppointmentPage> getAppointmentPageList() {
         Integer lastValue = null;
-        List<AppointmentPage> appointmentPageList = new ArrayList<>();
+        List<AppAppointmentPage> appAppointmentPageList = new ArrayList<>();
         JSONArray list;
         do {
-            IScene appointmentPageScene = AppointmentPageScene.builder().lastValue(lastValue).size(20).build();
+            IScene appointmentPageScene = AppAppointmentPageScene.builder().lastValue(lastValue).size(20).build();
             JSONObject response = visitor.invokeApi(appointmentPageScene);
             lastValue = response.getInteger("last_value");
             list = response.getJSONArray("list");
-            appointmentPageList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppointmentPage.class)).collect(Collectors.toList()));
+            appAppointmentPageList.addAll(list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppAppointmentPage.class)).collect(Collectors.toList()));
         } while (list.size() == 20);
-        return appointmentPageList;
+        return appAppointmentPageList;
     }
 
     /**
@@ -1506,6 +1563,20 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 预约看板的预约数
+     *
+     * @param date 日期
+     * @return 预约数量
+     */
+    public Integer appointmentNumber(Date date) {
+        String nowDate = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
+        IScene scene = TimeTableListScene.builder().appointmentMonth(nowDate).build();
+        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
+        return list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("day").equals(DateTimeUtil.getDayOnMonth(date)))
+                .map(e -> e.getInteger("appointment_number")).findFirst().orElse(0);
+    }
+
+    /**
      * 获取接待页
      *
      * @return 接待页列表
@@ -1515,7 +1586,7 @@ public class SupporterUtil extends BaseUtil {
         List<AppletReceptionPage> receptionPageList = new ArrayList<>();
         JSONArray list;
         do {
-            IScene appointmentPageScene = AppletReceptionPageScene.builder().lastValue(lastValue).size(20).build();
+            IScene appointmentPageScene = AppReceptionPageScene.builder().lastValue(lastValue).size(20).build();
             JSONObject response = visitor.invokeApi(appointmentPageScene);
             lastValue = response.getInteger("last_value");
             list = response.getJSONArray("list");
@@ -1539,7 +1610,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 售后员工
      */
     public ReceptionReceptorList getReceptorId() {
-        IScene receptorListScene = ReceptionReceptorListScene.builder().shopId(getShopId()).build();
+        IScene receptorListScene = AppReceptionReceptorListScene.builder().shopId(getShopId()).build();
         JSONArray jsonArray = visitor.invokeApi(receptorListScene).getJSONArray("list");
         return jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, ReceptionReceptorList.class)).findFirst().orElse(null);
     }

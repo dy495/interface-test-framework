@@ -1,30 +1,42 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.EquityEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.EquityPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
+ * 异常情况
+ *
  * @author wangmin
  * @date 2021/1/29 10:48
  */
 public class AbnormalManager extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
-    private static final Integer SIZE = 100;
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_DAILY;
+    private static final EnumAccount MARKETING = EnumAccount.MARKETING_DAILY;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public Visitor visitor = new Visitor(product);
-    public SupporterUtil util = new SupporterUtil(visitor);
     public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
 
 
     @BeforeClass
@@ -61,6 +73,69 @@ public class AbnormalManager extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+    }
+
+    @Test(description = "修改生日积分，积分异常")
+    public void vipMarketIng_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getString("equity_name").equals("生日积分")).map(e -> e.getInteger("equity_id")).findFirst().orElse(0);
+            //修改权益
+            Integer[] awardCounts = {null, 10001};
+            Arrays.stream(awardCounts).forEach(awardCount -> {
+                IScene equityEditScene = EquityEditScene.builder().awardCount(awardCount).equityId(equityId).description(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
+                String message = visitor.invokeApi(equityEditScene, false).getString("message");
+                String err = awardCount == null ? "奖励数不能为空" : "次数范围1-1000";
+                CommonUtil.checkResult("积分为" + awardCount, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("修改生日积分，积分异常");
+        }
+    }
+
+    @Test(description = "修改生日积分，描述异常")
+    public void vipMarketIng_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getString("equity_name").equals("生日积分")).map(e -> e.getInteger("equity_id")).findFirst().orElse(0);
+            //修改权益
+            String[] descriptions = {null, EnumDesc.MESSAGE_DESC.getDesc()};
+            Arrays.stream(descriptions).forEach(description -> {
+                IScene equityEditScene = EquityEditScene.builder().awardCount(100).equityId(equityId).description(description).build();
+                String message = visitor.invokeApi(equityEditScene, false).getString("message");
+                String err = description == null ? "说明不能为空" : "说明只能在0-30个字";
+                CommonUtil.checkResult("说明为" + description, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("修改生日积分，描述异常");
+        }
+    }
+
+    @Test(description = "修改免费洗车，次数异常")
+    public void vipMarketIng_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getString("equity_name").equals("免费洗车")).map(e -> e.getInteger("equity_id")).findFirst().orElse(0);
+            //修改权益
+            Integer[] awardCounts = {null, 100};
+            Arrays.stream(awardCounts).forEach(awardCount -> {
+                IScene equityEditScene = EquityEditScene.builder().awardCount(awardCount).equityId(equityId).description(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
+                String message = visitor.invokeApi(equityEditScene, false).getString("message");
+                String err = awardCount == null ? "奖励数不能为空" : "次数范围只能在1-99";
+                CommonUtil.checkResult("积分为" + awardCount, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("修改生日积分，积分异常");
+        }
     }
 
 }

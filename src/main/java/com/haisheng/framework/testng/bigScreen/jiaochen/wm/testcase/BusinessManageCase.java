@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * 业务管理测试用例
  */
-public class BusinessManage extends TestCaseCommon implements TestCaseStd {
+public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final Integer SIZE = 100;
