@@ -540,17 +540,17 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
-    @Test
-    public void createPreset() {
+    @Test(dataProvider = "device_id")
+    public void createPreset(String device_id) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取预置位列表
-            JSONArray list = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            JSONArray list = md.cameraList(device_id,"PRESET").getJSONArray("list");
             int num = list.size();
 
             //新建一个预置位
             String name = "预置位_" + CommonUtil.getRandom(2);
-            JSONObject a = md.creatPreset("8097818264503296",name,60,info.shop_id);
+            JSONObject a = md.creatPreset(device_id,name,60);
             String message = a.getString("message");
             JSONObject data = a.getJSONObject("data");
             String waring = data.getString("waring");
@@ -558,36 +558,36 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
             //获取创建预置位后的预置位列表
-            JSONArray list1 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            JSONArray list1 = md.cameraList(device_id,"PRESET").getJSONArray("list");
             int num1 = list1.size();
             int s = num1-num;
             checkArgument(s==1, "新建一个预置位列表实际增加的" + s);
 
 
             //创建名称为空的预置位
-            JSONObject kong = md.creatPreset("8097818264503296","",60,info.shop_id);
+            JSONObject kong = md.creatPreset(device_id,"",60);
             String m = kong.getString("message");
             checkArgument(m.equals("success"), "没有名称却创建成功了" + m);
 
             //创建时间为0的预置位
-            JSONObject s1 = md.creatPreset("8097818264503296",name,0,info.shop_id);
+            JSONObject s1 = md.creatPreset(device_id,name,0);
             String m2 = s1.getString("message");
             checkArgument(m2.equals("success"), "没有时间却创建成功了" + m2);
 
 
             //获取第一个预置位并删除预置位
-            JSONArray list2 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            JSONArray list2 = md.cameraList(device_id,"PRESET").getJSONArray("list");
             int num2 = list2.size();
 
             int preset = list.getJSONObject(0).getInteger("preset_index");
-            JSONObject b = md.deletePreset("8097818264503296",preset,info.shop_id);
+            JSONObject b = md.deletePreset(device_id,preset);
             String message1 = b.getString("message");
             JSONObject data1 = b.getJSONObject("data");
             String waring1 = data1.getString("waring");
             checkArgument(message1.equals("success"), "删除不成功原因" + waring1);
 
             //获取删除预置位后的预置位列表
-            JSONArray list3 = md.cameraList("8097818264503296","PRESET",info.shop_id).getJSONArray("list");
+            JSONArray list3 = md.cameraList(device_id,"PRESET").getJSONArray("list");
             int num3 = list3.size();
             int d = num2-num3;
             checkArgument(d==1, "删除一个预置位列表实际减少了" + d);
@@ -605,44 +605,111 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
 
+    //新建看守位，可以通过dataProvider和新建预置位合在一起
+    @Test(dataProvider = "device_id")
+    public void createGuard(String device_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取看守位列表
+            JSONArray list = md.cameraList(device_id,"GUARD").getJSONArray("list");
+            int num = list.size();
+
+            //新建一个看守位
+            JSONObject a = md.Guard(device_id);
+            String message = a.getString("message");
+            JSONObject data = a.getJSONObject("data");
+            String waring = data.getString("waring");
+            checkArgument(message.equals("success"), "创建不成功原因" + waring);
+            //获取创建看守位后的看守位列表
+            JSONArray list1 = md.cameraList(device_id,"GUARD").getJSONArray("list");
+            int num1 = list1.size();
+            int s = num1-num;
+            checkArgument(s==1, "新建一个看守位列表实际增加的" + s);
 
 
 
-    //新建看守位
+            //获取第一个预置位并删除预置位
+            JSONArray list2 = md.cameraList(device_id,"GUARD").getJSONArray("list");
+            int num2 = list2.size();
+
+            int preset = list2.getJSONObject(0).getInteger("preset_index");
+            JSONObject b = md.deleteGuard(device_id);
+            String message1 = b.getString("message");
+            JSONObject data1 = b.getJSONObject("data");
+            String waring1 = data1.getString("waring");
+            checkArgument(message1.equals("success"), "删除不成功原因" + waring1);
+
+            //获取删除预置位后的预置位列表
+            JSONArray list3 = md.cameraList(device_id,"GUARD").getJSONArray("list");
+            int num3 = list3.size();
+            int d = num2-num3;
+            checkArgument(d==1, "删除一个看守位列表实际减少了" + d);
 
 
-
-
-    @DataProvider(name = "CHKRESULT")
-    public Object[] chkResult() {
-
-        return new String[][]{
-                {"REMOTE", "远程巡店", "1", "合格"},
-                {"REMOTE", "远程巡店", "2", "不合格"},
-                {"REMOTE", "远程巡店", "3", "不适用"},
-                {"SPOT", "现场巡店", "1", "合格"},
-                {"SPOT", "现场巡店", "2", "不合格"},
-                {"SPOT", "现场巡店", "3", "不适用"},
-
-        };
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建看守位、新建看守位后列表+1、删除一个看守位列表-1");
+        }
     }
 
-    @DataProvider(name = "DJTYPE")
-    public Object[] DJTYPE() {
-        return new String[][]{
-                {"SCHEDULE_TASK", "定检任务", "1", "合格"},
-                {"SCHEDULE_TASK", "定检任务", "2", "不合格"},
-                {"SCHEDULE_TASK", "定检任务", "3", "不适用"},
-        };
+
+    //调用看守位
+    @Test(dataProvider = "device_id")
+    public void backGuard(String device_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject a = md.dyGuard(device_id);
+            String message = a.getString("message");
+            JSONObject data = a.getJSONObject("data");
+            String waring = data.getString("waring");
+            checkArgument(message.equals("success"), "调用不成功原因" + waring);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("调用看守位 ");
+        }
     }
 
 
-    @DataProvider(name = "XDTYPE")
-    public Object[] xdtype() {
+    //调用预置位
+    @Test(dataProvider = "device_id")
+    public void backPreset(String device_id) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取预置位列表
+            JSONArray list = md.cameraList(device_id,"PRESET").getJSONArray("list");
+            for(int i=0;i<=list.size();i++){
+                int index = list.getJSONObject(i).getInteger("preset_index");
+                JSONObject a = md.dyPreset(device_id,index);
+                String message = a.getString("message");
+                JSONObject data = a.getJSONObject("data");
+                String waring = data.getString("waring");
+                checkArgument(message.equals("success"), "调用不成功原因" + waring);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("调用看守位 ");
+        }
+    }
+
+
+
+    @DataProvider(name = "device_id")
+    public Object[] cameraId() {
 
         return new String[][]{
-                {"REMOTE", "远程巡店"},
-                {"SPOT", "现场巡店"},
+                {"8061349193417728"},
+                {"8097818264503296"},
+                {"8058611994690560"}
 
         };
     }

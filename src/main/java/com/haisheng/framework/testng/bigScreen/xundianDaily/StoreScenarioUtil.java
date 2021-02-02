@@ -1929,12 +1929,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject cameraList(String terminal_device_id,String type,Long shopId) throws Exception {
+    public JSONObject cameraList(String terminal_device_id,String type) throws Exception {
         String url = "/patrol/ptz/control/preset/list";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
         json.put("type",type);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1944,13 +1943,12 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject creatPreset(String terminal_device_id,String name,int time,Long shopId) throws Exception {
+    public JSONObject creatPreset(String terminal_device_id,String name,int time) throws Exception {
         String url = "/patrol/ptz/control/preset/add";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
         json.put("name",name);
         json.put("time",time);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1962,13 +1960,12 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject gxPreset(String terminal_device_id,String name,int preset_index,int shopId) throws Exception {
+    public JSONObject gxPreset(String terminal_device_id,String name,int preset_index) throws Exception {
         String url = "/patrol/ptz/control/preset/update";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
         json.put("name",name);
         json.put("preset_index",preset_index);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1978,27 +1975,41 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject deletePreset(String terminal_device_id,int preset_index,Long shopId) throws Exception {
+    public JSONObject deletePreset(String terminal_device_id,int preset_index) throws Exception {
         String url = "/patrol/ptz/control/preset/delete";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
         json.put("preset_index",preset_index);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
+
     /**
-     * @description: 20.5云台设备轮巡
+     * @description: 20.5删除看守位
      * @author: zt
      * @time:
      */
-    public JSONObject Polling(String terminal_device_id, int shopId,JSONArray preset_list) throws Exception {
+    public JSONObject deleteGuard(String terminal_device_id) throws Exception {
+        String url = "/patrol/ptz/control/preset/delete";
+        JSONObject json = new JSONObject();
+        json.put("terminal_device_id",terminal_device_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description: 20.6云台设备轮巡
+     * @author: zt
+     * @time:
+     */
+    public JSONObject Polling(String terminal_device_id,JSONArray preset_list) throws Exception {
         String url = "/patrol/ptz/control/polling";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
-        json.put("shopId",shopId);
         json.put("preset_list",preset_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -2006,15 +2017,14 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * @description: 20.6设置看守位
+     * @description: 20.7设置看守位
      * @author: zt
      * @time:
      */
-    public JSONObject Guard(String terminal_device_id,int shopId) throws Exception {
+    public JSONObject Guard(String terminal_device_id) throws Exception {
         String url = "/patrol/ptz/control/guard-position/add";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2022,16 +2032,14 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * @description: 20.7调用看守位
+     * @description: 20.8调用看守位
      * @author: zt
      * @time:
      */
-    public JSONObject dyGuard(String terminal_device_id,int preset_index,int shopId) throws Exception {
+    public JSONObject dyGuard(String terminal_device_id) throws Exception {
         String url = "/patrol/ptz/control/guard-position/back";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
-        json.put("preset_index",preset_index);
-        json.put("shopId",shopId);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2039,15 +2047,15 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * @description: 20.8调用预置位
+     * @description: 20.9调用预置位
      * @author: zt
      * @time:
      */
-    public JSONObject dyPreset(String terminal_device_id,int shopId) throws Exception {
+    public JSONObject dyPreset(String terminal_device_id,int index) throws Exception {
         String url = "/patrol/ptz/control/preset/back";
         JSONObject json = new JSONObject();
         json.put("terminal_device_id",terminal_device_id);
-        json.put("shopId",shopId);
+        json.put("index",index);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
