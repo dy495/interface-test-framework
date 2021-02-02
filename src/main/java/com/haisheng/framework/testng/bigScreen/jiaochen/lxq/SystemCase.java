@@ -2199,14 +2199,40 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+    //积分订单
+
     //todo 积分订单筛选栏 接口状态要改
-
-
     //todo 积分订单确认发货
+    //2021-02-02
+    @Test
+    public void exchangeOrder() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List time = new ArrayList();
 
-    //todo 新建商品-新建实体商品积分兑换- 小程序兑换- 发货
 
-    //todo 新建商品-新建虚拟商品积分兑换- 小程序兑换 ok
+            JSONArray list = jc.exchangeOrder(1,50,null,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String date = obj.getString("exchange_time")+":000";
+                time.add(dt.dateToTimestamp(date));
+            }
+            List timecopy = time;
+            Collections.sort(time);
+            Preconditions.checkArgument(Iterators.elementsEqual(time.iterator(),timecopy.iterator()),"未倒序排列");
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】列表根据兑换时间倒序排列");
+        }
+    }
+
+
 
     @Test
     public void newFictitiousAndBuy() {

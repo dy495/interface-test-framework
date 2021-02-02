@@ -4697,6 +4697,47 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+    /**
+     * @description :积分基础规则设置
+     * @date :2021/02/02 16:00
+     **/
+
+    public JSONObject basicRule(Integer page,Integer size) {
+        String url = "/jiaochen/pc/integral-center/integral-basic-rules";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分规则设置
+     * @date :2021/02/02 16:00
+     **/
+
+    public JSONObject setRule(Long id,Integer year,String description,String rule_type) {
+        String url = "/jiaochen/pc/integral-center/integral-rule-set";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("year",year);
+        json1.put("description",description);
+        json1.put("rule_type",rule_type);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :积分兑换规则设置
+     * @date :2021/02/02 16:00
+     **/
+
+    public JSONObject exchangeRule(Integer page,Integer size) {
+        String url = "/jiaochen/pc/integral-center/integral-exchange-rules";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        return invokeApi(url,json1);
+    }
+
 
     //-------------小程序部分------------------------
 
