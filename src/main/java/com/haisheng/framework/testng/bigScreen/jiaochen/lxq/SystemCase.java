@@ -10,6 +10,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProd
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -1547,7 +1549,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void brandAdd(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = (int)System.currentTimeMillis();
+            Long id = System.currentTimeMillis();
             int code = jc.BrandCreat(false,id,name,desc,info.logo).getInteger("code");
             Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
 
@@ -1574,7 +1576,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void brandAddErr(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = (int)System.currentTimeMillis();
+            Long id = System.currentTimeMillis();
             int code = jc.BrandCreat(false,id,name,desc,info.logo).getInteger("code");
             Preconditions.checkArgument(code==1001,a+"状态码期待1001，实际"+code);
 
@@ -1602,7 +1604,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void brandAddErr1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = (int)System.currentTimeMillis();
+            Long id = System.currentTimeMillis();
             String name = System.currentTimeMillis() + "重复";
             jc.BrandEdit(false,id,name,name,info.logo);
             int code = jc.BrandEdit(false,id,name,name,info.logo).getInteger("code");
@@ -2263,25 +2265,112 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             /**
-             * 步骤一 新建实体积分商品 兑换次数不限
+             * 步骤一 新建品牌、一二三级品类、规格、商品
              */
 
+            //新建品牌
+            Long brandID = System.currentTimeMillis();
+            jc.BrandCreat(true,brandID,"name"+brandID,"desc"+brandID,info.logo);
+
+            //新建一级品类
+            Long firstid = System.currentTimeMillis();
+            String firstname = "F"+Integer.toString((int)((Math.random()*9+1)*1000));
+            jc.categoryCreate(true,firstname,"一级品类",null,info.logo,firstid);
+            jc.categoryChgStatus(firstid,true);
+
+            //新建二级品类
+            Long secondid = System.currentTimeMillis();
+            String secondname = "S"+Integer.toString((int)((Math.random()*9+1)*1000));
+            jc.categoryCreate(true,secondname,"二级品类",firstid,info.logo,secondid);
+            jc.categoryChgStatus(secondid,true);
+
+            //新建三级品类
+            Long thirdid = System.currentTimeMillis();
+            String thirdname = "T"+Integer.toString((int)((Math.random()*9+1)*1000));
+            jc.categoryCreate(true,thirdname,"三级品类",secondid,info.logo,thirdid);
+            jc.categoryChgStatus(thirdid,true);
+
+            //新建规格
+            Long speID = System.currentTimeMillis();
+            String speName = "规格" + Integer.toString((int)((Math.random()*9+1)*1000));
+            String specifications_list_str = "[" +
+                    "{" +
+                    "\"specifications_item\":\""+dt.getHistoryDate(0) +"\"," +
+                    "\"num\":100" +
+                    "}" +
+                    "]";
+            JSONArray specifications_list = JSONArray.parseArray(specifications_list_str);
+            Long specifications_detail_id = 1L;// ??
+            jc.specificationsCreate(speName,firstid,specifications_list,speID,true);
+
+            //新建商品
+            String select_specifications_str =
+                    "[" +
+                            "{" +
+                            "\"specifications_id\":"+ speID+","+
+                            "\"specifications_name\":\""+speName +"\","+
+                            "\"specifications_list\":[" +
+                            "\"specifications_detail_id\":"+specifications_detail_id +"\","+
+                            "\"specifications_detail_name\":\""+dt.getHistoryDate(0)+"\""+
+                            "}]}]";
+            JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
+            String goods_specifications_list_str = "[" +
+                    "{" +
+                    "\"first_specifications\":"+specifications_detail_id+"," +
+                    //"\"second_specifications\":"+null+",\n" +
+                    "\"head_pic\":\""+info.logo+"\"," +
+                    "\"price\":69.98" +
+                    "}]";
+            JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
+            pcCreateGoods goods = new pcCreateGoods();
+            goods.id = System.currentTimeMillis();
+            goods.price = "99.99";
+            goods.select_specifications = select_specifications;
+            goods.goods_specifications_list = goods_specifications_list;
+            jc.createGoodMethod(goods);
 
 
             /**
-             * 步骤二 小程序【积分商城】兑换
+             * 步骤二 新建实体积分商品 兑换次数不限
              */
 
+            JSONArray specification_list = new JSONArray(); // 内容要补充
+            pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
+            ex.chkcode=true;
+            ex.id  = System.currentTimeMillis();
+            ex.exchange_goods_type = "REAL";
+            ex.goods_id = goods.id;
+            ex.is_limit=false;
+            ex.specification_list = specification_list;
+            jc.exchangeGoodCreat(ex);
 
 
             /**
-             * 步骤三 PC发货
+             * 步骤三 小程序【积分商城】兑换
              */
+            submitOrder or = new submitOrder();
+            or.commodity_id = ex.id;
+            or.specification_id = specifications_detail_id;
+            or.buyer_message = "自动化"+System.currentTimeMillis();
+            or.commodity_num = 1;
+            or.district_code = info.district_code;
+            or.address= "zdh北京市海淀区";
+            or.receiver = "zdh";
+            or.receive_phone= "13400000001";
+            jc.appletSubmitOrder(or);
 
+            //查询订单id
+            Long order_id = jc.exchangeOrder(1,1,null,null,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
 
             /**
-             * 步骤四 小程序【积分兑换订单】再次兑换
+             * 步骤四 PC发货
              */
+            jc.confirmShipment(order_id,String.valueOf(System.currentTimeMillis()),true);
+
+            /**
+             * 步骤五 小程序【积分兑换订单】再次兑换
+             */
+            jc.appletSubmitOrder(or);
 
 
         } catch (AssertionError e) {

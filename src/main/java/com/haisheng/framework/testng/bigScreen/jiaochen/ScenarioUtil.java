@@ -4128,7 +4128,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :创建品牌
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandCreat(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
+    public JSONObject BrandCreat(Boolean chkcode, Long id, String brand_name, String brand_description,String brand_pic) {
         String url = "/jiaochen/pc/integral-mall/create-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4167,7 +4167,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改品牌
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandEdit(Boolean chkcode, Integer id, String brand_name, String brand_description,String brand_pic) {
+    public JSONObject BrandEdit(Boolean chkcode, Long id, String brand_name, String brand_description,String brand_pic) {
         String url = "/jiaochen/pc/integral-mall/edit-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4181,7 +4181,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品牌
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandDel(Integer id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject BrandDel(Long id, Integer page, Integer size, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4194,7 +4194,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :创建商品规格
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsCreate(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
+    public JSONObject specificationsCreate(String specifications_name, Long belongs_category, JSONArray category_list,Long id,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/create-specifications";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4643,7 +4643,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/27 16:00
      **/
 
-    public JSONObject exchangeOrder(Integer page, Integer size,String order_id, String start_time,String end_time,String order_status,
+    public JSONObject exchangeOrderExport(Integer page, Integer size,String order_id, String start_time,String end_time,String order_status,
                                     String member,String goods_name,String export_type,JSONArray ids,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-center/exchange-order/export";
         JSONObject json1=new JSONObject();
@@ -4677,7 +4677,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/27 16:00
      **/
 
-    public JSONObject confirmShipment(Integer id,String odd_numbers,Boolean chkcode) {
+    public JSONObject confirmShipment(Long id,String odd_numbers,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-center/confirm_shipment";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
