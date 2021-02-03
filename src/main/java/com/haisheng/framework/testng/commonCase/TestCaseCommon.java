@@ -391,7 +391,25 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
-
+    public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
+        initHttpConfig();
+        StringBuilder stringBuilder = new StringBuilder();
+        String queryUrl = IpPort + path + "?";
+        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = paramMap.get(key);
+            stringBuilder.append("&").append(key).append("=").append(value);
+        }
+        String param = stringBuilder.toString().replaceFirst("&", "");
+        config.url(queryUrl + param);
+        logger.info("{} json param: {}", path.replace("?", ""), param);
+        long start = System.currentTimeMillis();
+        response = HttpClientUtil.get(config);
+        logger.info("response: {}", response);
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
     public String httpGet(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;

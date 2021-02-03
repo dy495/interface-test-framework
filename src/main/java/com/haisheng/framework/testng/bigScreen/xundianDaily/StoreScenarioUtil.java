@@ -2578,7 +2578,20 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-
+    /**
+     * @description:4.7. 历史数据-区域关注度数据
+     * @author:
+     * @time:
+     */
+    public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
+        String url = "/patrol/history/shop/day/region-pv-uv";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("dateType",dateType);
+        json.put("day",day);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------
