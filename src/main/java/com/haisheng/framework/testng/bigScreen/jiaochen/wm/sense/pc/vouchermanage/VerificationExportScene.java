@@ -10,7 +10,7 @@ import java.util.List;
  * 卡券管理 -> 创建核销人员
  */
 @Builder
-public class VerificationExport extends BaseScene {
+public class VerificationExportScene extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

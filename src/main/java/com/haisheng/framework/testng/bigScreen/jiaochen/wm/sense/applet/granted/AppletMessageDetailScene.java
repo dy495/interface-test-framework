@@ -12,7 +12,7 @@ import lombok.Builder;
  */
 @Builder
 public class AppletMessageDetailScene extends BaseScene {
-    private final String id;
+    private final Long id;
 
     @Override
     public JSONObject getJSONObject() {

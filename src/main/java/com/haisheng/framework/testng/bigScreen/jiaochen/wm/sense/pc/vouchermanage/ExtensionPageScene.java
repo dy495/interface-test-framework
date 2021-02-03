@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ExtensionPage extends BaseScene {
+public class ExtensionPageScene extends BaseScene {
     private final Integer id;
     @Builder.Default
     private Integer page = 1;

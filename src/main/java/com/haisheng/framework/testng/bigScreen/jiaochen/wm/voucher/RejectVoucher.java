@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 拒绝状态
+ *
  * @author wangmin
  * @date 2021/1/21 16:53
- * @desc 拒绝状态
  */
 public class RejectVoucher extends BaseVoucher {
     public RejectVoucher(Builder builder) {

@@ -9,9 +9,10 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * 停止发放状态
+ *
  * @author wangmin
  * @date 2021/1/20 16:41
- * @desc 停止发放状态
  */
 public class StopVoucher extends BaseVoucher {
 

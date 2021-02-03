@@ -740,7 +740,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             user.login(administrator);
             List<Long> list = new ArrayList<>();
             list.add(id);
-            IScene scene1 = Transfer.builder().transferPhone(marketing.getPhone())
+            IScene scene1 = TransferScene.builder().transferPhone(marketing.getPhone())
                     .receivePhone("13373166806").voucherIds(list).build();
             jc.invokeApi(scene1);
             int newTotal = jc.invokeApi(scene).getInteger("total");
@@ -1702,7 +1702,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
-            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+            IScene scene = TransferScene.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
                     .voucherIds(getList(voucherList.get(0))).build();
             String message = jc.invokeApi(scene, false).getString("message");
             CommonUtil.valueView(message);
@@ -1725,7 +1725,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             String voucherName = util.getAppletVoucherName(voucherList.get(0));
             //转移
             user.login(administrator);
-            IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
+            IScene scene = TransferScene.builder().transferPhone(marketing.getPhone()).receivePhone(applet.getPhone())
                     .voucherIds(getList(voucherList.get(0))).build();
             String message = jc.invokeApi(scene, false).getString("message");
             CommonUtil.valueView(message);
@@ -1750,7 +1750,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //转移
             user.login(administrator);
             Arrays.stream(phones).forEach(phone -> {
-                IScene scene = Transfer.builder().transferPhone(phone).receivePhone(applet.getPhone())
+                IScene scene = TransferScene.builder().transferPhone(phone).receivePhone(applet.getPhone())
                         .voucherIds(getList(voucherList.get(0))).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 String err = "推送用户id不能为空";
@@ -1775,7 +1775,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             //转移
             user.login(administrator);
             Arrays.stream(phones).forEach(phone -> {
-                IScene scene = Transfer.builder().transferPhone(marketing.getPhone()).receivePhone(phone)
+                IScene scene = TransferScene.builder().transferPhone(marketing.getPhone()).receivePhone(phone)
                         .voucherIds(getList(voucherList.get(0))).build();
                 String message = jc.invokeApi(scene, false).getString("message");
                 String err = phone.equals(marketing.getPhone()) ? "转移账号和接收账号不能相同" : "卡券接收人未注册小程序";

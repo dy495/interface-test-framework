@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumPushTarget;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletPushTargetEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
@@ -67,7 +67,7 @@ public class SellOutVoucher extends BaseVoucher {
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
         List<Long> voucherList = new ArrayList<>();
         voucherList.add(voucherId);
-        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                 .type(0).voucherOrPackageList(voucherList).useDays(10).ifSendImmediately(true);
         visitor.invokeApi(builder.build());

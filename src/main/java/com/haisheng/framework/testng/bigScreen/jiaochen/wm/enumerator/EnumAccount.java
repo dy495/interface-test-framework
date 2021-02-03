@@ -11,6 +11,8 @@ public enum EnumAccount {
 
     ADMINISTRATOR_DAILY("15711300001", "000000", "系统管理员", true, "轿辰"),
 
+    WINSENSE_LAB_DAILY("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）"),
+
     MARKETING_ONLINE("15321527989", "000000", "营销管理", false, ""),
 
     ADMINISTRATOR_ONLINE("15711200001", "000000", "系统管理员", false, "轿辰线上测试"),

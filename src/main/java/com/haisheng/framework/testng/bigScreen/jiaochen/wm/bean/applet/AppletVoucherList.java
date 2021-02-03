@@ -5,6 +5,12 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 小程序卡券信息
+ *
+ * @author wangmin
+ * @date 2020-12-20
+ */
 @Data
 public class AppletVoucherList implements Serializable {
     @JSONField(name = "id")

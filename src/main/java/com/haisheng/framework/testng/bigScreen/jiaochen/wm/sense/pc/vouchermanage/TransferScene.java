@@ -10,7 +10,7 @@ import java.util.List;
  * 卡券转移
  */
 @Builder
-public class Transfer extends BaseScene {
+public class TransferScene extends BaseScene {
     private final String transferPhone;
     private final String receivePhone;
     private final List<Long> voucherIds;

@@ -40,7 +40,7 @@ import java.util.Date;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class AppletManager extends TestCaseCommon implements TestCaseStd {
+public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_DAILY;
     private static final EnumAccount MARKETING = EnumAccount.MARKETING_DAILY;

@@ -6,9 +6,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
+ * 活动生成入口
+ *
  * @author wangmin
  * @date 2021/1/20 14:54
- * @desc 活动生成
  */
 public class ActivityGenerator extends BaseActivity {
 

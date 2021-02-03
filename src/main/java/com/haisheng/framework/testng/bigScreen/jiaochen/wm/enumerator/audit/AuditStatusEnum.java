@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * 套餐审核状态
+ *
  * @author wangmin
  * @date 2020-07-06 16:30
  */
@@ -27,8 +29,8 @@ public enum AuditStatusEnum {
      */
     CANCEL(3, "已取消");
 
-    private Integer code;
-    private String name;
+    private final Integer code;
+    private final String name;
 
     AuditStatusEnum(Integer code, String name) {
         this.code = code;

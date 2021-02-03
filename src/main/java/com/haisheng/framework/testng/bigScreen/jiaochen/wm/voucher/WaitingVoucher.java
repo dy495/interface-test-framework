@@ -8,9 +8,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
+ * 审核中状态
+ *
  * @author wangmin
  * @date 2021/1/20 15:35
- * @desc 审核中状态
  */
 public class WaitingVoucher extends BaseVoucher {
 

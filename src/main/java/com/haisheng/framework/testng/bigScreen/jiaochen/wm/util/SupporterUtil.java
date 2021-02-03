@@ -18,10 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionPageScene;
@@ -170,7 +167,7 @@ public class SupporterUtil extends BaseUtil {
                 return voucherName;
             }
         }
-        return createVoucherName();
+        return createVoucherName(typeEnum);
     }
 
     /**
@@ -754,9 +751,9 @@ public class SupporterUtil extends BaseUtil {
      *
      * @return 套餐名
      */
-    public String createPackageName() {
-        int num = CommonUtil.getRandom(1, 10000);
-        String packageName = "套餐" + num;
+    public String createPackageName(UseRangeEnum useRangeEnum) {
+        int num = CommonUtil.getRandom(1, 1000000);
+        String packageName = useRangeEnum.getName() + "套餐" + num;
         IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
         List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
         if (packagePages.isEmpty()) {
@@ -767,7 +764,7 @@ public class SupporterUtil extends BaseUtil {
                 return packageName;
             }
         }
-        return createPackageName();
+        return createPackageName(useRangeEnum);
     }
 
     /**
@@ -776,8 +773,8 @@ public class SupporterUtil extends BaseUtil {
      * @param voucherList 套餐所含卡券信息
      * @return 套餐名
      */
-    public String createPackage(JSONArray voucherList) {
-        String packageName = createPackageName();
+    public String createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
+        String packageName = createPackageName(anEnum);
         IScene scene = CreatePackageScene.builder().packageName(packageName).validity("30").packageDescription(getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList)
                 .packagePrice(49.99).status(true).customerUseValidity(1).shopIds(getShopIdList(3)).build();
@@ -848,7 +845,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public void buyTemporaryPackage(JSONArray voucherList, int type) {
         IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
+                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
@@ -864,7 +861,7 @@ public class SupporterUtil extends BaseUtil {
     public void buyTemporaryPackage(String voucherName, int type) {
         JSONArray voucherList = getVoucherArray(voucherName, 1);
         IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
+                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
@@ -879,7 +876,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public void buyFixedPackage(Long packageId, int type) {
         IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
+                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
                 .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
@@ -897,7 +894,7 @@ public class SupporterUtil extends BaseUtil {
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
         IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
-                .PurchaseFixedPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+                .PurchaseFixedPackage.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).packageId(packageId)
                 .packagePrice("1.11").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
@@ -917,7 +914,7 @@ public class SupporterUtil extends BaseUtil {
         JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
         ReceptionPage receptionPage = getReceptionPageById(receptionId);
         //购买套餐
-        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
@@ -937,7 +934,7 @@ public class SupporterUtil extends BaseUtil {
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
@@ -955,7 +952,7 @@ public class SupporterUtil extends BaseUtil {
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = PurchaseTemporaryPackage.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
                 .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
@@ -989,13 +986,28 @@ public class SupporterUtil extends BaseUtil {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
-        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.name())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                 .type(type).voucherOrPackageList(voucherOrPackageList).useDays(10);
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
         visitor.invokeApi(builder.build());
+    }
+
+    /**
+     * 校验消息详情
+     */
+    public void checkMessageDetail(String messageType, String messageTypeName, String sendTime, String content, String phone, String customerName, String customerTypeName) {
+        IScene pushMessageScene = PushMessageScene.builder().build();
+        PushMsgRecord pushMsgRecord = collectBean(pushMessageScene, PushMsgRecord.class).get(0);
+        CommonUtil.checkResult("推送原因", messageType, pushMsgRecord.getMessageType());
+        CommonUtil.checkResult("推送原因名称", messageTypeName, pushMsgRecord.getCustomerTypeName());
+        CommonUtil.checkResult("推送时间", sendTime, pushMsgRecord.getSendTime());
+        CommonUtil.checkResult("消息内容", content, pushMsgRecord.getContent());
+        CommonUtil.checkResult("联系电话", phone, pushMsgRecord.getPhone());
+        CommonUtil.checkResult("接收人", customerName, pushMsgRecord.getCustomerName());
+        CommonUtil.checkResult("客户类型", customerTypeName, pushMsgRecord.getCustomerTypeName());
     }
 
     //----------------------------------------------------预约记录-------------------------------------------------------
