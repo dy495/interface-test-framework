@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -4167,8 +4166,190 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
 
+    /**
+     * @deprecated V2.0精品商城-商城订单--筛选栏单项搜索
+     * @date :2021-2-3
+     */
+    @Test(dataProvider = "SELECT_storeOrderPageFilter", dataProviderClass = Constant.class)
+    public void storeOrderPageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.storeOrderPage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.storeOrderPage(shopId, "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.storeOrderPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "商城订单列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "商城订单列表-系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0精品商城-商城订单--筛选栏单项搜索");
+        }
+    }
 
+    /**
+     * @deprecated V2.0商城订单列表--筛选栏全部填写校验
+     * @date :2021-2-2
+     */
+    public void storeOrderPageAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.storeOrderPageFilter_pram();
+            StoreOrderPageVariable variable = new StoreOrderPageVariable();
+            JSONArray res = jc.storeOrderPage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.bindPhone = data.getString(flag[0][1].toString());
+                variable.commodityName = data.getString(flag[1][1].toString());
+                variable.orderNumber = data.getString(flag[2][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.storeOrderPage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.bindPhone),"参数输入的查询的"+ variable.bindPhone+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.commodityName), "参数输入的查询的" + variable.commodityName + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.orderNumber), "参数输入的查询的" + variable.orderNumber + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "商城订单列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0商城订单列表--筛选栏全部填写校验");
+        }
+    }
+
+    /**
+     * @deprecated V2.0商城订单列表--筛选栏多项填写校验
+     * @date :2021-2-2
+     */
+    public void storeOrderPageSomeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.storeOrderPageFilter_pram();
+            StoreOrderPageVariable variable = new StoreOrderPageVariable();
+            JSONArray res = jc.storeOrderPage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.bindPhone = data.getString(flag[0][1].toString());
+                variable.commodityName = data.getString(flag[1][1].toString());
+//                variable.orderNumber = data.getString(flag[2][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //筛选之后的结果
+                JSONObject result = jc.storeOrderPage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.bindPhone),"参数输入的查询的"+ variable.bindPhone+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.commodityName), "参数输入的查询的" + variable.commodityName + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.orderNumber), "参数输入的查询的" + variable.orderNumber + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
+
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "商城订单列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0商城订单列表--筛选栏多项填写校验");
+        }
+    }
+    /**
+     * @description :V2.0商城订单列表--筛选栏不填写查询
+     * @date :2021-2-3
+     **/
+    @Test()
+    public void storeOrderPageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.storeOrderPage("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0商城订单列表--筛选栏不填写查询");
+        }
+    }
+    /**
+     * @deprecated V2.0精品商城-分销员管理--筛选栏单项搜索
+     * @date :2021-2-3
+     */
+    @Test(dataProvider = "SELECT_storeSalesPageFilter", dataProviderClass = Constant.class)
+    public void storeSalesPageOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.storeSalesPage(shopId, "1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.storeSalesPage(shopId, "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.storeSalesPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "分销员管理列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            } else {
+                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "分销员管理列表-系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0精品商城-分销员管理--筛选栏单项搜索");
+        }
+    }
+
+    /**
+     * @deprecated V2.0分销员管理--筛选栏全部填写校验
+     * @date :2021-2-2
+     */
+    public void storeSalesPageAllFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Object[][] flag = Constant.storeSalesPageFilter_pram();
+            StoreSalesPageVariable variable = new StoreSalesPageVariable();
+            JSONArray res = jc.storeSalesPage("", "1", "10","", "").getJSONArray("list");
+            if (res.size() > 0) {
+                JSONObject data = res.getJSONObject(0);
+                variable.salesPhone = data.getString(flag[0][1].toString());
+                variable.shopId = data.getString(flag[1][1].toString());
+                variable.page = "1";
+                variable.size = "10";
+                //全部筛选之后的结果
+                JSONObject result = jc.storeSalesPage(variable).getJSONArray("list").getJSONObject(0);
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.salesPhone),"参数输入的查询的"+ variable.salesPhone+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
+                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(res.size() == 0, "分销员管理列表系统错误,请联系开发人员");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V2.0分销员管理列表--筛选栏全部填写校验");
+        }
+    }
+    /**
+     * @description :V2.0分销员管理列表--筛选栏不填写查询
+     * @date :2021-2-3
+     **/
+    @Test()
+    public void storeSalesPageEmptyFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray res = jc.storeSalesPage("","1","10","","").getJSONArray("list");
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("V2.0商城订单列表--筛选栏不填写查询");
+        }
+    }
 
 
 

@@ -505,8 +505,39 @@ public class Constant {
     public static Object[][] storeCommodityPageFilter_pram(){
         return new String[][]{
                 {"commodity_name", "commodity_name"},
-                {"start_create_date", "start_create_date"},
-                {"end_create_date", "end_create_date"},
+//                {"start_create_date", "start_create_date"},
+//                {"end_create_date", "end_create_date"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC精品商城-商城订单
+     * @author: gly
+     * @time: 2020-2-3
+     */
+    @DataProvider(name = "SELECT_storeOrderPageFilter")
+    public static Object[][] storeOrderPageFilter_pram(){
+        return new String[][]{
+                {"bind_phone", "bind_phone"},
+                {"commodity_name", "commodity_name"},
+                {"order_number", "order_number"},
+//                {"start_pay_time", "start_pay_time"},
+//                {"end_pay_time", "end_pay_time"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC精品商城-分销员管理
+     * @author: gly
+     * @time: 2020-2-3
+     */
+    @DataProvider(name = "SELECT_storeSalesPageFilter")
+    public static Object[][] storeSalesPageFilter_pram(){
+        return new String[][]{
+                {"sales_phone", "sales_phone"},
+                {"shop_id", "shop_id"},
 
         };
     }

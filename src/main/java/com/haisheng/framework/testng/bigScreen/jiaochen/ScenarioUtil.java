@@ -5288,7 +5288,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC精品商城-商城订单
      * @date :2021/2/2
      **/
-    public JSONObject storeOrderPage(StoreOrderPage variable) {
+    public JSONObject storeOrderPage(StoreOrderPageVariable variable) {
         String url = "/jiaochen/pc/store/order/page";
         JSONObject json=new JSONObject();
         json.put("page",variable.page);
@@ -5299,6 +5299,37 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("end_pay_time",variable.endPayTime);
         json.put("order_number",variable.orderNumber);
 
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC精品商城-分销员管理列表
+     * @date :2021/2/3
+     **/
+    public JSONObject storeSalesPage(StoreSalesPageVariable variable) {
+        String url = "/jiaochen/pc/store/sales/page";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.page);
+        json.put("size",variable.size);
+        json.put("sales_phone",variable.salesPhone);
+        json.put("shop_id",variable.shopId);
+
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC精品商城-分销员管理列表
+     * @date :2021/2/3
+     **/
+    public JSONObject storeSalesPage(String shopId,String page,String size,String pram,String result) {
+        String url = "/jiaochen/pc/store/sales/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (pram != null){
+            json.put(pram, result);
+        }
         return invokeApi(url,json);
     }
 

@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable;
 
-public class StoreOrderPage {
+public class StoreOrderPageVariable {
     public String page ;
     public String size ;
     public String bindPhone;
