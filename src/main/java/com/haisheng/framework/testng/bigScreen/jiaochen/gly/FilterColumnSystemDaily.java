@@ -4137,7 +4137,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @deprecated V2.0商城套餐列表--筛选栏单项搜索
+     * @deprecated V2.0商城套餐列表--筛选栏单项搜索（只有一个参数）
      * @date :2021-2-2
      */
     @Test(dataProvider = "SELECT_storeCommodityPageFilter", dataProviderClass = Constant.class)
@@ -4165,6 +4165,10 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             saveData("V2.0商城套餐列表--筛选栏单项搜索");
         }
     }
+
+
+
+
 
 
 

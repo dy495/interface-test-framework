@@ -5267,6 +5267,41 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json);
     }
 
+    /**
+     * @description :PC精品商城-商城订单
+     * @date :2021/2/2
+     **/
+    public JSONObject storeOrderPage(String shopId,String page,String size,String pram,String result) {
+        String url = "/jiaochen/pc/store/order/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        if (pram != null){
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
+
+
+    /**
+     * @description :PC精品商城-商城订单
+     * @date :2021/2/2
+     **/
+    public JSONObject storeOrderPage(StoreOrderPage variable) {
+        String url = "/jiaochen/pc/store/order/page";
+        JSONObject json=new JSONObject();
+        json.put("page",variable.page);
+        json.put("size",variable.size);
+        json.put("bind_phone",variable.bindPhone);
+        json.put("commodity_name",variable.commodityName);
+        json.put("start_pay_time",variable.startPayTime);
+        json.put("end_pay_time",variable.endPayTime);
+        json.put("order_number",variable.orderNumber);
+
+        return invokeApi(url,json);
+    }
+
 
 
 

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.ConstantOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.*;
@@ -75,7 +75,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管理查询-筛选栏参数单项插查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_ReceptionManageFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_ReceptionManageFilter", dataProviderClass = ConstantOnline.class)
     public void selectAppointmentRecodeOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -143,7 +143,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAppointmentRecodeAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] ss = Constant.receptionManageFilter_pram();
+            Object[][] ss = ConstantOnline.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -186,7 +186,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAppointmentRecodeSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] ss = Constant.receptionManageFilter_pram();
+            Object[][] ss = ConstantOnline.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -282,7 +282,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :销售客户查询-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_PreSleCustomerManageFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_PreSleCustomerManageFilter", dataProviderClass = ConstantOnline.class)
     public void preSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -344,7 +344,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void preSleCustomerManageALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.preSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.preSleCustomerManage_pram();
             PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -379,7 +379,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void preSleCustomerManageSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.preSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.preSleCustomerManage_pram();
             PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -427,7 +427,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :售后客户查询-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = ConstantOnline.class)
     public void selectAfterSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -492,7 +492,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAfterSleCustomerManageAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.afterSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.afterSleCustomerManage_pram();
             AfterSleCustomerVariable variable = new AfterSleCustomerVariable();
             JSONArray res = jc.afterSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -528,7 +528,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAfterSleCustomerManageFSomeilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.afterSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.afterSleCustomerManage_pram();
             AfterSleCustomerVariable variable = new AfterSleCustomerVariable();
             JSONArray res = jc.afterSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -578,7 +578,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :小程序客户查询-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_weChatSleCustomerManageFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_weChatSleCustomerManageFilter", dataProviderClass = ConstantOnline.class)
     public void weChatSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -639,7 +639,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void weChatSleCustomerManageAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.weChatSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.weChatSleCustomerManage_pram();
             weChatSleCustomerVariable variable = new weChatSleCustomerVariable();
             JSONArray res = jc.weChatSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -670,7 +670,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void weChatSleCustomerManageSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.weChatSleCustomerManage_pram();
+            Object[][] flag = ConstantOnline.weChatSleCustomerManage_pram();
             weChatSleCustomerVariable variable = new weChatSleCustomerVariable();
             JSONArray res = jc.weChatSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -716,7 +716,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :预约记录-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = ConstantOnline.class)
     public void appointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -797,7 +797,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void appointmentRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.appointmentRecordFilter_pram();
+            Object[][] flag = ConstantOnline.appointmentRecordFilter_pram();
             appointmentRecordVariable variable = new appointmentRecordVariable();
             JSONArray res = jc.appointmentRecordManage("", "1", "10", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
@@ -841,7 +841,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void appointmentRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.appointmentRecordFilter_pram();
+            Object[][] flag = ConstantOnline.appointmentRecordFilter_pram();
             appointmentRecordVariable variable = new appointmentRecordVariable();
             JSONArray res = jc.appointmentRecordManage("", "1", "10", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
@@ -896,7 +896,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :保养配置-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_maintainFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_maintainFilter", dataProviderClass = ConstantOnline.class)
     public void maintainOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -930,7 +930,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.maintainFilter_pram();
+            Object[][] flag = ConstantOnline.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -967,7 +967,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.maintainFilter_pram();
+            Object[][] flag = ConstantOnline.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1019,7 +1019,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :卡券管理-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_voucherFormFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_voucherFormFilter", dataProviderClass = ConstantOnline.class)
     public void voucherFormOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1053,7 +1053,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherFormAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.voucherFormFilter_pram();
+            Object[][] flag = ConstantOnline.voucherFormFilter_pram();
             voucherFormVariable variable = new voucherFormVariable();
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1093,7 +1093,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherFormSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.voucherFormFilter_pram();
+            Object[][] flag = ConstantOnline.voucherFormFilter_pram();
             voucherFormVariable variable = new voucherFormVariable();
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1142,7 +1142,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :发卡记录-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_sendRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_sendRecordFilter", dataProviderClass = ConstantOnline.class)
     public void sendRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1205,7 +1205,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void sendRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.sendRecordFilter_pram();
+            Object[][] flag = ConstantOnline.sendRecordFilter_pram();
             sendRecordVariable variable = new sendRecordVariable();
             JSONArray res = jc.sendRecordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1237,7 +1237,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void sendRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.sendRecordFilter_pram();
+            Object[][] flag = ConstantOnline.sendRecordFilter_pram();
             sendRecordVariable variable = new sendRecordVariable();
             JSONArray res = jc.sendRecordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1284,7 +1284,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销记录-筛选栏单项查询-----发券者列表中不存在，传入值和返回值不一致，没有校验
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = ConstantOnline.class)
     public void verificationRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1346,7 +1346,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void verificationRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.verificationRecordFilter_pram();
+            Object[][] flag = ConstantOnline.verificationRecordFilter_pram();
             verificationRecordVariable variable = new verificationRecordVariable();
             JSONArray res = jc.verificationReordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1377,7 +1377,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void verificationRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.verificationRecordFilter_pram();
+            Object[][] flag = ConstantOnline.verificationRecordFilter_pram();
             verificationRecordVariable variable = new verificationRecordVariable();
             JSONArray res = jc.verificationReordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1421,7 +1421,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销人员记录-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_verificationPeopleFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_verificationPeopleFilter", dataProviderClass = ConstantOnline.class)
     public void verificationPeopleOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1456,7 +1456,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void verificationPeopleAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.verificationPeopleFilter_pram();
+            Object[][] flag = ConstantOnline.verificationPeopleFilter_pram();
             verificationPeopleVariable variable = new verificationPeopleVariable();
             JSONArray res = jc.verificationPeopleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1490,7 +1490,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void verificationPeopleSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.verificationPeopleFilter_pram();
+            Object[][] flag = ConstantOnline.verificationPeopleFilter_pram();
             verificationPeopleVariable variable = new verificationPeopleVariable();
             JSONArray res = jc.verificationPeopleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1538,7 +1538,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :套餐表单-筛选栏单项查询----时间和归属门店没有调
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_packageFormFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_packageFormFilter", dataProviderClass = ConstantOnline.class)
     public void packageFormOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1599,7 +1599,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void packageFormAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.packageFormFilter_pram();
+            Object[][] flag = ConstantOnline.packageFormFilter_pram();
             packageFormVariable variable = new packageFormVariable();
             JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1632,7 +1632,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void packageFormSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.packageFormFilter_pram();
+            Object[][] flag = ConstantOnline.packageFormFilter_pram();
             packageFormVariable variable = new packageFormVariable();
             JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1679,7 +1679,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :套餐购买记录-筛选栏单项查询---发套餐者搜索，服务端筛选返回有问题,支付类型在5页3行为空
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_buyPackageRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_buyPackageRecordFilter", dataProviderClass = ConstantOnline.class)
     public void buyPackageRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1755,7 +1755,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void buyPackageRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.buyPackageRecordFilter_pram();
+            Object[][] flag = ConstantOnline.buyPackageRecordFilter_pram();
             buyPackageVariable variable = new buyPackageVariable();
             JSONArray res = jc.buyPackageRecordFilterManage("", "1", "10", "", "").getJSONArray("list");
             String payTypeName = res.getJSONObject(0).getString("pay_type_name");
@@ -1790,7 +1790,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void buyPackageRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.buyPackageRecordFilter_pram();
+            Object[][] flag = ConstantOnline.buyPackageRecordFilter_pram();
             buyPackageVariable variable = new buyPackageVariable();
             JSONArray res = jc.buyPackageRecordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String payTypeName = res.getJSONObject(0).getString("pay_type_name");
@@ -1840,7 +1840,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :消息表单-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_messageFormFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_messageFormFilter", dataProviderClass = ConstantOnline.class)
     public void messageFormOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1919,7 +1919,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void messageFormAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.messageFormFilter_pram();
+            Object[][] flag = ConstantOnline.messageFormFilter_pram();
             messageFormVariable variable = new messageFormVariable();
             JSONArray res = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -1955,7 +1955,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void messageFormSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.messageFormFilter_pram();
+            Object[][] flag = ConstantOnline.messageFormFilter_pram();
             messageFormVariable variable = new messageFormVariable();
             JSONArray res = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -2002,7 +2002,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :内容管理-文章表单-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_articleFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_articleFilter", dataProviderClass = ConstantOnline.class)
     public void articleOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2065,7 +2065,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void articleAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.articleFilter_pram();
+            Object[][] flag = ConstantOnline.articleFilter_pram();
             articleVariable variable = new articleVariable();
             JSONArray res = jc.articleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -2108,7 +2108,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :报名列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_registerListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_registerListFilter", dataProviderClass = ConstantOnline.class)
     public void registerListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2175,7 +2175,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void registerListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.registerListFilter_pram();
+            Object[][] flag = ConstantOnline.registerListFilter_pram();
             registerListVariable variable = new registerListVariable();
             JSONArray res = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -2205,7 +2205,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void registerListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.registerListFilter_pram();
+            Object[][] flag = ConstantOnline.registerListFilter_pram();
             registerListVariable variable = new registerListVariable();
             JSONArray res = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
@@ -2249,7 +2249,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :报名审批列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_approvalListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_approvalListFilter", dataProviderClass = ConstantOnline.class)
     public void approvalListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2296,7 +2296,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void approvalListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.approvalListFilter_pram();
+            Object[][] flag = ConstantOnline.approvalListFilter_pram();
             int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
             approvalListVariable variable = new approvalListVariable();
             JSONArray res = jc.approvalListFilterManage(shopId, "1", "10", id, "", "").getJSONArray("list");
@@ -2334,7 +2334,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void approvalListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.approvalListFilter_pram();
+            Object[][] flag = ConstantOnline.approvalListFilter_pram();
             int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
             approvalListVariable variable = new approvalListVariable();
             JSONArray res = jc.approvalListFilterManage(shopId, "1", "10", id, "", "").getJSONArray("list");
@@ -2384,7 +2384,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :卡券申请-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_applyListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_applyListFilter", dataProviderClass = ConstantOnline.class)
     public void applyListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2459,7 +2459,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void applyListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.applyListFilter_pram();
+            Object[][] flag = ConstantOnline.applyListFilter_pram();
             applyListVariable variable = new applyListVariable();
             JSONArray res = jc.applyListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String statusNameRespon = res.getJSONObject(0).getString("status_name");
@@ -2495,7 +2495,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void applyListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.applyListFilter_pram();
+            Object[][] flag = ConstantOnline.applyListFilter_pram();
             applyListVariable variable = new applyListVariable();
             JSONArray res = jc.applyListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String statusNameRespon = res.getJSONObject(0).getString("status_name");
@@ -2546,7 +2546,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :门店列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_shopListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_shopListFilter", dataProviderClass = ConstantOnline.class)
     public void shopListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2580,7 +2580,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void shopListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.shopListFilter_pram();
+            Object[][] flag = ConstantOnline.shopListFilter_pram();
             JSONArray res = jc.shopListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -2621,7 +2621,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :品牌列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_brandListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_brandListFilter", dataProviderClass = ConstantOnline.class)
     public void brandListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2656,7 +2656,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void brandListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.brandListFilter_pram();
+            Object[][] flag = ConstantOnline.brandListFilter_pram();
             JSONArray res = jc.brandListFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -2685,7 +2685,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void brandListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.brandListFilter_pram();
+            Object[][] flag = ConstantOnline.brandListFilter_pram();
             JSONArray res = jc.brandListFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -2726,7 +2726,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :车系列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_carStyleListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_carStyleListFilter", dataProviderClass = ConstantOnline.class)
     public void carStyleListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2775,7 +2775,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :车型列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_carModelListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_carModelListFilter", dataProviderClass = ConstantOnline.class)
     public void carModelListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2812,7 +2812,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void carModelListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.carModelListFilter_pram();
+            Object[][] flag = ConstantOnline.carModelListFilter_pram();
             String brand_id = "33";
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
@@ -2843,7 +2843,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void carModelListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.carModelListFilter_pram();
+            Object[][] flag = ConstantOnline.carModelListFilter_pram();
             String brand_id = "33";
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
@@ -2886,7 +2886,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :角色列表-筛选栏单项查询
      * @date :2020/11/27
      **/
-    @Test(dataProvider = "SELECT_roleListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_roleListFilter", dataProviderClass = ConstantOnline.class)
     public void roleListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2935,7 +2935,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :员工列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_roleListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_roleListFilter", dataProviderClass = ConstantOnline.class)
     public void staffListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2983,7 +2983,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :导入记录列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_importListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_importListFilter", dataProviderClass = ConstantOnline.class)
     public void importListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3044,7 +3044,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void importListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.importListFilter_pram();
+            Object[][] flag = ConstantOnline.importListFilter_pram();
             JSONArray res = jc.importListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -3073,7 +3073,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void importListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.importListFilter_pram();
+            Object[][] flag = ConstantOnline.importListFilter_pram();
             JSONArray res = jc.importListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -3118,7 +3118,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :导出记录列表-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_exportListFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_exportListFilter", dataProviderClass = ConstantOnline.class)
     public void exportListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3153,7 +3153,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void exportListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.exportListFilter_pram();
+            Object[][] flag = ConstantOnline.exportListFilter_pram();
             JSONArray res = jc.exportListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -3184,7 +3184,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void exportListSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] flag = Constant.exportListFilter_pram();
+            Object[][] flag = ConstantOnline.exportListFilter_pram();
             JSONArray res = jc.exportListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
