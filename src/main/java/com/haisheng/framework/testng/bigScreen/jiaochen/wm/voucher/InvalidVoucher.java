@@ -5,6 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 
 /**
+ *
+ * 作废状态
  * @author wangmin
  * @date 2021/1/22 15:49
  */
@@ -18,7 +20,6 @@ public class InvalidVoucher extends BaseVoucher {
         logger("CREATE INVALID START");
         Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
-        logger("DO INVALID");
         invalidVoucher(voucherId);
         logger("CREATE INVALID FINISH");
     }

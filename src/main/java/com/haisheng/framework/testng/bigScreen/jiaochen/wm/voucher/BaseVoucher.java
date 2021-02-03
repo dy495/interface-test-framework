@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import java.util.List;
 
 /**
- * 卡券生成期抽象类
+ * 卡券生成抽象类
  *
  * @author wangmin
  * @date 2021/1/20 14:38
@@ -90,7 +90,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      * @return 卡券名
      */
     protected String getVoucherName(Long voucherId) {
-        IScene scene = VoucherFormPageScene.builder().build();
+        IScene scene = VoucherPageScene.builder().build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
     }

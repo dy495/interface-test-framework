@@ -9,7 +9,15 @@ import lombok.Builder;
  */
 @Builder
 public class VoucherVerificationScene extends BaseScene {
+
+    /**
+     * 小程序我的卡券对应的id
+     */
     private final String id;
+
+    /**
+     * 核销码
+     */
     private final String verificationCode;
 
     @Override

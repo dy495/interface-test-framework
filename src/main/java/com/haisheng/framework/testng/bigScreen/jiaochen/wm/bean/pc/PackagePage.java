@@ -18,6 +18,18 @@ public class PackagePage implements Serializable {
     private Integer validity;
 
     /**
+     * 客户有效期
+     */
+    @JSONField(name = "customer_use_validity")
+    private Integer customerUseValidity;
+
+    /**
+     * 审核状态
+     */
+    @JSONField(name = "audit_status_name")
+    private String auditStatusName;
+
+    /**
      * 套餐名称
      */
     @JSONField(name = "package_name")

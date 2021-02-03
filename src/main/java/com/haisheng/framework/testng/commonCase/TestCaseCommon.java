@@ -129,7 +129,7 @@ public class TestCaseCommon {
         } else {
             caseResult.setCaseName(method.getName());
         }
-        caseResult.setCiCmd(commonConfig.checklistCiCmd+caseResult.getCaseName());
+        caseResult.setCiCmd(commonConfig.checklistCiCmd + caseResult.getCaseName());
         logger.debug("fresh case: " + caseResult);
         return caseResult;
     }

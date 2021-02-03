@@ -6,10 +6,11 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.FollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.MaintainTimeList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -54,9 +55,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 业务场景工具
+ *
  * @author wangmin
  * @date 2021/1/20 13:36
- * @desc 业务场景工具
  */
 public class SupporterUtil extends BaseUtil {
     private final Visitor visitor;
@@ -128,7 +130,6 @@ public class SupporterUtil extends BaseUtil {
         }
         return builder;
     }
-
 
     /**
      * 构建卡券信息
@@ -410,16 +411,16 @@ public class SupporterUtil extends BaseUtil {
 //        visitor.invokeApi(scene);
 //    }
 
-//    /**
-//     * 获取重复的核销人员
-//     *
-//     * @return 电话号
-//     */
-//    public String getRepetitionVerificationPhone() {
-//        IScene scene = VerificationPeople.builder().build();
-//        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-//        return array.stream().map(e -> (JSONObject) e).map(e -> e.getString("verification_phone")).findFirst().orElse(null);
-//    }
+    /**
+     * 获取重复的核销人员
+     *
+     * @return 电话号
+     */
+    public String getRepetitionVerificationPhone() {
+        IScene scene = VerificationPeopleScene.builder().build();
+        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> e.getString("verification_phone")).findFirst().orElse(null);
+    }
 
     /**
      * 获取卡券页信息
@@ -779,7 +780,7 @@ public class SupporterUtil extends BaseUtil {
         String packageName = createPackageName();
         IScene scene = CreatePackageScene.builder().packageName(packageName).validity("30").packageDescription(getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList)
-                .packagePrice(49.99).status(true).shopIds(getShopIdList(3)).build();
+                .packagePrice(49.99).status(true).customerUseValidity(1).shopIds(getShopIdList(3)).build();
         visitor.invokeApi(scene);
         return packageName;
     }
@@ -1077,6 +1078,7 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 获取核销码
      *
+     * @param verificationStatus   核销码状态
      * @param verificationIdentity 核销员身份
      * @return 核销码
      */
@@ -1266,34 +1268,56 @@ public class SupporterUtil extends BaseUtil {
 //    }
 //
 
-//    /**
-//     * 获取小程序可用卡券的信息
-//     *
-//     * @return 卡券id
-//     */
-//    public List<AppletVoucherList> getAppletCanUsedVoucherList() {
-//        List<AppletVoucherList> list = new ArrayList<>();
-//        Integer id = null;
-//        Integer status = null;
-//        JSONArray array;
-//        do {
-//            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
-//            JSONObject response = visitor.invokeApi(scene);
-//            JSONObject lastValue = response.getJSONObject("last_value");
-//            id = lastValue.getInteger("id");
-//            status = lastValue.getInteger("status");
-//            array = response.getJSONArray("list");
-//            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucherList.class)).collect(Collectors.toList()));
-//            logger.info("id:{},status:{}", id, status);
-//        } while (array.size() == 20);
-//        return list;
-//    }
-//
-//    private boolean compareType(JSONObject jsonObject) {
-//        String statusName = jsonObject.getString("status_name");
-//        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName()) && !statusName.equals(EnumAppletVoucherStatus.USED.getName());
-//    }
-//
+    /**
+     * 获取小程序卡券状态的信息
+     *
+     * @param voucherUseStatusEnum 优惠券状态枚举
+     */
+    public AppletVoucherList getAppletVoucherList(VoucherUseStatusEnum voucherUseStatusEnum) {
+        AppletVoucherList appletVoucherList;
+        Integer id = null;
+        Integer status = null;
+        JSONArray array;
+        do {
+            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
+            JSONObject response = visitor.invokeApi(scene);
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            array = response.getJSONArray("list");
+            appletVoucherList = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.name())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucherList.class)).findFirst().orElse(null);
+            logger.info("id:{},status:{}", id, status);
+        } while (array.size() == 20);
+        return appletVoucherList;
+    }
+
+    /**
+     * 获取小程序可用卡券的信息
+     *
+     * @return 卡券id
+     */
+    public List<AppletVoucherList> getAppletCanUsedVoucherList() {
+        List<AppletVoucherList> list = new ArrayList<>();
+        Integer id = null;
+        Integer status = null;
+        JSONArray array;
+        do {
+            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
+            JSONObject response = visitor.invokeApi(scene);
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            array = response.getJSONArray("list");
+            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucherList.class)).collect(Collectors.toList()));
+            logger.info("id:{},status:{}", id, status);
+        } while (array.size() == 20);
+        return list;
+    }
+
+    private boolean compareType(JSONObject jsonObject) {
+        String statusName = jsonObject.getString("status_name");
+        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName()) && !statusName.equals(VoucherUseStatusEnum.USED.getName());
+    }
 
     /**
      * 获取小程序卡券数量
