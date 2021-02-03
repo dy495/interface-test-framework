@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
 
 /**
  *
@@ -37,7 +38,7 @@ public class InvalidVoucher extends BaseVoucher {
      * @param voucherId 优惠券id
      */
     public void invalidVoucher(Long voucherId) {
-        IScene scene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucher.builder().id(voucherId).build();
+        IScene scene = InvalidVoucherScene.builder().id(voucherId).build();
         visitor.invokeApi(scene);
     }
 }

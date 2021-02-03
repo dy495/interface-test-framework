@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class InvalidVoucher extends BaseScene {
+public class InvalidVoucherScene extends BaseScene {
     private final Long id;
 
     @Override

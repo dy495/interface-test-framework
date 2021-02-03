@@ -310,7 +310,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene scene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(scene).getInteger("total");
             //作废优惠券
-            visitor.invokeApi(InvalidVoucher.builder().id(voucherId).build());
+            visitor.invokeApi(InvalidVoucherScene.builder().id(voucherId).build());
             //校验优惠券状态
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
@@ -477,7 +477,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int changeRecordTotal = visitor.invokeApi(scene).getInteger("total");
             String voucherName = util.getVoucherName(voucherId);
             //作废优惠券
-            visitor.invokeApi(InvalidVoucher.builder().id(voucherId).build());
+            visitor.invokeApi(InvalidVoucherScene.builder().id(voucherId).build());
             //校验优惠券状态
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.INVALIDED.name(), voucherPage.getVoucherStatus());
@@ -575,7 +575,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
             //作废优惠券
-            visitor.invokeApi(InvalidVoucher.builder().id(voucherId).build());
+            visitor.invokeApi(InvalidVoucherScene.builder().id(voucherId).build());
             //校验优惠券状态
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
@@ -736,7 +736,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-//            saveData("优惠券管理--购买一个临时套餐，套餐内优惠券剩余库存-1&套餐购买记录+1");
+            saveData("优惠券管理--购买一个临时套餐，套餐内优惠券剩余库存-1&套餐购买记录+1");
         }
     }
 
