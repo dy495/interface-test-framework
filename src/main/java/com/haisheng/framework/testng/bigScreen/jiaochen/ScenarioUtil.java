@@ -4013,7 +4013,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :创建商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,Long belong_category,String belong_pic,Long id) {
+    public JSONObject categoryCreate(Boolean Checkcode, String category_name,String category_level,String belong_category,String belong_pic,Long id) {
         String url = "/jiaochen/pc/integral-mall/create-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);
@@ -4075,7 +4075,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryEdit(Boolean Checkcode, Long id, String category_name,String category_level,Integer belong_category,String belong_pic) {
+    public JSONObject categoryEdit(Boolean Checkcode, Long id, String category_name,String category_level,String belong_category,String belong_pic) {
         String url = "/jiaochen/pc/integral-mall/edit-category";
         JSONObject json1=new JSONObject();
         json1.put("category_name",category_name);

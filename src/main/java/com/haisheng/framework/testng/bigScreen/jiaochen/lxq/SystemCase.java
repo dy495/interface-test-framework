@@ -908,7 +908,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ROLE")
     public  Object[] role() {
         return new Object[][]{
-                {info.allauth_id,info.allauth_list,"13412010057","全部页面权限"},
+//                {info.allauth_id,info.allauth_list,"13412010057","全部页面权限"},
                 {info.daoruauth_id,info.daoruauth_list,"13412010058","导入记录权限所有页面；数据权限=全部；主体=品牌；无功能权限"},
                 {info.jiedaiauth_id,info.jiedaiauth_list,"13412010069","接待管理所有页面；数据权限=个人；主体类型权限=门店；全部功能权限"},
                 {info.kehu12auth_id,info.kehu12auth_list,"13412010061","客户管理+销售客户tab+售后客户tab；数据权限=全部；主体类型权限=集团；无功能权限"},
@@ -916,11 +916,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {info.yuyue12auth_id,info.yuyue12auth_list,"13412010063","预约管理+预约看板tab+预约记录tab；数据权限=全部；主体类型权限=门店；功能权限=售后接待+预约保养分配+预约应答人"},
                 {info.xitong123auth_id,info.xitong123auth_list,"13412010064","门店管理+品牌管理+品牌删除；数据权限=全部；主体类型权限=集团；无功能权限"},
                 {info.xitong45auth_id,info.xitong45auth_list,"13412010065","角色管理+员工管理；数据权限=全部；主体类型权限=区域；无功能权限"},
-                {info.kaquan45auth_id,info.kaquan45auth_list,"13412010066","卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限"},
-                {info.kaquan123auth_id,info.kaquan123auth_list,"13412010067","卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限"},
+//                {info.kaquan45auth_id,info.kaquan45auth_list,"13412010066","卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限"},
+//                {info.kaquan123auth_id,info.kaquan123auth_list,"13412010067","卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限"},
                 {info.taocannoauth_id,info.taocannoauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
                 {info.taocanauth_id,info.taocanauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
-                {info.nxauth_id,info.nxauth_list,"13412010067","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
+//                {info.nxauth_id,info.nxauth_list,"13412010067","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
 
         };
     }
@@ -1039,7 +1039,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      */
 
     //2021-01-22
-    //@Test
+    @Test
     public void categoryFilter1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1072,7 +1072,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void categoryFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1095,7 +1095,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void categoryFilter3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1110,7 +1110,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             JSONArray list2 = jc.categoryPage(1,100,false,null,null,null).getJSONArray("list");
             for (int i=0;i <list2.size();i++){
-                JSONObject obj = list.getJSONObject(i);
+                JSONObject obj = list2.getJSONObject(i);
                 Boolean status = obj.getBoolean("category_status");
                 String name = obj.getString("category_name");
                 Preconditions.checkArgument(status==false,"搜索状态为false，商品"+name+"的状态为true");
@@ -1125,7 +1125,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void categoryShow() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1137,11 +1137,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("category_pic"),"品类"+id+"无品类图");
                 Preconditions.checkArgument(obj.containsKey("category_name"),"品类"+id+"无品类名称");
                 Preconditions.checkArgument(obj.containsKey("category_level"),"品类"+id+"无品类级别");
-                Preconditions.checkArgument(obj.containsKey("parent_category"),"品类"+id+"无上级品类");
                 Preconditions.checkArgument(obj.containsKey("num"),"品类"+id+"无商品数量");
                 Preconditions.checkArgument(obj.containsKey("category_status"),"品类"+id+"无品类状态");
                 Preconditions.checkArgument(obj.containsKey("last_modify_time"),"品类"+id+"无最新修改时间");
                 Preconditions.checkArgument(obj.containsKey("modify_sale_name"),"品类"+id+"无修改人");
+                if (!obj.getString("category_level").equals("一级品类")){
+                    Preconditions.checkArgument(obj.containsKey("parent_category"),"品类"+id+"无上级品类");
+                }
 
             }
 
@@ -1248,19 +1250,20 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //2021-01-25
-    //@Test(dataProvider = "NAME")
+    @Test(dataProvider = "NAME")
     public void categoryAddFirst(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = System.currentTimeMillis();
-            int code = jc.categoryCreate(false,name,"一级品类",null,info.logo,id).getInteger("code");
+
+            int code = jc.categoryCreate(false,name,"FIRST_CATEGORY","",info.logo,null).getInteger("code");
+            Long id = jc.categoryPage(1,1,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
             Preconditions.checkArgument(code==1000,"新建状态码期待1000，实际"+code);
 
             //启用品类
             jc.categoryChgStatus(id,true);
 
             //编辑品类
-            int code2 = jc.categoryEdit(false,id,name,"一级品类",null,info.logo).getInteger("code");
+            int code2 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",info.logo).getInteger("code");
             Preconditions.checkArgument(code2==1000,"编辑状态码期待1000，实际"+code);
 
             //删除启用品类
@@ -1277,9 +1280,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "NAME")
     public  Object[] name() {
         return new String[]{
-                "a",
-                "12345",
-                "1Aa啊！@#，嗷嗷",
+                "啊啊啊",
+//                "12345",
+//                "1Aa啊！@#，嗷嗷",
 
         };
     }
@@ -1308,11 +1311,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long id = System.currentTimeMillis();
             Long id2 = id+ 1000;
-            int code = jc.categoryCreate(false,name,"二级品类",info.first_category,info.logo,id).getInteger("code");
+            int code = jc.categoryCreate(false,name,"二级品类",Long.toString(info.first_category),info.logo,id).getInteger("code");
 
             //停用一级品类
             jc.categoryChgStatus(info.first_category,false);
-            int code2 = jc.categoryCreate(false,name,"二级品类",info.first_category,info.logo,id2).getInteger("code");
+            int code2 = jc.categoryCreate(false,name,"二级品类",Long.toString(info.first_category),info.logo,id2).getInteger("code");
             Preconditions.checkArgument(code==1000,"一级品类状态=开启，状态码为"+code);
             Preconditions.checkArgument(code2==1000,"一级品类状态=关闭，状态码为"+code);
             //删除停用品类
@@ -1337,7 +1340,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             jc.categoryChgStatus(info.first_category,true);
 
             Long id = System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.stringsix,"二级品类",99999999L,info.logo,id).getInteger("code");
+            int code = jc.categoryCreate(false,info.stringsix,"二级品类","99999999",info.logo,id).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
             //删除品类
             jc.categoryDel(id,1,1,true);
@@ -1360,9 +1363,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long id = System.currentTimeMillis();
             Long id2 = id+ 9000;
-            jc.categoryCreate(false,name,level,Long.valueOf(fatherid),info.logo,id);
+            jc.categoryCreate(false,name,level,fatherid,info.logo,id);
 
-            int code = jc.categoryCreate(false,name,level,Long.valueOf(fatherid),info.logo,id2).getInteger("code");
+            int code = jc.categoryCreate(false,name,level,fatherid,info.logo,id2).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             //删除品类
@@ -1392,7 +1395,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long id =  System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",info.first_category,info.logo,id).getInteger("code");
+            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.logo,id).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品类
@@ -1440,7 +1443,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //商品品牌
-    //@Test(dataProvider = "BRANDNAME")
+    @Test(dataProvider = "BRANDNAME")
     public void brandFilter1(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1468,11 +1471,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 "aA",
                 "!@#$%^&*(-",
                 "自动化",
+                "之家",
+                "测试",
 
         };
     }
 
-    //@Test
+    @Test
     public void brandFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1494,7 +1499,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void brandFilter3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1516,7 +1521,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void brandShow() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1545,7 +1550,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test(dataProvider = "BRANDADD") //必填项/非必填项没写 脑图没有
+    @Test(dataProvider = "BRANDADD") //1005 带id
     public void brandAdd(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1567,8 +1572,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public Object[] brandAdd1(){
         return new String[][] {
                 {"1","1","品牌名称1个字简介1个字"},
-                {info.stringsix,info.stringsix,"品牌名称6个字简介6个字"},
-                {"zh这是20位！@#的说的是发发简称11",info.stringfifty,"品牌名称20个字简介50个字"},
+//                {info.stringsix,info.stringsix,"品牌名称6个字简介6个字"},
+//                {"zh这是20位！@#的说的是发发简称11",info.stringfifty,"品牌名称20个字简介50个字"},
         };
     }
 
@@ -1622,7 +1627,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //商品品牌
+    //商品管理
     //2021-01-27
     @Test(dataProvider = "BRANDNAME")
     public void goodFilter1(String name) {
@@ -1808,7 +1813,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void goodEdit1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2307,13 +2312,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //新建二级品类
             Long secondid = System.currentTimeMillis();
             String secondname = "S"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,secondname,"二级品类",firstid,info.logo,secondid);
+            jc.categoryCreate(true,secondname,"二级品类",Long.toString(firstid),info.logo,secondid);
             jc.categoryChgStatus(secondid,true);
 
             //新建三级品类
             Long thirdid = System.currentTimeMillis();
             String thirdname = "T"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,thirdname,"三级品类",secondid,info.logo,thirdid);
+            jc.categoryCreate(true,thirdname,"三级品类",Long.toString(secondid),info.logo,thirdid);
             jc.categoryChgStatus(thirdid,true);
 
             //新建规格

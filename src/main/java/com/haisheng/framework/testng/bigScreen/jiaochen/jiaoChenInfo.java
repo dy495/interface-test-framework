@@ -18,7 +18,7 @@ public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    public final String logo = "general_temp/16de43e8-e98f-44d2-a005-62cab62b26ef";//120*120 品牌logo
+    public final String logo = "general_temp/89ebe7ba-fd09-4b21-b864-3d6f0504d771";//120*120 品牌logo
     public final String logo2 = "general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04";
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)((Math.random()*9+1)*10000));//字符串长度10
@@ -97,10 +97,10 @@ public class jiaoChenInfo {
     public final int BUSINESS_JIAOCHEN_PC_7 =  109 ; public  final String name109 = "BUSINESS_JIAOCHEN_PC_7";//系统配置权限-角色管理页面
     public final int BUSINESS_JIAOCHEN_PC_8 =   110 ; public  final String name110 = "BUSINESS_JIAOCHEN_PC_8";//系统配置权限-员工管理页面
     public final int BUSINESS_JIAOCHEN_PC_611 =   140 ; public  final String name140 = "BUSINESS_JIAOCHEN_PC_611";//系统配置权限-品牌删除按钮
-    public final int BUSINESS_JIAOCHEN_PC_9 =   111 ; public  final String name111 = "BUSINESS_JIAOCHEN_PC_9";//卡券管理权限-卡券管理页面
-    public final int BUSINESS_JIAOCHEN_PC_91 =   128 ; public  final String name128 = "BUSINESS_JIAOCHEN_PC_91";//卡券管理权限-卡券表单tab
-    public final int BUSINESS_JIAOCHEN_PC_92 =   129 ; public  final String name129 = "BUSINESS_JIAOCHEN_PC_92";//卡券管理权限-发卡记录tab
-    public final int BUSINESS_JIAOCHEN_PC_93 =   130 ; public  final String name130 = "BUSINESS_JIAOCHEN_PC_93";//卡券管理权限-核销记录tab
+//    public final int BUSINESS_JIAOCHEN_PC_9 =   111 ; public  final String name111 = "BUSINESS_JIAOCHEN_PC_9";//卡券管理权限-卡券管理页面 V2.0取消
+//    public final int BUSINESS_JIAOCHEN_PC_91 =   128 ; public  final String name128 = "BUSINESS_JIAOCHEN_PC_91";//卡券管理权限-卡券表单tab V2.0取消
+//    public final int BUSINESS_JIAOCHEN_PC_92 =   129 ; public  final String name129 = "BUSINESS_JIAOCHEN_PC_92";//卡券管理权限-发卡记录tab V2.0取消
+//    public final int BUSINESS_JIAOCHEN_PC_93 =   130 ; public  final String name130 = "BUSINESS_JIAOCHEN_PC_93";//卡券管理权限-核销记录tab V2.0取消
     public final int BUSINESS_JIAOCHEN_PC_94 =   131 ; public  final String name131 = "BUSINESS_JIAOCHEN_PC_94";//卡券管理权限-核销人员tab
     public final int BUSINESS_JIAOCHEN_PC_10 =   112 ; public  final String name112 = "BUSINESS_JIAOCHEN_PC_10";//套餐管理权限-套餐管理页面
     public final int BUSINESS_JIAOCHEN_PC_101 =   132 ; public  final String name132 = "BUSINESS_JIAOCHEN_PC_101";//套餐管理权限-套餐表单tab
@@ -108,21 +108,60 @@ public class jiaoChenInfo {
     public final int BUSINESS_JIAOCHEN_PC_1021 =  141; public  final String name141 = "BUSINESS_JIAOCHEN_PC_1021"; //套餐管理权限-确认支付按钮
     public final int BUSINESS_JIAOCHEN_PC_11 =  113; public  final String name113 = "BUSINESS_JIAOCHEN_PC_11"; //消息管理权限-消息管理页面
     public final int BUSINESS_JIAOCHEN_PC_12 =  114 ; public  final String name114 = "BUSINESS_JIAOCHEN_PC_12";//内容运营权限-内容管理页面
-    public final int BUSINESS_JIAOCHEN_PC_13 =  115 ; public  final String name115 = "BUSINESS_JIAOCHEN_PC_13";//内容运营权限-报名管理页面
+//    public final int BUSINESS_JIAOCHEN_PC_13 =  115 ; public  final String name115 = "BUSINESS_JIAOCHEN_PC_13";//内容运营权限-报名管理页面 V2.0取消
     public final int BUSINESS_JIAOCHEN_PC_15 =  116 ; public  final String name116 = "BUSINESS_JIAOCHEN_PC_15";//内容运营权限-banner管理页面
-    public final int BUSINESS_JIAOCHEN_PC_16 =   117 ; public  final String name117 = "BUSINESS_JIAOCHEN_PC_16";//卡券申请权限-卡券申请页面
+//    public final int BUSINESS_JIAOCHEN_PC_16 =   117 ; public  final String name117 = "BUSINESS_JIAOCHEN_PC_16";//卡券申请权限-卡券申请页面 V2.0取消
+
+    //V2.0新增
+//    public final int BUSINESS_JIAOCHEN_PC_000212 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_000212"; // 功能权限-导出
+//    public final int BUSINESS_JIAOCHEN_PC_00211 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_00211"; // 功能权限-售后接待
+//    public final int BUSINESS_JIAOCHEN_PC_0002112 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_0002112"; // 功能权限-变更售后接待
+//    public final int BUSINESS_JIAOCHEN_PC_1011 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_1011"; // 临时套餐套餐表单
+//    public final int BUSINESS_JIAOCHEN_PC_45 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_45"; // 预约维修配置
+//    public final int BUSINESS_JIAOCHEN_PC_201 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_201"; // 评价列表
+//    public final int BUSINESS_JIAOCHEN_PC_202 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_202"; // 页面-售后评价配置
+//    public final int BUSINESS_JIAOCHEN_PC_2111 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_2111"; // 功能-售后评价差评接收人
+//    public final int BUSINESS_JIAOCHEN_PC_203 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_203"; // 页面-销售评价配置
+//    public final int BUSINESS_JIAOCHEN_PC_2211 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_2211"; // 功能-销售评价差评接收人
+//    public final int BUSINESS_JIAOCHEN_PC_23 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_23"; // 页面-智能提醒
+//    public final int BUSINESS_JIAOCHEN_PC_24 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_24"; // 页面-道路救援
+//    public final int BUSINESS_JIAOCHEN_PC_711 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_711"; // 功能权限-全员核销
+//    public final int BUSINESS_JIAOCHEN_PC_712 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_712"; // 功能权限-核销权限
+//    public final int BUSINESS_JIAOCHEN_PC_25 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_25"; // 页面-优惠券管理
+//    public final int BUSINESS_JIAOCHEN_PC_16 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_16"; // 页面-卡券申请
+//    public final int BUSINESS_JIAOCHEN_PC_27 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_27"; // 页面-活动管理
+//    public final int BUSINESS_JIAOCHEN_PC_28 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_28"; // 页面-会员营销
+//    public final int BUSINESS_JIAOCHEN_PC_2511 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_2511"; // 按钮-优惠券作废
+//    public final int BUSINESS_JIAOCHEN_PC_2512 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_2512"; // 按钮-优惠券删除
+//    public final int BUSINESS_JIAOCHEN_PC_161 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_161"; // 卡券申请？？？
+//    public final int BUSINESS_JIAOCHEN_PC_271 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_271"; // 活动审批？？？
+//    public final int BUSINESS_JIAOCHEN_PC_40 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_40"; // 页面-删除记录
+//    public final int BUSINESS_JIAOCHEN_PC_46 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_46"; // 页面-商品运营-商品管理
+//    public final int BUSINESS_JIAOCHEN_PC_47 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_47"; // 页面-商品运营-商品品类
+//    public final int BUSINESS_JIAOCHEN_PC_48 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_48"; // 页面-商品运营-商品品牌
+//    public final int BUSINESS_JIAOCHEN_PC_49 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_49"; // 页面-商品运营-商品规格
+//    public final int BUSINESS_JIAOCHEN_PC_50 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_50"; // 页面-积分中心-积分兑换
+//    public final int BUSINESS_JIAOCHEN_PC_51 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_51"; // 页面-积分中心-积分明细
+//    public final int BUSINESS_JIAOCHEN_PC_52 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_52"; // 页面-积分中心-积分订单
+//    public final int BUSINESS_JIAOCHEN_PC_53 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_53"; // 页面-积分中心-积分规则
+//    public final int BUSINESS_JIAOCHEN_PC_54 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_54"; // 页面-特惠商城-商城订单
+//    public final int BUSINESS_JIAOCHEN_PC_55 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_55"; // 页面-特惠商城-商城套餐
+//    public final int BUSINESS_JIAOCHEN_PC_56 =  ; public  final String name = "BUSINESS_JIAOCHEN_PC_56"; // 页面-特惠商城-分销员管理
+
+
+
 
     //全部页面权限
-    public final int[] allauth = {118, 119, 120, 136, 142, 137, 143, 145, 147, 138, 144, 146, 148, 104, 105, 121, 122, 123, 106,
-            124, 125, 126, 127, 107, 108, 109, 110, 140, 111, 128, 129, 130, 131, 112, 132, 133, 141, 113, 114, 115, 116, 117};
-    public final JSONArray allauth_id = (JSONArray) JSONArray.toJSON(allauth);
-
-    public final String [] allauth_name = {name118, name119, name120, name136, name142, name137, name143, name145,
-            name147, name138, name144, name146, name148, name104, name105, name121, name122,
-            name123, name106, name124, name125, name126, name127, name107, name108, name109,
-            name110, name140, name111, name128, name129, name130, name131, name112, name132,
-            name133, name141, name113, name114, name115, name116, name117};
-    public final List<String> allauth_list = Arrays.asList(allauth_name);
+//    public final int[] allauth = {118, 119, 120, 136, 142, 137, 143, 145, 147, 138, 144, 146, 148, 104, 105, 121, 122, 123, 106,
+//            124, 125, 126, 127, 107, 108, 109, 110, 140, 111, 128, 129, 130, 131, 112, 132, 133, 141, 113, 114, 115, 116, 117};
+//    public final JSONArray allauth_id = (JSONArray) JSONArray.toJSON(allauth);
+//
+//    public final String [] allauth_name = {name118, name119, name120, name136, name142, name137, name143, name145,
+//            name147, name138, name144, name146, name148, name104, name105, name121, name122,
+//            name123, name106, name124, name125, name126, name127, name107, name108, name109,
+//            name110, name140, name111, name128, name129, name130, name131, name112, name132,
+//            name133, name141, name113, name114, name115, name116, name117};
+//    public final List<String> allauth_list = Arrays.asList(allauth_name);
 
 
 
@@ -177,19 +216,19 @@ public class jiaoChenInfo {
     public final String []  xitong45auth_name = {name109, name110, name136, name144};
     public final List<String>  xitong45auth_list = Arrays.asList( xitong45auth_name);
 
-    //卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限
-    public final int[] kaquan45auth = {111,130,131,136,148};
-    public final JSONArray  kaquan45auth_id = (JSONArray) JSONArray.toJSON(kaquan45auth);
+//    //卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限
+//    public final int[] kaquan45auth = {111,130,131,136,148};
+//    public final JSONArray  kaquan45auth_id = (JSONArray) JSONArray.toJSON(kaquan45auth);
+//
+//    public final String []  kaquan45auth_name = {name111, name130, name131, name136,name148};
+//    public final List<String>  kaquan45auth_list = Arrays.asList( kaquan45auth_name);
 
-    public final String []  kaquan45auth_name = {name111, name130, name131, name136,name148};
-    public final List<String>  kaquan45auth_list = Arrays.asList( kaquan45auth_name);
+//    //卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限
+//    public final int[] kaquan123auth = {111, 128,129,117,136,146};
+//    public final JSONArray  kaquan123auth_id = (JSONArray) JSONArray.toJSON(kaquan123auth);
 
-    //卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限
-    public final int[] kaquan123auth = {111, 128,129,117,136,146};
-    public final JSONArray  kaquan123auth_id = (JSONArray) JSONArray.toJSON(kaquan123auth);
-
-    public final String []  kaquan123auth_name = {name111, name128, name129, name117,name136,name146};
-    public final List<String> kaquan123auth_list = Arrays.asList( kaquan123auth_name);
+//    public final String []  kaquan123auth_name = {name111, name128, name129, name117,name136,name146};
+//    public final List<String> kaquan123auth_list = Arrays.asList( kaquan123auth_name);
 
     //套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限
     public final int[] taocannoauth = {112, 132,133,136,148};
@@ -210,8 +249,8 @@ public class jiaoChenInfo {
     public final int[] nxauth = {113, 114,115,116};
     public final JSONArray  nxauth_id = (JSONArray) JSONArray.toJSON(nxauth);
 
-    public final String [] nxauth_name = {name113, name114, name115, name116};
-    public final List<String> nxauth_list = Arrays.asList(nxauth_name);
+//    public final String [] nxauth_name = {name113, name114, name115, name116};
+//    public final List<String> nxauth_list = Arrays.asList(nxauth_name);
 
 
 
@@ -222,17 +261,23 @@ public class jiaoChenInfo {
     public final String [] jiedai234auth_name = {name104, name142, name148, name143,name145,name147};
     public final List<String> jiedai234auth_list = Arrays.asList(jiedai234auth_name);
 
+    //V2.0新增权限
+
+
+
+
+
 
 
     //V2.0
-    public final Long  first_category= 1L; //一级品类id
-    public final String  first_category_chin= ""; //一级品类name
+    public final Long  first_category= 6L; //一级品类id
+    public final String  first_category_chin= "服饰"; //一级品类name
 
-    public final Long  second_category= 1L; //二级品类id
-    public final String  second_category_chin= ""; //二级品类name
+    public final Long  second_category= 7L; //二级品类id
+    public final String  second_category_chin= "冬天衣服"; //二级品类name
 
-    public final Long  third_category= 1L; //三级品类id
-    public final String  third_category_chin= ""; //三级品类name
+    public final Long  third_category= 8L; //三级品类id
+    public final String  third_category_chin= "皮大衣"; //三级品类name
 
     public final Long  goods_brand= 1L; //商品品牌
     public final Long  goods_id= 1L; //商品id
