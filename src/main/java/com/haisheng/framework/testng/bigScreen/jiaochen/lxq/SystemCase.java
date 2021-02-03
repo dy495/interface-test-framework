@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -40,6 +41,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     jiaoChenInfo info = new  jiaoChenInfo();
     PublicParm pp = new PublicParm();
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -74,7 +76,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
+        //commonConfig.shopId = "-1";
+        commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
 
     }
@@ -1250,21 +1253,28 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //2021-01-25
-    @Test(dataProvider = "NAME")
+    //@Test(dataProvider = "NAME") 通了 有俩bug
     public void categoryAddFirst(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = jc.categoryCreate(false,name,"FIRST_CATEGORY","",info.logo,null).getInteger("code");
-            Long id = jc.categoryPage(1,1,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj = info.newFirstCategory(name);
+            int code = obj.getInteger("code");
+            Long id = obj.getLong("id");
             Preconditions.checkArgument(code==1000,"新建状态码期待1000，实际"+code);
 
-            //启用品类
-            jc.categoryChgStatus(id,true);
+            //禁用品类
+            jc.categoryChgStatus(id,false);
 
-            //编辑品类
-            int code2 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",info.logo).getInteger("code");
-            Preconditions.checkArgument(code2==1000,"编辑状态码期待1000，实际"+code);
+            //编辑品类-更换图片
+            String logo2 = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+            int code2 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",logo2).getInteger("code");
+            Preconditions.checkArgument(code2==1000,"编辑重新上传图片状态码期待1000，实际"+code2);
+
+            //编辑品类-不更换图片
+
+            int code3 = jc.categoryEdit(false,id,name+"1","FIRST_CATEGORY","",null).getInteger("code");
+            Preconditions.checkArgument(code3==1000,"编辑不传图片状态码期待1000，实际"+code3);
 
             //删除启用品类
             jc.categoryDel(id,1,1,true);
@@ -1280,18 +1290,19 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "NAME")
     public  Object[] name() {
         return new String[]{
-                "啊啊啊",
+                "啊啊啊2",
 //                "12345",
 //                "1Aa啊！@#，嗷嗷",
 
         };
     }
 
-    //@Test
+    @Test
     public void categoryAddFirstErr1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int code = jc.categoryCreate(false,"12345678901","一级品类",null,info.logo,null).getInteger("code");
+            JSONObject obj = info.newFirstCategory("12345678901");
+            int code = obj.getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1302,20 +1313,24 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test(dataProvider = "NAME")
+    @Test(dataProvider = "NAME")
     public void categoryAddSecond(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //启用一级品类
             jc.categoryChgStatus(info.first_category,true);
 
-            Long id = System.currentTimeMillis();
-            Long id2 = id+ 1000;
-            int code = jc.categoryCreate(false,name,"二级品类",Long.toString(info.first_category),info.logo,id).getInteger("code");
+
+            JSONObject obj1 = info.newSecondCategory(name);
+            int code = obj1.getInteger("code");
+            Long id =obj1.getLong("id");
 
             //停用一级品类
             jc.categoryChgStatus(info.first_category,false);
-            int code2 = jc.categoryCreate(false,name,"二级品类",Long.toString(info.first_category),info.logo,id2).getInteger("code");
+            JSONObject obj2 = info.newSecondCategory(name);
+            int code2 = obj2.getInteger("code");
+            Long id2 =obj2.getLong("id");
+
             Preconditions.checkArgument(code==1000,"一级品类状态=开启，状态码为"+code);
             Preconditions.checkArgument(code2==1000,"一级品类状态=关闭，状态码为"+code);
             //删除停用品类
@@ -1332,18 +1347,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test//bug
     public void categoryAddSecondErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //启用一级品类
-            jc.categoryChgStatus(info.first_category,true);
 
-            Long id = System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.stringsix,"二级品类","99999999",info.logo,id).getInteger("code");
+            String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+            int code = jc.categoryCreate(false,"name","SECOND_CATEGORY","99999",logo,null).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
-            //删除品类
-            jc.categoryDel(id,1,1,true);
 
 
         } catch (AssertionError e) {
@@ -1383,8 +1394,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "CATEGORYID")
     public  Object[] categroyid() {
         return new String[][]{
-                {"二级品类",Long.toString(info.first_category)},
-                {"三级品类",Long.toString(info.second_category)},
+                {"SECOND_CATEGORY",Long.toString(info.first_category)},
+                {"THIRD_CATEGORY",Long.toString(info.second_category)},
 
         };
     }
@@ -1412,24 +1423,24 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    @Test
     public void categoryAddErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long id =System.currentTimeMillis();
+            String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
             //不填写品类名称
-            int code = jc.categoryCreate(false,null,"一级品类",null,info.logo,id+1).getInteger("code");
+            int code = jc.categoryCreate(false,null,"FIRST_CATEGORY","",logo,null).getInteger("code");
             Preconditions.checkArgument(code==1001,"不填写品类名称,状态码期待1001，实际"+code);
 
 
             //不填写所属分类
 
-            int code2 = jc.categoryCreate(false,"不填写所属品类","二级品类",null,info.logo,id+2).getInteger("code");
+            int code2 = jc.categoryCreate(false,"不填写所属品类","SECOND_CATEGORY","",logo,null).getInteger("code");
             Preconditions.checkArgument(code2==1001,"不填写所属品类,状态码期待1001，实际"+code);
 
             //不选择logo
-            int code3 = jc.categoryCreate(false,"不选择logo","一级品类",null,null,id+3).getInteger("code");
+            int code3 = jc.categoryCreate(false,"不选择logo","FIRST_CATEGORY","",null,null).getInteger("code");
             Preconditions.checkArgument(code3==1001,"不选择logo,状态码期待1001，实际"+code);
 
         } catch (AssertionError e) {
@@ -2440,6 +2451,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Visitor visitor =new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
 
             Long voucherId=new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("卡券用法示例");
+        }
+    }
+
+    @Test
+    public void pic() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+            String base64 = new ImageUtil().getImageBinary(filePath);
+           String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

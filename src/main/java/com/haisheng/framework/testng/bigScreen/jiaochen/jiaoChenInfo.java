@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -10,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenera
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,8 @@ public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    public final String logo = "general_temp/89ebe7ba-fd09-4b21-b864-3d6f0504d771";//120*120 品牌logo
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+    public final String logo = "general_temp/9a215339-d897-4516-a1e6-3dee1f4021f8";//120*120 品牌logo
     public final String logo2 = "general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04";
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)((Math.random()*9+1)*10000));//字符串长度10
@@ -270,11 +273,11 @@ public class jiaoChenInfo {
 
 
     //V2.0
-    public final Long  first_category= 6L; //一级品类id
-    public final String  first_category_chin= "服饰"; //一级品类name
+    public final Long  first_category= 1L; //一级品类id
+    public final String  first_category_chin= "自动化一级品类别删"; //一级品类name
 
-    public final Long  second_category= 7L; //二级品类id
-    public final String  second_category_chin= "冬天衣服"; //二级品类name
+    public final Long  second_category= 2L; //二级品类id
+    public final String  second_category_chin= "自动化二级品类别删"; //二级品类name
 
     public final Long  third_category= 8L; //三级品类id
     public final String  third_category_chin= "皮大衣"; //三级品类name
@@ -384,6 +387,29 @@ public class jiaoChenInfo {
         goods.select_specifications = select_specifications;
         goods.goods_specifications_list = goods_specifications_list;
         jc.createGoodMethod(goods);
+    }
+
+
+    //新建一级品类
+    public JSONObject newFirstCategory(String name){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        int code = jc.categoryCreate(false,name,"FIRST_CATEGORY","",logo,null).getInteger("code");
+        Long id = jc.categoryPage(1,100,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+    }
+    //新建二级品类
+    public JSONObject newSecondCategory(String name){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        int code = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(first_category),logo,null).getInteger("code");
+        Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+
     }
 
 
