@@ -569,7 +569,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================3.11. 查询组下所有人脸接口，返回每个人脸的Feature======================
      */
-    @Test
+    //@Test
     public void default_search() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
