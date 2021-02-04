@@ -3338,6 +3338,22 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description:内容运营-删除文章
+     * @author: lxq
+     * @time: 2021-02-04
+     */
+
+    public JSONObject delArticle(Long id) {
+        String url = "/jiaochen/pc/operation/article/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(result).getJSONObject("data");
+    }
+
+
+
+    /**
      * @description:内容运营-报名批量审批
      * @author: lxq
      * @time: 2020-11-28

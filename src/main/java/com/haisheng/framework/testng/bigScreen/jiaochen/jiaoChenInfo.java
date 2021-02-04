@@ -34,13 +34,13 @@ public class jiaoChenInfo {
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
 
     //日常
-    public final long BrandID = 16L;//自动化用的品牌id
-    public final long CarStyleID = 50L;//自动化用的品牌车系id
+    public final long BrandID = 19L;//自动化用的品牌id
+    public final long CarStyleID = 17L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
         String name = ""+Integer.toString((int)(Math.random()*10000));
-        jc.addBrand(name,logo);
+        jc.addBrand(name,getLogo());
 
         //删除品牌
         Long id = jc.brandPage(1,10,"","").getJSONArray("list").getJSONObject(0).getLong("id");
@@ -279,10 +279,11 @@ public class jiaoChenInfo {
     public final Long  second_category= 2L; //二级品类id
     public final String  second_category_chin= "自动化二级品类别删"; //二级品类name
 
-    public final Long  third_category= 8L; //三级品类id
-    public final String  third_category_chin= "皮大衣"; //三级品类name
+    public final Long  third_category= 19L; //三级品类id
+    public final String  third_category_chin= "自动化三级品类别删"; //三级品类name
 
-    public final Long  goods_brand= 1L; //商品品牌
+    public final Long  goods_brand= 2L; //商品品牌
+    //还没改
     public final Long  goods_id= 1L; //商品id
     public final String  goods_name= "1"; //商品名称
 
@@ -410,6 +411,32 @@ public class jiaoChenInfo {
         obj.put("id",id);
         return obj;
 
+    }
+
+    public String getLogo(){
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        String base64 = new ImageUtil().getImageBinary(filePath);
+        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        return logo;
+    }
+
+    public JSONObject newArtical() throws Exception {
+
+        JSONArray pic_list1 =new JSONArray();
+        pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+        JSONArray pic_list2 =new JSONArray();
+        pic_list2.add("");
+        pic_list2.add("");
+        pic_list2.add("");
+        JSONObject obj = jc.addArticleNotChk(""+System.currentTimeMillis(),"ONE_BIG",pic_list1,"content","RED_PAPER","ARTICEL",null,null,null,
+                null,null,null,null,null,null,
+                null,null,null,null);
+        int code = obj.getInteger("code");
+        Long id = obj.getJSONObject("data").getLong("id");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("code",code);
+        obj1.put("id",id);
+        return obj1;
     }
 
 

@@ -117,7 +117,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = jc.addBrandNotChk(info.stringone,info.logo).getInteger("code");
+            int code = jc.addBrandNotChk(info.stringone,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品牌
@@ -139,7 +139,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = jc.addBrandNotChk(info.stringten,info.logo).getInteger("code");
+            int code = jc.addBrandNotChk(info.stringten,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品牌
@@ -163,11 +163,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //创建一个品牌
             String name1 = info.stringsix;
             String name2 = info.stringsix + "aaa";
-            jc.addBrand(name1,info.logo);
+            jc.addBrand(name1,info.getLogo());
             //获取创建的品牌id
             Long id = jc.brandPage(1,10,"","").getJSONArray("list").getJSONObject(0).getLong("id");
             //修改这个品牌的名字
-            jc.editBrand(id,name2,info.logo);
+            jc.editBrand(id,name2,info.getLogo());
             //根据id查询，名字为name2
             JSONArray arr = jc.brandPage(1,100,"","").getJSONArray("list");
             for (int i = 0 ; i < arr.size(); i++){
@@ -196,7 +196,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String name = "12345aA啊！@1";
-            int code = jc.addBrandNotChk(name,info.logo).getInteger("code");
+            int code = jc.addBrandNotChk(name,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
         } catch (AssertionError e) {
@@ -621,7 +621,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //        try {
 //            JSONArray arr = new JSONArray();
 //            arr.add(info.BrandID);
-//            int code = jc.addShopNotChk(info.logo,simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
+//            int code = jc.addShopNotChk(info.getLogo(),simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
 //                    Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
 //            Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
 //
@@ -658,9 +658,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            JSONArray arr = new JSONArray();
 //            arr.add(info.BrandID);
 //
-//            jc.addShop(info.logo,info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
+//            jc.addShop(info.getLogo(),info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
 //                    129.8439,42.96805, "DISABLE","DISABLE");
-//            int code = jc.addShopNotChk(info.logo,info.stringsix+"1",info.stringsix+"1",arr,info.district_code,info.stringsix,sale_tel,service_tel,
+//            int code = jc.addShopNotChk(info.getLogo(),info.stringsix+"1",info.stringsix+"1",arr,info.district_code,info.stringsix,sale_tel,service_tel,
 //                    129.8439,42.96805, "DISABLE","DISABLE").getInteger("code");
 //            Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
 //
@@ -681,7 +681,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //        try {
 //            JSONArray arr = new JSONArray();
 //            arr.add(info.BrandID);
-//            int code = jc.addShopNotChk(info.logo,simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
+//            int code = jc.addShopNotChk(info.getLogo(),simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
 //                    Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
 //            Preconditions.checkArgument(code==1001,a+"期待状态码1001，实际"+ code);
 //
@@ -725,7 +725,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            JSONArray arr = new JSONArray();
 //            arr.add(System.currentTimeMillis());
 //
-//            int code = jc.addShopNotChk(info.logo,info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
+//            int code = jc.addShopNotChk(info.getLogo(),info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
 //                    129.8439,42.96805, "DISABLE","DISABLE").getInteger("code");
 //            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+ code);
 //
@@ -765,6 +765,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long id = obj.getJSONObject("data").getLong("id");
             //关闭文章
             jc.changeArticleStatus(id);
+            //删除文章
+            jc.delArticle(id);
 
 
             Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
@@ -789,79 +791,33 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //新建活动
-    @Test(dataProvider = "ACTIVITY")
-    public void addActivity(String title, String pic_type,  String content, String label,String start,String end,String quota,String address,String maintain,String voucher,String type, String day) {
+
+    //@Test
+    public void ArticleTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //新建文章
+            JSONObject obj = info.newArtical();
+            Long id = obj.getLong("id");
+            //置顶
+            jc.topArticle(id);
+            //登陆小程序查看
+            jc.appletLoginToken(pp.appletTocken);
+            Long search_list = jc.appletArticleList(null,null).getJSONArray("list").getJSONObject(0).getLong("list");
 
-
-            JSONArray pic_list2 =new JSONArray();
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
-            pic_list2.add("general_temp/367611e8-96a4-4fed-9e58-e869f459fbe2");
-            JSONArray vou_list =new JSONArray();
-            vou_list.add(jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getInteger("id"));
-
-            if (day.equals(0)){
-                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list2,content,label,"ACTIVITY",start,end,start,
-                        end,Integer.valueOf(quota),address,Boolean.valueOf(maintain),Boolean.valueOf(voucher),vou_list,
-                        type,start,end,null);
-                int code = obj.getInteger("code");
-                Long id = obj.getJSONObject("data").getLong("id");
-                //关闭活动
-                jc.changeArticleStatus(id);
-                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
-            }
-            else {
-                JSONObject obj = jc.addArticleNotChk(title,pic_type,pic_list2,content,label,"ACTIVITY",start,end,start,
-                        end,Integer.valueOf(quota),address,Boolean.valueOf(maintain),Boolean.valueOf(voucher),vou_list,
-                        type,null,null,Integer.valueOf(day));
-                int code = obj.getInteger("code");
-                Long id = obj.getJSONObject("data").getLong("id");
-                //关闭活动
-                jc.changeArticleStatus(id);
-                Preconditions.checkArgument(code==1000,"期待1000，实际"+ code);
-            }
-
-
+            Preconditions.checkArgument(id==search_list,"置顶后不在小程序首位");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【内容运营】，新建活动3张图");
+            saveData("PC【内容运营】，置顶文章");
         }
     }
-    @DataProvider(name = "ACTIVITY")
-    public  Object[] activity() {
-        return new String[][]{
-                {"1234", "THREE",info.stringone, "RED_PAPER",dt.getHistoryDate(0),dt.getHistoryDate(100),"1","啊","false","true","SIGN_UP","0"},
-                {info.stringten, "THREE",info.stringfifty, "PREFERENTIAL",dt.getHistoryDate(0),dt.getHistoryDate(110),"100",info.stringfifty,"true","true","SIGN_UP","1"},
-                {info.string20, "THREE",info.stringten, "BARGAIN",dt.getHistoryDate(0),dt.getHistoryDate(365),"100000000",info.stringsix,"true","true","SIGN_UP","2000"},
-                {info.stringten, "THREE",info.stringlong, "WELFARE",dt.getHistoryDate(0),dt.getHistoryDate(364),"999",info.stringten,"false","true","ARTICLE_BUTTON","1000"},
-                {info.stringsix, "THREE",info.stringlong, "GIFT",dt.getHistoryDate(0),dt.getHistoryDate(62),"10000",info.stringfifty,"false","true","ARTICLE_BUTTON","50"}
-        };
-    }
 
 
 
 
-    @Test
-    public void enuma() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            jc.pcEnuMap();
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("通用枚举");
-        }
-    }
 
 
 
@@ -1347,7 +1303,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test//bug
+    //@Test//bug
     public void categoryAddSecondErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1374,9 +1330,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             Long id = System.currentTimeMillis();
             Long id2 = id+ 9000;
-            jc.categoryCreate(false,name,level,fatherid,info.logo,id);
+            jc.categoryCreate(false,name,level,fatherid,info.getLogo(),id);
 
-            int code = jc.categoryCreate(false,name,level,fatherid,info.logo,id2).getInteger("code");
+            int code = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),id2).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             //删除品类
@@ -1406,7 +1362,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long id =  System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.logo,id).getInteger("code");
+            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.getLogo(),id).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品类
@@ -1566,7 +1522,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long id = System.currentTimeMillis();
-            int code = jc.BrandCreat(false,id,name,desc,info.logo).getInteger("code");
+            int code = jc.BrandCreat(false,id,name,desc,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
 
             jc.BrandDel(id,1,1,true);
@@ -1593,7 +1549,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long id = System.currentTimeMillis();
-            int code = jc.BrandCreat(false,id,name,desc,info.logo).getInteger("code");
+            int code = jc.BrandCreat(false,id,name,desc,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1001,a+"状态码期待1001，实际"+code);
 
             jc.BrandDel(id,1,1,true);
@@ -1622,8 +1578,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long id = System.currentTimeMillis();
             String name = System.currentTimeMillis() + "重复";
-            jc.BrandEdit(false,id,name,name,info.logo);
-            int code = jc.BrandEdit(false,id,name,name,info.logo).getInteger("code");
+            jc.BrandEdit(false,id,name,name,info.getLogo());
+            int code = jc.BrandEdit(false,id,name,name,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             jc.BrandDel(id,1,1,true);
@@ -2312,24 +2268,24 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             //新建品牌
             Long brandID = System.currentTimeMillis();
-            jc.BrandCreat(true,brandID,"name"+brandID,"desc"+brandID,info.logo);
+            jc.BrandCreat(true,brandID,"name"+brandID,"desc"+brandID,info.getLogo());
 
             //新建一级品类
             Long firstid = System.currentTimeMillis();
             String firstname = "F"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,firstname,"一级品类",null,info.logo,firstid);
+            jc.categoryCreate(true,firstname,"一级品类",null,info.getLogo(),firstid);
             jc.categoryChgStatus(firstid,true);
 
             //新建二级品类
             Long secondid = System.currentTimeMillis();
             String secondname = "S"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,secondname,"二级品类",Long.toString(firstid),info.logo,secondid);
+            jc.categoryCreate(true,secondname,"二级品类",Long.toString(firstid),info.getLogo(),secondid);
             jc.categoryChgStatus(secondid,true);
 
             //新建三级品类
             Long thirdid = System.currentTimeMillis();
             String thirdname = "T"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,thirdname,"三级品类",Long.toString(secondid),info.logo,thirdid);
+            jc.categoryCreate(true,thirdname,"三级品类",Long.toString(secondid),info.getLogo(),thirdid);
             jc.categoryChgStatus(thirdid,true);
 
             //新建规格
@@ -2360,7 +2316,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                     "{" +
                     "\"first_specifications\":"+specifications_detail_id+"," +
                     //"\"second_specifications\":"+null+",\n" +
-                    "\"head_pic\":\""+info.logo+"\"," +
+                    "\"head_pic\":\""+info.getLogo()+"\"," +
                     "\"price\":69.98" +
                     "}]";
             JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
@@ -2444,7 +2400,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //@Test
+    @Test
     public void show() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2461,7 +2417,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void pic() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2475,6 +2431,22 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("卡券用法示例");
+        }
+    }
+
+    //@Test
+    public void enuma() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            jc.pcEnuMap();
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("通用枚举");
         }
     }
 }
