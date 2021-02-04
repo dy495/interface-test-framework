@@ -573,17 +573,17 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void default_search() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-             JSONObject res = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d3342342jk3","gate","22728--DEFAULT--20210127");
+             JSONObject res = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d3342342jk3","gate","22728--DEFAULT--20210122");
              JSONArray data= res.getJSONArray("data");
               userId = data.getJSONObject(0).getString("userId");
               imgUrl = data.getJSONObject(0).getString("imgUrl");
-             checkArgument(data.size()!=0  , "特殊人物人脸删除(正确入参&格式),data:"+data.size());
+             checkArgument(data.size()!=0  , "人物人脸查询(正确入参&格式),data:"+data.size());
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("特殊人物人脸删除(正确入参&格式)");
+            saveData("人物人脸查询(正确入参&格式)");
         }
     }
 
@@ -595,6 +595,10 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void default_search1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+              JSONObject ress = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d33478234uU","gate","22728--DEFAULT--20210123");
+              JSONArray data= ress.getJSONArray("data");
+              String imgUrl = data.getJSONObject(0).getString("imgUrl");
+
               JSONObject res = logic.default_search(imgUrl,1,true,false,null,"FACE",false);
               Integer code = res.getInteger("code");
               JSONArray faces = res.getJSONArray("faces");
@@ -632,6 +636,10 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     public void defaultUser_search() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject ress = logic.allFace_search("92412fb2-7ea7-46fa-b94a-7485d333442jjw","gate","22728--DEFAULT--20210120");
+            JSONArray data= ress.getJSONArray("data");
+            String userId = data.getJSONObject(0).getString("userId");
+
             JSONObject res = logic.default_userSearch("22728",userId);
             Integer code = res.getInteger("code");
             checkArgument(code == 1000  , " 默认组用户查询(正确入参&格式),code="+code);
@@ -667,7 +675,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================3.  删除默认组用户(正确入参&格式)======================
      */
-    @Test
+    //@Test
     public void defaultUser_delete() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -730,7 +738,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================4.  删除默认组用户的人脸(正确入参&格式)======================
      */
-    @Test
+    //@Test
     public void defaultFace_delete1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
