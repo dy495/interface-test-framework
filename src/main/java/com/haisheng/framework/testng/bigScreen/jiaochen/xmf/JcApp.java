@@ -627,7 +627,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //pc
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotal = jc.verificationReordFilterManage("-1", "1", "10", null, null).getInteger("total");
+            int verificationReordPctotal = jc.verificationReordFilterManage("-1", "","1", "10", null, null).getInteger("total");
 
             //核销记录总数
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
@@ -643,7 +643,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             int messagePctotalA = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotalA = jc.verificationReordFilterManage("-1", "1", "10", null, null).getInteger("total");
+            int verificationReordPctotalA = jc.verificationReordFilterManage("-1","", "1", "10", null, null).getInteger("total");
 
 
             Preconditions.checkArgument(messagePctotalA - messagePctotal == 1, "核销后pc消息总数没-1");

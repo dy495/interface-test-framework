@@ -70,7 +70,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        jc.pcLogin("13114785236", pp.gwpassword);
     }
 
 
@@ -94,6 +94,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                      list.forEach(e -> {
 //                      JSONObject jsonObject = (JSONObject) e;
 //                        String flag = jsonObject.getString(output);
+                        
                         Preconditions.checkArgument(flag.contains(result), "接待管理按" + result + "查询，结果错误" + flag);
                     }
                 }
