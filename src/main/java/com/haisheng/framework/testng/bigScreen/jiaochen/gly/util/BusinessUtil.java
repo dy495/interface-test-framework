@@ -182,21 +182,16 @@ public class BusinessUtil {
      */
     public  List<Long> getWaitingWorkingVoucherIds(){
         List<Long> voucherIds=new ArrayList<>();
-        List<String> name=new ArrayList<>();
         IScene scene= VoucherFormPageScene.builder().page(1).size(10).build();
         JSONObject response=visitor.invokeApi(scene);
-        System.err.println("======="+response);
         int pages=response.getInteger("pages");
         for(int page=1;page<=pages;page++){
             IScene scene1= VoucherFormPageScene.builder().page(page).size(10).build();
             JSONArray list=visitor.invokeApi(scene1).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 Long voucherId=list.getJSONObject(i).getLong("id");
-                String voucherStatus=list.getJSONObject(i).getString("audit_status_name");
-                String invalidStatusName=list.getJSONObject(i).getString("invalid_status_name");
-                String voucherName=list.getJSONObject(i).getString("voucher_name");
-                System.err.println(voucherId+"---------"+voucherStatus+"---------"+invalidStatusName);
-                if(invalidStatusName.equals(VoucherStatusEnum.WORKING.getName())&&voucherStatus.equals("进行中")){
+                String voucherStatusName=list.getJSONObject(i).getString("voucher_status_name");
+                if(voucherStatusName.equals(VoucherStatusEnum.WORKING.getName())){
                     voucherIds.add(voucherId);
                 }
             }
@@ -399,20 +394,8 @@ public class BusinessUtil {
      * 获取优惠券的面值
      */
     public String getPrice(Long id) {
-        IScene scene1 = VoucherDetailScene.builder().id(id).build();
-        int pages = visitor.invokeApi(scene1).getInteger("pages");
-        String parValue = "";
-        for (int page = 1; page <= pages; page++) {
-            IScene scene2 = VoucherPageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long voucherId = list.getJSONObject(i).getLong("voucher_id");
-                if (voucherId.equals(id)) {
-                    parValue = list.getJSONObject(i).getString("par_value");
-                    break;
-                }
-            }
-        }
+        IScene scene=VoucherDetailScene.builder().id(id).build();
+        String parValue=visitor.invokeApi(scene).getString("par_value");
         return parValue;
     }
 /**
@@ -881,9 +864,9 @@ public class BusinessUtil {
     /**
      * 招募活动详情页-获取返回值在【活动奖励】内部
      */
-    public JSONObject getRecruitActivityDetail(Long activityId) {
+    public JSONArray getRecruitActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        JSONObject response = visitor.invokeApi(scene).getJSONObject("recruit_activity_info").getJSONObject("reward_vouchers");
+        JSONArray response = visitor.invokeApi(scene).getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers");
         return response;
     }
 
@@ -965,7 +948,7 @@ public class BusinessUtil {
      * 获取小程序-首页-文章列表-更多的返回值
      */
     public JSONObject getAppletArticleList(){
-        IScene scene= AppletArticleList.builder().lastValue(0).size(10).build();
+        IScene scene= AppletArticleList.builder().lastValue(null).size(100).build();
         JSONObject response=visitor.invokeApi(scene);
         return response;
     }
@@ -1035,6 +1018,18 @@ public class BusinessUtil {
         IScene scene= ArticleActivityRegisterScene.builder().id(id).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
+
+    /**
+     * V2.0小程序-我的报名-报名列表
+     */
+    public JSONObject appointmentActivityList(){
+        IScene scene =AppointmentActivityListScene.builder().lastValue(null).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        return response;
+    }
+
+
+
 
 
 

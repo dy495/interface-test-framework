@@ -2300,12 +2300,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject verificationReordFilterManage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject verificationReordFilterManage(String shopId, String id ,String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
+        json.put("id", id);
         if (pram != null) {
             json.put(pram, result);
         }
@@ -2317,7 +2318,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-12-16
      */
-    public JSONObject verificationReordTimeFilterManage(String shopId, String page, String size, String start_time, String end_time) {
+    public JSONObject verificationReordTimeFilterManage(String shopId,String id, String page, String size, String start_time, String end_time) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);

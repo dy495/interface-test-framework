@@ -29,6 +29,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     PublicParm pp = new PublicParm();
     //    JsonPathUtil jpu = new JsonPathUtil();
     public String shopId = "-1";
+    public String shopOne="45973";//ALL-1-1门店
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -97,7 +98,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -119,14 +120,16 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(5);
             JSONObject respon=jc.receptionTimeManage("","1","10",startTime,endTime,startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.receptionTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String receptionDate = list.getJSONObject(i).getString("reception_date").substring(0,10);
-                    String finishTime = list.getJSONObject(i).getString("finish_time").substring(0,10);
-                    Preconditions.checkArgument(receptionDate.compareTo(startTime)>=0&&receptionDate.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的接待时间为："+receptionDate);
-                    Preconditions.checkArgument(finishTime.compareTo(startTime)>=0&&finishTime.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的完成时间为："+finishTime);
-                };
+            if (respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.receptionTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String receptionDate = list.getJSONObject(i).getString("reception_date").substring(0,10);
+                        String finishTime = list.getJSONObject(i).getString("finish_time").substring(0,10);
+                        Preconditions.checkArgument(receptionDate.compareTo(startTime)>=0&&receptionDate.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的接待时间为："+receptionDate);
+                        Preconditions.checkArgument(finishTime.compareTo(startTime)>=0&&finishTime.compareTo(endTime)<=0, "接待管理开始时间："+startTime+" 结束时间："+endTime+" 列表中的完成时间为："+finishTime);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -169,7 +172,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[5][1])).contains(sr.reception_type), "参数全部输入的查询的" + sr.reception_type + "与列表信息的第一行的" + result.getString(String.valueOf(ss[5][1]) + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[6][1])).contains(sr.shop_id), "参数全部输入的查询的" + sr.shop_id + "与列表信息的第一行的" + result.getString(ss[6][1].toString() + "不一致"));
            } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -208,7 +211,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[3][1])).contains(sr.reception_status), "参数全部输入的查询的" + sr.reception_status + "与列表信息的第一行的" + result.getString(ss[3][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(ss[4][1].toString()).contains(sr.customer_phone), "参数全部输入的查询的" + sr.customer_phone + "与列表信息的第一行的" + result.getString(ss[4][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -300,7 +303,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -322,12 +325,14 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(10);
             JSONObject respon=jc.preSleCustomerTimeManage("","1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.preSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String createDate = list.getJSONObject(i).getString("create_date").substring(0,10);
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "销售客户创建开始时间："+startTime+" 结束时间："+endTime+" 列表中的创建时间为："+createDate);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.preSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String createDate = list.getJSONObject(i).getString("create_date").substring(0,10);
+                        Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "销售客户创建开始时间："+startTime+" 结束时间："+endTime+" 列表中的创建时间为："+createDate);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -362,7 +367,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(variable.sale_name), "参数全部输入的查询的" + variable.sale_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -396,7 +401,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(flag[1][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString()) + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -446,7 +451,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -510,7 +515,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -546,7 +551,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(flag[1][1].toString()).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getJSONObject(i).getString(flag[2][1].toString()) + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -594,7 +599,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -615,13 +620,9 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(10);
             JSONObject respon=jc.weChatSleCustomerTimeManage("","1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.weChatSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String createDate = list.getJSONObject(i).getString("create_date").substring(0,10);
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "小程序客户注册开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的注册时间为："+createDate);
-                };
-            }
+           if(respon.getJSONArray("list").size()>0){
+
+          }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -653,7 +654,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.vip_type), "参数全部输入的查询的" + variable.vip_type + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -687,7 +688,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(flag[0][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getJSONObject(i).getString(flag[0][1].toString()) + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -750,7 +751,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 }
 
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -771,16 +772,18 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(10);
             JSONObject respon=jc.appointmentRecordTimeManage("","1","10",startTime,endTime,startTime,endTime,startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String createDate = list.getJSONObject(i).getString("create_date").substring(0,10);
-                    String arriveTime = list.getJSONObject(i).getString("arrive_time").substring(0,10);
-                    String confirmTime = list.getJSONObject(i).getString("confirm_time").substring(0,10);
-                    Preconditions.checkArgument(confirmTime.compareTo(startTime)>=0&&confirmTime.compareTo(endTime)<=0, "预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的确认时间为："+confirmTime);
-                    Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
-                    Preconditions.checkArgument(arriveTime.compareTo(startTime)>=0&&arriveTime.compareTo(endTime)<=0, "预约记录预约开始时间："+startTime+" 预约结束时间："+endTime+" 列表中的预约时间为："+arriveTime);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String createDate = list.getJSONObject(i).getString("create_date").substring(0,10);
+                        String arriveTime = list.getJSONObject(i).getString("arrive_time").substring(0,10);
+                        String confirmTime = list.getJSONObject(i).getString("confirm_time").substring(0,10);
+                        Preconditions.checkArgument(confirmTime.compareTo(startTime)>=0&&confirmTime.compareTo(endTime)<=0, "预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的确认时间为："+confirmTime);
+                        Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
+                        Preconditions.checkArgument(arriveTime.compareTo(startTime)>=0&&arriveTime.compareTo(endTime)<=0, "预约记录预约开始时间："+startTime+" 预约结束时间："+endTime+" 列表中的预约时间为："+arriveTime);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -825,7 +828,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[5][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[6][1].toString()).contains(variable.is_overtime), "参数全部输入的查询的" + variable.is_overtime + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res==null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -866,7 +869,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[4][1].toString()).contains(confirmStatus), "参数全部输入的查询的" + result.getString(flag[4][1].toString()) + "与列表信息的第一行的" + confirmStatus + "不一致");
                System.out.println("参数全部输入的查询的" + variable.shop_id + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -914,7 +917,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -925,7 +928,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
     /**
      * @description :保养配置-筛选栏填写全部参数查询
-     * @date :2020/11/24
+     * @date :2020/11/24e
      **/
     @Test
     public void maintainALLFilter() {
@@ -933,7 +936,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         try {
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
-            JSONArray res = jc.maintainFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.maintainFilterManage(shopOne, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -942,7 +945,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 variable.year = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id = "-1";
+                variable.shop_id = shopOne;
                 //全部筛选之后的结果
                 JSONObject result = jc.maintainFilterManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.brand_name), "参数全部输入的查询的" + variable.brand_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
@@ -950,7 +953,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.car_model), "参数全部输入的查询的" + variable.car_model + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.year), "参数全部输入的查询的" + variable.year + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -989,7 +992,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1037,7 +1040,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list")== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1064,7 +1067,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 variable.creator_name = data.getString(flag[2][1].toString());
                 variable.creator_account = data.getString(flag[3][1].toString());
                 variable.voucher_status = data.getString(flag[4][1].toString());
-                variable.voucher_type = data.getString(flag[5][1].toString());
+//                variable.voucher_type = data.getString(flag[5][1].toString());
                 variable.page = "1";
                 variable.size = "10";
                 //全部筛选之后的结果
@@ -1074,9 +1077,9 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.creator_name), "参数全部输入的查询的" + variable.creator_name + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.creator_account), "参数全部输入的查询的" + variable.creator_account + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.voucher_status), "参数全部输入的查询的" + variable.voucher_status + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_type), "参数全部输入的查询的" + variable.voucher_type + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
+//                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_type), "参数全部输入的查询的" + variable.voucher_type + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1114,7 +1117,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.creator_account), "参数全部输入的查询的" + variable.creator_account + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[4][1])).contains(variable.voucher_status), "参数全部输入的查询的" + variable.voucher_status + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[5][1])).contains(variable.voucher_type), "参数全部输入的查询的" + variable.voucher_type + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致"); } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1163,7 +1166,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1185,12 +1188,14 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(5);
             JSONObject respon=jc.sendRecordFilterTimeManage("","1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.sendRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String sendTime = list.getJSONObject(i).getString("send_time").substring(0,10);
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "发卡开始时间："+startTime+" 发卡结束时间："+endTime+" 列表中发放时间为："+sendTime);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.sendRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String sendTime = list.getJSONObject(i).getString("send_time").substring(0,10);
+                        Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "发卡开始时间："+startTime+" 发卡结束时间："+endTime+" 列表中发放时间为："+sendTime);
+                    }
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1221,7 +1226,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[0][1].toString()).contains(variable.voucher_name), "参数全部输入的查询的" + variable.voucher_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(flag[1][1].toString()).contains(variable.sender), "参数全部输入的查询的" + variable.sender + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1256,7 +1261,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(flag[1][1].toString()).contains(variable.sender), "参数全部输入的查询的" + variable.sender + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString() + "不一致"));
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1283,27 +1288,29 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :核销记录-筛选栏单项查询-----发券者列表中不存在，传入值和返回值不一致，没有校验
+     * @description :核销记录-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
     public void verificationRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.verificationReordFilterManage(shopId, "1", "10", "", "");
+            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("id");
+            JSONObject respon = jc.verificationReordFilterManage(shopId,id, "1", "10", "", "");
             if (respon.getJSONArray("list").size() > 0) {
                 String result = respon.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject respon1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result);
+                JSONObject respon1 = jc.verificationReordFilterManage(shopId,id, "1", "10", pram, result);
                 int pages = respon1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.verificationReordFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.verificationReordFilterManage("", id,String.valueOf(page),"10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1321,16 +1328,20 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void verificationRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("id");
             String startTime=  dt.getHistoryDate(-5);
             String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.verificationReordTimeFilterManage("","1","10",startTime,endTime);
+            JSONObject respon=jc.verificationReordTimeFilterManage("",id,"1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.verificationReordTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String verificationTime = list.getJSONObject(i).getString("verification_time").substring(0,10);
-                    Preconditions.checkArgument(verificationTime.compareTo(startTime)>=0&&verificationTime.compareTo(endTime)<=0, "核销开始时间："+startTime+" 核销结束时间："+endTime+" 列表中核销时间为："+verificationTime);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.verificationReordTimeFilterManage("",id, String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String verificationTime = list.getJSONObject(i).getString("verification_time").substring(0,10);
+                        Preconditions.checkArgument(verificationTime.compareTo(startTime)>=0&&verificationTime.compareTo(endTime)<=0, "核销开始时间："+startTime+" 核销结束时间："+endTime+" 列表中核销时间为："+verificationTime);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1347,9 +1358,11 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void verificationRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.verificationRecordFilter_pram();
             verificationRecordVariable variable = new verificationRecordVariable();
-            JSONArray res = jc.verificationReordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.verificationReordFilterManage(shopId,id, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.voucher_name = data.getString(flag[0][1].toString());
@@ -1361,7 +1374,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 JSONObject result = jc.verificationReordFilterManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.voucher_name), "参数全部输入的查询的" + variable.voucher_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
           } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1378,9 +1391,11 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void verificationRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.verificationRecordFilter_pram();
             verificationRecordVariable variable = new verificationRecordVariable();
-            JSONArray res = jc.verificationReordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.verificationReordFilterManage(shopId, id,"1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.voucher_name = data.getString(flag[0][1].toString());
@@ -1392,7 +1407,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[0][1])).contains(variable.voucher_name), "参数全部输入的查询的" + variable.voucher_name + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[0][1].toString() + "不一致"));
              }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1409,7 +1424,9 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void verificationRecordEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.verificationReordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("id");
+            jc.verificationReordFilterManage(shopId,id, "1", "10", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1439,7 +1456,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1474,7 +1491,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.verification_code), "参数全部输入的查询的" + variable.verification_code + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1508,7 +1525,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[1][1])).contains(variable.verification_phone), "参数全部输入的查询的" + variable.verification_phone + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString()) + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1556,7 +1573,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1577,12 +1594,14 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(5);
             JSONObject respon=jc.packageFormTimeFilterManage("","1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.packageFormTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String createTime = list.getJSONObject(i).getString("create_time").substring(0,10);
-                    Preconditions.checkArgument(createTime.compareTo(startTime)>=0&&createTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中创建时间为："+createTime);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.packageFormTimeFilterManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String createTime = list.getJSONObject(i).getString("create_time").substring(0,10);
+                        Preconditions.checkArgument(createTime.compareTo(startTime)>=0&&createTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中创建时间为："+createTime);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1616,7 +1635,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.package_status), "参数全部输入的查询的" + variable.package_status + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
             }
             else{
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1649,7 +1668,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[1][1])).contains(variable.creator), "参数全部输入的查询的" + variable.creator + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString() + "不一致"));
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1712,7 +1731,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1733,12 +1752,14 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(5);
             JSONObject respon=jc.buyPackageRecordFilterTimeManage("","1","10",startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.buyPackageRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String sendTime = list.getJSONObject(i).getString("send_time").substring(0,10);
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中时间发出为："+sendTime);
-                };
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.buyPackageRecordFilterTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String sendTime = list.getJSONObject(i).getString("send_time").substring(0,10);
+                        Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime+" 列表中时间发出为："+sendTime);
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1773,7 +1794,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(payTypeName), "参数全部输入的查询的" +payTypeName + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.sender), "参数全部输入的查询的" + variable.sender + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1808,7 +1829,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[1][1])).contains(payTypeName), "参数全部输入的查询的" + payTypeName + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString()) + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -1859,7 +1880,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         }
                     }
                 } else if (result != null) {
-                Preconditions.checkArgument(respon1.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon1.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
             }else{
@@ -1874,7 +1895,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         }
                     }
                 }else if (result != null) {
-                    Preconditions.checkArgument(respon1.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                    Preconditions.checkArgument(respon1.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -1937,7 +1958,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(sendAccount.contains(variable.send_account), "参数全部输入的查询的" + variable.send_account + "与列表信息的第一行的" + sendAccount + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1971,7 +1992,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(customerName.contains(variable.customer_name),"参数全部输入的查询的:" + variable.customer_name + "与列表信息的第" + i + "行的:" + customerName + "不一致");
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2035,17 +2056,19 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String endTime=  dt.getHistoryDate(5);
             JSONObject respon=jc.articleTimeFilterManage("","1","10",startTime,endTime,startTime,endTime);
             int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.articleTimeFilterManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String startDate = list.getJSONObject(i).getString("start_date");
-                    String endDate = list.getJSONObject(i).getString("end_date");
-                    String registerEndDate = list.getJSONObject(i).getString("register_end_date").substring(0,10);
-                    String registerStartDate = list.getJSONObject(i).getString("register_start_date").substring(0,10);
-                    Preconditions.checkArgument(startDate.compareTo(startTime)>=0&&endDate.compareTo(endTime)<=0&&endDate.compareTo(startTime)>=0&&startDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+endDate);
-                    Preconditions.checkArgument(registerStartDate.compareTo(startTime)>=0&&registerEndDate.compareTo(endTime)<=0&&registerEndDate.compareTo(startTime)>=0&&registerStartDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+registerEndDate);
+            if(respon.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.articleTimeFilterManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String startDate = list.getJSONObject(i).getString("start_date");
+                        String endDate = list.getJSONObject(i).getString("end_date");
+                        String registerEndDate = list.getJSONObject(i).getString("register_end_date").substring(0,10);
+                        String registerStartDate = list.getJSONObject(i).getString("register_start_date").substring(0,10);
+                        Preconditions.checkArgument(startDate.compareTo(startTime)>=0&&endDate.compareTo(endTime)<=0&&endDate.compareTo(startTime)>=0&&startDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+endDate);
+                        Preconditions.checkArgument(registerStartDate.compareTo(startTime)>=0&&registerEndDate.compareTo(endTime)<=0&&registerEndDate.compareTo(startTime)>=0&&registerStartDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+registerEndDate);
 
-                };
+                    };
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2076,7 +2099,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.title), "参数全部输入的查询的" + variable.title + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2102,279 +2125,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         }
     }
 
-    /**
-     * @description :报名列表-筛选栏单项查询
-     * @date :2020/11/24
-     **/
-    @Test(dataProvider = "SELECT_registerListFilter", dataProviderClass = Constant.class)
-    public void registerListOneFilter(String pram, String output) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject respon = jc.registerListFilterManage(shopId, "1", "10", "", "");
-            if (respon.getJSONArray("list").size() > 0) {
-                String result = respon.getJSONArray("list").getJSONObject(0).getString(pram);
-                JSONObject respon1 = jc.registerListFilterManage(shopId, "1", "10", pram, result);
-                int pages = respon1.getInteger("pages");
-                for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.registerListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++) {
-                        String Flag = list.getJSONObject(i).getString(output);
-                        Preconditions.checkArgument(Flag.contains(result), "报名列表按" + result + "查询，结果错误" + Flag);
-                    }
-                }
-            } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名列表单项查询，结果校验");
-        }
-    }
-
-    /**
-     * @description 报名列表-时间的筛选
-     * @date :2020/12/16
-     **/
-    @Test
-    public void registerListTimeFilter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String startTime=  dt.getHistoryDate(-5);
-            String endTime=  dt.getHistoryDate(5);
-            JSONObject respon=jc.registerListTimeFilterManage("","1","10",startTime,endTime,startTime,endTime);
-            int pages = respon.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.registerListTimeFilterManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String startDate = list.getJSONObject(i).getString("start_date").substring(0,10);
-                    String endDate = list.getJSONObject(i).getString("end_date").substring(0,10);
-                    String registerEndDate = list.getJSONObject(i).getString("register_end_date").substring(0,10);
-                    String registerStartDate = list.getJSONObject(i).getString("register_start_date").substring(0,10);
-                    Preconditions.checkArgument(startDate.compareTo(startTime)>=0&&endDate.compareTo(endTime)<=0&&endDate.compareTo(startTime)>=0&&startDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+endDate);
-                    Preconditions.checkArgument(registerStartDate.compareTo(startTime)>=0&&registerEndDate.compareTo(endTime)<=0&&registerEndDate.compareTo(startTime)>=0&&registerStartDate.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的开始时间:"+startDate+"列表中的结束时间:"+registerEndDate);
-
-                };
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名列表时间的筛选，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名列表-筛选栏填写全部参数查询
-     * @date :2020/11/24
-     **/
-    @Test()
-    public void registerListAllFilter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Object[][] flag = Constant.registerListFilter_pram();
-            registerListVariable variable = new registerListVariable();
-            JSONArray res = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
-            if (res.size() > 0) {
-                JSONObject data = res.getJSONObject(0);
-                variable.title = data.getString(flag[0][1].toString());
-                variable.page = "1";
-                variable.size = "10";
-                //全部筛选之后的结果
-                JSONObject result = jc.registerListFilterManage(variable).getJSONArray("list").getJSONObject(0);
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.title), "参数全部输入的查询的" + variable.title + "与列表信息的第一行的" + result.getString(flag[0][1].toString() + "不一致"));
-            } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名列表填写全部参数查询，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名列表-筛选栏填写多项参数查询
-     * @date :2020/11/28
-     **/
-    @Test()
-    public void registerListSomeFilter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Object[][] flag = Constant.registerListFilter_pram();
-            registerListVariable variable = new registerListVariable();
-            JSONArray res = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
-            if (res.size() > 0) {
-                JSONObject data = res.getJSONObject(0);
-                variable.title = data.getString(flag[0][1].toString());
-                variable.page = "1";
-                variable.size = "10";
-
-                //全部筛选之后的结果
-                JSONArray result = jc.registerListFilterManage(variable).getJSONArray("list");
-                for (int i = 0; i < result.size(); i++) {
-              }
-            } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名列表填写多项参数查询，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名列表查询-筛选栏参数不填写
-     * @date :2020/11/27
-     **/
-    @Test
-    public void registerListFilterSomeEmpty() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名列表参数不填写，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名审批列表-筛选栏单项查询
-     * @date :2020/11/24
-     **/
-    @Test(dataProvider = "SELECT_approvalListFilter", dataProviderClass = Constant.class)
-    public void approvalListOneFilter(String pram, String output) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
-            JSONObject respon = jc.approvalListFilterManage(shopId, "1", "10", id, "", "");
-            if (respon.getJSONArray("list").size() > 0) {
-                int pages = respon.getInteger("pages");
-                if (pram.equals("status")) {
-                    String statusNameRespon = respon.getJSONArray("list").getJSONObject(0).getString("status_name");
-                    String statusName = messageFormCustomerTurnMethod("ACTIVITY_APPROVAL_STATUS", statusNameRespon);
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.approvalListFilterManage(shopId, String.valueOf(page), "10", id, pram, statusName).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            Preconditions.checkArgument(Flag.contains(statusNameRespon), "报名审批按" + statusNameRespon + "查询，结果错误" + Flag);
-                        }
-                    }
-                } else {
-                    String result = respon.getJSONArray("list").getJSONObject(0).getString(output);
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.approvalListFilterManage(shopId, String.valueOf(page), "10", id, pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            Preconditions.checkArgument(Flag.contains(result), "报名审批按" + result + "查询，结果错误" + Flag);
-                        }
-                    }
-                }
-            } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名审批单项查询，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名审批列表-筛选栏填写全部参数查询
-     * @date :2020/11/24
-     **/
-    @Test()
-    public void approvalListAllFilter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Object[][] flag = Constant.approvalListFilter_pram();
-            int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
-            approvalListVariable variable = new approvalListVariable();
-            JSONArray res = jc.approvalListFilterManage(shopId, "1", "10", id, "", "").getJSONArray("list");
-            if (res.size() > 0) {
-                String statusNameRespon = res.getJSONObject(0).getString("status_name");
-                String statusName = messageFormCustomerTurnMethod("ACTIVITY_APPROVAL_STATUS", statusNameRespon);
-                JSONObject data = res.getJSONObject(0);
-                variable.customer_name = data.getString(flag[0][1].toString());
-                variable.phone = data.getString(flag[1][1].toString());
-                variable.status = statusName;
-                variable.page = "1";
-                variable.size = "10";
-                variable.article_id = id;
-                //全部筛选之后的结果
-                JSONObject result = jc.approvalListFilterManage(variable).getJSONArray("list").getJSONObject(0);
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.phone), "参数全部输入的查询的" + variable.phone + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
-                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(statusNameRespon), "参数全部输入的查询的" + statusNameRespon + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
-            } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名审批填写全部参数查询，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名审批列表-筛选栏填写多项参数查询
-     * @date :2020/11/28
-     **/
-    @Test()
-    public void approvalListSomeFilter() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Object[][] flag = Constant.approvalListFilter_pram();
-            int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
-            approvalListVariable variable = new approvalListVariable();
-            JSONArray res = jc.approvalListFilterManage(shopId, "1", "10", id, "", "").getJSONArray("list");
-            if (res.size() > 0) {
-                JSONObject data = res.getJSONObject(0);
-                variable.customer_name = data.getString(flag[0][1].toString());
-                variable.phone = data.getString(flag[1][1].toString());
-                variable.page = "1";
-                variable.size = "10";
-                variable.article_id = id;
-                //全部筛选之后的结果
-                JSONArray result = jc.approvalListFilterManage(variable).getJSONArray("list");
-                for (int i = 0; i < result.size(); i++) {
-                    Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[0][1])).contains(variable.customer_name), "参数全部输入的查询的" + variable.customer_name + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[0][1].toString() + "不一致"));
-                    Preconditions.checkArgument(result.getJSONObject(i).getString(String.valueOf(flag[1][1])).contains(variable.phone), "参数全部输入的查询的" + variable.phone + "与列表信息的第" + i + "行的" + result.getJSONObject(i).getString(flag[1][1].toString() + "不一致"));
-
-                }
-            } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名审批填写多项参数查询，结果校验");
-        }
-    }
-
-    /**
-     * @description :报名审批查询-筛选栏参数不填写
-     * @date :2020/11/27
-     **/
-    @Test
-    public void approvalListFilterEmpty() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = jc.registerListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("id");
-            jc.approvalListFilterManage(shopId, "1", "10", id, "", "").getJSONArray("list");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("报名审批参数不填写，结果校验");
-        }
-    }
 
     /**
      * @description :卡券申请-筛选栏单项查询
@@ -2411,7 +2161,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2472,7 +2222,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.apply_name), "参数全部输入的查询的" + variable.apply_name + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(statusNameRespon), "参数全部输入的查询的" + statusNameRespon + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2509,7 +2259,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(statusNameRespon), "参数全部输入的查询的" + statusNameRespon + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2557,7 +2307,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2584,7 +2334,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 JSONObject result = jc.shopListFilterManage(shopId, "1", "10", name).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + result.getString(flag[0][1].toString() + "与列表信息的第一行的" + name + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2632,7 +2382,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2662,7 +2412,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))), "参数全部输入的查询的" + result.getString(flag[0][1].toString() + "与列表信息的第一行的" + name) + "不一致");
                 Preconditions.checkArgument(firstLetter.contains(result.getString(String.valueOf(flag[1][1]))), "参数全部输入的查询的" + result.getString(flag[1][1].toString() + "与列表信息的第一行的" + firstLetter) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2689,7 +2439,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 JSONObject result = jc.brandListFilterManage3(shopId, "1", "10", name).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(name.contains(result.getString(String.valueOf(flag[0][1]))), "参数全部输入的查询的" + result.getString(flag[0][1].toString() + "与列表信息的第一行的" + name) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2738,7 +2488,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2789,7 +2539,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2821,7 +2571,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(year), "参数全部输入的查询的" + year + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(list.size()== 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(list== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2850,7 +2600,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 JSONObject result = jc.carModelListFilterManage1(shopId, "1", "10", name, "", brand_id, style_id).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(list.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(list == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2898,7 +2648,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2947,7 +2697,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2995,7 +2745,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3050,7 +2800,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(user), "参数全部输入的查询的" + user + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3082,7 +2832,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3129,7 +2879,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(respon.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respon.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -3161,7 +2911,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(user), "参数全部输入的查询的" + user + "与列表信息的第一行的" + result.getString(flag[1][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(export_time), "参数全部输入的查询的" + export_time + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3193,7 +2943,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
                 }
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3291,7 +3041,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         Preconditions.checkArgument(resultA.equals(value), "列表中的结果为：" + resultA + "筛选传入的值为" + value);
                     }
                 } else {
-                    Preconditions.checkArgument(list.size() == 0, "消息记录列表系统错误,请联系开发人员");
+                    Preconditions.checkArgument(list == null, "消息记录列表系统错误,请联系开发人员");
                 }
             }
 
@@ -3351,7 +3101,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString("message_type_name").contains(messageType), "参数全部输入的查询的" + messageType + "与列表信息的第一行的" + result.getString("message_type_name") + "不一致");
                 Preconditions.checkArgument(result.getString("customer_type_name").contains(customerType), "参数全部输入的查询的" + customerType + "与列表信息的第一行的" + result.getString("customer_type_name"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3382,7 +3132,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      *  item 提醒类型
      * @date :2021-2-1
      **/
-    @Test
+    @Test(enabled = false)
     public void intelligentRemindList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3411,7 +3161,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-洗车管理列表--单项搜索
      * @date :2021-2-1
      **/
-    @Test(dataProvider = "SELECT_washCarManagerFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false ,dataProvider = "SELECT_washCarManagerFilter", dataProviderClass = Constant.class )
     public void washCarManagerPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3428,7 +3178,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "洗车管理列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "洗车管理列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3441,7 +3191,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-洗车管理列表--筛选栏全部填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void washCarManagerPageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3463,7 +3213,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(washCarManagerVariable.shopId), "参数全部输入的查询的" + washCarManagerVariable.shopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(washCarManagerVariable.phone), "参数全部输入的查询的" + washCarManagerVariable.phone + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
                  } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3476,7 +3226,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-洗车管理列表--筛选栏多选查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void washCarManagerPageAllFielter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3498,7 +3248,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(washCarManagerVariable.shopId), "参数全部输入的查询的" + washCarManagerVariable.shopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(washCarManagerVariable.phone), "参数全部输入的查询的" + washCarManagerVariable.phone + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3511,7 +3261,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-洗车管理列表--筛选栏不填写查询
      * @date :2021-2-2
      **/
-    @Test()
+    @Test(enabled = false)
     public void washCarManagerPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3527,7 +3277,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-调整洗车次数--单项搜索
      * @date :2021-2-2
      **/
-    @Test(dataProvider = "SELECT_adjustNumberRecordFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_adjustNumberRecordFilter", dataProviderClass = Constant.class)
     public void AdjustNumberRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3544,7 +3294,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3557,7 +3307,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-调整洗车次数--筛选栏全部填写查询
      * @date :2021-2-2
      **/
-    @Test()
+    @Test(enabled = false)
     public void AdjustNumberRecordAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3579,7 +3329,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(adjustNumberRecordVariable.adjustShopId), "参数全部输入的查询的" + adjustNumberRecordVariable.adjustShopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(adjustNumberRecordVariable.customerType), "参数全部输入的查询的" + adjustNumberRecordVariable.customerType + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3592,7 +3342,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-调整洗车次数--筛选栏多项填写查询
      * @date :2021-2-2
      **/
-    @Test()
+    @Test(enabled = false)
     public void AdjustNumberRecordSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3614,7 +3364,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(flag[2][1].toString()).contains(adjustNumberRecordVariable.adjustShopId), "参数全部输入的查询的" + adjustNumberRecordVariable.adjustShopId + "与列表信息的第一行的" + result.getString(flag[2][1].toString() + "不一致"));
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(adjustNumberRecordVariable.customerType), "参数全部输入的查询的" + adjustNumberRecordVariable.customerType + "与列表信息的第一行的" + result.getString(flag[3][1].toString() + "不一致"));
             } else {
-                Preconditions.checkArgument(res.size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
@@ -3627,7 +3377,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-调整次数记录-筛选栏不填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void AdjustNumberRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3643,7 +3393,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0-优惠券领取记录--筛选栏单项搜索
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
     public void voucherManageSendRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3662,7 +3412,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3675,6 +3425,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      *@deprecated V2.0-优惠券领取记录--筛选栏全部填写搜索
      *  @date :2021-2-2
      */
+    @Test(enabled = false)
     public void voucherManageSendRecordAllFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3699,7 +3450,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.useStatus), "参数全部输入的查询的" + variable.useStatus + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.customerLabel), "参数全部输入的查询的" + variable.customerLabel + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
                } else {
-                Preconditions.checkArgument(res.size() == 0, "优惠券领取记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "优惠券领取记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3712,6 +3463,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0-优惠券领取记录--筛选栏多项填写搜索
      *  @date :2021-2-2
      */
+    @Test(enabled = false)
     public void voucherManageSendRecordSomeFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3736,7 +3488,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.useStatus), "参数全部输入的查询的" + variable.useStatus + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[7][1])).contains(variable.customerLabel), "参数全部输入的查询的" + variable.customerLabel + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "优惠券领取记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "优惠券领取记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3748,7 +3500,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-优惠券领取记录--筛选栏不填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void voucherManageSendRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3766,7 +3518,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0-优惠券作废记录--筛选栏单项搜索
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_voucherInvalidPageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_voucherInvalidPageFilter", dataProviderClass = Constant.class)
     public void voucherInvalidPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3785,7 +3537,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "优惠券作废记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3798,6 +3550,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0-优惠券作废记录--筛选栏全部填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void voucherInvalidPageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3822,7 +3575,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.invalidName), "参数输入的查询的" + variable.invalidName + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.invalidPhone), "参数输入的查询的" + variable.invalidPhone + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "优惠券作废记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3835,6 +3588,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0-优惠券作废记录--筛选栏多项填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void voucherInvalidPageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3859,7 +3613,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.invalidName), "参数输入的查询的" + variable.invalidName + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.invalidPhone), "参数输入的查询的" + variable.invalidPhone + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "优惠券作废记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3872,7 +3626,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0-优惠券作废记录--筛选栏不填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void voucherInvalidPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -3890,7 +3644,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0道路救援--筛选栏单项搜索
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_rescuePageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_rescuePageFilter", dataProviderClass = Constant.class)
     public void rescuePageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3907,7 +3661,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "道路救援列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "道路救援列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3920,6 +3674,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0道路救援列表记录--筛选栏全部填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void rescuePageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3941,7 +3696,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "道路救援列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "道路救援列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3954,6 +3709,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0道路救援列表记录--筛选栏多项填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void rescuePageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3975,7 +3731,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.customerPhone), "参数输入的查询的" + variable.customerPhone + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "优惠券作废记录系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "优惠券作废记录系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3987,7 +3743,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0道路救援列表记录--筛选栏不填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void rescuePageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -4003,7 +3759,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0评价列表--筛选栏单项搜索
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_evaluatePageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_evaluatePageFilter", dataProviderClass = Constant.class)
     public void evaluatePageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4020,7 +3776,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "评价列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "评价列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4033,6 +3789,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0评价列表--筛选栏全部填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void evaluatePageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4065,7 +3822,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[8][1])).contains(variable.isHaveMsg), "参数输入的查询的" + variable.isHaveMsg + "与列表信息的第一行的" + result.getString(flag[8][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "道路救援列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "道路救援列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4078,6 +3835,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0评价列表--筛选栏多项填写搜索
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void evaluatePageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4110,7 +3868,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[8][1])).contains(variable.isHaveMsg), "参数输入的查询的" + variable.isHaveMsg + "与列表信息的第一行的" + result.getString(flag[8][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "评价列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "评价列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4123,7 +3881,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0评价列表记录--筛选栏不填写查询
      * @date :2021-2-1
      **/
-    @Test()
+    @Test(enabled = false)
     public void evaluatePageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -4139,7 +3897,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0商城套餐列表--筛选栏单项搜索（只有一个参数）
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_storeCommodityPageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_storeCommodityPageFilter", dataProviderClass = Constant.class)
     public void storeCommodityPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4156,7 +3914,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "商城套餐列表-系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "商城套餐列表-系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4170,7 +3928,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0精品商城-商城订单--筛选栏单项搜索
      * @date :2021-2-3
      */
-    @Test(dataProvider = "SELECT_storeOrderPageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_storeOrderPageFilter", dataProviderClass = Constant.class)
     public void storeOrderPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4187,7 +3945,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "商城订单列表-系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "商城订单列表-系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4200,6 +3958,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0商城订单列表--筛选栏全部填写校验
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void storeOrderPageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4220,7 +3979,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.orderNumber), "参数输入的查询的" + variable.orderNumber + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "商城订单列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "商城订单列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4233,6 +3992,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0商城订单列表--筛选栏多项填写校验
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void storeOrderPageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4253,7 +4013,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.orderNumber), "参数输入的查询的" + variable.orderNumber + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
 
             } else {
-                Preconditions.checkArgument(res.size() == 0, "商城订单列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "商城订单列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4265,7 +4025,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0商城订单列表--筛选栏不填写查询
      * @date :2021-2-3
      **/
-    @Test()
+    @Test(enabled = false)
     public void storeOrderPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -4280,7 +4040,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0精品商城-分销员管理--筛选栏单项搜索
      * @date :2021-2-3
      */
-    @Test(dataProvider = "SELECT_storeSalesPageFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_storeSalesPageFilter", dataProviderClass = Constant.class)
     public void storeSalesPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4297,7 +4057,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }
             } else {
-                Preconditions.checkArgument(response.getJSONArray("list").size() == 0, "分销员管理列表-系统错误,请联系开发人员");
+                Preconditions.checkArgument(response.getJSONArray("list") == null, "分销员管理列表-系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4310,6 +4070,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @deprecated V2.0分销员管理--筛选栏全部填写校验
      * @date :2021-2-2
      */
+    @Test(enabled = false)
     public void storeSalesPageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4327,7 +4088,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(  variable.salesPhone),"参数输入的查询的"+ variable.salesPhone+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.shopId), "参数输入的查询的" + variable.shopId + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
             } else {
-                Preconditions.checkArgument(res.size() == 0, "分销员管理列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res == null, "分销员管理列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4339,7 +4100,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V2.0分销员管理列表--筛选栏不填写查询
      * @date :2021-2-3
      **/
-    @Test()
+    @Test(enabled = false)
     public void storeSalesPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

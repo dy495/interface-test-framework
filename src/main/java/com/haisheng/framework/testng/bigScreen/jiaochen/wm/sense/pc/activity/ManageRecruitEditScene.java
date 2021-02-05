@@ -35,6 +35,7 @@ public class ManageRecruitEditScene extends BaseScene {
     private final JSONObject voucherValid;
     private final Integer rewardReceiveType;
     private final Boolean isNeedApproval;
+    private final Long id;
 
     @Override
     public JSONObject getJSONObject() {
@@ -63,6 +64,7 @@ public class ManageRecruitEditScene extends BaseScene {
         object.put("voucher_valid", voucherValid);
         object.put("reward_receive_type", rewardReceiveType);
         object.put("is_need_approval", isNeedApproval);
+        object.put("id", id);
         return object;
     }
 

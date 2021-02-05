@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 活动管理-活动变更积分记录
+ * 活动管理-活动变更记录
  */
 @Builder
 public class ManageChangeRecordScene extends BaseScene {

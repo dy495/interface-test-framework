@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
     /**
-     * 小程序-我的报名中取消报名
+     * 小程序-我的报名中列表
      */
     @Builder
     public class AppointmentActivityListScene extends BaseScene {
