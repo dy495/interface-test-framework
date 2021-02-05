@@ -13,7 +13,9 @@ import org.testng.annotations.DataProvider;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -46,7 +48,25 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
     public String IpPort = "http://123.57.148.247";
-
+    public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
+        initHttpConfig();
+        StringBuilder stringBuilder = new StringBuilder();
+        String queryUrl = IpPort + path + "?";
+        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = paramMap.get(key);
+            stringBuilder.append("&").append(key).append("=").append(value);
+        }
+        String param = stringBuilder.toString().replaceFirst("&", "");
+        config.url(queryUrl + param);
+        logger.info("{} json param: {}", path.replace("?", ""), param);
+        long start = System.currentTimeMillis();
+        response = HttpClientUtil.get(config);
+        logger.info("response: {}", response);
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
     /**
      * @description:登录
      * @author: qingqing
@@ -205,6 +225,15 @@ public class StoreScenarioUtil extends TestCaseCommon {
                 "[\"type\"]",
                 "[\"accept_role\"]",
                 "[\"statu\"]"
+        };
+    }
+
+    @DataProvider(name = "DATATYPE")
+    public static Object[] dateType() {
+        return new String[]{
+                "NATURE_DAY",
+                "NATURE_WEEK"
+
         };
     }
 
@@ -2583,16 +2612,23 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
+//    public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
+//        String url = "/patrol/history/shop/day/region-pv-uv";
+//        JSONObject json = new JSONObject();
+//        json.put("shop_id",shop_id);
+//        json.put("dateType",dateType);
+//        json.put("day",day);
+//        String res = httpGet(url, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
     public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
-        String url = "/patrol/history/shop/day/region-pv-uv";
-        JSONObject json = new JSONObject();
-        json.put("shop_id",shop_id);
-        json.put("dateType",dateType);
-        json.put("day",day);
-        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        String path = "/patrol/history/shop/day/region-pv-uv";
+        Map<String, Object> map = new HashMap<>();
+        map.put("shop_id", shop_id);
+        map.put("dateType", dateType);
+        map.put("day", day);
+        return JSONObject.parseObject(httpGet(path, map, IpPort));
     }
-
 
 //------------------------------------------------------------------------------------------------------------------
 

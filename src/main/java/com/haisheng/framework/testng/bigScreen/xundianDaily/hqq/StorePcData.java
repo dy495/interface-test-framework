@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -27,6 +28,7 @@ import java.util.*;
 
 public class StorePcData extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     String cycle_type = "RECENT_THIRTY";
     String month = "";
     long shop_id = 4116;
@@ -695,7 +697,69 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+    /**
+     * ====================历史数据-区域关注度数据(自然日)======================
+     */
+    @Test()
+    public void region_data1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = "2020-02-01";
+            JSONObject res = md.regin_PUv(shop_id,"NATURE_DAY",date);
+            JSONObject data = res.getJSONObject("data");
+            JSONArray region_list = data.getJSONArray("region_data_day_list");
+            Map<String, Integer> Puvdata = mds.getRegionData(region_list);
+            int total_pv =Puvdata.get("total_pv");
+            int total_uv =Puvdata.get("uv2");
+            int total_stay_time =Puvdata.get("total_stay_time");
+            int pv = Puvdata.get("pv");
+            int uv =Puvdata.get("uv");
+            int stay_time =Puvdata.get("stay_time");
 
+            checkArgument(total_pv==pv, "【区域关注度】时间选择为-日-该日"+date+"总PV =="+date+"【折线图】中的PV，门店ID"+shop_id);
+            checkArgument(total_uv<=uv, "【区域关注度】时间选择为-日-该日"+date+"总UV =="+date+"【折线图】中的UV，门店ID"+shop_id);
+            checkArgument(total_stay_time==stay_time, "【区域关注度】时间选择为-日-该日"+date+"总停留时长 =="+date+"【折线图】中的停留时长，门店ID"+shop_id);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("【区域关注度】时间选择为-日-该日总PV/UV/停留时长 ==该日【折线图】中的PV/UV/停留时长");
+        }
+
+    }
+
+    /**
+     * ====================历史数据-区域关注度数据(周)======================
+     */
+    @Test()
+    public void region_data2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String date = "2020-02-01";
+            JSONObject res = md.regin_PUv(shop_id,"NATURE_WEEK",date);
+            JSONObject data = res.getJSONObject("data");
+            JSONArray region_list = data.getJSONArray("region_data_day_list");
+            Map<String, Integer> Puvdata = mds.getRegionData1(region_list);
+            int total_pv =Puvdata.get("total_pv");
+            int total_uv =Puvdata.get("uv2");
+            int pv = Puvdata.get("pv");
+            int uv =Puvdata.get("uv");
+
+            checkArgument(total_pv==pv, "【区域关注度】时间选择为-日-该周，从日期："+date+"开始的一周。总PV =="+date+"【折线图】中的PV，门店ID"+shop_id);
+            checkArgument(total_uv<=uv, "【区域关注度】时间选择为-日-该周，从日期："+date+"开始的一周。总UV =="+date+"【折线图】中的UV，门店ID"+shop_id);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("【区域关注度】时间选择为-周-该周总PV/UV/停留时长 ==该周【折线图】中的PV/UV/停留时长");
+        }
+
+    }
 
 
 }

@@ -1108,9 +1108,9 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject data = crm.provinceList();
             JSONArray list = data.getJSONArray("list");
-//            String util=list.getJSONObject(0).getString("province_name");
+//            String Util=list.getJSONObject(0).getString("province_name");
             checkArgument(list.size() == 31, "车牌号省份不是31");
-//            Preconditions.checkArgument(util.equals("苏"),"省份默认不是苏");
+//            Preconditions.checkArgument(Util.equals("苏"),"省份默认不是苏");
         } catch (AssertionError | Exception e) {
 
             appendFailReason(e.toString());

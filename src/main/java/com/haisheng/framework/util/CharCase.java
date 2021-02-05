@@ -18,7 +18,7 @@ public class CharCase {
                 "a", "b",  "c",  "d", "db",
                 "f",  "g",  "h",  "i", "j",
                 "k",  "l",  "m",  "n", "o",
-                "util",  "q", "r",  "s",  "t",
+                "Util",  "q", "r",  "s",  "t",
                 "u",  "v",  "w",  "x", "y",
                 "z",
                 //大写字母
