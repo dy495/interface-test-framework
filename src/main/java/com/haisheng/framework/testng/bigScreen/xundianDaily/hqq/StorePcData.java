@@ -700,7 +700,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================历史数据-区域关注度数据(自然日)======================
      */
-    @Test()
+    //@Test()
     public void region_data1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -734,7 +734,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================历史数据-区域关注度数据(周)======================
      */
-    @Test()
+   // @Test()
     public void region_data2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

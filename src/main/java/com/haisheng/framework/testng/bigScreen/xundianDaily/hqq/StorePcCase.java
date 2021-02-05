@@ -1534,7 +1534,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================历史数据-区域关注度数据不为空======================
      */
-    @Test(dataProvider = "DATATYPE",dataProviderClass = StoreScenarioUtil.class)
+   // @Test(dataProvider = "DATATYPE",dataProviderClass = StoreScenarioUtil.class)
     public void region_data(String dateType) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
