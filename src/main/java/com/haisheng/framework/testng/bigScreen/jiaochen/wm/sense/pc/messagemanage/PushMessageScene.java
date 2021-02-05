@@ -26,10 +26,26 @@ public class PushMessageScene extends BaseScene {
     private final Boolean ifSendImmediately = true;
     private final Long activityId;
 
+    /**
+     * v2.0
+     */
+    private final Integer pushTargetId;
+    //TODO 上线后替代原pushTarget
+
+    /**
+     * v2.0
+     */
+    private final String useDay;
+    //TODO 上线后替代原userDays
+
     @Override
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
-        object.put("push_target", pushTarget);
+        if (pushTarget != null) {
+            object.put("push_target", pushTarget);
+        } else {
+            object.put("push_target", pushTargetId);
+        }
         object.put("shop_list", shopList);
         object.put("tel_list", telList);
         object.put("message_name", messageName);
@@ -38,7 +54,11 @@ public class PushMessageScene extends BaseScene {
         object.put("voucher_or_package_list", voucherOrPackageList);
         object.put("begin_use_time", beginUseTime);
         object.put("end_use_time", endUseTime);
-        object.put("use_days", useDays);
+        if (useDays != null) {
+            object.put("use_days", useDays);
+        } else {
+            object.put("use_days", useDay);
+        }
         object.put("send_time", sendTime);
         object.put("if_send_immediately", ifSendImmediately);
         object.put("activity_id", activityId);

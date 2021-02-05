@@ -11,22 +11,25 @@ import java.util.Optional;
  * @desc
  */
 public enum AppletPushTargetEnum {
-    /**
-     * 全部门店
-     */
-    ALL("全部客户"),
-    SHOP_CUSTOMER("门店客户"),
-    PERSONNEL_CUSTOMER("个人客户"),
+    ALL(0, "全部客户"),
+    SHOP_CUSTOMER(1, "门店客户"),
+    PERSONNEL_CUSTOMER(2, "个人客户"),
     ;
 
-    private String name;
+    private final String name;
+    private final Integer id;
 
-    AppletPushTargetEnum(String name) {
+    AppletPushTargetEnum(int id, String name) {
         this.name = name;
+        this.id = id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public static AppletPushTargetEnum findById(Integer id) {

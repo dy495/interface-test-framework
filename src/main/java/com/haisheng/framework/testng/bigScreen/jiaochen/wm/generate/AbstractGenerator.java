@@ -23,6 +23,7 @@ public abstract class AbstractGenerator implements IGenerator {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
     protected static final int SIZE = 100;
     protected final StringBuilder errorMsg;
+    protected int counter = 0;
     protected Visitor visitor;
 
     protected AbstractGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
@@ -84,7 +85,6 @@ public abstract class AbstractGenerator implements IGenerator {
      * @return bean的集合
      */
     protected <T> List<T> resultCollectToBean(IScene scene, Class<T> bean) {
-        logger("RESULT COLLECT START");
         List<T> list = new ArrayList<>();
         int total = visitor.invokeApi(scene).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
@@ -94,7 +94,6 @@ public abstract class AbstractGenerator implements IGenerator {
             JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
         }
-        logger("RESULT COLLECT FINISH");
         return list;
     }
 
@@ -114,5 +113,10 @@ public abstract class AbstractGenerator implements IGenerator {
      */
     protected void logger(String str) {
         logger.info("---------------------------------------[ {} ]---------------------------------------", str);
+    }
+
+    protected void clear() {
+        this.visitor = null;
+        this.counter = 0;
     }
 }

@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
@@ -811,8 +811,8 @@ public class BusinessUtil extends BaseUtil {
      *
      * @return 卡券id
      */
-    public List<AppletVoucherList> getAppletCanUsedVoucherInfoList() {
-        List<AppletVoucherList> list = new ArrayList<>();
+    public List<AppletVoucher> getAppletCanUsedVoucherInfoList() {
+        List<AppletVoucher> list = new ArrayList<>();
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -824,7 +824,7 @@ public class BusinessUtil extends BaseUtil {
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
             list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType)
-                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucherList.class))
+                    .map(jsonObject -> JSON.parseObject(JSON.toJSONString(jsonObject), AppletVoucher.class))
                     .collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);

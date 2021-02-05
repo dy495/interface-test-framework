@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -788,7 +788,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
             int verificationTotal = jc.invokeApi(builder.build()).getInteger("total");
             //核销
             user.loginApplet(appletUser);
-            AppletVoucherList voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
+            AppletVoucher voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
             long id = voucherInfo.getId();
             String voucherName = voucherInfo.getTitle();
             CommonUtil.valueView(id, voucherName);
@@ -1873,7 +1873,7 @@ public class MarketingManageOnline extends TestCaseCommon implements TestCaseStd
         try {
             code = util.getVerificationCode(false, "本司员工");
             user.loginApplet(appletUser);
-            AppletVoucherList voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
+            AppletVoucher voucherInfo = util.getAppletCanUsedVoucherInfoList().get(0);
             long id = voucherInfo.getId();
             IScene scene = VoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build();
             String message = jc.invokeApi(scene, false).getString("message");

@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointme
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.FollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.MaintainTimeList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -298,7 +298,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 领取记录列表
      */
     public List<VoucherSendRecord> getVoucherSendRecordList(Long voucherId) {
-        IScene scene = SendRecordScene.builder().id(voucherId).build();
+        IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
         return collectBean(scene, VoucherSendRecord.class);
     }
 
@@ -334,79 +334,6 @@ public class SupporterUtil extends BaseUtil {
         Long voucherId = getVoucherId(voucherName);
         return getVoucherInvalidList(voucherId);
     }
-
-//    /**
-//     * 获取无库存的卡券id
-//     *
-//     * @return 卡券id
-//     */
-//    public Long getNoInventoryVoucherId() {
-//        List<Long> voucherLIst = new ArrayList<>();
-//        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder();
-//        int total = visitor.invokeApi(builder.build()).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, SIZE);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray list = visitor.invokeApi(builder.page(i).size(SIZE).build()).getJSONArray("list");
-//            voucherLIst.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("surplus_inventory") != null
-//                    && e.getLong("surplus_inventory") == 0 && !e.getString("invalid_status_name").equals("已作废")
-//                    && e.getString("audit_status_name").equals("已通过")).map(e -> e.getLong("voucher_id")).collect(Collectors.toList()));
-//        }
-//        if (voucherLIst.size() == 0) {
-//            String voucherName = createVoucher(1, VoucherTypeEnum.CUSTOM);
-//            applyVoucher(voucherName, "1");
-//            voucherLIst.add(getVoucherId(voucherName));
-//            List<String> phoneList = new ArrayList<>();
-//            phoneList.add(EnumAccount.MARKETING.getPhone());
-//            //发出此卡券
-//            IScene scene = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                    .telList(phoneList).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                    .type(0).voucherOrPackageList(voucherLIst).useDays(10).ifSendImmediately(true).build();
-//            visitor.invokeApi(scene);
-//        }
-//        return voucherLIst.get(0);
-//    }
-
-
-//    /**
-//     * 获取已作废卡券id
-//     *
-//     * @return 卡券id
-//     */
-//    public Long getObsoleteVoucherId() {
-//        IScene scene = VoucherPageScene.builder().build();
-//        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
-//        Long voucherId = vouchers.stream().filter(e -> e.getInvalidStatusName().equals("已作废") && e.getAuditStatusName().equals("已通过") && e.getSurplusInventory() != null && e.getSurplusInventory() != 0).map(VoucherPage::getVoucherId).findFirst().orElse(null);
-//        if (voucherId == null) {
-//            String voucherName = createVoucher(1, VoucherTypeEnum.CUSTOM);
-//            applyVoucher(voucherName, "1");
-//            invalidVoucher(voucherName);
-//            return getVoucherId(voucherName);
-//        }
-//        return voucherId;
-//    }
-
-//    /**
-//     * 增发卡券
-//     *
-//     * @param voucherName 增发的卡券名
-//     * @param number      增发数量
-//     */
-//    public void addVoucher(String voucherName, Integer number) {
-//        Long voucherId = getVoucherId(voucherName);
-//        IScene scene = AddVoucherScene.builder().id(voucherId).addNumber(number).build();
-//        visitor.invokeApi(scene);
-//    }
-
-//    /**
-//     * 作废卡券
-//     *
-//     * @param voucherName 被作废卡券的卡券名
-//     */
-//    public void invalidVoucher(String voucherName) {
-//        Long voucherId = getVoucherId(voucherName);
-//        IScene scene = InvalidVoucher.builder().id(voucherId).build();
-//        visitor.invokeApi(scene);
-//    }
 
     /**
      * 获取重复的核销人员
@@ -521,7 +448,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 核销码
      */
     public String getVoucherCode(Long voucherId) {
-        IScene scene = SendRecordScene.builder().id(voucherId).build();
+        IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
         return visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getString("voucher_code");
     }
 
@@ -627,14 +554,6 @@ public class SupporterUtil extends BaseUtil {
 //    }
 //
 
-//
-//
-//
-//
-//
-//
-//
-
     /**
      * 获取车牌号
      *
@@ -675,6 +594,34 @@ public class SupporterUtil extends BaseUtil {
 
     //--------------------------------------------------套餐----------------------------------------------------------
 
+    /**
+     * 获取某个状态的套餐
+     *
+     * @param packageStatusEnum packageStatusEnum
+     * @return 套餐信息
+     */
+    public PackagePage getPackagePage(PackageStatusEnum packageStatusEnum) {
+        String format = "yyyy-MM-dd HH:mm";
+        String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") + " 00:00";
+        long todayUnix = Long.parseLong(DateTimeUtil.dateToStamp(today, format));
+        IScene packageFormPageScene = PackageFormPageScene.builder().build();
+        List<PackagePage> packagePageList = collectBean(packageFormPageScene, PackagePage.class);
+        if (packageStatusEnum.getName().equals(PackageStatusEnum.EXPIRED.getName())) {
+            return packagePageList.stream().filter(e -> getValidityUnix(e, format) < todayUnix && e.getAuditStatusName().equals(PackageStatusEnum.AGREE.getName())).findFirst().orElse(null);
+        } else {
+            return packagePageList.stream().filter(e -> e.getAuditStatusName().equals(packageStatusEnum.getName())).findFirst().orElse(null);
+        }
+    }
+
+    /**
+     * 获取有效时间戳
+     *
+     * @param packagePage 套餐列表
+     * @return 有效时间戳
+     */
+    private Long getValidityUnix(PackagePage packagePage, String format) {
+        return Long.parseLong(DateTimeUtil.dateToStamp(packagePage.getCreateTime(), format)) + (long) packagePage.getValidity() * 24 * 60 * 60 * 1000;
+    }
 
     /**
      * 获取套餐信息
@@ -986,9 +933,9 @@ public class SupporterUtil extends BaseUtil {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
-        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.name())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
-                .type(type).voucherOrPackageList(voucherOrPackageList).useDays(10);
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDay("10");
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
@@ -1285,8 +1232,8 @@ public class SupporterUtil extends BaseUtil {
      *
      * @param voucherUseStatusEnum 优惠券状态枚举
      */
-    public AppletVoucherList getAppletVoucherList(VoucherUseStatusEnum voucherUseStatusEnum) {
-        AppletVoucherList appletVoucherList;
+    public AppletVoucher getAppletVoucher(VoucherUseStatusEnum voucherUseStatusEnum) {
+        AppletVoucher appletVoucher;
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -1297,10 +1244,10 @@ public class SupporterUtil extends BaseUtil {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
-            appletVoucherList = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.name())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucherList.class)).findFirst().orElse(null);
+            appletVoucher = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.name())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).findFirst().orElse(null);
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);
-        return appletVoucherList;
+        return appletVoucher;
     }
 
     /**
@@ -1308,8 +1255,8 @@ public class SupporterUtil extends BaseUtil {
      *
      * @return 卡券id
      */
-    public List<AppletVoucherList> getAppletCanUsedVoucherList() {
-        List<AppletVoucherList> list = new ArrayList<>();
+    public List<AppletVoucher> getAppletCanUsedVoucherList() {
+        List<AppletVoucher> list = new ArrayList<>();
         Integer id = null;
         Integer status = null;
         JSONArray array;
@@ -1320,7 +1267,7 @@ public class SupporterUtil extends BaseUtil {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucherList.class)).collect(Collectors.toList()));
+            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);
         return list;

@@ -29,20 +29,28 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
 
     @Override
     public Long getVoucherId() {
-        VoucherStatusEnum.findById(voucherStatus.getId());
-        Preconditions.checkArgument(!isEmpty(), "visitor is null");
-        logger("FIND " + voucherStatus.name());
-        IScene scene = VoucherPageScene.builder().build();
-        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
-        if (voucher != null) {
-            logger("voucherId is: " + voucher.getVoucherId());
-            logger("voucherName is：" + getVoucherName(voucher.getVoucherId()));
-            return voucher.getVoucherId();
+        try {
+            VoucherStatusEnum.findById(voucherStatus.getId());
+            Preconditions.checkArgument(!isEmpty(), "visitor is null");
+            logger("FIND " + voucherStatus.name() + " START");
+            Preconditions.checkArgument(counter(voucherStatus) < 3, voucherStatus.getName() + " 状态执行次数大于2次，已强行停止，请检查此状态生成");
+            IScene scene = VoucherPageScene.builder().build();
+            List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
+            VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+            if (voucher != null) {
+                logger("FIND " + voucherStatus.name() + " FINISH");
+                logger("voucherId is: " + voucher.getVoucherId());
+                logger("voucherName is：" + voucher.getVoucherName());
+                return voucher.getVoucherId();
+            }
+            logger(voucherStatus.name() + " DIDN'T FIND ");
+            voucherStatus.getVoucherBuilder().buildVoucher().execute(visitor, voucherScene);
+            return getVoucherId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMsg.append(e);
         }
-        logger(voucherStatus.name() + " DIDN'T FIND ");
-        voucherStatus.getVoucherBuilder().buildVoucher().execute(visitor, voucherScene);
-        return getVoucherId();
+        return null;
     }
 
     @Override
@@ -105,5 +113,19 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
         return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
+    }
+
+    /**
+     * 递归计数器
+     *
+     * @param voucherStatusEnum 卡券状态
+     * @return 执行此状态次数
+     */
+    private Integer counter(VoucherStatusEnum voucherStatusEnum) {
+        logger("计数器次数：" + counter);
+        if (this.voucherStatus == voucherStatusEnum) {
+            return counter += 1;
+        }
+        return counter;
     }
 }

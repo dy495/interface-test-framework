@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2020-12-20
  */
 @Data
-public class AppletVoucherList implements Serializable {
+public class AppletVoucher implements Serializable {
     @JSONField(name = "id")
     private Long id;
     @JSONField(name = "title")

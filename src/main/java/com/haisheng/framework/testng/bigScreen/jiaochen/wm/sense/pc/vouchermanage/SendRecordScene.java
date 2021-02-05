@@ -19,7 +19,7 @@ public class SendRecordScene extends BaseScene {
     /**
      * 2.0
      */
-    private final Long id;
+    private final Long voucherId;
     private final String receiver;
     private final String receivePhone;
     private final String useStatus;
@@ -36,7 +36,7 @@ public class SendRecordScene extends BaseScene {
         object.put("sender", sender);
         object.put("page", page);
         object.put("size", size);
-        object.put("id", id);
+        object.put("voucher_id", voucherId);
         object.put("receiver", receiver);
         object.put("receive_phone", receivePhone);
         object.put("use_status", useStatus);

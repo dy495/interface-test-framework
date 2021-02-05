@@ -6,6 +6,12 @@ import lombok.Builder;
 
 import java.util.List;
 
+/**
+ * 卡券增发接口
+ *
+ * @author wangmin
+ * @date 2020-12-29
+ */
 @Builder
 public class AddVoucherScene extends BaseScene {
     @Builder.Default

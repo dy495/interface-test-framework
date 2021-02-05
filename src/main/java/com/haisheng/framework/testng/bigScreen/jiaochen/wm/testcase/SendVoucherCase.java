@@ -277,7 +277,7 @@ public class SendVoucherCase extends TestCaseCommon implements TestCaseStd {
 
     public void checkVoucherRecord(Long voucherId, VoucherSourceEnum voucherSourceEnum) {
         String voucherName = util.getPackageName(voucherId);
-        IScene scene = SendRecordScene.builder().id(voucherId).build();
+        IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
         VoucherSendRecord voucherSendRecord = util.collectBean(scene, VoucherSendRecord.class).get(0);
         String sendChannelName = voucherSendRecord.getSendChannelName();
         CommonUtil.checkResult(voucherName + " 发出渠道", voucherSourceEnum.getName(), sendChannelName);

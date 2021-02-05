@@ -32,7 +32,7 @@ public class CreateVoucherScene extends BaseScene {
     private final Integer stock;
 
     /**
-     * 面值
+     * 成本
      */
     private final Double cost;
 
