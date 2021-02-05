@@ -456,7 +456,59 @@ public class StoreFuncPackage extends TestCaseCommon {
         return result;
 
     }
+    /**区域关注度中的数据获取**/
+    public Map<String, Integer>  getRegionData(JSONArray list) throws Exception {
+        Integer total_pv = null;
+        Integer total_uv = null;
+        Integer total_stay_time = null;
+        Integer pv = null;
+        Integer uv = null;
+        Integer stay_time = null;
+        for(int i=0;i<list.size();i++){
+            total_pv = list.getJSONObject(i).getInteger("total_pv");
+            total_uv = list.getJSONObject(i).getInteger("total_uv");
+            total_stay_time = list.getJSONObject(i).getInteger("total_stay_time");
 
+            JSONArray region_day_list = list.getJSONObject(i).getJSONArray("region_data_day_list");
+             pv = region_day_list.getJSONObject(i).getInteger("pv");
+             uv = region_day_list.getJSONObject(i).getInteger("uv");
+             stay_time = region_day_list.getJSONObject(i).getInteger("stay_time");
+        }
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("total_pv", total_pv);
+        result.put("total_uv", total_uv);
+        result.put("total_stay_time", total_stay_time);
+        result.put("pv", pv);
+        result.put("uv", uv);
+        result.put("stay_time", stay_time);
+        return result;
+    }
+
+    /**区域关注度中的数据获取**/
+    public Map<String, Integer>  getRegionData1(JSONArray list) throws Exception {
+        Integer total_pv = null;
+        Integer total_uv = null;
+        Integer pvs = null;
+        Integer uvs = null;
+        for(int i=0;i<list.size();i++) {
+            total_pv = list.getJSONObject(i).getInteger("total_pv");
+            total_uv = list.getJSONObject(i).getInteger("total_uv");
+            JSONArray region_day_list = list.getJSONObject(i).getJSONArray("region_data_day_list");
+            for (int j = 0; j < region_day_list.size(); j++) {
+                Integer pv = region_day_list.getJSONObject(j).getInteger("pv");
+                Integer uv = region_day_list.getJSONObject(j).getInteger("uv");
+                pvs += pv;
+                uvs += uv;
+            }
+        }
+        Map<String, Integer> result = new HashMap<>();
+        result.put("total_pv", total_pv);
+        result.put("total_uv", total_uv);
+        result.put("pv", pvs);
+        result.put("uv", uvs);
+        return result;
+    }
 }
 
 
