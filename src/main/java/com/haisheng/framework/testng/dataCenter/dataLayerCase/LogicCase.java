@@ -591,7 +591,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================3.1. 默认组人脸检索======================
      */
-    @Test
+    //@Test
     public void default_search1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -632,7 +632,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
     /**
     * ====================3.2. 默认组用户查询======================
     */
-    @Test
+   // @Test
     public void defaultUser_search() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
