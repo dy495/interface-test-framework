@@ -14,7 +14,7 @@ public enum VoucherExpireTypeEnum {
 
     private final Integer id;
 
-    private String typeName;
+    private final String typeName;
 
     VoucherExpireTypeEnum(Integer id, String typeName) {
         this.id = id;

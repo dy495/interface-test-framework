@@ -349,6 +349,7 @@ public class CommonUtil {
         } else {
             Preconditions.checkArgument(expect.equals(actual), reason);
         }
+        logger.info("------------");
     }
 
     @NotNull

@@ -48,6 +48,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -200,8 +201,14 @@ public class SupporterUtil extends BaseUtil {
 
 
     public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
         String picture = new ImageUtil().getImageBinary(picPath);
-        IScene scene = FileUpload.builder().isPermanent(false).pic(picture).ratio(1.5).build();
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        IScene scene = FileUpload.builder().isPermanent(false).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 
@@ -392,6 +399,16 @@ public class SupporterUtil extends BaseUtil {
             voucherArray.add(object);
         }
         return voucherArray;
+    }
+
+    /**
+     * 获取卡券集合
+     *
+     * @return 卡券集合
+     */
+    public JSONArray getVoucherArray() {
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        return getVoucherArray(voucherId, 1);
     }
 
     /**
@@ -753,6 +770,22 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 编辑指定套餐
+     *
+     * @param packageId   套餐 id
+     * @param voucherList 所含卡券列表
+     * @return 套餐名
+     */
+    public void editPackage(Long packageId, JSONArray voucherList) {
+        String packageName = getPackageName(packageId);
+        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
+                .validity(2000).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
+                .id(String.valueOf(packageId)).build();
+        visitor.invokeApi(editPackageScene);
+    }
+
+    /**
      * 编辑套餐
      *
      * @param voucherList 套餐包含的卡券
@@ -823,8 +856,7 @@ public class SupporterUtil extends BaseUtil {
      */
     public void buyFixedPackage(Long packageId, int type) {
         IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
-                .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
         visitor.invokeApi(purchaseFixedPackageScene);

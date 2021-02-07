@@ -33,7 +33,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             VoucherStatusEnum.findById(voucherStatus.getId());
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
-            Preconditions.checkArgument(counter(voucherStatus) < 3, voucherStatus.getName() + " 状态执行次数大于2次，已强行停止，请检查此状态生成");
+            Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
             IScene scene = VoucherPageScene.builder().build();
             List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
             VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);

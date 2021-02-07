@@ -118,10 +118,8 @@ public class ContentOperationOnline extends TestCaseCommon implements TestCaseSt
             File file = new File(filePath);
             File[] files = file.listFiles();
             assert files != null;
-            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath()))
-                    .collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path"))
-                    .collect(Collectors.toList());
+            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> jc.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
             IScene scene = BannerEditScene.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0)).bannerId1(16)
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(0)).bannerId2(17)

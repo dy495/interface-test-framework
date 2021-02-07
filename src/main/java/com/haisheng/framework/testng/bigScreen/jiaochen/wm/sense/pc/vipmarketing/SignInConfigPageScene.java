@@ -21,7 +21,7 @@ public class SignInConfigPageScene extends BaseScene {
     public JSONObject getJSONObject() {
         JSONObject object = new JSONObject();
         object.put("page", page);
-        object.put("szie", size);
+        object.put("size", size);
         return object;
     }
 

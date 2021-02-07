@@ -17,7 +17,7 @@ public enum CustomMessageStatusEnum {
     SUCCESS("发送成功");
 
 
-    private String statusName;
+    private final String statusName;
 
     CustomMessageStatusEnum(String statusName) {
         this.statusName = statusName;

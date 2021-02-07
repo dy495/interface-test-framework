@@ -16,11 +16,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.audit.Audi
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomMessageStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageDetailScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.MemberCenterEquityListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.VoucherVerificationScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
@@ -39,6 +37,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -64,12 +63,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public UserUtil user = new UserUtil(visitor);
     //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
+    CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
@@ -82,6 +81,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
+        commonConfig.roleId = "603";
         commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
         commonConfig.shopId = "46439";
         beforeClassInit(commonConfig);
@@ -142,7 +142,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
+    //ok
     @Test(description = "卡券管理--卡券详情--卡券详情与创建时相同")
     public void voucherManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -156,19 +156,17 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     CommonUtil.checkResult(voucherName + " 描述", EnumDesc.VOUCHER_DESC.getDesc(), e.getVoucherDescription());
                     CommonUtil.checkResult(voucherName + " 主体类型", util.getSubjectType(), e.getSubjectType());
                     CommonUtil.checkResult(voucherName + " 主体类型id", util.getSubjectDesc(util.getSubjectType()), e.getSubjectId());
-                    CommonUtil.checkResult(voucherName + " 面值", 49.99, e.getParValue());
                     CommonUtil.checkResult(voucherName + " 类型", anEnum.name(), e.getCardType());
                     CommonUtil.checkResult(voucherName + " 类型名称", anEnum.getDesc(), e.getCardTypeName());
                     if (anEnum.getDesc().equals(VoucherTypeEnum.COMMODITY_EXCHANGE.getDesc())) {
                         CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
                         CommonUtil.checkResult(voucherName + " 商品", "兑换布加迪威龙一辆", e.getExchangeCommodityName());
                     } else if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
-                        CommonUtil.valueView(voucherName);
                         CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
-                        CommonUtil.checkResult(voucherName + " 折扣", 2.5, e.getDiscount());
+                        CommonUtil.checkResult(voucherName + " 折扣", 2.50, e.getDiscount());
                         CommonUtil.checkResult(voucherName + " 最多减", 99.99, e.getMostDiscount());
                     } else if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
-                        CommonUtil.valueView(voucherName);
+                        CommonUtil.checkResult(voucherName + " 面值", 49.99, e.getParValue());
                         CommonUtil.checkResult(voucherName + " 满足金额", 999.99, e.getThresholdPrice());
                     }
                     CommonUtil.logger(voucherName);
@@ -181,7 +179,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
+    //bug 不可编辑
     @Test(description = "卡券管理--编辑待审批卡券--卡券信息更新")
     public void voucherManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -221,7 +219,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
+    //bug 审核状态不变
     @Test(description = "卡券管理--撤回卡券--卡券状态=已撤回&此卡券在审批列表状态=已取消")
     public void voucherManage_data_4() {
         try {
@@ -282,6 +280,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--进行中的卡券暂停发放--卡券状态=暂停发放")
     public void voucherManage_data_7() {
         try {
@@ -332,7 +331,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug-变更记录未倒序
+    //ok
     @Test(description = "卡券管理--进行中的卡券增发")
     public void voucherManage_data_9() {
         try {
@@ -366,12 +365,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + 10 + "张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", null, voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状态=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.WORKING.getName(), newResponse.getString("status_name"));
-            CommonUtil.checkResult(voucherName + " 增发记录申请增发数量", 10, newResponse.getString("additional_num"));
+            CommonUtil.checkResult(voucherName + " 增发记录申请增发数量", 10, newResponse.getInteger("additional_num"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -379,6 +378,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--进行中的卡券增发")
     public void voucherManage_data_23() {
         try {
@@ -406,8 +406,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory, newSurplusInventory);
             //增发记录状态=已拒绝
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene).getJSONArray("list").getJSONObject(0);
-            CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.REJECT.getName(), newResponse.getString("status_name"));
-            CommonUtil.checkResult(voucherName + " 增发记录申请增发数量", 10, newResponse.getString("additional_num"));
+            CommonUtil.checkResult(voucherName + " 增发记录状态", "审核未通过", newResponse.getString("status_name"));
+            CommonUtil.checkResult(voucherName + " 增发记录申请增发数量", 10, newResponse.getInteger("additional_num"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -446,6 +446,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--停止发放的卡券开始发放--卡券状态=进行中")
     public void voucherManage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -496,6 +497,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--停止发放的卡券增发")
     public void voucherManage_data_12() {
         try {
@@ -518,7 +520,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 增发记录列表数", addTotal + 1, newAddTotal);
             //增发记录状态
             String statusName = response.getJSONArray("list").getJSONObject(0).getString("status_name");
-            CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.WAITING, statusName);
+            CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.WAITING.getName(), statusName);
             //审批通过卡券剩余库存+10
             util.applyVoucher(voucherName, "1");
             Long newSurplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
@@ -529,7 +531,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
-            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName(), voucherChangeRecord.getChangeItem());
+            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "10张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
             CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
@@ -544,7 +546,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug消息发不出去
+    //ok
     @Test(description = "卡券管理--已售罄的卡券暂停发放--卡券状态=暂停发放")
     public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -565,6 +567,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--已售罄的卡券作废--状态=已作废&变更记录+1变更事项=作废卡券")
     public void voucherManage_data_14() {
         try {
@@ -576,7 +579,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //校验卡券状态
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
-            CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.INVALIDED.getName(), voucherPage.getVoucherStatus());
+            CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.INVALIDED.name(), voucherPage.getVoucherStatus());
+            CommonUtil.checkResult(voucherName + " 状态名称", VoucherStatusEnum.INVALIDED.getName(), voucherPage.getVoucherStatusName());
             //变更记录+1
             JSONObject changeResponse = visitor.invokeApi(changeRecordScene);
             int newChangeRecordTotal = changeResponse.getInteger("total");
@@ -594,6 +598,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "卡券管理--已售罄的卡券增发--审批通过状态")
     public void voucherManage_data_15() {
         try {
@@ -629,9 +634,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             List<VoucherChangeRecord> voucherChangeRecords = util.collectBean(changeRecordScene, VoucherChangeRecord.class);
             VoucherChangeRecord voucherChangeRecord = voucherChangeRecords.get(0);
             String changeItem = voucherChangeRecord.getChangeItem();
-            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName(), changeItem);
+            CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "1张", changeItem);
             CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", null, voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
@@ -2226,239 +2231,296 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买包含已售罄卡券的套餐，选择的套餐内包含无库存卡券，确认时会有提示：卡券【XXXX】库存不足");
+            saveData("套餐表单--购买包含已售罄卡券的套餐，确认时会有提示：卡券【XXX】已被作废，请重新选择！");
         }
     }
-//
-//    //关闭套餐也可购买
-//    @Test(description = "套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭", enabled = false)
-//    public void packageManager_system_21() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        long packageId = 0;
-//        try {
-//            packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            //关闭套餐
-//            jc.pcSwitchPackageStatus(false, packageId);
-//            //购买固定套餐
-//            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-//                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-//                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-//                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
-//                    .extendedInsuranceCopies(10).type(1).build();
-//            String message = jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-//            String err = "此套餐已关闭";
-//            Preconditions.checkArgument(message.contains(err), "购买的套餐内包含无库存卡券" + CommonUtil.checkResult(err, message));
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            jc.pcSwitchPackageStatus(true, packageId);
-//            saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
-//        }
-//    }
-//
-//    //没校验套餐过期
-//    @Test(description = "套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期", enabled = false)
-//    public void packageManager_system_30() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //过期套餐
-//            long packageId = util.getPackageId(EnumVP.THREE.getPackageName());
-//            //购买固定套餐
-//            IScene purchaseFixedPackageScene = PurchaseFixedPackage.builder().customerPhone(marketing.getPhone())
-//                    .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(util.getPlatNumber(marketing.getPhone()))
-//                    .packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumContent.B.getContent())
-//                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType())).extendedInsuranceYear(10)
-//                    .extendedInsuranceCopies(10).type(1).build();
-//            jc.invokeApi(purchaseFixedPackageScene, false).getString("message");
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，套餐名称异常")
-//    public void packageManager_system_22() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String[] packageNames = {EnumVP.ONE.getPackageName(), EnumContent.A.getContent(), null, ""};
-//            long packageId = util.getModifyPackageId();
-//            Arrays.stream(packageNames).forEach(packageName -> {
-//                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-//                        .voucherList(util.getVoucherInfo()).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
-//                        .id(String.valueOf(packageId)).build();
-//                String message = jc.invokeApi(scene, false).getString("message");
-//                String err = StringUtils.isEmpty(packageName) ? "套餐名称不能为空" : EnumVP.isContains(packageName) ? "套餐名称重复，请重新输入！" : "套餐名称输入应大于2字小于20字";
-//                CommonUtil.checkResult("套餐名称", packageName, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，套餐名称异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐， 套餐说明异常")
-//    public void packageManager_system_23() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String[] contents = {EnumContent.C.getContent(), null, ""};
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            Arrays.stream(contents).forEach(content -> {
-//                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(content).validity(2000)
-//                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectId(util.getSubjectType()))
-//                        .voucherList(util.getVoucherInfo()).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
-//                        .id(String.valueOf(packageId)).build();
-//                String message = jc.invokeApi(scene, false).getString("message");
-//                String err = StringUtils.isEmpty(content) ? "套餐说明不能为空" : "套餐说明不能超过200字";
-//                CommonUtil.checkResult("套餐说明", content, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，名称异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，主体类型异常")
-//    public void packageManager_system_24() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String[] subjectTypes = {"全部权限", null, ""};
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            Arrays.stream(subjectTypes).forEach(subjectType -> {
-//                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                        .subjectType(subjectType).subjectId(util.getSubjectId(subjectType)).validity(2000)
-//                        .voucherList(util.getVoucherInfo()).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
-//                        .id(String.valueOf(packageId)).build();
-//                String message = jc.invokeApi(scene, false).getString("message");
-//                String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
-//                CommonUtil.checkResult("主体类型", subjectType, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，主体类型异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，主体详情异常")
-//    public void packageManager_system_25() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                    .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(util.getVoucherInfo()).packagePrice("1.11")
-//                    .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
-//            String message = jc.invokeApi(scene, false).getString("message");
-//            String err = "主体详情不能为空";
-//            CommonUtil.checkResult("主体详情", null, err, message);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，主体类型异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，包含卡券异常")
-//    public void packageManager_system_26() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            List<JSONArray> voucherList = new ArrayList<>();
-//            voucherList.add(util.getVoucherInfo(11));
-//            voucherList.add(null);
-//            voucherList.forEach(voucher -> {
-//                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                        .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(voucher)
-//                        .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
-//                String message = jc.invokeApi(scene, false).getString("message");
-//                String err = StringUtils.isEmpty(voucher) ? "所选卡券不能为空" : "卡券数量不能超过10张";
-//                CommonUtil.checkResult("所选卡券", voucher, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，主体类型异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，套餐价格异常")
-//    public void packageManager_system_27() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            String[] prices = {"100000000.01", "10000000001", null, ""};
-//            Arrays.stream(prices).forEach(price -> {
-//                IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                        .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(util.getVoucherInfo())
-//                        .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
-//                String message = jc.invokeApi(scene, false).getString("message");
-//                String err = StringUtils.isEmpty(price) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
-//                CommonUtil.checkResult("套餐价格", price, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，套餐价格异常");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--修改套餐，所选门店为空")
-//    public void packageManager_system_28() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            long packageId = util.getModifyPackageId();
-//            String packageName = util.getPackageName(packageId);
-//            IScene scene = EditPackage.builder().packageName(packageName).packageDescription(EnumContent.B.getContent())
-//                    .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(util.getVoucherInfo())
-//                    .status(true).id(String.valueOf(packageId)).build();
-//            String message = jc.invokeApi(scene, false).getString("message");
-//            String err = "套餐适用门店列表不能为空";
-//            CommonUtil.checkResult("套餐适用门店", null, err, message);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--修改套餐，所选门店为空");
-//        }
-//    }
-//
-//    @Test(description = "套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
-//    public void packageManager_system_31() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        Long packageId = null;
-//        try {
-//            user.loginApplet(appletUser);
-//            int num = util.getAppletPackageNum();
-//            user.login(administrator);
-//            packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            String packageName = util.getPackageName(packageId);
-//            //购买套餐
-//            util.buyFixedPackage(1);
-//            //将套餐关闭
-//            jc.pcSwitchPackageStatus(false, packageId);
-//            //确认购买
-//            util.makeSureBuyPackage(packageName);
-//            user.loginApplet(appletUser);
-//            int newNum = util.getAppletPackageNum();
-//            CommonUtil.valueView(num, newNum);
-//            Preconditions.checkArgument(newNum == num + 1, "确认购买前小程序套餐数量" + num + "确认购买后小程序套餐数量" + newNum);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            user.login(administrator);
-//            jc.pcSwitchPackageStatus(true, packageId);
-//            saveData("套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
-//        }
-//    }
 
-    //bug 消息发送失败
+    //bug 关闭套餐也可购买
+    @Test(description = "套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭")
+    public void packageManager_system_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        long packageId = 0;
+        try {
+            packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            //关闭套餐
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                    .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
+                    .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
+            String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String err = "套餐不允许发送，请重新选择";
+            CommonUtil.checkResult("购买已关闭套餐" + packageName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
+        }
+    }
+
+    //bug 没校验套餐过期
+    @Test(description = "套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期")
+    public void packageManager_system_32() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //过期套餐
+            long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            //购买固定套餐
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                    .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
+                    .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
+            String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String err = "套餐已过期";
+            CommonUtil.checkResult("购买过期套餐" + packageName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--购买/赠送固定套餐时，套餐过期，确认时会有提示：此套餐已过期");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，套餐名称异常")
+    public void packageManager_system_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
+            Long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String[] packageNames = {EnumDesc.VOUCHER_DESC.getDesc(), null, ""};
+            Arrays.stream(packageNames).forEach(packageName -> {
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
+                        .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
+                        .id(String.valueOf(packageId)).build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(packageName) ? "套餐名称不能为空" : "套餐名称输入应大于2字小于20字";
+                CommonUtil.checkResult("修改套餐名称为：" + packageName, err, message);
+                CommonUtil.logger(packageName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐名称异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，套餐名称重复")
+    public void packageManager_system_33() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            long editPackageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
+            IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
+                    .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
+                    .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
+                    .id(String.valueOf(editPackageId)).build();
+            String message = visitor.invokeApi(editPackageScene, false).getString("message");
+            String err = "套餐名称重复，请重新输入！";
+            CommonUtil.checkResult("修改套餐名称为：" + packageName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐名称异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，套餐说明异常")
+    public void packageManager_system_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            String[] contents = {EnumDesc.ARTICLE_DESC.getDesc(), null, ""};
+            Arrays.stream(contents).forEach(content -> {
+                IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(content)
+                        .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
+                        .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
+                        .id(String.valueOf(packageId)).build();
+                String message = visitor.invokeApi(editPackageScene, false).getString("message");
+                String err = StringUtils.isEmpty(content) ? "套餐说明不能为空" : "套餐说明不能超过200字";
+                CommonUtil.checkResult("修改套餐说明为：" + content, err, message);
+                CommonUtil.logger(content);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐说明异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，主体类型异常")
+    public void packageManager_system_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray voucherArray = util.getVoucherArray();
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            String[] subjectTypes = {"全部权限", null, ""};
+            Arrays.stream(subjectTypes).forEach(subjectType -> {
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
+                        .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType()))
+                        .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
+                        .id(String.valueOf(packageId)).customerUseValidity("1").validity(1).build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
+                CommonUtil.checkResult("修改主体类型为：" + subjectType, err, message);
+                CommonUtil.logger(subjectType);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，主体详情异常")
+    public void packageManager_system_25() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray voucherArray = util.getVoucherArray();
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
+                    .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(voucherArray).packagePrice("1.11")
+                    .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            String err = "主体详情不能为空";
+            CommonUtil.checkResult("修改主体详情为：" + null, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，包含卡券异常")
+    public void packageManager_system_26() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<JSONArray> list = new ArrayList<>();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 15);
+            list.add(voucherArray);
+            list.add(null);
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            list.forEach(e -> {
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
+                        .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(e)
+                        .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                String err = e == null ? "所选卡券不能为空" : "卡券数量不能超过10张";
+                CommonUtil.checkResult("编辑所选卡券为：" + e, err, message);
+                CommonUtil.logger(e);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，主体类型异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，套餐价格异常")
+    public void packageManager_system_27() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray voucherArray = util.getVoucherArray();
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            String[] prices = {"100000000.01", "10000000001", null, ""};
+            Arrays.stream(prices).forEach(price -> {
+                IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
+                        .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(voucherArray)
+                        .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                String err = StringUtils.isEmpty(price) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
+                CommonUtil.checkResult("修改套餐价格为：" + price, err, message);
+                CommonUtil.logger(price);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，套餐价格异常");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--修改套餐，所选门店为空")
+    public void packageManager_system_28() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray voucherArray = util.getVoucherArray();
+            long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
+                    .subjectType(util.getSubjectType()).validity(2000).packagePrice("99.99").voucherList(voucherArray)
+                    .status(true).id(String.valueOf(packageId)).build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            String err = "套餐适用门店列表不能为空";
+            CommonUtil.checkResult("修改套餐适用门店为：" + null, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--修改套餐，所选门店为空");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
+    public void packageManager_system_34() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long packageId = null;
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            int packageNum = util.getAppletPackageNum();
+            int voucherNum = util.getAppletVoucherNum();
+            user.loginPc(ADMINISTRATOR);
+            PackagePage packagePage = util.getPackagePage(PackageStatusEnum.AGREE);
+            packageId = packagePage.getPackageId();
+            String packageName = packagePage.getPackageName();
+            util.editPackage(packageId, util.getVoucherArray());
+            //购买套餐
+            util.buyFixedPackage(packageId, 1);
+            //将套餐关闭
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            //确认购买
+            util.makeSureBuyPackage(packageName);
+            user.loginApplet(APPLET_USER_ONE);
+            int newPackageNum = util.getAppletPackageNum();
+            int newVoucherNum = util.getAppletVoucherNum();
+            CommonUtil.checkResult("确认支付套餐后小程序我的卡券", voucherNum, newVoucherNum);
+            CommonUtil.checkResult("确认支付套餐后小程序我的套餐", packageNum + 1, newPackageNum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            user.loginPc(ADMINISTRATOR);
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            saveData("套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
+        }
+    }
+
+    //bug 消息发送的卡券不记录
     @Test(description = "消息管理--推送消息含有一张卡券的消息，消息记录+1，卡券库存-1，发卡记录+1")
     public void messageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2487,7 +2549,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug 消息发送失败
+    //bug 到时间后状态未变化
     @Test(description = "消息管理--定时发送，列表+1&状态=排期中")
     public void messageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2495,10 +2557,16 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
+            String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             util.pushMessage(0, false, voucherId);
             String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
+            sleep(90);
+            JSONArray list = visitor.invokeApi(messageFormPageScene).getJSONArray("list");
+            JSONObject jsonObject = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("push_time").equals(pushTime)).findFirst().orElse(null));
+            String newSendStatusName = jsonObject.getString("send_status_name");
+            CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), newSendStatusName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2506,7 +2574,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug 消息发送失败
+    //bug 小程序没收到卡券
     @Test(description = "消息管理--发送给一个客户时客户名称&联系方式&车牌号码显示该客户信息")
     public void messageManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2514,6 +2582,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletMessageNum = util.getAppletMessageNum();
+            int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ADMINISTRATOR);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -2524,14 +2593,17 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONObject jsonObject = Objects.requireNonNull(jsonObjects.stream().filter(e -> e.getString("push_time").equals(date)).findFirst().orElse(null));
             String customerPhone = jsonObject.getString("customer_phone");
             String platNumber = jsonObject.getString("plate_number");
+            String content = jsonObject.getString("content");
+            CommonUtil.checkResult("内容", EnumDesc.MESSAGE_DESC.getDesc(), content);
             CommonUtil.checkResult("车牌号", util.getPlatNumber(customerPhone), platNumber);
             CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), customerPhone);
             user.loginApplet(APPLET_USER_ONE);
             int newAppletVoucherNum = util.getAppletVoucherNum();
             int newAppletMessageNum = util.getAppletMessageNum();
+            int newAppletPackageNum = util.getAppletPackageNum();
             CommonUtil.checkResult("小程序我的卡券数量", appletVoucherNum + 1, newAppletVoucherNum);
             CommonUtil.checkResult("小程序我的消息数量", appletMessageNum + 1, newAppletMessageNum);
-            //小程序我的消息+1，我的卡券+1
+            CommonUtil.checkResult("小程序我的套餐数量", appletPackageNum, newAppletPackageNum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2539,24 +2611,27 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug 消息发送失败
+    //ok
     @Test(description = "消息管理--发送给发送多人时客户名称为全部&联系方式&车牌号码显示为空", priority = 1)
     public void messageManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Long> shopList = util.getShopIdList(1);
+            List<Long> shopList = util.getShopIdList();
             //发送消息
-            IScene scene = PushMessageScene.builder().pushTarget(EnumPushTarget.SHOP_CUSTOMER.name()).shopList(shopList)
+            String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+            IScene scene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList)
                     .messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                     .ifSendImmediately(true).build();
             visitor.invokeApi(scene);
-            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
-            List<JSONObject> jsonObjectList = util.collectBean(messageFormPageScene, JSONObject.class);
-            JSONObject jsonObject = jsonObjectList.stream().filter(e -> e.getString("push_time").equals(date)).findFirst().orElse(null);
-            CommonUtil.checkResult("车牌号", null, jsonObject != null ? jsonObject.getString("plat_number") : null);
-            CommonUtil.checkResult("客户名称", "全部", jsonObject != null ? jsonObject.getString("customer_name") : null);
-            CommonUtil.checkResult("联系方式", null, jsonObject != null ? jsonObject.getString("customer_phone") : null);
+            JSONArray array = visitor.invokeApi(messageFormPageScene).getJSONArray("list");
+            List<JSONObject> jsonObjectList = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("push_time").equals(pushTime)).collect(Collectors.toList());
+            jsonObjectList.forEach(jsonObject -> {
+                CommonUtil.checkResult("内容", EnumDesc.MESSAGE_DESC.getDesc(), jsonObject != null ? jsonObject.getString("content") : null);
+                CommonUtil.checkResult("车牌号", null, jsonObject != null ? jsonObject.getString("plat_number") : null);
+                CommonUtil.checkResult("客户名称", "全部", jsonObject != null ? jsonObject.getString("customer_name") : null);
+                CommonUtil.checkResult("联系方式", null, jsonObject != null ? jsonObject.getString("customer_phone") : null);
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2564,8 +2639,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug 消息发送失败
-    @Test(description = "消息管理--发送成功率=发出条数/收到条数，结果x=100%时为全部成功，结果0%<=x<100%显示成功百分比")
+    //逻辑有问题先关闭
+    @Test(description = "消息管理--发送成功率=发出条数/收到条数，结果x=100%时为全部成功，结果0%<=x<100%显示成功百分比", enabled = false)
     public void messageManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2630,51 +2705,47 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//
-//
-//    @Test(description = "消息管理--推送消息，消息名称异常", enabled = false)
-//    public void messageManager_system_1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String[] titles = {null, "", EnumContent.A.getContent()};
-//            long packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            Arrays.stream(titles).forEach(title -> {
-//                PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                        .telList(getList(marketing.getPhone())).messageName(title).messageContent(EnumContent.C.getContent())
-//                        .type(1).voucherOrPackageList(getList(packageId)).useDays(10);
-//                String message = jc.invokeApi(builder.build(), false).getString("message");
-//                String err = StringUtils.isEmpty(title) ? "消息名称不能为空" : "消息名称不能超过20个字";
-//                CommonUtil.checkResult("消息名称", title, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--推送消息，消息名称异常");
-//        }
-//    }
-//
-//    @Test(description = "消息管理--推送消息，消息内容异常", enabled = false)
-//    public void messageManager_system_2() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String[] contents = {null, "", EnumContent.C.getContent()};
-//            long packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            Arrays.stream(contents).forEach(content -> {
-//                PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                        .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(content)
-//                        .type(1).voucherOrPackageList(getList(packageId)).useDays(10);
-//                String message = jc.invokeApi(builder.build(), false).getString("message");
-//                String err = StringUtils.isEmpty(content) ? "消息内容不能为空" : "消息内容不能超过200个字";
-//                CommonUtil.checkResult("消息内容", content, err, message);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--推送消息，消息名称异常");
-//        }
-//    }
-//
-//    @Test(description = "消息管理--推送消息，选择卡券但不选择具体卡券/套餐", enabled = false)
+    @Test(description = "消息管理--推送消息，消息名称异常")
+    public void messageManager_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] titles = {null, EnumDesc.MESSAGE_DESC.getDesc()};
+            Arrays.stream(titles).forEach(title -> {
+                IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                        .telList(getList(APPLET_USER_ONE.getPhone())).messageName(title)
+                        .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).build();
+                String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+                String err = StringUtils.isEmpty(title) ? "消息名称不能为空" : "消息名称不能超过20个字";
+                CommonUtil.checkResult("消息名称 " + title, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息，消息名称异常");
+        }
+    }
+
+    @Test(description = "消息管理--推送消息，消息内容异常")
+    public void messageManager_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] contents = {null, "", EnumDesc.ARTICLE_DESC.getDesc()};
+            Arrays.stream(contents).forEach(content -> {
+                IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                        .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                        .messageContent(content).type(1).build();
+                String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+                String err = StringUtils.isEmpty(content) ? "消息内容不能为空" : "消息内容不能超过200个字";
+                CommonUtil.checkResult("消息内容 " + content, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息，消息名称异常");
+        }
+    }
+
+    //    @Test(description = "消息管理--推送消息，选择卡券但不选择具体卡券/套餐", enabled = false)
 //    public void messageManager_system_3() {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
@@ -2736,29 +2807,29 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 //        }
 //    }
 //
-//    @Test(description = "消息管理--推送消息，推送目标异常")
-//    public void messageManager_system_6() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            long packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            String[] phones = {"133456", "133333333333", null, ""};
-//            List<List<String>> lists = Arrays.stream(phones).map(this::getList).collect(Collectors.toList());
-//            int[] types = {0, 1};
-//            Arrays.stream(types).forEach(type -> lists.forEach(list -> {
-//                PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                        .telList(list).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                        .type(type).voucherOrPackageList(getList(packageId)).useDays(10);
-//                String message = jc.invokeApi(builder.build(), false).getString("message");
-//                String err = "输入手机号【" + list.get(0) + "】格式不正确";
-//                CommonUtil.checkResult("手机号", list.get(0), err, message);
-//            }));
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--推送消息，推送目标异常");
-//        }
-//    }
-//
+    //bug,V1.0有拦截
+    @Test(description = "消息管理--推送消息，推送目标异常")
+    public void messageManager_system_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] phones = {"133456", "133333333333", null, ""};
+            List<List<String>> lists = Arrays.stream(phones).map(this::getList).collect(Collectors.toList());
+            int[] types = {0, 1};
+            Arrays.stream(types).forEach(type -> lists.forEach(list -> {
+                IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                        .telList(list).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                        .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).build();
+                String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+                String err = "输入手机号【" + list.get(0) + "】格式不正确";
+                CommonUtil.checkResult("手机号", list.get(0), err, message);
+            }));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息，推送目标异常");
+        }
+    }
+
 //    @Test(description = "消息管理--推送消息，发送时间不填", enabled = false)
 //    public void messageManager_system_7() {
 //        logger.logCaseStart(caseResult.getCaseName());
@@ -2779,86 +2850,119 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 //            saveData("消息管理--推送消息，发送时间不填");
 //        }
 //    }
-//
-//    @Test(description = "消息管理--选择卡券时，卡券被作废，提交时提示：卡券【XXXXX】已作废, 请重新选择！")
-//    public void messageManager_system_10() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //发消息
-//            long voucherId = util.getObsoleteVoucherId();
-//            PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                    .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
-//            String message = jc.invokeApi(builder.build(), false).getString("message");
-//            String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废, 请重新选择！";
-//            CommonUtil.checkResult("发送卡券", "已作废卡券", err, message);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--选择卡券时，卡券被作废，提交时提示：卡券【XXXXX】已作废, 请重新选择！");
-//        }
-//    }
-//
-//    @Test(description = "消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！")
-//    public void messageManager_system_11() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //发消息
-//            long voucherId = util.getNoInventoryVoucherId();
-//            CommonUtil.valueView(util.getVoucherName(voucherId));
-//            PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                    .type(0).voucherOrPackageList(getList(voucherId)).useDays(10).ifSendImmediately(true);
-//            String message = jc.invokeApi(builder.build(), false).getString("message");
-//            String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足";
-//            CommonUtil.checkResult("发送卡券", "库存不足卡券", err, message);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！");
-//        }
-//    }
-//
-//    @Test(description = "消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择")
-//    public void messageManager_system_12() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        long packageId = 0;
-//        try {
-//            //发消息
-//            packageId = util.getPackageId(EnumVP.ONE.getPackageName());
-//            jc.pcSwitchPackageStatus(false, packageId);
-//            PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                    .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
-//            String message = jc.invokeApi(builder.build(), false).getString("message");
-//            String err = "套餐不允许发送，请重新选择";
-//            Preconditions.checkArgument(message.equals(err), "选择套餐时，套餐被关闭" + CommonUtil.checkResult(err, message));
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            jc.pcSwitchPackageStatus(true, packageId);
-//            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
-//        }
-//    }
-//
-//    @Test(description = "消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择")
-//    public void messageManager_system_13() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //发消息
-//            long packageId = util.getPackageId(EnumVP.TWO.getPackageName());
-//            PushMessage.PushMessageBuilder builder = PushMessage.builder().pushTarget(EnumPushTarget.PERSONNEL_CUSTOMER.name())
-//                    .telList(getList(marketing.getPhone())).messageName(EnumContent.D.getContent()).messageContent(EnumContent.C.getContent())
-//                    .type(1).voucherOrPackageList(getList(packageId)).useDays(10).ifSendImmediately(true);
-//            String message = jc.invokeApi(builder.build(), false).getString("message");
-//            String err = "套餐【" + util.getPackageName(packageId) + "】中卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";
-//            Preconditions.checkArgument(message.equals(err), "选择套餐时，套餐内包含无库存卡券" + CommonUtil.checkResult(err, message));
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择");
-//        }
-//    }
+
+    //bug,与1.0不一致
+    @Test(description = "消息管理--发送已作废卡券，提交时提示：卡券【XXXXX】已作废, 请重新选择！")
+    public void messageManager_system_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发消息
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                    .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
+                    .useDays(10).ifSendImmediately(true).build();
+            String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+            String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废, 请重新选择！";
+            CommonUtil.checkResult("发送已作废卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--发送已作废卡券，提交时提示：卡券【XXXXX】已作废, 请重新选择！");
+        }
+    }
+
+    //bug,与1.0不一致
+    @Test(description = "消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！")
+    public void messageManager_system_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发消息
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                    .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
+                    .useDays(10).ifSendImmediately(true).build();
+            String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+            String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足";
+            CommonUtil.checkResult("发送已售罄卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--选择卡券时，卡券无库存，提交时提示：卡券【XXXXX】库存不足, 请重新选择！");
+        }
+    }
+
+    //bug
+    @Test(description = "消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择")
+    public void messageManager_system_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        long packageId = 0;
+        try {
+            //发消息
+            packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
+            //关闭套餐
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                    .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(packageId))
+                    .useDays(10).ifSendImmediately(true).build();
+            String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+            String err = "套餐不允许发送，请重新选择";
+            CommonUtil.checkResult("推送已关闭套餐", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            visitor.invokeApi(switchPackageStatusScene);
+            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
+        }
+    }
+
+    //bug
+    @Test(description = "消息管理--选择套餐时，套餐过期，提交时提示：套餐不允许发送，请重新选择")
+    public void messageManager_system_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //发消息
+            long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
+            String packageName = util.getPackageName(packageId);
+            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                    .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(packageId))
+                    .useDays(10).ifSendImmediately(true).build();
+            String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+            String err = "套餐已过期";
+            CommonUtil.checkResult("推送过期套餐" + packageName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
+        }
+    }
+
+    //bug
+    @Test(description = "消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择")
+    public void messageManager_system_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long packageId = util.editPackage(voucherId, 1);
+            //发消息
+            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
+                    .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(packageId))
+                    .useDays(10).ifSendImmediately(true).build();
+            String message = visitor.invokeApi(pushMessageScene, false).getString("message");
+            String err = "套餐【" + util.getPackageName(packageId) + "】中卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足";
+            CommonUtil.checkResult("推送包含已售罄的套餐", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择");
+        }
+    }
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -2868,13 +2972,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         return list;
     }
 
-    @Test(description = "修改权益，applet与pc所见内容一致")
+    @Test(description = "权益列表--修改权益，applet与pc所见内容一致")
     public void vipMarketIng_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
-            IScene equityEditScene = EquityEditScene.builder().awardCount(1000).equityId(equityId).description(EnumDesc.ARTICLE_DESC.getDesc()).build();
+            IScene equityEditScene = EquityEditScene.builder().awardCount(4).equityId(equityId).description(EnumDesc.VOUCHER_DESC.getDesc()).build();
             visitor.invokeApi(equityEditScene);
             user.loginApplet(APPLET_USER_ONE);
             IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
@@ -2892,11 +2996,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改权益，applet与pc所见内容一致");
+            saveData("权益列表--修改权益，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "关闭权益，applet与pc所见内容一致")
+    //ok
+    @Test(description = "权益列表--关闭权益，applet与pc所见内容一致")
     public void vipMarketIng_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2906,55 +3011,39 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build();
             visitor.invokeApi(equityStartOrCloseScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
-            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
-            String serviceTypeName = jsonObject.getString("service_type_name");
-            String equityName = jsonObject.getString("equity_name");
-            Integer awardCount = jsonObject.getInteger("award_count");
-            String description = jsonObject.getString("description");
-            String status = jsonObject.getString("status");
-            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
-            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
-            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
-            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
-            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.DISABLE.getName(), "applet权益状态", status);
+            IScene memberCenterEquityListScene = MemberCenterHomePageScene.builder().build();
+            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
+            CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.DISABLE.name(), jsonObject.getString("equity_status"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("关闭权益，applet与pc所见内容一致");
+            saveData("权益列表--关闭权益，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "开启权益，applet与pc所见内容一致")
+    //ok
+    @Test(description = "权益列表--开启权益，applet与pc所见内容一致")
     public void vipMarketIng_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
-            //关闭权益
+            //开启权益
             IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build();
             visitor.invokeApi(equityStartOrCloseScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
-            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
-            String serviceTypeName = jsonObject.getString("service_type_name");
-            String equityName = jsonObject.getString("equity_name");
-            Integer awardCount = jsonObject.getInteger("award_count");
-            String description = jsonObject.getString("description");
-            String status = jsonObject.getString("status");
-            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
-            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
-            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
-            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
-            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.ENABLE.getName(), "applet权益状态", status);
+            IScene memberCenterEquityListScene = MemberCenterHomePageScene.builder().build();
+            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
+            CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.ENABLE.name(), jsonObject.getString("equity_status"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("开启权益，applet与pc所见内容一致");
+            saveData("权益列表--开启权益，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "修改分享内容，applet与pc所见内容一致")
+    //ok
+    @Test(description = "任务管理--修改分享内容，applet与pc所见内容一致")
     public void vipMarketIng_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2962,80 +3051,87 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            List<Integer> ids = list.stream().map(e -> (JSONObject) e).map(e -> e.getInteger("id")).collect(Collectors.toList());
-            ids.forEach(id -> {
-                IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_DESC.getDesc())
-                        .awardScore(1000).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
-                        .awardCardVolumeId(voucherId).takeEffectType(VoucherExpireTypeEnum.EXPIRE_DAYS.name()).build();
+            list.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                int id = jsonObject.getInteger("id");
+                String businessType = jsonObject.getString("business_type");
+                IScene shareManagerEditScene = ShareManagerEditScene.builder().awardCustomerRule("ONCE").id(id).taskExplain(EnumDesc.MESSAGE_DESC.getDesc())
+                        .awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build();
                 visitor.invokeApi(shareManagerEditScene);
+            });
+            user.loginApplet(APPLET_USER_ONE);
+            JSONArray taskList = visitor.invokeApi(MemberCenterShareTaskListScene.builder().build()).getJSONArray("task_list");
+            taskList.forEach(e -> {
+                JSONObject jsonObject = (JSONObject) e;
+                CommonUtil.checkResult(jsonObject.getString("task_name") + "的内容为 ", EnumDesc.MESSAGE_DESC.getDesc(), jsonObject.getString("award_description"));
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改分享内容，applet与pc所见内容一致");
+            saveData("任务管理--修改分享内容，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "签到配置修改，applet与pc所见内容一致")
+    //ok
+    @Test(description = "签到配置--修改签到配置，applet与pc所见内容一致")
     public void vipMarketIng_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
-            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            List<Integer> ids = list.stream().map(e -> (JSONObject) e).map(e -> e.getInteger("id")).collect(Collectors.toList());
-            ids.forEach(id -> {
-                IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(1000).explain(EnumDesc.MESSAGE_DESC.getDesc()).build();
-                visitor.invokeApi(signInConfigEditScene);
-                IScene messageFormPageScene = MessageFormPageScene.builder().build();
-                Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
-                CommonUtil.checkResultPlus("pc修改后签到积分为", 1000, "小程序签到可得积分为", signInScore);
-            });
+            IScene signInConfigPageScene = SignInConfigPageScene.builder().build();
+            JSONArray list = visitor.invokeApi(signInConfigPageScene).getJSONArray("list");
+            int id = list.getJSONObject(0).getInteger("id");
+            IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(999).explain(EnumDesc.VOUCHER_DESC.getDesc()).build();
+            visitor.invokeApi(signInConfigEditScene);
+            user.loginApplet(APPLET_USER_ONE);
+            IScene messageFormPageScene = MemberCenterSignInDetailScene.builder().build();
+            Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
+            CommonUtil.checkResultPlus("pc修改后签到积分为", 999, "小程序签到可得积分为", signInScore);
+            user.loginPc(ADMINISTRATOR);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("签到配置修改，applet与pc所见内容一致");
+            saveData("签到配置--修改签到配置，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "签到配置修改，变更记录+1，变更积分为修改的积分&操作时间为当前时间&操作账号为当前账号&备注为修改的详情")
+    //ok
+    @Test(description = "签到配置--签到配置修改，变更记录+1，变更积分为修改的积分&操作时间为当前时间&操作账号为当前账号&备注为修改的详情")
     public void vipMarketIng_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            List<Integer> ids = list.stream().map(e -> (JSONObject) e).map(e -> e.getInteger("id")).collect(Collectors.toList());
-            ids.forEach(id -> {
-                int awardScore = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id").equals(id)).map(e -> e.getInteger("award_score")).findFirst().orElse(0);
-                IScene signInConfigChangeRecordScene = SignInConfigChangeRecordScene.builder().signInConfigId(id).build();
-                int recordTotal = visitor.invokeApi(signInConfigChangeRecordScene).getInteger("total");
-                //变更积分&说明
-                IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(awardScore + 1).explain(EnumDesc.MESSAGE_DESC.getDesc()).build();
-                visitor.invokeApi(signInConfigEditScene);
-                //变更后列表数
-                JSONObject response = visitor.invokeApi(signInConfigChangeRecordScene);
-                int newRecordTotal = response.getInteger("total");
-                CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
-                //变更内容
-                JSONObject recordObject = Objects.requireNonNull(response.getJSONArray("list").stream().map(e -> (JSONObject) e).findFirst().orElse(null));
-                CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), recordObject.getString("operate_phone"));
-                CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date()), recordObject.getString("operate_date"));
-                CommonUtil.checkResult("变更积分", awardScore + 1, recordObject.getString("change_score"));
-                CommonUtil.checkResult("变更备注", EnumDesc.MESSAGE_DESC.getDesc(), recordObject.getString("change_remark"));
-            });
+            int id = list.getJSONObject(0).getInteger("id");
+            int awardScore = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id") == id).map(e -> e.getInteger("award_score")).findFirst().orElse(0);
+            IScene signInConfigChangeRecordScene = SignInConfigChangeRecordScene.builder().signInConfigId(id).build();
+            int recordTotal = visitor.invokeApi(signInConfigChangeRecordScene).getInteger("total");
+            //变更积分&说明
+            IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
+            visitor.invokeApi(signInConfigEditScene);
+            //变更后列表数
+            JSONObject response = visitor.invokeApi(signInConfigChangeRecordScene);
+            int newRecordTotal = response.getInteger("total");
+            CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
+            //变更内容
+            JSONObject recordObject = Objects.requireNonNull(response.getJSONArray("list").stream().map(e -> (JSONObject) e).findFirst().orElse(null));
+            CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), recordObject.getString("operate_phone"));
+            CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), recordObject.getString("operate_date"));
+            CommonUtil.checkResult("变更积分", awardScore + 1, recordObject.getInteger("change_score"));
+            CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), recordObject.getString("change_remark"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("签到配置修改，applet与pc所见内容一致");
+            saveData("签到配置--签到配置修改，变更记录+1，变更积分为修改的积分&操作时间为当前时间&操作账号为当前账号&备注为修改的详情");
         }
     }
 
-    @Test(description = "修改生日积分，积分异常")
+    //ok
+    @Test(description = "权益列表--修改生日积分，积分异常")
     public void vipMarketIng_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getString("equity_name").equals("生日积分")).map(e -> e.getInteger("equity_id")).findFirst().orElse(0);
-            //修改权益
             Integer[] awardCounts = {null, 10001};
             Arrays.stream(awardCounts).forEach(awardCount -> {
                 IScene equityEditScene = EquityEditScene.builder().awardCount(awardCount).equityId(equityId).description(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
@@ -3046,11 +3142,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改生日积分，积分异常");
+            saveData("权益列表--修改生日积分，积分异常");
         }
     }
 
-    @Test(description = "修改生日积分，描述异常")
+    //ok
+    @Test(description = "权益列表--修改生日积分，描述异常")
     public void vipMarketIng_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3067,11 +3164,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改生日积分，描述异常");
+            saveData("权益列表--修改生日积分，描述异常");
         }
     }
 
-    @Test(description = "修改免费洗车，次数异常")
+    //ok
+    @Test(description = "权益列表--修改生日积分，积分异常")
     public void vipMarketIng_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3088,11 +3186,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改生日积分，积分异常");
+            saveData("权益列表--修改生日积分，积分异常");
         }
     }
 
-    @Test(description = "修改分享内容，说明异常")
+    //bug
+    @Test(description = "任务管理--修改分享内容，说明异常")
     public void vipMarketIng_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3113,11 +3212,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改分享内容，说明异常");
+            saveData("任务管理--修改分享内容，说明异常");
         }
     }
 
-    @Test(description = "修改分享内容，积分异常")
+    //bug
+    @Test(description = "任务管理--修改分享内容，积分异常")
     public void vipMarketIng_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3138,32 +3238,24 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改分享内容，积分异常");
+            saveData("任务管理--修改分享内容，积分异常");
         }
     }
 
-    @Test(description = "修改分享内容，图片异常")
+    @Test(description = "任务管理--修改分享内容，图片异常")
     public void vipMarketIng_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
-            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
-            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
-            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            List<Integer> ids = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("business_type").equals(AppletCodeBusinessTypeEnum.ACTIVITY_APPLY_PRIORITY.getKey())).map(e -> e.getInteger("id")).collect(Collectors.toList());
-            String picPath = util.getPicPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/大于500k.jpg");
-            List<String> picturePathList = new ArrayList<>();
-            picturePathList.add(picPath);
-            ids.forEach(id -> picturePathList.forEach(picturePath -> {
-                IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_DESC.getDesc())
-                        .picturePath(picturePath).awardScore(100).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
-                        .awardCardVolumeId(voucherId).takeEffectType(VoucherExpireTypeEnum.EXPIRE_DAYS.name()).build();
-                visitor.invokeApi(shareManagerEditScene);
-            }));
+            String picPath = util.getPicPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/大于500k.jpg", "9:16");
+            String picture = new ImageUtil().getImageBinary(picPath);
+            IScene scene = FileUpload.builder().isPermanent(false).pic(picture).ratioStr("9:16").ratio(0.5625).build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            String err = "图片宽高比不符合9:16的要求";
+            CommonUtil.checkResult("上传非9:16图片", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("修改分享内容，图片异常");
+            saveData("任务管理--修改分享内容，图片异常");
         }
     }
 }

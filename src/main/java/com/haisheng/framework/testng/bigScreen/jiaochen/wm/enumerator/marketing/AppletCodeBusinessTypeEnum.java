@@ -85,22 +85,22 @@ public enum AppletCodeBusinessTypeEnum {
     /**
      * 专属顾问
      */
-    EXCLUSIVE_COUNSELOR("0D","专属顾问"),
+    EXCLUSIVE_COUNSELOR("0D", "专属顾问"),
 
     /**
      * 专属客服
      */
-    EXCLUSIVE_CUSTOMER_SERVICE("0E","专属客服"),
+    EXCLUSIVE_CUSTOMER_SERVICE("0E", "专属客服"),
 
     /**
      * 活动报名优先
      */
-    ACTIVITY_APPLY_PRIORITY("0F","活动报名优先"),
+    ACTIVITY_APPLY_PRIORITY("0F", "活动报名优先"),
 
     /**
      * 新车试驾优先
      */
-    NEW_CAR_TEST_DRIVER_PRIORITY("0G","新车试驾优先");
+    NEW_CAR_TEST_DRIVER_PRIORITY("0G", "新车试驾优先");
 
 
     private final String key;
@@ -133,5 +133,9 @@ public enum AppletCodeBusinessTypeEnum {
         Optional<AppletCodeBusinessTypeEnum> any = Arrays.stream(values()).filter(t -> t.getKey().equals(key)).findAny();
         Preconditions.checkArgument(any.isPresent(), "小程序码业务类型不存在");
         return any.get();
+    }
+
+    public static String findKeyByTypeName(String typeName) {
+        return Arrays.stream(AppletCodeBusinessTypeEnum.values()).filter(e -> e.getTypeName().equals(typeName)).map(AppletCodeBusinessTypeEnum::getKey).findFirst().orElse(null);
     }
 }
