@@ -94,7 +94,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 //                      list.forEach(e -> {
 //                      JSONObject jsonObject = (JSONObject) e;
 //                        String flag = jsonObject.getString(output);
-                        
+
                         Preconditions.checkArgument(flag.contains(result), "接待管理按" + result + "查询，结果错误" + flag);
                     }
                 }
@@ -149,6 +149,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         try {
             Object[][] ss = Constant.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
+            JSONArray object = null;
 //            String startTime=  dt.getHistoryDate(-5);
 //            String endTime=  dt.getHistoryDate(5);
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
@@ -173,7 +174,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[5][1])).contains(sr.reception_type), "参数全部输入的查询的" + sr.reception_type + "与列表信息的第一行的" + result.getString(String.valueOf(ss[5][1]) + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[6][1])).contains(sr.shop_id), "参数全部输入的查询的" + sr.shop_id + "与列表信息的第一行的" + result.getString(ss[6][1].toString() + "不一致"));
            } else {
-                Preconditions.checkArgument(res== null, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(res.toString()==null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
