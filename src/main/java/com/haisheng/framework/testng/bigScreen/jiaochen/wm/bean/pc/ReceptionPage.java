@@ -31,4 +31,43 @@ public class ReceptionPage implements Serializable {
      */
     @JSONField(name = "id")
     private Integer id;
+
+    /**
+     * 接待状态
+     */
+    @JSONField(name = "reception_status_name")
+    private String receptionStatusName;
+
+    /**
+     * 注册状态
+     */
+    @JSONField(name = "registration_status_name")
+    private String registrationStatusName;
+
+    /**
+     * 接待人
+     */
+    @JSONField(name = "reception_sale_name")
+    private String receptionSaleName;
+
+    /**
+     * 接待时间
+     */
+    @JSONField(name = "reception_time")
+    private String receptionTime;
+
+
+    /**
+     * 完成时间
+     */
+    @JSONField(name = "finish_time")
+    private String finishTime;
+
+    /**
+     * 接待类型
+     */
+    @JSONField(name = "reception_type_name")
+    private String receptionTypeName;
+
+
 }

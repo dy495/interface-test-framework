@@ -18,11 +18,11 @@ public enum ReceptionStatusEnum {
     FINISH(3000, "完成", true);
 
 
-    private Integer id;
+    private final Integer id;
 
-    private String statusName;
+    private final String statusName;
 
-    private boolean isEndStatus;
+    private final boolean isEndStatus;
 
     ReceptionStatusEnum(Integer id, String statusName, boolean isEndStatus) {
         this.id = id;

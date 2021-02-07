@@ -9,7 +9,8 @@ import lombok.Builder;
  * @date 2021/1/29 11:46
  */
 @Builder
-public class MaintainTimeListScene extends BaseScene {
+public class AppointmentTimeListScene extends BaseScene {
+    private final String type;
     private final Integer shopId;
     private final Integer carId;
     private final String day;
@@ -17,6 +18,7 @@ public class MaintainTimeListScene extends BaseScene {
     @Override
     public JSONObject getJSONObject() {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", type);
         jsonObject.put("shop_id", shopId);
         jsonObject.put("car_id", carId);
         jsonObject.put("day", day);
@@ -25,6 +27,6 @@ public class MaintainTimeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/maintain/time/list";
+        return "/jiaochen/applet/granted/appointment/time/list";
     }
 }

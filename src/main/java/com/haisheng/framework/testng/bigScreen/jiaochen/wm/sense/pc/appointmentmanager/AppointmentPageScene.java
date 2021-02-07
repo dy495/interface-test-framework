@@ -18,7 +18,7 @@ public class AppointmentPageScene extends BaseScene {
     private final String createDate;
     private final String confirmTime;
     private final String customerPhone;
-    private final boolean isOvertime;
+    private final Boolean isOvertime;
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

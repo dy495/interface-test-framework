@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginApp;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginPc;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,8 @@ public class UserUtil {
      * @param enumAccount 账号
      */
     public void loginApp(EnumAccount enumAccount) {
-        loginPc(enumAccount);
+        IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
+        visitor.login(scene);
     }
 
     /**

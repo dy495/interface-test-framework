@@ -1,28 +1,25 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 点接待
- *
- * @author wangmin
- * @date 2021/1/29 15:11
+ * 接待人员列表
  */
 @Builder
-public class AppAppointmentReceptionScene extends BaseScene {
-    private final Integer id;
+public class ReceptorListScene extends BaseScene {
+    private final Integer shopId;
 
     @Override
     public JSONObject getJSONObject() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
+        jsonObject.put("shop_id", shopId);
         return jsonObject;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/appointment/reception";
+        return "/jiaochen/pc/reception-manage/receptor/list";
     }
 }

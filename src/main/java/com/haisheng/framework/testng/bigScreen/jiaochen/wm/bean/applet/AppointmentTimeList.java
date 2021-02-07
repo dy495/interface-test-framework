@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @date 2021/1/29 14:26
  */
 @Data
-public class MaintainTimeList implements Serializable {
+public class AppointmentTimeList implements Serializable {
     @JSONField(name = "is_full")
     private Boolean isFull;
     @JSONField(name = "price")
