@@ -468,7 +468,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void updateDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -606,7 +606,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void deleteRunningDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -676,7 +676,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void startDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -708,7 +708,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             deviceType = getOneDeviceType();
-            String response = addDevice(name, deviceType, SHOP_Id, aCase, step);
+            String response = addDevice(name, "WEB_CAMERA", SHOP_Id, aCase, step);
 
             deviceId = getDeviceId(response);
 
@@ -722,7 +722,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
-            checkDeviceStatus(response, deviceId, "RUNNING");
+            checkDeviceStatus(response, deviceId, "DEPLOYMENT_ING");
 
 //            4、停止设备
             logger.info("\n\n");
@@ -759,7 +759,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -797,8 +797,8 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
-            checkDeviceStatus(response, BATCH_START_DEVICE_ID_1, "RUNNING");
-            checkDeviceStatus(response, BATCH_START_DEVICE_ID_2, "RUNNING");
+            checkDeviceStatus(response, BATCH_START_DEVICE_ID_1, "DEPLOYMENT_ING");
+            checkDeviceStatus(response, BATCH_START_DEVICE_ID_2, "DEPLOYMENT_ING");
 
 //            3、批量停止设备
             logger.info("\n\n");
@@ -811,7 +811,7 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
             checkDeviceStatus(response, BATCH_START_DEVICE_ID_1, "UN_DEPLOYMENT");
-            checkDeviceStatus(response, BATCH_START_DEVICE_ID_2, "UN_DEPLOYMENT");
+            checkDeviceStatus(response, BATCH_START_DEVICE_ID_2, "STOPPED");
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -831,7 +831,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test
+    @Test
     public void batchMonitorDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -916,7 +916,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test
+    @Test
     public void batchRemoveDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -996,7 +996,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void listDeviceDSCheck() {
         String ciCaseName = new Object() {
         }
@@ -1037,33 +1037,33 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String deviceType = getOneDeviceType();
             String deviceName_1 = ciCaseName + "—11";
-            String response = addDevice(deviceName_1, deviceType, SHOP_Id, aCase, step);
+            String response = addDevice(deviceName_1, "WEB_CAMERA", SHOP_Id, aCase, step);
             deviceId_1 = getDeviceId(response);
 
 //            2、增加设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String deviceName_2 = ciCaseName + "-33";
-            response = addDevice(deviceName_2, deviceType, SHOP_Id, aCase, step);
+            response = addDevice(deviceName_2, "WEB_CAMERA", SHOP_Id, aCase, step);
             deviceId_2 = getDeviceId(response);
 
-//            2、启动设备
+//            3、启动设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId_1, aCase, step);
             Thread.sleep(120 * 1000);
 
-//            3、查询设备列表
+//            4、查询设备列表
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
-            checkListDeviceDs(response, deviceId_1, deviceName_1, APP_ID, computerId, SHOP_Id, deviceType, deploymentId,
+            checkListDeviceDs(response, deviceId_1, deviceName_1, APP_ID, computerId, SHOP_Id, "WEB_CAMERA", deploymentId,
                     deviceStatus_1, sceneType, cloudSceneType, deployTime, creatorName, createTime, true);
 
-            checkListDeviceDs(response, deviceId_2, deviceName_2, APP_ID, computerId, SHOP_Id, deviceType, deploymentId,
+            checkListDeviceDs(response, deviceId_2, deviceName_2, APP_ID, computerId, SHOP_Id, "WEB_CAMERA", deploymentId,
                     deviceStatus_2, sceneType, cloudSceneType, deployTime, creatorName, createTime, false);
 
-//            4、停止设备
+//            5、停止设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(deviceId_1, aCase, step);
@@ -1099,7 +1099,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(dataProvider = "CONDITION")(待调试)
+    @Test(dataProvider = "CONDITION")
     public void listDeviceDiffConditionCheck(String id, String condition) {
         String ciCaseName = new Object() {
         }
@@ -1961,7 +1961,7 @@ public class ManagePlatform {
             String desc = name + "-desc";
 
             int[] allFloorType = getAllFloorType();
-            int floorId = allFloorType[1];
+            int floorId = allFloorType[3];
 
 //            1、添加新平面
             logger.info("\n\n");
@@ -1998,7 +1998,7 @@ public class ManagePlatform {
         }
     }
 
-    @Test
+    //@Test
     public void reAddFloorCheck() {
 
         String ciCaseName = new Object() {
@@ -2012,7 +2012,7 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName+"123";
         String caseDesc = "验证重复添加新平面是否成功";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -2226,7 +2226,7 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName+"9989";
         String caseDesc = "验证添加/删除平面图";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -2289,7 +2289,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void floorDeviceCheck() {
 
         String ciCaseName = new Object() {
@@ -3044,7 +3044,7 @@ public class ManagePlatform {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void deleteRegionCheck() {
 
         String ciCaseName = new Object() {
@@ -3122,7 +3122,7 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName+"009";
         String caseDesc = "验证新增/删除多个设备";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -3247,7 +3247,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void regionDrawCheck() {
 
         String ciCaseName = new Object() {
@@ -3333,7 +3333,7 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName+"344";
         String caseDesc = "验证区域详情-设备列表-平面图是否显示设备位置";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -3380,7 +3380,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void deleteLayoutDeviceCheck() {
 
         String ciCaseName = new Object() {
@@ -3472,7 +3472,7 @@ public class ManagePlatform {
 
         System.out.println(deviceId);
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName+"aaa";
         String caseDesc = "平面区域不可绑定非此平面设备";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -4915,7 +4915,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void deleteSubjectCheck() {
         String ciCaseName = new Object() {
         }
@@ -4981,7 +4981,7 @@ public class ManagePlatform {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void getbindableListCheck() {
         String ciCaseName = new Object() {
         }
