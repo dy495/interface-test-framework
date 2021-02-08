@@ -3409,7 +3409,7 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String name = ciCaseName;
             String deviceType = getOneDeviceType();
-            String response = addDevice(name, deviceType, SHOP_Id, aCase, step);
+            String response = addDevice(name, "WEB_CAMERA", SHOP_Id, aCase, step);
             deviceId = getDeviceId(response);
 
 //            2、绑定平面设备
@@ -6105,7 +6105,7 @@ public class ManagePlatform {
         }
     }
 
-  //  @Test (待调试)
+   // @Test
     public void getBrandDSCheck() throws Exception {
 
         String ciCaseName = new Object() {
