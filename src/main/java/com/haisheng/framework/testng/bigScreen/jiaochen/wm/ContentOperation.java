@@ -108,7 +108,7 @@ public class ContentOperation extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = util.getArticleIdList().size();
-            ArticlePage.ArticlePageBuilder builder = ArticlePage.builder();
+            ArticlePageScene.ArticlePageSceneBuilder builder = ArticlePageScene.builder();
             int total = jc.invokeApi(builder.build()).getInteger("total");
             int s = CommonUtil.getTurningPage(total, size);
             List<JSONObject> list = new ArrayList<>();

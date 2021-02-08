@@ -15,7 +15,7 @@ import java.util.Optional;
 public enum VoucherUseStatusEnum {
     NORMAL("未使用"),
     USED("已使用"),
-    NEAR_EXPIRED("快过期"),
+    NEAR_EXPIRE("快过期"),
     EXPIRED("已过期"),
     ;
     private final String name;

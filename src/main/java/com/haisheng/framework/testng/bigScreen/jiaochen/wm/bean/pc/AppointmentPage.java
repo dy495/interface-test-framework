@@ -17,6 +17,12 @@ public class AppointmentPage implements Serializable {
     private Integer id;
 
     /**
+     * 预约类型
+     */
+    @JSONField(name = "type_name")
+    private String typeName;
+
+    /**
      * 预约状态
      */
     @JSONField(name = "appointment_status_name")
