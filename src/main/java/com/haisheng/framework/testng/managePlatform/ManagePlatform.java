@@ -116,6 +116,7 @@ public class ManagePlatform {
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
                         "    \"scene_type\":\"COMMON\",\n" +
+                        "    \"manufacturer\":\"海康威视\",\n" +
                         "    \"cloud_scene_type\":\"DEFAULT\",\n" +
                         "    \"url\":\"rtsp://admin:winsense2018@192.168.50.155\",\n" +
                         "    \"subject_id\":\"" + subjectId + "\"\n" +
