@@ -121,7 +121,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             AppointmentPage appointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", false, appointmentPage.getIsCanReception());
+            CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
             //确认预约
@@ -175,7 +175,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             IScene receptionFinishReceptionScene = AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build();
             visitor.invokeApi(receptionFinishReceptionScene);
             int newFinishReceptionNum = util.getReceptionPageNum();
-            CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum, newFinishReceptionNum);
+            CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             user.loginPc(ADMINISTRATOR);
             ReceptionPage finishReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
@@ -188,7 +188,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             visitor.invokeApi(evaluateSubmitScene);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
-            CommonUtil.checkResult("评价列表数", evaluatePageList.size(), newEvaluatePageList.size());
+            CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
             CommonUtil.checkResult("评价描述", EnumDesc.MESSAGE_DESC.getDesc(), newEvaluatePageList.get(0).getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.MESSAGE_DESC.getDesc(), newEvaluatePageList.get(0).getSuggestion());
             CommonUtil.checkResult("评价星星", 4, newEvaluatePageList.get(0).getScore());
