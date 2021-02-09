@@ -251,85 +251,46 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-////    2.0
-//    @Test(description = "跟进列表不为空校验")
-//    public void BJc_appfollowUpList() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            jc.appLogin(pp.jdgw,pp.jdgwpassword);
-//            JSONObject data = jc.appFollowUpList("10",null);
-//            JSONArray list=data.getJSONArray("list");
-//            if(list.size()!=0){
-//                String jsonpath = "$.list[*].id&&$.list[*].shop_id&&$.list[*].plate_number&&$.list[*].car_style&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].evaluate_time&&$.list[*].score&&$.list[*].suggestion&&$.list[*].labels";
-//                jpu.spiltString(data.toJSONString(), jsonpath);
-//            }
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("跟进列表不为空校验");
-//        }
-//    }
-//
-//    //跟进
-//    @Test(description = "跟进列表不为空校验")
-//    public void BJc_appfollowUp1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONObject data = jc.appFollowUpList("10",null);
-//            JSONArray list=data.getJSONArray("list");
-//            if(list.size()==0){
-//                return;
-//            }
-//            String id=list.getJSONObject(0).getString("id");
-//            jc.appFollowUp(id,pp.shopIdZ,"ewiqoe1",true);
-//
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("跟进操作");
-//        }
-//    }
-//    @Test(description = "消息列表不为空校验")
-//    public void BJc_appmessageList() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONObject data = jc.appmessageList("10",null);
-//            JSONArray list=data.getJSONArray("list");
-//            if(list.size()!=0){
-//                String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type";
-//                jpu.spiltString(data.toJSONString(), jsonpath);
-//            }
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("消息列表不为空校验");
-//        }
-//    }
-//
-//    //消息
-//    @Test(description = "消息详情不为空校验")
-//    public void ABappmessagedetail() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONObject data = jc.appmessageList("10",null);
-//            JSONArray list=data.getJSONArray("list");
-//            if(list.size()==0){
-//                return;
-//            }
-//            String id=list.getJSONObject(0).getString("id");
-//            JSONObject data2 = jc.appmessagedetail(id);
-//            String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type&&$.list[*].shop_id&&$.list[*].brand_name&&$.list[*].plate_number&&$.list[*].car_style_name&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].is_overtime&&$.list[*].car_logo_url&&$.list[*].appointment_arrival_time&&$.list[*].type_name&&$.list[*].fault_description&&$.list[*].service_sale_name";
-//            jpu.spiltString(data2.toJSONString(), jsonpath);
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("消息详情");
-//        }
-//    }
+//    2.0
+    @Test(description = "跟进列表不为空校验")
+    public void BJc_appfollowUpList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appLogin(pp.jdgw,pp.jdgwpassword);
+            JSONObject data = jc.appFollowUpList("10",null);
+            JSONArray list=data.getJSONArray("list");
+            if(list.size()!=0){
+                String jsonpath = "$.list[*].id&&$.list[*].shop_id&&$.list[*].plate_number&&$.list[*].car_style&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].evaluate_time&&$.list[*].score&&$.list[*].suggestion&&$.list[*].labels";
+                jpu.spiltString(data.toJSONString(), jsonpath);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("跟进列表不为空校验");
+        }
+    }
 
+    //跟进
+    @Test(description = "跟进列表不为空校验")
+    public void BJc_appfollowUp1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appFollowUpList("10",null);
+            JSONArray list=data.getJSONArray("list");
+            if(list.size()==0){
+                return;
+            }
+            String id=list.getJSONObject(0).getString("id");
+            jc.appFollowUp(id,pp.shopIdZ,"ewiqoe1",true);
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("跟进操作");
+        }
+    }
     @Test(description = "消息列表不为空校验")
-    public void Jc_appmessageList() {
+    public void BJc_appmessageList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appmessageList("10",null);
@@ -346,9 +307,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     }
 
     //消息
-
     @Test(description = "消息详情不为空校验")
-    public void Jc_appmessagedetail() {
+    public void ABappmessagedetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appmessageList("10",null);
@@ -366,5 +326,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("消息详情");
         }
     }
+
+
 
 }
