@@ -10,9 +10,9 @@ import lombok.Builder;
 @Builder
 public class VoucherInvalidPageScene extends BaseScene {
     @Builder.Default
-    private Integer size;
+    private Integer size = 10;
     @Builder.Default
-    private Integer page;
+    private Integer page = 1;
     private final Long id;
     private final String receiver;
     private final String receivePhone;

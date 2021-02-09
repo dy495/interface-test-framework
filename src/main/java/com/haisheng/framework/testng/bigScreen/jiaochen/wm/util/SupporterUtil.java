@@ -36,6 +36,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.EvaluatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
@@ -1144,7 +1145,7 @@ public class SupporterUtil extends BaseUtil {
     public Integer appointment(AppointmentTypeEnum type, String date) {
         AppointmentSubmitScene.AppointmentSubmitSceneBuilder builder = AppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
                 .shopId(getShopId()).staffId(getStaffId()).timeId(getTimeId(date)).appointmentName("隔壁小王").appointmentPhone("15321527989");
-        if (type.name().equals(AppointmentTypeEnum.MAINTAIN.name())) {
+        if (type.name().equals(AppointmentTypeEnum.REPAIR.name())) {
             builder.faultDescription(EnumDesc.FAULT_DESCRIPTION.getDesc());
         }
         return visitor.invokeApi(builder.build()).getInteger("id");
@@ -1302,7 +1303,7 @@ public class SupporterUtil extends BaseUtil {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             array = response.getJSONArray("list");
-            appletVoucher = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.name())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).findFirst().orElse(null);
+            appletVoucher = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.getName())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).findFirst().orElse(null);
             logger.info("id:{},status:{}", id, status);
         } while (array.size() == 20);
         return appletVoucher;
@@ -1672,6 +1673,16 @@ public class SupporterUtil extends BaseUtil {
     }
 
     //-------------------------------------------------------活动---------------------------------------------------
+
+    /**
+     * 获取文章id
+     *
+     * @return 文章id集合
+     */
+    public List<Long> getArticleIdList() {
+        JSONArray array = visitor.invokeApi(ArticleList.builder().build()).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
+    }
 
     /**
      * 活动审批

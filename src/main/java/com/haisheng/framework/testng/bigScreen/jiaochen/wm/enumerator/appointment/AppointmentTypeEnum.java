@@ -31,13 +31,13 @@ public enum AppointmentTypeEnum {
      */
     ACTIVITY("活动", null, "活动预约", false);
 
-    private String value;
+    private final String value;
 
-    private EvaluateTypeEnum evaluateType;
+    private final EvaluateTypeEnum evaluateType;
 
-    private String title;
+    private final String title;
 
-    private boolean isAfterSales;
+    private final boolean isAfterSales;
 
     AppointmentTypeEnum(String value, EvaluateTypeEnum evaluateType, String title, boolean isAfterSales) {
         this.value = value;

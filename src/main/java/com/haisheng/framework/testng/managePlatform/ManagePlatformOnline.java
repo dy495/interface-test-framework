@@ -98,6 +98,7 @@ public class ManagePlatformOnline {
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
                         "    \"scene_type\":\"" + sceneType + "\",\n" +
+                        "    \"manufacturer\":\"海康威视\",\n" +
                         "    \"cloud_scene_type\":\"DEFAULT\",\n" +
                         "    \"url\":\"rtsp://admin:winsense2018@192.168.50.150\",\n" +
                         "    \"subject_id\":\"" + subjectId + "\"\n" +
@@ -571,7 +572,7 @@ public class ManagePlatformOnline {
         }
     }
 
-   // @Test
+    @Test
     public void deleteRunningDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -641,7 +642,7 @@ public class ManagePlatformOnline {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void startDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -722,7 +723,7 @@ public class ManagePlatformOnline {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }

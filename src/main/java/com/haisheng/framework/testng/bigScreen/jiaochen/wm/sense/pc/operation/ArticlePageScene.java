@@ -4,17 +4,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+/**
+ * 内容管理页
+ */
 @Builder
-public class ArticlePage extends BaseScene {
+public class ArticlePageScene extends BaseScene {
     private final String startDate;
     private final String endDate;
     private final String registerStartDate;
     private final String registerEndDate;
     private final String title;
     @Builder.Default
-    private final Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getJSONObject() {
@@ -32,5 +35,15 @@ public class ArticlePage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/operation/article/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

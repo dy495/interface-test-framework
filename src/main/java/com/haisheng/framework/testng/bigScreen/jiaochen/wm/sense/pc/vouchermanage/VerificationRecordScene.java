@@ -9,7 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class VerificationRecordScene extends BaseScene {
-    private final Long id;
+    private final Long voucherId;
     private final String voucherName;
     private final String sender;
     private final Long startTime;
@@ -28,7 +28,7 @@ public class VerificationRecordScene extends BaseScene {
         object.put("end_time", endTime);
         object.put("page", page);
         object.put("size", size);
-        object.put("id", id);
+        object.put("voucher_id", voucherId);
         return object;
     }
 

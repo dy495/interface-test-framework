@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ApprovalPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.RegisterPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
@@ -939,7 +939,7 @@ public class BusinessUtil extends BaseUtil {
         List<Long> activityIds = new ArrayList<>();
         String startDate = "2020-12-01";
         String endDate = DateTimeUtil.addDayFormat(new Date(), 365);
-        ArticlePage.ArticlePageBuilder builder = ArticlePage.builder().registerStartDate(startDate).registerEndDate(endDate);
+        ArticlePageScene.ArticlePageSceneBuilder builder = ArticlePageScene.builder().registerStartDate(startDate).registerEndDate(endDate);
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -958,7 +958,7 @@ public class BusinessUtil extends BaseUtil {
      */
     public String getArticleName(Long articleId) {
         List<String> list = new ArrayList<>();
-        ArticlePage.ArticlePageBuilder builder = ArticlePage.builder();
+        ArticlePageScene.ArticlePageSceneBuilder builder = ArticlePageScene.builder();
         int total = jc.invokeApi(builder.build()).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {

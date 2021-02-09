@@ -13,7 +13,7 @@ import java.util.Optional;
 public enum ChangeItemEnum {
     CREATE("创建"),
 
-    EDIT("编辑优惠券"),
+    EDIT("编辑"),
 
     ADD("增发"),
 

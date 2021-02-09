@@ -15,15 +15,15 @@ import java.util.Optional;
  */
 public enum VoucherSourceEnum {
 
-    ACTIVITY("活动"),
+    ACTIVITY("活动发放"),
 
     TRANSFER("转移"),
 
-    MESSAGE("消息"),
+    MESSAGE("自动推送"),
 
-    PURCHASE("购买"),
+    PURCHASE("线下售卖"),
 
-    PRESENT("赠送"),
+    PRESENT("线上售卖"),
 
     INTELLIGENT_REMIND("智能提醒"),
 
@@ -31,7 +31,7 @@ public enum VoucherSourceEnum {
 
     EVALUATE_REWARD("评价奖励"),
 
-    INTEGRAL_PURCHASE("积分购买");
+    INTEGRAL_PURCHASE("积分商城");
 
     private final String name;
 
