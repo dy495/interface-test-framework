@@ -40,7 +40,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.Ar
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseTemporaryPackage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.VoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
@@ -393,7 +393,7 @@ public class SupporterUtil extends BaseUtil {
             throw new DataException("卡券种类数量与给定每个卡券数量不一致");
         }
         JSONArray voucherArray = new JSONArray();
-        IScene scene = VoucherListScene.builder().build();
+        IScene scene = ReceptionVoucherListScene.builder().build();
         List<VoucherList> voucherLists = visitor.invokeApi(scene).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherList.class)).collect(Collectors.toList());
         List<VoucherList> subVoucherLists = voucherLists.subList(0, voucherKind);
         for (int i = 0; i < subVoucherLists.size(); i++) {
@@ -1207,7 +1207,7 @@ public class SupporterUtil extends BaseUtil {
             id = lastValue.getInteger("id");
             status = lastValue.getInteger("status");
             list = response.getJSONArray("list");
-            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("title") != null && e.getString("title").equals(voucherName) && !e.getString("status_name").equals(VoucherUseStatusEnum.EXPIRED.getName()) && !e.getString("status_name").equals(VoucherUseStatusEnum.USED.getName())).map(e -> e.getLong("id")).collect(Collectors.toList()));
+            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("title") != null && e.getString("title").equals(voucherName) && !e.getString("status_name").equals(VoucherUseStatusEnum.EXPIRED.getName()) && !e.getString("status_name").equals(VoucherUseStatusEnum.IS_USED.getName())).map(e -> e.getLong("id")).collect(Collectors.toList()));
             logger.info("id:{},status:{}", id, status);
         } while (list.size() == 20);
         return voucherList.get(0);
@@ -1334,7 +1334,7 @@ public class SupporterUtil extends BaseUtil {
 
     private boolean compareType(JSONObject jsonObject) {
         String statusName = jsonObject.getString("status_name");
-        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName()) && !statusName.equals(VoucherUseStatusEnum.USED.getName());
+        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName()) && !statusName.equals(VoucherUseStatusEnum.IS_USED.getName());
     }
 
     /**
@@ -1360,6 +1360,28 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 获取小程序卡券数量
+     *
+     * @return 卡券数量
+     */
+    public int getAppletVoucherNum(VoucherUseStatusEnum voucherUseStatusEnum) {
+        Integer id = null;
+        Integer status = null;
+        JSONArray array;
+        int listSize = 0;
+        do {
+            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
+            JSONObject response = visitor.invokeApi(scene);
+            JSONObject lastValue = response.getJSONObject("last_value");
+            id = lastValue.getInteger("id");
+            status = lastValue.getInteger("status");
+            array = response.getJSONArray("list");
+            listSize += array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.getName())).count();
+        } while (array.size() == 20);
+        return listSize;
+    }
+
+    /**
      * 获取小程序套餐数量
      *
      * @return 套餐数量
@@ -1376,6 +1398,31 @@ public class SupporterUtil extends BaseUtil {
             listSize += array.size();
         } while (array.size() == 20);
         return listSize;
+    }
+
+    /**
+     * 获取小程序套餐内卡券信息
+     *
+     * @return 套餐数量
+     */
+    public List<AppletVoucherInfo> getAppletPackageContainVoucherList() {
+        List<AppletVoucherInfo> appletVoucherInfoList = new ArrayList<>();
+        List<Long> appletPackageId = new ArrayList<>();
+        Long lastValue = null;
+        int listSize = 0;
+        JSONArray array;
+        do {
+            IScene scene = AppletPackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            appletPackageId.addAll(array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList()));
+        } while (array.size() == 20);
+        appletPackageId.forEach(id -> {
+            JSONArray jsonArray = visitor.invokeApi(AppletPackageDetailScene.builder().id(id).build()).getJSONArray("list");
+            appletVoucherInfoList.addAll(jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletVoucherInfo.class)).collect(Collectors.toList()));
+        });
+        return appletVoucherInfoList;
     }
 
     /**

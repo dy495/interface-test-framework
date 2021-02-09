@@ -122,7 +122,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.MAINTAIN.getValue(), appointmentPage.getTypeName());
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
+            CommonUtil.checkResult("是否可接待", false, appointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
             //确认预约
