@@ -327,4 +327,44 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 //        }
 //    }
 
+
+    @Test(description = "消息列表不为空校验")
+    public void Jc_appmessageList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appmessageList("10",null);
+            JSONArray list=data.getJSONArray("list");
+            if(list.size()!=0){
+                String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type";
+                jpu.spiltString(data.toJSONString(), jsonpath);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("消息列表不为空校验");
+        }
+    }
+
+    //消息
+
+    @Test(description = "消息详情不为空校验")
+    public void Jc_appmessagedetail() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = jc.appmessageList("10",null);
+            JSONArray list=data.getJSONArray("list");
+            if(list.size()==0){
+                return;
+            }
+            String id=list.getJSONObject(0).getString("id");
+            JSONObject data2 = jc.appmessagedetail(id);
+            String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type&&$.list[*].shop_id&&$.list[*].brand_name&&$.list[*].plate_number&&$.list[*].car_style_name&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].is_overtime&&$.list[*].car_logo_url&&$.list[*].appointment_arrival_time&&$.list[*].type_name&&$.list[*].fault_description&&$.list[*].service_sale_name";
+            jpu.spiltString(data2.toJSONString(), jsonpath);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("消息详情");
+        }
+    }
+
 }

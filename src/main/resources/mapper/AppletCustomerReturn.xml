@@ -15,7 +15,7 @@
             parameterType="com.haisheng.framework.model.bean.AppletCustomer">
         UPDATE `business-porsche`.wechat_customer
         SET
-        phone=null,customer_id=null,phone=null,is_bind_user=0
+        phone=null,customer_id=null,is_bind_user=0
         WHERE
            id = #{id}
     </update>

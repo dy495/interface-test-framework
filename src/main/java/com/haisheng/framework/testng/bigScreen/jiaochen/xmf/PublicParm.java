@@ -6,41 +6,47 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 
 public class PublicParm {
     public int num = 5;
-    public int roleId = 1;
+    public String roleId = "603";
+    public String gwphone = "13114785236"; //超级管理员
+    public String gwpassword = "000000"; //单个店的客户的数据  登录密码
+
     public String shopId = "-1";   //门店Id
-    public String shopIdZ = "46012";   //门店Id
-    public String shopname="中关村";
-    public String reception_sale_id = "xx";
+    public String shopIdZ = "49195";   //门店Id
+
+    public String shopname="中关村店(全称)";
+    public String reception_sale_id = "2945";
     public String name = "";
     public String customerPhone = "15037286013";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/intefer/jcBase64.txt";
     public String shichang = "";
     public String shichangPassword = "";
     public String verification_code = "OGWTJK";   //夏夏的核销码
-    public String carModelId = "198";
-    public String car_id = "63217";    //小程序车id  plate_number=浙QWER123
-    public String carplate = "浙QWER123";      //编辑小程序车牌号
+    public String carModelId = "14";
+    public String car_id = "24";    //小程序车id  plate_number=京QWER123
+    public String carplate = "京QWER123";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
     //预约使用车辆
-    public Long car_idA = 63213L;  //plate_number=津DAASSE
-    public String modolIdAppointment = "151";
-    public String carModel="xia";
+    public Long car_idA =48L;  //plate_number=津DAASSE
+    public String modolIdAppointment = "14";
+    public String carModel="特斯拉model3(2021)";
     public String carStyleId = "";
     public String carStyleName = "";
 
-    public String gwname = "15711300001"; //单个店的客户的数据   //登录账号
+    public String gwname = "13402050050"; //单个店的客户的数据   //登录账号
 
-    public String gwphone = "15711300001"; //单个店的客户的数据   //登录账号
-    public String gwpassword = "000000"; //单个店的客户的数据  登录密码
 
-    public String jdgw = "13412010080";  //xx ,属于中关村店
-    public String jdgw2 = "13412010089";  //xx2 ,属于中关村店
+
+    public String jdgw = "13402050050";  //xx ,属于中关村店
+    public String roleidJdgw="2945"; //拥有接待权限的校色id
+    public String jdgw2 = "13402050050";  //xx2 ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
-    public String jdgwName = "xx"; //单个店的客户的数据  登录密码
+    public String jdgwName = "自动化专用账号"; //单个店的客户的数据  登录密码
 
-    public String dzphone = "13412010085";   //中关村店长
+    public String dzphone = "13402050049";   //中关村店长
+    public String dzroleId="2946";
     public String dzcode = "000000";
+
     //---------2.0---------
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
@@ -49,9 +55,9 @@ public class PublicParm {
     //其他小程序用户tocken和车牌号信息
     public String getAppletTockenOther="";
     public  String CarplateOther="豫AJSHD12";
-    public String userid="uid_f9342ae2"; //xx的userId;
-    public String userid2="uid_b05c86e9"; //xx2的userId;
-    public String roleid="533"; //拥有接待权限的校色id
+    public String userid="uid_0216a935"; //xx的userId;
+    public String userid2="uid_0216a935"; //xx2的userId;
+
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
