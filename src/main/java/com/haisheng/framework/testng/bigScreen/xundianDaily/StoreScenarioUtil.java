@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarEntry;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -542,8 +543,9 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopPageMemberV3(String district_code, String shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
+    public JSONObject shopPageMemberV3(String district_code, String[] shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/member";
+
         String json =
                 "{" +
                         "\"district_code\" :\"" + district_code + "\",\n" +
@@ -730,11 +732,12 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject customerFlowList(String district_code, Object shop_type, String shop_name,String shop_manager,String sort_type,Integer sort_type_order,Integer page,Integer size,String district_name) throws Exception {
+    public JSONObject customerFlowList(String district_code, JSONArray shop_type, String shop_name, String shop_manager, String sort_type, Integer sort_type_order, Integer page, Integer size, String district_name) throws Exception {
         String url = "/patrol/shop/page/passenger-flow";
         JSONObject json = new JSONObject();
         json.put("district_code", district_code);
         json.put("shop_type", shop_type);
+        json.put("shop_name",shop_name);
         json.put("shop_manager", shop_manager);
         json.put("sort_type", sort_type);
         json.put("sort_type_order", sort_type_order);

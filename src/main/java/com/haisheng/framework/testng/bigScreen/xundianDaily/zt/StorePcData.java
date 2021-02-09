@@ -66,10 +66,42 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    //客流分析搜索
+    @Test
+    public void ShopperTrak() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray type = new JSONArray();
+            type.add("NORMAL");
+            //获取list
+            JSONArray list = md.customerFlowList("110000",type,"AI-Test(门店订单录像)","徐鹏",null,null,1,10,null).getJSONArray("list");
+            //获取district_code,type,shop_name
+            for(int i=0;i<=list.size();i++){
+                String district_code = list.getJSONObject(i).getString("district_code");
+                String district_name = list.getJSONObject(i).getString("district_name");
+                String type1 = list.getJSONObject(i).getString("type");
+                String shop_name = list.getJSONObject(i).getString("name");
+                String manager_name = list.getJSONObject(i).getString("manager_name");
+                checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
+            }
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("通过搜索框输入==搜索出来门店的内容");
+        }
+    }
+
+
+
 
     //图片中心总数==展示的数量
     @Test
-    public void picNum() {
+    public void picNum()throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("","","","",null,1,8).getInteger("total");
@@ -91,7 +123,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片个数==返回的数量
     @Test
-    public void picScheduled() {
+    public void picScheduled() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
@@ -113,7 +145,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型==返回的图片类型
     @Test
-    public void picScheduled1() {
+    public void picScheduled1() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
@@ -139,7 +171,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期==返回的图片类型+日期
     @Test
-    public void picScheduled2() {
+    public void picScheduled2() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String start_time = "2021-01-19";
@@ -172,7 +204,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期+门店名称+异常==返回的图片类型+日期+门店名称+异常
     @Test
-    public void picScheduled3() {
+    public void picScheduled3() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String start_time = "2021-01-19";
@@ -210,7 +242,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期+门店名称+非异常==返回的图片类型+日期+门店名称+非异常
     @Test
-    public void picScheduled4() {
+    public void picScheduled4() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String start_time = "2021-01-19";
@@ -247,7 +279,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动留痕展示图片个数==返回的数量
     @Test
-    public void picSpot() {
+    public void picSpot() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SPOT","","","",null,1,8).getInteger("total");
@@ -269,7 +301,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动留痕展示图片类型==返回的图片类型
     @Test
-    public void picSpot1() {
+    public void picSpot1() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SPOT","","","",null,1,8).getInteger("total");
@@ -297,12 +329,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动展示图片类型+日期+门店名称+非异常==返回的图片类型+日期+门店名称+非异常
     @Test
-    public void picSpot4() {
+    public void picSpot4() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String start_time = "2021-01-19";
             String end_time = "2021-01-22";
-
             int pages = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,i,8).getJSONArray("list");
@@ -321,7 +352,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
                 }
 
             }
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -368,6 +398,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String m2 = s1.getString("message");
             checkArgument(m2.equals("success"), "没有时间却创建成功了" + m2);
 
+            //创建名称>20字符的预置位
+            JSONObject size = md.creatPreset(device_id,"这是名称的长度需要大于20所以她是不合格的创建不成功",60);
+            String m20 = kong.getString("message");
+            checkArgument(m20.equals("success"), "名称>20却创建成功了" + m20);
+
 
             //获取第一个预置位并删除预置位
             JSONArray list2 = md.cameraList(device_id,"PRESET").getJSONArray("list");
@@ -393,7 +428,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1");
+            saveData("新建预置位、新建预置位不加名称、名称过长、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1");
         }
     }
 
@@ -401,7 +436,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //新建看守位，可以通过dataProvider和新建预置位合在一起
     @Test(dataProvider = "device_id")
-    public void createGuard(String device_id) {
+    public void createGuard(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取看守位列表
@@ -452,7 +487,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //调用看守位
     @Test(dataProvider = "device_id")
-    public void backGuard(String device_id) {
+    public void backGuard(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject a = md.dyGuard(device_id);
@@ -472,7 +507,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //调用预置位
     @Test(dataProvider = "device_id")
-    public void backPreset(String device_id) {
+    public void backPreset(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取预置位列表
@@ -484,6 +519,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
                 JSONObject data = a.getJSONObject("data");
                 String waring = data.getString("waring");
                 checkArgument(message.equals("success"), "调用不成功原因" + waring);
+                Thread.sleep(1000);
             }
 
         } catch (AssertionError e) {

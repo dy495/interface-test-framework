@@ -37,9 +37,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
         //replace checklist app id and conf id
+
+
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
+        commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getDesc());
@@ -67,7 +69,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // 巡店记录列表报告数量 == 待处理+已处理+无需处理的数量
     @Test
-    public void getShopHandleStatusList() {
+    public void getShopHandleStatusList() throws Exception{
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -100,7 +102,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //不合格报告+合格报告 == 列表下全部报告
     @Test
-    public void getResultTypeList() {
+    public void getResultTypeList() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             // 获取门店巡店记录列表total总数
@@ -126,7 +128,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容
     @Test
-    public void getShopChecksDetail() {
+    public void getShopChecksDetail() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -171,7 +173,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test
-    public void wwcSum() {
+    public void wwcSum() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long lastValue = null;
@@ -201,7 +203,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 //    app账号下当前门店数量==pc该账号下巡店中心列表的数量
 
     @Test
-    public void mdNum() {
+    public void mdNum() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
@@ -220,11 +222,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // app账号下当前门店数量==pc该账号下客流分析列表的数量
     @Test
-    public void mdNum1() {
+    public void mdNum1() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
-            Integer pcCustomerNum = md.customerFlowList("", "", "", "", "", null, 1, 10, "").getInteger("total");
+            Integer pcCustomerNum = md.customerFlowList("", null, "", "", "", null, 1, 10, "").getInteger("total");
             checkArgument(appMdNum == pcCustomerNum, "app账号下当前门店数量" + appMdNum + "pc该账号下客流分析列表的数量" + pcCustomerNum);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -237,9 +239,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+
+
     //app[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
     @Test
-    public void todayNum() {
+    public void todayNum() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
