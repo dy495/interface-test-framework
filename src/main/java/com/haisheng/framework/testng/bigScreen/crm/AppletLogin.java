@@ -115,13 +115,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class,enabled = false)
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc());
-            commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+            //TODO 待更改
+            commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             jc.appletLoginToken(token);
             Response response = getJiaoChen(3);
@@ -210,8 +211,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] jc_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
-                EnumAppletToken.JC_XMF_DAILY.getToken(),
-                EnumAppletToken.JC_GLY_DAILY.getToken()
+//                EnumAppletToken.JC_XMF_DAILY.getToken(),
+//                EnumAppletToken.JC_GLY_DAILY.getToken()
         };
     }
 

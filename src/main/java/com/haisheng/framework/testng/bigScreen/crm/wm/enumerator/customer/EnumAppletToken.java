@@ -26,7 +26,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "Fhh9NQmWUe+iNT+hOlivvg==", "纯牛奶", false, "", "15321527989"),
 
-    JC_WM_DAILY(EnumProduce.JC.name(), "7evyY+c0dbVEbOGIUJASLA==", "", true, "", "15321527989"),
+    JC_WM_DAILY(EnumProduce.JC.name(), "eVvKxoI0LSCdMQJoN3Qg7g==", "", true, "", "15321527989"),
 
     JC_WM_ONLINE(EnumProduce.JC.name(), "5Vh23rx+RzSsFd0GIh2PdA==", "", false, "", "15321527989"),
 

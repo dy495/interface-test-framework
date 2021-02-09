@@ -212,7 +212,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "预约维修")
     public void appointmentManager_repair() {
         try {
-            int i = 1;
+            int i = 0;
             Integer shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
