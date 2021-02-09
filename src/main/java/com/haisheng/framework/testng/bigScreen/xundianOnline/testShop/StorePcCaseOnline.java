@@ -706,7 +706,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================账户列表的筛选（单一查询）======================
      */
-    //@Test
+    @Test
     public void accountPage_search() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -714,7 +714,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             String email = list.getJSONObject(0).getString("email");
-            String phone = list.getJSONObject(0).getString("phone");
+            String phone = list.getJSONObject(2).getString("phone");
 
             //根据账号名称筛选
             JSONArray list1 = md.organizationAccountPage(name, "", "", "", "", "", page, size).getJSONArray("list");
@@ -1191,19 +1191,17 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(name.equals(name1), "根据告警名称" + name + "筛查，没有查询到相应的结果");
 
 
-//            //根据列表第一个告警规则的类型进行筛查
-//            JSONArray list2 = md.alarm_page("", type, "", page, size).getJSONArray("list");
-//            for (int i = 0; i < list2.size(); i++) {
-//                String type1 = list2.getJSONObject(i).getString("type");
-//                checkArgument(type.equals(type1), "根据告警类型" + type + "筛查，没有查询到相应的结果");
-//            }
+            //根据列表第一个告警规则的类型进行筛查
+            JSONArray list2 = md.alarm_page("", type, "", page, size).getJSONArray("list");
+                String type1 = list2.getJSONObject(0).getString("type");
+                checkArgument(type.equals(type1), "根据告警类型" + type + "筛查，没有查询到相应的结果");
+
 
             //根据列表第一个告警规则的门店名字进行筛查
             JSONArray list3 = md.alarm_page("", "", shop_name, page, size).getJSONArray("list");
-            for (int i = 0; i < list3.size(); i++) {
-                String shop_name1 = list3.getJSONObject(i).getString("shop_name");
+                String shop_name1 = list3.getJSONObject(0).getString("shop_name");
                 checkArgument(shop_name.equals(shop_name1), "根据门店名称" + shop_name + "筛查，没有查询到相应的结果");
-            }
+
 
 //            //根据列表第一个告警规则的信息进行筛查
 //            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
