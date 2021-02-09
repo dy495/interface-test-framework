@@ -572,7 +572,7 @@ public class ManagePlatformPre {
         }
     }
 
-   // @Test
+    @Test
     public void deleteRunningDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -642,7 +642,7 @@ public class ManagePlatformPre {
         }
     }
 
-    //@Test(待调试)
+    @Test
     public void startDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -723,7 +723,7 @@ public class ManagePlatformPre {
         }
     }
 
-   // @Test(待调试)
+    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -961,7 +961,7 @@ public class ManagePlatformPre {
         }
     }
 
-   // @Test(待调试)
+    // @Test(待调试)
     public void listDeviceDSCheck() {
         String ciCaseName = new Object() {
         }
@@ -2922,7 +2922,7 @@ public class ManagePlatformPre {
         }
     }
 
-   // @Test
+    // @Test
     public void regionDeviceCheck() {
 
         String ciCaseName = new Object() {
@@ -3270,7 +3270,7 @@ public class ManagePlatformPre {
         }
     }
 
-   // @Test(dataProvider = "NON_LAYOUT_DEVICE")//ADD_REGION       NON_LAYOUT_DEVICE
+    // @Test(dataProvider = "NON_LAYOUT_DEVICE")//ADD_REGION       NON_LAYOUT_DEVICE
     public void layoutRegionBindNonLayoutDeviceCheck(String deviceId, int expect) {
 
         String ciCaseName = new Object() {
