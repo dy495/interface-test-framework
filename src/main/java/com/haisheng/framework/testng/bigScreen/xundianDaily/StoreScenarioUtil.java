@@ -543,23 +543,18 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopPageMemberV3(String district_code, String[] shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
+    public JSONObject shopPageMemberV3(String district_code, JSONArray shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/member";
-
-        String json =
-                "{" +
-                        "\"district_code\" :\"" + district_code + "\",\n" +
-                        "\"shop_type\" :\"" + shop_type + "\",\n" +
-                        "\"shop_name\" :\"" + shop_name + "\",\n" +
-                        "\"shop_manager\" :\"" + shop_manager + "\",\n" +
-                        "\"member_type\" :\"" + member_type + "\",\n" +
-                        "\"member_type_order\" :" + member_type_order + ",\n" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
+        JSONObject object = new JSONObject();
+        object.put("district_code", district_code);
+        object.put("shop_type", shop_type);
+        object.put("shop_name", shop_name);
+        object.put("shop_manager", shop_manager);
+        object.put("member_type", member_type);
+        object.put("member_type_order", member_type_order);
+        object.put("page", page);
+        object.put("size", size);
+        String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 

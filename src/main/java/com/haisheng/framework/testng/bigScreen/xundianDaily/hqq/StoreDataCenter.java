@@ -620,7 +620,8 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
             Integer paid_uv = uvs.get("paid_uv");
 
            //获取所选周期的所有门店各天顾客之和
-            String[] shop_type = new String[]{""};
+
+            JSONArray shop_type = new JSONArray();
             String shop_name = "";
             String shop_manager = "";
             String member_type = "";
