@@ -43,25 +43,17 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-
-
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "周涛";
-
-
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
-
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
-
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
-
         commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
-
         logger.debug("xundian " + xd);
 
         xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
