@@ -211,7 +211,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] jc_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
-//                EnumAppletToken.JC_XMF_DAILY.getToken(),
+                EnumAppletToken.JC_XMF_DAILY.getToken(),
 //                EnumAppletToken.JC_GLY_DAILY.getToken()
         };
     }

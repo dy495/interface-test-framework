@@ -319,7 +319,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("");
+//            saveData("");
         }
     }
 }
