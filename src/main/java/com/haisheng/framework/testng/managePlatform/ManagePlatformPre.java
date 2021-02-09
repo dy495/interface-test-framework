@@ -98,6 +98,7 @@ public class ManagePlatformPre {
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
                         "    \"scene_type\":\"" + sceneType + "\",\n" +
+                        "    \"manufacturer\":\"海康威视\",\n" +
                         "    \"cloud_scene_type\":\"DEFAULT\",\n" +
                         "    \"url\":\"rtsp://admin:winsense2018@192.168.50.150\",\n" +
                         "    \"subject_id\":\"" + subjectId + "\"\n" +
