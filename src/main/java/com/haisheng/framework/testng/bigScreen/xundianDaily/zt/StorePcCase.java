@@ -99,36 +99,72 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //门店客户列表通过搜索框搜索门店
-//    @Test(dataProvider = "type")
-//    public void StoreTrak(String type_1) throws Exception{
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray shopType = JSONArray.parseArray(type_1);
-//            //获取list
-////            JSONArray list = md.shopPageMemberV3("110000",shopType,info.shop_id_01_chin,"徐鹏",null,null,1,10).getJSONArray("list");
-//            //获取district_code,type,shop_name
-//            for(int i=0;i<list.size();i++){
-//                String district_code = list.getJSONObject(i).getString("district_code");
-//                String district_name = list.getJSONObject(i).getString("district_name");
-//                String type1 = list.getJSONObject(i).getString("type");
-//                String shop_name = list.getJSONObject(i).getString("name");
-//                String manager_name = list.getJSONObject(i).getString("manager_name");
-//                checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
-//                checkArgument(type1.equals("NORMAL"), "选择的门店类型" + "NORMAL" + "!=搜索出来门店展示的门店类型" + type1);
-//                checkArgument(shop_name.equals(info.shop_id_01_chin), "输入的门店名称" + info.shop_id_01_chin + "!=搜索出来门店的名称" + shop_name);
-//                checkArgument(manager_name.equals("徐鹏"), "输入的门店负责人" + "徐鹏" + "!=搜索出来门店的负责人" + manager_name);
-//            }
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("门店客户通过搜索框输入==门店客户搜索出来门店的内容");
-//        }
-//    }
+//    //门店客户列表通过搜索框搜索门店
+    @Test(dataProvider = "type")
+    public void StoreTrak(String type_1) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray type = new JSONArray();
+            type.add(type_1);
+            //获取list
+            JSONArray list = md.shopPageMemberV3("110000",type,info.shop_id_01_chin,"徐鹏",null,null,1,10).getJSONArray("list");
+            int total = md.shopPageMemberV3("110000",type,info.shop_id_01_chin,"徐鹏",null,null,1,10).getInteger("total");
+            if ( total!=0 ){
+                for(int i=0;i<list.size();i++){
+                    String district_code = list.getJSONObject(i).getString("district_code");
+                    String district_name = list.getJSONObject(i).getString("district_name");
+                    String type1 = list.getJSONObject(i).getString("type");
+                    String shop_name = list.getJSONObject(i).getString("name");
+                    String manager_name = list.getJSONObject(i).getString("manager_name");
+                    checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
+                    checkArgument(type1.equals(type_1), "选择的门店类型" + "NORMAL" + "!=搜索出来门店展示的门店类型" + type1);
+                    checkArgument(shop_name.equals(info.shop_id_01_chin), "输入的门店名称" + info.shop_id_01_chin + "!=搜索出来门店的名称" + shop_name);
+                    checkArgument(manager_name.equals("徐鹏"), "输入的门店负责人" + "徐鹏" + "!=搜索出来门店的负责人" + manager_name);
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("门店客户通过搜索框输入==门店客户搜索出来门店的内容");
+        }
+    }
 
+
+
+
+    //    //门店客户列表通过搜索框搜索门店
+    @Test(dataProvider = "type")
+    public void NewStoreUser(String type_1) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray type = new JSONArray();
+            type.add(type_1);
+            //获取list
+            JSONArray list = md.NewUser("110000",type,info.shop_id_01_chin,"徐鹏",null,null,1,10).getJSONArray("list");
+            int total = md.NewUser("110000",type,info.shop_id_01_chin,"徐鹏",null,null,1,10).getInteger("total");
+            if ( total!=0 ){
+                for(int i=0;i<list.size();i++){
+                    String district_code = list.getJSONObject(i).getString("district_code");
+                    String district_name = list.getJSONObject(i).getString("district_name");
+                    String type1 = list.getJSONObject(i).getString("type");
+                    String shop_name = list.getJSONObject(i).getString("name");
+                    String manager_name = list.getJSONObject(i).getString("manager_name");
+                    checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
+                    checkArgument(type1.equals(type_1), "选择的门店类型" + "NORMAL" + "!=搜索出来门店展示的门店类型" + type1);
+                    checkArgument(shop_name.equals(info.shop_id_01_chin), "输入的门店名称" + info.shop_id_01_chin + "!=搜索出来门店的名称" + shop_name);
+                    checkArgument(manager_name.equals("徐鹏"), "输入的门店负责人" + "徐鹏" + "!=搜索出来门店的负责人" + manager_name);
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增客户通过搜索框输入==新增客户搜索出来门店的内容");
+        }
+    }
 
     @DataProvider(name = "type")
     public Object[] type_1() {
