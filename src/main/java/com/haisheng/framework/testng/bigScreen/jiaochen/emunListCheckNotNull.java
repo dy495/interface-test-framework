@@ -68,8 +68,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 
         //set shop id
         commonConfig.shopId = "-1";
+        commonConfig.shopId="603";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
-//        commonConfig.referer=getJcReferdaily();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -193,7 +193,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             coor.add(116.29845);
             coor.add(39.95933);
 
-            JSONObject data = jc.appletmaintainShopList(pp.car_id, coor);
+            JSONObject data = jc.appletmaintainShopList(pp.car_id, coor,"MAINTAIN");
             String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
             jpu.spiltString(data.toJSONString(), jsonpath);
 

@@ -444,7 +444,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //保养配置修改
     public JSONObject pcCarModelPriceEdit(String id, Double price, String status) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
+        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("price", price);
@@ -454,7 +454,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //保养配置修改
     public JSONObject pcCarModelPriceEdit(String id, String price, String status,Boolean checkcode) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
+        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("price", price);
@@ -648,7 +648,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("name",name);
         json.put("phone",phone);
         json.put("role_list",role_list);
-        json.put("shop_list",shop_list);
+//        json.put("shop_list",shop_list);
         return invokeApi(url,json,checkcode);
     }
 
@@ -1561,11 +1561,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :保养门店列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainShopList(String car_id, List coordinate) {
-        String url = "/jiaochen/applet/granted/maintain/shop/list";
+    public JSONObject appletmaintainShopList(String car_id, List coordinate,String type) {
+        String url = "/jiaochen/applet/granted/appointment/shop/list";
         JSONObject json1 = new JSONObject();
         json1.put("car_id", car_id);
         json1.put("coordinate", coordinate);
+        json1.put("type", type);
 
         return invokeApi(url, json1);
     }
@@ -1586,22 +1587,24 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :可预约时段列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day) {
-        String url = "/jiaochen/applet/granted/maintain/time/list";
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day,String type) {
+        String url = "/jiaochen/applet/granted/appointment/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", shop_id);
         json1.put("car_id", car_id);
         json1.put("day", day);
+        json1.put("type", type);
 
         return invokeApi(url, json1);
     }
 
-    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day, Boolean checkcode) {
-        String url = "/jiaochen/applet/granted/maintain/time/list";
+    public JSONObject appletmaintainTimeList(Long shop_id, Long car_id, String day, String type,Boolean checkcode) {
+        String url = "/jiaochen/applet/granted/appointment/time/list";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", shop_id);
         json1.put("car_id", car_id);
         json1.put("day", day);
+        json1.put("type", type);
 
         return invokeApi(url, json1, checkcode);
     }
@@ -1654,7 +1657,7 @@ public class ScenarioUtil extends TestCaseCommon {
                 "苏BJ123",   //6位
                 "BJ12345",    //不含汉字
                 "京1234567",  //不含英文
-                "京bj12345", //含小写
+//                "京bj12345", //含小写
                 "京B@12345", //含字母
                 "苏BJ123456",//9位
         };

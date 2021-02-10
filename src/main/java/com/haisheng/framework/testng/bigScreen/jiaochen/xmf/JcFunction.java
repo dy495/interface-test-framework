@@ -26,16 +26,51 @@ public class JcFunction {
         return num;
     }
 
+    public JSONArray getroleLlist(){
+        //shopList
+        JSONObject shopdate=new JSONObject();
+        shopdate.put("shop_id",pp.shopIdZ);
+        shopdate.put("shop_name",pp.shopname);
+        JSONArray shop_list = new JSONArray();
+        shop_list.add(shopdate);
+        //shopList
+        JSONObject roleList=new JSONObject();
+        roleList.put("role_id",pp.roleidJdgw);
+        roleList.put("role_name",pp.nameJdgw);
+        roleList.put("shop_list",shop_list);
+
+        JSONArray r_dList = new JSONArray();
+        r_dList.add(roleList);
+
+        return r_dList;
+    }
+    public JSONObject getRoleList1(String roleId,String roleName){
+        //shopList
+        JSONObject shopdate=new JSONObject();
+        shopdate.put("shop_id",pp.shopIdZ);
+        shopdate.put("shop_name",pp.shopname);
+        JSONArray shop_list = new JSONArray();
+        shop_list.add(shopdate);
+        //shopList
+        JSONObject roleList=new JSONObject();
+        roleList.put("role_id",roleId);
+        roleList.put("role_name",roleName);
+        roleList.put("shop_list",shop_list);
+
+        return roleList;
+    }
+
+
     //pc预约记录总数
     public int pcAppointmentRecodePage() {
-        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        jc.pcLogin(pp.jdgw, pp.jdgwpassword);
         int num = jc.appointmentRecordManage("", "1", "10", null, null).getInteger("total");
         return num;
     }
 
     //小程序客户预约保养次数
     public int pcAppointmentTimes() {
-        jc.pcLogin(pp.gwphone, pp.gwpassword);
+        jc.pcLogin(pp.jdgw, pp.jdgwpassword);
         int num = jc.weChatSleCustomerManage("", "1", "10", "customer_phone", "15037286013").getJSONArray("list").getJSONObject(0).getInteger("appointment_maintain");
         return num;
     }
@@ -249,7 +284,7 @@ public class JcFunction {
 
     //获取预约时段id
     public Long getTimeId(Long shop_id, Long car_id, String data) {
-        JSONArray list = jc.appletmaintainTimeList(shop_id, car_id, data).getJSONArray("list");
+        JSONArray list = jc.appletmaintainTimeList(shop_id, car_id, data,"MAINTAIN").getJSONArray("list");
         Long id = 0L;
         for (int i = 0; i < list.size(); i++) {
             String is_full = list.getJSONObject(i).getString("is_full");

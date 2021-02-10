@@ -84,6 +84,16 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
     }
 
+    //pc登录
+    public void pcLogin(String phone, String verificationCode,String roleId) {
+        String path = "/jiaochen/login-pc";
+        JSONObject object = new JSONObject();
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
+        commonConfig.roleId=roleId;
+        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+    }
+
     @AfterClass
     @Override
     public void clean() {
@@ -636,7 +646,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         try {
             String voucher_code[] = pf.voucherName();
             //pc
-            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            System.out.println(commonConfig.shopId);
+            System.out.println(commonConfig.roleId);
+           pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
             int verificationReordPctotal = jc.verificationReordFilterManage("-1", "","1", "10", null, null).getInteger("total");
 
@@ -652,7 +664,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             String messageName = message.getString("content");
 //            String messageTime=message.getString("content");
 
-            jc.pcLogin(pp.gwphone, pp.gwpassword);
+           pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             int messagePctotalA = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
             int verificationReordPctotalA = jc.verificationReordFilterManage("-1","", "1", "10", null, null).getInteger("total");
 
@@ -722,37 +734,48 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :新增一个接待权限账户，接待人员列表+1
+     * @description :新增一个接待权限账户，接待人员列表+1 ok
      * @date :2021/1/21 14:56
      **/
-//    @Test(description = "新增一个接待权限账户，接待人员列表+1")
+    @Test(description = "新增一个接待权限账户，接待人员列表+1")
     public void receptorListAndCreateAccount() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //新建账户前，接待列表人数
-            Integer total=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+            Integer total=jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
             //创建账户
-            JSONArray r_dList = new JSONArray();
-            r_dList.add(pp.roleId);
 
+            //shopList
+            JSONObject shopdate=new JSONObject();
+            shopdate.put("shop_id",pp.shopIdZ);
+            shopdate.put("shop_name",pp.shopname);
             JSONArray shop_list = new JSONArray();
-            shop_list.add(pp.shopIdZ);
+            shop_list.add(shopdate);
+            //shopList
+            JSONObject roleList=new JSONObject();
+            roleList.put("role_id",pp.roleidJdgw);
+            roleList.put("role_name",pp.nameJdgw);
+            roleList.put("shop_list",shop_list);
+
+            JSONArray r_dList = new JSONArray();
+            r_dList.add(roleList);
+
             String name=""+System.currentTimeMillis();
             String phone=pf.genPhoneNum();
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
              jc.organizationAccountAdd(name, phone, r_dList, shop_list,true);
 
             JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("id");
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
-            Integer totalAfterAdd=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            Integer totalAfterAdd=jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
             jc.organizationAccountDelete(account);
 
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
-            Integer totalAfterDelate=jc.receptorList(Long.parseLong(pp.shopIdZ)).getInteger("total");
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            Integer totalAfterDelate=jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
             Preconditions.checkArgument(totalAfterAdd-total==1,"新增接待权限账户，接待人原列表+1");
             Preconditions.checkArgument(totalAfterDelate-totalAfterAdd==-1,"删除接待权限账户，接待人原列表-1");
 

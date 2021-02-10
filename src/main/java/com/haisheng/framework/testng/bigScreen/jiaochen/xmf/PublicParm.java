@@ -29,7 +29,7 @@ public class PublicParm {
     //预约使用车辆
     public Long car_idA =48L;  //plate_number=津DAASSE
     public String modolIdAppointment = "14";
-    public String carModel="特斯拉model3(2021)";
+    public String carModel="特斯拉model3";
     public String carStyleId = "";
     public String carStyleName = "";
 
@@ -39,6 +39,7 @@ public class PublicParm {
 
     public String jdgw = "13402050050";  //xx ,属于中关村店
     public String roleidJdgw="2945"; //拥有接待权限的校色id
+    public String nameJdgw="自动化专用角色"; //拥有接待权限的校色id
     public String jdgw2 = "13402050050";  //xx2 ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
     public String jdgwName = "自动化专用账号"; //单个店的客户的数据  登录密码

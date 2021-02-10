@@ -62,7 +62,8 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.shopId = "49195";
+        commonConfig.roleId = "2945";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
