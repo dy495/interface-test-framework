@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
@@ -59,7 +58,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
 
-        commonConfig.product = EnumProduce.JC.name();
+
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.name();
+
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -76,8 +78,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        //commonConfig.shopId = "-1";
-        commonConfig.shopId = "45973";
+        commonConfig.shopId = "-1";
+        commonConfig.roleId="603";
+        //commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
 
     }
@@ -99,7 +102,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
 
-        jc.pcLogin("15711300001","000000");
+        jc.pcLogin("13114785236","000000");
     }
 
     /**
@@ -752,7 +755,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             JSONArray pic_list1 =new JSONArray();
-            pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+            //pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+            pic_list1.add(info.getLogo());
 
             JSONArray pic_list2 =new JSONArray();
             pic_list2.add("");

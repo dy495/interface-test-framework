@@ -67,6 +67,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
         //set shop id
         commonConfig.shopId = "-1";
+        commonConfig.roleId="603";
         beforeClassInit(commonConfig);
 
 
@@ -87,7 +88,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("15711300001", "000000");
+        jc.pcLogin("13114785236","000000");
     }
 
 

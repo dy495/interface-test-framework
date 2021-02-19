@@ -273,16 +273,16 @@ public class jiaoChenInfo {
 
 
     //V2.0
-    public final Long  first_category= 1L; //一级品类id
+    public final Long  first_category= 46L; //一级品类id
     public final String  first_category_chin= "自动化一级品类别删"; //一级品类name
 
-    public final Long  second_category= 2L; //二级品类id
+    public final Long  second_category= 47L; //二级品类id
     public final String  second_category_chin= "自动化二级品类别删"; //二级品类name
 
-    public final Long  third_category= 19L; //三级品类id
+    public final Long  third_category= 48L; //三级品类id
     public final String  third_category_chin= "自动化三级品类别删"; //三级品类name
 
-    public final Long  goods_brand= 2L; //商品品牌
+    public final Long  goods_brand= 19L; //商品品牌
     //还没改
     public final Long  goods_id= 1L; //商品id
     public final String  goods_name= "1"; //商品名称
