@@ -7,4 +7,5 @@ public class appletAppointment {
     public Long car_id;
     public String appointment_name;
     public String appointment_phone;
+    public String type;
 }

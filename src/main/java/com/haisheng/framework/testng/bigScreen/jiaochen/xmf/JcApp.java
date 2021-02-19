@@ -201,7 +201,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //pc登录  预约记录页该顾问今日数据
             jc.pcLogin(pp.jdgw, pp.gwpassword);
             IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("100").customer_name(pp.jdgwName)
+                    .size("100").service_sale_id(pp.userid)
                     .shop_id(pp.shopIdZ)
                     .create_end(dt.getHistoryDate(0))
                     .create_start(dt.getHistoryDate(0)).build();
@@ -209,7 +209,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
 
             IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10").customer_name(pp.jdgwName)
+                    .size("10").service_sale_id(pp.userid)
                     .shop_id(pp.shopIdZ)
                     .appointment_status("20")
                     .create_end(dt.getHistoryDate(0))
@@ -510,7 +510,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "HEXIAONUM")  //核销，核销记录+1
+    @DataProvider(name = "HEXIAONUM")
     public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
         return new String[]{
                 "1234567890123456",     //16位
@@ -637,7 +637,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :核销----需要小程序有源源不断的卡券
+     * @description :核销----需要小程序有源源不断的卡券;  核销，核销记录+1
      * @date :2020/12/17 14:58
      **/
     @Test()

@@ -118,6 +118,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApplet_myappointment(pf.appletmyAppointment());
 
             //预约
+            logger.info("开始预约");
             dataTemp.setAppointmentId(pf.appletAppointment(num));
 
             System.out.println("PcNUm:" + dataTemp.getPcAppointmentNUmber());
@@ -233,7 +234,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             String customer_phone = data.getString("customer_phone");
             String plate_number = data.getString("plate_number");
             String customer_manager = data.getString("customer_manager");
-            Preconditions.checkArgument(customer_manager.equals("xx"), "接待人名异常");
+            Preconditions.checkArgument(customer_manager.equals(pp.jdgwName), "接待人名异常");
             Preconditions.checkArgument(customer_name.equals("自动夏"), "预约用户名异常");
             Preconditions.checkArgument(customer_phone.equals(pp.customerPhone), "预约手机号异常");
             Preconditions.checkArgument(plate_number.equals(pp.carplate7), "预约车牌号异常");

@@ -64,7 +64,8 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.shopId = "49195";
+        commonConfig.roleId = "2945";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -81,7 +82,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         initial1();
         qaDbUtil.openConnection();
-        BeforeStart();               //调试单个case时注释此行
+//        BeforeStart();               //调试单个case时注释此行
     }
 
     @AfterClass
@@ -121,10 +122,11 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApplet_myappointment(a);
 
             Integer id = qaDbUtil.selsetDataTempOne("appointmentId", "pc_appointmentPage");
+            dataTemp.setAppointmentId(id.longValue());
             System.out.println("id:" + id);
-            //预约
+            //取消预约前 记录数， 取消预约
             jc.appletLoginToken(pp.appletTocken);
-            jc.appletCancleAppointment(id.longValue(), pp.shopIdZ);
+            jc.appletCancleAppointment(id.longValue(),"MAINTAIN");
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {

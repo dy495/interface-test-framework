@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 /**
- * @description :运行单个test时，需将inintal中的存储操作函数注释掉
+ * @description :pc 开始接待  运行单个test时，需将inintal中的存储操作函数注释掉
  * @date :2020/12/18 16:45
  **/
 
@@ -63,7 +63,8 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.shopId = "49195";
+        commonConfig.roleId = "2945";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

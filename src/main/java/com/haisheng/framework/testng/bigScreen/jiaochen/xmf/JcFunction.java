@@ -65,7 +65,13 @@ public class JcFunction {
     public int pcAppointmentRecodePage() {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
         int num = jc.appointmentRecordManage("", "1", "10", null, null).getInteger("total");
+        System.out.println("预约记录数："+num);
         return num;
+    }
+    public Long getAppointmentId(){
+        jc.appletLoginToken(pp.appletTocken);
+        Long id=jc.appletAppointmentList("","10",null).getJSONArray("list").getJSONObject(0).getLong("id");
+        return  id;
     }
 
     //小程序客户预约保养次数
@@ -157,11 +163,12 @@ public class JcFunction {
         jc.pcStartReception(sr);
         //取接待列表id
         JSONObject dd = jc.receptionManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0);
-        long receptionID = dd.getLong("reception_id");
+        long receptionID = dd.getLong("id");
         String plate_number = dd.getString("plate_number");
         if (!carPlate.equals(plate_number)) {
             throw new Exception("获取接待id失败");
         }
+        System.out.println("接待ID:"+receptionID);
         return receptionID;
     }
 
@@ -304,8 +311,9 @@ public class JcFunction {
         pm.car_id = pp.car_idA;
         pm.appointment_name = "自动夏";
         pm.shop_id = Long.parseLong(pp.shopIdZ);
-        pm.staff_id = "uid_f9342ae2";
+        pm.staff_id = pp.userid;
         pm.time_id = getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(num));
+        pm.type="MAINTAIN";
 
         Long appointmentId = jc.appletAppointment(pm).getLong("id");
         return appointmentId;
