@@ -34,8 +34,8 @@ public class jiaoChenInfo {
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
 
     //日常
-    public final long BrandID = 19L;//自动化用的品牌id
-    public final long CarStyleID = 17L;//自动化用的品牌车系id
+    public final long BrandID = 61L;//自动化用的品牌id
+    public final long CarStyleID = 48L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){

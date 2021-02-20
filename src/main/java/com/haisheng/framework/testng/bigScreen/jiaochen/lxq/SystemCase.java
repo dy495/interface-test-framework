@@ -871,19 +871,19 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ROLE")
     public  Object[] role() {
         return new Object[][]{
-//                {info.allauth_id,info.allauth_list,"13412010057","全部页面权限"},
-                {info.daoruauth_id,info.daoruauth_list,"13412010058","导入记录权限所有页面；数据权限=全部；主体=品牌；无功能权限"},
-                {info.jiedaiauth_id,info.jiedaiauth_list,"13412010069","接待管理所有页面；数据权限=个人；主体类型权限=门店；全部功能权限"},
-                {info.kehu12auth_id,info.kehu12auth_list,"13412010061","客户管理+销售客户tab+售后客户tab；数据权限=全部；主体类型权限=集团；无功能权限"},
-                {info.kehu123auth_id,info.kehu123auth_list,"13412010062","客户管理全部页面；数据权限=全部；主体类型权限=集团；无功能权限"},
-                {info.yuyue12auth_id,info.yuyue12auth_list,"13412010063","预约管理+预约看板tab+预约记录tab；数据权限=全部；主体类型权限=门店；功能权限=售后接待+预约保养分配+预约应答人"},
-                {info.xitong123auth_id,info.xitong123auth_list,"13412010064","门店管理+品牌管理+品牌删除；数据权限=全部；主体类型权限=集团；无功能权限"},
-                {info.xitong45auth_id,info.xitong45auth_list,"13412010065","角色管理+员工管理；数据权限=全部；主体类型权限=区域；无功能权限"},
-//                {info.kaquan45auth_id,info.kaquan45auth_list,"13412010066","卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限"},
-//                {info.kaquan123auth_id,info.kaquan123auth_list,"13412010067","卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限"},
-                {info.taocannoauth_id,info.taocannoauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
-                {info.taocanauth_id,info.taocanauth_list,"13412010067","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
-//                {info.nxauth_id,info.nxauth_list,"13412010067","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
+//                {info.allauth_id,info.allauth_list,"13402050010","全部页面权限"},
+                {info.daoruauth_id,info.daoruauth_list,"13402050010","导入记录权限所有页面；数据权限=全部；主体=品牌；无功能权限"},
+                {info.jiedaiauth_id,info.jiedaiauth_list,"13402050011","接待管理所有页面；数据权限=个人；主体类型权限=门店；全部功能权限"},
+                {info.kehu12auth_id,info.kehu12auth_list,"13402050011","客户管理+销售客户tab+售后客户tab；数据权限=全部；主体类型权限=集团；无功能权限"},
+                {info.kehu123auth_id,info.kehu123auth_list,"13402050012","客户管理全部页面；数据权限=全部；主体类型权限=集团；无功能权限"},
+                {info.yuyue12auth_id,info.yuyue12auth_list,"13402050012","预约管理+预约看板tab+预约记录tab；数据权限=全部；主体类型权限=门店；功能权限=售后接待+预约保养分配+预约应答人"},
+                {info.xitong123auth_id,info.xitong123auth_list,"13402050013","门店管理+品牌管理+品牌删除；数据权限=全部；主体类型权限=集团；无功能权限"},
+                {info.xitong45auth_id,info.xitong45auth_list,"13402050013","角色管理+员工管理；数据权限=全部；主体类型权限=区域；无功能权限"},
+//                {info.kaquan45auth_id,info.kaquan45auth_list,"13402050014","卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限"},
+//                {info.kaquan123auth_id,info.kaquan123auth_list,"13402050014","卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限"},
+                {info.taocannoauth_id,info.taocannoauth_list,"13402050015","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
+                {info.taocanauth_id,info.taocanauth_list,"13402050015","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
+//                {info.nxauth_id,info.nxauth_list,"13402050016","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
 
         };
     }
@@ -970,13 +970,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         jc.roleAdd(name,idlist);
         //查询角色id
         String roleId_str = jc.organizationRolePage(name,1,10).getJSONArray("list").getJSONObject(0).getString("id");
-        JSONArray roleid = new JSONArray();
-        roleid.add(roleId_str);
+
 
         //创建账号
-        JSONArray shoparr = new JSONArray();
-        shoparr.add(46194);
-        jc.organizationAccountAdd("zdh",phone,roleid,shoparr);
+
+        jc.addAccount("zh"+Integer.toString((int)(Math.random()*100000)),phone,Long.parseLong(roleId_str),name);
         String accountid = jc.pcStaffPage("",1,1).getJSONArray("list").getJSONObject(0).getString("id");
 
         obj.put("roleid",roleId_str);
@@ -985,7 +983,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     public void creatRoleAndAccount(String roleid, String accountid) {
-        jc.pcLogin("15711300001","000000");
+        jc.pcLogin("13114785236","000000");
         //删除账号
         jc.organizationAccountDelete(accountid);
         //删除角色
@@ -1213,7 +1211,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //2021-01-25
-    //@Test(dataProvider = "NAME") 通了 有俩bug
+    @Test(dataProvider = "NAME")
     public void categoryAddFirst(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1307,7 +1305,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test//bug
+    @Test
     public void categoryAddSecondErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
