@@ -854,7 +854,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
-            int giveNumber = util.getPackagePage(packageName).getGiveNumber();
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
@@ -2986,7 +2985,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "权益列表--修改权益，applet与pc所见内容一致")
-    public void vipMarketIng_system_1() {
+    public void vipMarketing_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3015,7 +3014,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "权益列表--关闭权益，applet与pc所见内容一致")
-    public void vipMarketIng_system_2() {
+    public void vipMarketing_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3036,7 +3035,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "权益列表--开启权益，applet与pc所见内容一致")
-    public void vipMarketIng_system_3() {
+    public void vipMarketing_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3057,7 +3056,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "任务管理--修改分享内容，applet与pc所见内容一致")
-    public void vipMarketIng_system_4() {
+    public void vipMarketing_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
@@ -3087,7 +3086,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "签到配置--修改签到配置，applet与pc所见内容一致")
-    public void vipMarketIng_system_5() {
+    public void vipMarketing_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene signInConfigPageScene = SignInConfigPageScene.builder().build();
@@ -3109,7 +3108,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "签到配置--签到配置修改，变更记录+1，变更积分为修改的积分&操作时间为当前时间&操作账号为当前账号&备注为修改的详情")
-    public void vipMarketIng_system_6() {
+    public void vipMarketing_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
@@ -3140,7 +3139,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "权益列表--修改生日积分，积分异常")
-    public void vipMarketIng_system_7() {
+    public void vipMarketing_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3161,7 +3160,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "权益列表--修改生日积分，描述异常")
-    public void vipMarketIng_system_8() {
+    public void vipMarketing_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3183,7 +3182,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "权益列表--修改生日积分，积分异常")
-    public void vipMarketIng_system_9() {
+    public void vipMarketing_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -3205,7 +3204,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //bug
     @Test(description = "任务管理--修改分享内容，说明异常")
-    public void vipMarketIng_system_10() {
+    public void vipMarketing_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
@@ -3231,7 +3230,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //bug
     @Test(description = "任务管理--修改分享内容，积分异常")
-    public void vipMarketIng_system_11() {
+    public void vipMarketing_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
@@ -3251,7 +3250,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("任务管理--修改分享内容，积分异常");
+//            saveData("任务管理--修改分享内容，积分异常");
         }
     }
 }
