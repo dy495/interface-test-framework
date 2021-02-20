@@ -116,7 +116,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     String type1 = list.getJSONObject(i).getString("type");
                     String shop_name = list.getJSONObject(i).getString("name");
                     String manager_name = list.getJSONObject(i).getString("manager_name");
-                    checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
+                    checkArgument(district_code.contains("110000"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
                     checkArgument(type1.equals(type_1), "选择的门店类型" + "NORMAL" + "!=搜索出来门店展示的门店类型" + type1);
                     checkArgument(shop_name.equals(info.shop_id_01_chin), "输入的门店名称" + info.shop_id_01_chin + "!=搜索出来门店的名称" + shop_name);
                     checkArgument(manager_name.equals("徐鹏"), "输入的门店负责人" + "徐鹏" + "!=搜索出来门店的负责人" + manager_name);
