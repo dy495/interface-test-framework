@@ -3238,6 +3238,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             saveData("任务管理--修改分享内容，积分异常");
         }
     }
+
+    //----------------------------------------------------------活动管理-------------------------------------------------
+
 }
 
 

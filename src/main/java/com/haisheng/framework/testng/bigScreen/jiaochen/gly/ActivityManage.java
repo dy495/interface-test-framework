@@ -92,10 +92,10 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      * 创建5个招募活动和个裂变活动
      */
+    @Test
     public void preCreateSomeActivity() {
         //获取一个卡券
-        Long voucherId = businessUtil.getVoucherId();
-        System.out.println("-----" + voucherId);
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         //创建招募活动
         Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
         //创建裂变活动
