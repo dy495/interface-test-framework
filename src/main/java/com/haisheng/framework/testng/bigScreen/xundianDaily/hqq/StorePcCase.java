@@ -124,7 +124,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void getA() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            for (int i=0;i<6;i++) {
+            for (int i=0;i<1;i++) {
                 final String NUMBER = ".";
                 final String ALGORITHM = "HmacSHA256";
                 HttpClient client = null;
@@ -189,24 +189,24 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 //                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
                         "        \"shopType\": \"SHOP_TYPE\",\n" +
                         "        \"orderNumber\": \"13444894484\",\n" +
-                        "        \"memberName\":\"嘉期狗贼&涛涛22223333333\",\n" +
+                        "        \"memberName\":\"涛涛黑名单（10：57）\",\n" +
                         "        \"receipt_type\":\"小票类型\",\n" +
                         "        \"posId\": \"pos-1234586789\",\n" +
                         "        \"commodityList\": [\n" +
                         "            {\n" +
-                        "                \"commodityId\": \"iPhone12ABCDE\",\n" +
+                        "                \"commodityId\": \"iPhone12A42234\",\n" +
                         "                \"commodity_name\":\"苹果12s\",\n" +
                         "                \"unit_price\": 200,\n" +
                         "                \"num\": 4\n" +
                         "            },\n" +
                         "            {\n" +
-                        "                \"commodityId\": \"bananaABCDE\",\n" +
+                        "                \"commodityId\": \"banan3424724E\",\n" +
                         "                \"commodity_name\":\"香蕉20根啊\",\n" +
                         "                \"unit_price\": 2,\n" +
                         "                \"num\": 4\n" +
                         "            },\n" +
                         "            {\n" +
-                        "                \"commodityId\": \"AppleABCDE\",\n" +
+                        "                \"commodityId\": \"Apple3424323234\",\n" +
                         "                \"commodity_name\":\"苹果20ge\",\n" +
                         "                \"unit_price\": 3,\n" +
                         "                \"num\": 4\n" +
@@ -235,7 +235,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void getA4116() throws Exception {
-        for (int i=0;i<5;i++) {
+        for (int i=0;i<1;i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
             HttpClient client = null;
@@ -250,7 +250,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String uid = "uid_ef6d2de5";
             String appId = "49998b971ea0";
             String ak = "3fdce1db0e843ee0";
-            String router = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+            String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
             String sk = "5036807b1c25b9312116fd4b22c351ac";
             // java代码示例
@@ -283,9 +283,9 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             String str = "{\n" +
                     "  \"uid\": \"uid_ef6d2de5\",\n" +
                     "  \"app_id\": \"49998b971ea0\",\n" +
-                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a7498728934\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a74uuyy0\",\n" +
                     "  \"version\": \"v1.0\",\n" +
-                    "  \"router\": \"/business/bind/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
                     "        \"shop_id\": \"4116\",\n" +
@@ -299,7 +299,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"青青员工下单4116\",\n" +
+                    "        \"memberName\":\"无人风控（11：40）\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"1111\",\n" +
                     "        \"commodityList\": [\n" +
@@ -397,16 +397,18 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================门店类型（单选、多选、全选、不选）======================
      */
-    @Test
+    //@Test
     public void storeType() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //多选
-            String[] shopType = new String[]{"NORMAL", "COMMUNITY"};
+           // String[] shopType = new String[]{"NORMAL", "COMMUNITY"};
             String shopName = "";
             int num = 0;
             int num1 = 0;
-            JSONArray storeList = md.patrolShopRealV3A(districtCode, shopType, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray shopType = new JSONArray();
+            shopType.add("NORMAL");
+            JSONArray storeList = md.customerFlowList(districtCode, shopType, shopName, shopManager,null,null,page, size,null).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 checkArgument(storeList.getJSONObject(i).getString("type").equals("NORMAL") || storeList.getJSONObject(i).getString("type").equals("COMMUNITY"), "筛选栏多选数据有问题");
             }

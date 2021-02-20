@@ -34,8 +34,8 @@ public class jiaoChenInfo {
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
 
     //日常
-    public final long BrandID = 19L;//自动化用的品牌id
-    public final long CarStyleID = 17L;//自动化用的品牌车系id
+    public final long BrandID = 61L;//自动化用的品牌id
+    public final long CarStyleID = 48L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
@@ -273,16 +273,16 @@ public class jiaoChenInfo {
 
 
     //V2.0
-    public final Long  first_category= 1L; //一级品类id
+    public final Long  first_category= 46L; //一级品类id
     public final String  first_category_chin= "自动化一级品类别删"; //一级品类name
 
-    public final Long  second_category= 2L; //二级品类id
+    public final Long  second_category= 47L; //二级品类id
     public final String  second_category_chin= "自动化二级品类别删"; //二级品类name
 
-    public final Long  third_category= 19L; //三级品类id
+    public final Long  third_category= 48L; //三级品类id
     public final String  third_category_chin= "自动化三级品类别删"; //三级品类name
 
-    public final Long  goods_brand= 2L; //商品品牌
+    public final Long  goods_brand= 19L; //商品品牌
     //还没改
     public final Long  goods_id= 1L; //商品id
     public final String  goods_name= "1"; //商品名称
@@ -423,11 +423,11 @@ public class jiaoChenInfo {
     public JSONObject newArtical() throws Exception {
 
         JSONArray pic_list1 =new JSONArray();
-        pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+        pic_list1.add(getLogo());
         JSONArray pic_list2 =new JSONArray();
-        pic_list2.add("");
-        pic_list2.add("");
-        pic_list2.add("");
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
         JSONObject obj = jc.addArticleNotChk(""+System.currentTimeMillis(),"ONE_BIG",pic_list1,"content","RED_PAPER","ARTICEL",null,null,null,
                 null,null,null,null,null,null,
                 null,null,null,null);
