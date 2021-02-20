@@ -34,8 +34,8 @@ public class jiaoChenInfo {
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
 
     //日常
-    public final long BrandID = 19L;//自动化用的品牌id
-    public final long CarStyleID = 17L;//自动化用的品牌车系id
+    public final long BrandID = 61L;//自动化用的品牌id
+    public final long CarStyleID = 48L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
@@ -423,11 +423,11 @@ public class jiaoChenInfo {
     public JSONObject newArtical() throws Exception {
 
         JSONArray pic_list1 =new JSONArray();
-        pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+        pic_list1.add(getLogo());
         JSONArray pic_list2 =new JSONArray();
-        pic_list2.add("");
-        pic_list2.add("");
-        pic_list2.add("");
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
         JSONObject obj = jc.addArticleNotChk(""+System.currentTimeMillis(),"ONE_BIG",pic_list1,"content","RED_PAPER","ARTICEL",null,null,null,
                 null,null,null,null,null,null,
                 null,null,null,null);

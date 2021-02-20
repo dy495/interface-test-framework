@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.datastore.B;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -3547,6 +3546,7 @@ public class ScenarioUtil extends TestCaseCommon {
         String json =
                 "{\n" +
                         "\"name\":\"" + name + "\"," +
+                        "\"description\":\"" + "自动化创建的角色" + "\"," +
                         "\"auth_list\":" + auth_list +
                         "}";
         String result = httpPostWithCheckCode(url, json, IpPort);
@@ -5355,6 +5355,27 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json);
     }
 
+    /**
+     * @description :PC2.0新建账号
+     * @date :2021/2/3
+     **/
+    public JSONObject addAccount(String name,String phone,Long role_id,String role_name) {
+        String url = "/jiaochen/pc/staff/add";
+        String json =
+                "{" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"phone\" :" + phone + ",\n" +
+                        "\"role_list\":[{"+
+                        "\"role_id\" :" + role_id + ",\n" +
+                        "\"role_name\" :\"" + role_name + "\",\n" +
+                        "\"shop_list\":[{\"shop_id\":49309,\"shop_name\":\"0209门店-1全称\"}]}]"+
+
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 
