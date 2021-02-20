@@ -3454,7 +3454,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("contact", er.contact);
         json1.put("gender", er.gender);
         json1.put("birthday", er.birthday);
-        json1.put("shipping_address", er.shipping_address);
+//        json1.put("shipping_address", er.shipping_address);
         if (er.parmkey != null) {
             json1.put(er.parmkey, er.parmvalue);
         }
@@ -3813,7 +3813,7 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
 
     public JSONObject SalesCreate(pccreateStoreSales er) {
-        String url = "/business-jiaochen/pc/store/sales/create";
+        String url = "/jiaochen/pc/store/sales/create";
         JSONObject json1=new JSONObject();
         json1.put("sales_phone",er.sales_phone);
         json1.put("sales_name",er.sales_name);
@@ -3825,7 +3825,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1,er.checkcode);
     }
     public JSONObject SalesList(String page,String size,String sales_phone, String shop_id) {
-        String url = "/business-jiaochen/pc/store/sales/create";
+        String url = "/jiaochen/pc/store/sales/page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);

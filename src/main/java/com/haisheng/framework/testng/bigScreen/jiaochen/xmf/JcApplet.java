@@ -77,6 +77,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
         //set shop id
         commonConfig.shopId = "45973";
+        commonConfig.roleId=pp.roleId;
         beforeClassInit(commonConfig);
         jc.appletLoginToken(pp.appletTocken);
         logger.debug("jc: " + jc);
@@ -126,7 +127,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("添加车辆，applet我的车辆列表加1");
+            saveData("添加车辆，applet我的车辆列表加1");
         }
     }
 
@@ -156,7 +157,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("添加车辆7位车牌，applet我的车辆列表加1");
+            saveData("添加车辆7位车牌，applet我的车辆列表加1");
         }
     }
 
@@ -195,7 +196,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             int count = pf.carListNumber(pp.carStyleId);
             int limit = 5 - count;
             JSONArray carId = new JSONArray();
-            for (int i = 0; i < limit; i++) {
+            for (int i = 1; i < limit; i++) {
                 String plate_number;
                 plate_number = "豫GBBA3" + i;
                 String car_id = pf.appletAddCar(plate_number);
@@ -427,13 +428,13 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             er.gender = "FEMALE";
             er.name = "@@@";
             er.contact = "15037286013";
-            er.shipping_address = "中关村soho" + dt.getHHmm(0);
+//            er.shipping_address = "中关村soho" + dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
             JSONObject data = jc.appletUserInfoDetail();      //查看用户详情
             Preconditions.checkArgument(data.getString("birthday").equals(er.birthday));
             Preconditions.checkArgument(data.getString("gender").equals(er.gender));
             Preconditions.checkArgument(data.getString("name").equals(er.name));
-            Preconditions.checkArgument(data.getString("shipping_address").equals(er.shipping_address));
+//            Preconditions.checkArgument(data.getString("shipping_address").equals(er.shipping_address));
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -492,7 +493,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
     //报名领卡券 卡券选择通用不限量的固定id ok
     //卡券累计发出+1，发卡记录+1
-    @Test()
+//    @Test()
     public void activity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -539,7 +540,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     //报名领卡券报名通过即发券 卡券选择通用不限量的固定id  ok
-    @Test()
+//    @Test()
     public void activity2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -562,7 +563,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             ar.phone = "15037286013";
             jc.appletactivityRegister(ar);
             //pc--审批通过
-            jc.pcLogin(pp.gwphone, pp.jdgwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             String passId = jc.approvalListFilterManage(null, "1", "10", id.intValue(), null, null).getJSONArray("list").getJSONObject(0).getString("id");
             JSONArray json = new JSONArray();
             json.add(passId);
@@ -587,6 +588,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void appletArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appletLoginToken(pp.appletTocken);
             JSONArray list = jc.appletArticleList("10", null).getJSONArray("list");
             Preconditions.checkArgument(list.size() <= 10, "首页文章超过了10");
 
@@ -624,7 +626,9 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //小程序消息最新一条信息校验
             jc.appletLoginToken(pp.appletTocken);
             JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
-            String messageName = message.getString("content");
+            Long id=message.getLong("id");
+
+            String messageName = jc.appletMessageDetail(id.toString()).getString("content");
             Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
 
         } catch (AssertionError | Exception e) {
