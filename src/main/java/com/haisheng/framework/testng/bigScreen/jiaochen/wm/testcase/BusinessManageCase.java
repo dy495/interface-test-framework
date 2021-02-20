@@ -32,12 +32,14 @@ import java.util.stream.Collectors;
  * 业务管理测试用例
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
-    private static final Integer SIZE = 100;
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
+    //访问者
     public Visitor visitor = new Visitor(product);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    //登录工具
     public UserUtil user = new UserUtil(visitor);
+    //封装方法
+    public SupporterUtil util = new SupporterUtil(visitor);
 
 
     @BeforeClass
@@ -84,7 +86,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int total = visitor.invokeApi(importPageScene).getInteger("total");
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/服务单号已存在.xlsx";
             IScene workOrderScene = WorkOrderScene.builder().filePath(filePath).build();
-            String message = visitor.uploadFile(workOrderScene).getString("message");
+            String message = visitor.invokeApi(workOrderScene, false).getString("message");
             Assert.assertEquals(message, "success");
             int newTotal = visitor.invokeApi(importPageScene).getInteger("total");
             CommonUtil.checkResult("导入后导入记录总数", total + 1, newTotal);
