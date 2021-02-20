@@ -7,6 +7,7 @@ import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
@@ -796,7 +797,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    //@Test ID不一致
     public void ArticleTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -806,7 +807,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //置顶
             jc.topArticle(id);
             //登陆小程序查看
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(EnumAppletToken.JC_LXQ_DAILY.getToken());
             Long search_list = jc.appletArticleList(null,null).getJSONArray("list").getJSONObject(0).getLong("list");
 
             Preconditions.checkArgument(id==search_list,"置顶后不在小程序首位");
@@ -1324,17 +1325,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test(dataProvider =  "CATEGORYID")
+    @Test(dataProvider =  "CATEGORYID")
     public void categoryAdd2OR3Err(String level, String fatherid) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String name = info.stringsix +"aa";
 
-            Long id = System.currentTimeMillis();
-            Long id2 = id+ 9000;
-            jc.categoryCreate(false,name,level,fatherid,info.getLogo(),id);
+            Long id = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),null).getLong("id");
 
-            int code = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),id2).getInteger("code");
+            int code = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),null).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             //删除品类
@@ -1358,13 +1357,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //@Test
+    @Test
     public void categoryAddSecondErr2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long id =  System.currentTimeMillis();
-            int code = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.getLogo(),id).getInteger("code");
+
+            JSONObject obj = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.getLogo(),null);
+            int code = obj.getInteger("code");
+            Long id = obj.getJSONObject("data").getLong("id");
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品类

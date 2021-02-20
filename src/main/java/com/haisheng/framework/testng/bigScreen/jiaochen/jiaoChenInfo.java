@@ -423,11 +423,11 @@ public class jiaoChenInfo {
     public JSONObject newArtical() throws Exception {
 
         JSONArray pic_list1 =new JSONArray();
-        pic_list1.add("general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04");
+        pic_list1.add(getLogo());
         JSONArray pic_list2 =new JSONArray();
-        pic_list2.add("");
-        pic_list2.add("");
-        pic_list2.add("");
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
         JSONObject obj = jc.addArticleNotChk(""+System.currentTimeMillis(),"ONE_BIG",pic_list1,"content","RED_PAPER","ARTICEL",null,null,null,
                 null,null,null,null,null,null,
                 null,null,null,null);
