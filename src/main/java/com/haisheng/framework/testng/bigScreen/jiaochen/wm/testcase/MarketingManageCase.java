@@ -1066,8 +1066,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             Long id = appletVoucher.getId();
             String voucherName = appletVoucher.getTitle();
-//            user.loginApplet(APPLET_USER_TWO);
-//            int receiveVoucherNum = util.getAppletVoucherNum();
+            user.loginApplet(APPLET_USER_TWO);
+            int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             user.loginPc(ADMINISTRATOR);
             int messageNum = visitor.invokeApi(PushMsgPageScene.builder().build()).getInteger("total");
@@ -1087,8 +1087,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("消息名称", "系统消息", title);
             CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系轿辰会客服，对应卡券变更至对应转移的账号中；", content);
             user.loginApplet(APPLET_USER_TWO);
-//            int newReceiveVoucherNum = util.getAppletVoucherNum();
-//            CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
+            int newReceiveVoucherNum = util.getAppletVoucherNum();
+            CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
             //pc消息记录+1
             user.loginPc(ADMINISTRATOR);
             JSONObject messageResponse = visitor.invokeApi(PushMsgPageScene.builder().build());
@@ -3197,10 +3197,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 String[] taskExplains = {null, EnumDesc.ARTICLE_DESC.getDesc()};
                 Arrays.stream(taskExplains).forEach(desc -> {
                     IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(desc)
-                            .awardScore(1000).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
-                            .awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
+                            .awardScore(1000).awardCustomerRule("ONCE").awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
                     String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
-                    String err = "备注只能在0-20";
+                    String err = StringUtils.isEmpty(desc) ? "success" : "备注只能在0-20";
                     CommonUtil.checkResult("说明为" + desc, err, message);
                 });
             });
@@ -3211,31 +3210,58 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
-    @Test(description = "任务管理--修改分享内容，积分异常")
-    public void vipMarketing_system_11() {
+//    //bug
+//    @Test(description = "任务管理--修改分享内容，积分异常")
+//    public void vipMarketing_system_11() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
+//            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
+//            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
+//            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
+//            List<Integer> ids = list.stream().map(e -> (JSONObject) e).filter(e -> !e.getString("business_type").equals(AppletCodeBusinessTypeEnum.ACTIVITY_APPLY_PRIORITY.getKey())).map(e -> e.getInteger("id")).collect(Collectors.toList());
+//            ids.forEach(id -> {
+//                Integer[] awardScores = {null};
+//                Arrays.stream(awardScores).forEach(awardScore -> {
+//                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
+//                            .awardScore(awardScore).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
+//                            .awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
+//                    String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
+//                    String err = "";
+//                    CommonUtil.checkResult("积分为" + awardScore, err, message);
+//                });
+//            });
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("任务管理--修改分享内容，积分异常");
+//        }
+//    }
+
+    //ok
+    @Test(description = "洗车管理--每人的洗车剩余次数+调整记录增加次数=调整记录调整后次数")
+    public void vipMarketing_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
-            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
-            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
-            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            List<Integer> ids = list.stream().map(e -> (JSONObject) e).filter(e -> !e.getString("business_type").equals(AppletCodeBusinessTypeEnum.ACTIVITY_APPLY_PRIORITY.getKey())).map(e -> e.getInteger("id")).collect(Collectors.toList());
-            ids.forEach(id -> {
-                Integer[] awardScores = {null};
-                Arrays.stream(awardScores).forEach(awardScore -> {
-                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
-                            .awardScore(awardScore).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
-                            .awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
-                    String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
-                    String err = "";
-                    CommonUtil.checkResult("积分为" + awardScore, err, message);
-                });
-            });
+            IScene adjustNumberRecordScene = AdjustNumberRecordScene.builder().build();
+            int washRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
+            //增加洗车次数
+            IScene adjustNumberScene = AdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).adjustNumber("3").remark(EnumDesc.MESSAGE_TITLE.getDesc()).build();
+            visitor.invokeApi(adjustNumberScene);
+            //调整记录次数
+            int newWashRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
+            IScene newAdjustNumberRecordScene = AdjustNumberRecordScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
+            JSONObject response = visitor.invokeApi(newAdjustNumberRecordScene).getJSONArray("list").getJSONObject(0);
+            int afterNumber = response.getInteger("after_number");
+            CommonUtil.checkResult("增加" + APPLET_USER_ONE.getPhone() + "洗车次数3次后调整记录列表数", washRecordTotal + 1, newWashRecordTotal);
+            //小程序洗车次数
+            user.loginApplet(APPLET_USER_ONE);
+            String remainNumber = visitor.invokeApi(AppletCarWashRemainNumberScene.builder().build()).getString("remainNumber");
+            CommonUtil.checkResult("增加" + APPLET_USER_ONE.getPhone() + "洗车次数3次后小程序洗车次数", String.valueOf(afterNumber), remainNumber);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("任务管理--修改分享内容，积分异常");
+            saveData("洗车管理--每人的洗车剩余次数+调整记录增加次数=调整记录调整后次数");
         }
     }
 

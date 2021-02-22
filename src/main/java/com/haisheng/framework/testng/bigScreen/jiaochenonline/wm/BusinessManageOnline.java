@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermana
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PackageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PurchaseFixedPackage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util.BusinessUtilOnline;
@@ -233,7 +233,7 @@ public class BusinessManageOnline extends TestCaseCommon implements TestCaseStd 
             int consumeTimes = CommonUtil.getIntField(wechatCustomerData, 0, "consume_times");
             long wechatTotalPrice = (long) CommonUtil.getIntField(wechatCustomerData, 0, "total_price");
             //购买套餐
-            IScene scene = PurchaseFixedPackage.builder().customerId(customerId).receptionId(receptionId)
+            IScene scene = ReceptionPurchaseFixedPackageScene.builder().customerId(customerId).receptionId(receptionId)
                     .packageId(null).carType(EnumCarType.ALL_CAR.name()).selectNumber(1).packagePrice("100").expiryDate("30").remark("xxxxxxx")
                     .voucherType("CURRENT").type(1).subjectType("").subjectId(1L).build();
             jc.invokeApi(scene);

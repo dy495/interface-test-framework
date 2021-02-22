@@ -69,5 +69,10 @@ public class ReceptionPage implements Serializable {
     @JSONField(name = "reception_type_name")
     private String receptionTypeName;
 
+    /**
+     * 门店
+     */
+    @JSONField(name = "shop_id")
+    private Integer shopId;
 
 }

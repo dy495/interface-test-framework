@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.MakeSureBuy;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.MakeSureBuyScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
@@ -101,7 +101,7 @@ public class SellOutVoucher extends BaseVoucher {
         IScene scene = BuyPackageRecordScene.builder().packageName("临时套餐").size(SIZE).build();
         JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
         Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals("临时套餐")).map(e -> e.getLong("id")).findFirst().orElse(null);
-        visitor.invokeApi(MakeSureBuy.builder().id(id).auditStatus("AGREE").build());
+        visitor.invokeApi(MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build());
     }
 
 }

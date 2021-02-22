@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class MakeSureBuy extends BaseScene {
+public class MakeSureBuyScene extends BaseScene {
     private final Long id;
     private final String auditStatus;
 

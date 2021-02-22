@@ -94,10 +94,11 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "预约保养")
+    //ok
+    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_maintain() {
         try {
-            int i = 1;
+            int i = 0;
             Integer shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
@@ -122,7 +123,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.MAINTAIN.getValue(), appointmentPage.getTypeName());
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", false, appointmentPage.getIsCanReception());
+            CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
             //确认预约
@@ -204,12 +205,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("预约保养");
+            saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
 
     }
 
-    @Test(description = "预约维修")
+    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_repair() {
         try {
             int i = 0;
@@ -300,7 +301,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
             user.loginApplet(APPLET_USER_ONE);
-            IScene evaluateSubmitScene = EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(1).score(4).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).isAnonymous(true).build();
+            IScene evaluateSubmitScene = EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(2).score(4).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).isAnonymous(true).build();
             visitor.invokeApi(evaluateSubmitScene);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
@@ -319,7 +320,15 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-//            saveData("");
+            saveData("预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
+    }
+
+
+
+
+    @Test
+    public void integralMall_data_1(){
+
     }
 }
