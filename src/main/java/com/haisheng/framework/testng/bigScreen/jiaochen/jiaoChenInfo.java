@@ -404,7 +404,7 @@ public class jiaoChenInfo {
     //新建二级品类
     public JSONObject newSecondCategory(String name){
         JSONObject obj = new JSONObject();
-        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
         int code = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(first_category),logo,null).getInteger("code");
         Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
         obj.put("code",code);
@@ -416,7 +416,7 @@ public class jiaoChenInfo {
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
         String base64 = new ImageUtil().getImageBinary(filePath);
-        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
         return logo;
     }
 

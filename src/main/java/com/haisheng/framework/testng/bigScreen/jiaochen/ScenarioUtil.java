@@ -154,8 +154,9 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject pcFileUploadNew(String pic) {
         String path = "/jiaochen/pc/file/upload";
         JSONObject object = new JSONObject();
-        object.put("pic", pic);
         object.put("permanent_pic_type", 0);
+        object.put("pic", pic);
+
 
         return invokeApi(path, object);
     }
@@ -4122,12 +4123,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryDel(Long id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject categoryDel(Long id, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-category";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("page",page);
-        json1.put("size",size);
         return invokeApi(url,json1,chkcode);
     }
 
@@ -4212,12 +4211,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品牌
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandDel(Long id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject BrandDel(Long id, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("page",page);
-        json1.put("size",size);
+
         return invokeApi(url,json1,chkcode);
     }
 
@@ -4301,7 +4299,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :商品管理列表
      * @date :2021/1/20 14:00
      **/
-    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
+    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Long goods_brand,String goods_status,
                                       Integer first_category,Integer second_category,Integer third_category) {
         String url = "/jiaochen/pc/integral-mall/goods-manage-page";
         JSONObject json1=new JSONObject();
