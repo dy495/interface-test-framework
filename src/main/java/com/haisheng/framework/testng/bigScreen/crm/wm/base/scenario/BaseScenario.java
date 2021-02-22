@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.scenario;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 /**
  * 接口抽象
@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
  * @author wangmin
  * @date 2021/02/20
  */
-@SuperBuilder
+@Builder
 public abstract class BaseScenario implements IScenario {
     public Visitor visitor;
     public Boolean checkCode ;

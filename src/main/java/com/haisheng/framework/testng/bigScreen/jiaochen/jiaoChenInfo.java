@@ -394,7 +394,7 @@ public class jiaoChenInfo {
     //新建一级品类
     public JSONObject newFirstCategory(String name){
         JSONObject obj = new JSONObject();
-        String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
         int code = jc.categoryCreate(false,name,"FIRST_CATEGORY","",logo,null).getInteger("code");
         Long id = jc.categoryPage(1,100,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
         obj.put("code",code);

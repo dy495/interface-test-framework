@@ -150,6 +150,16 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(path, object);
     }
 
+    //图片上传
+    public JSONObject pcFileUploadNew(String pic) {
+        String path = "/jiaochen/pc/file/upload";
+        JSONObject object = new JSONObject();
+        object.put("pic", pic);
+        object.put("permanent_pic_type", 0);
+
+        return invokeApi(path, object);
+    }
+
     //pc接待管理 -> 列表
     public JSONObject pcReceptionManagePage(String shop_id, String page, String size) {
         String path = "/jiaochen/pc/reception-manage/page";
