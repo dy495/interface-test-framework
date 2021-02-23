@@ -9,10 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppletReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.FollowUpPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppointmentTimeList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletVoucherStatus;
@@ -38,9 +35,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.Eval
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseTemporaryPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
@@ -1435,7 +1432,6 @@ public class SupporterUtil extends BaseUtil {
         List<AppletVoucherInfo> appletVoucherInfoList = new ArrayList<>();
         List<Long> appletPackageId = new ArrayList<>();
         Long lastValue = null;
-        int listSize = 0;
         JSONArray array;
         do {
             IScene scene = AppletPackageListScene.builder().lastValue(lastValue).type("type").size(20).build();
@@ -1487,6 +1483,26 @@ public class SupporterUtil extends BaseUtil {
             listSize += array.size();
         } while (array.size() == 20);
         return listSize;
+    }
+
+    /**
+     * 获取小程序积分明细
+     *
+     * @return 积分明细
+     */
+    public List<AppletIntegralRecord> getAppletIntegralRecordList() {
+        List<AppletIntegralRecord> list = new ArrayList<>();
+        Integer lastValue = null;
+        JSONArray jsonArray;
+        do {
+            IScene scene = AppletIntegralRecordScene.builder().lastValue(lastValue).size(20).type("ALL").endTime(null).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getInteger("last_value");
+            jsonArray = response.getJSONArray("list");
+            list.addAll(jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e,AppletIntegralRecord.class)).collect(Collectors.toList()));
+        } while (jsonArray.size() == 20);
+        return list;
+
     }
 //
 //    /**

@@ -448,8 +448,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
-    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和")
+    //逻辑有问题
+    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
     public void customerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -461,8 +461,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
                 if (!list.isEmpty()) {
                     int newestMiles = list.stream().map(object -> (JSONObject) object).map(e -> e.getInteger("newest_miles")).findFirst().orElse(0);
                     double outputValue = list.stream().map(object -> (JSONObject) object).map(e -> e.getDouble("output_value")).mapToDouble(object -> object).sum();
-                    CommonUtil.checkResultPlus("列表最新里程数", afterSaleCustomerPage.getNewestMiles(), "维修记录中最新的里程数", newestMiles);
-                    CommonUtil.checkResultPlus("列表最总消费/元", afterSaleCustomerPage.getTotalPrice(), "维修记录中最新的产值/mb之和", outputValue);
+                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最新里程数", afterSaleCustomerPage.getNewestMiles(), "维修记录中最新的里程数", newestMiles);
+                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最总消费/元", afterSaleCustomerPage.getTotalPrice(), "维修记录中最新的产值/mb之和", outputValue);
                     CommonUtil.logger(afterSaleCustomerPage.getVehicleChassisCode());
                 }
             });

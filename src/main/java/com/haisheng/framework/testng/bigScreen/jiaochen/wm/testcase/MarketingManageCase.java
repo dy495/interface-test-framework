@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operatelog.RecordPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
@@ -266,12 +267,19 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
+            IScene recordPageScene = RecordPageScene.builder().build();
+            int total = visitor.invokeApi(recordPageScene).getInteger("total");
             //删除
             visitor.invokeApi(DeleteVoucherScene.builder().id(voucherId).build());
             //校验
             IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
             JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
             CommonUtil.checkResult(voucherName + " 结果列表", 0, list.size());
+            //删除记录
+            List<JSONObject> recordPageList = util.collectBean(recordPageScene, JSONObject.class);
+            String dataTypeName = recordPageList.stream().map(e -> e.getString("data_type_name")).findFirst().orElse(null);
+            CommonUtil.checkResult("删除记录页面", "优惠券", dataTypeName);
+            CommonUtil.checkResult("删除记录列表", total + 1, recordPageList.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -299,7 +307,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //
+    //ok
     @Test(description = "卡券管理--进行中的卡券作废--状态&变更记录校验")
     public void voucherManage_data_8() {
         try {
@@ -3048,7 +3056,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 JSONObject jsonObject = (JSONObject) e;
                 int id = jsonObject.getInteger("id");
                 String businessType = jsonObject.getString("business_type");
-                IScene shareManagerEditScene = ShareManagerEditScene.builder().awardCustomerRule("ONCE").id(id).taskExplain(EnumDesc.MESSAGE_DESC.getDesc())
+                IScene shareManagerEditScene = ShareManagerEditScene.builder().awardCustomerRule("ONCE").id(id).taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
                         .awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build();
                 visitor.invokeApi(shareManagerEditScene);
             });
@@ -3183,7 +3191,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
+    //ok
     @Test(description = "任务管理--修改分享内容，说明异常")
     public void vipMarketing_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -3196,10 +3204,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             ids.forEach(id -> {
                 String[] taskExplains = {null, EnumDesc.ARTICLE_DESC.getDesc()};
                 Arrays.stream(taskExplains).forEach(desc -> {
-                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(desc)
+                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(desc).dayNumber("9")
                             .awardScore(1000).awardCustomerRule("ONCE").awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
                     String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
-                    String err = StringUtils.isEmpty(desc) ? "success" : "备注只能在0-20";
+                    String err = StringUtils.isEmpty(desc) ? "说明不能为空" : "备注只能在0-20";
                     CommonUtil.checkResult("说明为" + desc, err, message);
                 });
             });
@@ -3210,33 +3218,32 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    //bug
-//    @Test(description = "任务管理--修改分享内容，积分异常")
-//    public void vipMarketing_system_11() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
-//            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
-//            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
-//            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-//            List<Integer> ids = list.stream().map(e -> (JSONObject) e).filter(e -> !e.getString("business_type").equals(AppletCodeBusinessTypeEnum.ACTIVITY_APPLY_PRIORITY.getKey())).map(e -> e.getInteger("id")).collect(Collectors.toList());
-//            ids.forEach(id -> {
-//                Integer[] awardScores = {null};
-//                Arrays.stream(awardScores).forEach(awardScore -> {
-//                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
-//                            .awardScore(awardScore).awardCustomerRule(WechatCustomerTaskAwardLogicRuleEnum.EVERY_TIME.name())
-//                            .awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
-//                    String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
-//                    String err = "";
-//                    CommonUtil.checkResult("积分为" + awardScore, err, message);
-//                });
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("任务管理--修改分享内容，积分异常");
-//        }
-//    }
+    //ok
+    @Test(description = "任务管理--修改分享内容，积分异常")
+    public void vipMarketing_system_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
+            Integer voucherId = Math.toIntExact(voucher.getVoucherId());
+            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
+            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
+            List<Integer> ids = list.stream().map(e -> (JSONObject) e).filter(e -> !e.getString("business_type").equals(AppletCodeBusinessTypeEnum.ACTIVITY_APPLY_PRIORITY.getKey())).map(e -> e.getInteger("id")).collect(Collectors.toList());
+            ids.forEach(id -> {
+                Integer[] awardScores = {null};
+                Arrays.stream(awardScores).forEach(awardScore -> {
+                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
+                            .awardScore(awardScore).awardCustomerRule("ONCE").awardCardVolumeId(voucherId).takeEffectType(TaskEffectTypeEnum.DAY.name()).build();
+                    String message = visitor.invokeApi(shareManagerEditScene, false).getString("message");
+                    String err = "积分不能为空";
+                    CommonUtil.checkResult("积分为" + awardScore, err, message);
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("任务管理--修改分享内容，积分异常");
+        }
+    }
 
     //ok
     @Test(description = "洗车管理--每人的洗车剩余次数+调整记录增加次数=调整记录调整后次数")
