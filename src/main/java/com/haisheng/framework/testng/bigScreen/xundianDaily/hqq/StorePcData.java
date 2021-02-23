@@ -347,7 +347,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
                 //获取收银风控事件列表的异常事件的数量
                 String handle_result = "ABNORMAL";
                 int total = md.cashier_riskPage(shop_id_01, "", "", "", "", handle_result, "", page, size).getInteger("total");
-                Preconditions.checkArgument(abnormal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的正常事件：" + abnormal_num + "！=【收银风控事件】中该门店正常事件的数量：" + total);
+                Preconditions.checkArgument(abnormal_num == total, "收银风控列表门店ID：" + shop_id_01 + "的待处理事件：" + abnormal_num + "！=【收银风控事件】中该门店待处理事件的数量：" + total);
             }
 
         } catch (AssertionError e) {

@@ -189,7 +189,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 //                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
                         "        \"shopType\": \"SHOP_TYPE\",\n" +
                         "        \"orderNumber\": \"13444894484\",\n" +
-                        "        \"memberName\":\"涛涛黑名单（10：57）\",\n" +
+                        "        \"memberName\":\"是青青弄得自动化1513\",\n" +
                         "        \"receipt_type\":\"小票类型\",\n" +
                         "        \"posId\": \"pos-1234586789\",\n" +
                         "        \"commodityList\": [\n" +
@@ -369,7 +369,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================列表页排序按照上个整点计算的今日到访人次排序(人次从大到小排序)======================
      */
-    @Test
+   // @Test
     public void storeListRank() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
