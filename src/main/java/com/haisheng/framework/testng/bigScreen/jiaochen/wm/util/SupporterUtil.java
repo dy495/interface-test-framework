@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionPage;

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletAppointmentActivity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.OperationApproval;

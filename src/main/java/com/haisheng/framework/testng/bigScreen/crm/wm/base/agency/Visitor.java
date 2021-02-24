@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;

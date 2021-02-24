@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,13 +10,18 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumApplyTypeName;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumSubject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.UseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.audit.AuditStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomMessageStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
@@ -30,8 +35,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -50,12 +53,12 @@ import java.util.stream.Collectors;
 /**
  * 营销管理模块测试用例
  */
-public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
+public class MarketingManageCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
     //小程序用户
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_GLY_DAILY;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
+    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_GLY_ONLINE;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具

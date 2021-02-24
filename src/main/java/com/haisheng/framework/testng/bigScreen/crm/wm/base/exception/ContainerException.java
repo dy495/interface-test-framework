@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.exception;
+package com.haisheng.framework.testng.bigScreen.crm.wm.base.exception;
 
 public class ContainerException extends RuntimeException {
     public ContainerException(String message) {

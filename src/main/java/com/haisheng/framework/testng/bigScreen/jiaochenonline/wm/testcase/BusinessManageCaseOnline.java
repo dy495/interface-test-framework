@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -45,10 +45,10 @@ import java.util.stream.Collectors;
 /**
  * 业务管理测试用例
  */
-public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
+public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具

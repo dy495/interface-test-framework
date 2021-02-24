@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.exception;
+package com.haisheng.framework.testng.bigScreen.crm.wm.base.exception;
 
 /**
  * sql创建错误
