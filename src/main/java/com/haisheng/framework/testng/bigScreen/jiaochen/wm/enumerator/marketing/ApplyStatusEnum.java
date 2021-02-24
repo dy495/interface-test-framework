@@ -12,7 +12,7 @@ public enum ApplyStatusEnum {
     AUDITING(0, "审核中"),
     AGREE(1, "已通过"),
     REFUSAL(2, "已拒绝"),
-    CANCEL(3, "已取消"),
+    CANCEL(3, "已撤回"),
     ;
 
     ApplyStatusEnum(Integer id, String name) {

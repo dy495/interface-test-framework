@@ -593,8 +593,20 @@ public class SupporterUtil extends BaseUtil {
      * @param voucherName 卡券名称
      * @return 卡券申请信息
      */
-    public ApplyPage getApplyPage(String voucherName) {
+    public ApplyPage getAuditingApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
+        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
+        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public ApplyPage getApplyPage(String voucherName) {
+        IScene scene = ApplyPageScene.builder().name(voucherName).build();
         List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
         return voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null);
     }
@@ -782,6 +794,28 @@ public class SupporterUtil extends BaseUtil {
      */
     public List<Long> getPackageContainVoucher(Long packageId, Integer kind) {
         return getPackageContainVoucher(packageId).subList(0, kind);
+    }
+
+    public PackageDetail getPackageDetail(Long packageId) {
+        IScene packageDetailScene = PackageDetailScene.builder().id(packageId).build();
+        return JSONObject.toJavaObject(visitor.invokeApi(packageDetailScene), PackageDetail.class);
+    }
+
+    /**
+     * 编辑指定套餐包含的卡券
+     *
+     * @param packageId   套餐 id
+     * @param voucherList 所含卡券列表
+     * @return 套餐名
+     */
+    public String editPackageContainVoucher(Long packageId, JSONArray voucherList) {
+        PackageDetail packageDetail = getPackageDetail(packageId);
+        IScene editPackageScene = EditPackageScene.builder().packageName(packageDetail.getPackageName()).packageDescription(packageDetail.getPackageDescription())
+                .validity(packageDetail.getValidity()).subjectType(packageDetail.getSubjectType()).subjectId(packageDetail.getSubjectId())
+                .voucherList(voucherList).packagePrice(packageDetail.getPackagePrice()).status(true).shopIds(getShopIdList(3))
+                .id(String.valueOf(packageId)).customerUseValidity(packageDetail.getCustomerUseValidity()).build();
+        visitor.invokeApi(editPackageScene);
+        return packageDetail.getPackageName();
     }
 
     /**
@@ -1328,7 +1362,7 @@ public class SupporterUtil extends BaseUtil {
             array = response.getJSONArray("list");
             appletVoucher = array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(e -> e.getString("status_name").equals(voucherUseStatusEnum.getName())).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).findFirst().orElse(null);
             logger.info("id:{},status:{}", id, status);
-        } while (array.size() == 20);
+        } while (appletVoucher == null && array.size() == 20);
         return appletVoucher;
     }
 
@@ -1499,7 +1533,7 @@ public class SupporterUtil extends BaseUtil {
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getInteger("last_value");
             jsonArray = response.getJSONArray("list");
-            list.addAll(jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e,AppletIntegralRecord.class)).collect(Collectors.toList()));
+            list.addAll(jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletIntegralRecord.class)).collect(Collectors.toList()));
         } while (jsonArray.size() == 20);
         return list;
 

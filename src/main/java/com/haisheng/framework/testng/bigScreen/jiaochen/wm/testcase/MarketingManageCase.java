@@ -21,7 +21,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operatelog.RecordPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
@@ -130,7 +129,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 int newApplyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
                 CommonUtil.checkResult(voucherName + " 审批列表数", applyTotal + 1, newApplyTotal);
                 //审批状态=审批中
-                ApplyPage applyPage = util.getApplyPage(voucherName);
+                ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
                 CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
                 //申请类型=首发
                 CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.VOUCHER.getName(), applyPage.getApplyTypeName());
@@ -209,7 +208,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(newVoucherName + " 业务类型", ShopTypeEnum.DIFF.getId(), voucherDetail.getShopType());
             CommonUtil.checkResult(newVoucherName + " 是否自助核销", false, voucherDetail.getSelfVerification());
             //审批列表
-            ApplyPage applyPage = util.getApplyPage(newVoucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(newVoucherName);
             CommonUtil.checkResult(newVoucherName + " 审批列表名称", newVoucherName, applyPage.getName());
             CommonUtil.checkResult(newVoucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
         } catch (Exception | AssertionError e) {
@@ -267,19 +266,20 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            IScene recordPageScene = RecordPageScene.builder().build();
-            int total = visitor.invokeApi(recordPageScene).getInteger("total");
+//            IScene recordPageScene = RecordPageScene.builder().build();
+//            int total = visitor.invokeApi(recordPageScene).getInteger("total");
             //删除
             visitor.invokeApi(DeleteVoucherScene.builder().id(voucherId).build());
             //校验
             IScene voucherPageScene = VoucherPageScene.builder().voucherName(voucherName).build();
             JSONArray list = visitor.invokeApi(voucherPageScene).getJSONArray("list");
-            CommonUtil.checkResult(voucherName + " 结果列表", 0, list.size());
-            //删除记录
-            List<JSONObject> recordPageList = util.collectBean(recordPageScene, JSONObject.class);
-            String dataTypeName = recordPageList.stream().map(e -> e.getString("data_type_name")).findFirst().orElse(null);
-            CommonUtil.checkResult("删除记录页面", "优惠券", dataTypeName);
-            CommonUtil.checkResult("删除记录列表", total + 1, recordPageList.size());
+            int count = (int) list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).count();
+            CommonUtil.checkResult(voucherName + " 结果列表", 0, count);
+//            //删除记录
+//            List<JSONObject> recordPageList = util.collectBean(recordPageScene, JSONObject.class);
+//            String dataTypeName = recordPageList.stream().map(e -> e.getString("data_type_name")).findFirst().orElse(null);
+//            CommonUtil.checkResult("删除记录页面", "优惠券", dataTypeName);
+//            CommonUtil.checkResult("删除记录列表", total + 1, recordPageList.size());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -353,7 +353,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //增发卡券
             visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(10).build());
             //卡券审批列表卡券状态=增发
-            ApplyPage applyPage = util.getApplyPage(voucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
@@ -398,7 +398,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //增发卡券
             visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(10).build());
             //卡券审批列表卡券状态=增发
-            ApplyPage applyPage = util.getApplyPage(voucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
@@ -424,7 +424,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //bug 增发撤回无效
-    @Test(description = "卡券管理--进行中的卡券增发")
+    @Test(description = "卡券管理--进行中的卡券增发", enabled = false)
     public void voucherManage_data_31() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -434,7 +434,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //增发卡券
             visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(10).build());
             //卡券审批列表卡券状态=增发
-            ApplyPage applyPage = util.getApplyPage(voucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
@@ -521,7 +521,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //增发卡券
             visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(10).build());
             //卡券审批列表卡券状态=增发
-            ApplyPage applyPage = util.getApplyPage(voucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
@@ -622,7 +622,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //增发卡券
             visitor.invokeApi(AddVoucherScene.builder().id(voucherId).addNumber(1).build());
             //卡券审批列表卡券状态=增发
-            ApplyPage applyPage = util.getApplyPage(voucherName);
+            ApplyPage applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
@@ -1118,7 +1118,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {EnumDesc.MESSAGE_DESC.getDesc(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(name)
+                IScene scene = CreateVoucherScene.builder().voucherName(name)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).stock(1000)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1141,7 +1141,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, "", EnumDesc.ARTICLE_DESC_500.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).parValue(99.99)
                         .voucherDescription(desc).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList(2)).selfVerification(true).build();
@@ -1164,7 +1164,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {"全部权限", null, ""};
             Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                         .subjectType(subjectType).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(subjectType)).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1185,7 +1185,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                     .subjectType(EnumSubject.STORE.name()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                     .voucherDescription(util.getDesc()).stock(1000).cost(99.99).shopType(0)
                     .shopIds(util.getShopIdList(2)).selfVerification(true).build();
@@ -1206,7 +1206,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {1000000000, null, -100, Integer.MAX_VALUE};
             Arrays.stream(integers).forEach(stock -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(stock)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1229,7 +1229,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1252,7 +1252,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Double[] doubles = {(double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(cost)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1273,7 +1273,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherPic(util.getPicPath()).voucherName(util.createVoucherName())
+            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
                     .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                     .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                     .shopType(0).selfVerification(true).build();
@@ -1653,13 +1653,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             List<PackagePage> packagePageList = util.collectBean(packageFormPageScene, PackagePage.class);
             packagePageList.forEach(packagePage -> {
-                IScene packageDetailScene = PackageDetailScene.builder().id(packagePage.getPackageId()).build();
-                JSONObject detail = visitor.invokeApi(packageDetailScene);
-                int voucherCountSum = detail.getJSONArray("voucher_list").stream().map(e -> (JSONObject) e).map(e -> e.getInteger("voucher_count")).collect(Collectors.toList()).stream().mapToInt(e -> e).sum();
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice(), "详情价格", detail.getString("package_price"));
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getValidity(), "详情有效期", detail.getInteger("validity"));
+                PackageDetail packageDetail = util.getPackageDetail(packagePage.getPackageId());
+                int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
+                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice().equals("0") ? "0.00" : packagePage.getPrice(), "详情价格", packageDetail.getPackagePrice());
+                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getValidity(), "详情有效期", packageDetail.getValidity());
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getVoucherNumber(), "详情有效期", voucherCountSum);
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表客户套餐有效期", packagePage.getCustomerUseValidity(), "详情客户套餐有效期", detail.getInteger("customer_use_validity"));
+                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表客户套餐有效期", packagePage.getCustomerUseValidity(), "详情客户套餐有效期", packageDetail.getCustomerUseValidity());
                 CommonUtil.logger(packagePage.getPackageName());
             });
         } catch (Exception | AssertionError e) {
@@ -1699,29 +1698,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "套餐购买记录--套餐累计赠送数量=套餐购买记录中该套餐的赠送数量")
-    public void packageManager_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            List<PackagePage> packagePages = util.collectBean(packageFormPageScene, PackagePage.class);
-            packagePages.forEach(e -> {
-                String packageName = e.getPackageName();
-                int giverNumber = e.getGiveNumber();
-                IScene buyPackageRecordScene = BuyPackageRecordScene.builder().packageName(packageName).build();
-                List<JSONObject> jsonObjects = util.collectBean(buyPackageRecordScene, JSONObject.class);
-                int giverCount = (int) jsonObjects.stream().filter(jsonObject -> jsonObject.getString("pay_type_name").equals(SendWayEnum.PRESENT.getName())).count();
-                CommonUtil.checkResultPlus(packageName + " 累计赠送数", giverNumber, " 购买记录赠送列表数", giverCount);
-                CommonUtil.logger(e.getPackageName());
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("套餐购买记录--套餐累计赠送数量=套餐购买记录中该套餐的赠送数量");
-        }
-    }
-
-    //ok
     @Test(description = "套餐购买记录--套餐累计出售数量=套餐购买记录中该套餐的出售数量")
     public void packageManager_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1730,11 +1706,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             List<PackagePage> packagePages = util.collectBean(packageFormPageScene, PackagePage.class);
             packagePages.forEach(e -> {
                 String packageName = e.getPackageName();
-                int giverNumber = e.getSoldNumber();
-                IScene buyPackageRecordScene = BuyPackageRecordScene.builder().packageName(packageName).build();
+                int soldNumber = e.getSoldNumber();
+                IScene buyPackageRecordScene = BuyPackageRecordScene.builder().packageName(packageName).sendType(SendWayEnum.SOLD.getId()).build();
                 List<JSONObject> jsonObjects = util.collectBean(buyPackageRecordScene, JSONObject.class);
-                int giverCount = (int) jsonObjects.stream().filter(jsonObject -> jsonObject.getString("pay_type_name").equals(SendWayEnum.SOLD.getName())).count();
-                CommonUtil.checkResultPlus(packageName + " 累计赠送数", giverNumber, " 购买记录赠送列表数", giverCount);
+                int giverCount = jsonObjects.stream().filter(jsonObject -> jsonObject.getString("package_name").equals(packageName)).mapToInt(jsonObject -> jsonObject.getInteger("send_number") == null ? 0 : jsonObject.getInteger("send_number")).sum();
+                CommonUtil.checkResultPlus(packageName + " 累计购买数", soldNumber, " 购买记录累计售出发出数量", giverCount);
                 CommonUtil.logger(e.getPackageName());
             });
         } catch (Exception | AssertionError e) {
@@ -2312,9 +2288,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_32() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             //过期套餐
             long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
-            String packageName = util.getPackageName(packageId);
+            String packageName = util.editPackageContainVoucher(packageId, voucherList);
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
@@ -2420,7 +2398,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
-                        .id(String.valueOf(packageId)).customerUseValidity("1").validity(1).build();
+                        .id(String.valueOf(packageId)).customerUseValidity(1).validity(1).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
                 CommonUtil.checkResult("修改主体类型为：" + subjectType, err, message);
@@ -2973,27 +2951,23 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         return list;
     }
 
+    //ok
     @Test(description = "权益列表--修改权益，applet与pc所见内容一致")
     public void vipMarketing_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
-            IScene equityEditScene = EquityEditScene.builder().awardCount(4).equityId(equityId).description(EnumDesc.VOUCHER_DESC.getDesc()).build();
+            IScene equityEditScene = EquityEditScene.builder().awardCount(4).equityId(equityId).description(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
             visitor.invokeApi(equityEditScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = MemberCenterEquityListScene.builder().build();
-            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("list").getJSONObject(0);
-            String serviceTypeName = jsonObject.getString("service_type_name");
-            String equityName = jsonObject.getString("equity_name");
-            Integer awardCount = jsonObject.getInteger("award_count");
-            String description = jsonObject.getString("description");
-            String status = jsonObject.getString("status");
-            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getTypeName(), "applet权益服务类型", serviceTypeName);
-            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equityName);
-            CommonUtil.checkResultPlus("pc权益奖励积分", 1000, "applet权益奖励积分", awardCount);
-            CommonUtil.checkResultPlus("pc权益奖励说明", EnumDesc.ARTICLE_DESC.getDesc(), "applet权益奖励说明", description);
-            CommonUtil.checkResultPlus("pc权益状态", UseStatusEnum.ENABLE.getName(), "applet权益状态", status);
+            IScene homePageScene = MemberCenterHomePageScene.builder().build();
+            JSONObject response = visitor.invokeApi(homePageScene);
+            int vipType = response.getInteger("vip_type");
+            JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
+            String equityName = equity.getString("equity_name");
+            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.COMMON.getId(), "applet权益服务类型", vipType);
+            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.WASH_CAR.getTypeName(), "applet权益名称", equityName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

@@ -99,7 +99,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
+    //日常有问题
     @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
     public void IntegralOrder_data_2() {
         logger.logCaseStart(caseResult.getCaseName());

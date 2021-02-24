@@ -21,7 +21,7 @@ public enum AppletCodeBusinessTypeEnum {
     /**
      * 洗车
      */
-    WASH_CAR("00", "洗车"),
+    WASH_CAR("00", "免费洗车"),
 
     /**
      * 生日积分
