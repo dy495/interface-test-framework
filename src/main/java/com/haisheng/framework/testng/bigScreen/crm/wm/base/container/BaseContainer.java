@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.container;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.SqlCreateException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.SqlCreateException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.property.BasicProperty;
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.sql;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.ContainerConstants;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.SqlCreateException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.SqlCreateException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

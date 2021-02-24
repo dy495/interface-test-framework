@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.EvaluatePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
@@ -165,7 +165,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             int receptionId = receptionPage.getId();
             user.loginApp(ADMINISTRATOR);
-            ReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
             IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
             visitor.invokeApi(receptionReceptorChangePageScene);
@@ -281,7 +281,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             int receptionId = receptionPage.getId();
             user.loginApp(ADMINISTRATOR);
-            ReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
             IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
             visitor.invokeApi(receptionReceptorChangePageScene);
