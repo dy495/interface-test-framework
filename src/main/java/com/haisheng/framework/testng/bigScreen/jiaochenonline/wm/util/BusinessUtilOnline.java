@@ -3,11 +3,13 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletAppointmentActivity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.OperationApproval;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.OperationRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.*;
@@ -26,7 +28,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.CommonUtil;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
  * 业务场景工具
  */
 public class BusinessUtilOnline {
-    public static final Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
+    public static final Logger logger = LoggerFactory.getLogger(BusinessUtilOnline.class);
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     private static final int size = 100;
 
@@ -919,8 +920,8 @@ public class BusinessUtilOnline {
         return listSize;
     }
 
-    public List<AppointmentActivity> getAppletArticleList() {
-        List<AppointmentActivity> list = new ArrayList<>();
+    public List<AppletAppointmentActivity> getAppletArticleList() {
+        List<AppletAppointmentActivity> list = new ArrayList<>();
         Long lastValue = null;
         JSONArray array;
         do {
@@ -928,7 +929,7 @@ public class BusinessUtilOnline {
             JSONObject response = jc.invokeApi(builder.build());
             lastValue = response.getLong("last_value");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AppointmentActivity.class)).collect(Collectors.toList()));
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSON.parseObject(JSON.toJSONString(e), AppletAppointmentActivity.class)).collect(Collectors.toList()));
         } while (array.size() == 20);
         return list;
     }

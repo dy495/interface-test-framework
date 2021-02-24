@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class VoucherDetail implements Serializable {
+
     /**
      * 卡券名称
      */
@@ -121,4 +122,10 @@ public class VoucherDetail implements Serializable {
      */
     @JSONField(name = "self_verification")
     private Boolean selfVerification;
+
+    /**
+     * 成本
+     */
+    @JSONField(name = "cost")
+    private String cost;
 }

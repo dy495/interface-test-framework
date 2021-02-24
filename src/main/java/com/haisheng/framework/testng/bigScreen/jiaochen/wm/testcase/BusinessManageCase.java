@@ -7,16 +7,17 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AfterSaleCustomerPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Import.WorkOrderScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
@@ -27,7 +28,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -165,6 +165,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
+            int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ADMINISTRATOR);
@@ -187,6 +188,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+            CommonUtil.checkResult("小程序我的消息数", appletMessageMessageNum + 1, util.getAppletMessageNum());
             String voucherCode = voucherSendRecord.getVoucherCode();
             AppletVoucherInfo appletVoucherInfo = util.getAppletPackageVoucherInfo(voucherCode);
             CommonUtil.checkResult("小程序卡券指定车辆", platNumber, appletVoucherInfo.getPlateNumber());
@@ -270,6 +272,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
+            int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ADMINISTRATOR);
@@ -292,6 +295,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+            CommonUtil.checkResult("小程序我的消息数", appletMessageMessageNum + 1, util.getAppletMessageNum());
             String voucherCode = voucherSendRecord.getVoucherCode();
             AppletVoucherInfo appletVoucherInfo = util.getAppletPackageVoucherInfo(voucherCode);
             CommonUtil.checkResult("小程序卡券指定车辆", platNumber, appletVoucherInfo.getPlateNumber());
@@ -397,6 +401,33 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             saveData("客户管理--导入一次工单，【导入记录】+1");
         }
     }
+
+//    @Test(description = "客户管理--小程序【我的爱车】新加一个爱车,售后客户+1")
+//    public void customerManager_data_2() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        String carId = null;
+//        try {
+//            String platNumber = "皖H123456";
+//            List<Long> shopList = util.getShopIdList();
+//            AfterSaleCustomerPageScene.builder().
+//            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder builder = AfterSaleCustomerPageScene.builder().customerPhone(marketing.getPhone());
+//            int customerNum = getCustomerNum(builder, shopList);
+//            //小程序添加爱车
+//            user.loginApplet(APPLET_USER_ONE);
+//            carId = new JcFunction().appletAddCar(platNumber);
+//            //添加车辆后，客户列表数
+//            user.login(administrator);
+//            int newCustomerNum = getCustomerNum(builder, shopList);
+//            CommonUtil.valueView(customerNum, newCustomerNum);
+//            Preconditions.checkArgument(newCustomerNum == customerNum + 1, "添加爱车前售后客户列表数：" + customerNum + "添加爱车后售后客户列表数：" + newCustomerNum);
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            user.loginApplet(appletUser);
+//            jc.appletCarDelst(carId);
+//            saveData("客户管理--小程序【我的爱车】新加一个爱车,售后客户+1");
+//        }
+//    }
 
     //逻辑不对
     @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和", enabled = false)

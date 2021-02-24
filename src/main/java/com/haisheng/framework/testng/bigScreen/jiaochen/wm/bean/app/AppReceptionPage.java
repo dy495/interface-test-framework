@@ -6,13 +6,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 跟进列表
+ * 接待列表
  *
  * @author wangmin
  * @date 2021/1/29 15:20
  */
 @Data
-public class FollowUpPage implements Serializable {
+public class AppReceptionPage implements Serializable {
     @JSONField(name = "id")
     private Integer id;
     @JSONField(name = "shop_id")
@@ -23,8 +23,8 @@ public class FollowUpPage implements Serializable {
     private String customerPhone;
 
     /**
-     * 评价时间
+     * 预约到达时间
      */
-    @JSONField(name = "evaluate_time")
-    private String evaluateTime;
+    @JSONField(name = "arrive_time")
+    private String arriveTime;
 }

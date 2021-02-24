@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -12,8 +13,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerLis
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -34,9 +35,10 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
+    Visitor visitor = new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
     private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
-    BusinessUtil util = new BusinessUtil();
+    SupporterUtil util = new SupporterUtil(visitor);
     LoginUtil user = new LoginUtil();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -77,7 +79,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
         //set shop id
         commonConfig.shopId = "45973";
-        commonConfig.roleId=pp.roleId;
+        commonConfig.roleId = pp.roleId;
         beforeClassInit(commonConfig);
         jc.appletLoginToken(pp.appletTocken);
         logger.debug("jc: " + jc);
@@ -503,7 +505,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //登录门店查询数据
             commonConfig.shopId = "-1";
             String voucherName = util.getVoucherName(pp.voucherId);
-            VoucherPage voucher = util.getVoucherInfo(voucherName);
+            VoucherPage voucher = util.getVoucherPage(voucherName);
             //累计发出数
             Long cumulativeDelivery = voucher.getCumulativeDelivery();
             //发卡记录数
@@ -522,7 +524,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //查询新数据
             commonConfig.shopId = "-1";
             //累计发出数
-            VoucherPage newVoucher = util.getVoucherInfo(voucherName);
+            VoucherPage newVoucher = util.getVoucherPage(voucherName);
             Long newCumulativeDelivery = newVoucher.getCumulativeDelivery();
             //发卡记录数
             int newSendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
@@ -626,7 +628,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //小程序消息最新一条信息校验
             jc.appletLoginToken(pp.appletTocken);
             JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
-            Long id=message.getLong("id");
+            Long id = message.getLong("id");
 
             String messageName = jc.appletMessageDetail(id.toString()).getString("content");
             Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
