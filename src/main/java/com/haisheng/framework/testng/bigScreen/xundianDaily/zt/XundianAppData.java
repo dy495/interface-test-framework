@@ -169,7 +169,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             saveData("巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容");
         }
     }
-
+ 
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test

@@ -22,7 +22,7 @@ public class EditPackageScene extends BaseScene {
     private final String id;
     private final String subjectType;
     private final Long subjectId;
-    private final String customerUseValidity;
+    private final Integer customerUseValidity;
 
     @Override
     public JSONObject getJSONObject() {

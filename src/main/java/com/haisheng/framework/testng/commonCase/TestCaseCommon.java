@@ -13,7 +13,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
@@ -595,8 +595,8 @@ public class TestCaseCommon {
      */
     public String dingPushResult(String str) {
         String result = str;
-        for (EnumProduce p : EnumProduce.values()) {
-            if (str.contains(p.name())) {
+        for (EnumTestProduce p : EnumTestProduce.values()) {
+            if (str.contains(p.getAbbreviation())) {
                 result = CommonUtil.replace(str, "_");
             }
         }

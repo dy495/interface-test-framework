@@ -66,37 +66,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //客流分析搜索
-    @Test
-    public void ShopperTrak() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray type = new JSONArray();
-            type.add("NORMAL");
-            //获取list
-            JSONArray list = md.customerFlowList("110000",type,"AI-Test(门店订单录像)","徐鹏",null,null,1,10,null).getJSONArray("list");
-            //获取district_code,type,shop_name
-            for(int i=0;i<=list.size();i++){
-                String district_code = list.getJSONObject(i).getString("district_code");
-                String district_name = list.getJSONObject(i).getString("district_name");
-                String type1 = list.getJSONObject(i).getString("type");
-                String shop_name = list.getJSONObject(i).getString("name");
-                String manager_name = list.getJSONObject(i).getString("manager_name");
-                checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
-            }
-
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("通过搜索框输入==搜索出来门店的内容");
-        }
-    }
-
-
 
 
     //图片中心总数==展示的数量

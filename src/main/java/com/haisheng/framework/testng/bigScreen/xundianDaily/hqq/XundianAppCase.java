@@ -324,7 +324,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "将【待办事项】中[未完成]中的定检任务中是否有图片")
+    //@Test(description = "将【待办事项】中[未完成]中的定检任务中是否有图片")
     public void dealAfterData_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

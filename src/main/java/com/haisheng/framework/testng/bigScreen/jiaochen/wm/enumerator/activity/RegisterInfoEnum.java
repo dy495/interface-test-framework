@@ -4,15 +4,19 @@ import lombok.Getter;
 
 public enum RegisterInfoEnum {
 
-    PHONE(0,"手机号"),
-    NAME(1,"姓名"),
-    REGISTER_COUNT(2,"报名人数"),
-    EMAIL(3,"邮箱"),
+    NAME(1, "姓名"),
+    PHONE(2, "手机号"),
+    GENDER(3, "性别"),
+    AGE(4, "年龄"),
+    EMAIL(5, "邮箱"),
+    REGISTER_COUNT(6, "报名人数"),
     ;
-    RegisterInfoEnum(Integer id,String name){
-        this.id=id;
-        this.name=name;
+
+    RegisterInfoEnum(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
+
     @Getter
     private final Integer id;
     @Getter

@@ -24,6 +24,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseFixedPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
@@ -629,8 +631,7 @@ public class BusinessUtil extends BaseUtil {
         Integer receptionId = jsonObject.getInteger("reception_id");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
-        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager
-                .PurchaseFixedPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = ReceptionPurchaseFixedPackageScene.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
                 .plateNumber(plateNumber).packageId(getPackageId(EnumVP.ONE.getPackageName()))
                 .packagePrice("1.11").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectId(getSubjectType()))
@@ -652,8 +653,7 @@ public class BusinessUtil extends BaseUtil {
         Integer receptionId = jsonObject.getInteger("reception_id");
         String plateNumber = jsonObject.getString("plate_number");
         //购买套餐
-        IScene purchaseScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.
-                PurchaseTemporaryPackage.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
+        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerPhone("").carType(EnumCarType.RECEPTION_CAR.name())
                 .plateNumber(plateNumber).voucherList(getVoucherInfo(EnumVP.ONE.getVoucherName(), 1))
                 .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectId(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")

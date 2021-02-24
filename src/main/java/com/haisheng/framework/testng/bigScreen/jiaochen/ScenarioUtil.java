@@ -150,6 +150,17 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(path, object);
     }
 
+    //图片上传
+    public JSONObject pcFileUploadNew(String pic) {
+        String path = "/jiaochen/pc/file/upload";
+        JSONObject object = new JSONObject();
+        object.put("permanent_pic_type", 0);
+        object.put("pic", pic);
+
+
+        return invokeApi(path, object);
+    }
+
     //pc接待管理 -> 列表
     public JSONObject pcReceptionManagePage(String shop_id, String page, String size) {
         String path = "/jiaochen/pc/reception-manage/page";
@@ -3453,7 +3464,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("contact", er.contact);
         json1.put("gender", er.gender);
         json1.put("birthday", er.birthday);
-        json1.put("shipping_address", er.shipping_address);
+//        json1.put("shipping_address", er.shipping_address);
         if (er.parmkey != null) {
             json1.put(er.parmkey, er.parmvalue);
         }
@@ -3813,7 +3824,7 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
 
     public JSONObject SalesCreate(pccreateStoreSales er) {
-        String url = "/business-jiaochen/pc/store/sales/create";
+        String url = "/jiaochen/pc/store/sales/create";
         JSONObject json1=new JSONObject();
         json1.put("sales_phone",er.sales_phone);
         json1.put("sales_name",er.sales_name);
@@ -3825,7 +3836,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1,er.checkcode);
     }
     public JSONObject SalesList(String page,String size,String sales_phone, String shop_id) {
-        String url = "/business-jiaochen/pc/store/sales/create";
+        String url = "/jiaochen/pc/store/sales/page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -4112,12 +4123,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品类
      * @date :2021/1/20 14:00
      **/
-    public JSONObject categoryDel(Long id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject categoryDel(Long id, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-category";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("page",page);
-        json1.put("size",size);
         return invokeApi(url,json1,chkcode);
     }
 
@@ -4202,12 +4211,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除商品品牌
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandDel(Long id, Integer page, Integer size, Boolean chkcode) {
+    public JSONObject BrandDel(Long id, Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/delete-brand";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("page",page);
-        json1.put("size",size);
+
         return invokeApi(url,json1,chkcode);
     }
 
@@ -4291,7 +4299,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :商品管理列表
      * @date :2021/1/20 14:00
      **/
-    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Integer goods_brand,String goods_status,
+    public JSONObject goodsManagePage(Integer page, Integer size,String goods_name,Long goods_brand,String goods_status,
                                       Integer first_category,Integer second_category,Integer third_category) {
         String url = "/jiaochen/pc/integral-mall/goods-manage-page";
         JSONObject json1=new JSONObject();

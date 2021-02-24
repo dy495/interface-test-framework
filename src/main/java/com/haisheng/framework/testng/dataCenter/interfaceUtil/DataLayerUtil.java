@@ -141,7 +141,7 @@ public class DataLayerUtil extends TestCaseCommon {
     public JSONObject customer_dealData(String shop_id, String trans_id, String trans_time, List trans_type,String user_id,double total_price
             ,double real_price,String openid,String orderNumber,String memberName,String receipt_type,String posId,JSONArray commodityList
     ) throws Exception {
-        String url = "/business/bind/TRANS_INFO_RECEIVE/v1.0";
+        String url = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
         json.put("trans_id", trans_id);

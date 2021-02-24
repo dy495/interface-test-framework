@@ -45,6 +45,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     Random random = new Random();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
+    CommonConfig commonConfig = new CommonConfig();
+
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -53,7 +55,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
 
 
 
@@ -81,16 +82,34 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.shopId = pp.shopIdZ;
+        commonConfig.roleId="603";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.pcLogin(pp.gwname, pp.gwpassword);
+        pcLogin(pp.gwname, pp.gwpassword,pp.roleidJdgw);
         qaDbUtil.openConnection();
 
-
+    }
+    //app登录
+    public void appLogin(String username, String password,String roleId) {
+        String path = "/jiaochen/login-m-app";
+        JSONObject object = new JSONObject();
+        object.put("phone", username);
+        object.put("verification_code", password);
+        commonConfig.roleId=roleId;
+        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
     }
 
+    //pc登录
+    public void pcLogin(String phone, String verificationCode,String roleId) {
+        String path = "/jiaochen/login-pc";
+        JSONObject object = new JSONObject();
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
+        commonConfig.roleId=roleId;
+        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+    }
     @AfterClass
     @Override
     public void clean() {
@@ -138,7 +157,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             pccreateStoreSales er=new pccreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
-            er.sales_phone=pp.shopIdZ;
+            er.shop_id=pp.shopIdZ;
             jc.SalesCreate(er);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -156,7 +175,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             int code=jc.SalesCreate(er).getInteger("code");
             Preconditions.checkArgument(code==1001,"新建分销员必填项不填异常");
             er.sales_phone="";
-            er.sales_phone=pp.shopIdZ;
+            er.shop_id=pp.shopIdZ;
             int code2=jc.SalesCreate(er).getInteger("code");
             Preconditions.checkArgument(code2==1001,"新建分销员必填项不填异常");
         } catch (AssertionError | Exception e) {
@@ -172,19 +191,22 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             pccreateStoreSales er=new pccreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
-            er.sales_phone=pp.shopIdZ;
+            er.shop_id=pp.shopIdZ;
             er.checkcode=false;
             //名字51
-            er.dept_name="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十分销1部";
+            er.dept_name="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十分销1部";
             er.job_name="分销员";
             int code=jc.SalesCreate(er).getInteger("code");
-            Preconditions.checkArgument(code==1001,"分销员名51异常");
+            Preconditions.checkArgument(code==1001,"部门名21异常");
             //岗位21
             er.dept_name="分销1部";
             er.job_name="一二三四五六七八九十一二三四五六七分销员1";
             int code2=jc.SalesCreate(er).getInteger("code");
-            Preconditions.checkArgument(code2==1001,"所属部门名21异常");
-
+            Preconditions.checkArgument(code2==1001,"岗位名21异常");
+            er.sales_name="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十分销1部";
+            er.job_name="分销员";
+            int code3=jc.SalesCreate(er).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"分销员名51异常");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -199,6 +221,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             pccreateStoreSales er=new pccreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
+            er.shop_id=pp.shopIdZ;
             er.sales_phone=phone;
             er.dept_name="分销1部";
             er.job_name="分销员";

@@ -208,6 +208,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_role_add_work2(String name, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             JSONArray moduleId = pp.roleList;
             int totalB = jc.roleListFilterManage("", "1", "10", "", "").getInteger("total");
 
@@ -239,6 +240,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_role_add_workAb(String name, String res, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             JSONArray moduleId = pp.roleList;
             String description = "自动化测试给店长自动化用的角色";
 
@@ -303,7 +305,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    @Test(description = "新增姓名异常")    //接口未作限制
+    @Test(description = "新增姓名异常")    //接口未作限制
     public void Jc_accountAb() {
         try {
             JSONArray r_dList = pf.getroleLlist();
@@ -344,11 +346,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Test(description = "重复电话异常")    //ok
     public void Jc_accountAb3() {
         try {
-            JSONArray r_dList = new JSONArray();
-            r_dList.add("417");
+            JSONArray r_dList = pf.getroleLlist();
 
             JSONArray shop_list = new JSONArray();
-            shop_list.add("46012");
             String phone=pp.gwphone;
             //用EMAIL新增一个账号
             int code= jc.organizationAccountAdd(name, phone, r_dList, shop_list,false).getInteger("code");
@@ -426,7 +426,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "创建账号必填项不填")    //角色列表和门店列表接口未作限制，前端作了限制
+//    @Test(description = "创建账号必填项不填")    //角色列表和门店列表接口未作限制，前端作了限制
     public void Jc_account7() {
         try {
             JSONArray r_dList = new JSONArray();
@@ -439,8 +439,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             String emptyList[]={"name",
                                 "phone",
-//                                "role_list",
-//                                "shop_list"
+                                "role_list",
+                                "shop_list"
             };
             for(int i=0;i<emptyList.length;i++){
                 int code= jc.organizationAccountAdd2(name, phone, r_dList, shop_list,false,emptyList[i]).getInteger("code");//用EMAIL新增一个账号

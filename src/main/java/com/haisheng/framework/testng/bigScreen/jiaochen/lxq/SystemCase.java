@@ -882,8 +882,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {info.xitong45auth_id,info.xitong45auth_list,"13402050013","角色管理+员工管理；数据权限=全部；主体类型权限=区域；无功能权限"},
 //                {info.kaquan45auth_id,info.kaquan45auth_list,"13402050014","卡券管理+核销人员tab+核销记录tab；数据权限=全部；主体类型权限=门店；无功能权限"},
 //                {info.kaquan123auth_id,info.kaquan123auth_list,"13402050014","卡券管理+卡券表单tab+发卡记录tab+卡券申请页面；数据权限=全部；主体类型权限=品牌；无功能权限"},
-                {info.taocannoauth_id,info.taocannoauth_list,"13402050015","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
-                {info.taocanauth_id,info.taocanauth_list,"13402050015","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
+                {info.taocannoauth_id,info.taocannoauth_list,"13402050017","套餐管理+套餐表单tab+套餐购买记录tab+无确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
+                {info.taocanauth_id,info.taocanauth_list,"13402050017","套餐管理+套餐表单tab+套餐购买记录tab+有确认支付按钮；数据权限=全部；主体类型权限=门店；无功能权限"},
 //                {info.nxauth_id,info.nxauth_list,"13402050016","内容运营+消息管理；数据权限=全部；主体类型权限=集团；无功能权限"},
 
         };
@@ -1146,7 +1146,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+
+    //@Test     --------没改
     public void categoryFalse1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1179,7 +1180,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    //@Test--------没改
     public void categoryFalse2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1226,7 +1227,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             jc.categoryChgStatus(id,false);
 
             //编辑品类-更换图片
-            String logo2 = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+            String logo2 = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             int code2 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",logo2).getInteger("code");
             Preconditions.checkArgument(code2==1000,"编辑重新上传图片状态码期待1000，实际"+code2);
 
@@ -1236,7 +1237,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code3==1000,"编辑不传图片状态码期待1000，实际"+code3);
 
             //删除启用品类
-            jc.categoryDel(id,1,1,true);
+            jc.categoryDel(id,true);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1293,8 +1294,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,"一级品类状态=开启，状态码为"+code);
             Preconditions.checkArgument(code2==1000,"一级品类状态=关闭，状态码为"+code);
             //删除停用品类
-            jc.categoryDel(id,1,1,true);
-            jc.categoryDel(id2,1,1,true);
+            jc.categoryDel(id,true);
+            jc.categoryDel(id2,true);
 
 
         } catch (AssertionError e) {
@@ -1311,7 +1312,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+            String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             int code = jc.categoryCreate(false,"name","SECOND_CATEGORY","99999",logo,null).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
@@ -1331,13 +1332,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             String name = info.stringsix +"aa";
 
-            Long id = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),null).getLong("id");
+            Long id = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),null).getJSONObject("data").getLong("id");
 
             int code = jc.categoryCreate(false,name,level,fatherid,info.getLogo(),null).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
             //删除品类
-            jc.categoryDel(id,1,1,true);
+            jc.categoryDel(id,true);
 
 
         } catch (AssertionError e) {
@@ -1369,7 +1370,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
 
             //删除品类
-            jc.categoryDel(id,1,1,true);
+            jc.categoryDel(id,true);
 
 
         } catch (AssertionError e) {
@@ -1387,7 +1388,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+            String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             //不填写品类名称
             int code = jc.categoryCreate(false,null,"FIRST_CATEGORY","",logo,null).getInteger("code");
             Preconditions.checkArgument(code==1001,"不填写品类名称,状态码期待1001，实际"+code);
@@ -1524,11 +1525,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void brandAdd(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = System.currentTimeMillis();
-            int code = jc.BrandCreat(false,id,name,desc,info.getLogo()).getInteger("code");
-            Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
 
-            jc.BrandDel(id,1,1,true);
+            int code = jc.BrandCreat(false,null,name,desc,info.getLogo()).getInteger("code");
+            Long id = jc.BrandPage(1,1,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+            Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
+            jc.BrandDel(id,true);
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1547,15 +1549,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //@Test(dataProvider = "BRANDADDERR")
+    @Test(dataProvider = "BRANDADDERR")
     public void brandAddErr(String name, String desc,String a) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = System.currentTimeMillis();
-            int code = jc.BrandCreat(false,id,name,desc,info.getLogo()).getInteger("code");
+
+            int code = jc.BrandCreat(false,null,name,desc,info.getLogo()).getInteger("code");
             Preconditions.checkArgument(code==1001,a+"状态码期待1001，实际"+code);
 
-            jc.BrandDel(id,1,1,true);
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1575,17 +1577,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    @Test
     public void brandAddErr1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = System.currentTimeMillis();
-            String name = System.currentTimeMillis() + "重复";
-            jc.BrandEdit(false,id,name,name,info.getLogo());
-            int code = jc.BrandEdit(false,id,name,name,info.getLogo()).getInteger("code");
-            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
 
-            jc.BrandDel(id,1,1,true);
+            String name = System.currentTimeMillis() + "重复";
+            Long id = jc.BrandCreat(false,null,name,name,info.getLogo()).getJSONObject("data").getLong("id");
+
+            int code = jc.BrandCreat(false,null,name,name,info.getLogo()).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+            jc.BrandDel(id,true);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1620,12 +1622,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    @Test
     public void goodFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             //todo
+            JSONArray list  = jc.BrandList().getJSONArray("list");
+            if (list.size()>0){
+                Long id= list.getJSONObject(0).getLong("id");
+                String brandname = list.getJSONObject(0).getString("brand_name");
+                JSONArray goodlist = jc.goodsManagePage(1,10,null,id,null,null,null,null).getJSONArray("list");
+                for (int i = 0 ; i < goodlist.size();i++){
+                    JSONObject obj = goodlist.getJSONObject(i);
+                    String search = obj.getString("belongs_brand");
+                    Preconditions.checkArgument(search.equals(brandname),"搜索"+brandname+", 结果包含"+search);
+                }
+            }
             //要去下拉框的接口
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1636,13 +1649,18 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
-    public void goodFilter3() {
+    @Test(dataProvider = "Status")
+    public void goodFilter3(String status, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            //todo
-            //要去下拉框的接口
+            JSONArray goodlist = jc.goodsManagePage(1,10,null,null,status,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < goodlist.size();i++){
+                JSONObject obj = goodlist.getJSONObject(i);
+                String search = obj.getString("goods_status_name");
+                Preconditions.checkArgument(search.equals(name),"搜索"+name+", 结果包含"+search);
+            }
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1650,6 +1668,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("PC【商品管理】根据筛选栏-商品状态搜索");
         }
+    }
+
+    @DataProvider(name = "Status")
+    public Object[] searchStatus(){
+        return new String[][] {
+                {"UP","上架"},
+                {"DOWN","下架"},
+        };
     }
 
     //@Test
@@ -1696,7 +1722,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+   // @Test
     public void goodUp() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1709,10 +1735,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(obj.getString("goods_status_name").equals("启用"),"启用后列表商品状态不是启用");
                 }
             }
-//            //查看小程序是否有该商品
-//
-//            JSONArray appletlist = jc.appletMallCommidityList(100,null,null,null,true).getJSONArray("list");
-//            Boolean isexist = false;
+            //查看小程序是否有该商品
+
+            JSONArray appletlist = jc.appletMallCommidityList(100,null,null,null,true).getJSONArray("list");
+            Boolean isexist = false;
 //            for (int j = 0 ; j < appletlist.size();j++){
 //                JSONObject obj = list.getJSONObject(j);
 //                if (obj.getInteger("id")==info.goods_id){
@@ -1720,7 +1746,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //                    break;
 //                }
 //            }
-//            Preconditions.checkArgument(isexist==true,"小程序未展示该商品");
+            Preconditions.checkArgument(isexist==true,"小程序未展示该商品");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1812,8 +1838,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //积分兑换
 
-    //todo 积分兑换筛选栏 ok
-    //@Test(dataProvider = "exchangeType")
+
+    @Test(dataProvider = "exchangeType")
     public void exchangeFilter1(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1839,7 +1865,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //@Test(dataProvider = "exchangeStatus")
+    @Test(dataProvider = "exchangeStatus")
     public void exchangeFilter2(String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1867,7 +1893,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    //@Test(dataProvider = "BRANDNAME")
+    @Test(dataProvider = "BRANDNAME")
     public void exchangeFilter3(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2426,7 +2452,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-           String logo = jc.pcFileUpload(new ImageUtil().getImageBinary(filePath),true,null).getString("pic_path");
+           String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

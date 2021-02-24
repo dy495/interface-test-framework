@@ -42,5 +42,10 @@ public class AppletVoucherInfo implements Serializable {
     @JSONField(name = "status_name")
     private String statusName;
 
+    /**
+     * 指定车辆
+     */
+    @JSONField(name = "plate_number")
+    private String plateNumber;
 
 }

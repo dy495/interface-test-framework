@@ -12,6 +12,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.testDriverCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.appointLimit"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.AppletManagerCase"/>
         </classes>
     </test>
 </suite>

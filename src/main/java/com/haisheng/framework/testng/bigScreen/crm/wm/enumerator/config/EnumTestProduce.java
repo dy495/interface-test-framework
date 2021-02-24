@@ -16,7 +16,6 @@ public enum EnumTestProduce {
 
     CRM_ONLINE_PORSCHE("汽车-保时捷 保时捷线上 ", "", CRM_ONLINE.getAddress(), "12732", "BSJ", ""),
 
-
     JIAOCHEN_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
 
     JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/24/page-frame.html", "http://nb.jiaochenclub.com/", "-1", "JC", ""),

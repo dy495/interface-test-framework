@@ -199,7 +199,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //pc登录  预约记录页该顾问今日数据
-            jc.pcLogin(pp.jdgw, pp.gwpassword);
+            pcLogin(pp.jdgw, pp.gwpassword,pp.roleidJdgw);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("100").service_sale_id(pp.userid)
                     .shop_id(pp.shopIdZ)
@@ -252,7 +252,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //pc登录  预约记录页该顾问今日数据
-            jc.pcLogin(pp.dzphone, pp.dzcode);
+            pcLogin(pp.dzphone, pp.dzcode,pp.dzroleId);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .shop_id(pp.shopIdZ)
@@ -304,7 +304,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //pc登录  预约记录页该顾问今日数据
-            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleidJdgw);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .create_end(dt.getHistoryDate(0))
@@ -420,16 +420,17 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //pc登录
-            jc.pcLogin(pp.jdgw, pp.jdgwpassword);
+            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             //接待前，接待任务列表总数
             int total = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
 
             //app登录 开始接待
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             Long id[] = pf.startReception(pp.carplate);
 
             //pc登录
-            jc.pcLogin(pp.jdgw, pp.jdgwpassword);
+            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+
             int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
 
             //完成接待
@@ -437,7 +438,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 //            jc.finishReception(id[0], id[1]);
 
             //pc登录
-            jc.pcLogin(pp.jdgw, pp.jdgwpassword);
+//            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+
             int totalC = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
 
             Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
@@ -455,6 +457,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void BJc_canclereception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             //开始接待
             Long id[] = new Long[2];
             JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
@@ -485,7 +488,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_receptionTodayDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             String type = "all";
             String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
             //接待前，今日任务
@@ -558,11 +561,11 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/10 21:08
      **/
 
-    @Test()
+//    @Test()
     public void messageFormOneFilter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
 
             Map<String, String> map = new HashMap<String, String>();
@@ -588,7 +591,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleId);
             saveData("消息表单单项查询，结果校验");
         }
     }
@@ -602,6 +605,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+
             saveData("登录登出校验");
         }
     }
@@ -627,6 +631,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_apploginAb2(String code) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             int code1 = jc.appLogin2(pp.jdgw, code, false).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "登录异常手机号");
         } catch (AssertionError | Exception e) {
@@ -653,7 +658,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int verificationReordPctotal = jc.verificationReordFilterManage("-1", "","1", "10", null, null).getInteger("total");
 
             //核销记录总数
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             int total = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
             //核销
             jc.verification(voucher_code[0], true);
@@ -678,7 +683,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             saveData("app核销记录数据一致校验");
         }
     }
@@ -741,6 +746,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void receptorListAndCreateAccount() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             //新建账户前，接待列表人数
             Integer total=jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
             //创建账户

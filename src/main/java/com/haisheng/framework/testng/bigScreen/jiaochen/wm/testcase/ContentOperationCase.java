@@ -86,13 +86,14 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         logger.debug("case: " + caseResult);
     }
 
+    //ok
     @Test(description = "内容运营--banner--上传图片不符合3:2")
     public void banner_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = visitor.invokeApi(FileUpload.builder().pic(base64).isPermanent(false).ratio(1.5).ratioStr("3：2").build(), false).getString("message");
+            String message = visitor.invokeApi(FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build(), false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {
@@ -102,6 +103,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
+    //??
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章&进行中活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -120,6 +122,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
+    //ok
     @Test(description = "内容运营--banner--填写banner1-banner5的内容")
     public void banner_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -130,7 +133,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             File[] files = file.listFiles();
             assert files != null;
             List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
             IScene scene = BannerEdit.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))
