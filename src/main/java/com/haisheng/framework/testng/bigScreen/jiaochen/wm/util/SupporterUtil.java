@@ -16,7 +16,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVou
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAppletVoucherStatus;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
@@ -997,17 +996,6 @@ public class SupporterUtil extends BaseUtil {
     /**
      * 消息推送
      *
-     * @return 发出去的卡券id
-     */
-    public Long pushMessage() {
-        Long voucherId = getVoucherId(EnumVP.ONE.getVoucherName());
-        pushMessage(0, true, voucherId);
-        return voucherId;
-    }
-
-    /**
-     * 消息推送
-     *
      * @param type               推送优惠类型 0：卡券，1：套餐
      * @param voucherOrPackageId 卡券id
      * @param immediately        是否立即发送
@@ -1367,34 +1355,6 @@ public class SupporterUtil extends BaseUtil {
             logger.info("id:{},status:{}", id, status);
         } while (appletVoucher == null && array.size() == 20);
         return appletVoucher;
-    }
-
-    /**
-     * 获取小程序可用卡券的信息
-     *
-     * @return 卡券id
-     */
-    public List<AppletVoucher> getAppletCanUsedVoucherList() {
-        List<AppletVoucher> list = new ArrayList<>();
-        Integer id = null;
-        Integer status = null;
-        JSONArray array;
-        do {
-            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
-            JSONObject response = visitor.invokeApi(scene);
-            JSONObject lastValue = response.getJSONObject("last_value");
-            id = lastValue.getInteger("id");
-            status = lastValue.getInteger("status");
-            array = response.getJSONArray("list");
-            list.addAll(array.stream().map(jsonObject -> (JSONObject) jsonObject).filter(this::compareType).map(jsonObject -> JSONObject.toJavaObject(jsonObject, AppletVoucher.class)).collect(Collectors.toList()));
-            logger.info("id:{},status:{}", id, status);
-        } while (array.size() == 20);
-        return list;
-    }
-
-    private boolean compareType(JSONObject jsonObject) {
-        String statusName = jsonObject.getString("status_name");
-        return !statusName.equals(EnumAppletVoucherStatus.EXPIRED.getName()) && !statusName.equals(VoucherUseStatusEnum.IS_USED.getName());
     }
 
     /**

@@ -2102,7 +2102,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(phones).forEach(phone -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(phone)
-                        .carType(EnumCarType.ALL_CAR.name()).voucherList(voucherList)
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList)
                         .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
                         .extendedInsuranceCopies("1").type(1).build();
@@ -2128,7 +2128,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(plateNumbers).forEach(plateNumber -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
+                        .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
                         .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
                         .extendedInsuranceCopies("1").type(1).build();
@@ -2152,7 +2152,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 11);
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                    .carType(EnumCarType.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                    .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
                     .extendedInsuranceCopies("1").type(1).build();
             String message = visitor.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
@@ -2173,7 +2173,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] packagePrices = {"0", "100000001"};
             Arrays.stream(packagePrices).forEach(packagePrice -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice(packagePrice).expiryDate("1")
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice(packagePrice).expiryDate("1")
                         .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
                 String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2195,7 +2195,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] expiryDates = {null, "", "20001", "12.23"};
             Arrays.stream(expiryDates).forEach(expiryDate -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate(expiryDate)
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate(expiryDate)
                         .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
                 String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2218,7 +2218,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] remarks = {EnumDesc.ARTICLE_DESC.getDesc()};
             Arrays.stream(remarks).forEach(remark -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).remark(remark).build();
                 String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2242,7 +2242,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] subjectTypes = {"全部权限", null, ""};
             Arrays.stream(subjectTypes).forEach(subjectType -> {
                 IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(subjectType).subjectId(util.getSubjectDesc(subjectType))
                         .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
                 String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2265,7 +2265,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                    .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
+                    .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                     .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(UseRangeEnum.STORE.getName())
                     .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
             String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
@@ -2287,7 +2287,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(packageIds).forEach(packageId -> {
                 //购买固定套餐
                 IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
-                        .carType(EnumCarType.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
+                        .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
                 String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
