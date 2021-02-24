@@ -473,11 +473,6 @@ public class BusinessUtil {
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-//          id=list.stream().map(e->(JSONObject)e).filter(e->e.getString("status").equals("待审核"))
-//                    .map(e->e.getLong("id")).findFirst().orElse(null);
-//          if(id==null){
-//            id=  createRecruitActivity();
-//          }
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 if (status==ActivityStatusEnum.PENDING.getId()) {
