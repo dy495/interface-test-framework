@@ -98,6 +98,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         //创建招募活动
         Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
+        
         //创建裂变活动
         Long activityId1 = businessUtil.createFissionActivity(voucherId);
 

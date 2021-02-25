@@ -213,7 +213,7 @@ public class SupporterUtil extends BaseUtil {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        IScene scene = FileUpload.builder().isPermanent(false).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 
