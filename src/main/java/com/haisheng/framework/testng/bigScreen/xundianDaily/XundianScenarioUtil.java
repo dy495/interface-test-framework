@@ -1534,6 +1534,34 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
 
+    /**
+     * @author zt
+     * @description 1.7 个人中心(V1.1新增字段)（V1.1） 消息中心列表
+     */
+    public JSONObject user_message_center(Boolean is_read,Integer last_value,int size) throws Exception {
+        String url = "/store/m-app/auth/user/message-center";
+        JSONObject json = new JSONObject();
+        json.put("is_read",is_read);
+        json.put("last_value",last_value);
+        json.put("size",size);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @author zt
+     * @description 1.7 个人中心(V1.1新增字段)（V1.1） 消息中心列表
+     */
+    public JSONObject user_message_center_detail(int id) throws Exception {
+        String url = "/store/m-app/auth/user/message-center-detail";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     //我的报表-报表类型枚举
     public JSONObject reporttype() throws Exception {
         String url = "/patrol/download-center/report-type-list";

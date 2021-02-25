@@ -19,6 +19,9 @@ import com.haisheng.framework.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import java.lang.reflect.Method;
 
@@ -239,9 +242,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
     //app[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
     @Test
     public void todayNum() throws Exception{
@@ -272,6 +272,39 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
+        }
+
+    }
+
+    //巡店记录详情，打开展示报告信息
+    @Test
+    public void ReportList() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+//            获取消息列表
+            JSONArray message_center = xd.user_message_center(null,null,10).getJSONArray("list");
+//          获取第一份报告的id
+            for(int i=0;i<message_center.size();i++){
+                int reportId = message_center.getJSONObject(i).getInteger("id");
+//            获取recordID
+                Long record_id = xd.user_message_center_detail(reportId).getLong("record_id");
+                Long shopID = xd.user_message_center_detail(reportId).getLong("shop_id");
+                JSONArray items_list = xd.patrol_detail(shopID,record_id).getJSONArray("list");
+                for(int j=0;j<items_list.size();j++){
+                    Long items_id = items_list.getJSONObject(j).getLong("id");
+                    JSONObject check = xd.getShopChecksDetail(record_id,info.shop_id_01,items_id,null).getJSONObject("check");
+
+                    checkArgument(check != null, "app巡店记录详情");
+                }
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("巡店记录详情默认展示为空");
         }
 
     }
