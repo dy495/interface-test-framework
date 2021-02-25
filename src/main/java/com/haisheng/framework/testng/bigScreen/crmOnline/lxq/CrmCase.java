@@ -941,9 +941,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "DCCCREAT", dataProviderClass = CrmScenarioUtilOnline.class)
     public void addDccCust(String name, String phone, String car) {
         logger.logCaseStart(caseResult.getCaseName());
-        try {
-            crm.login(cstm.dcc, cstm.pwd);
-
+        try{
             int total1 = crm.dcclist(1, 1).getInteger("total");
             crm.dccCreate(name, phone, car);
             JSONObject obj = crm.dcclist(1, 1);
@@ -969,8 +967,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addDccCustErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.dcc, cstm.pwd);
-
             String name = "自动化";
             String nameno = "      ";
             String name51 = "姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位123451";
@@ -1000,9 +996,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code5 == 1001, "非车牌号格式" + carno + "期待1001，实际" + code5);
             Preconditions.checkArgument(code6 == 1001, "姓名为空格时期待1001，实际" + code6);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
+            e.printStackTrace();
             appendFailReason(e.toString());
         } finally {
             saveData("新建dcc线索-姓名/手机号/车牌号格式不正确");
@@ -1013,7 +1008,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addDccCustRe() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(cstm.dcc, cstm.pwd);
 
             String name = getCarName();
             String phone = "139100" + (int) ((Math.random() * 9 + 1) * 10000);

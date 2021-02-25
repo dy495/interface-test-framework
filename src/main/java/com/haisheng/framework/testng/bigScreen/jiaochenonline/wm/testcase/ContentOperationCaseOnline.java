@@ -122,7 +122,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     }
 
     //ok
-    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
+    @Test(description = "内容运营--banner--填写banner1-banner5的内容",enabled = false)
     public void banner_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
