@@ -200,11 +200,11 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             JSONArray carId = new JSONArray();
             for (int i = 1; i < limit; i++) {
                 String plate_number;
-                plate_number = "豫GBBA3" + i;
+                plate_number = "吉GBBA3" + i;
                 String car_id = pf.appletAddCar(plate_number);
                 carId.add(car_id);
             }
-            String plate_number = "豫GBBA11";
+            String plate_number = "吉GBBA10";
             Long code = jc.appletAddCarcode(plate_number, pp.carModelId).getLong("code");
             checkArgument(code == 1001, "我的车辆上限5辆车");
 

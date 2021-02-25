@@ -23,7 +23,7 @@ public class PublicParm {
     public String verification_code = "3MR9C7";   //夏夏的核销码
     public String carModelId = "14";
     public String car_id = "24";    //小程序车id  plate_number=京QWER123
-    public String carplate = "京QWER123";      //编辑小程序车牌号
+    public String carplate = "浙QWER123";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
     //预约使用车辆
@@ -54,8 +54,8 @@ public class PublicParm {
     public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
-    public String getAppletTockenOther="";
-    public  String CarplateOther="豫AJSHD12";
+    public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
+    public  String CarplateOther="浙ZXCV123";
     public String userid="uid_0216a935"; //xx的userId;
     public String userid2="uid_0216a935"; //xx2的userId;
 
