@@ -111,22 +111,17 @@ public class SupporterUtil extends BaseUtil {
         return voucherName;
     }
 
-    public IScene createVoucherScene(Integer stock, VoucherTypeEnum type) {
-        String voucherName = createVoucherName(type);
-        return createVoucherBuilder(stock, type).voucherName(voucherName).build();
-    }
-
     public CreateVoucherScene.CreateVoucherSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
         CreateVoucherScene.CreateVoucherSceneBuilder builder = createVoucherBuilder(true).stock(stock).cardType(type.name());
         switch (type.name()) {
             case "FULL_DISCOUNT":
-                builder.isThreshold(true).thresholdPrice(999.99).cost(99.99);
+                builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99);
                 break;
             case "COUPON":
                 builder.isThreshold(true).thresholdPrice(999.99).discount(2.5).mostDiscount(99.99);
                 break;
             case "COMMODITY_EXCHANGE":
-                builder.isThreshold(true).thresholdPrice(999.99).exchangeCommodityName("兑换布加迪威龙一辆");
+                builder.exchangeCommodityName("兑换布加迪威龙一辆").parValue(null);
                 break;
             default:
                 builder.isThreshold(false);
@@ -142,7 +137,7 @@ public class SupporterUtil extends BaseUtil {
      * @return CreateVoucher.CreateVoucherBuilder
      */
     public CreateVoucherScene.CreateVoucherSceneBuilder createVoucherBuilder(Boolean selfVerification) {
-        return CreateVoucherScene.builder().isDefaultPic(false).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+        return CreateVoucherScene.builder().subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).cost(0.01)
                 .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
     }
 
