@@ -2742,7 +2742,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             List<Long> shopList = util.getShopIdList();
             //发送消息
             String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-            IScene scene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList)
+            IScene scene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList)
                     .messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                     .ifSendImmediately(true).build();
             visitor.invokeApi(scene);
@@ -2837,7 +2837,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             String[] titles = {null, EnumDesc.MESSAGE_DESC.getDesc()};
             Arrays.stream(titles).forEach(title -> {
-                IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                         .telList(getList(APPLET_USER_ONE.getPhone())).messageName(title)
                         .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).build();
                 String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2858,7 +2858,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             String[] contents = {null, EnumDesc.ARTICLE_DESC.getDesc()};
             Arrays.stream(contents).forEach(content -> {
-                IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                         .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                         .messageContent(content).type(1).build();
                 String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2879,10 +2879,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
-            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+            IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
-                    .useDays(10).ifSendImmediately(true).build();
+                    .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废，请重新选择！";
             CommonUtil.checkResult("发送已作废卡券", err, message);
@@ -2900,10 +2900,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
-            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+            IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
-                    .useDays(10).ifSendImmediately(true).build();
+                    .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足，请重新选择！";
             CommonUtil.checkResult("发送已售罄卡券", err, message);
@@ -2925,10 +2925,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //关闭套餐
             IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
-            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+            IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).voucherOrPackageList(getList(packageId))
-                    .useDays(10).ifSendImmediately(true).build();
+                    .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = "套餐不允许发送，请重新选择";
             CommonUtil.checkResult("推送已关闭套餐", err, message);
@@ -2949,10 +2949,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //发消息
             long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
             String packageName = util.getPackageName(packageId);
-            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+            IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).voucherOrPackageList(getList(packageId))
-                    .useDays(10).ifSendImmediately(true).build();
+                    .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = "已过套餐有效期";
             CommonUtil.checkResult("推送过期套餐" + packageName, err, message);
@@ -2971,10 +2971,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             Long packageId = util.editPackage(voucherId, 1);
             //发消息
-            IScene pushMessageScene = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+            IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).voucherOrPackageList(getList(packageId))
-                    .useDays(10).ifSendImmediately(true).build();
+                    .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = util.getPackageName(packageId) + ":卡券【" + util.getVoucherName(util.getPackageContainVoucher(packageId).get(0)) + "】库存不足，请重新选择！";
             CommonUtil.checkResult("推送包含已售罄的套餐", err, message);

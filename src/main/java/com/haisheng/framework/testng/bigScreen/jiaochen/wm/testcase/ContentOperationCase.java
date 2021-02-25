@@ -104,7 +104,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     }
 
     //??
-    @Test(description = "banner--跳转活动/文章的条数=展示中的文章&进行中活动条数之和")
+    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -118,7 +118,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("banner--跳转活动/文章的条数=展示中的文章&进行中活动条数之和");
+            saveData("banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和");
         }
     }
 

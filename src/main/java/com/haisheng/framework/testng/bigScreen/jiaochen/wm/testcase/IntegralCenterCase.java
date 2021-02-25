@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -99,14 +100,16 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //日常有问题
+    //ok
     @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
     public void IntegralOrder_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //上线日期，之前得数据不做校验
+            long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
             IScene exchangePageScene = ExchangePageScene.builder().build();
             List<JSONObject> exchangePageList = util.collectBean(exchangePageScene, JSONObject.class);
-            exchangePageList.forEach(e -> {
+            exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
                 int id = e.getInteger("id");
                 AtomicInteger s = new AtomicInteger();
                 IScene exchangeStockScene = ExchangeStockScene.builder().id(String.valueOf(id)).build();

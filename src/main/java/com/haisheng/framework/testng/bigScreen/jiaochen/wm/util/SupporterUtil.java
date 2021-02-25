@@ -1000,9 +1000,9 @@ public class SupporterUtil extends BaseUtil {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
-        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTargetId(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                 .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
-                .type(type).voucherOrPackageList(voucherOrPackageList).useDay("10");
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
@@ -1197,7 +1197,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 门店id
      */
     public Integer getShopId() {
-        return visitor.isOnline() ? 20032 : 50401;
+        return visitor.isOnline() ? 49195 : 50401;
     }
 
     /**

@@ -18,13 +18,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Import.WorkOrderScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -32,7 +30,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -376,7 +373,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
-
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -389,7 +385,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             long packageId = 146;
             util.receptionBuyFixedPackage(packageId, 1);
-            util.makeSureBuyPackage(packageId);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -397,54 +392,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户管理--导入一次工单，【导入记录】+1")
-    public void customerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene importPageScene = ImportPageScene.builder().build();
-            int total = visitor.invokeApi(importPageScene).getInteger("total");
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/服务单号已存在.xlsx";
-            IScene workOrderScene = WorkOrderScene.builder().filePath(filePath).build();
-            String message = visitor.invokeApi(workOrderScene, false).getString("message");
-            Assert.assertEquals(message, "success");
-            int newTotal = visitor.invokeApi(importPageScene).getInteger("total");
-            CommonUtil.checkResult("导入后导入记录总数", total + 1, newTotal);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("客户管理--导入一次工单，【导入记录】+1");
-        }
-    }
-
-//    @Test(description = "客户管理--小程序【我的爱车】新加一个爱车,售后客户+1")
-//    public void customerManager_data_2() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        String carId = null;
-//        try {
-//            String platNumber = "皖H123456";
-//            List<Long> shopList = util.getShopIdList();
-//            AfterSaleCustomerPageScene.builder().
-//            AfterSaleCustomerPageScene.AfterSaleCustomerPageSceneBuilder builder = AfterSaleCustomerPageScene.builder().customerPhone(marketing.getPhone());
-//            int customerNum = getCustomerNum(builder, shopList);
-//            //小程序添加爱车
-//            user.loginApplet(APPLET_USER_ONE);
-//            carId = new JcFunction().appletAddCar(platNumber);
-//            //添加车辆后，客户列表数
-//            user.login(administrator);
-//            int newCustomerNum = getCustomerNum(builder, shopList);
-//            CommonUtil.valueView(customerNum, newCustomerNum);
-//            Preconditions.checkArgument(newCustomerNum == customerNum + 1, "添加爱车前售后客户列表数：" + customerNum + "添加爱车后售后客户列表数：" + newCustomerNum);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            user.loginApplet(appletUser);
-//            jc.appletCarDelst(carId);
-//            saveData("客户管理--小程序【我的爱车】新加一个爱车,售后客户+1");
-//        }
-//    }
-
     //逻辑不对
-    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和", enabled = false)
+    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和")
     public void customerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -494,7 +443,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //逻辑有问题
-    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
+    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和")
     public void customerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

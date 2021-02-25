@@ -213,6 +213,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_repair() {
         logger.logCaseStart(caseResult.getCaseName());
