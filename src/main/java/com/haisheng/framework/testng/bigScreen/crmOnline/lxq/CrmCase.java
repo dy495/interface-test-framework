@@ -942,6 +942,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addDccCust(String name, String phone, String car) {
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            crm.login(cstm.dcc, cstm.pwd);
             int total1 = crm.dcclist(1, 1).getInteger("total");
             crm.dccCreate(name, phone, car);
             JSONObject obj = crm.dcclist(1, 1);
@@ -967,6 +968,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addDccCustErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.login(cstm.dcc, cstm.pwd);
             String name = "自动化";
             String nameno = "      ";
             String name51 = "姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位姓名51位123451";
