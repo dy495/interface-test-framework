@@ -31,7 +31,7 @@ public class DccEditScene extends BaseScene {
     private final int customerId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         String[] plateNumber = plateNumber1 == null && plateNumber2 == null ? null : plateNumber1 == null ?
                 new String[]{plateNumber2} : plateNumber2 == null ?
                 new String[]{plateNumber1} : new String[]{plateNumber1, plateNumber2};

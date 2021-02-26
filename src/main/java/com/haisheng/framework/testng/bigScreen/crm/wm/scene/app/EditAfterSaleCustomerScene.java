@@ -46,7 +46,7 @@ public class EditAfterSaleCustomerScene extends BaseScene {
     private final String secondAccompanyCar;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("after_record_id", afterRecordId);
         JSONArray alongList = new JSONArray();

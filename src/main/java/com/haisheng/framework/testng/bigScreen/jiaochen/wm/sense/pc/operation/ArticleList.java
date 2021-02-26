@@ -8,7 +8,7 @@ import lombok.Builder;
 public class ArticleList extends BaseScene {
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         return new JSONObject();
     }
 

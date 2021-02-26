@@ -13,7 +13,7 @@ public class Analysis2SkuRankScene extends BaseScene {
     private final String cycleType;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("cycle_type", cycleType);
         object.put("month", month);

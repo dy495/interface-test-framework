@@ -18,7 +18,7 @@ public class CarStyleChangeListScene extends BaseScene {
     private final Integer regionId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

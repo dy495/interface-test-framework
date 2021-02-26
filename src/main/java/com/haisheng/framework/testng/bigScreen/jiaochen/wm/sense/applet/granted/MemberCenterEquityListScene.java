@@ -14,7 +14,7 @@ import lombok.Builder;
 public class MemberCenterEquityListScene extends BaseScene {
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         return new JSONObject();
     }
 

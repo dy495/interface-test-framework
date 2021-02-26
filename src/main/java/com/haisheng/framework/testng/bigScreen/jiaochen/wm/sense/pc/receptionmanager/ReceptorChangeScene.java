@@ -14,7 +14,7 @@ public class ReceptorChangeScene extends BaseScene {
     private final Integer shopId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("receptor_id", receptorId);
         jsonObject.put("id", id);

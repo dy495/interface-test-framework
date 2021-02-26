@@ -36,7 +36,7 @@ public class ManageRecruitAddScene extends BaseScene {
     private final Boolean isNeedApproval;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);

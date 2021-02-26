@@ -16,7 +16,7 @@ public class AppReceptionPageScene extends BaseScene {
     private final Integer lastValue;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("size", size);
         jsonObject.put("last_value", lastValue);

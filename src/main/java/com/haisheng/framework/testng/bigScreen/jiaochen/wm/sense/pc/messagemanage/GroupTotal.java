@@ -16,7 +16,7 @@ public class GroupTotal extends BaseScene {
     private final List<String> telList;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("push_target", pushTarget);
         object.put("shop_list", shopList);

@@ -28,7 +28,7 @@ public class FissionVoucherEditScene extends BaseScene {
     private final JSONObject invitedVoucher;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);

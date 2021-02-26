@@ -13,7 +13,7 @@ public class PackageDetailScene extends BaseScene {
     private final Long id;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

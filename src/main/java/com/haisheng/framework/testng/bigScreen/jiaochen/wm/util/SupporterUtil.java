@@ -609,6 +609,19 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public ApplyPage getApplyPageByTime(String voucherName, String time) {
+        logger.info("time is:{}", time);
+        IScene scene = ApplyPageScene.builder().name(voucherName).build();
+        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
+        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().equals(time)).findFirst().orElse(null);
+    }
+
+    /**
      * 卡券审批
      *
      * @param voucherName 卡券名称

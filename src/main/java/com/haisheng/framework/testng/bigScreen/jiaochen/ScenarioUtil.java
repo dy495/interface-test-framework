@@ -581,7 +581,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequest(), checkCode);
     }
 
     private JSONObject invokeApi(String path, JSONObject requestBody) {

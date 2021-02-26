@@ -18,7 +18,7 @@ public class PushMsgPageScene extends BaseScene {
     private Integer page = 1;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("size", size);
         jsonObject.put("page", page);

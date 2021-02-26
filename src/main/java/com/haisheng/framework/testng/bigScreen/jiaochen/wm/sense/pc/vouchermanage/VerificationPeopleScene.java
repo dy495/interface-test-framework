@@ -18,7 +18,7 @@ public class VerificationPeopleScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("verification_person", verificationPerson);
         object.put("verification_phone", verificationPhone);

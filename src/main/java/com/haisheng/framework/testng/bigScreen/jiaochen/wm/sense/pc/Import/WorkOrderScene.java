@@ -15,7 +15,7 @@ public class WorkOrderScene extends BaseScene {
     private final String filePath;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("filePath", filePath);
         return jsonObject;

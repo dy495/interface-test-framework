@@ -13,7 +13,7 @@ public class CreatePotentialCustomerScene extends BaseScene {
     private final String carModelId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);

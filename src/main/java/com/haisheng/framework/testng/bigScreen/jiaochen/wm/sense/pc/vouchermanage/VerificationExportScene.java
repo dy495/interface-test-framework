@@ -27,7 +27,7 @@ public class VerificationExportScene extends BaseScene {
     private final List<Long> ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("verification_person_name", verificationPersonName);
         object.put("verification_person_phone", verificationPersonPhone);

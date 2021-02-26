@@ -65,7 +65,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.roleId = product.getRoleId();
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
+        commonConfig.referer = product.getReferer();
         commonConfig.shopId = product.getShopId();
         beforeClassInit(commonConfig);
     }
@@ -92,7 +92,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = visitor.invokeApi(FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build(), false).getString("message");
+            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {
@@ -122,7 +122,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     }
 
     //ok
-    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
+    @Test(description = "内容运营--banner--填写banner1-banner5的内容", enabled = false)
     public void banner_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

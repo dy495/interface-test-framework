@@ -21,7 +21,7 @@ public class SwitchPackageStatusScene extends BaseScene {
     private final Boolean status;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("status", status);
         object.put("id", id);

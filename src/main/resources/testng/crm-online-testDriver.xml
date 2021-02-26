@@ -13,6 +13,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnlineWarm"></class>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.appointLimitOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.AppletManagerCaseOnline"/>
         </classes>
     </test>
 </suite>

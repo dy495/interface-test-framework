@@ -23,7 +23,7 @@ public class MessageAddScene extends BaseScene {
     private final Integer activityId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("title", title);
         object.put("content", content);

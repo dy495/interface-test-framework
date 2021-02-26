@@ -14,7 +14,7 @@ public class CustomerFaceLabelScene extends BaseScene {
     private final String customerId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
         return object;

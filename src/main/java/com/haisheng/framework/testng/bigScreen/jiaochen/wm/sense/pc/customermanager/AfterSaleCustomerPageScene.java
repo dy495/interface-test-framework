@@ -23,7 +23,7 @@ public class AfterSaleCustomerPageScene extends BaseScene {
     private final Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);

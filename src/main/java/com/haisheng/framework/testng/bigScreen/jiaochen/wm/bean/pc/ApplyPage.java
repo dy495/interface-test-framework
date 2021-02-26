@@ -61,4 +61,10 @@ public class ApplyPage implements Serializable {
      */
     @JSONField(name = "price")
     private String price;
+
+    /**
+     * 申请时间
+     */
+    @JSONField(name = "apply_time")
+    private String applyTime;
 }

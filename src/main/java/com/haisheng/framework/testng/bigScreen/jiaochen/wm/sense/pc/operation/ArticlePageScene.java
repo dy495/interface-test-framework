@@ -20,7 +20,7 @@ public class ArticlePageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("start_date", startDate);
         object.put("end_date", endDate);

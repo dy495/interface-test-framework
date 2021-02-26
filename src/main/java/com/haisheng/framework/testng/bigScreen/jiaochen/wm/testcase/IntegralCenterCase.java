@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -29,7 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具

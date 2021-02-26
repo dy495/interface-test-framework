@@ -17,7 +17,7 @@ public class FollowUpPageScene extends BaseScene {
     private final Integer time;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("size", size);
         JSONObject lastValue = new JSONObject();

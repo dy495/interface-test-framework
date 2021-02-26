@@ -1,14 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 
 /**
+ * 场景抽象类
+ *
  * @author wangmin
  */
 public abstract class BaseScene implements IScene {
 
     @Override
-    public abstract JSONObject getJSONObject();
+    public abstract JSONObject getRequest();
 
     @Override
     public abstract String getPath();
@@ -26,5 +29,10 @@ public abstract class BaseScene implements IScene {
     @Override
     public void setSize(Integer size) {
 
+    }
+
+    @Override
+    public JSONObject execute(Visitor visitor, boolean checkCode) {
+        return visitor.invokeApi(getPath(), getRequest(), checkCode);
     }
 }

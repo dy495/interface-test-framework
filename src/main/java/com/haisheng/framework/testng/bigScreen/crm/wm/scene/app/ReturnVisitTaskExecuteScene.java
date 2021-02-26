@@ -24,7 +24,7 @@ public class ReturnVisitTaskExecuteScene extends BaseScene {
     private final String customerId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("comment", comment);
         object.put("failure_cause", failureCause);

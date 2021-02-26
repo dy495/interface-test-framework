@@ -15,7 +15,7 @@ public class ManageApprovalScene extends BaseScene {
     private final List<Long> ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("status", status);
         object.put("ids", ids);

@@ -24,7 +24,7 @@ public class EvaluateSubmitScene extends BaseScene {
     private final Boolean isAnonymous;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);

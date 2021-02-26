@@ -11,7 +11,7 @@ import lombok.Builder;
 public class ReceptionVoucherListScene extends BaseScene {
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         return new JSONObject();
     }
 

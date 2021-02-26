@@ -21,7 +21,7 @@ public class MessageFormPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("message_type", messageType);
         object.put("send_account", sendAccount);

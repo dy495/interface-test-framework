@@ -14,7 +14,7 @@ public class AppointmentStaffListScene extends BaseScene {
     private final String type;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("shop_id", shopId);
         jsonObject.put("type", type);

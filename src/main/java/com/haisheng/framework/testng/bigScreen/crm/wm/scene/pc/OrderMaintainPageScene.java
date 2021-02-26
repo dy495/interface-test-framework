@@ -19,7 +19,7 @@ public class OrderMaintainPageScene extends BaseScene {
     private final int size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("start_day", startDay);
         object.put("end_day", endDay);

@@ -21,7 +21,7 @@ public class CustomerDccListScene extends BaseScene {
     private final String searchCondition;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

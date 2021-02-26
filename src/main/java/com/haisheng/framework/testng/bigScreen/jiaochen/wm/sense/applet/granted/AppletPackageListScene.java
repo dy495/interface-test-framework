@@ -14,7 +14,7 @@ public class AppletPackageListScene extends BaseScene {
     private final Integer size;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("last_value", lastValue);
         object.put("type", type);

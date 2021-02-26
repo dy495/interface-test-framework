@@ -28,7 +28,7 @@ public class ReceptionPurchaseFixedPackageScene extends BaseScene {
     private final Integer shopId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("customer_phone", customerPhone);
         object.put("reception_id", receptionId);

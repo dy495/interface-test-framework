@@ -24,7 +24,7 @@ public class AppointmentConfig extends BaseScene {
 
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("remind_time", remindTime);

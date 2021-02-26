@@ -4,28 +4,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-import java.util.List;
-
 /**
- * 卡券转移
+ * 撤回卡券
+ *
+ * @author wangmin
+ * @date 2021/1/20 16:46
  */
 @Builder
-public class TransferScene extends BaseScene {
-    private final String transferPhone;
-    private final String receivePhone;
-    private final List<Long> voucherIds;
+public class RecallAdditionalScene extends BaseScene {
+    private final Long id;
 
     @Override
     public JSONObject getRequest() {
         JSONObject object = new JSONObject();
-        object.put("transfer_phone", transferPhone);
-        object.put("receive_phone", receivePhone);
-        object.put("voucher_ids", voucherIds);
+        object.put("id", id);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/transfer";
+        return "/jiaochen/pc/voucher-manage/recall-additional";
     }
+
 }

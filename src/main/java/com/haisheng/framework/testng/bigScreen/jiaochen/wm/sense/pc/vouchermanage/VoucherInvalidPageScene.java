@@ -24,7 +24,7 @@ public class VoucherInvalidPageScene extends BaseScene {
     private final String invalidEndTime;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);

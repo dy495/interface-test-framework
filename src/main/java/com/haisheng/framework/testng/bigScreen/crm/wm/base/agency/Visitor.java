@@ -45,7 +45,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequest(), checkCode);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject uploadFile(IScene scene) {
-        String response = uploadFile(scene.getJSONObject().getString("filePath"), scene.getPath(), product.getAddress());
+        String response = uploadFile(scene.getRequest().getString("filePath"), scene.getPath(), product.getAddress());
         return JSON.parseObject(response);
     }
 
@@ -94,7 +94,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getJSONObject(), product.getAddress());
+        httpPost(scene.getPath(), scene.getRequest(), product.getAddress());
     }
 
     /**

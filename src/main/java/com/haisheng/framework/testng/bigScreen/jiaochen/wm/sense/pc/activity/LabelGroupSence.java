@@ -17,7 +17,7 @@ public class LabelGroupSence extends BaseScene {
     private final String desc;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("code", code);
         object.put("message", message);

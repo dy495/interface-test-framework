@@ -17,10 +17,10 @@ public class ChangeProvideStatusScene extends BaseScene {
     private final Boolean isStart;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("id", id);
-        object.put("isStart", isStart);
+        object.put("is_start", isStart);
         return object;
     }
 

@@ -11,7 +11,7 @@ public enum AdditionalRecordStatusEnum {
     /**
      * 待审核
      */
-    WAITING(0, "审核中"),
+    AUDITING(0, "审核中"),
 
     /**
      * 已撤回
@@ -21,12 +21,12 @@ public enum AdditionalRecordStatusEnum {
     /**
      * 审核未通过
      */
-    REJECT(2, "已拒绝"),
+    REFUSAL(2, "审核未通过"),
 
     /**
      * 进行中
      */
-    WORKING(3, "已通过"),
+    AGREE(3, "已通过"),
     ;
 
     AdditionalRecordStatusEnum(Integer id, String name) {

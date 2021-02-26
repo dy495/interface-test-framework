@@ -12,7 +12,7 @@ public class VoucherListScene extends BaseScene {
     private final String transferPhone;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("transfer_phone", transferPhone);
         return jsonObject;

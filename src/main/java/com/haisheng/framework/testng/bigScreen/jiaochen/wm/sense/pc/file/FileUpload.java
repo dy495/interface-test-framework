@@ -13,7 +13,7 @@ public class FileUpload extends BaseScene {
     private final Integer permanentPicType;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("permanent_pic_type", permanentPicType);
         object.put("pic", pic);

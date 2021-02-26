@@ -14,7 +14,7 @@ import lombok.Builder;
 
 
         @Override
-        public JSONObject getJSONObject() {
+        public JSONObject getRequest() {
             JSONObject object = new JSONObject();
             object.put("id", id);
             object.put("status", status);

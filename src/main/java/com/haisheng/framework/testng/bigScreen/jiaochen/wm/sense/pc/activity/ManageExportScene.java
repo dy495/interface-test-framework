@@ -21,7 +21,7 @@ public class ManageExportScene extends BaseScene {
     private final JSONArray ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

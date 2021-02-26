@@ -27,7 +27,7 @@ public class TimeRangeEdit extends BaseScene {
     private final Double afternoonDiscount;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject morning = new JSONObject();
         morning.put("reply_start", morningReplyStart);
         morning.put("reply_end", morningReplyEnd);

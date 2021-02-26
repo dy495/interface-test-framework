@@ -11,7 +11,7 @@ public class AppletArticleListScene extends BaseScene {
     private final String lastValue;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);

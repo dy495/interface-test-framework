@@ -15,7 +15,7 @@ public class AppletVoucherListScene extends BaseScene {
     private final Integer size;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         JSONObject lastValue = new JSONObject();
         lastValue.put("id", id);

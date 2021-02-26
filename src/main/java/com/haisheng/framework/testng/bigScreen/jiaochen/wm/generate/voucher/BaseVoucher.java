@@ -34,8 +34,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            IScene scene = VoucherPageScene.builder().build();
-            List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
+            List<VoucherPage> vouchers = resultCollectToBean(VoucherPageScene.builder().build(), VoucherPage.class);
             VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
             if (voucher != null) {
                 logger("FIND " + voucherStatus.name() + " FINISH");
@@ -56,8 +55,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
     @Override
     public abstract void execute(Visitor visitor, IScene scene);
 
-
-    public static abstract class BaseBuilder extends AbstractBuilder<BaseBuilder> {
+    public static abstract class BaseBuilder extends AbstractGenerator.AbstractBuilder<BaseBuilder> {
         private VoucherStatusEnum voucherStatus;
         private IScene voucherScene;
 
@@ -89,6 +87,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
         protected IVoucher buildProduct() {
             return buildVoucher();
         }
+
     }
 
     /**

@@ -19,7 +19,7 @@ public class PassengerFlow extends BaseScene {
 
     @Override
 
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("district_code", districtCode);
         object.put("shop_type", shopType);

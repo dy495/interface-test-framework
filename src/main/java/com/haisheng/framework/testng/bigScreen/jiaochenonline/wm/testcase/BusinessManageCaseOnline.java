@@ -380,7 +380,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    @Test(description = "套餐购买并发测试", threadPoolSize = 4, invocationCount = 4)
+    @Test(description = "套餐购买并发测试", threadPoolSize = 4, invocationCount = 4, enabled = false)
     public void receptionManage_data_7() {
         try {
             long packageId = 146;
@@ -393,7 +393,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //逻辑不对
-    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和")
+    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和", enabled = false)
     public void customerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -443,7 +443,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //逻辑有问题
-    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和")
+    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
     public void customerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -17,7 +17,7 @@ public class Analysis2OrderWholeCountryScene extends BaseScene {
     private final String carType;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("month", month);
         object.put("cycle_type", cycleType);

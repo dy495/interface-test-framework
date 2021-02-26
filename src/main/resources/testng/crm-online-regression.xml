@@ -19,20 +19,10 @@
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPageOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AfterSaleOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPagePorsche"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.BusinessManageCaseOnline">
-                <methods>
-                    <exclude name="receptionManage_data_7"/>
-                    <exclude name="customerManager_data_3"/>
-                    <exclude name="customerManager_data_5"/>
-                </methods>
-            </class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.AppletManagerCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.BusinessManageCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.IntegralCenterCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.ContentOperationCaseOnline">
-                <methods>
-                    <exclude name="banner_data_2"/>
-                </methods>
-            </class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.MarketingManageCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.ContentOperationCaseOnline"/>
         </classes>
     </test>
 </suite>

@@ -20,7 +20,7 @@ public class AfterSaleCustomerListScene extends BaseScene {
     private final String searchDateEnd;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

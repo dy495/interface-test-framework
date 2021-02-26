@@ -10,7 +10,7 @@ public class SwitchVerificationStatusScene extends BaseScene {
     private final Boolean status;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("status", status);

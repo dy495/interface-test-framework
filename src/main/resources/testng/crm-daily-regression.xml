@@ -23,24 +23,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.MarketingManageCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.BusinessManageCase">
-                <methods>
-                    <!--<接口变动>-->
-                    <exclude name="customerManager_data_1"/>
-                </methods>
-            </class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase">
-                <methods>
-                    <!--<日常数据有问题>-->
-                    <exclude name="IntegralOrder_data_2"/>
-                </methods>
-            </class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ContentOperationCase">
-                <methods>
-                    <!--<逻辑问题>-->
-                    <exclude name="banner_data_1"/>
-                </methods>
-            </class>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.BusinessManageCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ContentOperationCase"/>
         </classes>
     </test>
 </suite>

@@ -40,7 +40,6 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
     //小程序用户
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_GLY_DAILY;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具
@@ -93,7 +92,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = visitor.invokeApi(FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build(), false).getString("message");
+            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {
@@ -103,7 +102,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    //??
+    //ok
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());

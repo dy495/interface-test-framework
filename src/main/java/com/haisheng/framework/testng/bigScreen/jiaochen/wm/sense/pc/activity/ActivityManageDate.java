@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-import java.util.List;
-
 /**
  * 活动管理-活动管理列表--gly
  */
 @Builder
 public class ActivityManageDate extends BaseScene {
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
 
         return object;

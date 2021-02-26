@@ -15,7 +15,7 @@ public class SearchCustomerScene extends BaseScene {
     private final String customerPhone;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("customer_phone", customerPhone);
         return object;

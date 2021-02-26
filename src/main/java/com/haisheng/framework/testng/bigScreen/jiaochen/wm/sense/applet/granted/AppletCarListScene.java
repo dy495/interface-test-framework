@@ -13,7 +13,7 @@ import lombok.Builder;
 @Builder
 public class AppletCarListScene extends BaseScene {
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         return new JSONObject();
     }
 

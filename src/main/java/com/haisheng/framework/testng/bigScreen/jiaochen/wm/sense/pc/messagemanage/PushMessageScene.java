@@ -27,7 +27,7 @@ public class PushMessageScene extends BaseScene {
     private final Long activityId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("push_target", pushTarget);
         object.put("shop_list", shopList);

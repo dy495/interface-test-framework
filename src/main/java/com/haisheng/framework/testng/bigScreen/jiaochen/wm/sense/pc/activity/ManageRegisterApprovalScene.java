@@ -16,7 +16,7 @@ public class ManageRegisterApprovalScene extends BaseScene {
     private final List<Long> ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequest() {
         JSONObject object = new JSONObject();
         object.put("activity_id", activityId);
         object.put("status", status);
