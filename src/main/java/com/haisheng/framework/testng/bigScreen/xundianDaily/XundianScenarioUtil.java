@@ -1356,6 +1356,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
     /**
      * @author zhoutao
      * @description 3.18 巡店记录处理事项下拉列表（V1.1）

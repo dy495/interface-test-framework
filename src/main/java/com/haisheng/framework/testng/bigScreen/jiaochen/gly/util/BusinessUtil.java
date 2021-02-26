@@ -455,6 +455,17 @@ public class BusinessUtil {
         String parValue = visitor.invokeApi(scene).getString("par_value");
         return parValue;
     }
+
+    /**
+     * 获取优惠券的成本
+     */
+    public String getCost(Long id) {
+        IScene scene = VoucherDetailScene.builder().id(id).build();
+        String parValue = visitor.invokeApi(scene).getString("cost");
+        return parValue;
+    }
+
+
 /**
  * --------------------------------活动列表中活动状态--------------------------------------------
  */

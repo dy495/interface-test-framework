@@ -26,4 +26,15 @@ public class DataProviderMethod {
 
         };
     }
+
+    @DataProvider(name = "is_read")
+    public Object[] isread() {
+
+        return new Boolean[][]{
+                {null},
+                {true},
+                {false},
+        };
+    }
+
 }
