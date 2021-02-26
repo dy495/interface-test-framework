@@ -46,7 +46,7 @@ public class EditCustomerScene extends BaseScene {
     private final String secondAccompanyCar;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("vehicle_id", vehicleId);
         object.put("customer_id", customerId);

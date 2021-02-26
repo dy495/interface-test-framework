@@ -15,7 +15,7 @@ public class HistoryDayTrendPvUv extends BaseScene {
     private final String cycleType;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         object.put("month", month);

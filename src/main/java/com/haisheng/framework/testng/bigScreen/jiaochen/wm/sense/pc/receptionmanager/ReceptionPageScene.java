@@ -25,7 +25,7 @@ public class ReceptionPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("plate_number", plateNumber);
         object.put("reception_sale_id", receptionSaleId);

@@ -8,7 +8,7 @@ import lombok.Builder;
 public class AppletCarWashRemainNumberScene extends BaseScene {
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

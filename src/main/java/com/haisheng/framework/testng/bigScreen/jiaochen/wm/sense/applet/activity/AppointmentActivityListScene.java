@@ -14,7 +14,7 @@ import lombok.Builder;
         private  final JSONObject lastValue;
 
         @Override
-        public JSONObject getRequest() {
+        public JSONObject getRequestBody() {
             JSONObject object = new JSONObject();
             object.put("size",size);
             object.put("last_value",lastValue);

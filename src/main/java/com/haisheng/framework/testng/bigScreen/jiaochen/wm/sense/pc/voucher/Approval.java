@@ -14,7 +14,7 @@ public class Approval extends BaseScene {
     private final String status;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("id", id);

@@ -29,7 +29,7 @@ public class EquityEditScene extends BaseScene {
     private final Integer equityId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("award_count", awardCount);
         object.put("description", description);

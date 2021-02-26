@@ -60,7 +60,7 @@ public class AddVoucherScene extends BaseScene {
     private final String packageName;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);

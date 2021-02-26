@@ -14,7 +14,7 @@ public class ImportPageScene extends BaseScene {
     private final Integer page = 1;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("user", user);

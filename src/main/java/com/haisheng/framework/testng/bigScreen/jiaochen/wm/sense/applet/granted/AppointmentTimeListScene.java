@@ -16,7 +16,7 @@ public class AppointmentTimeListScene extends BaseScene {
     private final String day;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", type);
         jsonObject.put("shop_id", shopId);

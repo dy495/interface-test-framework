@@ -22,7 +22,7 @@ public class VoucherFormPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_status", voucherStatus);
         object.put("subject_name", subjectName);

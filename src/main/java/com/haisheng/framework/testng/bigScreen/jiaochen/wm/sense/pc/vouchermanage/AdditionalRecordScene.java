@@ -19,7 +19,7 @@ public class AdditionalRecordScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucherId", voucherId);
         object.put("page", page);

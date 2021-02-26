@@ -17,7 +17,7 @@ public class FollowUpCompleteScene extends BaseScene {
     private final String remark;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", id);
         jsonObject.put("shop_id", shopId);

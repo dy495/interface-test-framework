@@ -14,7 +14,7 @@ public class CustomerBuyCarListScene extends BaseScene {
     private final String customerId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
         return object;

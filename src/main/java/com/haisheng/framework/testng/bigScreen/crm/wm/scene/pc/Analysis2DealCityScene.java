@@ -18,7 +18,7 @@ public class Analysis2DealCityScene extends BaseScene {
     private final long adCode;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("month", month);
         object.put("cycle_type", cycleType);

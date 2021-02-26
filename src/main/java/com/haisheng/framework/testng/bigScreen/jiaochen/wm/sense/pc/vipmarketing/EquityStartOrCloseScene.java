@@ -16,7 +16,7 @@ public class EquityStartOrCloseScene extends BaseScene {
     private final String equityStatus;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("equity_id", equityId);
         jsonObject.put("equity_status", equityStatus);

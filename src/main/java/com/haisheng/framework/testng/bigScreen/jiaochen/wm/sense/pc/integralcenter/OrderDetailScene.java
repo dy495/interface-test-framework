@@ -12,7 +12,7 @@ public class OrderDetailScene extends BaseScene {
     private final Integer id;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

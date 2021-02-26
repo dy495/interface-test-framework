@@ -22,7 +22,7 @@ public class ManageRecruitRegisterInformationScene extends BaseScene {
     private final String is_required;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("code", code);
         object.put("message", message);

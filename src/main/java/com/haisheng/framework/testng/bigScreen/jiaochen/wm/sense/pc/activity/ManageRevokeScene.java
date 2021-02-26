@@ -11,7 +11,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 public class ManageRevokeScene extends BaseScene {
     private final Long  id;
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id",id );
         return object;

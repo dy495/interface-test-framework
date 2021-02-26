@@ -4189,14 +4189,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
      * invokeApi重构
      */
     public JSONObject invokeApi(IScene scene) {
-        return invokeApi(scene.getPath(), scene.getRequest());
+        return invokeApi(scene.getPath(), scene.getRequestBody());
     }
 
     /**
      * invokeApi重构
      */
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getRequest(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
     }
 
     /**

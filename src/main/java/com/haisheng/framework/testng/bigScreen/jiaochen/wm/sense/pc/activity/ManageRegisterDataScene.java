@@ -10,7 +10,7 @@ import lombok.Builder;
 public class ManageRegisterDataScene extends BaseScene {
     private final Long  activityId;
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("activity_id",activityId );
         return object;

@@ -16,7 +16,7 @@ public class ManageRegisterScene extends BaseScene {
     private final Long activityId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

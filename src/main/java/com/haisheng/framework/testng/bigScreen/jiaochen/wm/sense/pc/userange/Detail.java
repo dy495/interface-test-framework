@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public class Detail extends BaseScene {
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("subject_key", "BRAND");
         return object;

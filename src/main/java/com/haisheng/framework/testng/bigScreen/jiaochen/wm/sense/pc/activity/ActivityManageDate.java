@@ -10,7 +10,7 @@ import lombok.Builder;
 @Builder
 public class ActivityManageDate extends BaseScene {
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
 
         return object;

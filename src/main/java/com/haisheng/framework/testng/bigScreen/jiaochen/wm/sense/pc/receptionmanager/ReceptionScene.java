@@ -12,7 +12,7 @@ public class ReceptionScene extends BaseScene {
     private final String platNumber;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("plate_number", platNumber);
         return object;

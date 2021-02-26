@@ -12,7 +12,7 @@ public class TimeTableListScene extends BaseScene {
     private final String appointmentMonth;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("appointment_month", appointmentMonth);
         return object;

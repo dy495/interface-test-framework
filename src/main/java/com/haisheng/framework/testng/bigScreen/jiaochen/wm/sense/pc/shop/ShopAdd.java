@@ -25,7 +25,7 @@ public class ShopAdd extends BaseScene {
     private final String washingStatus;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("avatar_path", avatarPath);
         object.put("simple_name", simpleName);

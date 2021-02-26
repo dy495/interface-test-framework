@@ -10,7 +10,7 @@ public class ShopDetail extends BaseScene {
 
     @Override
 
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         return object;

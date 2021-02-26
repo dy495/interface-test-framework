@@ -21,7 +21,7 @@ public class VoucherVerificationScene extends BaseScene {
     private final String verificationCode;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("verification_code", verificationCode);

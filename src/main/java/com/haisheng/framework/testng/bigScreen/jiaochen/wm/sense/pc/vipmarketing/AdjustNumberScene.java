@@ -28,7 +28,7 @@ public class AdjustNumberScene extends BaseScene {
     private final String remark;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_phone", customerPhone);
         object.put("adjust_number", adjustNumber);

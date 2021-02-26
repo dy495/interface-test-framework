@@ -20,7 +20,7 @@ public class VerificationRecordScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_name", voucherName);
         object.put("sender", sender);

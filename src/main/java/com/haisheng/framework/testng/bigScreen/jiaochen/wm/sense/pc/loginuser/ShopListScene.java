@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public class ShopListScene extends BaseScene {
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

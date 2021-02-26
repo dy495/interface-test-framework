@@ -38,7 +38,7 @@ public class ManageRecruitEditScene extends BaseScene {
     private final Long id;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);

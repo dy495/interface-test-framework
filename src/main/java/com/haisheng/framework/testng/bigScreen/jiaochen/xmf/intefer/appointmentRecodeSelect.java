@@ -28,7 +28,7 @@ public class appointmentRecodeSelect extends BaseScene {
     private final String service_sale_id;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
 
         JSONObject json1=new JSONObject();
         json1.put("plate_number",plate_number);

@@ -2656,7 +2656,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getRequest(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
     }
 
     private JSONObject invokeApi(String path, JSONObject requestBody) {

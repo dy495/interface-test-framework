@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
  */
 public interface IScene {
 
-    JSONObject getRequest();
+    JSONObject getRequestBody();
 
     String getPath();
 

@@ -17,7 +17,7 @@ public class AppReceptionReceptorChangePageScene extends BaseScene {
     private final String receptorId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", id);
         jsonObject.put("shop_id", shopId);

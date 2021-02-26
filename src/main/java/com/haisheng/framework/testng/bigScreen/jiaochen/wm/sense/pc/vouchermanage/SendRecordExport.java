@@ -27,7 +27,7 @@ public class SendRecordExport extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("receiver", receiver);

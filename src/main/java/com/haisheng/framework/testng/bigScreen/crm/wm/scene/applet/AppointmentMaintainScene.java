@@ -19,7 +19,7 @@ public class AppointmentMaintainScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("my_car_id", myCarId);
         object.put("customer_name", customerName);

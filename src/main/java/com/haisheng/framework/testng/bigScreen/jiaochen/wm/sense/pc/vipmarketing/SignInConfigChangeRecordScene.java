@@ -24,7 +24,7 @@ public class SignInConfigChangeRecordScene extends BaseScene {
     private final Integer signInConfigId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);

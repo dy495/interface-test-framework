@@ -14,7 +14,7 @@ public class CardList extends BaseScene {
     private final Integer size;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page_type", pageType);
         object.put("last_value", lastValue);

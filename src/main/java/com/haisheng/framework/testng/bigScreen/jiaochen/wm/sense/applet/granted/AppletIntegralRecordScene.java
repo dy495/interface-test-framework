@@ -18,7 +18,7 @@ public class AppletIntegralRecordScene extends BaseScene {
     private final String endTime;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("last_value", lastValue);
         object.put("size", size);

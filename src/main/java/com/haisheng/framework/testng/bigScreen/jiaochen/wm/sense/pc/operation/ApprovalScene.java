@@ -12,7 +12,7 @@ public class ApprovalScene extends BaseScene {
     private final String status;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("register_ids", registerIds);
         object.put("status", status);

@@ -21,7 +21,7 @@ public class ActivityManageListScene extends BaseScene {
     private final Integer subjectId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

@@ -12,7 +12,7 @@ public class ReceptorListScene extends BaseScene {
     private final Integer shopId;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("shop_id", shopId);
         return jsonObject;

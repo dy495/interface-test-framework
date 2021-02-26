@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 public abstract class BaseScene implements IScene {
 
     @Override
-    public abstract JSONObject getRequest();
+    public abstract JSONObject getRequestBody();
 
     @Override
     public abstract String getPath();
@@ -33,6 +33,6 @@ public abstract class BaseScene implements IScene {
 
     @Override
     public JSONObject execute(Visitor visitor, boolean checkCode) {
-        return visitor.invokeApi(getPath(), getRequest(), checkCode);
+        return visitor.invokeApi(getPath(), getRequestBody(), checkCode);
     }
 }

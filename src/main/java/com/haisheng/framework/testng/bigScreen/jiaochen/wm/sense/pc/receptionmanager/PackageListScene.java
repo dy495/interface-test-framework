@@ -11,7 +11,7 @@ import lombok.Builder;
 public class PackageListScene extends BaseScene {
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

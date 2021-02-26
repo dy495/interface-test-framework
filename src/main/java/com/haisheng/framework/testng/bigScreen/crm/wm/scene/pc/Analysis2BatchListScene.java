@@ -20,7 +20,7 @@ public class Analysis2BatchListScene extends BaseScene {
     private final String cycleType;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

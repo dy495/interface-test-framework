@@ -25,7 +25,7 @@ public class EditPackageScene extends BaseScene {
     private final Integer customerUseValidity;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("package_name", packageName);
         object.put("validity", validity);

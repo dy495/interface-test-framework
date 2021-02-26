@@ -10,7 +10,7 @@ import lombok.Builder;
 public class ManageDetailScene extends BaseScene {
     private final Long  id;
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id",id );
         return object;

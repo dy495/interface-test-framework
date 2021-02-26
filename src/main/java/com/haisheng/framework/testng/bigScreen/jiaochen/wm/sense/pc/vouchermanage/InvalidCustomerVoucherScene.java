@@ -13,7 +13,7 @@ public class InvalidCustomerVoucherScene extends BaseScene {
     private final String invalidReason;
 
     @Override
-    public JSONObject getRequest() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("invalid_reason", invalidReason);
