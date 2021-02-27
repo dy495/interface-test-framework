@@ -14,8 +14,9 @@ public class ActivityManageListScene extends BaseScene {
     @Builder.Default
     private Integer size = 10;
     private final String title;
-    private final Integer status;
+    private final Integer approvalStatus;
     private final String creatorAccount;
+    private final Integer status;
     private final String creatorName;
     private final String subjectType;
     private final Integer subjectId;
@@ -26,6 +27,7 @@ public class ActivityManageListScene extends BaseScene {
         object.put("page", page);
         object.put("size", size);
         object.put("title", title);
+        object.put("approval_status", approvalStatus);
         object.put("status", status);
         object.put("creator_account", creatorAccount);
         object.put("creator_name", creatorName);
