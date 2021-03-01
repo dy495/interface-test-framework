@@ -487,10 +487,10 @@ public class StoreFuncPackage extends TestCaseCommon {
 
     /**区域关注度中的数据获取**/
     public Map<String, Integer>  getRegionData1(JSONArray list) throws Exception {
-        Integer total_pv = null;
-        Integer total_uv = null;
-        Integer pvs = null;
-        Integer uvs = null;
+        Integer total_pv = 0;
+        Integer total_uv = 0;
+        Integer pvs = 0;
+        Integer uvs = 0;
         for(int i=0;i<list.size();i++) {
             total_pv = list.getJSONObject(i).getInteger("total_pv");
             total_uv = list.getJSONObject(i).getInteger("total_uv");
