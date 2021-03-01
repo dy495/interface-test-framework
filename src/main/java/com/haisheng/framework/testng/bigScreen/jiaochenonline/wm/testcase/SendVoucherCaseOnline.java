@@ -62,10 +62,10 @@ public class SendVoucherCaseOnline extends TestCaseCommon implements TestCaseStd
         commonConfig.product = PRODUCT.getAbbreviation();
         commonConfig.referer = PRODUCT.getReferer();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = PRODUCT.getShopId();
         beforeClassInit(commonConfig);
