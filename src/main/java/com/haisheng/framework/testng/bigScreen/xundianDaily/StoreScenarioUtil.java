@@ -2644,11 +2644,15 @@ public class StoreScenarioUtil extends TestCaseCommon {
 //    }
     public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
         String path = "/patrol/history/shop/day/region-pv-uv";
-        Map<String, Object> map = new HashMap<>();
-        map.put("shop_id", shop_id);
-        map.put("dateType", dateType);
-        map.put("day", day);
-        return JSONObject.parseObject(httpGet(path, map, IpPort));
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"dateType\" :\"" + dateType + "\",\n" +
+                        "\"day\" :\"" + day + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
 //------------------------------------------------------------------------------------------------------------------

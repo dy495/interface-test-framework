@@ -1136,7 +1136,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================风控事项的处理（订单处理备注的字数）======================
      */
-    @Test
+    //@Test
     public void trace_dealMark() {
         logger.logCaseStart(caseResult.getCaseName());
         md.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -1536,13 +1536,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================历史数据-区域关注度数据不为空======================
      */
-   // @Test(dataProvider = "DATATYPE",dataProviderClass = StoreScenarioUtil.class)
+   @Test(dataProvider = "DATATYPE",dataProviderClass = StoreScenarioUtil.class)
     public void region_data(String dateType) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject res = md.regin_PUv(shop_id,dateType,"2020-02-1");
-            JSONObject data = res.getJSONObject("data");
-            JSONArray region_list = data.getJSONArray("region_data_day_list");
+            JSONArray region_list = md.regin_PUv(shop_id_01,dateType,"2021-02-25").getJSONArray("region_data_list");
             for(int i=0;i<region_list.size();i++){
                 Integer total_pv = region_list.getJSONObject(i).getInteger("total_pv");
                 Integer total_uv = region_list.getJSONObject(i).getInteger("total_uv");

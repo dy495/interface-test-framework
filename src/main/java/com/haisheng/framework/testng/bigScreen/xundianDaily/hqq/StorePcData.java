@@ -734,14 +734,12 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================历史数据-区域关注度数据(周)======================
      */
-   // @Test()
+    //@Test()
     public void region_data2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = "2020-02-01";
-            JSONObject res = md.regin_PUv(shop_id,"NATURE_WEEK",date);
-            JSONObject data = res.getJSONObject("data");
-            JSONArray region_list = data.getJSONArray("region_data_day_list");
+            JSONArray region_list = md.regin_PUv(shop_id_01,"NATURE_WEEK","2021-02-25").getJSONArray("region_data_list");
             Map<String, Integer> Puvdata = mds.getRegionData1(region_list);
             int total_pv =Puvdata.get("total_pv");
             int total_uv =Puvdata.get("uv2");
@@ -750,7 +748,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             checkArgument(total_pv==pv, "【区域关注度】时间选择为-日-该周，从日期："+date+"开始的一周。总PV =="+date+"【折线图】中的PV，门店ID"+shop_id);
             checkArgument(total_uv<=uv, "【区域关注度】时间选择为-日-该周，从日期："+date+"开始的一周。总UV =="+date+"【折线图】中的UV，门店ID"+shop_id);
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
