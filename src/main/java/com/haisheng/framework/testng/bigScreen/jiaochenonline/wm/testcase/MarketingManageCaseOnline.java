@@ -72,7 +72,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.product = product.getAbbreviation();
         commonConfig.referer = product.getReferer();
@@ -2674,7 +2674,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
-            String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+            String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
             util.pushMessage(0, false, voucherId);
             String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
@@ -3105,25 +3105,21 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
-            JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            int id = list.getJSONObject(0).getInteger("id");
-            int awardScore = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id") == id).map(e -> e.getInteger("award_score")).findFirst().orElse(0);
-            IScene signInConfigChangeRecordScene = SignInConfigChangeRecordScene.builder().signInConfigId(id).build();
-            int recordTotal = visitor.invokeApi(signInConfigChangeRecordScene).getInteger("total");
+            JSONObject response = SignInConfigPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            int signInConfigId = response.getInteger("id");
+            int awardScore = response.getInteger("award_score") >= 1999 ? 1 : response.getInteger("award_score");
+            int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
             //变更积分&说明
-            IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
-            visitor.invokeApi(signInConfigEditScene);
+            SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build().execute(visitor, true);
             //变更后列表数
-            JSONObject response = visitor.invokeApi(signInConfigChangeRecordScene);
-            int newRecordTotal = response.getInteger("total");
+            int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
             CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
             //变更内容
-            JSONObject recordObject = Objects.requireNonNull(response.getJSONArray("list").stream().map(e -> (JSONObject) e).findFirst().orElse(null));
-            CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), recordObject.getString("operate_phone"));
-            CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), recordObject.getString("operate_date"));
-            CommonUtil.checkResult("变更积分", awardScore + 1, recordObject.getInteger("change_score"));
-            CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), recordObject.getString("change_remark"));
+            JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), newResponse.getString("operate_phone"));
+            CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), newResponse.getString("operate_date"));
+            CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
+            CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), newResponse.getString("change_remark"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
