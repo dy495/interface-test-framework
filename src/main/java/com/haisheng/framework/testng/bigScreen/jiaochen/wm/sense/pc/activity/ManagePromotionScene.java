@@ -20,9 +20,4 @@ public class ManagePromotionScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/promotion";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

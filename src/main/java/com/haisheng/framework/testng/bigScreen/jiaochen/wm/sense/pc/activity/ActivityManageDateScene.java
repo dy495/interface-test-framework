@@ -8,21 +8,14 @@ import lombok.Builder;
  * 活动管理-活动管理列表--gly
  */
 @Builder
-public class ActivityManageDate extends BaseScene {
+public class ActivityManageDateScene extends BaseScene {
     @Override
     public JSONObject getRequestBody() {
-        JSONObject object = new JSONObject();
-
-        return object;
+        return new JSONObject();
     }
 
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/data";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

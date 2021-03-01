@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.BannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
@@ -103,16 +104,16 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     }
 
     //ok
-    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和")
+    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = util.getArticleIdList().size();
             IScene articlePageScene = ArticlePageScene.builder().build();
-            List<ArticlePage> articlePageList = util.collectBean(articlePageScene, ArticlePage.class);
-            int articlePageListSize = articlePageList.size();
-            IScene activityManageListScene = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build();
-            int activityManageListSize = util.collectBean(activityManageListScene, JSONObject.class).size();
+            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePage.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
+            IScene activityManageListScene = ActivityManageListScene.builder().build();
+            int activityManageListSize = (int) util.collectBean(activityManageListScene, JSONObject.class).stream()
+                    .filter(e -> e.getString("status_name").equals(ActivityStatusEnum.PASSED.getStatusName()) || e.getString("status_name").equals(ActivityStatusEnum.FINISH.getStatusName())).count();
             CommonUtil.checkResult("跳转活动/文章的条数", activityManageListSize + articlePageListSize, num);
         } catch (Exception | AssertionError e) {
             collectMessage(e);

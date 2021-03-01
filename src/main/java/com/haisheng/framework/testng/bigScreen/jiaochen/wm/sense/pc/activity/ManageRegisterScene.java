@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -30,8 +29,5 @@ public class ManageRegisterScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/page";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

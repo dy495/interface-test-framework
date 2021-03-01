@@ -53,9 +53,4 @@ public class FissionVoucherEditScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/fission-voucher/edit";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

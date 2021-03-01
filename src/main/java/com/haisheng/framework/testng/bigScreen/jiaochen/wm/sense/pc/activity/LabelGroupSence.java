@@ -33,9 +33,4 @@ public class LabelGroupSence extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/label-group";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

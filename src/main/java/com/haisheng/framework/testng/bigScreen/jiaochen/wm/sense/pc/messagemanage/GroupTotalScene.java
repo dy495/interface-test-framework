@@ -10,7 +10,7 @@ import java.util.List;
  * 消息管理 -> 消息表单
  */
 @Builder
-public class GroupTotal extends BaseScene {
+public class GroupTotalScene extends BaseScene {
     private final Integer pushTarget;
     private final List<Long> shopList;
     private final List<String> telList;
@@ -26,6 +26,6 @@ public class GroupTotal extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/message-form/page";
+        return "/jiaochen/pc/message-manage/group-total";
     }
 }

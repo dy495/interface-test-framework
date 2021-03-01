@@ -20,9 +20,4 @@ public class ManageCancelScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/cancel";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

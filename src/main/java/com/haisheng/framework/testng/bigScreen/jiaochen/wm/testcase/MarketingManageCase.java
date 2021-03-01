@@ -11,9 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumApplyTypeName;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumSubject;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.UseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.audit.AuditStatusEnum;
@@ -58,7 +56,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
     //小程序用户
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_GLY_DAILY;
+    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_DAILY;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具
@@ -1005,7 +1003,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 int additionalRecordNum = additionalRecordList.stream().map(AdditionalRecord::getAdditionalNum).mapToInt(Integer::parseInt).sum();
                 String voucherName = util.getVoucherName(voucherId);
                 IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
-                List<ApplyPage> applyPageList = util.collectBean(applyPageScene, ApplyPage.class).stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(EnumApplyTypeName.FIRST_PUBLISH.getName())).collect(Collectors.toList());
+                List<ApplyPage> applyPageList = util.collectBean(applyPageScene, ApplyPage.class).stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.ADDITIONAL.getName())).collect(Collectors.toList());
                 int applyPageSum = applyPageList.stream().mapToInt(ApplyPage::getNum).sum();
                 CommonUtil.checkResultPlus(voucherName + " 增发记录列表数", additionalRecordList.size(), "卡券审批列表申请类型为增发的列表数", applyPageList.size());
                 CommonUtil.checkResultPlus(voucherName + " 增发记录总增发量", additionalRecordNum, "卡券审批列表申请类型为增发的总增发量", applyPageSum);
@@ -1181,7 +1179,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                    .subjectType(EnumSubject.STORE.name()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
+                    .subjectType(UseRangeEnum.STORE.name()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                     .voucherDescription(util.getDesc()).stock(1000).cost(99.99).shopType(0)
                     .shopIds(util.getShopIdList(2)).selfVerification(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
@@ -1693,7 +1691,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int total = packageFormPageScene.execute(visitor, true).getInteger("total");
             //创建套餐
             JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
-            String packageName = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
+            String packageName = util.createPackage(voucherArray, com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.CURRENT);
             Long packageId = util.getPackageId(packageName);
             //创建套餐后列表数量
             int newTotal = packageFormPageScene.execute(visitor, true).getInteger("total");
@@ -1865,7 +1863,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30").packageDescription(desc)
+                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30").packageDescription(desc)
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).customerUseValidity(1)
                         .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1889,7 +1887,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(validity -> {
-                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity(validity).packageDescription(util.getDesc())
+                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity(validity).packageDescription(util.getDesc())
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).customerUseValidity(1)
                         .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1913,7 +1911,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30").packageDescription(util.getDesc())
+                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30").packageDescription(util.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType())).customerUseValidity(1)
                         .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1935,8 +1933,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name())
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name())
                     .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "主体详情不能为空";
@@ -1953,8 +1951,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name()).packagePrice(5000.00)
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice(5000.00)
                     .status(true).shopIds(util.getShopIdList()).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "所选卡券不能为空";
@@ -1975,8 +1973,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(doubles).forEach(packagePrice -> {
-                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
-                        .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name()).packagePrice(packagePrice)
+                IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
+                        .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice(packagePrice)
                         .status(true).shopIds(util.getShopIdList()).voucherList(voucherList).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = packagePrice == null ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
@@ -1997,8 +1995,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
-                    .packageDescription(util.getDesc()).subjectType(EnumSubject.STORE.name()).packagePrice(499.99)
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
+                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice(499.99)
                     .status(true).voucherList(voucherList).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "套餐适用门店列表不能为空";
@@ -2018,7 +2016,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList()).build();
             String message = visitor.invokeApi(scene, false).getString("message");
@@ -2039,7 +2037,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList()).build();
             String message = visitor.invokeApi(scene, false).getString("message");
@@ -2060,7 +2058,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).validity("30")
+            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.BRAND)).validity("30")
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList()).build();
             String message = visitor.invokeApi(scene, false).getString("message");
@@ -2250,7 +2248,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
-                    .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(UseRangeEnum.STORE.getName())
+                    .remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.STORE.getName())
                     .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
             String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
             String err = "主体类型不存在";
@@ -2517,7 +2515,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String packageName = util.getPackageName(packageId);
             IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
-                    .subjectType(EnumSubject.STORE.name()).validity(2000).voucherList(voucherArray).packagePrice("1.11")
+                    .subjectType(UseRangeEnum.STORE.name()).validity(2000).voucherList(voucherArray).packagePrice("1.11")
                     .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "主体详情不能为空";
@@ -2735,10 +2733,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void messageManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Long> shopList = util.getShopIdList();
+            List<Long> list = new ArrayList<>();
+            Long shopId = util.getContainMoreCustomerShopId();
+            list.add(shopId);
             //发送消息
             String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-            IScene scene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList)
+            IScene scene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(list)
                     .messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
                     .ifSendImmediately(true).build();
             visitor.invokeApi(scene);
@@ -2983,18 +2983,21 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    //ok
+    //bug
     @Test(description = "权益列表--修改权益，applet与pc所见内容一致")
     public void vipMarketing_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene equityPageScene = EquityPageScene.builder().build();
-            Integer equityId = visitor.invokeApi(equityPageScene).getJSONArray("list").getJSONObject(0).getInteger("equity_id");
-            IScene equityEditScene = EquityEditScene.builder().awardCount(4).equityId(equityId).description(EnumDesc.FAULT_DESCRIPTION.getDesc()).build();
-            visitor.invokeApi(equityEditScene);
+            String[] desc = {EnumDesc.FAULT_DESCRIPTION.getDesc(), EnumDesc.MESSAGE_TITLE.getDesc(), EnumDesc.INVALID_REASON.getDesc()};
+            JSONObject equityPageResponse = EquityPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            int equityId = equityPageResponse.getInteger("equity_id");
+            String description = Arrays.stream(desc).filter(e -> !e.equals(equityPageResponse.getString("description"))).findFirst().orElse(equityPageResponse.getString("description"));
+            EquityEditScene.builder().awardCount(4).equityId(equityId).description(description).build().execute(visitor, true);
+            JSONObject newEquityPageResponse = EquityPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            String newDescription = newEquityPageResponse.getString("description");
+            CommonUtil.checkResult("pc修改过权益说明后", description, newDescription);
             user.loginApplet(APPLET_USER_ONE);
-            IScene homePageScene = MemberCenterHomePageScene.builder().build();
-            JSONObject response = visitor.invokeApi(homePageScene);
+            JSONObject response = MemberCenterHomePageScene.builder().build().execute(visitor, true);
             int vipType = response.getInteger("vip_type");
             JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
             String equityName = equity.getString("equity_name");

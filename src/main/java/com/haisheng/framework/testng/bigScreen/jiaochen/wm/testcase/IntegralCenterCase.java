@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangeDetailed;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -34,7 +35,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     public UserUtil user = new UserUtil(visitor);
     //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
-
 
     @BeforeClass
     @Override
@@ -131,4 +131,17 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    @Test(description = "")
+    public void IntegralOrder_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
+            List<ExchangeDetailed> exchangeDetailedList = util.collectBean(exchangeDetailedScene, ExchangeDetailed.class);
+            Long stockSum = exchangeDetailedList.stream().filter(e -> e.getChangeReason() != null && e.getChangeReason().equals("签到获得100积分")).mapToLong(ExchangeDetailed::getStockDetail).sum();
+            System.err.println(stockSum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        }
+    }
 }

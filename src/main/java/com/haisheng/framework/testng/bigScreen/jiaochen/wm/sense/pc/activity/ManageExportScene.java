@@ -40,9 +40,4 @@ public class ManageExportScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/export";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

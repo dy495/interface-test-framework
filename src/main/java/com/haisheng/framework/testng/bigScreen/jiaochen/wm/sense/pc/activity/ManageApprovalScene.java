@@ -26,9 +26,4 @@ public class ManageApprovalScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/approval";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

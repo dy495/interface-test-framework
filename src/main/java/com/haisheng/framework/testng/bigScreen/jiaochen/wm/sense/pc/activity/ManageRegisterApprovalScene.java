@@ -29,8 +29,5 @@ public class ManageRegisterApprovalScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/approval";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

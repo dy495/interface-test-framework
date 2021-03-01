@@ -26,4 +26,5 @@ public interface IScene {
      * @return response.data|response 校验时返回response.data/不校验时返回response
      */
     JSONObject execute(Visitor visitor, boolean checkCode);
+
 }

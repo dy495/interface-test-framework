@@ -21,8 +21,5 @@ public class ManageRevokeScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/revoke";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

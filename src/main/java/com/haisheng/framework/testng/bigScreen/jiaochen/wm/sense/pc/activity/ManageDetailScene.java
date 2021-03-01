@@ -19,9 +19,4 @@ public class ManageDetailScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/detail";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

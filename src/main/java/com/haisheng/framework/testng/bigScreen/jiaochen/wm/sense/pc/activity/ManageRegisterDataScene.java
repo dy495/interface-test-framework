@@ -20,8 +20,5 @@ public class ManageRegisterDataScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/data";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

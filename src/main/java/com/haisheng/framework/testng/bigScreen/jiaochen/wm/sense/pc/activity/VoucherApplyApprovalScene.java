@@ -25,8 +25,5 @@ import lombok.Builder;
         public String getPath() {
             return "/jiaochen/pc/voucher/apply/approval";
         }
-        @Override
-        public String getIpPort() {
-            return null;
-        }
+
     }

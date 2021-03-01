@@ -70,8 +70,4 @@ public class ManageRecruitAddScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/recruit/add";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

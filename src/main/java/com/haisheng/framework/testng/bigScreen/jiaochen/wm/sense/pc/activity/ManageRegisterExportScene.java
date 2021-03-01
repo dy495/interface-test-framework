@@ -34,8 +34,5 @@ public class ManageRegisterExportScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/export";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

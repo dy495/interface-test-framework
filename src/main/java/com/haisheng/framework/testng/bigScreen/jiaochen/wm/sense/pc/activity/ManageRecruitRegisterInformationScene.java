@@ -1,10 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
-
-import java.util.List;
 
 /**
  * 活动管理-招募活动报名列表
@@ -40,8 +37,5 @@ public class ManageRecruitRegisterInformationScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/recruit/register-information/list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

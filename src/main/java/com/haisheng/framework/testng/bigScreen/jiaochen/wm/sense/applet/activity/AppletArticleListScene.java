@@ -7,7 +7,7 @@ import lombok.Builder;
  * 活动管理-活动管理列表-更多--gly
  */
 @Builder
-public class AppletArticleList extends BaseScene {
+public class AppletArticleListScene extends BaseScene {
     private final Integer lastValue;
     private  final Integer size;
 

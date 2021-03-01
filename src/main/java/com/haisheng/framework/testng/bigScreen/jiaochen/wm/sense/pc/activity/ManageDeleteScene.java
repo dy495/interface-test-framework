@@ -20,9 +20,4 @@ public class ManageDeleteScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/delete";
     }
-
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }
